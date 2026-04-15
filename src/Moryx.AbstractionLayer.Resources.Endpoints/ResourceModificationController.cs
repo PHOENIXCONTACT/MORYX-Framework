@@ -44,9 +44,7 @@ public class ResourceModificationController : ControllerBase
     }
 
     /// <summary>
-    /// Returns the full resource type tree, including all derived types, their constructors,
-    /// and reference properties. Use this to discover which resource types are available
-    /// before calling POST /types/{type}
+    /// Returns the full resource type tree
     /// </summary>
     /// <returns>The root node of the resource type tree.</returns>
     [HttpGet("types")]
@@ -60,15 +58,13 @@ public class ResourceModificationController : ControllerBase
     }
 
     /// <summary>
-    /// Returns the full details for one or more resources by their database IDs.
-    /// If no IDs are supplied, details for all resources are returned.
+    /// Returns the details for one or more resources by their IDs.
     /// </summary>
     /// <param name="ids">
-    /// One or more resource database IDs to fetch details for.
-    /// When omitted or empty, details for all resources are returned.
-    /// IDs that do not match an existing resource are silently ignored.
+    /// One or more resource IDs.
+    /// When left empty, details for all resources are returned.
     /// </param>
-    /// <returns> An array of resource detail models, one per matched ID.</returns>
+    /// <returns> An array of resource detail models.</returns>
     [HttpGet]
     [ProducesResponseType(typeof(ResourceModel[]), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -86,13 +82,8 @@ public class ResourceModificationController : ControllerBase
 
     /// <summary>
     /// Returns all resources matching the specified query filter.
-    /// Use query parameters to filter by type, reference conditions, and reference inclusion.
+    /// All query parameters are optional. When none are specified all resources are returned.
     /// </summary>
-    /// <remarks>
-    /// All query parameters are optional; when none are specified all resources are returned.
-    /// ReferenceCondition matches only resources where the named (or role/type-matched) reference
-    /// property satisfies the specified value constraint. When both Name and role/type are set, Name takes precedence.
-    /// </remarks>
     /// <param name="query"></param>
     /// <returns></returns>
     [HttpGet("query")]
@@ -111,11 +102,10 @@ public class ResourceModificationController : ControllerBase
     }
 
     /// <summary>
-    /// Returns the full details of a single resource by its datbaase ID,
-    /// including extended properties, available actions, and all references.
+    /// Returns the details of a resource by its ID.
     /// </summary>
-    /// <param name="id"> The database ID of the resource to retrieve.</param>
-    /// <returns>The full detail model of the requested resource.</returns>
+    /// <param name="id"> The ID of the resource.</param>
+    /// <returns>The full model of the requested resource.</returns>
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(ResourceModel), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
@@ -132,12 +122,11 @@ public class ResourceModificationController : ControllerBase
     }
 
     /// <summary>
-    /// Invokes a named action on the resource. Available actions are listed in the
-    /// 'methods' field of the resource returned by GET /{id}.
-    /// Returns the action's return value, or 204 No Content if the action has no return value.
+    /// Invokes a named action on the resource.
+    /// Available actions are listed in the 'methods' field of the resource returned by GET /{id}.
     /// </summary>
-    /// <param name="id">The database ID of the resource on which to invoke the action.</param>
-    /// <param name="action">The name of the action to invoke, as listed in the resource's methods field.</param>
+    /// <param name="id">The ID of the resource.</param>
+    /// <param name="action">The name of the action to invoke.</param>
     /// <param name="parameters">
     /// The action's input parameters structured as an Entry tree.
     /// Pass an empty body if the action takes no parameters.
@@ -183,22 +172,21 @@ public class ResourceModificationController : ControllerBase
     /// Optionally invokes a constructor method with the supplied arguments, which does persist it.
     /// </summary>
     /// <param name="type">
-    /// The fully qualified resource type name to construct (e.g. MyNamespace.MyResource).
+    /// The resource type name to construct (e.g. MyNamespace.MyResource).
     /// Available types are returned by GET /types.
     /// </param>
     /// <param name="method">
-    /// The name of an optional constructor method to invoke. Available constructor names are listed
-    /// in the methods field of the unpersisted instance returned when this parameter is omitted.
-    /// When provided, the resource is created and persisted using this constructor.
+    /// The name of an optional constructor method to invoke.
+    /// Available constructor names are listed in the methods field of the unpersisted instance
+    /// returned when this parameter is omitted.
     /// </param>
     /// <param name="arguments">
     /// Arguments for the constructor method, structured as an Entry tree.
-    /// Only used when <paramref name="method"/> is speicified.
     /// Pass an empty body if the constructor takes no arguments.
     /// </param>
     /// <returns>
-    /// The constructed resource modle. The Id is 0 when no constructor was invoked
-    /// (the instance is not yet persisted); otherwise thee assigned database ID is included.
+    /// The constructed resource model. The Id is 0 when no constructor was invoked,
+    /// otherwise the assigned ID is included.
     /// </returns>
     [HttpPost("types/{type}")]
     [ProducesResponseType(typeof(ResourceModel), StatusCodes.Status200OK)]
@@ -259,14 +247,14 @@ public class ResourceModificationController : ControllerBase
     }
 
     /// <summary>
-    /// Saves a new resource to the database. The resource model must have Id = 0.
-    /// Returns the saved resource with its assigned database ID.
+    /// Saves a new resource to the database.
+    /// Returns the saved resource with its assigned ID.
     /// </summary>
     /// <param name="model">
     /// The resource model to persist. The Id field must be 0.
     /// Nested references with Id = 0 are created; references with an existing ID are linked.
     /// </param>
-    /// <returns>The saved resource model with its assigned adatabase ID.</returns>
+    /// <returns>The saved resource model with its assigned ID.</returns>
     [HttpPost]
     [ProducesResponseType(typeof(ResourceModel), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status400BadRequest)]
@@ -421,14 +409,11 @@ public class ResourceModificationController : ControllerBase
     }
 
     /// <summary>
-    /// Updates an existing resource. The model must match the resource identified by {id}.
-    /// Returns the resource as it exists after the update.
+    /// Updates an existing resource.
     /// </summary>
-    /// <param name="id">The database ID of the resource to update.</param>
+    /// <param name="id">The ID of the resource to update.</param>
     /// <param name="model">
     /// The updated resource model. The model's type must match the existing resource's type.
-    /// Nested references are reconciled: new references are created, existing ones are updated,
-    /// and references absent from the model are removed.
     /// </param>
     /// <returns>The resource model as it exists in the databse after the update.</returns>
     [HttpPut("{id}")]
@@ -467,11 +452,13 @@ public class ResourceModificationController : ControllerBase
     }
 
     /// <summary>
-    /// Deletes the resource with the specified ID. Returns 409 Conflict if the resource
-    /// cannot be deleted because it is still referenced by other resources.
+    /// Deletes the resource with the specified ID.
     /// </summary>
-    /// <param name="id">The database ID of the resource to delete.</param>
-    /// <returns>No content on success.</returns>
+    /// <param name="id">The ID of the resource to delete.</param>
+    /// <returns>
+    /// No content on success.
+    /// Returns conflict if the resource cannot be deleted because it is still referenced by other resources.
+    /// </returns>
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
