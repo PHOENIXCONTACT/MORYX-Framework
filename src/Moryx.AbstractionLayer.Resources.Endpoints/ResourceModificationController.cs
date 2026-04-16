@@ -82,10 +82,9 @@ public class ResourceModificationController : ControllerBase
 
     /// <summary>
     /// Returns all resources matching the specified query filter.
-    /// All query parameters are optional. When none are specified all resources are returned.
     /// </summary>
-    /// <param name="query"></param>
-    /// <returns></returns>
+    /// <param name="query">Query filter passed in the URL.</param>
+    /// <returns>An array of resource models.</returns>
     [HttpGet("query")]
     [ProducesResponseType(typeof(ResourceModel[]), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status400BadRequest)]
