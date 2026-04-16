@@ -8,6 +8,7 @@
 	<SbomGenerationEnablePackageMetadataParsing>true</SbomGenerationEnablePackageMetadataParsing>
     <SbomGenerationPackageSupplier>Phoenix Contact</SbomGenerationPackageSupplier>
     <SbomGenerationPackageName>Moryx-Framework</SbomGenerationPackageName>
+	<SbomGenerationNamespaceBaseUri>https://sbom.moryx-industry.net</SbomGenerationNamespaceBaseUri>
   </PropertyGroup>
 
 	<PropertyGroup>
