@@ -158,7 +158,7 @@ public class ResourceModificationController : ControllerBase
         }
         catch (MissingMethodException)
         {
-            return NotFound(new MoryxExceptionResponse { Title = $"Action '{action}' does not exist on resource {id}." });
+            return NotFound(new MoryxExceptionResponse { Title = $"Action '{action}' does not exist on resource {id}. Please check spelling and access modifier (has to be `public` or `internal`)." });
         }
         catch (Exception e)
         {
@@ -170,11 +170,11 @@ public class ResourceModificationController : ControllerBase
 
     /// <summary>
     /// Constructs a new resource instance of the specified type without persisting it.
-    /// Optionally invokes a constructor method with the supplied arguments, which does persist it.
+    /// Optionally invokes a ResourcesConstructor method with the supplied arguments, which does persist it.
     /// </summary>
     /// <param name="type">
     /// The resource type name to construct (e.g. MyNamespace.MyResource).
-    /// Available types are returned by GET /types.
+    /// Available types, listed by their full name, are returned by GET /types.
     /// </param>
     /// <param name="method">
     /// The name of an optional constructor method to invoke.
