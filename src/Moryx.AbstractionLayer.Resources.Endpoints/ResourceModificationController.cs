@@ -39,6 +39,8 @@ public class ResourceModificationController : ControllerBase
     {
         _resourceManagement = resourceManagement ?? throw new ArgumentNullException(nameof(resourceManagement));
         _resourceTypeTree = resourceTypeTree ?? throw new ArgumentNullException(nameof(resourceTypeTree));
+        ArgumentNullException.ThrowIfNull(moduleManager);
+        ArgumentNullException.ThrowIfNull(serviceProvider);
         var module = moduleManager.AllModules.FirstOrDefault(module => module is IFacadeContainer<IResourceManagement>);
         _serialization = new ResourceSerialization(module.Container, serviceProvider);
     }
@@ -240,7 +242,7 @@ public class ResourceModificationController : ControllerBase
         catch (Exception e)
         {
             if (e is ArgumentException or SerializationException or ValidationException)
-                return BadRequest(e.Message);
+                return BadRequest(new MoryxExceptionResponse { Title = e.Message });
             throw;
         }
     }
