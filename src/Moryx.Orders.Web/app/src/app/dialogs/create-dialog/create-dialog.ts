@@ -4,7 +4,7 @@
 */
 
 import { CommonModule } from "@angular/common";
-import { Component, computed, effect, ElementRef, inject, linkedSignal, resource, signal, untracked, ViewChild } from "@angular/core";
+import { Component, computed, effect, ElementRef, inject, linkedSignal, resource, signal, untracked, viewChild, ViewChild } from "@angular/core";
 import { FormControl, FormsModule, ReactiveFormsModule, UntypedFormControl } from "@angular/forms";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { MatButtonModule } from "@angular/material/button";
@@ -57,9 +57,6 @@ enum Action {
   providers: []
 })
 export class CreateDialog {
-  @ViewChild('productInput') productInput!: ElementRef<HTMLInputElement>;
-  @ViewChild('recipeInput') recipeInput!: ElementRef<HTMLInputElement>;
-    
   TranslationConstants = TranslationConstants;
   
   private orderManagementService = inject(OrderManagementService);
@@ -100,6 +97,7 @@ export class CreateDialog {
   }});
   dropdownDisabled = computed(() => !this.canAdd() && !this.canCreate());
 
+  productInput = viewChild.required<ElementRef<HTMLInputElement>>('productInput');
   private productsLoader = resource<ProductModel[], { query: ProductQuery }>({
     params: () => ({ query: 
       <ProductQuery>{
@@ -123,6 +121,7 @@ export class CreateDialog {
   selectedProduct = signal<ProductModel | undefined>(undefined);  
   productFormControl = new FormControl<ProductModel | undefined>(undefined);
 
+  recipeInput = viewChild.required<ElementRef<HTMLInputElement>>('recipeInput');
   private recipesLoader = resource<RecipeModel[], { product: ProductModel | undefined }>({
     params: () => ({ product: this.selectedProduct() }),
     loader: ({ params }) => {
@@ -295,7 +294,7 @@ export class CreateDialog {
   }
   
   filterProduct(): void {
-    const filterValue = this.productInput.nativeElement.value.toLowerCase();
+    const filterValue = this.productInput().nativeElement.value.toLowerCase();
     const filtered = this.possibleProducts().filter(p => this.productToString(p).toLowerCase().includes(filterValue));
     this.filteredProducts.set(filtered);
     if (filtered.length === 1 && filterValue) {
@@ -304,7 +303,7 @@ export class CreateDialog {
   }
   
   filterRecipe(): void {
-    const filterValue = this.recipeInput.nativeElement.value.toLowerCase();
+    const filterValue = this.recipeInput()?.nativeElement.value.toLowerCase();
     const filtered = this.possibleRecipes().filter(r => this.recipeToString(r).toLowerCase().includes(filterValue));
     this.filteredRecipes.set(filtered);
     if (filtered.length === 1 && filterValue) {

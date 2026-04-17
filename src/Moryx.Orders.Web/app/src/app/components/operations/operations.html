@@ -19,44 +19,44 @@
                       position="end" class="operations-drawer">
             @switch (drawerContent()) {
               @case (DrawerContent.Filter) {
-                <div class="operations-drawer-content">
+                <div class="operations-drawer-container">
                   <div class="operations-drawer-title">
                     <h2>{{ TranslationConstants.OPERATIONS.FILTER_TITLE | translate }}</h2>
                     <a mat-icon-button (click)="closeDrawer()">
                       <mat-icon>close</mat-icon>
                     </a>
                   </div>
-                  <app-operations-filter />
+                  <app-operations-filter class="operations-drawer-content" />
                 </div>
               }
               @case (DrawerContent.Messages) {
-                <div class="operations-drawer-content">
+                <div class="operations-drawer-container">
                   <div class="operations-drawer-title">
                     <h2>{{ TranslationConstants.OPERATIONS.LOG_TITLE | translate }}</h2>
                     <a mat-icon-button (click)="closeDrawer()">
                       <mat-icon>close</mat-icon>
                     </a>
                   </div>
-                  <app-log-message-list
+                  <app-log-message-list class="operations-drawer-content"
                     [guid]="selectedOperation()?.identifier!"
                   ></app-log-message-list>
                 </div>
               }
               @case (DrawerContent.Parts) {
-                <div class="operations-drawer-content">
+                <div class="operations-drawer-container">
                   <div class="operations-drawer-title">
                     <h2>{{ TranslationConstants.OPERATIONS.PARTS_TITLE | translate }}</h2>
                     <a mat-icon-button (click)="drawer.close()">
                       <mat-icon>close</mat-icon>
                     </a>
                   </div>
-                  <app-part-list
+                  <app-part-list class="operations-drawer-content"
                     [guid]="selectedOperation()?.identifier!"
                   ></app-part-list>
                 </div>
               }
               @case (DrawerContent.Source) {
-                <div class="operations-drawer-content">
+                <div class="operations-drawer-container">
                   <div class="operations-drawer-title">
                     <h2>
                       {{ TranslationConstants.OPERATIONS.SOURCE_TITLE | translate }}
@@ -65,7 +65,7 @@
                       <mat-icon>close</mat-icon>
                     </a>
                   </div>
-                  <app-operation-source
+                  <app-operation-source class="operations-drawer-content"
                     [operationSource]="selectedOperation()?.operationSource!"
                   ></app-operation-source>
                 </div>
