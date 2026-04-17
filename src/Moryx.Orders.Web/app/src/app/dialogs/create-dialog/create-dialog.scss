@@ -1,10 +1,6 @@
 @use "@angular/material" as mat;
 @import "../dialog-styles.scss";
 
-.intermediate-header {
-  margin-top: -12px;
-}
-
 .create-dialog-operation-list-container {
   padding: 0px;
 }
@@ -53,11 +49,3 @@
 .split-button .dropdown-flat .mat-icon {
   margin: 0;
 }
-
-.create-dialog-operation-list-container 
-.operation-list-item 
-.mdc-list-item__end, 
-.create-dialog-operation-list-container 
-.operation-list-item 
-.mat-mdc-list-item-meta 
-{ align-self: center; display: flex; align-items: center; }

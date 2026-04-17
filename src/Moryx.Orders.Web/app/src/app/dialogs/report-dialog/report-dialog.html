@@ -1,36 +1,38 @@
-<h2 mat-dialog-title class="interrupt-dialog-title">
+<h2 mat-dialog-title class="dialog-title">
   {{ TranslationConstants.REPORT_DIALOG.REPORT_TITLE | translate }}
 </h2>
 <mat-dialog-content>
-  <p>
-    {{ TranslationConstants.REPORT_DIALOG.ORDER | translate }}:
-    {{ data.operation.model.order }} - {{ data.operation.model.number }}
-  </p>
-  <p>
-    {{ TranslationConstants.REPORT_DIALOG.PRODUCT | translate }}:
-    {{ data.operation.model.productIdentifier }}-{{
-    data.operation.model.productRevision | number: '2.0'
-    }}
-    {{ data.operation.model.productName }}
-  </p>
-  <mat-grid-list cols="3" rowHeight="50px" class="amounts-list">
+  <div class="dialog-context">
+    <p class="dialog-context-item">
+      <span class="info-label">{{ TranslationConstants.REPORT_DIALOG.ORDER | translate }}</span>
+      <span class="info-value">
+        {{ data.operation.model.order }} - {{ data.operation.model.number }}
+      </span>
+    </p>
+    <p class="dialog-context-item">
+      <span class="info-label">{{ TranslationConstants.REPORT_DIALOG.PRODUCT | translate }}</span>
+      <span class="info-value">
+        {{ this.data.operation.model.productIdentifier }}-{{
+          this.data.operation.model.productRevision | number : '2.0' }}
+        {{ this.data.operation.model.productName }}
+      </span>
+    </p>
+  </div>
+
+  <mat-grid-list cols="3" rowHeight="50px" class="full-width">
     <mat-grid-tile>
       <div class="amounts-data-entry">
-        <label
-          ><b>{{
-          TranslationConstants.REPORT_DIALOG.AMOUNT | translate
-        }}</b></label
-        >
+        <label><b>{{
+            TranslationConstants.REPORT_DIALOG.AMOUNT | translate
+            }}</b></label>
         <div>{{ data.operation.model.totalAmount }}</div>
       </div>
     </mat-grid-tile>
     <mat-grid-tile>
       <div class="amounts-data-entry">
-        <label
-          ><b>{{
-          TranslationConstants.REPORT_DIALOG.OVERDELIVERY | translate
-        }}</b></label
-        >
+        <label><b>{{
+            TranslationConstants.REPORT_DIALOG.OVERDELIVERY | translate
+            }}</b></label>
         <div>
           {{ data.operation.model.overDeliveryAmount }} ({{
           data.operation.overDelivery
@@ -41,11 +43,9 @@
     </mat-grid-tile>
     <mat-grid-tile>
       <div class="amounts-data-entry">
-        <label
-          ><b>{{
-          TranslationConstants.REPORT_DIALOG.UNDERDELIVERY | translate
-        }}</b></label
-        >
+        <label><b>{{
+            TranslationConstants.REPORT_DIALOG.UNDERDELIVERY | translate
+            }}</b></label>
         <div>
           {{ data.operation.model.underDeliveryAmount }} ({{
           data.operation.underDelivery
@@ -57,92 +57,63 @@
   </mat-grid-list>
   <mat-grid-list cols="2" rowHeight="80px">
     <mat-grid-tile>
-      <mat-form-field
-        appearance="outline"
-        class="interrupt-dialog-report-success-count">
+      <mat-form-field appearance="outline" class="interrupt-dialog-report-success-count">
         <mat-label>{{
           TranslationConstants.REPORT_DIALOG.SUCCESS | translate
-        }}</mat-label>
+          }}</mat-label>
         <input matInput [(ngModel)]="success" [disabled]="isLoading()" />
-        <mat-hint align="start"
-          >{{ TranslationConstants.REPORT_DIALOG.REPORTED | translate }}:
-          {{ reportContext()?.reportedSuccess }}</mat-hint
-          >
-          <mat-hint align="end"
-            >{{ TranslationConstants.REPORT_DIALOG.ESTIMATED | translate }}:
-            {{ estimatedSuccess() }}</mat-hint
-            >
-          </mat-form-field>
-        </mat-grid-tile>
-        <mat-grid-tile>
-          <mat-form-field
-            appearance="outline"
-            class="interrupt-dialog-report-failure-count">
-            <mat-label>{{
-              TranslationConstants.REPORT_DIALOG.SCRAP | translate
-            }}</mat-label>
-            <input matInput [(ngModel)]="scrap" [disabled]="isLoading()" />
-            <mat-hint align="start"
-              >{{ TranslationConstants.REPORT_DIALOG.REPORTED | translate }}:
-              {{ reportContext()?.reportedFailure }}</mat-hint
-              >
-              <mat-hint align="end"
-                >{{ TranslationConstants.REPORT_DIALOG.ESTIMATED | translate }}:
-                {{ estimatedFailure() }}</mat-hint
-                >
-              </mat-form-field>
-            </mat-grid-tile>
-          </mat-grid-list>
-          <mat-form-field appearance="outline" class="interrupt-dialog-comment">
-            <mat-label>{{
-              TranslationConstants.REPORT_DIALOG.COMMENT | translate
-            }}</mat-label>
-            <textarea matInput [(ngModel)]="comment" [disabled]="isLoading()"></textarea>
-          </mat-form-field>
-          <h3>{{ TranslationConstants.REPORT_DIALOG.CONFIRMATION | translate }}</h3>
-          <mat-radio-group aria-label="Select an report option" [(ngModel)]="confirmationType">
-            <mat-radio-button
-              [disabled]="!reportContext()?.canPartial || isLoading()"
-              value="partial"
-              >{{
-              TranslationConstants.REPORT_DIALOG.PARTIAL | translate
-              }}</mat-radio-button
-              >
-              <mat-radio-button
-                [disabled]="!reportContext()?.canFinal || isLoading()"
-                value="final"
-                >{{
-                TranslationConstants.REPORT_DIALOG.FINAL | translate
-                }}</mat-radio-button
-                >
-              </mat-radio-group>
-              @for (restriction of reportContext()?.restrictions; track restriction) {
-                <mat-list>
-                  <mat-list-item
-      [ngStyle]="{
-        color:
-          restriction.severity === 'Error'
-            ? 'red'
-            : restriction.severity === 'Warning'
-            ? 'orange'
-            : 'black'
-      }">
-                    {{ restriction.text }}
-                  </mat-list-item>
-                </mat-list>
-              }
-            </mat-dialog-content>
-            <div mat-dialog-actions align="end">
-              <button mat-button mat-dialog-close color="primary">
-                {{ TranslationConstants.CANCEL | translate }}
-              </button>
-              <button
-                mat-flat-button
-                (click)="submit()"
-                [disabled]="!canReport()">
-                {{ TranslationConstants.REPORT_DIALOG.REPORT | translate }}
-              </button>
-              @if (isLoading()) {
-                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-              }
-            </div>
+        <mat-hint align="start">{{ TranslationConstants.REPORT_DIALOG.REPORTED | translate }}:
+          {{ reportContext()?.reportedSuccess }}</mat-hint>
+        <mat-hint align="end">{{ TranslationConstants.REPORT_DIALOG.ESTIMATED | translate }}:
+          {{ estimatedSuccess() }}</mat-hint>
+      </mat-form-field>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <mat-form-field appearance="outline" class="interrupt-dialog-report-failure-count">
+        <mat-label>{{
+          TranslationConstants.REPORT_DIALOG.SCRAP | translate
+          }}</mat-label>
+        <input matInput [(ngModel)]="scrap" [disabled]="isLoading()" />
+        <mat-hint align="start">{{ TranslationConstants.REPORT_DIALOG.REPORTED | translate }}:
+          {{ reportContext()?.reportedFailure }}</mat-hint>
+        <mat-hint align="end">{{ TranslationConstants.REPORT_DIALOG.ESTIMATED | translate }}:
+          {{ estimatedFailure() }}</mat-hint>
+      </mat-form-field>
+    </mat-grid-tile>
+  </mat-grid-list>
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>{{
+      TranslationConstants.REPORT_DIALOG.COMMENT | translate
+      }}</mat-label>
+    <textarea matInput [(ngModel)]="comment" [disabled]="isLoading()"></textarea>
+  </mat-form-field>
+  <h3 class="intermediate-header">{{ TranslationConstants.REPORT_DIALOG.CONFIRMATION | translate }}</h3>
+  <mat-radio-group aria-label="Select an report option" [(ngModel)]="confirmationType">
+    <mat-radio-button [disabled]="!reportContext()?.canPartial || isLoading()" value="partial">
+      {{ TranslationConstants.REPORT_DIALOG.PARTIAL | translate }}
+    </mat-radio-button>
+    <mat-radio-button [disabled]="!reportContext()?.canFinal || isLoading()" value="final">
+      {{ TranslationConstants.REPORT_DIALOG.FINAL | translate }}
+    </mat-radio-button>
+  </mat-radio-group>
+  @for (restriction of reportContext()?.restrictions; track restriction) {
+  <mat-list>
+    <mat-list-item>
+      <span matListItemIcon class="material-symbols-outlined">
+        {{restriction.severity === 'Error' ? 'error' : restriction.severity === 'Warning' ? 'warning' : 'info'}}</span>
+      <div matListItemTitle>{{ restriction.text }}</div>
+    </mat-list-item>
+  </mat-list>
+  }
+</mat-dialog-content>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close color="primary">
+    {{ TranslationConstants.CANCEL | translate }}
+  </button>
+  <button mat-flat-button (click)="submit()" [disabled]="!canReport() && !isLoading()">
+    {{ TranslationConstants.REPORT_DIALOG.REPORT | translate }}
+  </button>
+  @if (isLoading()) {
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }
+</div>

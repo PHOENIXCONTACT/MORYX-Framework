@@ -1,6 +1,5 @@
-.amounts-list {
-    min-width: 450px;
-}
+@import '../dialog-styles.scss';
+
 .amounts-data-entry {
     position: absolute;
     left: 0px;
@@ -9,10 +8,6 @@
 
 mat-form-field {
     margin-bottom: 8px;
-}
-
-.interrupt-dialog-comment {
-    width: 100%;
 }
 
 .mat-radio-button ~ .mat-radio-button {
