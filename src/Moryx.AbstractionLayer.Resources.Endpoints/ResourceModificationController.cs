@@ -142,7 +142,7 @@ public class ResourceModificationController : ControllerBase
     [Authorize(Policy = ResourcePermissions.CanInvokeMethod)]
     public async Task<ActionResult<Entry>> InvokeAction(long id, string action, Entry parameters)
     {
-        if (_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == id) is null)
+        if (!_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == id).Any())
             return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ResourceNotFoundException_ById_Message, id) });
 
         Entry entry = null;
