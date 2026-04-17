@@ -1,14 +1,8 @@
 @use "@angular/material" as mat;
-mat-form-field {
-  width: 100%;
-}
+@import "../dialog-styles.scss";
 
-.create-dialog-operation-container {
-  place-content: space-between;
-}
-
-.create-dialog-operation-title {
-  display: inline-block;
+.intermediate-header {
+  margin-top: -12px;
 }
 
 .create-dialog-operation-list-container {
@@ -30,7 +24,7 @@ mat-form-field {
   padding: 0 !important;
   @include mat.list-overrides((
      list-item-two-line-container-height: 60px,
-));
+  ));
 }
 
 .actions { gap: 8px; }
@@ -59,3 +53,11 @@ mat-form-field {
 .split-button .dropdown-flat .mat-icon {
   margin: 0;
 }
+
+.create-dialog-operation-list-container 
+.operation-list-item 
+.mdc-list-item__end, 
+.create-dialog-operation-list-container 
+.operation-list-item 
+.mat-mdc-list-item-meta 
+{ align-self: center; display: flex; align-items: center; }
