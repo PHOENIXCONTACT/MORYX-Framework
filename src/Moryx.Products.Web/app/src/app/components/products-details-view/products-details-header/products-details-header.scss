@@ -1,8 +1,8 @@
 @use "@moryx/ngx-web-framework/styles/variables" as *; 
 
 
-.header {
-  padding: 16px 26px 4px 26px;
+:host {
+  padding: 24px 24px 4px 24px;
   background-color: $mat-background-light;
 }
 

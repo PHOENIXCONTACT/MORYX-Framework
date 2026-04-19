@@ -97,7 +97,7 @@
                 matTooltipShowDelay="500"
                 type="button"
                 (click)="onEdit()"
-                [disabled]="editDisabled()"
+                [disabled]="!selected()"
               >
                 <mat-icon>edit</mat-icon>
               </button>
@@ -167,7 +167,7 @@
         </mat-toolbar>
       }
 
-      @if (!importDisabled()) {
+      @if (!isEditMode()) {
         <button
           mat-fab
           color="primary"
