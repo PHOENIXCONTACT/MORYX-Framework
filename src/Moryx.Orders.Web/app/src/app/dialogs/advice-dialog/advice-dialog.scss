@@ -1,0 +1,62 @@
+@use "@moryx/ngx-web-framework/styles/variables" as *;
+
+.advice-dialog-context {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+@media (max-width: 560px) {
+  .advice-dialog-context {
+    grid-template-columns: 1fr;
+  }
+}
+
+.advice-dialog-context-item {
+  /* Remove default <p> spacing and make it a “card” */
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 10px 12px;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-left: 2px solid $primary-dark;
+  border-radius: 4px;
+  min-width: 0;
+}
+
+.advice-dialog-context-item .info-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #374151;
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+
+.advice-dialog-context-item .info-value {
+  font-size: 14px;
+  font-weight: 500;
+  color: #111827;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1 1 auto;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.suffix-icon {
+  margin-right: 6px;
+}
+
+.advice-dialog-title {
+  margin-left: -5px;
+}

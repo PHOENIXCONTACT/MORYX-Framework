@@ -23,6 +23,7 @@
     "CHANGE_AMOUNT": "VARIAZIONE DELL'IMPORTO",
     "INTERRUPT": "INTERROMPERE",
     "REPORT": "REPORT",
+    "ADVICE": "ADVICE",
     "REFRESH_DATA": "Aggiornare",
     "REFRESH_RECOMMENDED": "Aggiornamento consigliato",
     "REFRESH_OPTIONAL": "Aggiornamento facoltativo",
@@ -124,6 +125,15 @@
     "TITLE": "Aggiornare l'importo target corrente",
     "UPDATE_AMOUNT": "IMPORTO AGGIORNATO",
     "CANNOT_REDUCE_TARGET_AMOUNT": "L'importo target non può essere ulteriormente ridotto"
+  },
+  "ADVICE_DIALOG": {
+    "TITLE": "Advice",
+    "PART": "Material",
+    "PART_DESCRIPTION": "Select the product or a part to advice",
+    "ALREADY_ADVICED": "Already adviced",
+    "TOTE_BOX_NUMBER": "Tote Box",
+    "TOTE_BOX_NUMBER_DESCRIPTION": "Identification of the tote box",
+    "AMOUNT": "Amount"
   },
   "DISMISS": "RIFIUTARE",
   "CANCEL": "CANCELLA",

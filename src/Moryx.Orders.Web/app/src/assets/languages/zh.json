@@ -23,6 +23,7 @@
     "CHANGE_AMOUNT": "变动金额",
     "INTERRUPT": "中断",
     "REPORT": "报告",
+    "ADVICE": "ADVICE",
     "REFRESH_DATA": "刷新",
     "REFRESH_RECOMMENDED": "建议更新",
     "REFRESH_OPTIONAL": "可选更新",
@@ -124,6 +125,15 @@
     "TITLE": "更新当前目标金额",
     "UPDATE_AMOUNT": "更新金额",
     "CANNOT_REDUCE_TARGET_AMOUNT": "目标金额不得进一步减少"
+  },
+  "ADVICE_DIALOG": {
+    "TITLE": "Advice",
+    "PART": "Material",
+    "PART_DESCRIPTION": "Select the product or a part to advice",
+    "ALREADY_ADVICED": "Already adviced",
+    "TOTE_BOX_NUMBER": "Tote Box",
+    "TOTE_BOX_NUMBER_DESCRIPTION": "Identification of the tote box",
+    "AMOUNT": "Amount"
   },
   "DISMISS": "关闭",
   "CANCEL": "取消",

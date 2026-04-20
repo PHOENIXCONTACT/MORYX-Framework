@@ -323,6 +323,13 @@
                       >
                         {{ TranslationConstants.OPERATIONS.REPORT | translate }}
                       </button>
+                      <button 
+                        mat-flat-button
+                        color="primary"
+                        [disabled]="!operation.model.canAdvice"
+                        (click)="onAdvice(operation)">
+                        {{ TranslationConstants.OPERATIONS.ADVICE | translate }}
+                      </button>
                     </mat-action-row>
                   </mat-expansion-panel>
                 }

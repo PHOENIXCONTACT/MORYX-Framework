@@ -23,6 +23,7 @@
     "CHANGE_AMOUNT": "MENGE ÄNDERN",
     "INTERRUPT": "UNTERBRECHEN",
     "REPORT": "RÜCKMELDEN",
+    "ADVICE": "AVISIEREN",
     "REFRESH_DATA": "AKTUALISIEREN",
     "REFRESH_RECOMMENDED": "Aktualisierung empfohlen",
     "REFRESH_OPTIONAL": "Aktualisierung optional",
@@ -126,6 +127,15 @@
     "TITLE": "Ändern Sie die aktuelle Zielmenge",
     "UPDATE_AMOUNT": "MENGE ÄNDERN",
     "CANNOT_REDUCE_TARGET_AMOUNT": "Die Zielmenge kann nicht weiter reduziert werden"
+  },
+  "ADVICE_DIALOG": {
+    "TITLE": "Avisieren",
+    "PART": "Material",
+    "PART_DESCRIPTION": "Wähle das avisierte Produkt oder Material",
+    "ALREADY_ADVICED": "Bereits avisiert",
+    "TOTE_BOX_NUMBER": "Transportbehälter",
+    "TOTE_BOX_NUMBER_DESCRIPTION": "Identifikationsnummer des Transportbehälters",
+    "AMOUNT": "Menge"
   },
   "DISMISS": "OKAY",
   "CANCEL": "ABBRECHEN",
