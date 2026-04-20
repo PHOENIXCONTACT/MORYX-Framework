@@ -39,14 +39,19 @@ public class ResourceModificationController : ControllerBase
     {
         _resourceManagement = resourceManagement ?? throw new ArgumentNullException(nameof(resourceManagement));
         _resourceTypeTree = resourceTypeTree ?? throw new ArgumentNullException(nameof(resourceTypeTree));
+        ArgumentNullException.ThrowIfNull(moduleManager);
+        ArgumentNullException.ThrowIfNull(serviceProvider);
         var module = moduleManager.AllModules.FirstOrDefault(module => module is IFacadeContainer<IResourceManagement>);
         _serialization = new ResourceSerialization(module.Container, serviceProvider);
     }
 
-    [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status417ExpectationFailed)]
-    [Route("types")]
+    /// <summary>
+    /// Returns the full resource type tree
+    /// </summary>
+    /// <returns>The root node of the resource type tree.</returns>
+    [HttpGet("types")]
+    [ProducesResponseType(typeof(ResourceTypeModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Policy = ResourcePermissions.CanViewTypeTree)]
     public ActionResult<ResourceTypeModel> GetTypeTree()
     {
@@ -54,9 +59,17 @@ public class ResourceModificationController : ControllerBase
         return converter.ConvertType(_resourceTypeTree.RootType);
     }
 
+    /// <summary>
+    /// Returns the details for one or more resources by their IDs.
+    /// </summary>
+    /// <param name="ids">
+    /// One or more resource IDs.
+    /// When left empty, details for all resources are returned.
+    /// </param>
+    /// <returns> An array of resource detail models.</returns>
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status417ExpectationFailed)]
+    [ProducesResponseType(typeof(ResourceModel[]), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Policy = ResourcePermissions.CanViewDetails)]
     public ActionResult<ResourceModel[]> GetDetailsBatch([FromQuery] long[] ids)
     {
@@ -69,12 +82,17 @@ public class ResourceModificationController : ControllerBase
             .Where(details => details != null).ToArray();
     }
 
-    [HttpPost]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status417ExpectationFailed)]
-    [Route("query")]
+    /// <summary>
+    /// Returns all resources matching the specified query filter.
+    /// </summary>
+    /// <param name="query">Query filter passed in the URL.</param>
+    /// <returns>An array of resource models.</returns>
+    [HttpGet("query")]
+    [ProducesResponseType(typeof(ResourceModel[]), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Policy = ResourcePermissions.CanViewTree)]
-    public ActionResult<ResourceModel[]> GetResources(ResourceQuery query)
+    public ActionResult<ResourceModel[]> GetResources([FromQuery] ResourceQuery query)
     {
         var filter = new ResourceQueryFilter(query, _resourceTypeTree);
         var resourceProxies = _resourceManagement.GetResourcesUnsafe<IResource>(r => filter.Match(r as Resource)).ToArray();
@@ -84,11 +102,15 @@ public class ResourceModificationController : ControllerBase
         return values;
     }
 
-    [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status417ExpectationFailed)]
-    [Route("{id}")]
+    /// <summary>
+    /// Returns the details of a resource by its ID.
+    /// </summary>
+    /// <param name="id"> The ID of the resource.</param>
+    /// <returns>The full model of the requested resource.</returns>
+    [HttpGet("{id}")]
+    [ProducesResponseType(typeof(ResourceModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Policy = ResourcePermissions.CanViewDetails)]
     public ActionResult<ResourceModel> GetDetails(long id)
     {
@@ -100,16 +122,29 @@ public class ResourceModificationController : ControllerBase
         return resourceModel;
     }
 
-    [HttpPost]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status417ExpectationFailed)]
-    [Route("{id}/invoke/{method}")]
+    /// <summary>
+    /// Invokes a named action on the resource.
+    /// Available actions are listed in the 'methods' field of the resource returned by GET /{id}.
+    /// </summary>
+    /// <param name="id">The ID of the resource.</param>
+    /// <param name="method">The name of the method to invoke.</param>
+    /// <param name="parameters">
+    /// The action's input parameters structured as an Entry tree.
+    /// Pass an empty body if the action takes no parameters.
+    /// </param>
+    /// <returns>
+    /// The action's return value as an Entry tree (200 OK),
+    /// or an empty body when the action returns void (204 No Content).
+    /// </returns>
+    [HttpPost("{id}/invoke/{method}")]
+    [ProducesResponseType(typeof(Entry), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
     [Authorize(Policy = ResourcePermissions.CanInvokeMethod)]
     public async Task<ActionResult<Entry>> InvokeMethod(long id, string method, Entry parameters)
     {
-        if (_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == id) is null)
+        if (!_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == id).Any())
             return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ResourceNotFoundException_ById_Message, id) });
 
         Entry entry = null;
@@ -123,21 +158,42 @@ public class ResourceModificationController : ControllerBase
         }
         catch (MissingMethodException)
         {
-            return BadRequest("Method could not be invoked. Please check spelling and access modifier (has to be `public` or `internal`).");
+            return NotFound(new MoryxExceptionResponse { Title = $"Method '{method}' does not exist on resource {id}. Please check spelling and access modifier (has to be `public` or `internal`)." });
         }
-        catch
+        catch (Exception e)
         {
-            return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+            return UnprocessableEntity(new MoryxExceptionResponse { Title = $"Method '{method}' failed: {e.Message}." });
         }
 
-        return entry;
+        return entry is null ? NoContent() : Ok(entry);
     }
 
-    [HttpPost]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status417ExpectationFailed)]
-    [Route("types/{type}")]
+    /// <summary>
+    /// Constructs a new resource instance of the specified type without persisting it.
+    /// Optionally invokes a ResourcesConstructor method with the supplied arguments, which does persist the resource in the process.
+    /// </summary>
+    /// <param name="type">
+    /// The resource type name to construct (e.g. MyNamespace.MyResource).
+    /// Available types, listed by their full name, are returned by GET /types.
+    /// </param>
+    /// <param name="method">
+    /// The name of an optional constructor method to invoke.
+    /// Available constructor names are listed in the methods field of the unpersisted instance
+    /// returned when this parameter is omitted.
+    /// </param>
+    /// <param name="arguments">
+    /// Arguments for the constructor method, structured as an Entry tree.
+    /// Pass an empty body if the constructor takes no arguments.
+    /// </param>
+    /// <returns>
+    /// The constructed resource model. The Id is 0 when no constructor was invoked,
+    /// otherwise the assigned ID is included.
+    /// </returns>
+    [HttpPost("types/{type}")]
+    [ProducesResponseType(typeof(ResourceModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Policy = ResourcePermissions.CanAdd)]
     public Task<ActionResult<ResourceModel>> ConstructWithParameters(string type, string method = null, [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] Entry arguments = null)
     {
@@ -186,21 +242,30 @@ public class ResourceModificationController : ControllerBase
         catch (Exception e)
         {
             if (e is ArgumentException or SerializationException or ValidationException)
-                return BadRequest(e.Message);
+                return BadRequest(new MoryxExceptionResponse { Title = e.Message });
             throw;
         }
     }
 
+    /// <summary>
+    /// Saves a new resource to the database.
+    /// Returns the saved resource with its assigned ID.
+    /// </summary>
+    /// <param name="model">
+    /// The resource model to persist. The Id field must be 0.
+    /// Nested references with Id = 0 are created; references with an existing ID are linked.
+    /// </param>
+    /// <returns>The saved resource model with its assigned ID.</returns>
     [HttpPost]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status409Conflict)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ResourceModel), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Policy = ResourcePermissions.CanAdd)]
     public async Task<ActionResult<ResourceModel>> Save(ResourceModel model)
     {
         if (_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == model.Id).Any())
-            return Conflict($"The resource '{model.Id}' already exists.");
+            return Conflict(new MoryxExceptionResponse { Title = $"Resource '{model.Id}' already exists. Use PUT /{model.Id} to update it." });
         try
         {
             var id = await _resourceManagement.CreateUnsafeAsync(_resourceTypeTree[model.Type].ResourceType, async (r) =>
@@ -214,12 +279,13 @@ public class ResourceModificationController : ControllerBase
                 }
             });
 
-            return GetDetails(id);
+            var created = GetDetails(id);
+            return CreatedAtAction(nameof(GetDetails), new { id }, created.Value);
         }
         catch (Exception e)
         {
             if (e is ArgumentException or SerializationException or ValidationException)
-                return BadRequest(e.Message);
+                return BadRequest(new MoryxExceptionResponse { Title = e.Message });
             throw;
         }
     }
@@ -343,56 +409,73 @@ public class ResourceModificationController : ControllerBase
         }
     }
 
-    [HttpPut]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    /// <summary>
+    /// Updates an existing resource.
+    /// </summary>
+    /// <param name="id">The ID of the resource to update.</param>
+    /// <param name="model">
+    /// The updated resource model. The model's type must match the existing resource's type.
+    /// </param>
+    /// <returns>The resource model as it exists in the database after the update.</returns>
+    [HttpPut("{id}")]
+    [ProducesResponseType(typeof(ResourceModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [Route("{id}")]
     [Authorize(Policy = ResourcePermissions.CanEdit)]
-    public ActionResult<ResourceModel> Update(long id, ResourceModel model)
+    public async Task<ActionResult<ResourceModel>> Update(long id, ResourceModel model)
     {
-        if (_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == id) is null)
+        if (!_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == id).Any())
             return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ResourceNotFoundException_ById_Message, id) });
 
         try
         {
-            _resourceManagement.ModifyUnsafeAsync(id, async (r) =>
+            await _resourceManagement.ModifyUnsafeAsync(id, async (r) =>
             {
                 var resourcesToSave = new HashSet<long>();
                 var resourceCache = new Dictionary<long, Resource>();
                 await FromModel(model, resourcesToSave, resourceCache, r);
-                resourcesToSave.ForEach(id => _resourceManagement.ModifyUnsafeAsync(id, _ => Task.FromResult(true)));
+                foreach (var resourceId in resourcesToSave.Skip(1))
+                {
+                    await _resourceManagement.ModifyUnsafeAsync(resourceId, _ => Task.FromResult(true));
+                }
                 return true;
             });
         }
         catch (Exception e)
         {
             if (e is ArgumentException or SerializationException or ValidationException)
-                return BadRequest(e.Message);
+                return BadRequest(new MoryxExceptionResponse { Title = e.Message });
             throw;
         }
 
         return GetDetails(id);
     }
 
-    [HttpDelete]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status417ExpectationFailed)]
-    [Route("{id}")]
+    /// <summary>
+    /// Deletes the resource with the specified ID.
+    /// </summary>
+    /// <param name="id">The ID of the resource to delete.</param>
+    /// <returns>
+    /// No content on success.
+    /// Returns conflict if the resource cannot be deleted because it is still referenced by other resources.
+    /// </returns>
+    [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Policy = ResourcePermissions.CanDelete)]
     public async Task<ActionResult> Remove(long id)
     {
-        if (_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == id) is null)
+        if (!_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == id).Any())
             return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ResourceNotFoundException_ById_Message, id) });
 
         var deleted = await _resourceManagement.DeleteAsync(id);
         if (!deleted)
-            return Conflict($"Unable to delete {id}");
+            return Conflict(new MoryxExceptionResponse { Title = $"Resource {id} cannot be deleted while it is still referenced by other resources."});
 
-        return Accepted();
+        return NoContent();
     }
 
     private class ResourceQueryFilter
