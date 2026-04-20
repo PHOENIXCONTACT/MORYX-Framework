@@ -416,7 +416,7 @@ public class ResourceModificationController : ControllerBase
     /// <param name="model">
     /// The updated resource model. The model's type must match the existing resource's type.
     /// </param>
-    /// <returns>The resource model as it exists in the databse after the update.</returns>
+    /// <returns>The resource model as it exists in the database after the update.</returns>
     [HttpPut("{id}")]
     [ProducesResponseType(typeof(ResourceModel), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status400BadRequest)]
