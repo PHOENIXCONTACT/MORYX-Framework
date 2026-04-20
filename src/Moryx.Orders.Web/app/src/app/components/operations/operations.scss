@@ -35,7 +35,9 @@ mat-grid-list {
   ));
 }
 
-.operations-drawer-content {
+.operations-drawer-container {
+  display: flex;
+  flex-flow: column nowrap;
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -58,6 +60,14 @@ mat-grid-list {
     color: rgba(0, 0, 0, 0.54);
     margin-right: 10px;
   }
+}
+
+.operations-drawer-content {
+  display: block;
+  flex: 1;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .operation-details-state {
@@ -88,10 +98,6 @@ mat-grid-list {
 .operation-title {
   margin: 0px;
   font-weight: bold;
-}
-
-.operation-subtitle {
-  margin: -4px 0px 0px 0px;
 }
 
 .operation-details {
