@@ -136,7 +136,7 @@ public class ResourceModificationController : ControllerBase
     /// The action's return value as an Entry tree (200 OK),
     /// or an empty body when the action returns void (204 No Content).
     /// </returns>
-    [HttpPost("{id}/actions/{method}")]
+    [HttpPost("{id}/invoke/{method}")]
     [ProducesResponseType(typeof(Entry), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
