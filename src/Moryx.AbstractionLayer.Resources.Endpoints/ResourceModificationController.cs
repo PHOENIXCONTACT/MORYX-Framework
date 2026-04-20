@@ -170,7 +170,7 @@ public class ResourceModificationController : ControllerBase
 
     /// <summary>
     /// Constructs a new resource instance of the specified type without persisting it.
-    /// Optionally invokes a ResourcesConstructor method with the supplied arguments, which does persist it.
+    /// Optionally invokes a ResourcesConstructor method with the supplied arguments, which does persist the resource in the process.
     /// </summary>
     /// <param name="type">
     /// The resource type name to construct (e.g. MyNamespace.MyResource).
