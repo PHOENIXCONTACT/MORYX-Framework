@@ -136,13 +136,13 @@ public class ResourceModificationController : ControllerBase
     /// The action's return value as an Entry tree (200 OK),
     /// or an empty body when the action returns void (204 No Content).
     /// </returns>
-    [HttpPost("{id}/actions/{action}")]
+    [HttpPost("{id}/actions/{method}")]
     [ProducesResponseType(typeof(Entry), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
     [Authorize(Policy = ResourcePermissions.CanInvokeMethod)]
-    public async Task<ActionResult<Entry>> InvokeAction(long id, string action, Entry parameters)
+    public async Task<ActionResult<Entry>> InvokeMethod(long id, string method, Entry parameters)
     {
         if (!_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == id).Any())
             return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ResourceNotFoundException_ById_Message, id) });
@@ -152,17 +152,17 @@ public class ResourceModificationController : ControllerBase
         {
             await _resourceManagement.ModifyUnsafeAsync(id, r =>
             {
-                entry = EntryConvert.InvokeMethod(r.Descriptor, new MethodEntry { Name = action, Parameters = parameters }, _serialization);
+                entry = EntryConvert.InvokeMethod(r.Descriptor, new MethodEntry { Name = method, Parameters = parameters }, _serialization);
                 return Task.FromResult(true);
             });
         }
         catch (MissingMethodException)
         {
-            return NotFound(new MoryxExceptionResponse { Title = $"Action '{action}' does not exist on resource {id}. Please check spelling and access modifier (has to be `public` or `internal`)." });
+            return NotFound(new MoryxExceptionResponse { Title = $"Method '{method}' does not exist on resource {id}. Please check spelling and access modifier (has to be `public` or `internal`)." });
         }
         catch (Exception e)
         {
-            return UnprocessableEntity(new MoryxExceptionResponse { Title = $"Action '{action}' failed: {e.Message}." });
+            return UnprocessableEntity(new MoryxExceptionResponse { Title = $"Method '{method}' failed: {e.Message}." });
         }
 
         return entry is null ? NoContent() : Ok(entry);
