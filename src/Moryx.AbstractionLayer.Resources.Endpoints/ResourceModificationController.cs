@@ -127,7 +127,7 @@ public class ResourceModificationController : ControllerBase
     /// Available actions are listed in the 'methods' field of the resource returned by GET /{id}.
     /// </summary>
     /// <param name="id">The ID of the resource.</param>
-    /// <param name="action">The name of the action to invoke.</param>
+    /// <param name="method">The name of the method to invoke.</param>
     /// <param name="parameters">
     /// The action's input parameters structured as an Entry tree.
     /// Pass an empty body if the action takes no parameters.
