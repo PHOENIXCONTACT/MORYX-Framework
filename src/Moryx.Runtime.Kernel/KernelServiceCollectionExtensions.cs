@@ -32,6 +32,7 @@ public static class KernelServiceCollectionExtensions
 
             // Register parallel operations
             serviceCollection.AddTransient<IParallelOperations, ParallelOperations>();
+            serviceCollection.AddTransient<IAsyncParallelOperations, AsyncParallelOperations>();
 
             // Register container factory for module container
             serviceCollection.AddSingleton<IModuleContainerFactory, ModuleContainerFactory>();

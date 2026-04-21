@@ -56,7 +56,7 @@ public class SerializationTests
         var enums = encoded.SubEntries[2];
         Assert.That(enums.Value.Possible.Length, Is.EqualTo(3));
         Assert.That(enums.Prototypes.Count, Is.EqualTo(3));
-        for (int i = 0; i < 3; i++)
+        for (var i = 0; i < 3; i++)
             Assert.That(enums.Prototypes[i].Value.Current, Is.EqualTo(enums.Value.Possible[i].Key));
     }
 

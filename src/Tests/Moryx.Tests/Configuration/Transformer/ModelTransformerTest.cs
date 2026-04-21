@@ -29,18 +29,18 @@ public class ModelTransformerTest
         var serialization = new PossibleValuesSerialization(null, null, null);//new TransformationProviderMock(config));
         var converted = EntryConvert.EncodeObject(config, serialization);
 
-        bool foundPropertyWithDescriptionAttribute = false;
-        bool foundPropertyWithoutDescriptionAttribute = false;
-        bool foundPropertyWithDefaultAttribute = false;
-        bool foundPropertyWithoutDefaultAttribute = false;
-        bool foundPropertyWithValuesAttribute = false;
-        bool foundPropertyWithoutValueAttribute = false;
-        bool foundPropertyWithDisplayNameAttribute = false;
+        var foundPropertyWithDescriptionAttribute = false;
+        var foundPropertyWithoutDescriptionAttribute = false;
+        var foundPropertyWithDefaultAttribute = false;
+        var foundPropertyWithoutDefaultAttribute = false;
+        var foundPropertyWithValuesAttribute = false;
+        var foundPropertyWithoutValueAttribute = false;
+        var foundPropertyWithDisplayNameAttribute = false;
 
         // get the properties of the given object
         foreach (var propertyInfo in config.GetType().GetProperties())
         {
-            bool found = false;
+            var found = false;
             foreach (var entry in converted.SubEntries)
             {
                 // find the property in the generic object
@@ -169,7 +169,7 @@ public class ModelTransformerTest
     [Test(Description = "Checks if the config object is updated.")]
     public void SetConfigTest()
     {
-        TransformerTestConfig config = new TransformerTestConfig();
+        var config = new TransformerTestConfig();
 
         //var provider = new TransformationProviderMock(config);
         // tranform a config object
