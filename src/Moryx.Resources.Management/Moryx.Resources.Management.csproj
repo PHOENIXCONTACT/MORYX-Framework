@@ -7,6 +7,9 @@
     <Description>ResourceManagement module composing and maintaining the resource graph as the habitat for digital twins of manufacturing assets.</Description>
     <PackageTags>MORYX;IIoT;IoT;Manufacturing;API;Resource</PackageTags>
     <IsPackable>true</IsPackable>
+    <GenerateSBOM>true</GenerateSBOM>
+    <SbomGenerationFetchLicenseInformation>true</SbomGenerationFetchLicenseInformation>
+    <SbomGenerationManifestInfo>SPDX:3.0</SbomGenerationManifestInfo>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,6 +23,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+    <PackageReference Include="Microsoft.Sbom.Targets" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>

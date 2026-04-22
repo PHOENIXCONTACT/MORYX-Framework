@@ -3,6 +3,9 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <IsPackable>true</IsPackable>
+    <GenerateSBOM>true</GenerateSBOM>
+    <SbomGenerationFetchLicenseInformation>true</SbomGenerationFetchLicenseInformation>
+    <SbomGenerationManifestInfo>SPDX:3.0</SbomGenerationManifestInfo>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>Opc Ua Driver</Description>
     <PackageTags>MORYX;IoT;Manufacturing;Resource;OpcUa</PackageTags>
@@ -10,6 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Client" />
+    <PackageReference Include="Microsoft.Sbom.Targets" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup Label="FilesToCopy">

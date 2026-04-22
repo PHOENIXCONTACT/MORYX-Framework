@@ -4,12 +4,19 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>Moryx.ProcessData.InfluxDbListener</Description>
     <IsPackable>true</IsPackable>
+    <GenerateSBOM>true</GenerateSBOM>
+    <SbomGenerationFetchLicenseInformation>true</SbomGenerationFetchLicenseInformation>
+    <SbomGenerationManifestInfo>SPDX:3.0</SbomGenerationManifestInfo>
   </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="InfluxDB.LineProtocol" />
     <PackageReference Include="InfluxDB.Client" />
+    <PackageReference Include="Microsoft.Sbom.Targets" PrivateAssets="All" />
   </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Moryx.ProcessData\Moryx.ProcessData.csproj" />
   </ItemGroup>
+  
 </Project>

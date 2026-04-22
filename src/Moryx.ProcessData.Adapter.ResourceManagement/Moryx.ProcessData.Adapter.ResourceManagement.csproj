@@ -4,10 +4,19 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>Moryx.ProcessData.Adapter.ResourceManagement</Description>
     <IsPackable>true</IsPackable>
+    <GenerateSBOM>true</GenerateSBOM>
+    <SbomGenerationFetchLicenseInformation>true</SbomGenerationFetchLicenseInformation>
+    <SbomGenerationManifestInfo>SPDX:3.0</SbomGenerationManifestInfo>
   </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Sbom.Targets" PrivateAssets="All" />
+  </ItemGroup>
+  
   <ItemGroup>
 	  <ProjectReference Include="..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj" />
 	  <ProjectReference Include="..\Moryx.ProcessData\Moryx.ProcessData.csproj" />
 	  <ProjectReference Include="..\Moryx.Runtime\Moryx.Runtime.csproj" />
   </ItemGroup>
+
 </Project>

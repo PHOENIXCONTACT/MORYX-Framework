@@ -1,13 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <Description>Default or base implementations for simulated drivers of common interfaces</Description>
     <IsPackable>true</IsPackable>
+    <GenerateSBOM>true</GenerateSBOM>
+    <SbomGenerationFetchLicenseInformation>true</SbomGenerationFetchLicenseInformation>
+    <SbomGenerationManifestInfo>SPDX:3.0</SbomGenerationManifestInfo>
     <PackageTags>MORYX;IoT;Manufacturing;Resource;Simulation</PackageTags>
   </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Moryx.ControlSystem\Moryx.ControlSystem.csproj" />
+    <PackageReference Include="Microsoft.Sbom.Targets" PrivateAssets="All" />
   </ItemGroup>
+
 </Project>

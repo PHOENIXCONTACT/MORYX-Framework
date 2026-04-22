@@ -4,6 +4,9 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>Moryx.Operators.Management</Description>
     <IsPackable>true</IsPackable>
+    <GenerateSBOM>true</GenerateSBOM>
+    <SbomGenerationFetchLicenseInformation>true</SbomGenerationFetchLicenseInformation>
+    <SbomGenerationManifestInfo>SPDX:3.0</SbomGenerationManifestInfo>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
@@ -12,6 +15,7 @@
       <TreatAsUsed>true</TreatAsUsed>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Configuration.Json"/>
+    <PackageReference Include="Microsoft.Sbom.Targets" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>

@@ -4,11 +4,15 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>Mqtt Driver, which can listen to several Topics, where the messageType can be specified.</Description>
     <IsPackable>true</IsPackable>
+    <GenerateSBOM>true</GenerateSBOM>
+    <SbomGenerationFetchLicenseInformation>true</SbomGenerationFetchLicenseInformation>
+    <SbomGenerationManifestInfo>SPDX:3.0</SbomGenerationManifestInfo>
     <PackageTags>MORYX;IoT;Manufacturing;Resource;Mqtt</PackageTags>
   </PropertyGroup>
   
   <ItemGroup>
     <PackageReference Include="MQTTnet" />
+    <PackageReference Include="Microsoft.Sbom.Targets" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>

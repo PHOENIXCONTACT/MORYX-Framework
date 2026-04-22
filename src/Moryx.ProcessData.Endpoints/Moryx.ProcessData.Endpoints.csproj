@@ -2,13 +2,23 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <IsPackable>true</IsPackable>
+    <GenerateSBOM>true</GenerateSBOM>
+    <SbomGenerationFetchLicenseInformation>true</SbomGenerationFetchLicenseInformation>
+    <SbomGenerationManifestInfo>SPDX:3.0</SbomGenerationManifestInfo>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Sbom.Targets" PrivateAssets="All" />
+  </ItemGroup>
+
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj" />
     <ProjectReference Include="..\Moryx.Notifications\Moryx.Notifications.csproj" />
     <ProjectReference Include="..\Moryx.ProcessData.Monitor\Moryx.ProcessData.Monitor.csproj" />
   </ItemGroup>
+
 </Project>

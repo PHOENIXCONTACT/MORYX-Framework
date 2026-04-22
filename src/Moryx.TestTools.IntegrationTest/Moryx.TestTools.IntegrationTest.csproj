@@ -6,10 +6,14 @@
     <CreatePackage>true</CreatePackage>
     <PackageTags>MORYX;Tests;IntegrationTest</PackageTags>
     <IsPackable>true</IsPackable>
+    <GenerateSBOM>true</GenerateSBOM>
+    <SbomGenerationFetchLicenseInformation>true</SbomGenerationFetchLicenseInformation>
+    <SbomGenerationManifestInfo>SPDX:3.0</SbomGenerationManifestInfo>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Moq"/>
+    <PackageReference Include="Microsoft.Sbom.Targets" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>

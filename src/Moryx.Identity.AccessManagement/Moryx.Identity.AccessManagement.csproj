@@ -6,6 +6,9 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>MORYX Identity and Access Management (IAM) Module</Description>
     <IsPackable>true</IsPackable>
+    <GenerateSBOM>true</GenerateSBOM>
+    <SbomGenerationFetchLicenseInformation>true</SbomGenerationFetchLicenseInformation>
+    <SbomGenerationManifestInfo>SPDX:3.0</SbomGenerationManifestInfo>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,6 +18,7 @@
   
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Sbom.Targets" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>

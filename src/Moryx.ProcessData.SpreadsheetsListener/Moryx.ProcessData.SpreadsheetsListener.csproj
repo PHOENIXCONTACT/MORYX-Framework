@@ -4,11 +4,18 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>Moryx.ProcessData.SpreadsheetsListener</Description>
     <IsPackable>true</IsPackable>
+    <GenerateSBOM>true</GenerateSBOM>
+    <SbomGenerationFetchLicenseInformation>true</SbomGenerationFetchLicenseInformation>
+    <SbomGenerationManifestInfo>SPDX:3.0</SbomGenerationManifestInfo>
   </PropertyGroup>
+  
   <ItemGroup>
     <PackageReference Include="CsvHelper" />
+    <PackageReference Include="Microsoft.Sbom.Targets" PrivateAssets="All" />
   </ItemGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\Moryx.ProcessData\Moryx.ProcessData.csproj" />
   </ItemGroup>
+
 </Project>
