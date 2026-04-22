@@ -2,6 +2,13 @@
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
+	<GenerateSBOM>true</GenerateSBOM>
+    <SbomGenerationManifestInfo>SPDX:3.0</SbomGenerationManifestInfo>
+    <SbomGenerationFetchLicenseInformation>true</SbomGenerationFetchLicenseInformation>
+	<SbomGenerationEnablePackageMetadataParsing>true</SbomGenerationEnablePackageMetadataParsing>
+    <SbomGenerationPackageSupplier>Phoenix Contact</SbomGenerationPackageSupplier>
+    <SbomGenerationPackageName>Moryx-Framework</SbomGenerationPackageName>
+	<SbomGenerationNamespaceBaseUri>https://sbom.moryx-industry.net</SbomGenerationNamespaceBaseUri>
   </PropertyGroup>
 
 	<PropertyGroup>
