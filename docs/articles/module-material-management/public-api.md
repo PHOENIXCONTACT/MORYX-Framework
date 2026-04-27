@@ -8,19 +8,35 @@ uid: MaterialManagerPublicAPI
 
 The Material Manager module provides infrastructure for managing digital twins of material containers in a cyber-physical system. The public API consists of:
 
-- **IMaterialManagement facade**: Container discovery and registration
+- **IMaterialManagement facade**: Container lifecycle, discovery, and event publishing
 - **Resource interfaces**: `IMaterialContainer`, `IOrderMaterialContainer`, `IOperatorMaterialContainer`, `IProductMaterialContainer`
-- **Hook plugin system**: Extensible validation and side-effect handling for linking operations
-- **Event-driven linking**: Containers emit linking events; hooks can inject validation and side-effects
+- **Two-phase linking API**: `GetLinkingRequirementsAsync()` for validation, `LinkToOrderAsync()` for execution (ADR: Material Manager Linking Flow)
+- **Hook plugin system**: Extensible validation and side-effect handling via configuration-driven plugins (ADR: Material Manager Hook Plugin System)
+- **Event-driven architecture**: Containers emit events; internal module listener orchestrates hook execution via factory pattern
+- **Full lineage tracking**: Split/merge operations with complete genealogy preservation
+
+---
+
+## Architectural Decisions Requiring ADR
+
+The following design decisions should be formalized in Architectural Decision Records:
+
+- **ADR: Material Manager Linking Flow** — Two-phase separation of validation (GetLinkingRequirementsAsync) and execution (LinkToOrderAsync) for async processing and user interaction
+- **ADR: Material Manager Hook Plugin System** — Factory-based, configuration-driven hook instantiation with sequential priority-ordered execution
+- **ADR: Material Manager Hook Priorities** — How hook priorities enable deterministic execution and state inspection across multiple hook instances
+
+---
 
 ## Core Design Principles
 
 1. **Containers are Resources**: `IMaterialContainer` extends `IResource` and is part of the physical/digital system
-2. **Linking on Resources**: Link operations happen on container resource instances, not via facade
+2. **Linking on Resources**: Link operations happen on container resource instances; facade provides extension methods for orchestrated flows
 3. **Polymorphic Container Interfaces**: Different interfaces for different linking purposes (orders, operators, products)
-4. **Capability-based Constraints**: Container capabilities match product type requirements using MORYX capability system
-5. **Event-Driven Hook Processing**: Hooks subscribe to linking events and inject validation/side-effects via context
-6. **Full Lineage Preservation**: All material movement (split/merge) is fully traceable
+4. **Two-Phase Linking**: Separate validation (requirements collection) from execution to enable async processing and user interaction
+5. **Event-Driven Hook Processing**: Internal module listener subscribes to container events; configures hooks via factory pattern
+6. **Sequential Hook Execution**: Hooks execute in priority order with shared context mutation; exception-safe
+7. **Capability-based Constraints**: Container capabilities match product type requirements using MORYX capability system
+8. **Full Lineage Preservation**: All material movement (split/merge) is fully traceable
 
 ---
 
@@ -203,16 +219,43 @@ public interface IOrderMaterialContainer : IMaterialContainer
     event EventHandler<UnlinkedOrderEventArgs> UnlinkedOrder;
 
     /// <summary>
-    /// Attempt to link this container to an order
+    /// Phase 1: Validate linking and collect requirements from hooks
+    /// This is the first step in a two-phase linking flow (ADR: Material Manager Linking Flow)
+    ///
+    /// Fires BeginLinkingOrder event where hook plugins can:
+    /// - Examine the container and order
+    /// - Inject validation blocks (IsBlocking = true)
+    /// - Add input requirements (e.g., operator acknowledgment)
+    /// - Add tracing/context data
     ///
     /// Flow:
-    /// 1. Fires BeginLinkingOrder event for hook plugins to modify LinkingContext
-    /// 2. Waits for all hook plugins to complete (async)
-    /// 3. Checks if any hook has IsBlocking = true
-    /// 4. If blocked or input not provided, returns LinkResult with failed status
-    /// 5. If successful, performs the link and fires LinkedOrder event
+    /// 1. Fires BeginLinkingOrder event
+    /// 2. Waits for all configured hooks to complete (sequential by priority)
+    /// 3. Collects any exceptions and logs them (fails gracefully)
+    /// 4. Returns LinkResult with context containing all hook requirements
     ///
-    /// Returns LinkResult indicating success/failure and any blocking hooks
+    /// Returns LinkResult.Success = false if any hook blocks or required input is missing.
+    /// The returned context is used in phase 2 after user provides required input.
+    /// </summary>
+    Task<LinkResult> GetLinkingRequirementsAsync(
+        Order order,
+        CancellationToken ct = default);
+
+    /// <summary>
+    /// Phase 2: Execute the linking with hook requirements satisfied
+    /// This is the second step in a two-phase linking flow (ADR: Material Manager Linking Flow)
+    ///
+    /// Assumes the LinkingContext has been collected from GetLinkingRequirementsAsync
+    /// and all hook requirements (acknowledgments, inputs) have been fulfilled by the caller.
+    /// Hooks are NOT invoked again; this is purely execution.
+    ///
+    /// Flow:
+    /// 1. Validates that context is provided
+    /// 2. Performs the actual link: LinkedOrder = order
+    /// 3. Fires LinkedOrder event for side-effects and audit trail
+    /// 4. Records linking action in material history
+    ///
+    /// Returns LinkResult.Success = true if linking completed.
     /// </summary>
     Task<LinkResult> LinkToOrderAsync(
         Order order,
@@ -222,7 +265,18 @@ public interface IOrderMaterialContainer : IMaterialContainer
     /// <summary>
     /// Attempt to unlink this container from its currently linked order
     ///
-    /// Flow similar to LinkToOrderAsync via BeginUnlinkingOrder event
+    /// Similar two-phase flow pattern:
+    /// 1. GetUnlinkingRequirementsAsync() - fires BeginUnlinkingOrder, collects hook requirements
+    /// 2. UnlinkFromOrderAsync() - executes with fulfilled requirements
+    /// Hooks run only in the requirements phase, not execution.
+    /// </summary>
+    Task<LinkResult> GetUnlinkingRequirementsAsync(
+        CancellationToken ct = default);
+
+    /// <summary>
+    /// Attempt to unlink this container from its currently linked order
+    ///
+    /// Phase 2 of unlinking: Executes the unlinking after requirements are satisfied.
     /// </summary>
     Task<UnlinkResult> UnlinkFromOrderAsync(
         UnlinkingContext context,
@@ -264,8 +318,14 @@ public interface IOperatorMaterialContainer : IMaterialContainer
     event EventHandler<UnlinkedOperatorEventArgs> UnlinkedOperator;
 
     /// <summary>
-    /// Attempt to link this container to an operator
-    /// Flow matches LinkToOrderAsync
+    /// Phase 1: Validate operator linking and collect hook requirements
+    /// </summary>
+    Task<LinkResult> GetLinkingRequirementsAsync(
+        Operator @operator,
+        CancellationToken ct = default);
+
+    /// <summary>
+    /// Phase 2: Execute the linking to operator
     /// </summary>
     Task<LinkResult> LinkToOperatorAsync(
         Operator @operator,
@@ -273,7 +333,13 @@ public interface IOperatorMaterialContainer : IMaterialContainer
         CancellationToken ct = default);
 
     /// <summary>
-    /// Attempt to unlink this container from its currently linked operator
+    /// Phase 1: Validate operator unlinking and collect hook requirements
+    /// </summary>
+    Task<LinkResult> GetUnlinkingRequirementsAsync(
+        CancellationToken ct = default);
+
+    /// <summary>
+    /// Phase 2: Execute the unlinking from operator
     /// </summary>
     Task<UnlinkResult> UnlinkFromOperatorAsync(
         UnlinkingContext context,
@@ -315,8 +381,14 @@ public interface IProductMaterialContainer : IMaterialContainer
     event EventHandler<UnlinkedProductEventArgs> UnlinkedProduct;
 
     /// <summary>
-    /// Attempt to link this container to a product
-    /// Flow matches LinkToOrderAsync
+    /// Phase 1: Validate product linking and collect hook requirements
+    /// </summary>
+    Task<LinkResult> GetLinkingRequirementsAsync(
+        ProductType product,
+        CancellationToken ct = default);
+
+    /// <summary>
+    /// Phase 2: Execute the linking to product
     /// </summary>
     Task<LinkResult> LinkToProductAsync(
         ProductType product,
@@ -324,7 +396,13 @@ public interface IProductMaterialContainer : IMaterialContainer
         CancellationToken ct = default);
 
     /// <summary>
-    /// Attempt to unlink this container from its currently linked product
+    /// Phase 1: Validate product unlinking and collect hook requirements
+    /// </summary>
+    Task<LinkResult> GetUnlinkingRequirementsAsync(
+        CancellationToken ct = default);
+
+    /// <summary>
+    /// Phase 2: Execute the unlinking from product
     /// </summary>
     Task<UnlinkResult> UnlinkFromProductAsync(
         UnlinkingContext context,
@@ -339,31 +417,34 @@ public interface IProductMaterialContainer : IMaterialContainer
 ```csharp
 /// <summary>
 /// Context for a linking operation
-/// Modified by hook plugins during BeginLinking* events to inject validation, side-effects, and UI inputs
-/// Entry Format serialization only happens at the REST API boundary
+/// Modified by hook plugins during GetLinkingRequirementsAsync to inject validation, side-effects, and input requirements
+/// Entry Format serialization of hook.Data happens only at the REST API boundary
 /// </summary>
 public class LinkingContext
 {
     /// <summary>
     /// Whether this linking operation is manual (initiated by operator) or automatic (workflow)
+    /// Hooks may use this to apply different validation logic
     /// </summary>
     public bool IsManual { get; set; }
 
     /// <summary>
-    /// Collection of hooks that should be applied to this linking operation
-    /// Populated and modified by hook plugins when BeginLinking* event fires
+    /// Collection of hooks that have been applied to this linking operation
+    /// Populated by configured hook plugins during GetLinkingRequirementsAsync phase
+    /// Each hook can inject blocks, input requirements, or tracing data
     /// </summary>
     public ICollection<LinkingHook> Hooks { get; } = new List<LinkingHook>();
 
     /// <summary>
     /// Convenience flag: true if any hook has IsBlocking = true
-    /// Checked after all hooks complete to determine success/failure
+    /// Checked after all hooks complete to determine LinkResult.Success
     /// </summary>
     public bool IsBlocked => Hooks.Any(h => h.IsBlocking);
 
     /// <summary>
-    /// Optional custom data for the operation
-    /// Will be serialized to Entry format at REST API boundary only
+    /// Optional custom metadata for the operation
+    /// Examples: user ID, timestamp, batch reference
+    /// Not typically used; hook.Data is preferred for hook-specific data
     /// </summary>
     public object? CustomData { get; set; }
 }
@@ -389,6 +470,7 @@ public class LinkResult
 
 /// <summary>
 /// Context for an unlinking operation
+/// Modified by hook plugins during GetUnlinkingRequirementsAsync to inject validation and requirements
 /// </summary>
 public class UnlinkingContext
 {
@@ -399,6 +481,7 @@ public class UnlinkingContext
 
     /// <summary>
     /// Collection of hooks to apply to unlinking
+    /// Populated by hook plugins during GetUnlinkingRequirementsAsync phase
     /// </summary>
     public ICollection<LinkingHook> Hooks { get; } = new List<LinkingHook>();
 
@@ -408,7 +491,7 @@ public class UnlinkingContext
     public bool IsBlocked => Hooks.Any(h => h.IsBlocking);
 
     /// <summary>
-    /// Optional custom data for the audit trail
+    /// Optional custom metadata for audit trail
     /// </summary>
     public object? CustomData { get; set; }
 }
@@ -432,7 +515,7 @@ public class UnlinkResult
 
 /// <summary>
 /// A validation/side-effect hook attached to a linking operation
-/// Injected by hook plugins when BeginLinking* event fires
+/// Injected by hook plugins during the requirements phase (BeginLinking* event)
 /// </summary>
 public class LinkingHook
 {
@@ -451,15 +534,22 @@ public class LinkingHook
     /// <summary>
     /// Optional message explaining the block or providing context
     /// Example: "Critical area - operator acknowledgment required"
+    /// Displayed to the user when the linking is blocked or input is required
     /// </summary>
     public string? Remark { get; set; }
 
     /// <summary>
-    /// Optional user input required by this hook
-    /// Can be any type (e.g., OperatorAcknowledgment)
-    /// Serialized to Entry format only at REST API boundary
+    /// Hook-specific data serving multiple purposes:
+    /// - User input requirement: e.g., OperatorAcknowledgment object for the UI to fill
+    /// - Tracing/context information: e.g., readonly metadata for automatic processing
+    /// - Prefilled context: e.g., readonly objects providing business logic context
+    ///
+    /// This field is mutable by the hook and by the caller between phases.
+    /// Serialized to Entry format only at the REST API boundary for UI consumption/modification.
+    /// When returned from GetLinkingRequirementsAsync, contains uninitialized user input objects.
+    /// When passed to LinkToOrderAsync phase 2, contains user-provided values.
     /// </summary>
-    public object? Input { get; set; }
+    public object? Data { get; set; }
 }
 ```
 
@@ -764,25 +854,35 @@ public class UnlinkedOrderEventArgs : EventArgs
 
 ## Hook Plugin System
 
-Hook plugins are registered in the dependency injection container with the `[Plugin]` attribute and subscribe to container events. They are strongly typed by the domain construct they handle.
+### Architecture (ADR: Material Manager Hook Plugin System)
 
-### Order Link Hook Interface
+Hook plugins are registered in the dependency injection container with the `[Plugin]` attribute. The execution model is:
+
+1. **Event-driven subscription**: Container resource fires `BeginLinking*` events
+2. **Internal orchestration**: Material Manager module's internal listener subscribes to these events
+3. **Config-based instantiation**: On event, the listener uses a factory to create transient hook instances from `ModuleConfig`
+4. **Sequential execution**: Hooks execute in configuration order (sorted by priority)
+5. **Exception handling**: Exceptions are caught and logged; hooks fail gracefully without interrupting others
+6. **Context mutation**: All hooks operate on the same context, mutations are shared across all plugins
+
+### Hook Plugin Interfaces
+
+Hook plugins are strongly typed by the domain construct they handle (Order, Operator, Product). Each implements `IConfiguredModulePlugin<TConfig>` for factory-based creation.
+
+#### Order Link Hook Interface
 
 ```csharp
 /// <summary>
-/// Plugin interface for handling order linking hooks
-/// Registered via [Plugin] attribute in Module initialization
+/// Plugin interface for order-linking validations and side-effects
+/// Registered with [Plugin] attribute and discovered via IConfigBasedComponentSelector factory
+/// Hooks run only during the requirements phase (GetLinkingRequirementsAsync)
 /// </summary>
 public interface IOrderMaterialLinkHook
 {
     /// <summary>
-    /// Hook name for audit trail identification
-    /// </summary>
-    string HookName { get; }
-
-    /// <summary>
-    /// Called when a BeginLinkingOrder event fires
-    /// Hook can inspect the context and inject blocks, side-effects, or input requirements
+    /// Called when GetLinkingRequirementsAsync fires BeginLinkingOrder event
+    /// Hook can inspect container and order, then mutate context to inject validation/requirements
+    /// Exceptions are caught and logged; hook execution continues
     /// </summary>
     Task OnBeginLinkingOrderAsync(
         IOrderMaterialContainer container,
@@ -791,7 +891,8 @@ public interface IOrderMaterialLinkHook
         CancellationToken ct = default);
 
     /// <summary>
-    /// Called when a BeginUnlinkingOrder event fires
+    /// Called when GetUnlinkingRequirementsAsync fires BeginUnlinkingOrder event
+    /// Hook can block the unlinking or add audit requirements
     /// </summary>
     Task OnBeginUnlinkingOrderAsync(
         IOrderMaterialContainer container,
@@ -799,19 +900,21 @@ public interface IOrderMaterialLinkHook
         CancellationToken ct = default);
 
     /// <summary>
-    /// Optional: Called after successful linking for side-effects
+    /// Optional hook: Called after successful LinkToOrderAsync for side-effects
+    /// Examples: audit logging, external system notification, state machine transitions
+    /// NOT executed during requirements phase
     /// </summary>
     Task OnOrderLinkedAsync(
         IOrderMaterialContainer container,
         Order order,
-        CancellationToken ct = default);
+        CancellationToken ct = default) => Task.CompletedTask;
 
     /// <summary>
-    /// Optional: Called after successful unlinking for side-effects
+    /// Optional hook: Called after successful UnlinkFromOrderAsync for side-effects
     /// </summary>
     Task OnOrderUnlinkedAsync(
         IOrderMaterialContainer container,
-        CancellationToken ct = default);
+        CancellationToken ct = default) => Task.CompletedTask;
 }
 
 /// <summary>
@@ -821,13 +924,73 @@ public interface IOperatorMaterialLinkHook { /* ... */ }
 public interface IProductMaterialLinkHook { /* ... */ }
 ```
 
+### Hook Configuration
+
+Hooks are configured in `ModuleConfig` with plugin-specific settings and priorities:
+
+```csharp
+[DataContract]
+public class ModuleConfig : ConfigBase
+{
+    [DataMember]
+    [PluginConfigs(typeof(IOrderMaterialLinkHook))]
+    public List<OrderMaterialLinkHookConfig> OrderLinkingHooks { get; set; } = new();
+
+    [DataMember]
+    [PluginConfigs(typeof(IOperatorMaterialLinkHook))]
+    public List<OperatorMaterialLinkHookConfig> OperatorLinkingHooks { get; set; } = new();
+
+    [DataMember]
+    [PluginConfigs(typeof(IProductMaterialLinkHook))]
+    public List<ProductMaterialLinkHookConfig> ProductLinkingHooks { get; set; } = new();
+}
+```
+
+### Hook Configuration Base
+
+```csharp
+[DataContract]
+public abstract class MaterialLinkHookConfigBase : IPluginConfig
+{
+    [DataMember]
+    public string PluginName { get; set; }
+
+    /// <summary>
+    /// Execution priority for this hook instance (0-100)
+    /// Lower numbers execute first; allows hooks to reason about state
+    /// ADR: Material Manager Hook Priorities
+    /// </summary>
+    [DataMember]
+    public int Priority { get; set; } = 50;
+}
+
+[DataContract]
+public class OrderMaterialLinkHookConfig : MaterialLinkHookConfigBase
+{
+    /// <summary>
+    /// Example: Critical storage locations that require acknowledgment
+    /// Can use custom PossibleValuesAttribute to list available IContainerStorage resources
+    /// </summary>
+    [DataMember]
+    public List<long> CriticalAreaStorageResourceIds { get; set; } = new();
+}
+```
+
 ### Example Hook Implementation
 
 ```csharp
 [Plugin(LifeCycle.Transient, typeof(IOrderMaterialLinkHook), Name = nameof(CriticalAreaAcknowledgmentHook))]
-public class CriticalAreaAcknowledgmentHook : IOrderMaterialLinkHook
+public class CriticalAreaAcknowledgmentHook : IOrderMaterialLinkHook, IConfiguredModulePlugin<OrderMaterialLinkHookConfig>
 {
-    public string HookName => nameof(CriticalAreaAcknowledgmentHook);
+    private OrderMaterialLinkHookConfig _config;
+
+    /// <summary>
+    /// Factory injection: called by IConfigBasedComponentSelector before use
+    /// </summary>
+    public void Initialize(OrderMaterialLinkHookConfig config)
+    {
+        _config = config;
+    }
 
     public async Task OnBeginLinkingOrderAsync(
         IOrderMaterialContainer container,
@@ -835,26 +998,76 @@ public class CriticalAreaAcknowledgmentHook : IOrderMaterialLinkHook
         LinkingContext context,
         CancellationToken ct = default)
     {
-        // Check if this is a critical area (e.g., based on storage location)
-        var isCriticalArea = CheckIfCritical(container.Storage);
-
-        if (isCriticalArea && context.IsManual)
+        // Check if this is a critical area based on configuration
+        if (_config.CriticalAreaStorageResourceIds.Contains(container.Storage?.Id ?? 0) && context.IsManual)
         {
             // Require operator acknowledgment
             var hook = new LinkingHook
             {
-                Name = HookName,
-                IsBlocking = false, // Will become blocking if not resolved
-                Remark = "Critical area - operator acknowledgment required",
-                Input = new OperatorAcknowledgment(),
-                InputEntry = new Entry { /* ... */ }
+                Name = nameof(CriticalAreaAcknowledgmentHook),
+                IsBlocking = false,  // Initially not blocking
+                Remark = "Critical area detected - operator acknowledgment required",
+                Data = new OperatorAcknowledgment()  // Empty object for UI to fill
             };
 
             context.Hooks.Add(hook);
         }
     }
 
-    // ... other hook methods
+    public Task OnBeginUnlinkingOrderAsync(
+        IOrderMaterialContainer container,
+        UnlinkingContext context,
+        CancellationToken ct = default)
+    {
+        // Similar pattern for unlinking
+        return Task.CompletedTask;
+    }
+
+    public Task OnOrderLinkedAsync(
+        IOrderMaterialContainer container,
+        Order order,
+        CancellationToken ct = default)
+    {
+        // Side-effect: audit trail or external notification
+        return Task.CompletedTask;
+    }
+
+    public Task OnOrderUnlinkedAsync(
+        IOrderMaterialContainer container,
+        CancellationToken ct = default)
+    {
+        // Side-effect: cleanup or notification
+        return Task.CompletedTask;
+    }
+}
+```
+
+### Data Objects for Hook Input
+
+Hook plugins can use hook.Data to request input from the user:
+
+```csharp
+[DataContract]
+public class OperatorAcknowledgment
+{
+    /// <summary>
+    /// Operator identifier/badge code
+    /// Set by UI after user provides acknowledgment
+    /// </summary>
+    [DataMember]
+    public string OperatorId { get; set; }
+
+    /// <summary>
+    /// Optional reason for acknowledgment
+    /// </summary>
+    [DataMember]
+    public string? Reason { get; set; }
+
+    /// <summary>
+    /// Timestamp added by the system
+    /// </summary>
+    [DataMember]
+    public DateTime AcknowledgedAt { get; set; } = DateTime.UtcNow;
 }
 ```
 
@@ -882,14 +1095,68 @@ public class CriticalAreaAcknowledgmentHook : IOrderMaterialLinkHook
 
 ---
 
+## Two-Phase Linking Flow (ADR: Material Manager Linking Flow)
+
+Linking operations use a two-phase pattern to separate validation from execution. This enables asynchronous hook processing and user interaction:
+
+### Phase 1: Collect Requirements
+
+```csharp
+// Get hook requirements and validation blocks
+var requirements = await container.GetLinkingRequirementsAsync(order, ct);
+
+if (!requirements.Success)
+{
+    // Linking blocked by hooks, or input required
+    foreach (var hook in requirements.Context.Hooks.Where(h => h.IsBlocking))
+    {
+        Console.WriteLine($"Blocked by: {hook.Name} - {hook.Remark}");
+    }
+
+    var inputHooks = requirements.Context.Hooks.Where(h => h.Data != null).ToList();
+    if (inputHooks.Any())
+    {
+        // Serialize hooks[x].Data to Entry format, send to UI for user input
+        var hookData = EntryConvert.EncodeObject(inputHooks);
+        await userInterface.RequestInputAsync(hookData);
+
+        // User provides input, callbacks populate requirements.Context.Hooks[x].Data
+    }
+}
+```
+
+### Phase 2: Execute Linking
+
+```csharp
+// After requirements satisfied and input collected, execute the link
+var result = await container.LinkToOrderAsync(order, requirements.Context, ct);
+
+if (result.Success)
+{
+    // Linking complete, LinkedOrder event fired, audit trail recorded
+    Console.WriteLine($"Container {container.Name} linked to {order.Number}");
+}
+```
+
+### Key Design Decisions
+
+- **Hooks run only in Phase 1**: No re-evaluation during Phase 2 execution
+- **Context is mutable**: All hooks work on the same context object; mutations are shared
+- **Data field is flexible**: Can contain user input, tracing info, readonly context, or prefilled metadata
+- **Sequential execution by priority**: Hooks execute in configuration order, allowing state inspection
+- **Exception handling**: Hook exceptions are caught and logged; other hooks continue
+
+---
+
 ## Entry Format & REST API Serialization
 
 Entry Format serialization is used **only at the REST API boundary**, not within business models:
 
 - **Business models** (facade, interfaces, contexts) use strongly typed C# objects
-- **REST endpoints** convert these objects to `Entry` format using `EntryConvert.EncodeObject()`
-- **Audit trail** stores `Entry?` representation of `LinkingContext/UnlinkingContext` for full reconstruction
-- **Hook plugin inputs** (e.g., `OperatorAcknowledgment`) are serialized via Entry Format only when returned to clients
+- **REST endpoints** receive `LinkingContext` and convert `LinkingHook.Data` objects to `Entry` format using `EntryConvert.EncodeObject()`
+- **UI interaction**: Hook data is serialized to Entry format, sent to UI for user input, then deserialized back
+- **Audit trail** stores `Entry?` representation of hook data for full reconstruction and traceability
+- **Hook plugin implementation** works only with strongly typed C# objects (Entry Format is transparent to hooks)
 
 This separation maintains type safety in code while providing flexible serialization for UI/persistence.
 
