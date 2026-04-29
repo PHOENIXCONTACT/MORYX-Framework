@@ -1,186 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
-    Microsoft ResX Schema 
-    
-    Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
-    associated with the data types.
-    
-    Example:
-    
-    ... ado.net/XML headers & schema ...
-    <resheader name="resmimetype">text/microsoft-resx</resheader>
-    <resheader name="version">2.0</resheader>
-    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
-    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[base64 mime encoded serialized .NET Framework object]</value>
-    </data>
-    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
-        <comment>This is a comment</comment>
-    </data>
-                
-    There are any number of "resheader" rows that contain simple 
-    name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
-    mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
-    extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
-    read any of the formats listed below.
-    
-    mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
-            : and then encoded with base64 encoding.
-    
-    mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-            : and then encoded with base64 encoding.
-
-    mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
-            : using a System.ComponentModel.TypeConverter
-            : and then encoded with base64 encoding.
-    -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <data name="Layout_About" xml:space="preserve">
-    <value>Informazioni</value>
-  </data>
-  <data name="AboutModal_Misc_Company" xml:space="preserve">
-    <value>Azienda</value>
-  </data>
-  <data name="AboutModal_Misc_Configuration" xml:space="preserve">
-    <value>Configurazione</value>
-  </data>
-  <data name="AboutModal_Copyright" xml:space="preserve">
+  <accessability>internal</accessability>
+  <data id="eba62f48-571c-410e-96c8-288b61f82b28" name="AboutModal_Copyright" xml:space="preserve">
     <value>Copyright</value>
+    <comment></comment>
   </data>
-  <data name="AboutModal_Misc_Description" xml:space="preserve">
+  <data id="11e525d8-6cc8-4ada-a58f-95ef7683a0b1" name="AboutModal_Misc_Company" xml:space="preserve">
+    <value>Azienda</value>
+    <comment></comment>
+  </data>
+  <data id="b1b09237-4612-4729-9126-30f3f77b2a88" name="AboutModal_Misc_Configuration" xml:space="preserve">
+    <value>Configurazione</value>
+    <comment></comment>
+  </data>
+  <data id="b927b992-0a7f-44ad-bfb9-d32756af4135" name="AboutModal_Misc_Description" xml:space="preserve">
     <value>Descrizione</value>
+    <comment></comment>
   </data>
-  <data name="Layout_Details" xml:space="preserve">
-    <value>DETTAGLI</value>
-  </data>
-  <data name="Layout_ExitFullscreen" xml:space="preserve">
-    <value>Esci a schermo intero</value>
-  </data>
-  <data name="Layout_FullscreenMode" xml:space="preserve">
-    <value>Modalità a schermo intero</value>
-  </data>
-  <data name="HELP" xml:space="preserve">
-    <value>Aiuto</value>
-  </data>
-  <data name="Layout_Language" xml:space="preserve">
-    <value>Lingua</value>
-  </data>
-  <data name="Layout_Modules" xml:space="preserve">
-    <value>Moduli</value>
-  </data>
-  <data name="Layout_More" xml:space="preserve">
-    <value>Di più</value>
-  </data>
-  <data name="Layout_OperatorMode" xml:space="preserve">
-    <value>Modalità operatore</value>
-  </data>
-  <data name="AboutModal_Misc_Product" xml:space="preserve">
+  <data id="ea4e5864-9e6a-4607-9b3f-ca0ba109672c" name="AboutModal_Misc_Product" xml:space="preserve">
     <value>Prodotto</value>
+    <comment></comment>
   </data>
-  <data name="Layout_Search" xml:space="preserve">
-    <value>Cerca</value>
-  </data>
-  <data name="SETTING_LANGUAGE" xml:space="preserve">
-    <value>Lingua</value>
-  </data>
-  <data name="Layout_SignIn" xml:space="preserve">
-    <value>Accedi</value>
-  </data>
-  <data name="AboutModal_Misc_TargetFramework" xml:space="preserve">
+  <data id="8cb875df-4339-48ac-aaef-28861b948166" name="AboutModal_Misc_TargetFramework" xml:space="preserve">
     <value>Framework di destinazione</value>
+    <comment></comment>
   </data>
-  <data name="AboutModal_Misc_Title" xml:space="preserve">
+  <data id="1ff7f903-1cfe-4b12-a0cc-3ea4bbdfbc60" name="AboutModal_Misc_Title" xml:space="preserve">
     <value>Titolo</value>
+    <comment></comment>
   </data>
-  <data name="TRADEMARK" xml:space="preserve">
-    <value>Marchio registrato</value>
-  </data>
-  <data name="AboutModal_Version" xml:space="preserve">
+  <data id="b28c22fb-7dc5-44c2-a851-1df4fabbf292" name="AboutModal_Version" xml:space="preserve">
     <value>Versione</value>
+    <comment></comment>
   </data>
-  <data name="Layout_Views" xml:space="preserve">
+  <data id="23a7cafa-f0a3-4b72-a912-1647f90fcd63" name="HELP" xml:space="preserve">
+    <value>Aiuto</value>
+    <comment></comment>
+  </data>
+  <data id="2f5b3f7f-5ce1-4cc2-a630-b4b6fbbb7aa3" name="Layout_About" xml:space="preserve">
+    <value>Informazioni</value>
+    <comment></comment>
+  </data>
+  <data id="692b75fd-5e0b-48dd-b1eb-268bef57e214" name="Layout_AdministrationMode" xml:space="preserve">
+    <value>Modalità amministrativa</value>
+    <comment></comment>
+  </data>
+  <data id="4ab6a898-c220-4096-b555-fcad35e687ca" name="Layout_Details" xml:space="preserve">
+    <value>DETTAGLI</value>
+    <comment></comment>
+  </data>
+  <data id="35d5f146-2f35-4879-ae48-df7eb8ebe8aa" name="Layout_ExitFullscreen" xml:space="preserve">
+    <value>Esci a schermo intero</value>
+    <comment></comment>
+  </data>
+  <data id="76cfbda1-d433-4c12-bb58-863ad3e1ca96" name="Layout_FullscreenMode" xml:space="preserve">
+    <value>Modalità a schermo intero</value>
+    <comment></comment>
+  </data>
+  <data id="c1b0fd0a-4a00-4b6c-8fc2-1cd42b017408" name="Layout_Language" xml:space="preserve">
+    <value>Lingua</value>
+    <comment></comment>
+  </data>
+  <data id="8a434391-bf27-4281-b033-3a7aa3dcc5a0" name="Layout_Modules" xml:space="preserve">
+    <value>Moduli</value>
+    <comment></comment>
+  </data>
+  <data id="a0f07147-200e-4231-b3ef-7e99a5b94ad1" name="Layout_More" xml:space="preserve">
+    <value>Di più</value>
+    <comment></comment>
+  </data>
+  <data id="5c585d54-d55a-428e-bd32-768e0b0bfe42" name="Layout_OperatorMode" xml:space="preserve">
+    <value>Modalità operatore</value>
+    <comment></comment>
+  </data>
+  <data id="bef979c0-fa79-4f5f-b907-1ce9a3a65c67" name="Layout_Search" xml:space="preserve">
+    <value>Cerca</value>
+    <comment></comment>
+  </data>
+  <data id="3e9df74c-83ab-4a71-ae67-c36c01a01fa2" name="Layout_SignIn" xml:space="preserve">
+    <value>Accedi</value>
+    <comment></comment>
+  </data>
+  <data id="fd2ad0ef-06ee-430d-bbac-80b3188da9cf" name="Layout_Views" xml:space="preserve">
     <value>Visualizzazioni</value>
+    <comment></comment>
+  </data>
+  <data id="b41e70ae-c08a-4694-a73f-98b7a38656e2" name="SETTING_LANGUAGE" xml:space="preserve">
+    <value>Lingua</value>
+    <comment></comment>
+  </data>
+  <data id="ec21f46f-c891-4de7-8c23-c634e4e7f278" name="TRADEMARK" xml:space="preserve">
+    <value>Marchio registrato</value>
+    <comment></comment>
   </data>
 </root>
