@@ -4,8 +4,8 @@ An architectural decision record (ADR) is a document that captures an important 
 
 | No  | Name                                                                         |
 |-----|------------------------------------------------------------------------------|
-| 005 | [Date and Time Handling](0005-datetime-handling.md)
-| 004 | [Dependency Versioning Policy](0004-dependency-versioning-policy.md)         |
-| 003 | [Export `ResourceProxy` out of Facade](0003-resource-proxies.md)             |
-| 002 | [Prefer `System.Text.Json` over `Newtonsoft.Json`](0002-system-text-json.md) |
-| 001 | [Immutable Jobs](0001-immutable-jobs.md)                                     |
+| 005 | [Date and Time Handling](005-datetime-handling.md)
+| 004 | [Dependency Versioning Policy](004-dependency-versioning-policy.md)         |
+| 003 | [Export `ResourceProxy` out of Facade](003-resource-proxies.md)             |
+| 002 | [Prefer `System.Text.Json` over `Newtonsoft.Json`](002-system-text-json.md) |
+| 001 | [Immutable Jobs](001-immutable-jobs.md)                                     |
