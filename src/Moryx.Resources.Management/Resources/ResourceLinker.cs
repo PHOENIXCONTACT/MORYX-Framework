@@ -11,6 +11,7 @@ using Moryx.Logging;
 using Moryx.Model;
 using Moryx.Model.Repositories;
 using Moryx.Resources.Management.Model;
+using Moryx.Tools;
 using static Moryx.Resources.Management.ResourceReferenceTools;
 
 namespace Moryx.Resources.Management;
@@ -55,9 +56,13 @@ internal class ResourceLinker : IResourceLinker
             {
                 // Get the reference collection
                 var value = (IReferenceCollection)property.GetValue(resource);
-                foreach (var referencedResource in resources)
+                lock (value.UnderlyingCollection)
                 {
-                    value.UnderlyingCollection.Add(referencedResource);
+                    value.UnderlyingCollection.AddRange(resources);
+                }
+                if (value is IReferenceCollectionExtended extended)
+                {
+                    extended.UnderlyingCollectionChanged();
                 }
             }
             // Link a single reference
@@ -323,8 +328,22 @@ internal class ResourceLinker : IResourceLinker
         {
             prop.SetValue(target, value);
         }
-        else if (prop.GetValue(target) is IReferenceCollection collection && !collection.UnderlyingCollection.Contains(value))
-            collection.UnderlyingCollection.Add(value);
+        else if (prop.GetValue(target) is IReferenceCollection collection)
+        {
+            bool collectionChanged = false;
+            lock (collection.UnderlyingCollection)
+            {
+                if (!collection.UnderlyingCollection.Contains(value))
+                {
+                    collectionChanged = true;
+                    collection.UnderlyingCollection.Add(value);
+                }
+            }
+            if(collectionChanged && collection is IReferenceCollectionExtended extended)
+            {
+                extended.UnderlyingCollectionChanged();
+            }
+        }
 
         var backAttr = prop.GetCustomAttribute<ResourceReferenceAttribute>();
         UpdateRelationEntity(relationEntity, backAttr);
@@ -344,9 +363,17 @@ internal class ResourceLinker : IResourceLinker
         {
             prop.SetValue(target, null);
         }
-        else
+        else if (propValue is IReferenceCollection collection)
         {
-            (propValue as IReferenceCollection)?.UnderlyingCollection.Remove(value);
+            bool changed;
+            lock (collection.UnderlyingCollection)
+            {
+                changed = collection.UnderlyingCollection.Remove(value);
+            }
+            if(changed && collection is IReferenceCollectionExtended extended)
+            {
+                extended.UnderlyingCollectionChanged();
+            }
         }
     }
 
@@ -439,10 +466,24 @@ internal class ResourceLinker : IResourceLinker
             return;
 
         // Remove the reference from the property
+        // TODO: Should we really test for IEnumerable and then cast to other types?
+        // This looks like a bad idea to me. Why don't we test for IReferenceCollection?
         if (typeof(IEnumerable<IResource>).IsAssignableFrom(backReference.PropertyType))
         {
-            var referenceCollection = (IReferenceCollection)backReference.GetValue(reference);
-            referenceCollection.UnderlyingCollection.Remove(deletedInstance);
+            var value = backReference.GetValue(reference);
+            
+            if (value is IReferenceCollection referenceCollection)
+            {
+                bool result;
+                lock (referenceCollection.UnderlyingCollection)
+                {
+                    result = referenceCollection.UnderlyingCollection.Remove(deletedInstance);
+                }
+                if (result && referenceCollection is IReferenceCollectionExtended extended)
+                {
+                    extended.UnderlyingCollectionChanged();
+                }
+            }
         }
         else
         {

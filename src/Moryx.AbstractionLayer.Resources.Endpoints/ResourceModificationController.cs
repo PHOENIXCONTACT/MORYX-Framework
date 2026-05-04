@@ -291,7 +291,12 @@ public class ResourceModificationController : ControllerBase
             var property = type.GetProperty(reference.Name);
             if (property.GetValue(instance) is IReferenceCollection asCollection)
             {
+                bool collectionChanged = false;
                 var collection = asCollection.UnderlyingCollection;
+
+                // TODO: find a way to synchronize collection acceess for adding as well
+                // currently we can't do it, because of the await statements.
+
                 // Add new items and update existing ones
                 foreach (var targetModel in reference.Targets)
                 {
@@ -301,6 +306,7 @@ public class ResourceModificationController : ControllerBase
                         // New reference added to the collection
                         target = await FromModel(targetModel, resourcesToSave, cache);
                         collection.Add(target);
+                        collectionChanged = true;
                         resourcesToSave.Add(target.Id);
                     }
                     else
@@ -312,13 +318,23 @@ public class ResourceModificationController : ControllerBase
                 }
                 // Remove deleted items
                 var targetIds = reference.Targets.Select(t => t.Id).Distinct().ToArray();
-                var deletedItems = collection.Where(r => !targetIds.Contains(r.Id)).ToArray();
-                foreach (var deletedItem in deletedItems)
-                    collection.Remove(deletedItem);
-
-                if (deletedItems.Any())
+                lock (collection)
                 {
-                    resourcesToSave.Add(instance.Id);
+                    var deletedItems = collection.Where(r => !targetIds.Contains(r.Id)).ToArray();
+                    foreach (var deletedItem in deletedItems)
+                    {
+                        collectionChanged = true;
+                        collection.Remove(deletedItem);
+                    }
+
+                    if (deletedItems.Any())
+                    {
+                        resourcesToSave.Add(instance.Id);
+                    }
+                    if (collectionChanged && collection is IReferenceCollectionExtended extended)
+                    {
+                        extended.UnderlyingCollectionChanged();
+                    }
                 }
             }
             else

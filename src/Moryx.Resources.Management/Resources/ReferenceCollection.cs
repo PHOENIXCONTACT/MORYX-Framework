@@ -10,7 +10,7 @@ namespace Moryx.Resources.Management;
 /// <summary>
 /// Collection that wraps another collection of references
 /// </summary>
-internal class ReferenceCollection<TResource> : IReferences<TResource>
+internal class ReferenceCollection<TResource> : IReferences<TResource>, IReferenceCollectionExtended
     where TResource : class, IResource
 {
     private readonly Resource _parent;
@@ -113,5 +113,11 @@ internal class ReferenceCollection<TResource> : IReferences<TResource>
         var args = new ReferenceCollectionChangedEventArgs(_parent, _property);
         CollectionChanged?.Invoke(this, args);
     }
+
+    public void UnderlyingCollectionChanged()
+    {
+        RaiseCollectionChanged();
+    }
+
     public event EventHandler<ReferenceCollectionChangedEventArgs> CollectionChanged;
 }

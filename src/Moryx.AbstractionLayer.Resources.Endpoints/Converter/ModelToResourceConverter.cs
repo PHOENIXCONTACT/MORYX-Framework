@@ -8,6 +8,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints;
 
 /// <summary>
 /// Converts ResourceModel to Resource
+/// TODO: Can this be removed? It does not appear to be used
 /// </summary>
 internal class ModelToResourceConverter
 {
@@ -93,34 +94,42 @@ internal class ModelToResourceConverter
             var property = type.GetProperty(reference.Name);
             if (property.GetValue(instance) is IReferenceCollection asCollection)
             {
+                bool collectionChanged = false;
                 var collection = asCollection.UnderlyingCollection;
-                // Add new items and update existing ones
-                foreach (var targetModel in reference.Targets)
+                lock (collection)
                 {
-                    Resource target;
-                    if (targetModel.Id == 0 || collection.All(r => r.Id != targetModel.Id))
+                    // Add new items and update existing ones
+                    foreach (var targetModel in reference.Targets)
                     {
-                        // New reference added to the collection
-                        target = FromModel(targetModel, resourcesToSave);
-                        collection.Add(target);
+                        Resource target;
+                        if (targetModel.Id == 0 || collection.All(r => r.Id != targetModel.Id))
+                        {
+                            // New reference added to the collection
+                            target = FromModel(targetModel, resourcesToSave);
+                            collection.Add(target);
+                            resourcesToSave.Add(instance);
+                        }
+                        else
+                        {
+                            // Element already exists in the collection
+                            target = (Resource)collection.First(r => r.Id == targetModel.Id);
+                            FromModel(targetModel, resourcesToSave, target);
+                        }
+                    }
+                    // Remove deleted items
+                    var targetIds = reference.Targets.Select(t => t.Id).Distinct().ToArray();
+                    var deletedItems = collection.Where(r => !targetIds.Contains(r.Id)).ToArray();
+                    foreach (var deletedItem in deletedItems)
+                        collection.Remove(deletedItem);
+
+                    if (deletedItems.Any())
+                    {
                         resourcesToSave.Add(instance);
                     }
-                    else
-                    {
-                        // Element already exists in the collection
-                        target = (Resource)collection.First(r => r.Id == targetModel.Id);
-                        FromModel(targetModel, resourcesToSave, target);
-                    }
                 }
-                // Remove deleted items
-                var targetIds = reference.Targets.Select(t => t.Id).Distinct().ToArray();
-                var deletedItems = collection.Where(r => !targetIds.Contains(r.Id)).ToArray();
-                foreach (var deletedItem in deletedItems)
-                    collection.Remove(deletedItem);
-
-                if (deletedItems.Any())
+                if(collectionChanged && asCollection is IReferenceCollectionExtended extended)
                 {
-                    resourcesToSave.Add(instance);
+                    extended.UnderlyingCollectionChanged();
                 }
             }
             else
