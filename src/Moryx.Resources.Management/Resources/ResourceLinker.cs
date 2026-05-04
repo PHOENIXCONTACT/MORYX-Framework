@@ -69,11 +69,17 @@ internal class ResourceLinker : IResourceLinker
             else
             {
                 if (resources.Count == 1)
+                {
                     property.SetValue(resource, resources[0]);
+                }
                 else if (resources.Count > 1)
+                {
                     Logger.Log(LogLevel.Warning, "Inconclusive relation: Can not assign property {0} on {1}:{2} from [{3}]. Too many matches!", property.Name, resource.Id, resource.Name, string.Join(",", matches.Select(m => m.ReferenceId)));
+                }
                 else if (matches.Any(m => referenceProperties.All(p => !PropertyMatchesRelation(p, m, Graph.Get(m.ReferenceId)))))
+                {
                     Logger.Log(LogLevel.Warning, "Incompatible relation: Resources from [{0}] with relation type {1} can not be assigned to a property on {2}:{3}.", string.Join(",", matches.Select(m => m.ReferenceId)), matches[0].RelationType, resource.Id, resource.Name);
+                }
             }
         }
     }
@@ -96,8 +102,7 @@ internal class ResourceLinker : IResourceLinker
     private async Task SaveReferences(ReferenceSaverContext context, Resource instance, Dictionary<Resource, ResourceEntity> dict = null)
     {
         var entity = await GetOrCreateEntity(context, instance);
-        if (dict != null)
-            dict.Add(instance, entity);
+        dict?.Add(instance, entity);
 
         var referenceAccessors = (await ResourceRelationAccessor.FromEntity(context.UnitOfWork, entity))
             .Union(ResourceRelationAccessor.FromQueryable(context.CreatedRelations.AsQueryable(), entity))
@@ -119,13 +124,17 @@ internal class ResourceLinker : IResourceLinker
                 // Save a single reference
                 var createdResource = await UpdateSingleReference(context, entity, instance, referenceProperty, typeMatches);
                 if (createdResource != null)
+                {
                     createdResources.Add(createdResource);
+                }
             }
         }
 
         // Recursively save references for new resources
         foreach (var resource in createdResources)
+        {
             await SaveReferences(context, resource, dict);
+        }
     }
 
     /// <inheritdoc />
@@ -140,7 +149,9 @@ internal class ResourceLinker : IResourceLinker
         var created = await UpdateCollectionReference(context, entity, instance, property, typeMatches);
 
         foreach (var resource in created)
+        {
             await SaveReferences(context, resource);
+        }
 
         return context.EntityCache.Keys.Where(i => i.Id == 0).ToList();
     }
@@ -153,7 +164,7 @@ internal class ResourceLinker : IResourceLinker
     /// [ResourceReference(ResourceRelationType.TransportRoute, ResourceReferenceRole.Source)]
     /// public Resource FriendResource { get; set; }
     /// </example>
-    private async Task<Resource> UpdateSingleReference(ReferenceSaverContext context, ResourceEntity entity, Resource resource, PropertyInfo referenceProperty, IReadOnlyList<ResourceRelationAccessor> matches)
+    private static async Task<Resource> UpdateSingleReference(ReferenceSaverContext context, ResourceEntity entity, Resource resource, PropertyInfo referenceProperty, IReadOnlyList<ResourceRelationAccessor> matches)
     {
         var relationRepo = context.UnitOfWork.GetRepository<IResourceRelationRepository>();
 
@@ -161,25 +172,31 @@ internal class ResourceLinker : IResourceLinker
         var referencedResource = value as Resource;
         // Validate if object assigned to the property is a resource
         if (value != null && referencedResource == null)
+        {
             throw new ArgumentException($"Value of property {referenceProperty.Name} on resource {resource.Id}:{resource.GetType().Name} must be a Resource");
+        }
 
         var referenceAtt = referenceProperty.GetCustomAttribute<ResourceReferenceAttribute>();
 
         // Validate if required property is set
         if (referencedResource == null && referenceAtt.IsRequired)
+        {
             throw new ValidationException($"Property {referenceProperty.Name} is flagged 'Required' and was null!");
+        }
 
         // Check if there is a relation that represents this reference
         if (referencedResource != null && matches.Any(m => referencedResource == context.ResolveReferencedResource(m)))
+        {
             return null;
+        }
 
         // Get all references of this resource with the same relation information
         var currentReferences = CurrentReferences(resource, referenceAtt);
 
         // Try to find a match that is not used in any reference
         var relMatch = (from match in matches
-            where currentReferences.All(cr => cr != context.ResolveReferencedResource(match))
-            select match).FirstOrDefault();
+                        where currentReferences.All(cr => cr != context.ResolveReferencedResource(match))
+                        select match).FirstOrDefault();
         var relEntity = relMatch?.Entity;
         if (relEntity == null && referencedResource != null)
         {
@@ -223,7 +240,7 @@ internal class ResourceLinker : IResourceLinker
     /// [ResourceReference(ResourceRelationType.TransportRoute, ResourceReferenceRole.Source)]
     /// public IReferences&lt;Resource&gt; FriendResources { get; set; }
     /// </example>
-    private async Task<IEnumerable<Resource>> UpdateCollectionReference(ReferenceSaverContext context, ResourceEntity entity, Resource resource, PropertyInfo referenceProperty, IReadOnlyList<ResourceRelationAccessor> relationTemplates)
+    private static async Task<IEnumerable<Resource>> UpdateCollectionReference(ReferenceSaverContext context, ResourceEntity entity, Resource resource, PropertyInfo referenceProperty, IReadOnlyList<ResourceRelationAccessor> relationTemplates)
     {
         var relationRepo = context.UnitOfWork.GetRepository<IResourceRelationRepository>();
         var referenceAtt = referenceProperty.GetCustomAttribute<ResourceReferenceAttribute>();
@@ -234,7 +251,9 @@ internal class ResourceLinker : IResourceLinker
 
         // Check required attribute against empty collections
         if (referencedResources.Count == 0 && referenceAtt.IsRequired)
+        {
             throw new ValidationException($"Property {referenceProperty.Name} is flagged 'Required' and was empty!");
+        }
 
         // First delete references that are not used by ANY property of the same configuration
         var currentReferences = CurrentReferences(resource, referenceAtt);
@@ -265,11 +284,11 @@ internal class ResourceLinker : IResourceLinker
     {
         // Get all references of this resource with the same relation information
         var currentReferences = (from property in ReferenceProperties(instance.GetType(), false)
-            let att = property.GetCustomAttribute<ResourceReferenceAttribute>()
-            where att.RelationType == referenceAtt.RelationType
-                  && att.Name == referenceAtt.Name
-                  && att.Role == referenceAtt.Role
-            select property.GetValue(instance)).SelectMany(ExtractAllFromProperty);
+                                 let att = property.GetCustomAttribute<ResourceReferenceAttribute>()
+                                 where att.RelationType == referenceAtt.RelationType
+                                       && att.Name == referenceAtt.Name
+                                       && att.Role == referenceAtt.Role
+                                 select property.GetValue(instance)).SelectMany(ExtractAllFromProperty);
         return new HashSet<IResource>(currentReferences);
     }
 
@@ -280,11 +299,15 @@ internal class ResourceLinker : IResourceLinker
     {
         // Check if it is a single reference
         if (propertyValue is IResource asResource)
+        {
             return [asResource];
+        }
 
         // Otherwise it must be a collection
         if (propertyValue is IEnumerable asEnumerable)
+        {
             return asEnumerable.Cast<IResource>();
+        }
 
         return [];
     }
@@ -296,11 +319,11 @@ internal class ResourceLinker : IResourceLinker
     private static PropertyInfo FindBackLink(Resource target, Resource value, ResourceReferenceAttribute referenceAtt)
     {
         var propOnTarget = (from prop in ReferenceProperties(target.GetType(), false)
-            where IsInstanceOfReference(prop, value)
-            let backAtt = prop.GetCustomAttribute<ResourceReferenceAttribute>()
-            where backAtt.RelationType == referenceAtt.RelationType // Compare relation type
-                  && backAtt.Role != referenceAtt.Role // Validate inverse role
-            select prop).FirstOrDefault();
+                            where IsInstanceOfReference(prop, value)
+                            let backAtt = prop.GetCustomAttribute<ResourceReferenceAttribute>()
+                            where backAtt.RelationType == referenceAtt.RelationType // Compare relation type
+                                  && backAtt.Role != referenceAtt.Role // Validate inverse role
+                            select prop).FirstOrDefault();
         return propOnTarget;
     }
 
@@ -311,7 +334,10 @@ internal class ResourceLinker : IResourceLinker
     {
         var typeLimit = property.PropertyType;
         if (property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(IReferences<>))
+        {
             typeLimit = property.PropertyType.GetGenericArguments()[0];
+        }
+
         return typeLimit.IsInstanceOfType(value);
     }
 
@@ -322,7 +348,9 @@ internal class ResourceLinker : IResourceLinker
     {
         var prop = FindBackLink(target, value, referenceAtt);
         if (prop == null)
+        {
             return; // No back-link -> nothing to do
+        }
         // Update back-link property
         if (prop.PropertyType.IsInstanceOfType(value))
         {
@@ -339,7 +367,7 @@ internal class ResourceLinker : IResourceLinker
                     collection.UnderlyingCollection.Add(value);
                 }
             }
-            if(collectionChanged && collection is IReferenceCollectionExtended extended)
+            if (collectionChanged && collection is IReferenceCollectionExtended extended)
             {
                 extended.UnderlyingCollectionChanged();
             }
@@ -356,7 +384,9 @@ internal class ResourceLinker : IResourceLinker
     {
         var prop = FindBackLink(target, value, referenceAtt);
         if (prop == null)
+        {
             return; // No back-link -> nothing to do
+        }
         // Update property ONLY if it currently points to our resource
         var propValue = prop.GetValue(target);
         if (propValue == value)
@@ -370,7 +400,7 @@ internal class ResourceLinker : IResourceLinker
             {
                 changed = collection.UnderlyingCollection.Remove(value);
             }
-            if(changed && collection is IReferenceCollectionExtended extended)
+            if (changed && collection is IReferenceCollectionExtended extended)
             {
                 extended.UnderlyingCollectionChanged();
             }
@@ -384,7 +414,9 @@ internal class ResourceLinker : IResourceLinker
     {
         // First check if the context contains an entity for the instance
         if (context.EntityCache.TryGetValue(instance, out var cached))
+        {
             return cached;
+        }
 
         ResourceEntity entity;
         if (instance.Id > 0)
@@ -445,9 +477,13 @@ internal class ResourceLinker : IResourceLinker
     private static void UpdateRelationEntity(ResourceRelationEntity relEntity, ResourceReferenceAttribute att)
     {
         if (att.Role == ResourceReferenceRole.Source)
+        {
             relEntity.SourceName = att.Name;
+        }
         else
+        {
             relEntity.TargetName = att.Name;
+        }
     }
 
     /// <inheritdoc />
@@ -456,14 +492,16 @@ internal class ResourceLinker : IResourceLinker
         // Try to find a property on the reference back-linking to the deleted instance
         var type = reference.GetType();
         var backReference = (from property in ReferenceProperties(type, false)
-            // Instead of comparing the resource type we simply look for the object reference
-            let value = property.GetValue(reference)
-            where value == deletedInstance || ((value as IEnumerable<IResource>)?.Contains(deletedInstance) ?? false)
-            select property).FirstOrDefault();
+                             // Instead of comparing the resource type we simply look for the object reference
+                             let value = property.GetValue(reference)
+                             where value == deletedInstance || ((value as IEnumerable<IResource>)?.Contains(deletedInstance) ?? false)
+                             select property).FirstOrDefault();
 
         // If the referenced resource does not define a back reference we don't have to do anything
         if (backReference == null)
+        {
             return;
+        }
 
         // Remove the reference from the property
         // TODO: Should we really test for IEnumerable and then cast to other types?
@@ -471,7 +509,7 @@ internal class ResourceLinker : IResourceLinker
         if (typeof(IEnumerable<IResource>).IsAssignableFrom(backReference.PropertyType))
         {
             var value = backReference.GetValue(reference);
-            
+
             if (value is IReferenceCollection referenceCollection)
             {
                 bool result;
@@ -498,10 +536,10 @@ internal class ResourceLinker : IResourceLinker
     {
         var attribute = property.GetCustomAttribute<ResourceReferenceAttribute>();
         var matches = from relation in relations
-            where relation.Role == attribute.Role
-            where relation.RelationType == attribute.RelationType
-            where relation.Name == attribute.Name
-            select relation;
+                      where relation.Role == attribute.Role
+                      where relation.RelationType == attribute.RelationType
+                      where relation.Name == attribute.Name
+                      select relation;
         return matches;
     }
 
@@ -525,9 +563,9 @@ internal class ResourceLinker : IResourceLinker
         Func<ResourceRelationAccessor, Resource> instanceResolver)
     {
         return from relation in relations
-            let other = instanceResolver(relation)
-            where IsInstanceOfReference(property, other)
-            select relation;
+               let other = instanceResolver(relation)
+               where IsInstanceOfReference(property, other)
+               select relation;
     }
 
     /// <summary>
@@ -548,7 +586,9 @@ internal class ResourceLinker : IResourceLinker
         {
             EntityCache[initialInstance] = entity;
             if (initialInstance.Id == 0)
+            {
                 ResourceLookup[entity] = initialInstance;
+            }
         }
 
         public ReferenceSaverContext(IUnitOfWork uow, IResourceGraph graph)

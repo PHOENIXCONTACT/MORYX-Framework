@@ -10,7 +10,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints;
 /// Converts ResourceModel to Resource
 /// TODO: Can this be removed? It does not appear to be used
 /// </summary>
-internal class ModelToResourceConverter
+internal sealed class ModelToResourceConverter
 {
     /// <summary>
     /// Resource cache to avoid redundant conversions AND make use of WCFs "IsReference" feature
@@ -38,11 +38,15 @@ internal class ModelToResourceConverter
     {
         // Break recursion if we converted this instance already
         // Try to load by real id first
-        if (_resourceCache.ContainsKey(model.Id))
-            return _resourceCache[model.Id];
+        if (_resourceCache.TryGetValue(model.Id, out var value))
+        {
+            return value;
+        }
         // Otherwise by reference id
-        if (model.Id == 0 && _resourceCache.ContainsKey(model.ReferenceId))
-            return _resourceCache[model.ReferenceId];
+        if (model.Id == 0 && _resourceCache.TryGetValue(model.ReferenceId, out var referencedValue))
+        {
+            return referencedValue;
+        }
 
         // Only fetch resource object if it was not given
         if (resource == null)
@@ -54,17 +58,25 @@ internal class ModelToResourceConverter
 
         // Write to cache because following calls might only have an empty reference
         if (model.Id == 0)
+        {
             _resourceCache[model.ReferenceId] = resource;
+        }
         else
+        {
             _resourceCache[model.Id] = resource;
+        }
 
         // Do not copy values from partially loaded models
         if (model.PartiallyLoaded)
+        {
             return resource;
+        }
 
         // Add to list if object was created or modified
         if (model.Id == 0 || model.DifferentFrom(resource, _serialization))
+        {
             resourcesToSave.Add(resource);
+        }
 
         // Copy standard properties
         resource.Name = model.Name;
@@ -89,7 +101,9 @@ internal class ModelToResourceConverter
         {
             // Skip references that were not set
             if (reference.Targets == null)
+            {
                 continue;
+            }
 
             var property = type.GetProperty(reference.Name);
             if (property.GetValue(instance) is IReferenceCollection asCollection)
@@ -120,14 +134,16 @@ internal class ModelToResourceConverter
                     var targetIds = reference.Targets.Select(t => t.Id).Distinct().ToArray();
                     var deletedItems = collection.Where(r => !targetIds.Contains(r.Id)).ToArray();
                     foreach (var deletedItem in deletedItems)
+                    {
                         collection.Remove(deletedItem);
+                    }
 
                     if (deletedItems.Any())
                     {
                         resourcesToSave.Add(instance);
                     }
                 }
-                if(collectionChanged && asCollection is IReferenceCollectionExtended extended)
+                if (collectionChanged && asCollection is IReferenceCollectionExtended extended)
                 {
                     extended.UnderlyingCollectionChanged();
                 }
@@ -139,11 +155,17 @@ internal class ModelToResourceConverter
 
                 Resource target;
                 if (targetModel == null)
+                {
                     target = null;
+                }
                 else if (targetModel.Id == value?.Id)
+                {
                     target = FromModel(targetModel, resourcesToSave, value);
+                }
                 else
+                {
                     target = FromModel(targetModel, resourcesToSave);
+                }
 
                 if (target != value)
                 {
