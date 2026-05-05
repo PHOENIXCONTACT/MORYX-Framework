@@ -67,6 +67,9 @@ To use MORYX to _build your own application_, we recommend to
 
 To quickly get a running MORYX application to _check out the different components_, we offer the [MORYX Demo](https://github.com/PHOENIXCONTACT/MORYX-Demo), a fully functional, simulated production system based on MORYX.
 
+And lastly, to _participate in the development_ of MORYX you can either submit a general feature request as described in our introduction to [Feature Specifications](./docs/requirements/index.md), or contribute your changes directly.
+Please refer to our [guidelines section](https://github.com/PHOENIXCONTACT/MORYX-Home#guidelines) to allow a smooth integration of your proposals.
+
 ## The Ecosystem
 
 Here we list all available packages in the MORYX ecosystem separated into components linking to their documentation.
@@ -125,15 +128,97 @@ Here we list all available packages in the MORYX ecosystem separated into compon
 
 At the core MORYX is a .NET based framework to quickly build three-tier applications. Its architecture is a modular monolith using the service and facade pattern to isolate and decouple functionality. It uses a 2-level Dependency Injection structure to isolate a modules composition and offer a per-module life-cycle with all instances hidden behind the previously mentioned facades. It also offers a range of tools and components to speed up development, increase stability and drastically reduce boilerplate code. To improve flexibility of modules and applications the core has built in support for configuration management as well as plugin loading.
 
-<p align="center">
-    <img src="docs/images/arch-level-1.png" width="400px"/>
-</p>
+```mermaid
+%%{init: { 'theme': 'neutral', "flowchart": { "nodeSpacing ": 8, "diagramPadding": 48, "wrappingWidth": 300, "rankSpacing": 24, "padding": 8 }, "themeVariables": { "fontSize": "11px" } }}%%
+flowchart TB
+  %% MORYX Framework — Simplified High-Level Architecture
+
+  subgraph T1["Presentation Tier"]
+    Browser["Browser / Client"]
+  end
+
+  subgraph T2["Application Tier — ASP.NET Core Web Application"]
+    direction TB
+
+    API["API Layer"]
+
+    subgraph Modules["MORYX Modules"]
+      direction LR
+
+      subgraph M1["Module A"]
+        direction TB
+        CompA["Components"]
+        PlugA["Plugins"]
+      end
+
+      subgraph M2["Module B"]
+        direction TB
+        CompB["Components"]
+      end
+
+      subgraph M3["Module C"]
+        direction TB
+        CompC["Components"]
+      end
+    end
+
+    subgraph Core["MORYX Core"]
+      direction LR
+      ASP["ASP Integration<br/>(Composition in Service Collection)"]
+      ModMgmt["Module Orchestration<br/>(Discovery + Lifecycle + Utilities)"]
+      CfgMgmt["Configuration Management"]
+      PlugInfra["Plugin Infrastructure<br/>(module-internal extensions)"]
+      Launcher["Micro-Frontend Web-Host"]
+      Com["Binary Communication<br/>Infrastructure"]
+    end
+  end
+
+  subgraph T3["Data Tier"]
+    Database["Database / Storage"]
+  end
+
+  %% Tier layout only
+  T1 <--> T2 --> T3
+  API <--> Modules
+
+  %% Module dependency
+  M3 --> M1
+```
 
 Each modules composition is constructed by its own DI-container instance. This makes it possible to dispose the container in order to restart the module and reconstruct the composition with a different configuration or to recover from a fatal error. The `ModuleController` and `Facade` instances are preserved through the lifecycle of the application as part of the level 1 composition. The  Components (_always present_) and plugins (_configurable_) are created when a module is started and disposed when the module stops. For each lifecycle the references of the facade are updated.
 
-<p align="center">
-    <img src="docs/images/arch-level-2.png" width="400px"/>
-</p>
+```mermaid
+%%{init: { 'theme': 'neutral', "flowchart": { "nodeSpacing ": 8, "diagramPadding": 48, "wrappingWidth": 300, "rankSpacing": 24, "padding": 8 }, "themeVariables": { "fontSize": "11px" } }}%%
+flowchart TB
+  %% MORYX Framework — Single Module with Level 2 DI-Container
+
+  Facade["IOtherModuleFacade"]
+
+  subgraph Module["MORYX Module A"]
+    direction TB
+
+    ModCtrl["Module Controller"]
+    ModCfg["Module Configuration"]
+    FacA["Facade A"]
+
+    subgraph DI2["Level 2 DI-Container"]
+      direction TB
+
+      ComponentA["Component A"]
+      ComponentB["Component B"]
+      Plugins["Plugins"]
+    end
+
+    ModCtrl -->|"reads"| ModCfg
+    ModCtrl -->|"activates"| FacA
+    ModCtrl -->|"creates / disposes"| DI2
+    Plugins -. "extend" .-> ComponentA
+  end
+
+  ModCtrl -. "depends on" .-> Facade
+```
+
+If you are interested in diving deeper into the architectural concepts within MORYX and their orchestration the [Architecture Design Guidelines](./docs/articles/development/architecture-design-guidelines.md) offer further reading material.
 
 ## Key Features of the factory automation components
 
