@@ -14,7 +14,7 @@ The different terms for software constructs you will (probably) come across when
 
 The figure provides an overview of the orchestration of the different concepts while the subsequent statements give a first intuition on how their purposes are separated.
 
-![MORYX-Framework](/docs/images/moryx-framework-overview.png)
+![MORYX-Framework](moryx-framework-overview.png)
 
 *Modules* enclose a reusable piece of functionality accessible through their Facades.
 They are the most complex and most powerful entities in the framework.
