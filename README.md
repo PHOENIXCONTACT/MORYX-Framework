@@ -67,6 +67,9 @@ To use MORYX to _build your own application_, we recommend to
 
 To quickly get a running MORYX application to _check out the different components_, we offer the [MORYX Demo](https://github.com/PHOENIXCONTACT/MORYX-Demo), a fully functional, simulated production system based on MORYX.
 
+And lastly, to _participate in the development_ of MORYX you can either submit a general feature request as described in our introduction to [Feature Specifications](./docs/requirements/index.md), or contribute your changes directly.
+Please refer to our [guidelines section](https://github.com/PHOENIXCONTACT/MORYX-Home#guidelines) to allow a smooth integration of your proposals.
+
 ## The Ecosystem
 
 Here we list all available packages in the MORYX ecosystem separated into components linking to their documentation.
@@ -125,15 +128,123 @@ Here we list all available packages in the MORYX ecosystem separated into compon
 
 At the core MORYX is a .NET based framework to quickly build three-tier applications. Its architecture is a modular monolith using the service and facade pattern to isolate and decouple functionality. It uses a 2-level Dependency Injection structure to isolate a modules composition and offer a per-module life-cycle with all instances hidden behind the previously mentioned facades. It also offers a range of tools and components to speed up development, increase stability and drastically reduce boilerplate code. To improve flexibility of modules and applications the core has built in support for configuration management as well as plugin loading.
 
-<p align="center">
-    <img src="docs/images/arch-level-1.png" width="400px"/>
-</p>
-
 Each modules composition is constructed by its own DI-container instance. This makes it possible to dispose the container in order to restart the module and reconstruct the composition with a different configuration or to recover from a fatal error. The `ModuleController` and `Facade` instances are preserved through the lifecycle of the application as part of the level 1 composition. The  Components (_always present_) and plugins (_configurable_) are created when a module is started and disposed when the module stops. For each lifecycle the references of the facade are updated.
 
-<p align="center">
-    <img src="docs/images/arch-level-2.png" width="400px"/>
-</p>
+```mermaid
+flowchart TD
+  %% MORYX Framework — High-Level Architecture
+
+  subgraph T1["Presentation Tier"]
+    Browser["Browser (Client)"]
+  end
+
+  subgraph T2["Application Tier — ASP.NET Core Web Application (Modular Monolith)"]
+    direction TB
+
+    %% API Layer
+    subgraph API["API Layer (ASP.NET Core)"]
+      direction TB
+      Pipeline["Routing / Middleware Pipeline"]
+      DtoMap["HTTP DTOs + Mapping + Validation"]
+      Controllers["Controllers / Endpoints"]      
+
+      Controllers <--> DtoMap
+      Pipeline --> Controllers
+    end
+
+    %% Module A
+    subgraph M1["Module A"]
+      direction LR
+      ModCfgA["Module Configuration"]
+      ModCtrlA["Module Controller<br>(Lifecycle + DI)"]
+      FacA["Facade A<br>(public API boundary)"]
+      CompA["Component(s) A<br>(internal implementation)"]
+      PlugA["Plugins A<br>(module-specific extensions)"]
+      RepoA["Repository A"]
+
+      ModCtrlA --> ModCfgA
+      ModCtrlA --> FacA
+      ModCtrlA --> CompA
+      FacA --> CompA
+      PlugA -. "extends" .-> CompA
+      CompA --> RepoA
+    end
+
+    %% Module B
+    subgraph M2["Module B"]
+      direction RL
+      ModCfgB["Module Configuration"]
+      ModCtrlB["Module Controller<br>(Lifecycle + DI)"]
+      FacB["Facade B<br>(public API boundary)"]
+      CompB["Component(s) B<br>(internal implementation)"]
+      PlugB["Plugins B<br>(module-specific extensions)"]
+      RepoB["Repository B"]
+
+      ModCtrlB --> ModCfgB
+      ModCtrlB --> FacB
+      ModCtrlB --> CompB
+      FacB --> CompB
+      PlugB -. "extends" .-> CompB
+      CompB --> RepoB
+    end
+
+    %% Module C
+    subgraph M3["Module C"]
+      direction RL
+      ModCfgC["Module Configuration"]
+      ModCtrlC["Module Controller<br>(Lifecycle + DI)"]
+      FacC["Facade C<br>(public API boundary)"]
+      CompC["Component(s) C<br>(internal implementation)"]
+
+      ModCtrlC --> ModCfgC
+      ModCtrlC --> FacC
+      ModCtrlC --> CompC
+      FacC --> CompC
+    end
+
+    %% Framework Core
+    subgraph Core["MORYX Core"]
+      direction RL
+      Runtime(["Runtime / Host Infrastructure"])
+      GDI(["Global DI Container<br>(app-wide composition)"])
+      ModMgmt(["Module Discovery + Loading<br>& Lifecycle Orchestration"])
+      CfgMgmt(["Configuration Management"])
+      PlugInfra(["Plugin Infrastructure<br>(for module-specific extensions)"])
+
+      %% Formatting
+      Runtime ~~~ GDI ~~~ ModMgmt ~~~ CfgMgmt ~~~ PlugInfra 
+    end
+    
+    %% Controllers invoke facades (mapping/validation happens inside controllers)
+    API ~~~ M1
+    API ~~~ M2
+    API ~~~ M3
+    Controllers --> FacA
+    Controllers --> FacB
+
+    %% Inter-module communication strictly via facades
+    ModCtrlA --> FacC
+
+    %% Everything relies on the Core
+    M1 ~~~ Core
+    M2 ~~~ Core
+    M3 ~~~ Core
+  end
+
+  subgraph T3["Data Tier — Database Provider<br>(e.g. Postgres or SqLite)"]
+    direction LR
+
+    DBA[("Module A Database/Storage")]
+    DBB[("Module B Database/Storage")]
+  end
+
+  %% Request path
+  Browser -->|"HTTP(S)"| Pipeline
+
+  %% Data path
+  RepoA --> DBA
+  RepoB --> DBB
+```
 
 ## Key Features of the factory automation components
 
