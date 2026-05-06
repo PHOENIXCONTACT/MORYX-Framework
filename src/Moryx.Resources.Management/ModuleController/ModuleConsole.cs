@@ -38,6 +38,8 @@ internal class ModuleConsole : IServerModuleConsole
             }
             catch (Exception e)
             {
+
+
                 return $"{config.PluginName} failed to run: {e.Message}";
             }
         }

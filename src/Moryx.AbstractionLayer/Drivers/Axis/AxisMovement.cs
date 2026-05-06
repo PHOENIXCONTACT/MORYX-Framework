@@ -44,4 +44,14 @@ public class AxisMovement
         Axis = axis;
         PredefinedPosition = predefinedPosition;
     }
+
+
+    /// <summary>
+    /// Default constructor required so the UI can create the instance dynamically.
+    /// </summary>
+
+    public AxisMovement()
+    {
+         
+    }
 }
