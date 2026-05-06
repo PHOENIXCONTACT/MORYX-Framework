@@ -108,6 +108,9 @@
     <File Path="NuGet.Config" />
     <File Path="VERSION" />
   </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/Moryx.Startup.Hooks/Moryx.Startup.Hooks.csproj" />
+  </Folder>
   <Folder Name="/Tests/">
     <File Path="src/Tests/Directory.Build.props" />
   </Folder>
