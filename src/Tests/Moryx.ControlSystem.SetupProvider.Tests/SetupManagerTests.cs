@@ -1,7 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
@@ -87,7 +86,9 @@ public class SetupManagerTests
         Assert.DoesNotThrow(delegate
         {
             foreach (var triggerConfigs in _setupManagerConfig.SetupTriggers)
+            {
                 _triggerFactoryMock.Verify(f => f.Create(triggerConfigs), Times.Once);
+            }
         });
     }
 
@@ -109,7 +110,9 @@ public class SetupManagerTests
             Assert.That(requiredSetup.Workplan.Steps.Count(), Is.EqualTo(steps));
         }
         else
+        {
             Assert.That(requiredSetup, Is.Null);
+        }
     }
 
     [Test(Description = "There should be only one SetupJob of type cleanup after the only production job. " +
@@ -131,6 +134,27 @@ public class SetupManagerTests
         // Temporary recipe not executable
         Assert.That(workplan.Steps.Count(), Is.EqualTo(4), "Workplan should have 4 steps: 2 setup steps, split and join");
         Assert.That(workplan.Connectors.Count(), Is.EqualTo(7), "Workplan should have 7 connectors: start, end, failed AND 2 step-in, 2 step-out");
+    }
+
+    [TestCase(SetupExecution.BeforeProduction)]
+    [TestCase(SetupExecution.AfterProduction)]
+    public void DisabledSetupTriggersProduceNoJobs(SetupExecution execution)
+    {
+        // Arrange
+        foreach (var triggerConfig in _setupManagerConfig.SetupTriggers)
+        {
+            triggerConfig.Disabled = true;
+        }
+        var manager = CreateSetupManager(_setupManagerConfig);
+
+        var recipe = CreateRecipe(1783, 42);
+
+        // Act
+        var setupRecipe = manager.RequiredSetup(execution, recipe, new CurrentResourceTarget(_resourceManagerMock.Object));
+
+        // Assert
+        Assert.That(setupRecipe, Is.Null);
+
     }
 
     /// <summary>
