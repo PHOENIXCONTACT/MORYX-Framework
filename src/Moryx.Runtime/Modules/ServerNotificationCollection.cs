@@ -49,7 +49,7 @@ namespace Moryx.Runtime.Modules
 
             if (removedItem != null)
             {
-                CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item));
+                CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removedItem));
             }
         }
 
