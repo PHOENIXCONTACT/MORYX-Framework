@@ -5,7 +5,7 @@ using System.ComponentModel;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Runtime.Modules;
 using Moryx.Serialization;
-
+using NLog;
 namespace Moryx.Resources.Management;
 
 [ServerModuleConsole]
@@ -38,8 +38,8 @@ internal class ModuleConsole : IServerModuleConsole
             }
             catch (Exception e)
             {
-
-
+                var logger = LogManager.GetCurrentClassLogger();
+                logger.Error(e, "Resource initializer failed");
                 return $"{config.PluginName} failed to run: {e.Message}";
             }
         }
