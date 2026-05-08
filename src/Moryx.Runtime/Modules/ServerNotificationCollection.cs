@@ -1,20 +1,21 @@
 // Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Moryx.Modules;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
-using Moryx.Modules;
 
 namespace Moryx.Runtime.Modules
 {
     internal class ServerNotificationCollection : INotificationCollection
     {
         private const int MaxCollectionSize = 2500;
-        private readonly Collection<IModuleNotification> _internalList = new Collection<IModuleNotification>();
-        private readonly object _lockObj = new object();
+        private readonly Collection<IModuleNotification> _internalList = [];
+        private readonly object _lockObj = new();
 
         // ReSharper disable once InconsistentlySynchronizedField
         public int Count => _internalList.Count;
@@ -25,7 +26,7 @@ namespace Moryx.Runtime.Modules
         {
             List<IModuleNotification> copy;
             lock (_lockObj)
-                copy = _internalList.ToList();
+                copy = [.. _internalList];
 
             return copy.GetEnumerator();
         }
@@ -38,7 +39,7 @@ namespace Moryx.Runtime.Modules
             lock (_lockObj)
             {
                 _internalList.Add(item);
-                if (_internalList.Count > MaxCollectionSize) ;
+                if (_internalList.Count > MaxCollectionSize)
                 {
                     removedItem = _internalList.First();
                     _internalList.Remove(removedItem);
@@ -49,7 +50,7 @@ namespace Moryx.Runtime.Modules
 
             if (removedItem != null)
             {
-                CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item));
+                CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removedItem));
             }
         }
 
