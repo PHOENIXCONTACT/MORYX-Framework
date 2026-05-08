@@ -46,10 +46,11 @@ public class AxisMovement
     }
 
 
-    /// <summary>
-    /// Default constructor required so the UI can create the instance dynamically.
-    /// </summary>
-
+    
+/// <summary>
+/// Creates an empty <see cref="AxisMovement"/> without <see cref="PredefinedPosition"/> or <see cref="TargetPosition"/>.
+/// Required for deserialization.
+/// </summary>
     public AxisMovement()
     {
          
