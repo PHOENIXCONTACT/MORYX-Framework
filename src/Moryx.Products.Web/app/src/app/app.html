@@ -306,7 +306,6 @@
             <mat-tree-node
               *matTreeNodeDef="let node"
               (click)="onSelect(node.id)"
-              (press)="onOpenContextMenu($event, node.id)"
               (contextmenu)="onProductContext($event, node.id)"
               class="overview-tree-content-tree-items"
               [ngClass]="{
@@ -328,7 +327,6 @@
               *matTreeNodeDef="let node; when: hasChild"
               (click)="onSelect(node.id)"
               (contextmenu)="onProductContext($event, node.id)"
-              (press)="onOpenContextMenu($event, node.id)"
               class="overview-tree-content-tree-items"
               [ngClass]="{
                 'moryx-selected': selected()?.id == node.id
