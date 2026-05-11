@@ -117,8 +117,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Layout_About" xml:space="preserve">
-    <value>信息</value>
+  <data name="AboutModal_Copyright" xml:space="preserve">
+    <value>版权</value>
   </data>
   <data name="AboutModal_Misc_Company" xml:space="preserve">
     <value>公司</value>
@@ -126,11 +126,29 @@
   <data name="AboutModal_Misc_Configuration" xml:space="preserve">
     <value>配置</value>
   </data>
-  <data name="AboutModal_Copyright" xml:space="preserve">
-    <value>版权</value>
-  </data>
   <data name="AboutModal_Misc_Description" xml:space="preserve">
     <value>描述</value>
+  </data>
+  <data name="AboutModal_Misc_Product" xml:space="preserve">
+    <value>产品</value>
+  </data>
+  <data name="AboutModal_Misc_TargetFramework" xml:space="preserve">
+    <value>目标框架</value>
+  </data>
+  <data name="AboutModal_Misc_Title" xml:space="preserve">
+    <value>标题</value>
+  </data>
+  <data name="AboutModal_Version" xml:space="preserve">
+    <value>版本</value>
+  </data>
+  <data name="HELP" xml:space="preserve">
+    <value>帮助</value>
+  </data>
+  <data name="Layout_About" xml:space="preserve">
+    <value>信息</value>
+  </data>
+  <data name="Layout_AdministrationMode" xml:space="preserve">
+    <value>管理模式</value>
   </data>
   <data name="Layout_Details" xml:space="preserve">
     <value>细节</value>
@@ -140,9 +158,6 @@
   </data>
   <data name="Layout_FullscreenMode" xml:space="preserve">
     <value>全屏模式</value>
-  </data>
-  <data name="HELP" xml:space="preserve">
-    <value>帮助</value>
   </data>
   <data name="Layout_Language" xml:space="preserve">
     <value>语言</value>
@@ -156,31 +171,19 @@
   <data name="Layout_OperatorMode" xml:space="preserve">
     <value>操作员模式</value>
   </data>
-  <data name="AboutModal_Misc_Product" xml:space="preserve">
-    <value>产品</value>
-  </data>
   <data name="Layout_Search" xml:space="preserve">
     <value>查找</value>
-  </data>
-  <data name="SETTING_LANGUAGE" xml:space="preserve">
-    <value>语言</value>
   </data>
   <data name="Layout_SignIn" xml:space="preserve">
     <value>登录</value>
   </data>
-  <data name="AboutModal_Misc_TargetFramework" xml:space="preserve">
-    <value>目标框架</value>
+  <data name="Layout_Views" xml:space="preserve">
+    <value>视图</value>
   </data>
-  <data name="AboutModal_Misc_Title" xml:space="preserve">
-    <value>标题</value>
+  <data name="SETTING_LANGUAGE" xml:space="preserve">
+    <value>语言</value>
   </data>
   <data name="TRADEMARK" xml:space="preserve">
     <value>商标</value>
-  </data>
-  <data name="AboutModal_Version" xml:space="preserve">
-    <value>版本</value>
-  </data>
-  <data name="Layout_Views" xml:space="preserve">
-    <value>视图</value>
   </data>
 </root>
