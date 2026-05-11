@@ -1,96 +1,189 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <accessability>internal</accessability>
-  <data id="e9eddcfe-0577-4fde-b879-dd1dcdd8cf84" name="AboutModal_Copyright" xml:space="preserve">
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AboutModal_Copyright" xml:space="preserve">
     <value>版权</value>
-    <comment></comment>
   </data>
-  <data id="c2af2693-65af-4c1e-a12e-ab0fec4ca5e4" name="AboutModal_Misc_Company" xml:space="preserve">
+  <data name="AboutModal_Misc_Company" xml:space="preserve">
     <value>公司</value>
-    <comment></comment>
   </data>
-  <data id="14219952-5d80-40f9-ba59-70bf441c55e0" name="AboutModal_Misc_Configuration" xml:space="preserve">
+  <data name="AboutModal_Misc_Configuration" xml:space="preserve">
     <value>配置</value>
-    <comment></comment>
   </data>
-  <data id="8daac502-f6a9-411a-a964-2a117ba257b2" name="AboutModal_Misc_Description" xml:space="preserve">
+  <data name="AboutModal_Misc_Description" xml:space="preserve">
     <value>描述</value>
-    <comment></comment>
   </data>
-  <data id="5db486ac-f870-4559-8ac2-729ae5dbd8fb" name="AboutModal_Misc_Product" xml:space="preserve">
+  <data name="AboutModal_Misc_Product" xml:space="preserve">
     <value>产品</value>
-    <comment></comment>
   </data>
-  <data id="ebdaf81e-229f-4c3b-86d2-057bb8b7a672" name="AboutModal_Misc_TargetFramework" xml:space="preserve">
+  <data name="AboutModal_Misc_TargetFramework" xml:space="preserve">
     <value>目标框架</value>
-    <comment></comment>
   </data>
-  <data id="3dbcce73-66f2-4100-a7a3-9b18af00e5ab" name="AboutModal_Misc_Title" xml:space="preserve">
+  <data name="AboutModal_Misc_Title" xml:space="preserve">
     <value>标题</value>
-    <comment></comment>
   </data>
-  <data id="c8041dec-ee8a-4851-8c8e-f5050a053092" name="AboutModal_Version" xml:space="preserve">
+  <data name="AboutModal_Version" xml:space="preserve">
     <value>版本</value>
-    <comment></comment>
   </data>
-  <data id="3be03be3-2a4c-4fbf-8819-487229d0adff" name="HELP" xml:space="preserve">
+  <data name="HELP" xml:space="preserve">
     <value>帮助</value>
-    <comment></comment>
   </data>
-  <data id="a9d300a5-759c-4cab-89be-63f3cfd0d6c7" name="Layout_About" xml:space="preserve">
+  <data name="Layout_About" xml:space="preserve">
     <value>信息</value>
-    <comment></comment>
   </data>
-  <data id="89927721-bf09-4b6e-a09c-1e010900bcc2" name="Layout_AdministrationMode" xml:space="preserve">
+  <data name="Layout_AdministrationMode" xml:space="preserve">
     <value>管理模式</value>
-    <comment></comment>
   </data>
-  <data id="5deaaf4f-10dd-4614-b04e-283df531ce1d" name="Layout_Details" xml:space="preserve">
+  <data name="Layout_Details" xml:space="preserve">
     <value>细节</value>
-    <comment></comment>
   </data>
-  <data id="730c9666-e98e-466b-9dad-6f95c35b2393" name="Layout_ExitFullscreen" xml:space="preserve">
+  <data name="Layout_ExitFullscreen" xml:space="preserve">
     <value>退出全屏</value>
-    <comment></comment>
   </data>
-  <data id="7a29207d-b448-4347-b1cc-583a9ce8723d" name="Layout_FullscreenMode" xml:space="preserve">
+  <data name="Layout_FullscreenMode" xml:space="preserve">
     <value>全屏模式</value>
-    <comment></comment>
   </data>
-  <data id="4b9d75e1-05ad-4d86-be13-fc9658e84c3d" name="Layout_Language" xml:space="preserve">
+  <data name="Layout_Language" xml:space="preserve">
     <value>语言</value>
-    <comment></comment>
   </data>
-  <data id="4aaf54ea-2b57-4ad8-88a1-0af2a3d40df5" name="Layout_Modules" xml:space="preserve">
+  <data name="Layout_Modules" xml:space="preserve">
     <value>模块</value>
-    <comment></comment>
   </data>
-  <data id="3b516bf2-e85d-4efb-8c48-962b6cc50b56" name="Layout_More" xml:space="preserve">
+  <data name="Layout_More" xml:space="preserve">
     <value>更多的</value>
-    <comment></comment>
   </data>
-  <data id="0e492b20-a9c7-4899-85a3-c16a3244d9ee" name="Layout_OperatorMode" xml:space="preserve">
+  <data name="Layout_OperatorMode" xml:space="preserve">
     <value>操作员模式</value>
-    <comment></comment>
   </data>
-  <data id="449ac458-6810-44d2-9f2c-d55d92fa452b" name="Layout_Search" xml:space="preserve">
+  <data name="Layout_Search" xml:space="preserve">
     <value>查找</value>
-    <comment></comment>
   </data>
-  <data id="a60f389a-6616-4fc1-9e76-374f5c6c6dbc" name="Layout_SignIn" xml:space="preserve">
+  <data name="Layout_SignIn" xml:space="preserve">
     <value>登录</value>
-    <comment></comment>
   </data>
-  <data id="ccd392a5-a30e-4686-ab70-fd5168d08c75" name="Layout_Views" xml:space="preserve">
+  <data name="Layout_Views" xml:space="preserve">
     <value>视图</value>
-    <comment></comment>
   </data>
-  <data id="df192c96-508f-4229-b228-8d5279efb7f8" name="SETTING_LANGUAGE" xml:space="preserve">
+  <data name="SETTING_LANGUAGE" xml:space="preserve">
     <value>语言</value>
-    <comment></comment>
   </data>
-  <data id="b4b066a7-81d2-4339-b50c-8622dd04c615" name="TRADEMARK" xml:space="preserve">
+  <data name="TRADEMARK" xml:space="preserve">
     <value>商标</value>
-    <comment></comment>
   </data>
 </root>
