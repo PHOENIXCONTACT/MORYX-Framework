@@ -14,13 +14,7 @@ namespace Moryx.Resources.Management;
 internal class ModuleConsole : IServerModuleConsole
 {
     #region Dependencies
-    private readonly IModuleLogger _logger;
-
-    public ModuleConsole(IModuleLogger logger)
-    {
-        _logger = logger;
-    }
-
+    public IModuleLogger Logger { get; set; }
 
     /// <summary>
     /// Factory to create the resource initializer
@@ -47,7 +41,7 @@ internal class ModuleConsole : IServerModuleConsole
             }
             catch (Exception e)
             {
-                _logger.LogError(e,"Resource initializer failed for plugin {Plugin}",config.PluginName);
+                Logger.LogError(e,"Resource initializer failed for plugin {Plugin}",config.PluginName);
                 return $"{config.PluginName} failed to run: {e.Message}";
             }
         }
