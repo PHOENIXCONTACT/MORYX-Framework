@@ -28,3 +28,14 @@ public interface IProductInstance
     /// </summary>
     ProductInstanceState State { get; set; }
 }
+
+/// <summary>
+/// Extended product instance
+/// </summary>
+public interface IProductInstanceExtended : IProductInstance
+{
+    /// <summary>
+    /// The parent product instance, null if it has no parent.
+    /// </summary>
+    ProductInstance Parent { get; }
+}
