@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections;
+using System.Globalization;
 
 namespace Moryx.Serialization;
 
@@ -17,6 +18,7 @@ public static partial class EntryConvert
     public static EntryValueType TransformType(Type propertyType)
     {
         var valueType = EntryValueType.String;
+
         if (propertyType == typeof(Byte))
         {
             valueType = EntryValueType.Byte;
@@ -73,6 +75,7 @@ public static partial class EntryConvert
         {
             valueType = EntryValueType.Class;
         }
+
         return valueType;
     }
 
@@ -90,7 +93,7 @@ public static partial class EntryConvert
         if (type == typeof(string))
         {
             result = value;
-        }
+        } 
         else if (type == typeof(Byte))
         {
             result = Byte.Parse(value, formatProvider);
@@ -98,7 +101,7 @@ public static partial class EntryConvert
         else if (type == typeof(Boolean))
         {
             result = Boolean.Parse(value);
-        }
+            }
         else if (type == typeof(Int16))
         {
             result = Int16.Parse(value, formatProvider);
@@ -125,11 +128,24 @@ public static partial class EntryConvert
         }
         else if (type == typeof(Single))
         {
-            result = Single.Parse(value, formatProvider);
+            result = ParseWithFallback<float>(
+                value, formatProvider, NumberStyles.Float,
+                Single.TryParse,
+                nameof(Single));
         }
         else if (type == typeof(Double))
         {
-            result = Double.Parse(value, formatProvider);
+            result = ParseWithFallback<double>(
+                value, formatProvider, NumberStyles.Float,
+                Double.TryParse,
+                nameof(Double));
+        }
+        else if (type == typeof(Decimal))
+        {
+            result = ParseWithFallback<decimal>(
+                value, formatProvider, NumberStyles.Number,
+                Decimal.TryParse,
+                nameof(Decimal));
         }
         else if (type.IsEnum)
         {
@@ -143,10 +159,25 @@ public static partial class EntryConvert
         return result;
     }
 
+    private delegate bool TryParseDelegate<T>(string s, NumberStyles style, IFormatProvider provider, out T result);
+
+    private static T ParseWithFallback<T>(
+    string s,
+    IFormatProvider provider,
+    NumberStyles styles,
+    TryParseDelegate<T> parser,
+    string typeName)
+    {
+        if (parser(s, styles, provider, out var v)) return v;
+
+        if (parser(s, styles, CultureInfo.InvariantCulture, out v)) return v;
+
+        throw new FormatException($"Cannot parse '{s}' to {typeName}.");
+    }
+
     private static DateTime? ConvertToUtc(DateTime? dateTime)
     {
         if (dateTime == null) return null;
-
         var nonNullDateTime = (DateTime)dateTime;
         if (nonNullDateTime.Kind == DateTimeKind.Utc)
             return nonNullDateTime;
@@ -165,43 +196,59 @@ public static partial class EntryConvert
     {
         // Traditional re-transformation
         object result = null;
+
         switch (type)
         {
             case EntryValueType.String:
                 result = value;
                 break;
+
             case EntryValueType.Byte:
                 result = Byte.Parse(value, formatProvider);
                 break;
+
             case EntryValueType.Boolean:
                 result = Boolean.Parse(value);
                 break;
+
             case EntryValueType.Int16:
                 result = Int16.Parse(value, formatProvider);
                 break;
+
             case EntryValueType.UInt16:
                 result = UInt16.Parse(value, formatProvider);
                 break;
+
             case EntryValueType.Int32:
                 result = Int32.Parse(value, formatProvider);
                 break;
+
             case EntryValueType.UInt32:
                 result = UInt32.Parse(value, formatProvider);
                 break;
+
             case EntryValueType.Int64:
                 result = Int64.Parse(value, formatProvider);
                 break;
+
             case EntryValueType.UInt64:
                 result = UInt64.Parse(value, formatProvider);
                 break;
+
             case EntryValueType.Single:
-                result = Single.Parse(value, formatProvider);
+                result = ParseWithFallback<float>(
+                    value, formatProvider, NumberStyles.Float,
+                    Single.TryParse,
+                    nameof(Single));
                 break;
+
             case EntryValueType.Double:
-                result = Double.Parse(value, formatProvider);
+                result = ParseWithFallback<double>(
+                    value, formatProvider, NumberStyles.Float,
+                    Double.TryParse,
+                    nameof(Double));
                 break;
         }
-
         return result;
     }
 }
