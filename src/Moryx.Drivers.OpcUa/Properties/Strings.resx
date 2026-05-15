@@ -192,4 +192,16 @@
   <data name="OpcUaDriver_SamplingInterval_Description" xml:space="preserve">
     <value>In milliseconds. A typical value is 1000.</value>
   </data>
+  <data name="OpcUaDriver_DisconnectedNotification_Title" xml:space="preserve">
+    <value>{0}: Disconnected</value>
+  </data>
+  <data name="OpcUaDriver_DisconnectedNotification_Message" xml:space="preserve">
+    <value>{0} was disconnected from the OPC server</value>
+  </data>
+  <data name="OpcUaDriver_ConnectingNotification_Title" xml:space="preserve">
+    <value>{0}: Not connected</value>
+  </data>
+  <data name="OpcUaDriver_ConnectingNotification_Message" xml:space="preserve">
+    <value>{0} tries to establish the connection to the OPC server...</value>
+  </data>
 </root>

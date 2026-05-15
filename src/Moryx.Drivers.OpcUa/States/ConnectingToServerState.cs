@@ -7,6 +7,12 @@ namespace Moryx.Drivers.OpcUa.States;
 
 internal class ConnectingToServerState(OpcUaDriver context, StateMachines.StateBase.StateMap stateMap) : DriverOpcUaState(context, stateMap, StateClassification.Offline)
 {
+    public override void OnEnter()
+    {
+        base.OnEnter();
+        Context.PublishConnectingNotification();
+    }
+
     internal override async Task OnConnectingCompletedAsync(bool successfull)
     {
         if (successfull)

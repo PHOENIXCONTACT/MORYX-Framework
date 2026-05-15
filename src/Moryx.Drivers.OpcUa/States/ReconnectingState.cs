@@ -8,6 +8,12 @@ namespace Moryx.Drivers.OpcUa.States;
 
 internal class ReconnectingState(OpcUaDriver context, StateMachines.StateBase.StateMap stateMap) : DriverOpcUaState(context, stateMap, StateClassification.Offline)
 {
+    public override void OnEnter()
+    {
+        base.OnEnter();
+        Context.PublishConnectingNotification();
+    }
+
     internal override Task OnConnectionLostAsync(KeepAliveEventArgs e)
     {
         //do nothing

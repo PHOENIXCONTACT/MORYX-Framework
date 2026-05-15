@@ -36,7 +36,7 @@ internal abstract class DriverOpcUaState(OpcUaDriver context, StateBase.StateMap
 
     public override void Disconnect()
     {
-        Context.Disconnect();
+        Context.HandleDisconnect();
         NextState(StateDisconnected);
     }
 
