@@ -8,13 +8,12 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationCancel, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import { SessionService } from 'src/app/services/session.service';
-import { ProductModel } from '../../api/models';
 import { EditProductsService } from '../../services/edit-products.service';
 import { ProductsDetailsHeader } from './products-details-header/products-details-header';
 
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTabsModule } from '@angular/material/tabs';
+import { ProductModel } from 'src/app/api/models';
 
 @Component({
   selector: 'app-products-details-view',
@@ -30,14 +29,11 @@ import { MatTabsModule } from '@angular/material/tabs';
 })
 export class ProductsDetailsView {
   private router = inject(Router);
-  private sessionService = inject(SessionService);
   private editProductsService = inject(EditProductsService);
   private activatedRoute = inject(ActivatedRoute);
 
   isEditMode = toSignal(this.editProductsService.edit$, { initialValue: false });
-  currentProduct = toSignal(this.editProductsService.currentProduct, { initialValue: undefined });
-
-  lastProductId = signal<number | undefined>(undefined);
+  currentProduct = toSignal(this.editProductsService.currentProduct$);
   activeLink = signal<Tabs>(Tabs.Unknown);
 
   Tabs = Tabs;
@@ -48,30 +44,6 @@ export class ProductsDetailsView {
   regexProperties: RegExp = /(details\/\d*\/properties)/;
 
   constructor() {
-    this.activatedRoute.data.subscribe(data => {
-      const product = data['product'];
-
-      if (this.lastProductId() === product?.id) return;
-
-      const wipProduct = this.sessionService.getWipProduct();
-
-      if (
-        this.lastProductId() !== undefined &&
-        product?.properties &&
-        !wipProduct
-      ) {
-        const newUrl = `details/${product?.id}/properties`;
-        this.router.navigate([newUrl]);
-      }
-
-      this.lastProductId.set(product?.id);
-
-      if (wipProduct) {
-        this.editProductsService.edit$.next(true);
-        this.sessionService.removeWipProduct();
-      }
-    });
-
     this.router.events.subscribe((val) => {
       if (val instanceof NavigationEnd || val instanceof NavigationCancel) {
         let url = this.router.url;
@@ -92,6 +64,7 @@ export class ProductsDetailsView {
     const url = this.router.url;
     const regexSpecificRecipe: RegExp = /(details\/\d*\/recipes\/\d*)/;
     const regexParts: RegExp = /(details\/\d*\/parts)/;
+    // ToDo: Simplify, no need for 2 navigations
     if (regexSpecificRecipe.test(url) || regexParts.test(url)) {
       this.router.navigate(['../../'], { relativeTo: this.activatedRoute }).then(() => {
         this.routeToTab(target);
@@ -123,7 +96,7 @@ export class ProductsDetailsView {
 
   onCurrentProductChangeFromHeader(product: ProductModel | undefined) {
     if (this.isEditMode() && product) {
-      this.editProductsService.currentProduct.next(product);
+      this.editProductsService.updateCurrentProduct(product);
     }
   }
 }

@@ -1,22 +1,14 @@
 @use "@moryx/ngx-web-framework/styles/variables" as *; 
 
-.importer-header {
-  display: flex;
-  margin-left: 10px;
-  flex-flow: row nowrap;
-  height: fit-content;
-  margin-top: 10px;
-  justify-content: flex-start;
+.importer-subtitle {
+  font-size: 14px;
+  letter-spacing: 0.1pt;
+  line-height: 20pt;
+  margin-top: -24px;
 }
+
 .importer-selector{
   margin-top: 10px;
-}
-.importer-header-information {
-  flex: 1 1 90%;
-  display: flex;
-  flex-flow: column nowrap;
-  height: fit-content;
-  justify-content: flex-start;
 }
 
 .importer-properties {
@@ -39,4 +31,5 @@
 .progress-bar-container{
   margin-left: 10px;
   margin-right: 10px;
+  margin-bottom: 16px;
 }

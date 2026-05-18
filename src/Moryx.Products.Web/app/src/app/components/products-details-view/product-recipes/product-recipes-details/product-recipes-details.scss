@@ -1,6 +1,6 @@
 @use "@moryx/ngx-web-framework/styles/variables" as *; 
 
-.product-recipes-details {
+:host {
   display: flex;
   flex-flow: column nowrap;
   justify-content: flex-start;

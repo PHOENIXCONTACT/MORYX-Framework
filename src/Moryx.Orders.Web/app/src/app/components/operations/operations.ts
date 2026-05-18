@@ -69,7 +69,7 @@ import { MultiProgressBar } from '../../multi-progress-bar/multi-progress-bar';
     MatSidenavModule,
     MatToolbarModule,
     MultiProgressBar
-  ]
+]
 })
 export class Operations implements OnInit, OnDestroy {
   private orderManagementService = inject(OrderManagementService);

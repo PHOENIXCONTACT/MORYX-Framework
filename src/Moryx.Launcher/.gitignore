@@ -1,2 +1,4 @@
 # Compiled output
-/wwwroot
+!/wwwroot
+/wwwroot/*
+!/wwwroot/assets/

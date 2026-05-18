@@ -1018,7 +1018,7 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
             select new
             {
                 entity,
-                parentCount = entity.Parents.Count
+                parentCount = entity.Parents.Count(pl => pl.Parent.Deleted == null)
             }).FirstOrDefault();
         // No match, nothing removed!
         if (queryResult == null)

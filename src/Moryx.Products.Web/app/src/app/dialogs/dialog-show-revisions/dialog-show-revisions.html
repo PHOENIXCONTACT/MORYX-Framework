@@ -9,7 +9,7 @@
         class="show-revisions-list-item"
         (click)="onOpen(product)">
         {{ createProductIdentity(product.identifier, product.revision) }}
-        {{ product.name | slice: 0:40 }}
+        {{ product.name }}
       </mat-list-item>
     }
   </mat-action-list>

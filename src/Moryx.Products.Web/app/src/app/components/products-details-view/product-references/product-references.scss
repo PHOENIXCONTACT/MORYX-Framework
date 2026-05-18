@@ -1,10 +1,10 @@
-@use "@moryx/ngx-web-framework/styles/variables" as *; 
+@use "@moryx/ngx-web-framework/styles/variables" as *;
 
-.table-description-header-row{
+.table-description-header-row {
   height: 24px;
 }
 
-.table-description-header{
+.table-description-header {
   font-size: var(--mat-typography-caption-font-size);
   line-height: var(--mat-typography-caption-line-height);
   font-weight: var(--mat-typography-caption-font-weight);
@@ -12,10 +12,12 @@
   font-style: italic;
 }
 
-.product-references-loading {
-  flex: 1 1;
-  align-self: center;
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: center;
+.clickable-row {
+  cursor: pointer;
+}
+
+.clickable-row:hover .mat-mdc-cell,
+.clickable-row:focus-visible .mat-mdc-cell {
+  background-color: rgba(0, 0, 0, 0.04);
+  transition: background-color 120ms ease; 
 }

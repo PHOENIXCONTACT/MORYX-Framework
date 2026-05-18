@@ -3,46 +3,29 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { HttpErrorResponse } from "@angular/common/http";
-import {
-  Component,
-  computed,
-  effect,
-  inject,
-  OnInit,
-  signal,
-  untracked,
-} from "@angular/core";
-import {
-  FormsModule,
-  ReactiveFormsModule,
-  UntypedFormControl,
-} from "@angular/forms";
+import { CommonModule } from "@angular/common";
+import { Component, computed, effect, ElementRef, inject, linkedSignal, resource, signal, untracked, viewChild, ViewChild } from "@angular/core";
+import { FormControl, FormsModule, ReactiveFormsModule, UntypedFormControl } from "@angular/forms";
+import { MatAutocompleteModule } from "@angular/material/autocomplete";
+import { MatButtonModule } from "@angular/material/button";
 import { MatDialogModule, MatDialogRef } from "@angular/material/dialog";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatIconModule } from "@angular/material/icon";
+import { MatInputModule } from "@angular/material/input";
+import { MatListModule } from "@angular/material/list";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { MatSelectModule } from "@angular/material/select";
+import { MatTooltipModule } from "@angular/material/tooltip";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { lastValueFrom } from "rxjs";
 import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
 import { OperationNumberValidations } from "src/app/validations/operationNumberValidations";
+import { OperationCreationContextModel, ProductModel, ProductQuery, RecipeClassificationModel, RecipeFilter, RecipeModel, RevisionFilter } from '../../api/models';
 import { OrderManagementService } from "../../api/services/order-management.service";
 import { ProductManagementService } from "../../api/services/product-management.service";
-import { ProductModel } from '../../api/models';
-import { RecipeClassificationModel } from '../../api/models';
-import { RecipeModel } from '../../api/models';
-import { ProductQuery } from '../../api/models';
-import { RecipeFilter } from '../../api/models';
-import { RevisionFilter } from '../../api/models';
-import { OperationCreationContextModel } from '../../api/models';
-import { OperationRecipeModel } from '../../api/models';
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatButtonModule } from "@angular/material/button";
-import { MatSelectModule } from "@angular/material/select";
-import { CommonModule } from "@angular/common";
-import { MatIconModule } from "@angular/material/icon";
-import { MatListModule } from "@angular/material/list";
-import { MatProgressBarModule } from "@angular/material/progress-bar";
-import { MatInputModule } from "@angular/material/input";
-import { MatMenuModule } from "@angular/material/menu";
-import { MatTooltipModule } from "@angular/material/tooltip";
+import { HttpErrorResponse } from "@angular/common/http";
 
 enum Action {
   AddCreate,
@@ -68,31 +51,38 @@ enum Action {
     MatProgressBarModule,
     MatInputModule,
     MatMenuModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatAutocompleteModule
   ],
   providers: []
 })
-export class CreateDialog implements OnInit {
+export class CreateDialog {
+  TranslationConstants = TranslationConstants;
+  
+  private orderManagementService = inject(OrderManagementService);
+  private productManagementService = inject(ProductManagementService);
+  private dialog = inject(MatDialogRef<CreateDialog>);
+  private translateService = inject(TranslateService);
+  private snackbarService = inject(SnackbarService);
+
   orderNumber = signal("");
-  operationNumber = signal("");
   amount = signal(0);
-  products = signal<ProductModel[]>([]);
-  recipes = signal<RecipeModel[]>([]);
   operations = signal<OperationCreationContextModel[]>([]);
-  selectedRecipe = signal<OperationRecipeModel>(<OperationRecipeModel>{});
   isLoading = signal(false);
-  selectedProduct = signal<ProductModel | undefined>(undefined);
-  canAddOperation = computed(() =>
-    this.orderNumber() !== "" &&
-    this.operationNumber() !== "" &&
-    this.selectedProduct() !== undefined &&
-    this.selectedRecipe() !== undefined &&
-    this.amount() > 0 &&
-    this.operationNumberFormControl.valid
-  );
+  canAddOperation = computed(() => {
+    const hasOrderNumber = this.orderNumber() !== "";
+    const hasProduct = !!this.selectedProduct();
+    const hasRecipe = !!this.selectedRecipe();
+    const hasAmount = this.amount();
+
+    const hasValidOperationNumber = this.operationNumberFormControl.value &&
+      this.operationNumberFormControl.valid;
+
+    return hasOrderNumber && hasValidOperationNumber && hasProduct && hasRecipe && hasAmount;
+  });
+
   primaryAction = signal<Action>(Action.AddCreate);
   Action = Action;
-
   primaryActionLabel = computed(() => {
     return this.primaryAction() === Action.AddCreate
       ? this.translateService.instant(TranslationConstants.CREATE_DIALOG.CREATE)
@@ -100,75 +90,91 @@ export class CreateDialog implements OnInit {
   });
 
   canAdd = computed(() => !this.isLoading() && this.canAddOperation());
+  canCreate = computed(() => !(this.isLoading() || !(this.operations().length || this.canAddOperation())));
+  canRun = computed<Record<Action, boolean>>(() => { return {
+    [Action.AddCreate]: this.canCreate(),
+    [Action.AddOnly]: this.canAdd()
+  }});
+  dropdownDisabled = computed(() => !this.canAdd() && !this.canCreate());
 
-  canCreate = computed(() => !this.isLoading() && (this.operations().length > 0 || this.canAddOperation()));
+  productInput = viewChild.required<ElementRef<HTMLInputElement>>('productInput');
+  private productsLoader = resource<ProductModel[], { query: ProductQuery }>({
+    params: () => ({ query: 
+      <ProductQuery>{
+        recipeFilter: RecipeFilter.WithRecipe,
+        revisionFilter: RevisionFilter.All,
+      }}),
+    loader: ({ params }) => lastValueFrom(this.productManagementService.getTypes({body: params.query}))
+  });
+  private possibleProducts = computed(() => {
+    const error = this.productsLoader.error();
+    if (error) {
+      this.snackbarService.handleError(error as HttpErrorResponse)
+      return [];
+    }
+    if (!this.productsLoader.hasValue()) {
+      return [];
+    }
+    return this.productsLoader.value().sort((a, b) => this.byProductNameAndRevision(a, b));
+  });
+  filteredProducts = linkedSignal(this.possibleProducts)
+  selectedProduct = signal<ProductModel | undefined>(undefined);  
+  productFormControl = new FormControl<ProductModel | undefined>(undefined);
 
-  dropdownDisabled = computed(() => !this.canRun(Action.AddCreate) && !this.canRun(Action.AddOnly));
+  recipeInput = viewChild.required<ElementRef<HTMLInputElement>>('recipeInput');
+  private recipesLoader = resource<RecipeModel[], { product: ProductModel | undefined }>({
+    params: () => ({ product: this.selectedProduct() }),
+    loader: ({ params }) => {
+      if (!params.product) {
+        return Promise.resolve([]);
+      }
+      return this.loadRecipes(params.product.identifier!, params.product.revision!);
+    }
+  });
+  private possibleRecipes = computed(() => {
+    const error = this.recipesLoader.error();
+    if (error) {
+      this.snackbarService.handleError(error as HttpErrorResponse)
+      return [];
+    }
+    if (!this.recipesLoader.hasValue()) {
+      return [];
+    }
+    return this.recipesLoader.value();
+  });
+  filteredRecipes = linkedSignal(this.possibleRecipes)
+  selectedRecipe = linkedSignal<RecipeModel[], RecipeModel | undefined>({
+    source: this.possibleRecipes,
+    computation: (recipes, previous) => recipes.find(r => r.id === previous?.value?.id)
+  });
+  recipeFormControl = new FormControl<RecipeModel | undefined>(undefined);
 
-  TranslationConstants = TranslationConstants;
-  //Form Controls
   operationNumberFormControl = new UntypedFormControl("", [
     OperationNumberValidations.isOperationNumberNotValid,
   ]);
 
-  private orderManagementService = inject(OrderManagementService);
-  private productManagementService = inject(ProductManagementService);
-  private dialog = inject(MatDialogRef<CreateDialog>);
-  private translateService = inject(TranslateService);
-  private snackbarService = inject(SnackbarService);
+  constructor() {
+    effect(() => this.processLoading());
+    effect(() => this.productFormControl.setValue(this.selectedProduct()));
+    effect(() => this.recipeFormControl.setValue(this.selectedRecipe()));    
+  }
+  
+  private processLoading(): void {
+    const isLoading = this.productsLoader.isLoading() || this.recipesLoader.isLoading();
+    const error = !!this.productsLoader.error() || !!this.recipesLoader.error() ;
+    
+    untracked(() => {
+      this.isLoading.set(isLoading);
+      
+      if(isLoading)
+        this.operationNumberFormControl.disable();
+      else
+        this.operationNumberFormControl.enable();
 
-  async setProduct() {
-    const assignableRecipes = await this.orderManagementService
-      .getAssignableRecipes({
-        identifier: this.selectedProduct()?.identifier!,
-        revision: this.selectedProduct()?.revision
-      })
-      .toAsync();
-
-    assignableRecipes.forEach(async (assignableRecipe) => {
-      const recipe = await this.productManagementService
-        .getRecipe({id: assignableRecipe.id!})
-        .toAsync();
-      this.recipes.update((items) => {
-        items.push(recipe);
-        return items;
-      });
-
-      if (recipe.classification === RecipeClassificationModel.Default) {
-        this.selectedRecipe.update((_) => recipe);
+      if (error) {
+        this.dialog.close();
       }
     });
-  }
-
-  constructor() {
-    effect(() => {
-      const product = this.selectedProduct();
-      untracked(() => {
-        if (product) {
-          this.recipes.set([]);
-          this.setProduct().then();
-        }
-      });
-    });
-  }
-
-  async ngOnInit(): Promise<void> {
-    const query = <ProductQuery>{
-      recipeFilter: RecipeFilter.WithRecipe,
-      revisionFilter: RevisionFilter.All,
-    };
-    this.isLoading.update((_) => true);
-    await this.productManagementService
-      .getTypes({body: query})
-      .toAsync()
-      // set only products that have a recipe
-      .then((value) =>
-        this.products.update((_) => value.filter((x) => x.recipes?.length))
-      )
-      .catch(
-        async (e: HttpErrorResponse) => await this.snackbarService.handleError(e)
-      );
-    this.isLoading.update((_) => false);
   }
 
   detailsInputchanged(event: Event | KeyboardEvent) {
@@ -179,7 +185,7 @@ export class CreateDialog implements OnInit {
 
   addOperation(): void {
     const operation = <OperationCreationContextModel>{};
-    operation.operationNumber = this.operationNumber();
+    operation.operationNumber = this.operationNumberFormControl.value;
     operation.name = this.selectedProduct()?.name;
     operation.productIdentifier = this.selectedProduct()?.identifier;
     operation.productRevision = this.selectedProduct()?.revision;
@@ -225,18 +231,13 @@ export class CreateDialog implements OnInit {
   }
 
   private clearOperation(): void {
-    this.operationNumber.set("");
-    this.selectedProduct.set(undefined);
-    this.selectedRecipe.set(<OperationRecipeModel>{});
+    this.operationNumberFormControl.setValue('');
     this.amount.set(0);
-    this.recipes.set([]);
+    this.selectedProduct.set(undefined);
 
     //remove the operation number validation
     if (
-      this.operationNumberFormControl.hasValidator(
-        OperationNumberValidations.isOperationNumberNotValid
-      ) &&
-      this.products.length > 0
+      this.operationNumberFormControl.hasValidator(OperationNumberValidations.isOperationNumberNotValid)
     ) {
       this.operationNumberFormControl.removeValidators(
         OperationNumberValidations.isOperationNumberNotValid
@@ -268,8 +269,6 @@ export class CreateDialog implements OnInit {
     if (!failed) this.dialog.close();
   }
 
-  canRun = (a: Action) => (a === Action.AddCreate ? this.canCreate() : this.canAdd());
-
   onPrimaryClick = async () => {
     await this.performAction(this.primaryAction());
   };
@@ -292,5 +291,49 @@ export class CreateDialog implements OnInit {
     } else if (canAdd) {
       this.addOperation();
     }
+  }
+  
+  filterProduct(): void {
+    const filterValue = this.productInput().nativeElement.value.toLowerCase();
+    const filtered = this.possibleProducts().filter(p => this.productToString(p).toLowerCase().includes(filterValue));
+    this.filteredProducts.set(filtered);
+    if (filtered.length === 1 && filterValue) {
+      this.selectedProduct.set(filtered[0]);
+    }
+  }
+  
+  filterRecipe(): void {
+    const filterValue = this.recipeInput()?.nativeElement.value.toLowerCase();
+    const filtered = this.possibleRecipes().filter(r => this.recipeToString(r).toLowerCase().includes(filterValue));
+    this.filteredRecipes.set(filtered);
+    if (filtered.length === 1 && filterValue) {
+      this.selectedRecipe.set(filtered[0]);
+    }
+  }
+
+  private async loadRecipes(productIdentifier: string, productRevision: number): Promise<RecipeModel[]> {
+    const assignableRecipes = await lastValueFrom(this.orderManagementService
+      .getAssignableRecipes({ identifier: productIdentifier, revision: productRevision }));
+    
+    return await Promise.all(assignableRecipes.map(async (ar) => await this.loadRecipe(ar.id!)));
+  }
+
+  private async loadRecipe(id: number): Promise<RecipeModel> {
+    return lastValueFrom(this.productManagementService.getRecipe({ id }));
+  }
+
+  private byProductNameAndRevision(a: ProductModel, b: ProductModel): number {
+    if (!a.name) return 1;
+    if (!b.name) return -1;
+    if (a.name !== b.name) return a.name.localeCompare(b.name);
+    return (b.revision ?? 0) - (a.revision ?? 0);
+  }
+    
+  productToString(value: ProductModel) {
+    return value ? `${value.identifier}-${String(value.revision).padStart(2, '0')} ${value.name}` : '';
+  }
+  
+  recipeToString(value: RecipeModel) {
+    return value ? `\[${value.type}\] ${value.name}` : '';
   }
 }

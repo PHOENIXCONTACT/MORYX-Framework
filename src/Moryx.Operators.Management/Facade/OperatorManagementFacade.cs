@@ -147,11 +147,11 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
     }
 
     /// <inheritdoc />
-    public IReadOnlyList<AttendanceChangedArgs> GetAttendingOperators(IOperatorAssignable resource)
+    public IReadOnlyList<AttendanceData> GetAttendanceData(IOperatorAssignable resource)
     {
         return ((IAttendanceManagement)this).Operators
             .Where(o => o.AssignedResources.Any(r => r.Id == resource.Id))
-            .Select(o => new AttendanceChangedArgs(o, this.GetSkills(o).ToArray()))
+            .Select(o => new AttendanceData(o, this.GetSkills(o).ToArray()))
             .ToArray();
     }
 

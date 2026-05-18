@@ -59,9 +59,7 @@
     "REMOVE": "REMOVE",
     "ADD": "ADD",
     "REPLACE": "REPLACE",
-    "DETAILS": {
-      "TITLE": "Configuration for the connection between the product and its part"
-    }
+    "OPEN": "OPEN PRODUCT"
   },
   "ADD_DIALOG": {
     "TITLE": "Select Part",

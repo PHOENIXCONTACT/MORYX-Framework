@@ -44,4 +44,13 @@ public class AxisMovement
         Axis = axis;
         PredefinedPosition = predefinedPosition;
     }
+
+    /// <summary>
+    /// Creates an empty <see cref="AxisMovement"/> without <see cref="PredefinedPosition"/> or <see cref="TargetPosition"/>.
+    /// Required for deserialization.
+    /// </summary>
+    public AxisMovement()
+    {
+
+    }
 }
