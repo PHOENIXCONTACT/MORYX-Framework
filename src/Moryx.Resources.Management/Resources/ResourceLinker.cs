@@ -60,10 +60,7 @@ internal class ResourceLinker : IResourceLinker
                 {
                     value.UnderlyingCollection.AddRange(resources);
                 }
-                if (value is IReferenceCollectionExtended extended)
-                {
-                    extended.UnderlyingCollectionChanged();
-                }
+                value.UnderlyingCollectionChanged();
             }
             // Link a single reference
             else
@@ -367,10 +364,7 @@ internal class ResourceLinker : IResourceLinker
                     collection.UnderlyingCollection.Add(value);
                 }
             }
-            if (collectionChanged && collection is IReferenceCollectionExtended extended)
-            {
-                extended.UnderlyingCollectionChanged();
-            }
+            collection.UnderlyingCollectionChanged();
         }
 
         var backAttr = prop.GetCustomAttribute<ResourceReferenceAttribute>();
@@ -400,10 +394,7 @@ internal class ResourceLinker : IResourceLinker
             {
                 changed = collection.UnderlyingCollection.Remove(value);
             }
-            if (changed && collection is IReferenceCollectionExtended extended)
-            {
-                extended.UnderlyingCollectionChanged();
-            }
+            collection.UnderlyingCollectionChanged();
         }
     }
 
@@ -517,10 +508,7 @@ internal class ResourceLinker : IResourceLinker
                 {
                     result = referenceCollection.UnderlyingCollection.Remove(deletedInstance);
                 }
-                if (result && referenceCollection is IReferenceCollectionExtended extended)
-                {
-                    extended.UnderlyingCollectionChanged();
-                }
+                referenceCollection.UnderlyingCollectionChanged();
             }
         }
         else

@@ -10,7 +10,7 @@ namespace Moryx.Resources.Management;
 /// <summary>
 /// Collection that wraps another collection of references
 /// </summary>
-internal class ReferenceCollection<TResource> : IReferences<TResource>, IReferenceCollectionExtended
+internal class ReferenceCollection<TResource> : IReferences<TResource>, IReferenceCollection
     where TResource : class, IResource
 {
     private readonly Resource _parent;
