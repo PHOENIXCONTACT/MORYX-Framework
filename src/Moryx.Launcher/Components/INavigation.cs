@@ -1,3 +1,4 @@
+
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
@@ -5,14 +6,18 @@ using Microsoft.AspNetCore.Http;
 
 namespace Moryx.Launcher;
 
-//TODO: make it internal in next major
 /// <summary>
-/// Component to determine navigation items for the shell
+/// Component to determine module/regin items for the shell
 /// </summary>
-public interface IShellNavigator
+internal interface INavigation
 {
     /// <summary>
     /// Gathers the available Web Modules to display in the shell
     /// </summary>
     Task<IReadOnlyList<ModuleItem>> GetModuleItemsAsync(HttpContext context);
+
+    /// <summary>
+    /// Get the regions configuration
+    /// </summary>
+    RegionItem GetRegion(LauncherRegion region);
 }

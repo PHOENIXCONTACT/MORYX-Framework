@@ -16,11 +16,12 @@ using Moryx.Modules;
 using Moryx.Tools;
 
 namespace Moryx.Launcher;
-//TODO: make it internal in next major
-/// <inheritdoc />
-public class ShellNavigator : IShellNavigator, ILauncher
+
+/// <summary>
+/// Component to determine navigation items for the shell
+/// </summary>
+internal class Navigation : INavigation
 {
-    private readonly ILogger _logger;
     private readonly MoryxAccessManagementClient _client;
     private readonly IReadOnlyList<ExternalModuleItem> _externalModules;
     private readonly LauncherConfig _launcherConfig;
@@ -28,7 +29,7 @@ public class ShellNavigator : IShellNavigator, ILauncher
     private readonly EndpointDataSource _endpointsDataSource;
     private readonly PageLoader _pageLoader;
 
-    public ShellNavigator(
+    public Navigation(
         EndpointDataSource endpointsDataSource,
         PageLoader pageLoader,
         IConfigManager configManager,
@@ -38,13 +39,12 @@ public class ShellNavigator : IShellNavigator, ILauncher
     {
         _endpointsDataSource = endpointsDataSource;
         _pageLoader = pageLoader;
-        _logger = logger.CreateLogger(nameof(ShellNavigator));
         if (options?.CurrentValue?.BaseAddress is not null)
         {
             _client = new MoryxAccessManagementClient(
                 options,
                 memoryCache,
-                logger.CreateLogger($"{nameof(ShellNavigator)}:{nameof(MoryxAccessManagementClient)}")
+                logger.CreateLogger($"{nameof(Navigation)}:{nameof(MoryxAccessManagementClient)}")
             );
         }
 
@@ -109,7 +109,7 @@ public class ShellNavigator : IShellNavigator, ILauncher
         return compiledPageActionDescriptors;
     }
 
-    RegionItem ILauncher.GetRegion(LauncherRegion region)
+    public RegionItem GetRegion(LauncherRegion region)
     {
         var availableAssemblies = ReflectionTool.GetAssemblies();
 
