@@ -2,7 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
+using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Resources;
+using Moryx.Logging;
 using Moryx.Runtime.Modules;
 using Moryx.Serialization;
 
@@ -12,6 +14,7 @@ namespace Moryx.Resources.Management;
 internal class ModuleConsole : IServerModuleConsole
 {
     #region Dependencies
+    public IModuleLogger Logger { get; set; }
 
     /// <summary>
     /// Factory to create the resource initializer
@@ -38,6 +41,7 @@ internal class ModuleConsole : IServerModuleConsole
             }
             catch (Exception e)
             {
+                Logger.LogError(e,"Resource initializer failed for plugin {Plugin}",config.PluginName);
                 return $"{config.PluginName} failed to run: {e.Message}";
             }
         }
