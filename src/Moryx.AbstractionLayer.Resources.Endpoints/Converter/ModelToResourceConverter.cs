@@ -156,7 +156,7 @@ internal sealed class ModelToResourceConverter
                         resourcesToSave.Add(instance.Id);
                     }
                 }
-                if (collectionChanged && collection is IReferenceCollectionExtended extended)
+                if (collectionChanged && collection is IReferenceCollection extended)
                 {
                     extended.UnderlyingCollectionChanged();
                 }

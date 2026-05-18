@@ -80,6 +80,6 @@ public class AttendableResource : Resource, IOperatorAssignable
     public ICapabilities RequiredSkills { get; private set; } = NullCapabilities.Instance;
 
     /// <inheritdoc/>
-    public void AttendanceChanged(IReadOnlyList<AttendanceChangedArgs> attandances) { }
+    public void AttendanceChanged(IReadOnlyList<AttendanceData> attandances) { }
 }
 

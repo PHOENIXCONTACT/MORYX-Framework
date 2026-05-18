@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Capabilities;
@@ -20,6 +20,6 @@ internal class UserResource : Resource, IOperatorAssignable
 
     public ICapabilities RequiredSkills => NullCapabilities.Instance;
 
-    public void AttendanceChanged(IReadOnlyList<AttendanceChangedArgs> attandances) { }
+    public void AttendanceChanged(IReadOnlyList<AttendanceData> attandances) { }
 }
 

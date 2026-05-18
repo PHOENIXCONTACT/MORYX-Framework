@@ -112,11 +112,8 @@ public class OperatorManagementController(
     {
         return Response(() =>
         {
-            var attendableResources =
-                _attendanceManagement is IAttendanceManagementExtended extended
-                ? extended.Assignables
-                : resourceManagement.GetAssignableResources();
-            // return all the resources
+            var attendableResources = _attendanceManagement.Assignables;
+
             if (string.IsNullOrEmpty(operatorIdentifier))
             {
                 return attendableResources.Select(Converter.ToModel);
@@ -164,14 +161,7 @@ public class OperatorManagementController(
 
     private void NotifyResource(IOperatorAssignable resource)
     {
-        var attendance =
-                _attendanceManagement is IAttendanceManagementExtended extended
-                ? extended.GetAttendingOperators(resource)
-                : _attendanceManagement.Operators
-                    .Where(o => o.AssignedResources.Any(r => r.Id == resource.Id))
-                    .Select(o => new AttendanceChangedArgs(o, _skillManagement.GetSkills(o).ToArray()))
-                    .ToArray();
-
+        var attendance = _attendanceManagement.GetAttendanceData(resource);
         resource.AttendanceChanged(attendance);
     }
 
@@ -231,20 +221,14 @@ public class OperatorManagementController(
         }
 
         _operatorManagement.OperatorChanged += OnOperatorChanged;
-        if (_attendanceManagement is IAttendanceManagementExtended extended)
-        {
-            extended.SignInStatusChanged += OnStatusChanged;
-        }
+        _attendanceManagement.SignInStatusChanged += OnStatusChanged;
 
         await foreach (var item in channel.Reader.ReadAllAsync(token))
         {
             yield return item;
         }
-        if (_attendanceManagement is IAttendanceManagementExtended extended2)
-        {
-            extended2.SignInStatusChanged -= OnStatusChanged;
-        }
 
+        _attendanceManagement.SignInStatusChanged -= OnStatusChanged;
         _operatorManagement.OperatorChanged -= OnOperatorChanged;
     }
 
@@ -299,15 +283,5 @@ public class OperatorManagementController(
         => _attendanceManagement.GetOperator(WebUtility.HtmlEncode(operatorIdentifier)) ?? throw new OperatorNotFoundException(operatorIdentifier);
 
     private IOperatorAssignable RetrieveResource(long resourceId)
-    {
-        if (_attendanceManagement is IAttendanceManagementExtended extended)
-        {
-            return extended.GetAssignable(resourceId) ?? throw new ResourceNotFoundException(resourceId);
-        }
-        else
-        {
-            return resourceManagement.GetAssignableResource(resourceId) ?? throw new ResourceNotFoundException(resourceId);
-        }
-    }
+        => _attendanceManagement.GetAssignable(resourceId) ?? throw new ResourceNotFoundException(resourceId);
 }
-
