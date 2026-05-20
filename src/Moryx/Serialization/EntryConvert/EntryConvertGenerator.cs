@@ -141,7 +141,7 @@ public static partial class EntryConvert
         else if (type == typeof(decimal))
         {
             result = ParseWithFallback<decimal>(
-                value, formatProvider, NumberStyles.Number,
+                value, formatProvider, NumberStyles.Float,
                 decimal.TryParse);
         }
         else if (type.IsEnum)
@@ -156,13 +156,9 @@ public static partial class EntryConvert
         return result;
     }
 
-    private delegate bool TryParseDelegate<T>(string s, NumberStyles style, IFormatProvider provider, out T result);
+    private delegate bool TryParseDelegate<T>(string input, NumberStyles style, IFormatProvider provider, out T result);
 
-    private static T ParseWithFallback<T>(
-    string input,
-    IFormatProvider provider,
-    NumberStyles styles,
-    TryParseDelegate<T> parser)
+    private static T ParseWithFallback<T>(string input, IFormatProvider provider, NumberStyles styles, TryParseDelegate<T> parser)
     {
         if (parser(input, styles, provider, out var parsedValue))
         {
