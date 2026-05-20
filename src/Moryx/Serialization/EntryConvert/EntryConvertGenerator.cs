@@ -19,43 +19,43 @@ public static partial class EntryConvert
     {
         var valueType = EntryValueType.String;
 
-        if (propertyType == typeof(Byte))
+        if (propertyType == typeof(byte))
         {
             valueType = EntryValueType.Byte;
         }
-        else if (propertyType == typeof(Boolean))
+        else if (propertyType == typeof(bool))
         {
             valueType = EntryValueType.Boolean;
         }
-        else if (propertyType == typeof(Int16))
+        else if (propertyType == typeof(short))
         {
             valueType = EntryValueType.Int16;
         }
-        else if (propertyType == typeof(UInt16))
+        else if (propertyType == typeof(ushort))
         {
             valueType = EntryValueType.UInt16;
         }
-        else if (propertyType == typeof(Int32))
+        else if (propertyType == typeof(int))
         {
             valueType = EntryValueType.Int32;
         }
-        else if (propertyType == typeof(UInt32))
+        else if (propertyType == typeof(uint))
         {
             valueType = EntryValueType.UInt32;
         }
-        else if (propertyType == typeof(Int64))
+        else if (propertyType == typeof(long))
         {
             valueType = EntryValueType.Int64;
         }
-        else if (propertyType == typeof(UInt64))
+        else if (propertyType == typeof(ulong))
         {
             valueType = EntryValueType.UInt64;
         }
-        else if (propertyType == typeof(Single))
+        else if (propertyType == typeof(float))
         {
             valueType = EntryValueType.Single;
         }
-        else if (propertyType == typeof(Double))
+        else if (propertyType == typeof(double))
         {
             valueType = EntryValueType.Double;
         }
@@ -93,58 +93,58 @@ public static partial class EntryConvert
         if (type == typeof(string))
         {
             result = value;
-        } 
-        else if (type == typeof(Byte))
-        {
-            result = Byte.Parse(value, formatProvider);
         }
-        else if (type == typeof(Boolean))
+        else if (type == typeof(byte))
         {
-            result = Boolean.Parse(value);
-            }
-        else if (type == typeof(Int16))
-        {
-            result = Int16.Parse(value, formatProvider);
+            result = byte.Parse(value, formatProvider);
         }
-        else if (type == typeof(UInt16))
+        else if (type == typeof(bool))
         {
-            result = UInt16.Parse(value, formatProvider);
+            result = bool.Parse(value);
         }
-        else if (type == typeof(Int32))
+        else if (type == typeof(short))
         {
-            result = Int32.Parse(value, formatProvider);
+            result = short.Parse(value, formatProvider);
         }
-        else if (type == typeof(UInt32))
+        else if (type == typeof(ushort))
         {
-            result = UInt32.Parse(value, formatProvider);
+            result = ushort.Parse(value, formatProvider);
         }
-        else if (type == typeof(Int64))
+        else if (type == typeof(int))
         {
-            result = Int64.Parse(value, formatProvider);
+            result = int.Parse(value, formatProvider);
         }
-        else if (type == typeof(UInt64))
+        else if (type == typeof(uint))
         {
-            result = UInt64.Parse(value, formatProvider);
+            result = uint.Parse(value, formatProvider);
         }
-        else if (type == typeof(Single))
+        else if (type == typeof(long))
+        {
+            result = long.Parse(value, formatProvider);
+        }
+        else if (type == typeof(ulong))
+        {
+            result = ulong.Parse(value, formatProvider);
+        }
+        else if (type == typeof(float))
         {
             result = ParseWithFallback<float>(
                 value, formatProvider, NumberStyles.Float,
-                Single.TryParse,
+                float.TryParse,
                 nameof(Single));
         }
-        else if (type == typeof(Double))
+        else if (type == typeof(double))
         {
             result = ParseWithFallback<double>(
                 value, formatProvider, NumberStyles.Float,
-                Double.TryParse,
+                double.TryParse,
                 nameof(Double));
         }
-        else if (type == typeof(Decimal))
+        else if (type == typeof(decimal))
         {
             result = ParseWithFallback<decimal>(
                 value, formatProvider, NumberStyles.Number,
-                Decimal.TryParse,
+                decimal.TryParse,
                 nameof(Decimal));
         }
         else if (type.IsEnum)
@@ -168,21 +168,35 @@ public static partial class EntryConvert
     TryParseDelegate<T> parser,
     string typeName)
     {
-        if (parser(s, styles, provider, out var v)) return v;
+        if (parser(s, styles, provider, out var v))
+        {
+            return v;
+        }
 
-        if (parser(s, styles, CultureInfo.InvariantCulture, out v)) return v;
+        if (parser(s, styles, CultureInfo.InvariantCulture, out v))
+        {
+            return v;
+        }
 
         throw new FormatException($"Cannot parse '{s}' to {typeName}.");
     }
 
     private static DateTime? ConvertToUtc(DateTime? dateTime)
     {
-        if (dateTime == null) return null;
+        if (dateTime == null)
+        {
+            return null;
+        }
+
         var nonNullDateTime = (DateTime)dateTime;
         if (nonNullDateTime.Kind == DateTimeKind.Utc)
+        {
             return nonNullDateTime;
+        }
         else
+        {
             return TimeZoneInfo.ConvertTimeToUtc(nonNullDateTime, TimeZoneInfo.Local);
+        }
     }
 
     /// <summary>
@@ -204,48 +218,48 @@ public static partial class EntryConvert
                 break;
 
             case EntryValueType.Byte:
-                result = Byte.Parse(value, formatProvider);
+                result = byte.Parse(value, formatProvider);
                 break;
 
             case EntryValueType.Boolean:
-                result = Boolean.Parse(value);
+                result = bool.Parse(value);
                 break;
 
             case EntryValueType.Int16:
-                result = Int16.Parse(value, formatProvider);
+                result = short.Parse(value, formatProvider);
                 break;
 
             case EntryValueType.UInt16:
-                result = UInt16.Parse(value, formatProvider);
+                result = ushort.Parse(value, formatProvider);
                 break;
 
             case EntryValueType.Int32:
-                result = Int32.Parse(value, formatProvider);
+                result = int.Parse(value, formatProvider);
                 break;
 
             case EntryValueType.UInt32:
-                result = UInt32.Parse(value, formatProvider);
+                result = uint.Parse(value, formatProvider);
                 break;
 
             case EntryValueType.Int64:
-                result = Int64.Parse(value, formatProvider);
+                result = long.Parse(value, formatProvider);
                 break;
 
             case EntryValueType.UInt64:
-                result = UInt64.Parse(value, formatProvider);
+                result = ulong.Parse(value, formatProvider);
                 break;
 
             case EntryValueType.Single:
                 result = ParseWithFallback<float>(
                     value, formatProvider, NumberStyles.Float,
-                    Single.TryParse,
+                    float.TryParse,
                     nameof(Single));
                 break;
 
             case EntryValueType.Double:
                 result = ParseWithFallback<double>(
                     value, formatProvider, NumberStyles.Float,
-                    Double.TryParse,
+                    double.TryParse,
                     nameof(Double));
                 break;
         }
