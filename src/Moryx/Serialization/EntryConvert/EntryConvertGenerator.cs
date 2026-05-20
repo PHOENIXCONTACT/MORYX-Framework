@@ -130,22 +130,19 @@ public static partial class EntryConvert
         {
             result = ParseWithFallback<float>(
                 value, formatProvider, NumberStyles.Float,
-                float.TryParse,
-                nameof(Single));
+                float.TryParse);
         }
         else if (type == typeof(double))
         {
             result = ParseWithFallback<double>(
                 value, formatProvider, NumberStyles.Float,
-                double.TryParse,
-                nameof(Double));
+                double.TryParse);
         }
         else if (type == typeof(decimal))
         {
             result = ParseWithFallback<decimal>(
                 value, formatProvider, NumberStyles.Number,
-                decimal.TryParse,
-                nameof(Decimal));
+                decimal.TryParse);
         }
         else if (type.IsEnum)
         {
@@ -162,23 +159,22 @@ public static partial class EntryConvert
     private delegate bool TryParseDelegate<T>(string s, NumberStyles style, IFormatProvider provider, out T result);
 
     private static T ParseWithFallback<T>(
-    string s,
+    string input,
     IFormatProvider provider,
     NumberStyles styles,
-    TryParseDelegate<T> parser,
-    string typeName)
+    TryParseDelegate<T> parser)
     {
-        if (parser(s, styles, provider, out var v))
+        if (parser(input, styles, provider, out var parsedValue))
         {
-            return v;
+            return parsedValue;
         }
 
-        if (parser(s, styles, CultureInfo.InvariantCulture, out v))
+        if (parser(input, styles, CultureInfo.InvariantCulture, out parsedValue))
         {
-            return v;
+            return parsedValue;
         }
 
-        throw new FormatException($"Cannot parse '{s}' to {typeName}.");
+        throw new FormatException($"Cannot parse '{input}' to {typeof(T).Name}.");
     }
 
     private static DateTime? ConvertToUtc(DateTime? dateTime)
@@ -252,15 +248,13 @@ public static partial class EntryConvert
             case EntryValueType.Single:
                 result = ParseWithFallback<float>(
                     value, formatProvider, NumberStyles.Float,
-                    float.TryParse,
-                    nameof(Single));
+                    float.TryParse);
                 break;
 
             case EntryValueType.Double:
                 result = ParseWithFallback<double>(
                     value, formatProvider, NumberStyles.Float,
-                    double.TryParse,
-                    nameof(Double));
+                    double.TryParse);
                 break;
         }
         return result;
