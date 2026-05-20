@@ -30,4 +30,5 @@ public class LauncherRegionConfig
 public enum LauncherRegion
 {
     Right,
+    Top
 }
