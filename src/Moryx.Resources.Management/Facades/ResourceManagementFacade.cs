@@ -121,10 +121,38 @@ internal class ResourceManagementFacade : FacadeBase, IResourceManagement
         ValidateHealthState();
 
         var resource = ResourceGraph.Instantiate(resourceType.ResourceType());
-        await initializer(resource);
+        CollectionsInitialized(resource);
+        await initializer(resource); 
         await ResourceGraph.SaveAsync(resource, cancellationToken);
         return resource.Id;
     }
+
+
+
+    /// <summary>
+    /// Ensures that all collection-type properties of the resource are initialized
+    /// after instantiation, to handle cases where deserialization overrides default initializers.
+    /// </summary>
+
+    private void CollectionsInitialized(object resource)
+    {
+        foreach (var prop in resource.GetType().GetProperties())
+        {
+            if (!prop.CanWrite || prop.PropertyType == typeof(string))
+                continue;
+
+            if (typeof(System.Collections.IEnumerable).IsAssignableFrom(prop.PropertyType)
+                && prop.GetValue(resource) == null)
+            {
+                try
+                {
+                    prop.SetValue(resource, Activator.CreateInstance(prop.PropertyType));
+                }
+                catch { }
+            }
+        }
+    }
+
 
 
     public TResult ReadUnsafe<TResult>(long id, Func<Resource, TResult> accessor)
