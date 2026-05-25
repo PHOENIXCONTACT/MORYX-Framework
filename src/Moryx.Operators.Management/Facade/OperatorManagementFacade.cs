@@ -12,7 +12,7 @@ using Moryx.Users;
 
 namespace Moryx.Operators.Management;
 
-internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAttendanceManagement, IAttendanceManagementExtended, ISkillManagement, IUserManagement
+internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAttendanceManagement, ISkillManagement, IUserManagement
 {
     #region Dependencies
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -147,11 +147,11 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
     }
 
     /// <inheritdoc />
-    public IReadOnlyList<AttendanceChangedArgs> GetAttendingOperators(IOperatorAssignable resource)
+    public IReadOnlyList<AttendanceData> GetAttendanceData(IOperatorAssignable resource)
     {
         return ((IAttendanceManagement)this).Operators
             .Where(o => o.AssignedResources.Any(r => r.Id == resource.Id))
-            .Select(o => new AttendanceChangedArgs(o, this.GetSkills(o).ToArray()))
+            .Select(o => new AttendanceData(o, this.GetSkills(o).ToArray()))
             .ToArray();
     }
 

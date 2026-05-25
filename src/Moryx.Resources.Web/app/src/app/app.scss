@@ -42,6 +42,7 @@
   overflow-x: hidden;
   background-color: $mat-background-light;
   padding-bottom: 48px;
+  touch-action: auto;
 }
 .mat-toolbar-row{
   color: $mat-background-light;

@@ -3,17 +3,16 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import { ProductModel } from '../../../api/models';
 import { EditProductsService } from '../../../services/edit-products.service';
-
 import { MatTableModule } from '@angular/material/table';
 import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-product-references',
@@ -24,27 +23,11 @@ import { MatCardModule } from '@angular/material/card';
     TranslateModule,
     EmptyState,
     MatProgressSpinnerModule,
-    MatCardModule
-  ]
+    MatCardModule,
+    RouterLink
+]
 })
 export class ProductReferences {
-  private editProductsService = inject(EditProductsService);
-  private router = inject(Router);
-
-  references = signal<ProductModel[]>([]);
-  isLoading = signal(false);
+  references = toSignal(inject(EditProductsService).references$, { initialValue: [] });
   TranslationConstants = TranslationConstants;
-
-  constructor() {
-    this.isLoading.update(_ => true);
-    this.editProductsService.references.subscribe((references) => {
-      this.references.update(_ => references ?? []);
-      this.isLoading.update(_ => false);
-    });
-  }
-
-  referenceClicked(reference: ProductModel) {
-    this.router.navigate(['/details', reference.id, 'properties'])
-  }
 }
-

@@ -9,7 +9,7 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
 import { MatCheckboxModule } from "@angular/material/checkbox";
-import { MatDialogModule } from "@angular/material/dialog";
+import { MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS } from "@angular/material/dialog";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
@@ -79,6 +79,13 @@ export const appConfig: ApplicationConfig = {
       }),
       fallbackLang: 'en'
     }),
+    {
+      provide: MAT_DIALOG_DEFAULT_OPTIONS,
+      useValue: {
+        maxWidth: 'min(560px, 95vw)',
+        maxHeight: '90vh'
+      }
+    },
     provideAnimationsAsync(),
   ],
 };

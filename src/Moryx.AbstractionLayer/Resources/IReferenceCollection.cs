@@ -19,6 +19,13 @@ public interface IReferenceCollection
     /// Event raised when the collection was changed
     /// </summary>
     event EventHandler<ReferenceCollectionChangedEventArgs> CollectionChanged;
+
+    // TODO: Add a way to synchronize access to the underlying collection properly.
+    //       Is not a best practice and not possible in an async context
+    /// <summary>
+    /// Notifies the collection that the UnderlyingCollection was changed directly
+    /// </summary>
+    void UnderlyingCollectionChanged();
 }
 
 /// <summary>

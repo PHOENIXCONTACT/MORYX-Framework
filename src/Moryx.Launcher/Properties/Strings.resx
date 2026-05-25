@@ -117,8 +117,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Layout_About" xml:space="preserve">
-    <value>About</value>
+  <data name="AboutModal_Copyright" xml:space="preserve">
+    <value>Copyright</value>
   </data>
   <data name="AboutModal_Misc_Company" xml:space="preserve">
     <value>Company</value>
@@ -126,11 +126,29 @@
   <data name="AboutModal_Misc_Configuration" xml:space="preserve">
     <value>Config</value>
   </data>
-  <data name="AboutModal_Copyright" xml:space="preserve">
-    <value>Copyright</value>
-  </data>
   <data name="AboutModal_Misc_Description" xml:space="preserve">
     <value>Description</value>
+  </data>
+  <data name="AboutModal_Misc_Product" xml:space="preserve">
+    <value>Product</value>
+  </data>
+  <data name="AboutModal_Misc_TargetFramework" xml:space="preserve">
+    <value>Target Framework</value>
+  </data>
+  <data name="AboutModal_Misc_Title" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="AboutModal_Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="HELP" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="Layout_About" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="Layout_AdministrationMode" xml:space="preserve">
+    <value>Administration Mode</value>
   </data>
   <data name="Layout_Details" xml:space="preserve">
     <value>Details</value>
@@ -140,9 +158,6 @@
   </data>
   <data name="Layout_FullscreenMode" xml:space="preserve">
     <value>Fullscreen mode</value>
-  </data>
-  <data name="HELP" xml:space="preserve">
-    <value>Help</value>
   </data>
   <data name="Layout_Language" xml:space="preserve">
     <value>Language</value>
@@ -156,31 +171,19 @@
   <data name="Layout_OperatorMode" xml:space="preserve">
     <value>Operator Mode</value>
   </data>
-  <data name="AboutModal_Misc_Product" xml:space="preserve">
-    <value>Product</value>
-  </data>
   <data name="Layout_Search" xml:space="preserve">
     <value>Search</value>
-  </data>
-  <data name="SETTING_LANGUAGE" xml:space="preserve">
-    <value>Language</value>
   </data>
   <data name="Layout_SignIn" xml:space="preserve">
     <value>Sign in</value>
   </data>
-  <data name="AboutModal_Misc_TargetFramework" xml:space="preserve">
-    <value>Target Framework</value>
+  <data name="Layout_Views" xml:space="preserve">
+    <value>Views</value>
   </data>
-  <data name="AboutModal_Misc_Title" xml:space="preserve">
-    <value>Title</value>
+  <data name="SETTING_LANGUAGE" xml:space="preserve">
+    <value>Language</value>
   </data>
   <data name="TRADEMARK" xml:space="preserve">
     <value>Trademark</value>
-  </data>
-  <data name="AboutModal_Version" xml:space="preserve">
-    <value>Version</value>
-  </data>
-  <data name="Layout_Views" xml:space="preserve">
-    <value>Views</value>
   </data>
 </root>

@@ -3,10 +3,10 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, linkedSignal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { PartConnector, PartModel, ProductModel } from '../../../api/models';
@@ -16,8 +16,10 @@ import { CommonModule } from '@angular/common';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatListModule } from '@angular/material/list';
 import { ProductPartsDetailsComponent } from './product-parts-details/product-parts-details';
-import { DefaultView } from '../../default-view/default-view';
 import { MatButtonModule } from '@angular/material/button';
+import { firstValueFrom } from 'rxjs';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from "@angular/material/tooltip";
 
 @Component({
   selector: 'app-product-parts',
@@ -28,175 +30,84 @@ import { MatButtonModule } from '@angular/material/button';
     MatExpansionModule,
     MatListModule,
     ProductPartsDetailsComponent,
-    DefaultView,
     MatButtonModule,
-    TranslateModule
-  ]
+    TranslateModule,
+    MatIcon,
+    MatTooltip,
+    RouterLink
+]
 })
-export class ProductParts implements OnInit {
+export class ProductParts {
   private editProductsService = inject(EditProductsService);
   private router = inject(Router);
-  private activatedRoute = inject(ActivatedRoute);
   private dialog = inject(MatDialog);
 
   isEditMode = toSignal(this.editProductsService.edit$, { initialValue: false });
-  currentProduct = signal<ProductModel | undefined>(undefined);
-  expandedPart = signal<PartConnector | undefined>(undefined);
-  selectedPart = signal<PartModel | undefined>(undefined);
+  currentProduct = toSignal(this.editProductsService.currentProduct$);
+  expandedPart = linkedSignal(this.editProductsService.currentPartConnector);
+  selectedPart = linkedSignal(this.editProductsService.currentPart);
   TranslationConstants = TranslationConstants;
 
-  constructor() {
-    this.editProductsService.currentProduct.subscribe((product) => {
-      this.currentProduct.set(product);
-      this.init();
-    });
-  }
-
-  ngOnInit(): void {
-    this.init();
-  }
-
-  init() {
-    const partName = this.activatedRoute.snapshot.paramMap.get('partName');
-
-    if (partName === 'base') return;
-
-    if (!this.currentProduct) {
-      this.router.navigate(['']);
-      return;
-    }
-
-    let url = this.getBaseUrl();
-    this.expandedPart.set(this.currentProduct()?.parts?.find(
-      (p) => p.name === partName
-    ));
-    if (!this.expandedPart()) {
-      url += 'base/0';
-      this.router.navigate([url]);
-      return;
-    }
-    const partId = Number(this.activatedRoute.snapshot.paramMap.get('partId'));
-    if (partId === 0) {
-      return;
-    }
-
-    this.selectedPart.set(this.expandedPart()?.parts?.find(
-      (part) => part.id === partId
-    ));
-    if (!this.selectedPart() && this.expandedPart()?.name) {
-      if (this.expandedPart()?.isCollection) {
-        url += this.expandedPart()?.name + '/0';
-        this.router.navigate([url]);
-      } else {
-        this.expandedPart.set(undefined);
-        url += 'base/0';
-        this.router.navigate([url]);
-        return;
-      }
-    }
-  }
-
-  onSelectPartConnector(part: PartConnector) {
-    if (this.expandedPart()?.name === part.name) return;
-    this.expandedPart.set(part);
-    let url = this.getBaseUrl();
-    url += part.name;
-    if (!part.isCollection && part.parts?.length) {
-      this.selectedPart.set(part.parts?.[0]);
-      url += '/' + this.selectedPart()?.id;
-    } else {
-      url += '/0';
-      this.selectedPart.set(undefined);
-    }
-    this.router.navigate([url]);
+  onSelectPartConnector(connector: PartConnector) {
+    const firstPartId = connector.parts && connector.parts.length > 0 ? connector.parts[0].id : 0;
+    this.router.navigate(['details', this.currentProduct()!.id, 'parts', connector.name, firstPartId]);
   }
 
   onDeselectPartConnector(part: PartConnector) {
     if (part.name !== this.expandedPart()?.name) return;
-    this.expandedPart.set(undefined);
-    this.selectedPart.set(undefined);
-    const url = this.getBaseUrl() + 'base/0';
-    this.router.navigate([url]);
+    this.router.navigate(['details', this.currentProduct()!.id, 'parts', 'base', 0]);
   }
 
-  onSelectPartElement(part: PartModel) {
-    this.selectedPart.set(part);
-    let url = this.getBaseUrl();
-    url += this.expandedPart()?.name + '/' + part.id;
-    this.router.navigate([url]);
-  }
+  async addPart() {
+    const connector = this.expandedPart();
+    const dialogRef = this.dialog.open(DialogAddPart, { data: connector });
 
-  addPart() {
-    const dialogRef = this.dialog.open(DialogAddPart, {
-      data: this.expandedPart(),
-      width: '500px'
-    });
+    const product = await firstValueFrom(dialogRef.afterClosed());
+    if (!product) return;
 
-    dialogRef.afterClosed().subscribe((product) => {
-      if (!product) return;
+    // Create new Part
+    let newPart = <PartModel>{};
+    newPart.product = product;
+    if (connector?.propertyTemplates) {
+      newPart.properties = structuredClone(connector.propertyTemplates!);
+    }
 
-      // Create new Part
-      let newPart = <PartModel>{};
-      newPart.product = product;
-      if (this.expandedPart()?.propertyTemplates) {
-        newPart.properties = structuredClone(this.expandedPart()?.propertyTemplates!);
-      }
-      this.editProductsService.currentPartId++;
-      newPart.id = this.editProductsService.currentPartId;
-
-      // Add new Part to PartLink
-      if (this.expandedPart()?.isCollection)
-        this.expandedPart()?.parts?.push(newPart);
-      else {
-        if (this.expandedPart()?.parts?.length)
-          this.expandedPart.update(item => {
-            item!.parts![0] = newPart
-            return item;
-          });
-        else this.expandedPart.update(item => {
-          item!.parts?.push(newPart);
-          return item;
-        })
-      }
-
-      this.onSelectPartElement(newPart);
-    });
+    const addedPart = this.editProductsService.addPartToConnector(newPart);
+    this.router.navigate(['details', this.currentProduct()!.id, 'parts', connector!.name, addedPart.id]);
   }
 
   removePart() {
-    if (!this.expandedPart()) return;
-
-    if (this.expandedPart()?.isCollection) {
-      if (!this.selectedPart() || !this.expandedPart()?.parts) return;
-
-      this.expandedPart.update(item => {
-        item!.parts = item?.parts?.filter(
-          (part) => part.id !== this.selectedPart()?.id
-        );
-        return item;
-      })
-    } else {
-      this.expandedPart.update(item => {
-        item!.parts = [] as PartModel[];
-        return item;
-      })
+    const connector = this.expandedPart();
+    if (!connector) {
+      return;
     }
 
-    this.selectedPart.set(undefined);
-    const url = this.getBaseUrl() + this.expandedPart()?.name + '/0';
-    this.router.navigate([url]);
-  }
+    this.editProductsService.removePartFromConnector();
 
-  private getBaseUrl(): string {
-    const url = this.router.url;
-    const index = url.lastIndexOf('parts');
-    let newUrl = url.substring(0, index);
-    newUrl += 'parts/';
-    return newUrl;
+    if (connector?.isCollection) {
+      this.onSelectPartConnector(connector);
+    } else {
+      this.onDeselectPartConnector(connector);
+    }
   }
 
   createProductNameWithIdentity(product: ProductModel | undefined, shortened: boolean = false, maxLength: number = 40): string {
     return this.editProductsService.createProductNameWithIdentity(product, shortened, maxLength);
   }
-}
 
+  getConnectorPreview(connector: PartConnector): string {
+    if (!connector.parts || connector.parts.length === 0) {
+      return '';
+    }
+    const partNames = connector.parts.map(p => p.product ? this.createProductNameWithIdentity(p.product, true) : 'Unnamed Product');
+    return partNames.join(', ');
+  }
+
+  openProduct(part: PartModel) {
+    if (this.isEditMode()) {
+      this.router.navigate(['details', this.currentProduct()!.id, 'parts', this.expandedPart()!.name, part.id], { queryParamsHandling: 'preserve' });
+      return;
+    }
+    this.router.navigate(['details', part.product?.id]);
+  }
+}

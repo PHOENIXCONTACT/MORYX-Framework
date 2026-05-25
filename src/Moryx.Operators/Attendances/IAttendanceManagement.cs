@@ -19,6 +19,25 @@ public interface IAttendanceManagement
     AssignableOperator? DefaultOperator { get; }
 
     /// <summary>
+    /// Gets a list of assignable resources
+    /// </summary>
+    IEnumerable<IOperatorAssignable> Assignables { get; }
+
+    /// <summary>
+    /// Get's the assignable with the given id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    IOperatorAssignable GetAssignable(long id);
+
+    /// <summary>
+    /// Retrieves a list of signed in operators and their skills
+    /// </summary>
+    /// <param name="resource"></param>
+    /// <returns></returns>
+    IReadOnlyList<AttendanceData> GetAttendanceData(IOperatorAssignable assignable);
+
+    /// <summary>
     /// Signs in a operator
     /// </summary>
     void SignIn(AssignableOperator @operator, IOperatorAssignable resource);
@@ -37,4 +56,10 @@ public interface IAttendanceManagement
     /// Event to inform that a operator was signed out
     /// </summary>
     event EventHandler<AssignableOperator> OperatorSignedOut;
+
+    /// <summary>
+    /// Event to inform that an operator was signed in or signed out of a specific resource
+    /// </summary>
+    event EventHandler<SignInStatusChangedArgs>? SignInStatusChanged;
+
 }

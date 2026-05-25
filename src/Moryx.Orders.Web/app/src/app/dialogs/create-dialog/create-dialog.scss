@@ -1,15 +1,5 @@
 @use "@angular/material" as mat;
-mat-form-field {
-  width: 100%;
-}
-
-.create-dialog-operation-container {
-  place-content: space-between;
-}
-
-.create-dialog-operation-title {
-  display: inline-block;
-}
+@use "../dialog-styles.scss";
 
 .create-dialog-operation-list-container {
   padding: 0px;
@@ -30,7 +20,7 @@ mat-form-field {
   padding: 0 !important;
   @include mat.list-overrides((
      list-item-two-line-container-height: 60px,
-));
+  ));
 }
 
 .actions { gap: 8px; }

@@ -152,7 +152,6 @@
           [matTreeNodePaddingIndent]="10"
           (click)="selectResource(node.id)"
           (contextmenu)="openContextMenuByClicking($event, node.id)"
-          (press)="openContextMenuByPressing($event, node.id)"
           class="resources-tree-item"
           [ngClass]="{
             'moryx-selected': active?.id == node.id,
@@ -168,7 +167,6 @@
           [matTreeNodePaddingIndent]="10"
           (click)="selectResource(node.id)"
           (contextmenu)="openContextMenuByClicking($event, node.id)"
-          (press)="openContextMenuByPressing($event, node.id)"
           class="resources-tree-item"
           [ngClass]="{
             'moryx-selected': active?.id == node.id,

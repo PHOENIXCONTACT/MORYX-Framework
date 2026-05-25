@@ -1,3 +1,10 @@
+@let edit = this.isEditMode();
+@let recipe = this.currentRecipe();
+
+@if (!recipe) {
+  <empty-state [icon]="'error'" [header]="'Undefined State'" [message]="''"></empty-state>
+}
+@else {
 <mat-form-field appearance="outline">
   <mat-label>{{
     TranslationConstants.SHARED.IDENTIFIER | translate
@@ -5,16 +12,16 @@
   <input
     matInput
     aria-label="Recipe Name"
-    [disabled]="edit() === false"
-    [(ngModel)]="recipe().name"
+    [disabled]="edit === false"
+    [(ngModel)]="recipe.name"
     />
 </mat-form-field>
 @if (hasWorkplans()) {
   <mat-form-field appearance="outline">
     <mat-label>{{ TranslationConstants.SHARED.WORKPLAN | translate }}</mat-label>
     <mat-select
-      [(ngModel)]="recipe().workplanModel"
-      [disabled]="edit() === false"
+      [(ngModel)]="recipe.workplanModel"
+      [disabled]="edit === false"
       [compareWith]="byWorkplanId"
       required
       >
@@ -30,7 +37,7 @@
   <mat-label>{{
     TranslationConstants.SHARED.CLASSIFICATION | translate
   }}</mat-label>
-  <mat-select [(ngModel)]="recipe().classification" [disabled]="edit() === false" [formControl]="recipeControl" restrictKeywordValidator="Unset">
+  <mat-select [(ngModel)]="recipe.classification" [disabled]="!edit" [formControl]="recipeControl" restrictKeywordValidator="Unset">
     @for (classification of recipeClassifications(); track classification) {
       <mat-option
         [value]="classification"
@@ -46,3 +53,4 @@
     <mat-hint>{{recipeControl.value !== 'Unset' ? recipeControl.value : TranslationConstants.DETAILS.RECIPS.CHOOSE_OTHER | translate }}</mat-hint>
   }
 </mat-form-field>
+}

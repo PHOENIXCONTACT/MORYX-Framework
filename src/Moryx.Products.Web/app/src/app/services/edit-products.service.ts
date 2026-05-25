@@ -5,23 +5,19 @@
 
 import { formatNumber } from "@angular/common";
 import { HttpErrorResponse } from "@angular/common/http";
-import { inject, Injectable } from "@angular/core";
+import { inject, Injectable, linkedSignal } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
 import { PrototypeToEntryConverter } from "@moryx/ngx-web-framework/entry-editor";
-import { BehaviorSubject } from "rxjs";
-import {
-  ProductModel,
-  ProductQuery,
-  RecipeModel,
-  RevisionFilter,
-  Selector,
-} from "../api/models";
+import { BehaviorSubject, lastValueFrom } from "rxjs";
+import { map } from "rxjs/operators";
+import { PartConnector, PartModel, ProductModel, RecipeModel } from "../api/models";
 import { ProductManagementService } from "../api/services/product-management.service";
 import { TranslationConstants } from "../extensions/translation-constants.extensions";
 import { DuplicateProductInfos } from "../models/DuplicateProductInfos";
 import { CacheProductsService } from "./cache-products.service";
-import { SessionService } from "./session.service";
+import { ProductStorageObject } from "./session.service";
+import { toSignal } from "@angular/core/rxjs-interop";
 
 @Injectable({
   providedIn: "root",
@@ -30,113 +26,86 @@ export class EditProductsService {
   private productManagementService = inject(ProductManagementService);
   private router = inject(Router);
   private cacheProductsService = inject(CacheProductsService);
-  private sessionService = inject(SessionService);
-  private activatedRoute = inject(ActivatedRoute);
   private snackbarService = inject(SnackbarService);
 
   public edit$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  public currentProduct: BehaviorSubject<ProductModel | undefined> = new BehaviorSubject<ProductModel | undefined>(undefined);
-  public references: BehaviorSubject<ProductModel[] | undefined> = new BehaviorSubject<ProductModel[] | undefined>(undefined);
+
+  private currentProduct: BehaviorSubject<ProductModel | undefined> = new BehaviorSubject<ProductModel | undefined>(undefined);
+  public currentProduct$ = this.currentProduct.asObservable();
+  public currentProductId = toSignal(this.currentProduct$.pipe(map((p) => p?.id)));
+  private productSignal = toSignal(this.currentProduct$, { initialValue: undefined });
+
+  private references: BehaviorSubject<ProductModel[] | undefined> = new BehaviorSubject<ProductModel[] | undefined>(undefined);
+  public references$ = this.references.asObservable();
+
+  private recipe = linkedSignal<ProductModel | undefined, RecipeModel | undefined>({
+    source: this.productSignal,
+    computation: (currentProduct, previous) => {
+    if (!currentProduct) {
+      return undefined;
+    }
+    return currentProduct.recipes?.find(r => r.id === previous?.value?.id);
+  }});
+  public currentRecipe = this.recipe.asReadonly();
   public currentRecipeNumber: number = 0;
   maximumAlreadySavedRecipeId: number = 0;
+
+  private partConnector = linkedSignal<ProductModel | undefined, PartConnector | undefined>({
+    source: this.productSignal,
+    computation: (currentProduct, previous) => {
+    if (!currentProduct) {
+      return undefined;
+    }
+    return currentProduct.parts?.find(c => c.name === previous?.value?.name);
+  }});
+  public currentPartConnector = this.partConnector.asReadonly();
+  private part = linkedSignal<PartConnector | undefined, PartModel | undefined>({
+    source: this.partConnector,
+    computation: (partConnector, previous) => {
+      if (!partConnector) {
+        return undefined;
+      }
+      return partConnector.parts?.find(p => p.id === previous?.value?.id);
+    }});
+  public currentPart = this.part.asReadonly();
   public currentPartId: number = 0;
-  maximumAlreadySavedPartId: number = 0;
-  currentProductId: number = 0;
+  public maximumAlreadySavedPartId: number = 0;
   TranslationConstants = TranslationConstants;
 
-  loadFromStorage() {
-    const productStorageObject = this.sessionService.getWipProduct();
-    if (productStorageObject) {
-      this.currentProductId = productStorageObject.product.id!;
-      this.currentPartId = productStorageObject.details.currentPartId;
-      this.currentRecipeNumber = productStorageObject.details.currentRecipeNumber;
-      this.maximumAlreadySavedPartId = productStorageObject.details.maximumAlreadySavedPartId;
-      this.maximumAlreadySavedRecipeId = productStorageObject.details.maximumAlreadySavedRecipeId;
-      this.currentProduct.next(productStorageObject.product);
-    }
+  setProductFromStorage(productStorageObject: ProductStorageObject) {
+    this.currentPartId = productStorageObject.details.currentPartId;
+    this.currentRecipeNumber = productStorageObject.details.currentRecipeNumber;
+    this.maximumAlreadySavedPartId = productStorageObject.details.maximumAlreadySavedPartId;
+    this.maximumAlreadySavedRecipeId = productStorageObject.details.maximumAlreadySavedRecipeId;
+    this.currentProduct.next(productStorageObject.product);
+    this.recipe.set(productStorageObject.product.recipes?.find(r => r.id === productStorageObject.details.currentRecipeNumber));
+
+    this.edit$.next(true);
   }
 
-  loadProduct() {
-    let id = 0;
-    const navigation = this.router.currentNavigation();
-    if (
-      navigation &&
-      (navigation?.finalUrl?.root.children["primary"]?.segments?.length ??
-        0 > 1)
-    )
-      id = Number(
-        navigation.finalUrl?.root.children["primary"].segments[1].toString()
-      );
-    else {
-      const url = this.router.url;
-      const regexId: RegExp = /(details\/\d*)/;
-      if (!regexId.test(url)) {
-        this.currentProduct.next(undefined);
-        return;
-      }
-      id = Number(url.split("/")[2]);
-    }
+  setProduct(product: ProductModel | undefined) {
+    this.currentProduct.next(product);
+    this.references.next(undefined);
+  }
 
-    this.currentProductId = id;
-
-    if (id === 0) {
-      this.unloadProduct();
+  updateCurrentProduct(product: ProductModel) {
+    const current = this.currentProduct.value;
+    if (Object.is(product, current)) {
       return;
     }
-    this.loadProductById(id);
-  }
-
-  loadProductById(id: number) {
-    this.productManagementService.getTypeById({id: id}).subscribe({
-      next: (product) => {
-        this.currentProduct.next(product);
-        this.getReferencesOfCurrentProduct();
-      },
-      error: async (e: HttpErrorResponse) => {
-        await this.handleLoadError(e);
-        this.unloadProduct();
-      },
-    });
-  }
-
-  private async handleLoadError(error: HttpErrorResponse) {
-    if (error.status === 0) {
-      // Unknown errors occur most commonly when the server is not reachable.
-      // That is handled somewhere else, so there is no need to show that here.
-      return;
+    if (current?.id !== product.id) {
+      throw new Error("Tried to update product with id " + product.id + " but current product has id " + current?.id);
     }
-
-    if (error.error?.title !== undefined) {
-      await this.snackbarService.showError(error.error?.title);
-    } else {
-      await this.snackbarService.handleError(error);
-    }
+    this.currentProduct.next(product);
   }
 
-  unloadProduct() {
+  resetProduct() {
     this.currentProduct.next(undefined);
-    this.router.navigate([""]);
+    this.references.next(undefined);
   }
 
-  private getReferencesOfCurrentProduct() {
-    const product = this.currentProduct.value;
-    if (!product) return;
-
-    const body = <ProductQuery>{
-      includeDeleted: false,
-      identifier: product.identifier,
-      revision: product.revision,
-      revisionFilter: RevisionFilter.Specific,
-      selector: Selector.Parent,
-    };
-    this.productManagementService.getTypes({body: body}).subscribe({
-      next: (references) => {
-        this.references.next(references);
-      },
-      error: async (e: HttpErrorResponse) => {
-        await this.snackbarService.handleError(e);
-      },
-    });
+  setReferences(references: ProductModel[] | undefined) {
+    this.references.next(references);
   }
 
   onEdit() {
@@ -165,7 +134,7 @@ export class EditProductsService {
     this.edit$.next(true);
   }
 
-  onSave() {
+  async onSave() {
     const productModel = this.currentProduct.value;
     if (!productModel || productModel.id === undefined) return;
 
@@ -173,91 +142,63 @@ export class EditProductsService {
     if (productModel.properties)
       PrototypeToEntryConverter.convertToEntry(productModel.properties);
 
-    if (productModel.recipes) {
-      for (let recipe of productModel.recipes) {
-        // Recipes with the id 0 will be created and saved as new recipes in the backend
-        if (!recipe.id) recipe.id = 0;
-        else if (recipe.id > this.maximumAlreadySavedRecipeId) recipe.id = 0;
-
-        if (recipe.properties)
-          PrototypeToEntryConverter.convertToEntry(recipe.properties);
+    for (let recipe of productModel.recipes ?? []) {
+      // Recipes with the id 0 will be created and saved as new recipes in the backend
+      if (!recipe.id || recipe.id > this.maximumAlreadySavedRecipeId) {
+        recipe.id = 0;
       }
+
+      if (recipe.properties)
+        PrototypeToEntryConverter.convertToEntry(recipe.properties);
     }
 
-    if (productModel?.parts?.length) {
-      for (let partConnector of productModel.parts) {
-        if (!partConnector.parts?.length) continue;
-        for (let part of partConnector.parts) {
-          if (!part.id) part.id = 0;
-          else if (part.id > this.maximumAlreadySavedPartId) part.id = 0;
-
-          if (part.properties)
-            PrototypeToEntryConverter.convertToEntry(part.properties);
+    for (let partConnector of productModel?.parts ?? []) {
+      for (let part of partConnector.parts ?? []) {
+        if (!part.id || part.id > this.maximumAlreadySavedPartId) {
+          part.id = 0;
         }
+
+        if (part.properties)
+          PrototypeToEntryConverter.convertToEntry(part.properties);
       }
     }
 
-    this.productManagementService
-      .updateType({id: productModel.id, body: productModel})
-      .subscribe((result) => {
-        if (result !== productModel?.id) return;
-
-        this.cacheProductsService.loadProductsForTree();
-        this.productManagementService.getTypeById({id: result}).subscribe({
-          next: (p) => {
-            this.currentProduct.next(p);
-            this.edit$.next(false);
-          },
-          error: async (e: HttpErrorResponse) => {
-            await this.snackbarService.handleError(e);
-          },
-        });
-      });
+    let updated: ProductModel = {};
+    try {
+      await lastValueFrom(this.productManagementService.updateType({id: productModel.id, body: productModel}));
+      this.cacheProductsService.loadProductsForTree();
+      updated = await lastValueFrom(this.productManagementService.getTypeById({id: productModel.id}));  
+    } catch (error) {
+      await this.snackbarService.handleError(error as HttpErrorResponse);
+      return;
+    }
+    
+    this.currentProduct.next(updated);
+    this.edit$.next(false);
   }
 
   async onCancel() {
     this.edit$.next(false);
-    if (!this.currentProduct.value?.id) return;
-
-    await this.productManagementService
-      .getTypeById({id: this.currentProduct.value.id})
-      .toAsync()
-      .then(product => this.currentProduct.next(product))
-      .catch(async (error) => await this.snackbarService.handleError(error));
+    const to = this.router.url;
+    await this.router.navigate(['/cancel'], { queryParams: { to: encodeURIComponent(to) }, replaceUrl: true, });   
   }
 
-  onDuplicate(infos: DuplicateProductInfos) {
+  async onDuplicate(infos: DuplicateProductInfos) {
     if (!infos.revision || !infos.identifier || !infos.product?.id) return;
 
+    const id = infos.product.id;
     const identifier = this.createProductIdentity(
       infos.identifier,
       infos.revision
     );
 
-    this.productManagementService
-      .duplicate({id: infos.product.id, body: `"${identifier}"`})
-      .subscribe({
-        next: (product) => {
-          this.cacheProductsService.loadProductsForTree();
-          const regexSpecificRecipe: RegExp = /(details\/\d*\/recipes\/\d*)/;
-          if (regexSpecificRecipe.test(this.router.url)) {
-            this.router
-              .navigate(["../../"], {relativeTo: this.activatedRoute})
-              .then(() => {
-                this.router
-                  .navigate([`/details/${product.id}`])
-                  .then(() => this.loadProduct());
-              });
-          } else {
-            this.router
-              .navigate([`/details/${product.id}`])
-              .then(() => this.loadProduct());
-          }
-        },
-        error: async (e: HttpErrorResponse) => {
-          await this.snackbarService.handleError(e);
-        },
-      });
+    try {
+      const product = await lastValueFrom(this.productManagementService.duplicate({id: id, body: `"${identifier}"`}));
+      this.cacheProductsService.loadProductsForTree();  
+      this.router.navigate(['details', product.id]);  
+    } catch (error) {
+      await this.snackbarService.handleError(error as HttpErrorResponse);
+    }
   }
 
   createProductIdentity(
@@ -289,12 +230,39 @@ export class EditProductsService {
     return productName;
   }
 
-  addRecipe(recipe: RecipeModel) {
-    const currentProduct = this.currentProduct.value;
-    currentProduct?.recipes?.push(recipe);
-    this.currentProduct.next(currentProduct);
+  addRecipe(recipe: RecipeModel) {const currentProduct = this.currentProduct.value;
+    if (!currentProduct) {
+      throw new Error("Invalid State: No current product set");
+    }
+    currentProduct.recipes!.push(recipe);
+    this.currentProduct.next({...currentProduct, recipes: [...currentProduct.recipes!]});
   }
 
+  setRecipe(recipe: RecipeModel | undefined) {
+    this.recipe.set(recipe);
+  }
+  
+  updateCurrentRecipe(recipe: RecipeModel) {
+    const currentRecipe = this.recipe();
+    if (Object.is(recipe, currentRecipe)) {
+      return;
+    }
+    if (currentRecipe?.id !== recipe.id) {
+      throw new Error("Invalid State: Tried to update recipe with id " + recipe.id + " but current recipe has id " + currentRecipe?.id);
+    }
+    const currentProduct = this.currentProduct.value;
+    if (!currentProduct) {
+      throw new Error("Invalid State: No current product set");
+    }
+    const recipeIndex = currentProduct.recipes?.findIndex(r => r.id === recipe.id);
+    if (recipeIndex === undefined || recipeIndex < 0) {
+      throw new Error("Invalid State: Tried to update recipe with id " + recipe.id + " but it was not found in current product");
+    }
+    this.recipe.set(recipe);
+    currentProduct.recipes![recipeIndex] = recipe;
+    this.currentProduct.next({...currentProduct, recipes: [...currentProduct.recipes!]});
+  }
+  
   removeRecipe(recipe: RecipeModel) {
     const currentProduct = this.currentProduct.value;
     if (!currentProduct?.recipes) return;
@@ -302,6 +270,63 @@ export class EditProductsService {
       (r) => r.id !== recipe.id
     );
     this.currentProduct.next(currentProduct);
+  }
+
+  setPartConnector(partConnector: PartConnector | undefined) {
+    this.partConnector.set(partConnector);
+  }
+
+  setPart(part: PartModel | undefined) {
+    this.part.set(part);
+  }
+
+  addPartToConnector(newPart: PartModel) {
+    const product = this.currentProduct.value;
+    if (!product) {
+      throw new Error("Invalid State: No current product set");
+    }
+
+    const connector = this.partConnector();
+    if (!connector) {
+      throw new Error("Invalid State: No part connector selected");
+    }
+
+    // Add new Part to PartLink
+    newPart.id = ++this.currentPartId;
+    if (connector.isCollection) {
+      connector.parts = [...connector.parts!, newPart];
+    }
+    else {
+      connector.parts = [newPart];
+    }
+    
+    const updatedConnectors = product.parts?.map(c => c.name === connector.name ? {...connector} : c) ?? [];
+    this.currentProduct.next({...product, parts: updatedConnectors});
+    return newPart;
+  }
+
+  removePartFromConnector() {
+    const product = this.currentProduct.value;
+    if (!product) {
+      throw new Error("Invalid State: No current product set");
+    }
+
+    const connector = this.partConnector();
+    if (!connector) {
+      throw new Error("Invalid State: No part connector selected");
+    }
+    const part = this.part();    
+    
+    if (connector?.isCollection) {
+      if (!part) {
+        throw new Error("Invalid State: No part selected");
+      }
+      connector.parts = connector.parts?.filter((p) => p.id !== part.id);
+    } else {
+      connector.parts = [] as PartModel[];
+    }
+    const updatedConnectors = product.parts?.map(c => c.name === connector.name ? {...connector} : c) ?? [];
+    this.currentProduct.next({...product, parts: updatedConnectors});
   }
 }
 

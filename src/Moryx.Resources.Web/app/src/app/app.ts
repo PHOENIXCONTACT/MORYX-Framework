@@ -179,10 +179,6 @@ export class App implements OnInit, OnDestroy {
     this.treeStateIsInitialized = true;
   }
 
-  openContextMenuByPressing(event: any, id: number) {
-    this.openContextMenu(id, event.pointers[0].clientX, event.pointers[0].clientY);
-  }
-
   private openContextMenu(resourceId: number, xCoordinate: number, yCoordinate: number) {
     this.trigger().menuData = {id: resourceId};
     this.menuTopLeftPosition.update(() => {
@@ -201,6 +197,10 @@ export class App implements OnInit, OnDestroy {
   }
 
   openContextMenuByClicking(event: MouseEvent, resourceId: number) {
+    // Only handle right-click, not touch long-press
+    if ((event as any).pointerType === 'touch') {
+      return;
+    }
     event.preventDefault();
     this.openContextMenu(resourceId, event.clientX, event.clientY);
   }

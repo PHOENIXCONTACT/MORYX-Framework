@@ -3,7 +3,6 @@
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;
-using Moryx.ControlSystem.Cells;
 using Moryx.ControlSystem.Recipes;
 using Moryx.ControlSystem.Setups;
 using Moryx.Logging;
@@ -15,7 +14,7 @@ namespace Moryx.ControlSystem.SetupProvider;
 [Component(LifeCycle.Singleton, typeof(ISetupManager))]
 internal partial class SetupManager : ISetupManager, ILoggingComponent
 {
-    private readonly ICollection<ISetupTrigger> _triggers = new List<ISetupTrigger>();
+    private readonly List<ISetupTrigger> _triggers = [];
 
     #region Dependencies
     /// <summary>
@@ -41,9 +40,14 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
     {
         foreach (var triggerConfig in Config.SetupTriggers)
         {
+            if (triggerConfig.Disabled)
+            {
+                continue;
+            }
             var trigger = TriggerFactory.Create(triggerConfig);
             _triggers.Add(trigger);
         }
+        _triggers.Sort((t1, t2) => t1.SortOrder - t2.SortOrder);
     }
 
     /// <inheritdoc />
@@ -74,7 +78,9 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
             if (evaluation is SetupEvaluation.Change change)
             {
                 if (ShouldSkipForExecution(execution, targetSystem, change, trigger.GetType().Name))
+                {
                     continue;
+                }
             }
 
             triggers.Add(trigger);
@@ -89,7 +95,7 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
 
         // Create all necessary setup steps
         var stepGroups = new Dictionary<int, List<IWorkplanStep>>();
-        foreach (var trigger in triggers.OrderBy(t => t.SortOrder))
+        foreach (var trigger in triggers)
         {
             var index = trigger.SortOrder;
 
@@ -240,7 +246,6 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
         switch (execution)
         {
             case SetupExecution.BeforeProduction:
-            {
                 var targetCells = targetSystem.Cells(change.TargetCapabilities);
                 var hasTargetCaps = targetCells.Any();
 
@@ -251,10 +256,8 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
                     return true;
                 }
                 return false;
-            }
 
             case SetupExecution.AfterProduction:
-            {
                 var currentCells = targetSystem.Cells(change.CurrentCapabilities);
                 var hasCurrentCaps = currentCells.Any();
 
@@ -266,12 +269,10 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
                     return true;
                 }
                 return false;
-            }
             default:
                 return false;
         }
     }
-
 
     private static partial class Log
     {

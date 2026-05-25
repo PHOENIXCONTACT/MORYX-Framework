@@ -9,7 +9,7 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/materia
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import { PartConnector, ProductModel, RevisionFilter, Selector } from '../../api/models';
+import { PartConnector, ProductModel, ProductQuery, RevisionFilter, Selector } from '../../api/models';
 import { ProductManagementService } from '../../api/services';
 import { EditProductsService } from '../../services/edit-products.service';
 import { CommonModule } from '@angular/common';
@@ -58,24 +58,21 @@ export class DialogAddPart {
       includeDeleted: false,
       revisionFilter: RevisionFilter.All,
       selector: Selector.Direct,
-      type: this.data?.type,
-    };
+      typeName: this.data.type,
+    } as ProductQuery;
     this.productManagementService.getTypes({body: body}).subscribe({
       next: (products) => {
-        let possibleParts = [] as ProductModel[];
-        if (this.data && this.data.parts?.length && !this.data.isCollection) {
-          possibleParts = products.filter(
-            (p) => !this.data.parts?.some((s) => s.product?.id === p.id)
-          );
-        } else {
-          possibleParts = products;
+        let possibleParts = products;
+        const currentParts = this.data.parts;
+        if (currentParts?.length && !this.data.isCollection) {
+          possibleParts = possibleParts.filter((p) => currentParts[0]?.id !== p.id);
         }
-
+        
+        // Todo: Make possible parts a resource signal
         this.possibleParts.update(_ => possibleParts);
         this.filteredPossibleParts.update(_ => possibleParts);
       },
-      error: async (e: HttpErrorResponse) =>
-        await this.snackbarService.handleError(e)
+      error: async (e) => await this.snackbarService.handleError(e)
     });
   }
 

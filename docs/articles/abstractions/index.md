@@ -23,7 +23,7 @@ An [Activity](processing/activities.md) is the smallest separately executable st
 
 ## Capabilities
 
-[Capabilities](processing/capabilities.md) are used to find a matching *Resource* for an Activity.
+[Capabilities](abstractions/processing/capabilities.md) are used to find a matching *Resource* for an Activity.
 
 ## Constraints
 
