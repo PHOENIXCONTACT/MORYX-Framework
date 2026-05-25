@@ -67,11 +67,12 @@ internal class ResourceEntityAccessor
         // Copy default properties
         Instance.Id = Id;
         Instance.Name = Name;
-        Instance.Description = Description;
 
         // Copy extended data from json, or simply use JSON to provide defaults
-        JsonConvert.PopulateObject(ExtensionData ?? "{}", Instance, JsonSettings.Minimal);
-
+        if (!string.IsNullOrEmpty(ExtensionData))
+        {
+            JsonConvert.PopulateObject(ExtensionData ?? "{}", Instance, JsonSettings.Minimal);
+        }
         return Instance;
     }
 
