@@ -11,8 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Moryx.Notifications.Endpoints\Moryx.Notifications.Endpoints.csproj" />
-    <ProjectReference Include="..\Moryx\Moryx.csproj" />
     <ProjectReference Include="..\Moryx.Launcher\Moryx.Launcher.csproj" />
   </ItemGroup>
 

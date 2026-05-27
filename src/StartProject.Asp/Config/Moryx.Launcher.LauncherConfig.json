@@ -25,7 +25,7 @@
   "Regions": [
     {
       "Region": "Top",
-      "Name": "_NotificationsBar"
+      "Name": "NotificationsBar"
     }
   ],
   "ConfigState": "Valid"

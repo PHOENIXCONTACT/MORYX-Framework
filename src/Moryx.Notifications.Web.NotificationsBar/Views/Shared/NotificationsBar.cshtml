@@ -1,15 +1,14 @@
 ﻿
-@attribute [LauncherRegion("_NotificationsBar")]
+@attribute [LauncherRegion("NotificationsBar")]
 
 @{
 // Sections do not work with partial views, so we import the dependencies via script.
 }
 <script type="module">
     const tag = 'moryx-notifications-bar';
-    const jsSrc = '/_content/Moryx.Notifications.Web.NotificationsBar/main.js';
+    const jsSrc = '~/_content/Moryx.Notifications.Web.NotificationsBar/main.js';
 
-    if (!customElements.get(tag))
-    {
+    if (!customElements.get(tag)) {
         import(jsSrc).catch(err =>
             console.error("Failed to load notifications bar", err)
         );
