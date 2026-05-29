@@ -19,7 +19,6 @@
     <Project Path="src/Moryx.Drivers.OpcUa/Moryx.Drivers.OpcUa.csproj" />
     <Project Path="src/Moryx.Drivers.Simulation/Moryx.Drivers.Simulation.csproj" />
   </Folder>
-  <Folder Name="/Mqtt/" />
   <Folder Name="/FactoryMonitor/">
     <Project Path="src/Moryx.Factory/Moryx.Factory.csproj" />
     <Project Path="src/Moryx.FactoryMonitor.Endpoints/Moryx.FactoryMonitor.Endpoints.csproj" />
@@ -182,8 +181,4 @@
   <Project Path="src/Moryx.Launcher/Moryx.Launcher.csproj" />
   <Project Path="src/Moryx/Moryx.csproj" />
   <Project Path="src/StartProject.Asp/StartProject.Asp.csproj" />
-  <Properties Name="ExtensibilityGlobals" Scope="PostLoad">
-    <Property Name="RESX_ShowErrorsInErrorList" Value="True" />
-    <Property Name="RESX_TaskErrorCategory" Value="Message" />
-  </Properties>
 </Solution>
