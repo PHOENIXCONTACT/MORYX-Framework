@@ -11,6 +11,7 @@ using NUnit.Framework;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Moryx.Resources.Management.Model;
+using System.Collections.Generic;
 
 namespace Moryx.Resources.Management.Tests;
 
@@ -51,6 +52,23 @@ public class ResourceEntityAccessorTests
 
         Assert.That(resource.Enabled);
         Assert.That(resource.Number, Is.EqualTo(42));
+    }
+	
+	
+    [Test(Description = "Calling Instantiate on a type that holds ignored properties does not override these properties")]
+    public void InstantiateWithoutEntityDoesNotOverrideIgnoredJsonProperties()
+    {
+        // Arrange
+        var accessor = new ResourceEntityAccessor
+        {
+            Type = typeof(DefaultTestResource).ResourceType()
+        };
+
+        // Act
+        var resource = accessor.Instantiate(_typeControllerMock, _resourceGraph) as DefaultTestResource;
+
+        // Assert
+        Assert.That(resource.InitializedProperty, Is.Not.Null);
     }
 
     [Test(Description = "Instantiates a resource")]
@@ -148,6 +166,9 @@ public class ResourceEntityAccessorTests
 
         [DataMember, DefaultValue(true)]
         public bool Enabled { get; set; }
+		
+		[DataMember, JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+		public List<string> InitializedProperty { get; set; } = [];
     }
 
     private class TestResource : Resource
