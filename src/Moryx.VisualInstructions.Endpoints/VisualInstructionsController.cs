@@ -3,6 +3,8 @@
 
 using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Channels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -22,7 +24,12 @@ public class VisualInstructionsController : ControllerBase
     private const string CookieName = "moryx-client-identifier";
     private readonly IVisualInstructions _visualInstructions;
 
-    private static readonly ConcurrentDictionary<Guid, (string Identifier, Channel<InstructionModel[]> Channel)> _instructionStreamSubscribers = new();
+    private static readonly ConcurrentDictionary<Guid, (string Identifier, Channel<string> Channel)> _instructionStreamSubscribers = new();
+    private static readonly JsonSerializerOptions _serializerOptions = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        Converters = { new JsonStringEnumConverter() }
+    };
 
     public VisualInstructionsController(IVisualInstructions visualInstructions)
         => _visualInstructions = visualInstructions;
@@ -63,15 +70,15 @@ public class VisualInstructionsController : ControllerBase
 
         return;
 
-        async IAsyncEnumerable<InstructionModel[]> Subscribe([EnumeratorCancellation] CancellationToken cancelToken)
+        async IAsyncEnumerable<string> Subscribe([EnumeratorCancellation] CancellationToken cancelToken)
         {
-            var channel = Channel.CreateUnbounded<InstructionModel[]>();
+            var channel = Channel.CreateUnbounded<string>();
             var id = Guid.NewGuid();
             _instructionStreamSubscribers[id] = (identifier, channel);
 
-            // Send initial instruction set as first item
+            // Send all instructions as first item
             var initialInstructions = _visualInstructions.GetInstructions(identifier).Select(Converter.ToModel).ToArray();
-            yield return initialInstructions;
+            yield return JsonSerializer.Serialize(initialInstructions, _serializerOptions);
 
             try
             {
@@ -95,7 +102,7 @@ public class VisualInstructionsController : ControllerBase
             {
                 if (clientIdentifier == targetIdentifier)
                 {
-                    channel.Writer.TryWrite(instructions);
+                    channel.Writer.TryWrite(JsonSerializer.Serialize(instructions, _serializerOptions));
                 }
             }
         }

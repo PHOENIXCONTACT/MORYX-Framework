@@ -2,7 +2,10 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Concurrent;
+using System.Net.ServerSentEvents;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Channels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -23,7 +26,12 @@ public class NotificationPublisherController : ControllerBase
 {
     private readonly INotificationPublisher _notificationPublisher;
 
-    private static readonly ConcurrentDictionary<Guid, Channel<NotificationModel[]>> _notificationStreamSubscribers = new();
+    private static readonly ConcurrentDictionary<Guid, Channel<SseItem<string>>> _notificationStreamSubscribers = new();
+    private static readonly JsonSerializerOptions _serializerOptions = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        Converters = { new JsonStringEnumConverter() }
+    };
 
     public NotificationPublisherController(INotificationPublisher notificationPublisher)
         => _notificationPublisher = notificationPublisher;
@@ -81,16 +89,16 @@ public class NotificationPublisherController : ControllerBase
 
         return;
 
-        async IAsyncEnumerable<NotificationModel[]> Subscribe([EnumeratorCancellation] CancellationToken token)
+        async IAsyncEnumerable<SseItem<string>> Subscribe([EnumeratorCancellation] CancellationToken token)
         {
-            var channel = Channel.CreateUnbounded<NotificationModel[]>();
+            var channel = Channel.CreateUnbounded<SseItem<string>>();
             var id = Guid.NewGuid();
             _notificationStreamSubscribers[id] = channel;
 
-            // Send initial instruction set as first item
+            // Send all notifications set as first item
             var initialNotifications = _notificationPublisher.GetAll()
                 .Select(Converter.ToModel).ToArray();
-            yield return initialNotifications;
+            yield return new SseItem<string>(JsonSerializer.Serialize(initialNotifications, _serializerOptions));
 
             try
             {
@@ -113,7 +121,7 @@ public class NotificationPublisherController : ControllerBase
 
             foreach (var channel in _notificationStreamSubscribers.Values)
             {
-                channel.Writer.TryWrite(notifications);
+                channel.Writer.TryWrite(new SseItem<string>(JsonSerializer.Serialize(notifications, _serializerOptions)));
             }
         }
     }

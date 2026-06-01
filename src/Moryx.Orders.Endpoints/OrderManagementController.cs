@@ -11,6 +11,8 @@ using Moryx.Users;
 using System.Net;
 using System.Net.ServerSentEvents;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Channels;
 using Moryx.AspNetCore;
 using Moryx.Orders.Endpoints.Models;
@@ -28,7 +30,12 @@ public class OrderManagementController : ControllerBase
     private readonly IOrderManagement _orderManagement;
     private readonly IUserManagement _userManagement;
 
-    private static readonly ConcurrentDictionary<Guid, Channel<(string, object)>> _operationStreamSubscribers = new();
+    private static readonly ConcurrentDictionary<Guid, Channel<(string, string)>> _operationStreamSubscribers = new();
+    private static readonly JsonSerializerOptions _serializerOptions = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        Converters = { new JsonStringEnumConverter() }
+    };
 
     public OrderManagementController(IOrderManagement orderManagement, IUserManagement userManagement = null)
     {
@@ -120,9 +127,9 @@ public class OrderManagementController : ControllerBase
 
         return;
 
-        async IAsyncEnumerable<SseItem<object>> Subscribe([EnumeratorCancellation] CancellationToken cancelToken)
+        async IAsyncEnumerable<SseItem<string>> Subscribe([EnumeratorCancellation] CancellationToken cancelToken)
         {
-            var channel = Channel.CreateUnbounded<(string, object)>();
+            var channel = Channel.CreateUnbounded<(string, string)>();
             var id = Guid.NewGuid();
             _operationStreamSubscribers[id] = channel;
 
@@ -130,7 +137,7 @@ public class OrderManagementController : ControllerBase
             {
                 await foreach (var evt in channel.Reader.ReadAllAsync(cancelToken))
                 {
-                    yield return new SseItem<object>(evt.Item2, eventType: evt.Item1);
+                    yield return new SseItem<string>(evt.Item2, eventType: evt.Item1);
                 }
             }
             finally
@@ -140,11 +147,11 @@ public class OrderManagementController : ControllerBase
         }
 
         // Local helper to broadcast events to all connected clients
-        static void Broadcast(string eventType, object model)
+        static void Broadcast(string eventType, object data)
         {
             foreach (var channel in _operationStreamSubscribers.Values)
             {
-                channel.Writer.TryWrite((eventType, model));
+                channel.Writer.TryWrite((eventType, JsonSerializer.Serialize(data, _serializerOptions)));
             }
         }
     }

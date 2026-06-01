@@ -3,6 +3,8 @@
 
 using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Channels;
 using Microsoft.AspNetCore.Http;
 using Moryx.AbstractionLayer.Resources;
@@ -15,7 +17,12 @@ namespace Moryx.ControlSystem.Processes.Endpoints.StreamServices;
 /// </summary>
 internal class ProcessHolderGroupStream(IResourceManagement resourceManagement)
 {
-    private static readonly ConcurrentDictionary<Guid, Channel<ProcessHolderGroupModel>> _subscribers = new();
+    private static readonly ConcurrentDictionary<Guid, Channel<string>> _subscribers = new();
+    private static readonly JsonSerializerOptions _serializerOptions = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        Converters = { new JsonStringEnumConverter() }
+    };
 
     /// <summary>
     /// Starts the Process Holder Group stream
@@ -39,6 +46,8 @@ internal class ProcessHolderGroupStream(IResourceManagement resourceManagement)
 
         try
         {
+            var result = TypedResults.ServerSentEvents(Subscribe(cancellationToken));
+
             // Register event handlers after result creation but before execution to ensure finally cleanup
             foreach (var position in allPositions)
             {
@@ -54,7 +63,6 @@ internal class ProcessHolderGroupStream(IResourceManagement resourceManagement)
             resourceManagement.ResourceAdded += resourceAdded;
             resourceManagement.ResourceRemoved += resourceRemoved;
 
-            var result = TypedResults.ServerSentEvents(Subscribe(cancellationToken));
             await result.ExecuteAsync(context);
         }
         finally
@@ -74,23 +82,22 @@ internal class ProcessHolderGroupStream(IResourceManagement resourceManagement)
             resourceManagement.ResourceAdded -= resourceAdded;
             resourceManagement.ResourceRemoved -= resourceRemoved;
         }
-
-        return;
-
-        // Local helper to broadcast process holder group changes to all connected clients
     }
 
+    /// <summary>
+    /// Local helper to broadcast process holder group changes to all connected clients
+    /// </summary>
     private static void Broadcast(ProcessHolderGroupModel groupModel)
     {
         foreach (var channel in _subscribers.Values)
         {
-            channel.Writer.TryWrite(groupModel);
+            channel.Writer.TryWrite(JsonSerializer.Serialize(groupModel, _serializerOptions));
         }
     }
 
-    private static async IAsyncEnumerable<ProcessHolderGroupModel> Subscribe([EnumeratorCancellation] CancellationToken token)
+    private static async IAsyncEnumerable<string> Subscribe([EnumeratorCancellation] CancellationToken token)
     {
-        var channel = Channel.CreateUnbounded<ProcessHolderGroupModel>();
+        var channel = Channel.CreateUnbounded<string>();
         var id = Guid.NewGuid();
         _subscribers[id] = channel;
 

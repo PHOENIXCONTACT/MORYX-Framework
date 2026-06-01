@@ -3,6 +3,8 @@
 
 using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +24,12 @@ public class JobManagementController : ControllerBase
 {
     private readonly IJobManagement _jobManagement;
 
-    private static readonly ConcurrentDictionary<Guid, Channel<JobModel>> _jobStreamSubscribers = new();
+    private static readonly ConcurrentDictionary<Guid, Channel<string>> _jobStreamSubscribers = new();
+    private static readonly JsonSerializerOptions _serializerOptions = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        Converters = { new JsonStringEnumConverter() }
+    };
 
     public JobManagementController(IJobManagement jobManagement)
         => _jobManagement = jobManagement;
@@ -103,9 +110,9 @@ public class JobManagementController : ControllerBase
 
         return;
 
-        async IAsyncEnumerable<JobModel> Subscribe([EnumeratorCancellation] CancellationToken token)
+        async IAsyncEnumerable<string> Subscribe([EnumeratorCancellation] CancellationToken token)
         {
-            var channel = Channel.CreateUnbounded<JobModel>();
+            var channel = Channel.CreateUnbounded<string>();
             var id = Guid.NewGuid();
             _jobStreamSubscribers[id] = channel;
 
@@ -127,7 +134,7 @@ public class JobManagementController : ControllerBase
         {
             foreach (var channel in _jobStreamSubscribers.Values)
             {
-                channel.Writer.TryWrite(Converter.ToModel(job));
+                channel.Writer.TryWrite(JsonSerializer.Serialize(Converter.ToModel(job), _serializerOptions));
             }
         }
     }

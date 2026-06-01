@@ -3,6 +3,8 @@
 
 using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Channels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -31,9 +33,13 @@ public class ProcessEngineController : ControllerBase // TODO: Rename to Process
     private readonly IResourceManagement _resourceManagement;
     private readonly IJobManagement _jobManagement;
 
-    private static readonly ConcurrentDictionary<Guid, Channel<JobProcessModel>> _processStreamSubscribers = new();
-    private static readonly ConcurrentDictionary<Guid, Channel<ProcessActivityModel>> _activityStreamSubscribers = new();
-
+    private static readonly ConcurrentDictionary<Guid, Channel<string>> _processStreamSubscribers = new();
+    private static readonly ConcurrentDictionary<Guid, Channel<string>> _activityStreamSubscribers = new();
+    private static readonly JsonSerializerOptions _serializerOptions = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        Converters = { new JsonStringEnumConverter() }
+    };
     public ProcessEngineController(IProcessControl processControl, IProductManagement productManagement,
         IResourceManagement resourceManagement, IJobManagement jobManagement)
     {
@@ -224,9 +230,9 @@ public class ProcessEngineController : ControllerBase // TODO: Rename to Process
 
         return;
 
-        async IAsyncEnumerable<JobProcessModel> Subscribe([EnumeratorCancellation] CancellationToken cancelToken)
+        async IAsyncEnumerable<string> Subscribe([EnumeratorCancellation] CancellationToken cancelToken)
         {
-            var channel = Channel.CreateUnbounded<JobProcessModel>();
+            var channel = Channel.CreateUnbounded<string>();
             var id = Guid.NewGuid();
             _processStreamSubscribers[id] = channel;
 
@@ -251,7 +257,7 @@ public class ProcessEngineController : ControllerBase // TODO: Rename to Process
 
             foreach (var channel in _processStreamSubscribers.Values)
             {
-                channel.Writer.TryWrite(processModel);
+                channel.Writer.TryWrite(JsonSerializer.Serialize(processModel, _serializerOptions));
             }
         }
     }
@@ -281,9 +287,9 @@ public class ProcessEngineController : ControllerBase // TODO: Rename to Process
 
         return;
 
-        async IAsyncEnumerable<ProcessActivityModel> Subscribe([EnumeratorCancellation] CancellationToken token)
+        async IAsyncEnumerable<string> Subscribe([EnumeratorCancellation] CancellationToken token)
         {
-            var channel = Channel.CreateUnbounded<ProcessActivityModel>();
+            var channel = Channel.CreateUnbounded<string>();
             var id = Guid.NewGuid();
             _activityStreamSubscribers[id] = channel;
 
@@ -308,7 +314,7 @@ public class ProcessEngineController : ControllerBase // TODO: Rename to Process
 
             foreach (var channel in _activityStreamSubscribers.Values)
             {
-                channel.Writer.TryWrite(activityModel);
+                channel.Writer.TryWrite(JsonSerializer.Serialize(activityModel, _serializerOptions));
             }
         }
 

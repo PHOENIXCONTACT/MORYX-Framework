@@ -4,6 +4,8 @@
 using System.Collections.Concurrent;
 using System.Net.ServerSentEvents;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moryx.AbstractionLayer.Resources;
@@ -40,7 +42,12 @@ public class FactoryMonitorController : ControllerBase
     private readonly IOrderManagement _orderManager;
     private readonly CellSerialization _serialization;
 
-    private static readonly ConcurrentDictionary<Guid, Channel<(string EventType, object Data)>> _factoryStreamSubscribers = new();
+    private static readonly ConcurrentDictionary<Guid, Channel<(string EventType, string Data)>> _factoryStreamSubscribers = new();
+    private static readonly JsonSerializerOptions _serializerOptions = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        Converters = { new JsonStringEnumConverter() }
+    };
 
     private List<ICell> _cells;
     private Timer _resourceChangedTimer;
@@ -277,9 +284,9 @@ public class FactoryMonitorController : ControllerBase
 
         return;
 
-        async IAsyncEnumerable<SseItem<object>> Subscribe([EnumeratorCancellation] CancellationToken token)
+        async IAsyncEnumerable<SseItem<string>> Subscribe([EnumeratorCancellation] CancellationToken token)
         {
-            var channel = Channel.CreateUnbounded<(string EventType, object Data)>();
+            var channel = Channel.CreateUnbounded<(string EventType, string Data)>();
             var id = Guid.NewGuid();
             _factoryStreamSubscribers[id] = channel;
 
@@ -287,7 +294,7 @@ public class FactoryMonitorController : ControllerBase
             {
                 await foreach (var (eventType, data) in channel.Reader.ReadAllAsync(token))
                 {
-                    yield return new SseItem<object>(data, eventType);
+                    yield return new SseItem<string>(data, eventType);
                 }
             }
             finally
@@ -301,7 +308,7 @@ public class FactoryMonitorController : ControllerBase
         {
             foreach (var channel in _factoryStreamSubscribers.Values)
             {
-                channel.Writer.TryWrite((eventType, data));
+                channel.Writer.TryWrite((eventType, JsonSerializer.Serialize(data, _serializerOptions)));
             }
         }
     }
