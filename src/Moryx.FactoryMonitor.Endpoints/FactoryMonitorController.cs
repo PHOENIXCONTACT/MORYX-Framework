@@ -1,10 +1,13 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Collections.Concurrent;
+using System.Net.ServerSentEvents;
+using System.Runtime.CompilerServices;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Serialization;
-using Newtonsoft.Json;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.ControlSystem.Processes;
 using Moryx.Factory;
@@ -19,7 +22,6 @@ using Moryx.AbstractionLayer.Processes;
 using Moryx.AspNetCore;
 using Moryx.FactoryMonitor.Endpoints.Converter;
 using Moryx.FactoryMonitor.Endpoints.Properties;
-//old models in '.Model' namespace. Only ones still in use: TransoirtRoute- / PathModel & CellSettingsModel
 using Moryx.FactoryMonitor.Endpoints.Extensions;
 using Timer = System.Timers.Timer;
 
@@ -40,8 +42,15 @@ public class FactoryMonitorController : ControllerBase
     private readonly IOrderManagement _orderManager;
     private readonly CellSerialization _serialization;
 
+    private static readonly ConcurrentDictionary<Guid, Channel<(string EventType, string Data)>> _factoryStreamSubscribers = new();
+    private static readonly JsonSerializerOptions _serializerOptions = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        Converters = { new JsonStringEnumConverter() }
+    };
+
     private List<ICell> _cells;
-    private Timer resourceChangedTimer;
+    private Timer _resourceChangedTimer;
     private readonly ILogger<FactoryMonitorController> _logger;
 
     public FactoryMonitorController(IResourceManagement resourceManager, IProcessControl processControl, IOrderManagement orderManagement, ILogger<FactoryMonitorController> logger = null)
@@ -67,7 +76,6 @@ public class FactoryMonitorController : ControllerBase
         var activityChangedModels = new List<ActivityChangedModel>();
         var cellStateChangedModels = new List<CellStateChangedModel>();
         var resourceChangedModels = new List<ResourceChangedModel>();
-        var orderModels = new List<OrderModel>();
 
         var activities = _processControl.GetRunningProcesses()
             .Select(p => p.CurrentActivity())
@@ -93,7 +101,7 @@ public class FactoryMonitorController : ControllerBase
         activityChangedModels = activityChangedModels.OrderBy(x => x.ResourceId).ToList();
         cellStateChangedModels = cellStateChangedModels.OrderBy(x => x.Id).ToList();
         resourceChangedModels = resourceChangedModels.OrderBy(x => x.Id).ToList();
-        orderModels = _orderManager.GetOrderModels(_colorPalette).OrderBy(x => x.Order).ThenBy(x => x.Operation).ToList();
+        var orderModels = _orderManager.GetOrderModels(_colorPalette).OrderBy(x => x.Order).ThenBy(x => x.Operation).ToList();
 
         var factory = _resourceManager.GetRootFactory();
 
@@ -128,23 +136,34 @@ public class FactoryMonitorController : ControllerBase
     {
         // check if there is a factory with the given id
         var factory = _resourceManager.GetResource<IManufacturingFactory>(x => x.Id == factoryId);
-        if (factory is null) return NotFound(Strings.FactoryMonitorController_FactoryNotFound_);
+        if (factory is null)
+        {
+            return NotFound(Strings.FactoryMonitorController_FactoryNotFound_);
+        }
         var converter = new Converter.Converter(_serialization);
 
         var root = _resourceManager.GetRootFactory();
-        SimpleGraph graph = _resourceManager.ReadUnsafe(factory.Id, e => SimpleGraph.Create(e as ManufacturingFactory));
+        var graph = _resourceManager.ReadUnsafe(factory.Id, e => SimpleGraph.Create(e as ManufacturingFactory));
 
         //root level (Factory)
         if (root.Id == factoryId)
-            return graph.Children.Select(e => e.ToVisualItemModel(_resourceManager, _logger, converter, CellFilterBaseOnLocation))
+        {
+            return graph.Children
+                .Select(e => e.ToVisualItemModel(_resourceManager, _logger, converter, CellFilterBaseOnLocation))
                 .Where(x => x is not null).ToList();
+        }
 
         // 1 level tree graph
         graph = graph.GetSubGraphById(factoryId);
-        if (graph is null) return NotFound();
+        if (graph is null)
+        {
+            return NotFound();
+        }
 
-        var output = graph.Children.Select(e => e.ToVisualItemModel(_resourceManager, _logger, converter, CellFilterBaseOnLocation))
+        var output = graph.Children
+            .Select(e => e.ToVisualItemModel(_resourceManager, _logger, converter, CellFilterBaseOnLocation))
             .Where(x => x is not null).ToList();
+
         return output;
     }
 
@@ -166,7 +185,11 @@ public class FactoryMonitorController : ControllerBase
         };
 
         var factory = _resourceManager.ReadUnsafe(factoryId, e => (ManufacturingFactory)e);
-        if (factory is not ManufacturingFactory manufacturingFactory) BadRequest(Strings.FactoryMonitorController_FactoryNotFound_);
+        if (factory is not ManufacturingFactory manufacturingFactory)
+        {
+            BadRequest(Strings.FactoryMonitorController_FactoryNotFound_);
+        }
+
         var parentFactory = factory.GetFactory(); //Get Parent factory
 
         return new FactoryModel
@@ -188,73 +211,65 @@ public class FactoryMonitorController : ControllerBase
     [ProducesResponseType(typeof(OrderChangedModel), StatusCodes.Status200OK)]
     public async Task FactoryStatesStream(CancellationToken cancellationToken)
     {
-        var response = Response;
-        response.Headers.Append("Content-Type", "text/event-stream");
-
-        // Configure Serialization Settings
-        var serializerSettings = new JsonSerializerSettings();
-        serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-        serializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
-
-        var _factoryChannel = Channel.CreateUnbounded<Tuple<string, string>>();
-
-        resourceChangedTimer = new();
-        resourceChangedTimer.Interval = 5000;
-        resourceChangedTimer.AutoReset = true;
-        resourceChangedTimer.Enabled = true;
-
+        // Early validation - check if there are cells to monitor
         var locations = _resourceManager.GetResources<IMachineLocation>();
         _cells = locations.Where(CellFilterBaseOnLocation)
             .Select(l => l.Machine)
             .Cast<ICell>().ToList();
+
         if (_cells.Count == 0)
         {
-            await response.WriteAsync("retry: 5000\n", cancellationToken: cancellationToken);
-            await response.CompleteAsync();
+            Response.Headers.Append("Retry-After", "5");
             return;
         }
+
+        // Configure Serialization Settings
         var converter = new Converter.Converter(_serialization);
 
-        var resourceEventHandler = new ElapsedEventHandler(async (sender, eventArgs) =>
-            await FactoryMonitorHelper.ResourceUpdated(serializerSettings, _factoryChannel, _resourceManager, CellFilterBaseOnLocation, converter, cancellationToken)); //resource events are substitute with a timer event since there are no such events
+        // Define event handlers using helper methods
+        var resourceEventHandler = new ElapsedEventHandler((_, _) =>
+            FactoryMonitorHelper.ResourceUpdated(_resourceManager, CellFilterBaseOnLocation, converter, Broadcast));
 
-        var capabilitiesEventHandler = new EventHandler<ICapabilities>(async (sender, eventArgs) =>
-            await FactoryMonitorHelper.PublishCellUpdate((sender as ICell).GetCellStateChangedModel(_resourceManager.ReadUnsafe((sender as ICell).Id, r => r)), serializerSettings, _factoryChannel, cancellationToken));
+        var capabilitiesEventHandler = new EventHandler<ICapabilities>((sender, _) =>
+            FactoryMonitorHelper.PublishCellUpdate((sender as ICell).GetCellStateChangedModel(_resourceManager.ReadUnsafe((sender as ICell).Id, r => r)),
+                Broadcast));
 
-        var orderStartedEventHandler = new EventHandler<OperationStartedEventArgs>(async (sender, eventArgs) =>
-            await FactoryMonitorHelper.OrderStarted(eventArgs, serializerSettings, _factoryChannel, cancellationToken));
+        var orderStartedEventHandler = new EventHandler<OperationStartedEventArgs>((_, eventArgs) =>
+            FactoryMonitorHelper.OrderStarted(eventArgs, Broadcast));
 
-        var orderEventHandler = new EventHandler<OperationChangedEventArgs>(async (sender, eventArgs) =>
-            await FactoryMonitorHelper.OrderUpdated(eventArgs, serializerSettings, _factoryChannel, cancellationToken));
+        var orderEventHandler = new EventHandler<OperationChangedEventArgs>((sender, eventArgs) =>
+            FactoryMonitorHelper.OrderUpdated(eventArgs, Broadcast));
 
-        var activityEventHandler = new EventHandler<ActivityUpdatedEventArgs>(async (sender, eventArgs) => await
-            FactoryMonitorHelper.ActivityUpdated(eventArgs, serializerSettings, _factoryChannel, _cells, _resourceManager.ReadUnsafe(eventArgs.Activity.Tracing.ResourceId, r => r), converter, _orderManager.GetOrderModels(_colorPalette), cancellationToken));
+        var activityEventHandler = new EventHandler<ActivityUpdatedEventArgs>((sender, eventArgs) =>
+            FactoryMonitorHelper.ActivityUpdated(eventArgs, _cells, _resourceManager.ReadUnsafe(eventArgs.Activity.Tracing.ResourceId, r => r),
+                _orderManager.GetOrderModels(_colorPalette), Broadcast));
 
-        foreach (var cell in _cells)
-        {
-            //register to cell notready-to-work event
-            cell.CapabilitiesChanged += capabilitiesEventHandler;
-        }
-
-        _orderManager.OperationStarted += orderStartedEventHandler;
-        _orderManager.OperationUpdated += orderEventHandler;
-        _processControl.ActivityUpdated += activityEventHandler;
-        resourceChangedTimer.Elapsed += resourceEventHandler;
+        // Setup timer
+        _resourceChangedTimer = new();
+        _resourceChangedTimer.Interval = 5000;
+        _resourceChangedTimer.AutoReset = true;
+        _resourceChangedTimer.Enabled = true;
 
         try
         {
-            // Create infinite loop awaiting changes or cancellation
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                var changes = await _factoryChannel.Reader.ReadAsync(cancellationToken);
+            var result = TypedResults.ServerSentEvents(Subscribe(cancellationToken));
 
-                await response.WriteAsync($"type: {changes.Item1}\n", cancellationToken);
-                await response.WriteAsync($"data: {changes.Item2}\r\r", cancellationToken);
+            // Register event handlers after result creation but before execution to ensure finally cleanup
+            foreach (var cell in _cells)
+            {
+                cell.CapabilitiesChanged += capabilitiesEventHandler;
             }
+
+            _orderManager.OperationStarted += orderStartedEventHandler;
+            _orderManager.OperationUpdated += orderEventHandler;
+            _processControl.ActivityUpdated += activityEventHandler;
+            _resourceChangedTimer.Elapsed += resourceEventHandler;
+
+            await result.ExecuteAsync(HttpContext);
         }
         finally
         {
-            // Unregister handler
+            // Unregister handlers
             foreach (var cell in _cells)
             {
                 cell.CapabilitiesChanged -= capabilitiesEventHandler;
@@ -263,11 +278,39 @@ public class FactoryMonitorController : ControllerBase
             _orderManager.OperationStarted -= orderStartedEventHandler;
             _orderManager.OperationUpdated -= orderEventHandler;
             _processControl.ActivityUpdated -= activityEventHandler;
-            resourceChangedTimer.Elapsed -= resourceEventHandler;
-
-            _factoryChannel.Writer.Complete();
+            _resourceChangedTimer.Elapsed -= resourceEventHandler;
+            _resourceChangedTimer?.Dispose();
         }
-        await response.CompleteAsync();
+
+        return;
+
+        async IAsyncEnumerable<SseItem<string>> Subscribe([EnumeratorCancellation] CancellationToken token)
+        {
+            var channel = Channel.CreateUnbounded<(string EventType, string Data)>();
+            var id = Guid.NewGuid();
+            _factoryStreamSubscribers[id] = channel;
+
+            try
+            {
+                await foreach (var (eventType, data) in channel.Reader.ReadAllAsync(token))
+                {
+                    yield return new SseItem<string>(data, eventType);
+                }
+            }
+            finally
+            {
+                _factoryStreamSubscribers.TryRemove(id, out _);
+            }
+        }
+
+        // Local helper to broadcast events to all connected clients
+        static void Broadcast(string eventType, object data)
+        {
+            foreach (var channel in _factoryStreamSubscribers.Values)
+            {
+                channel.Writer.TryWrite((eventType, JsonSerializer.Serialize(data, _serializerOptions)));
+            }
+        }
     }
 
     /// <summary>
@@ -420,7 +463,7 @@ public class FactoryMonitorController : ControllerBase
         if (machine is null)
         {
             return false;
-        } 
+        }
 
         return true;
     }
