@@ -735,10 +735,11 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
         var repo = uow.GetRepository<IProductInstanceRepository>();
         var entities = repo.GetByKeys(ids);
 
-        var results = await TransformInstances(uow, entities, cancellationToken);
-
-        return results;
+        return await GatherFullInstanceTree<ProductInstance>(uow, entities, cancellationToken);
     }
+
+    private ProductInstanceEntity GetRoot(ProductInstanceEntity entity)
+        => entity.Parent is not null ? GetRoot(entity.Parent) : entity;
 
     public Task<IReadOnlyList<ProductInstance>> LoadInstancesAsync(ProductType productType, CancellationToken cancellationToken = default)
     {
@@ -789,7 +790,7 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
         var repo = uow.GetRepository<IProductInstanceRepository>();
         var entities = repo.Linq.Where(instanceSelector).ToList();
 
-        return (await TransformInstances(uow, entities, cancellationToken)).OfType<TInstance>().ToList();
+        return await GatherFullInstanceTree<TInstance>(uow, entities, cancellationToken);
     }
 
     private async Task<IReadOnlyList<TInstance>> LoadWithStrategy<TInstance>(Expression<Func<TInstance, bool>> selector, CancellationToken cancellationToken)
@@ -813,7 +814,8 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
         if (query == null || (entities = query.ToList()).Count == 0)
             return Array.Empty<TInstance>();
 
-        var instances = (await TransformInstances(uow, entities, cancellationToken)).OfType<TInstance>().ToArray();
+        var instances = (await GatherFullInstanceTree<TInstance>(uow, entities, cancellationToken));
+
         // Final check against compiled expression
         var compiledSelector = selector.Compile();
         // Only return matches against compiled expression
@@ -823,8 +825,41 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
     /// <summary>
     /// Transform entities to business objects
     /// </summary>
-    private async Task<ProductInstance[]> TransformInstances(IUnitOfWork uow, ICollection<ProductInstanceEntity> entities,
-        CancellationToken cancellationToken)
+    private async Task<TInstance[]> GatherFullInstanceTree<TInstance>(IUnitOfWork uow,
+        ICollection<ProductInstanceEntity> entities, CancellationToken cancellationToken)
+    {
+        // get root instances and load the hole instance tree
+        var rootEntities = entities.Select(GetRoot).ToArray();
+
+        var lookup = new Dictionary<long, ProductInstance>();
+
+        // Fetch all products we need to load product instances
+        var productMap = new Dictionary<long, IProductType>();
+        var requiredProducts = rootEntities.Select(e => e.ProductId).Distinct();
+        foreach (var productId in requiredProducts)
+        {
+            productMap[productId] = await LoadType(uow, productId, cancellationToken);
+        }
+
+        // Create product instance using the type and fill properties
+        foreach (var entity in rootEntities)
+        {
+            var product = productMap[entity.ProductId];
+            var instance = product.CreateInstance();
+
+            await TransformInstance(uow, entity, instance, lookup, cancellationToken);
+        }
+
+        // get the requested instances
+        var instances = entities.Select(e => lookup[e.Id]).OfType<TInstance>().ToArray();
+        return instances;
+    }
+
+    /// <summary>
+    /// Transform entities to business objects
+    /// </summary>
+    private async Task<ProductInstance[]> TransformInstances(IUnitOfWork uow, List<ProductInstanceEntity> entities,
+        Dictionary<long, ProductInstance> lookup, CancellationToken cancellationToken)
     {
         var results = new ProductInstance[entities.Count];
 
@@ -833,7 +868,7 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
         var requiredProducts = entities.Select(e => e.ProductId).Distinct();
         foreach (var productId in requiredProducts)
         {
-            productMap[productId] = await LoadType(uow, productId, cancellationToken);
+            productMap[productId] = await LoadTypeAsync(productId, cancellationToken);
         }
 
         // Create product instance using the type and fill properties
@@ -843,7 +878,7 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
             var product = productMap[entity.ProductId];
             var instance = product.CreateInstance();
 
-            await TransformInstance(uow, entity, instance, cancellationToken);
+            await TransformInstance(uow, entity, instance, lookup, cancellationToken);
 
             results[index++] = instance;
         }
@@ -854,8 +889,15 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
     /// <summary>
     /// Recursive function to transform entities into objects
     /// </summary>
-    private async Task TransformInstance(IUnitOfWork uow, ProductInstanceEntity entity, ProductInstance productInstance, CancellationToken cancellationToken)
+    private async Task TransformInstance(IUnitOfWork uow, ProductInstanceEntity entity, ProductInstance productInstance,
+            Dictionary<long, ProductInstance> instances, CancellationToken cancellationToken)
     {
+        // there must be only one with that Id, but user could request same twice or sth.
+        if (!instances.ContainsKey(entity.Id))
+        {
+            instances.Add(entity.Id, productInstance);
+        }
+
         productInstance.Id = entity.Id;
         productInstance.State = (ProductInstanceState)entity.State;
 
@@ -874,6 +916,7 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
         var partLinks = ReflectionTool.GetReferences<ProductPartLink>(productType)
             .SelectMany(g => g).ToList();
         var partGroups = ReflectionTool.GetReferences<ProductInstance>(productInstance)
+            .Where(p => p.Key.Name != nameof(ProductInstance.Parent))
             .ToDictionary(p => p.Key, p => p.ToList());
         var partEntityGroups = entity.Parts.GroupBy(p => p.PartLinkEntity.PropertyName)
             .ToDictionary(p => p.Key, p => p.ToList());
@@ -895,16 +938,18 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
                         continue;
                     }
                     var part = partGroup.Value.First(p => p.PartLink.Id == partEntity.PartLinkEntityId);
-                    await TransformInstance(uow, partEntity, part, cancellationToken);
+                    part.Parent = productInstance;
+                    await TransformInstance(uow, partEntity, part, instances, cancellationToken);
                 }
             }
             else if (linkStrategy.PartCreation == PartSourceStrategy.FromEntities)
             {
                 // Load part using the entity and assign PartLink afterwards
                 var partCollection = partEntityGroups[partGroup.Key.Name].ToList();
-                var partArticles = await TransformInstances(uow, partCollection, cancellationToken);
+                var partArticles = await TransformInstances(uow, partCollection, instances, cancellationToken);
                 for (var index = 0; index < partArticles.Length; index++)
                 {
+                    partArticles[index].Parent = productInstance;
                     partArticles[index].PartLink = partLinks.Find(pl => pl?.Id == partCollection[index].PartLinkEntityId.Value);
                 }
 

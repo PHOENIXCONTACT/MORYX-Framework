@@ -198,11 +198,13 @@ public class ProductStorageTests
             ],
             LinkStrategies =
             [
-                new ProductLinkConfiguration()
+                new GenericLinkConfiguration
                 {
                     TargetType = typeof(WatchType).FullName,
                     PartName = nameof(WatchType.WatchFace),
-                    PluginName = nameof(SimpleLinkStrategy)
+                    JsonColumn = nameof(IGenericColumns.Text8),
+                    PartCreation = PartSourceStrategy.FromEntities,
+                    PropertyConfigs = new List<PropertyMapperConfig>()
                 },
 
                 new GenericLinkConfiguration
@@ -900,6 +902,7 @@ public class ProductStorageTests
         instance.TimeSet = true;
         instance.DeliveryDate = DateTime.Now;
         instance.Identity = new BatchIdentity("12345");
+        instance.WatchFace.Identity = new BatchIdentity("23456");
         await _storage.SaveInstancesAsync([instance]);
 
         // Assert
@@ -915,6 +918,9 @@ public class ProductStorageTests
 
             var single = parts.FirstOrDefault(p => p.PartLinkEntityId == watch.WatchFace.Id);
             Assert.That(single, Is.Not.Null, "Single part not saved!");
+
+            Assert.That(single.Text2.Contains("BatchIdentity"));
+            Assert.That(single.Text2.Contains("23456"));
         }
 
         // Act
@@ -929,8 +935,11 @@ public class ProductStorageTests
         var byType3 = await _storage.LoadInstancesAsync<WatchInstance>(i => watch.Equals(i.Type));
         var byType4 = await _storage.LoadInstancesAsync<WatchInstance>(i => i.Type.Name == "TestWatch");
         var byType5 = await _storage.LoadInstancesAsync<WatchInstance>(i => watch == i.Type);
-        identity = watch.Identity;
-        var byType6 = await _storage.LoadInstancesAsync<WatchInstance>(i => i.Type.Identity == identity);
+        var typeIdentity = watch.Identity;
+        var byType6 = await _storage.LoadInstancesAsync<WatchInstance>(i => i.Type.Identity.Equals(typeIdentity));
+
+        var watchfaceIdentity = instance.WatchFace.Identity;
+        var byWatchface = await _storage.LoadInstancesAsync<WatchFaceInstance>(w => watchfaceIdentity.Equals(w.Identity));
 
         // Assert
         Assert.That(watchCopy, Is.Not.Null);
@@ -940,16 +949,23 @@ public class ProductStorageTests
         Assert.That(watchCopy.WatchFace.Identifier, Is.EqualTo(instance.WatchFace.Identifier), "Guid does not match");
         Assert.That(instance.Needles, Is.Not.Null);
         Assert.That(instance.Needles.Count, Is.EqualTo(3));
+        Assert.That(instance.Needles.First().Type is NeedleType);
 
-        Assert.That(byIdentity.Count, Is.GreaterThanOrEqualTo(1));
-        Assert.That(byDateTime.Count, Is.GreaterThanOrEqualTo(1));
-        Assert.That(byBool.Count, Is.GreaterThanOrEqualTo(1));
-        Assert.That(byType.Count, Is.GreaterThanOrEqualTo(1));
-        Assert.That(byType1.Count, Is.GreaterThanOrEqualTo(1));
-        Assert.That(byType2.Count, Is.GreaterThanOrEqualTo(1));
-        Assert.That(byType3.Count, Is.GreaterThanOrEqualTo(1));
-        Assert.That(byType4.Count, Is.GreaterThanOrEqualTo(1));
-        Assert.That(byType5.Count, Is.GreaterThanOrEqualTo(1));
-        Assert.That(byType6.Count, Is.GreaterThanOrEqualTo(1));
+        Assert.That(byIdentity.Count, Is.EqualTo(1));
+        Assert.That(byDateTime.Count, Is.EqualTo(1));
+        Assert.That(byBool.Count, Is.EqualTo(1));
+        Assert.That(byType.Count, Is.EqualTo(1));
+        Assert.That(byType1.Count, Is.EqualTo(1));
+        Assert.That(byType2.Count, Is.EqualTo(1));
+        Assert.That(byType3.Count, Is.EqualTo(1));
+        Assert.That(byType4.Count, Is.EqualTo(1));
+        Assert.That(byType5.Count, Is.EqualTo(1));
+        Assert.That(byType6.Count, Is.EqualTo(1));
+
+        Assert.That(byWatchface.Count, Is.EqualTo(1));
+        Assert.That(byWatchface[0] is WatchFaceInstance wfi && wfi.Identity.Equals(watchfaceIdentity));
+        Assert.That(byWatchface[0].Parent is WatchInstance wi && wi.Identity.Equals(identity));
+        Assert.That(byWatchface[0].Type is WatchFaceType);
+        Assert.That(byWatchface[0].Parent.Type is WatchType);
     }
 }
