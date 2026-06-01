@@ -19,6 +19,7 @@ import { StrictHttpResponse } from '../strict-http-response';
 
 import { constructWithParameters } from '../fn/resource-modification/construct-with-parameters';
 import { ConstructWithParameters$Params } from '../fn/resource-modification/construct-with-parameters';
+
 import { getDetails } from '../fn/resource-modification/get-details';
 import { GetDetails$Params } from '../fn/resource-modification/get-details';
 import { getDetailsBatch } from '../fn/resource-modification/get-details-batch';
@@ -132,7 +133,7 @@ export class ResourceModificationService extends BaseService {
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `getResources()` instead.
    *
-   * This method sends `application/*+json` and handles request body of type `application/*+json`.
+   * This method doesn't expect any request body.
    */
   getResources$Response(params?: GetResources$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ResourceModel>>> {
     const obs = getResources(this.http, this.rootUrl, params, context);
@@ -143,7 +144,7 @@ export class ResourceModificationService extends BaseService {
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getResources$Response()` instead.
    *
-   * This method sends `application/*+json` and handles request body of type `application/*+json`.
+   * This method doesn't expect any request body.
    */
   getResources(params?: GetResources$Params, context?: HttpContext): Observable<Array<ResourceModel>> {
     const resp = this.getResources$Response(params, context);

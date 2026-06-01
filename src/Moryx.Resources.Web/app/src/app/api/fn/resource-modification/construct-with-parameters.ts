@@ -14,6 +14,7 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
+
 import { ResourceModel } from '../../models/resource-model';
 
 export interface ConstructWithParameters$Params {

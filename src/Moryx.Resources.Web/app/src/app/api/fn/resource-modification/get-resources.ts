@@ -12,17 +12,37 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
+import { ReferenceFilter } from '../../models/reference-filter';
+import { ReferenceValue } from '../../models/reference-value';
 import { ResourceModel } from '../../models/resource-model';
-import { ResourceQuery } from '../../models/resource-query';
+import { ResourceReferenceRole } from '../../models/resource-reference-role';
+import { ResourceRelationType } from '../../models/resource-relation-type';
 
 export interface GetResources$Params {
-      body?: ResourceQuery
+  Types?: Array<string>;
+  'ReferenceCondition.Name'?: string;
+  'ReferenceCondition.RelationType'?: ResourceRelationType;
+  'ReferenceCondition.Role'?: ResourceReferenceRole;
+  'ReferenceCondition.ValueConstraint'?: ReferenceValue;
+  ReferenceRecursion?: boolean;
+  IncludedReferences?: Array<ReferenceFilter>;
 }
 
 export function getResources(http: HttpClient, rootUrl: string, params?: GetResources$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ResourceModel>>> {
-  const rb = new RequestBuilder(rootUrl, getResources.PATH, 'post');
+  const rb = new RequestBuilder(rootUrl, getResources.PATH, 'get');
   if (params) {
-    rb.body(params.body, 'application/*+json');
+    rb.query('Types', params.Types, {});
+    rb.query('ReferenceCondition.Name', params['ReferenceCondition.Name'], {});
+    rb.query('ReferenceCondition.RelationType', params['ReferenceCondition.RelationType'], {});
+    rb.query('ReferenceCondition.Role', params['ReferenceCondition.Role'], {});
+    rb.query('ReferenceCondition.ValueConstraint', params['ReferenceCondition.ValueConstraint'], {});
+    rb.query('ReferenceRecursion', params.ReferenceRecursion, {});
+    params.IncludedReferences?.forEach((ref, index) => {
+      if (ref.name !== undefined) rb.query(`IncludedReferences[${index}].name`, ref.name, {});
+      if (ref.relationType !== undefined) rb.query(`IncludedReferences[${index}].relationType`, ref.relationType, {});
+      if (ref.role !== undefined) rb.query(`IncludedReferences[${index}].role`, ref.role, {});
+      if (ref.valueConstraint !== undefined) rb.query(`IncludedReferences[${index}].valueConstraint`, ref.valueConstraint, {})
+    })
   }
 
   return http.request(

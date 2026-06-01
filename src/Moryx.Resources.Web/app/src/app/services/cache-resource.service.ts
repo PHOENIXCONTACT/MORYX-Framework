@@ -7,7 +7,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { BehaviorSubject } from 'rxjs';
-import { ReferenceValue, ResourceModel, ResourceTypeModel } from '../api/models';
+import { ReferenceValue, ResourceModel, ResourceReferenceRole, ResourceTypeModel } from '../api/models';
 import { ResourceModificationService } from '../api/services';
 import { TranslationConstants } from '../extensions/translation-constants.extensions';
 import '../extensions/observable.extensions';
@@ -91,14 +91,10 @@ export class CacheResourceService {
 
     await this.resourceModificationService
       .getResources({
-        body: {
-          referenceCondition: {
-            name: 'Parent',
-            valueConstraint: ReferenceValue.NullOrEmpty,
-          },
-          referenceRecursion: true,
-          includedReferences: [{name: this.ChildReferenceName}],
-        },
+        "ReferenceCondition.Name": "Parent",
+        "ReferenceCondition.ValueConstraint": ReferenceValue.NullOrEmpty,
+        ReferenceRecursion: true,
+        IncludedReferences: [{name: this.ChildReferenceName}],
       })
       .toAsync()
       .then(resources => this.resources.next(resources))

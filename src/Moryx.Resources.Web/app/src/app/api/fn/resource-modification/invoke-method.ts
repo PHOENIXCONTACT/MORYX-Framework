@@ -15,6 +15,7 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 
+
 export interface InvokeMethod$Params {
   id: number;
   method: string;
