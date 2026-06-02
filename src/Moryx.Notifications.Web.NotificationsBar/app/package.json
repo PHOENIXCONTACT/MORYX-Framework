@@ -8,8 +8,6 @@
     "build:prod": "ng build --delete-output-path --configuration production --progress false",
     "test": "ng test"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "@angular/common": "^21.1.0",
     "@angular/compiler": "^21.1.0",

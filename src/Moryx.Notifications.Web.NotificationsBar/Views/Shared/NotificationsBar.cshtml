@@ -6,7 +6,7 @@
 }
 <script type="module">
     const tag = 'moryx-notifications-bar';
-    const jsSrc = '~/_content/Moryx.Notifications.Web.NotificationsBar/main.js';
+    const jsSrc = '@(Url.Content("~/_content/Moryx.Notifications.Web.NotificationsBar/main.js"))';
 
     if (!customElements.get(tag)) {
         import(jsSrc).catch(err =>

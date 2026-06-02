@@ -22,7 +22,7 @@ export interface Notification {
   templateUrl: './notifications-bar.html',
   styleUrl: './notifications-bar.scss',
   host: {
-    '[style.--severity-background-color]': 'getSeverityBackgroundColor(currentNotification()?.severity)'
+    '[style.--severity-background-color]': 'getSeverityBackgroundColor(currentNotification()?.severity, errorAvailable())'
   }
 })
 export class NotificationsBar implements OnInit, OnDestroy {
@@ -32,6 +32,8 @@ export class NotificationsBar implements OnInit, OnDestroy {
 
   notifications = signal<Array<Notification>|undefined>(undefined);
   notificationIndex = signal<number>(0);
+  errorAvailable = signal<boolean>(false);
+
   currentNotification = computed<Notification|undefined|null>(() => {
     const notifications = this.notifications();
 
@@ -61,8 +63,13 @@ export class NotificationsBar implements OnInit, OnDestroy {
     }
 
     // listen to notification stream
+    this.connect();
+  }
+
+  private connect() {
     this.eventSource = new EventSource(this.api());
     this.eventSource.onmessage = this.onMessageReceived.bind(this);
+    this.eventSource.onerror =  this.onErrorReceived.bind(this);
   }
 
   private onMessageReceived(event: any) {
@@ -91,9 +98,38 @@ export class NotificationsBar implements OnInit, OnDestroy {
 
       this.clearInterval();
     }
+
+    this.errorAvailable.set(false);
   }
 
-  updateInterval() {
+  private onErrorReceived(event: any) {
+    if (!this.errorAvailable()) {
+      this.errorAvailable.set(true);
+
+      this.notificationIndex.set(0);
+      this.notifications.set([]);
+      this.clearInterval();
+    }
+
+    if (this.eventSource?.readyState == EventSource.CLOSED) {
+      this.clearEventSource();
+
+      setTimeout(() => {
+        this.connect();
+      }, 3000);
+    }
+  }
+
+  private clearEventSource() {
+    if (this.eventSource !== undefined) {
+      this.eventSource.removeEventListener('message', this.onMessageReceived);
+      this.eventSource.removeEventListener('error', this.onErrorReceived);
+      this.eventSource.close();
+      this.eventSource = undefined;
+    }
+  }
+
+  private updateInterval() {
     this.clearInterval();
 
     this.intervalId = window.setInterval(() => {
@@ -106,18 +142,21 @@ export class NotificationsBar implements OnInit, OnDestroy {
     }, 5000);
   }
 
-  clearInterval() {
+  private clearInterval() {
     if (this.intervalId) {
       clearInterval(this.intervalId);
       this.intervalId = undefined;
     }
   }
 
-  getSeverityBackgroundColor(severity: Severity | undefined | null): string {
+  getSeverityBackgroundColor(severity: Severity | undefined | null, errorAvailabe: boolean): string {
     const computedStyle = getComputedStyle(this.elementRef.nativeElement);
 
+     if (errorAvailabe)
+      return computedStyle.getPropertyValue('--color-Info').trim();
+
      if (severity === undefined || severity === null)
-      return computedStyle.getPropertyValue('--color-Success').trim();;
+      return computedStyle.getPropertyValue('--color-Success').trim();
 
     const color = computedStyle.getPropertyValue('--color-' + severity).trim();
 
@@ -140,7 +179,7 @@ export class NotificationsBar implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.eventSource?.removeEventListener('message', this.onMessageReceived);
+    this.clearEventSource();
     this.clearInterval();
   }
 }
