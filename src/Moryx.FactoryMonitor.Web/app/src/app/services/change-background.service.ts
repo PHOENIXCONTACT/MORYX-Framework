@@ -35,7 +35,7 @@ export class ChangeBackgroundService {
     });
     this.factoryMonitorService.initialFactoryState().subscribe({
       next: (fsm: FactoryStateModel) => {
-        this._backgroundChanged.next(fsm.backgroundURL ?? this.defaultUrl);
+        this.changeLocalBackground(fsm.backgroundURL ?? this.defaultUrl);
       }
     });
   }
@@ -50,14 +50,25 @@ export class ChangeBackgroundService {
       })
       .subscribe({
         next: () => {
-          this._backgroundChanged.next(url);
+          this.changeLocalBackground(url);
         },
         error: () => this.snackbarService.showError('An error occured while saving the background URL')
       });
   }
 
   public changeLocalBackground(url: string) {
+    if (!this.isAbsoluteUrl(url)) {
+      url = environment.rootUrl + url;
+    }
+    
     this._backgroundChanged.next(url);
   }
+  
+  private isAbsoluteUrl(url: string): boolean {
+    try {
+      return Boolean(new URL(url).origin);
+    } catch {
+      return false;
+    }
+  }
 }
-
