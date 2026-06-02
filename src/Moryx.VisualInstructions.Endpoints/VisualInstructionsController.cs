@@ -1,13 +1,15 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Collections.Concurrent;
+using System.Runtime.CompilerServices;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Channels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moryx.Serialization;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace Moryx.VisualInstructions.Endpoints;
 
@@ -22,15 +24,12 @@ public class VisualInstructionsController : ControllerBase
     private const string CookieName = "moryx-client-identifier";
     private readonly IVisualInstructions _visualInstructions;
 
-    private static readonly JsonSerializerSettings _serializerSettings = CreateSerializerSettings();
-
-    private static JsonSerializerSettings CreateSerializerSettings()
+    private static readonly ConcurrentDictionary<Guid, (string Identifier, Channel<string> Channel)> _instructionStreamSubscribers = new();
+    private static readonly JsonSerializerOptions _serializerOptions = new()
     {
-        var serializerSettings = new JsonSerializerSettings();
-        serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-        serializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
-        return serializerSettings;
-    }
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        Converters = { new JsonStringEnumConverter() }
+    };
 
     public VisualInstructionsController(IVisualInstructions visualInstructions)
         => _visualInstructions = visualInstructions;
@@ -41,71 +40,72 @@ public class VisualInstructionsController : ControllerBase
     [Authorize(Policy = VisualInstructionsPermissions.CanView)]
     public async Task InstructionStream(CancellationToken cancellationToken)
     {
-        var response = Response;
-        response.Headers.Add("Content-Type", "text/event-stream");
-
         // Read identifier cookie
         var identifier = Request.Cookies[CookieName];
         if (identifier == null)
         {
-            await response.CompleteAsync();
             BadRequest($"The expected cookie {CookieName} was not send. Make sure the cookie is sent and try again.");
             return;
         }
 
-        var instructionSetChannel = Channel.CreateUnbounded<string>();
-
-        // Define event handling
-        var eventHandler = new EventHandler<InstructionEventArgs>((_, eventArgs) =>
-        {
-            if (eventArgs.Identifier != identifier)
-            {
-                return;
-            }
-
-            WriteIdentifiers(identifier, instructionSetChannel);
-        });
-        _visualInstructions.InstructionAdded += eventHandler;
-        _visualInstructions.InstructionCleared += eventHandler;
+        // Define event handlers using the broadcast helper
+        var eventHandler = new EventHandler<InstructionEventArgs>((_, e) =>
+            Broadcast(e.Identifier));
 
         try
         {
-            // Send initial instruction set via stream
-            WriteIdentifiers(identifier, instructionSetChannel);
+            var result = TypedResults.ServerSentEvents(Subscribe(cancellationToken));
 
-            // Create infinite loop awaiting changes or cancellation
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                var changes = await instructionSetChannel.Reader.ReadAsync(cancellationToken);
-                await response.WriteAsync($"data: {changes}\r\r", cancellationToken);
-            }
-        }
-        catch (OperationCanceledException)
-        {
-        }
-        catch (ChannelClosedException)
-        {
-        }
-        catch (InvalidOperationException)
-        {
+            // Register event handlers after result creation but before execution to ensure finally cleanup
+            _visualInstructions.InstructionAdded += eventHandler;
+            _visualInstructions.InstructionCleared += eventHandler;
+
+            await result.ExecuteAsync(HttpContext);
         }
         finally
         {
-            // Unregister handler from facade
             _visualInstructions.InstructionAdded -= eventHandler;
             _visualInstructions.InstructionCleared -= eventHandler;
-
-            instructionSetChannel.Writer.TryComplete();
         }
 
-        await response.CompleteAsync();
-    }
+        return;
 
-    private void WriteIdentifiers(string identifier, Channel<string> instructionSetChannel)
-    {
-        var instructions = _visualInstructions.GetInstructions(identifier).Select(Converter.ToModel);
-        var json = JsonConvert.SerializeObject(instructions, _serializerSettings);
-        instructionSetChannel.Writer.TryWrite(json);
+        async IAsyncEnumerable<string> Subscribe([EnumeratorCancellation] CancellationToken cancelToken)
+        {
+            var channel = Channel.CreateUnbounded<string>();
+            var id = Guid.NewGuid();
+            _instructionStreamSubscribers[id] = (identifier, channel);
+
+            // Send all instructions as first item
+            var initialInstructions = _visualInstructions.GetInstructions(identifier).Select(Converter.ToModel).ToArray();
+            yield return JsonSerializer.Serialize(initialInstructions, _serializerOptions);
+
+            try
+            {
+                await foreach (var data in channel.Reader.ReadAllAsync(cancelToken))
+                {
+                    yield return data;
+                }
+            }
+            finally
+            {
+                _instructionStreamSubscribers.TryRemove(id, out _);
+            }
+        }
+
+        // Local helper to broadcast instruction changes to all matching subscribers
+        void Broadcast(string targetIdentifier)
+        {
+            var instructions = _visualInstructions.GetInstructions(targetIdentifier).Select(Converter.ToModel).ToArray();
+
+            foreach (var (clientIdentifier, channel) in _instructionStreamSubscribers.Values)
+            {
+                if (clientIdentifier == targetIdentifier)
+                {
+                    channel.Writer.TryWrite(JsonSerializer.Serialize(instructions, _serializerOptions));
+                }
+            }
+        }
     }
 
     [HttpGet("{identifier}")]
