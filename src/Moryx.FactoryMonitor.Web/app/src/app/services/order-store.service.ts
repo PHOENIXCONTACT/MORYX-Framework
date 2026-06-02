@@ -4,7 +4,7 @@
 */
 
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { OrderModel } from '../api/models/order-model';
 import { FactoryStateStreamService } from './factory-state-stream.service';
 import Order from '../models/order';
@@ -20,9 +20,9 @@ export class OrderStoreService {
   private _runningOrders = new BehaviorSubject<Order[]>([]);
   private _toggledOrder = new Subject<Order>();
 
-  public orders$: Observable<Order[]>;
-  public runningOrders$: Observable<Order[]>;
-  public toggledOrder$: Observable<Order>;
+  public orders$ = this._orders.asObservable();
+  public runningOrders$ = this._runningOrders.asObservable();
+  public toggledOrder$ = this._toggledOrder.asObservable();
 
   constructor() {
     this.factoryStateStreamService.updatedOrder.subscribe({
@@ -35,10 +35,7 @@ export class OrderStoreService {
       },
     });
 
-    this.orders$ = this._orders.asObservable();
     this._runningOrders.next(this._orders.getValue().filter(o => o.classification == InternalOperationClassification.Running))
-    this.runningOrders$ = this._runningOrders.asObservable();
-    this.toggledOrder$ = this._toggledOrder.asObservable();
   }
 
   private getUpdateOrders(orders: Order[]): Order[] {
@@ -110,6 +107,7 @@ export class OrderStoreService {
     this._orders.next(orders)
   }
 
+  // ToDo: Remove/make automatic
   public updateRunningOrders(){
     const orders = this._orders.getValue();
     this._runningOrders.next(orders.filter(o => o.classification == InternalOperationClassification.Running))
