@@ -35,7 +35,11 @@ export class App {
   private cellStoreService = inject(CellStoreService);
 
   private editMenuState = toSignal(inject(EditMenuService).activeState$, { initialValue: EditMenuState.Closed });
-  backgroundImage = toSignal(inject(ChangeBackgroundService).backgroundChanged$, { initialValue: '' });
+  private background = toSignal(inject(ChangeBackgroundService).backgroundChanged$);
+  backgroundImage = computed(() => {
+    const bg = this.background();
+    return bg ? `url(${bg})` : 'none';
+  });
   isEditMode = computed(() => this.editMenuState() === EditMenuState.EditingCells);
 
   constructor() {

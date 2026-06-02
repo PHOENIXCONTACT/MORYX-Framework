@@ -1,9 +1,11 @@
+@let canSave = backgroundChangeService.canSaveBackground();
+
 <div mat-dialog-title>
   <span>{{ TranslationConstants.CHANGE_BACKGROUND_DIALOG.BACKGROUND_IMAGE | translate }}</span>
 </div>
 <div mat-dialog-content>
   <div>
-    @if (backgroundChangeService.canSaveBackground$ | async) {
+    @if (canSave) {
       <mat-form-field class="background-input"
         appearance="outline">
         <mat-label>{{ TranslationConstants.CHANGE_BACKGROUND_DIALOG.BACKGROUND_URL | translate }}</mat-label>
@@ -17,7 +19,7 @@
         }
       </mat-form-field>
     }
-    @if (!(backgroundChangeService.canSaveBackground$ | async)) {
+    @else {
       <p>
         {{ TranslationConstants.CHANGE_BACKGROUND_DIALOG.NO_MANUFACTURING_RESOURCE| translate }}
       </p>
@@ -30,7 +32,7 @@
     mat-flat-button
     color="primary"
     (click)="onSave()"
-    [disabled]="backgroundUrlFormControl.invalid || !(backgroundChangeService.canSaveBackground$ | async)">
+    [disabled]="backgroundUrlFormControl.invalid || !canSave">
     {{ TranslationConstants.SHARED.SAVE | translate }}
   </button>
 </div>
