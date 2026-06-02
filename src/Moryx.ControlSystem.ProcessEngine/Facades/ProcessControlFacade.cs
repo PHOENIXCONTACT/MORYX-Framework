@@ -13,7 +13,7 @@ using Moryx.Threading;
 
 namespace Moryx.ControlSystem.ProcessEngine;
 
-internal class ProcessControlFacade : FacadeBase, IProcessControlExtended
+internal class ProcessControlFacade : FacadeBase, IProcessControl
 {
     #region Dependencies
 
