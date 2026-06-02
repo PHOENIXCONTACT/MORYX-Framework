@@ -8,14 +8,14 @@ namespace Moryx.Operators.Management.Tests;
 [TestFixture]
 internal class IAttendanceManagementTests : TestsBase
 {
-    private IAttendanceManagementExtended _facade;
+    private IAttendanceManagement _facade;
     private readonly string _defaultOperatorIdentifier = "Default Operator Identifier";
 
     [SetUp]
     public override void SetUp()
     {
         base.SetUp();
-        _facade = _env.GetTestModule<IAttendanceManagementExtended>();
+        _facade = _env.GetTestModule<IAttendanceManagement>();
         _env.GetTestModule<IOperatorManagement>().AddOperator(AssignableOperator);
     }
 

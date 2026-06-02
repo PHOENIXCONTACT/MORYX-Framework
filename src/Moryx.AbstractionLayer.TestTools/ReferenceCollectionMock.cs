@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System;
 using Moryx.AbstractionLayer.Resources;
 
 namespace Moryx.AbstractionLayer.TestTools;
@@ -23,5 +24,13 @@ public class ReferenceCollectionMock<T> : List<T>, IReferenceCollection, IRefere
     public void RaiseCollectionChanged(ReferenceCollectionChangedEventArgs eventArgs)
     {
         CollectionChanged?.Invoke(this, eventArgs);
+    }
+    /// <summary>
+    ///  
+    /// </summary>
+    /// <exception cref="NotImplementedException"></exception>
+    public void UnderlyingCollectionChanged()
+    {
+        throw new NotImplementedException();
     }
 }

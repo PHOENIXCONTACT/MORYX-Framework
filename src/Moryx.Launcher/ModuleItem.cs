@@ -5,7 +5,7 @@ using Moryx.Modules;
 
 namespace Moryx.Launcher;
 
-public class ModuleItem
+internal class ModuleItem
 {
     /// <summary>
     ///  Unique route of the module

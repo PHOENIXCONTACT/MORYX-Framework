@@ -22,7 +22,8 @@ namespace Moryx.Operators.Management;
 [Description("Manages operators, with their skills and availabilities.")]
 public class ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager dbContextManager) :
     ServerModuleBase<ModuleConfig>(containerFactory, configManager, loggerFactory),
-    IFacadeContainer<IOperatorManagement>, IFacadeContainer<IAttendanceManagement>, IFacadeContainer<IAttendanceManagementExtended>,
+    IFacadeContainer<IOperatorManagement>,
+    IFacadeContainer<IAttendanceManagement>,
     IFacadeContainer<IUserManagement>,
     IFacadeContainer<ISkillManagement>
 {
@@ -72,7 +73,6 @@ public class ModuleController(IModuleContainerFactory containerFactory, IConfigM
 
     IOperatorManagement IFacadeContainer<IOperatorManagement>.Facade => _facade;
     IAttendanceManagement IFacadeContainer<IAttendanceManagement>.Facade => _facade;
-    IAttendanceManagementExtended IFacadeContainer<IAttendanceManagementExtended>.Facade => _facade;
     ISkillManagement IFacadeContainer<ISkillManagement>.Facade => _facade;
     IUserManagement IFacadeContainer<IUserManagement>.Facade => _facade;
 }

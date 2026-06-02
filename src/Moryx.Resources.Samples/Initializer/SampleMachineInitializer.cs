@@ -58,6 +58,10 @@ public class SampleMachineInitializer : ResourceInitializerBase<SampleMachineIni
         anotherGate.Parent = machine;
         machine.Children.Add(anotherGate);
 
-        return InitializedAsync([machine]);
+        return Task.FromResult(new ResourceInitializerResult
+        {
+            InitializedResources = [machine],
+            Saved = false
+        });
     }
 }
