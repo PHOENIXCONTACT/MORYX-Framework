@@ -9,6 +9,7 @@ import { OrderModel } from '../api/models/order-model';
 import { FactoryStateStreamService } from './factory-state-stream.service';
 import Order from '../models/order';
 import { InternalOperationClassification } from '../api/models/internal-operation-classification';
+import CellModel from '../models/cellModel';
 
 @Injectable({
   providedIn: 'root',
@@ -38,6 +39,7 @@ export class OrderStoreService {
     this._runningOrders.next(this._orders.getValue().filter(o => o.classification == InternalOperationClassification.Running))
   }
 
+  // ToDo: Check why it is unused
   private getUpdateOrders(orders: Order[]): Order[] {
     // Unselect orders that existed but were unselected
     const currentlyUnselectedOrders = this._orders.getValue().filter(order => !order.isToggled);
@@ -111,6 +113,12 @@ export class OrderStoreService {
   public updateRunningOrders(){
     const orders = this._orders.getValue();
     this._runningOrders.next(orders.filter(o => o.classification == InternalOperationClassification.Running))
+  }
+
+  public applyOrderColor(cell: CellModel): CellModel {
+    const color = this._orders.getValue().find(o => o.operationNumber === cell.operationNumber && o.orderNumber === cell.orderNumber)?.orderColor;
+    cell.orderColor = color ?? '';
+    return cell;
   }
 }
 

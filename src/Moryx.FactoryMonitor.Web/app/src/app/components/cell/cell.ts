@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, OnInit, ElementRef, viewChild, input, computed, signal, effect, untracked, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, viewChild, input, computed, inject, linkedSignal } from '@angular/core';
 import { EditMenuState } from 'src/app/services/EditMenutState';
 import { CellStoreService } from 'src/app/services/cell-store.service';
 import { CellState } from '../../api/models/cell-state';
@@ -13,6 +13,9 @@ import { CdkDragEnd, DragDropModule } from '@angular/cdk/drag-drop';
 import CellModel from 'src/app/models/cellModel';
 import { CommonModule } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
+import { VisualizableItemModel } from 'src/app/api/models';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-cell',
@@ -24,92 +27,84 @@ import { MatIcon } from '@angular/material/icon';
     DragDropModule
   ]
 })
-export class Cell implements OnInit {
+export class Cell implements OnInit, OnDestroy {
   private cellStoreService = inject(CellStoreService);
   private orderStoreService = inject(OrderStoreService);
   private editMenuService = inject(EditMenuService);
 
-  cellElement = viewChild<ElementRef<HTMLElement>>('cell');
-  container = input<ElementRef<HTMLElement>>();
-  parameters = input.required<CellModel>();
+  private subscriptions = new Subscription();
+
+  cellElement = viewChild.required<ElementRef<HTMLElement>>('cell');
+  container = input.required<ElementRef<HTMLElement>>();
+  parameters = input.required<VisualizableItemModel>();
   isEditMode = computed(() => this.editMenuState() === EditMenuState.EditingCells);
-  private editMenuState = signal<EditMenuState | undefined>(undefined);
-  currentCell = signal<CellModel | undefined>(undefined);
-  isHighlighted = signal<boolean>(true);
+  private editMenuState = toSignal(this.editMenuService.activeState$);
+  currentCell = linkedSignal<CellModel>(() => this.cellStoreService.getCell(this.parameters().id!));
+  private currentOrder = computed(() => {
+    const cell = this.currentCell();
+    if (!cell?.orderNumber || !cell.operationNumber) return null;
+    return this.orderStoreService.getOrder(cell.orderNumber, cell.operationNumber);
+  });
+  private currentOrderIsToggled = linkedSignal(() => !!this.currentOrder()?.isToggled);
+  isHighlighted = computed(() => {
+    const cell = this.currentCell();
+    return !!cell && cell.state == CellState.Running && !!cell.orderNumber && !!cell.operationNumber &&
+        this.currentOrderIsToggled();
+  });
   backgroundColor = computed(() =>
     this.currentCell()?.state === CellState.NotReadyToWork ? '#e46d6d' : 'white'
   );
   borderColor = computed(() => {
     const cell = this.currentCell();
-    if (this.isHighlighted() && this.currentCell()!.orderColor)
-      return this.currentCell()?.orderColor!;
-    if (this.currentCell()?.state === CellState.NotReadyToWork)
+    if (this.isHighlighted() && cell.orderColor)
+      return cell.orderColor!;
+    if (cell.state === CellState.NotReadyToWork)
       return '#e46d6d';
     return 'white';
   });
   iconColor = computed(() => {
-    if (this.isHighlighted() && this.currentCell()?.orderColor)
-      return this.currentCell()?.orderColor!;
-    if (this.currentCell()?.state === CellState.NotReadyToWork)
+    const cell = this.currentCell();
+    if (this.isHighlighted() && cell.orderColor)
+      return cell.orderColor!;
+    if (cell.state === CellState.NotReadyToWork)
       return 'white';
     return '#585858';
   });
 
-  constructor() {
-    effect(() => {
-      const parameters = this.parameters();
-      untracked(() => {
-        this.updateCell(parameters);
-      });
-    });
-  }
-
   ngOnInit(): void {
     // React to toggling of an order
-    this.orderStoreService.toggledOrder$.subscribe(o => {
-      if (this.currentCell()?.orderNumber !== o.orderNumber || this.currentCell()?.operationNumber !== o.operationNumber)
+    this.subscriptions.add(this.orderStoreService.toggledOrder$.subscribe(o => {
+      if (this.currentOrder()?.orderNumber !== o.orderNumber || this.currentOrder()?.operationNumber !== o.operationNumber)
         return;
-      this.isHighlighted.set(o.isToggled);
-    });
-
-    // Keep the menu state
-    this.editMenuService.activeState$.subscribe({
-      next: state => (this.editMenuState.set(state))
-    });
+      this.currentOrderIsToggled.set(o.isToggled);
+    }));
 
     // React to updates to the cell data
-    this.cellStoreService.cellUpdated$.subscribe(c => {
+    this.subscriptions.add(this.cellStoreService.cellUpdated$.subscribe(c => {
       if (c.id !== this.currentCell()?.id) {
         return;
       }
 
-      this.updateCell(c);
-    });
+      this.currentCell.set({... c});
+    }));
   }
 
-  private updateCell(newParams: CellModel) {
-    if (!newParams) {
-      return;
-    }
-    
-    this.currentCell.set(newParams);
-    const shouldBeHighlighted = newParams.state == CellState.Running && !!newParams.orderNumber && !!newParams.operationNumber &&
-        !!this.orderStoreService.getOrder(newParams.orderNumber, newParams.operationNumber)?.isToggled;
-    this.isHighlighted.set(shouldBeHighlighted);  
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   onCellClicked() {
     //Do not show details menu if the edit button is not closed
     if (this.editMenuState() != EditMenuState.Closed) return;
-    this.cellStoreService.selectCell(this.currentCell()?.id!);
+    this.cellStoreService.selectCell(this.currentCell().id!);
   }
 
   onCellMove(event: CdkDragEnd<any>) {
     // Calculate new position as percetage value relative to the cell-container
-    const cellY = this.cellElement()?.nativeElement?.offsetTop! + event.distance.y;
-    const cellX = this.cellElement()?.nativeElement?.offsetLeft! + event.distance.x;
-    const containerHeight = this.container()?.nativeElement?.offsetHeight!;
-    const containerWidth = this.container()?.nativeElement?.offsetWidth!;
+    const cellY = this.cellElement().nativeElement?.offsetTop! + event.distance.y;
+    const cellX = this.cellElement().nativeElement?.offsetLeft! + event.distance.x;
+    const containerHeight = this.container().nativeElement?.offsetHeight!;
+    const containerWidth = this.container().nativeElement?.offsetWidth!;
     this.currentCell.update(cell => {
       cell!.location!.positionX = this.clamp(cellX / containerWidth);
       cell!.location!.positionY = this.clamp(cellY / containerHeight);
@@ -117,7 +112,7 @@ export class Cell implements OnInit {
     });
 
     // Save position and reset translation
-    this.cellStoreService.moveCell(this.currentCell()?.location!);
+    this.cellStoreService.moveCell(this.currentCell().location!);
     event.source._dragRef.reset();
   }
 
@@ -125,4 +120,3 @@ export class Cell implements OnInit {
     return Math.max(0, Math.min(x, 1));
   }
 }
-
