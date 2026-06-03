@@ -40,6 +40,7 @@ export class Cell implements OnInit {
     this.currentCell()?.state === CellState.NotReadyToWork ? '#e46d6d' : 'white'
   );
   borderColor = computed(() => {
+    const cell = this.currentCell();
     if (this.isHighlighted() && this.currentCell()!.orderColor)
       return this.currentCell()?.orderColor!;
     if (this.currentCell()?.state === CellState.NotReadyToWork)
@@ -78,20 +79,23 @@ export class Cell implements OnInit {
 
     // React to updates to the cell data
     this.cellStoreService.cellUpdated$.subscribe(c => {
-      if (c?.id != this.currentCell()?.id) return;
-      this.updateCell(c!);
+      if (c.id !== this.currentCell()?.id) {
+        return;
+      }
+
+      this.updateCell(c);
     });
   }
 
   private updateCell(newParams: CellModel) {
+    if (!newParams) {
+      return;
+    }
+    
     this.currentCell.set(newParams);
-    if (this.currentCell()?.orderNumber && this.currentCell()?.operationNumber)
-      if (newParams.state == CellState.Running &&
-        this.orderStoreService.getOrder(this.currentCell()?.orderNumber!, this.currentCell()?.operationNumber!)?.isToggled) {
-        this.isHighlighted.set(true);
-      } else {
-        this.isHighlighted.set(false);
-      }
+    const shouldBeHighlighted = newParams.state == CellState.Running && !!newParams.orderNumber && !!newParams.operationNumber &&
+        !!this.orderStoreService.getOrder(newParams.orderNumber, newParams.operationNumber)?.isToggled;
+    this.isHighlighted.set(shouldBeHighlighted);  
   }
 
   onCellClicked() {
