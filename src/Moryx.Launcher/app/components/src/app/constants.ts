@@ -17,5 +17,6 @@ export class Constants {
         NotificationBadge: "moryx-notification-badge",
         SignIn: "moryx-auth-buttons",
         NavigationButton: "moryx-nav-button",
+        NotificationsBar: "moryx-notifications-bar"
     }
 }

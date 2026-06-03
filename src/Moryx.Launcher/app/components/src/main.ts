@@ -16,6 +16,7 @@ import { SearchBox } from './app/search-box/search-box';
 import { NotificationBadge } from './app/notification-badge/notification-badge';
 import { SignInButton } from './app/auth-button/auth-button';
 import { NavigationButton } from './app/navigation-button/navigation-button';
+import { NotificationsBar } from './app/notifications-bar/notifications-bar';
 
 (async () => {
   const app = await createApplication();
@@ -52,6 +53,9 @@ import { NavigationButton } from './app/navigation-button/navigation-button';
   const navButton = createCustomElement(NavigationButton, {
     injector: app.injector
   });
+  const notificationsBar = createCustomElement(NotificationsBar, {
+    injector: app.injector
+  });
 
   customElements.define(Constants.WebComponentNames.DropdownMenu, dropdownMenu);
   customElements.define(Constants.WebComponentNames.DropdownItem, dropdownItem);
@@ -63,5 +67,6 @@ import { NavigationButton } from './app/navigation-button/navigation-button';
   customElements.define(Constants.WebComponentNames.NotificationBadge, notificationBadge);
   customElements.define(Constants.WebComponentNames.SignIn, authButtons);
   customElements.define(Constants.WebComponentNames.NavigationButton, navButton);
+  customElements.define(Constants.WebComponentNames.NotificationsBar, notificationsBar);
 
 })();
