@@ -29,8 +29,10 @@ internal static class CellExtensions
                 .GetResources(cellFilter)
                 .FirstOrDefault(x => x.Machine?.Id == cell.Id);
             resourceChangedCellModel.Location = Converter.Converter.ToCellLocationModel(machineLocation);
+            resourceChangedCellModel.CellLocation = resourceChangedCellModel.Location;
             resourceChangedCellModel.CellImageURL = machineLocation.Image;
             resourceChangedCellModel.IconName = machineLocation.SpecificIcon;
+            resourceChangedCellModel.CellIconName = resourceChangedCellModel.IconName;
             resourceChangedCellModel.FactoryId = GetFactoryId(cell, resourceManager);
 
             return resourceChangedCellModel;

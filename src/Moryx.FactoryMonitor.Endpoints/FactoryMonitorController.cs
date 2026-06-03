@@ -143,6 +143,7 @@ public class FactoryMonitorController : ControllerBase
         var converter = new Converter.Converter(_serialization);
 
         var root = _resourceManager.GetRootFactory();
+        // ToDo: Cannot assume ManufacturingFactory base class
         var graph = _resourceManager.ReadUnsafe(factory.Id, e => SimpleGraph.Create(e as ManufacturingFactory));
 
         //root level (Factory)
