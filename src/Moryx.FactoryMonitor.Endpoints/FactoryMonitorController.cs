@@ -114,6 +114,7 @@ public class FactoryMonitorController : ControllerBase
         return model;
     }
 
+    // Currently returns a list of all visualizable items and is not used, so remove or at least rename in MORYX 12
     /// <summary>
     /// List of all the cells
     /// </summary>
@@ -128,6 +129,7 @@ public class FactoryMonitorController : ControllerBase
         return cells.Select(x => new SimpleGraph { Id = x.Id }.ToVisualItemModel(_resourceManager, _logger, converter, CellFilterBaseOnLocation)).ToList();
     }
 
+    // ToDo: Endpoints usually return arrays and pagination would be good.
     /// <summary>
     /// Get the list of displayable item for this current factory view
     /// </summary>
@@ -144,7 +146,7 @@ public class FactoryMonitorController : ControllerBase
 
         var root = _resourceManager.GetRootFactory();
         // ToDo: Cannot assume ManufacturingFactory base class
-        var graph = _resourceManager.ReadUnsafe(factory.Id, e => SimpleGraph.Create(e as ManufacturingFactory));
+        var graph = _resourceManager.ReadUnsafe(factory.Id, SimpleGraph.Create);
 
         //root level (Factory)
         if (root.Id == factoryId)
@@ -314,6 +316,7 @@ public class FactoryMonitorController : ControllerBase
         }
     }
 
+    // ToDo: Rename to move location in MORYX 12 and 
     /// <summary>
     /// Return the location of the cell in the factory
     /// </summary>
