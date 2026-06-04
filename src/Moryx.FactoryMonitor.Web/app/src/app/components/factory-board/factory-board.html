@@ -1,4 +1,4 @@
-@for (item of factoryContent(); track item) {
+@for (item of factoryContent(); track item.id) {
   @if (item.isACell) {
     <app-cell  [container]="elemRef" [parameters]="item"></app-cell>
   }

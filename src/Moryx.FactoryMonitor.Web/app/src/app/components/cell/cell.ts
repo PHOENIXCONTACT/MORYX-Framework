@@ -16,6 +16,7 @@ import { MatIcon } from '@angular/material/icon';
 import { VisualizableItemModel } from 'src/app/api/models';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Subscription } from 'rxjs';
+import { createUpdatedLocation } from 'src/app/extensions/locations';
 
 @Component({
   selector: 'app-cell',
@@ -99,24 +100,15 @@ export class Cell implements OnInit, OnDestroy {
     this.cellStoreService.selectCell(this.currentCell().id!);
   }
 
-  onCellMove(event: CdkDragEnd<any>) {
+  async onCellMove(event: CdkDragEnd<any>) {
+    const params = this.parameters();
+
     // Calculate new position as percetage value relative to the cell-container
-    const cellY = this.cellElement().nativeElement?.offsetTop! + event.distance.y;
-    const cellX = this.cellElement().nativeElement?.offsetLeft! + event.distance.x;
-    const containerHeight = this.container().nativeElement?.offsetHeight!;
-    const containerWidth = this.container().nativeElement?.offsetWidth!;
-    this.currentCell.update(cell => {
-      cell!.location!.positionX = this.clamp(cellX / containerWidth);
-      cell!.location!.positionY = this.clamp(cellY / containerHeight);
-      return cell;
-    });
+    const updatedLocation = createUpdatedLocation(event, this.cellElement(), 
+      this.container(), params.location?.id);
 
-    // Save position and reset translation
-    this.cellStoreService.moveCell(this.currentCell().location!);
+    // Save position and reset translation as the new position is immediately applied
+    await this.cellStoreService.moveItem(params, updatedLocation);
     event.source._dragRef.reset();
-  }
-
-  private clamp(x: number) {
-    return Math.max(0, Math.min(x, 1));
-  }
+  }  
 }

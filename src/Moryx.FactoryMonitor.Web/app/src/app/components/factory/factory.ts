@@ -15,6 +15,11 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { VisualizableItemModel } from 'src/app/api/models';
+import { createUpdatedLocation } from 'src/app/extensions/locations';
+import { lastValueFrom } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
+import { FactoryMonitorService } from 'src/app/api/services';
+import { SnackbarService } from '@moryx/ngx-web-framework/services';
 
 @Component({
   selector: 'app-factory',
@@ -29,6 +34,8 @@ import { VisualizableItemModel } from 'src/app/api/models';
 export class Factory implements OnInit {
   private cellStoreService = inject(CellStoreService);
   private factorySelectionService = inject(FactorySelectionService);
+  private factoryMonitorService = inject(FactoryMonitorService);  
+  private snackbarService = inject(SnackbarService);
   private router = inject(Router);
 
   private factoryElement = viewChild.required<ElementRef<HTMLElement>>('FactoryElement');
@@ -83,31 +90,19 @@ export class Factory implements OnInit {
     });
   }
 
-  onCellMove(event: CdkDragEnd<any>) {
+  async onCellMove(event: CdkDragEnd<any>) {
     const params = this.parameters();
-    const factoryElement = this.factoryElement();
-    const containerElement = this.container();
-
-    if (!params.location) return;
 
     // Calculate new position as percetage value relative to the cell-container
-    const cellY = factoryElement.nativeElement.offsetTop + event.distance.y;
-    const cellX = factoryElement.nativeElement.offsetLeft + event.distance.x;
-    const containerHeight = containerElement.nativeElement.offsetHeight;
-    const containerWidth = containerElement.nativeElement.offsetWidth;
-
-    const updatedLocation = {
-      ...this.parameters().location,
-      positionX: this.clamp(cellX / containerWidth),
-      positionY: this.clamp(cellY / containerHeight)
-    };
-
+    const updatedLocation = createUpdatedLocation(event, this.factoryElement(), 
+      this.container(), params.location?.id);
+    
     // Save position and reset translation
-    this.cellStoreService.moveCell(updatedLocation);
-    event.source._dragRef.reset();
-  }
-
-  private clamp(x: number) {
-    return Math.max(0, Math.min(x, 1));
+    try {
+      await lastValueFrom(this.factoryMonitorService.moveCell({ body: updatedLocation }));
+    } catch (error) {
+      this.snackbarService.handleError(error as HttpErrorResponse);
+      return;
+    }
   }
 }

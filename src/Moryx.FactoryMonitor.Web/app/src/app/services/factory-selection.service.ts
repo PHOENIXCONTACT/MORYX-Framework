@@ -9,6 +9,7 @@ import { FactoryStateModel } from '../api/models/factory-state-model';
 import { FactoryMonitorService } from '../api/services';
 import { VisualizableItemModel } from '../api/models/visualizable-item-model';
 
+// ToDo: Make this a route resolver, it loads data and does not need to be a service for that.
 @Injectable({
   providedIn: 'root'
 })

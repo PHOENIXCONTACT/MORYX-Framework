@@ -16,7 +16,11 @@ import { Converter } from '../extensions/converter';
 import { FactoryStateModel } from '../api/models/factory-state-model';
 import { FactorySelectionService } from './factory-selection.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { VisualizableItemModel } from '../api/models';
 
+
+// ToDo: While this is called cell-store service it actually holds all items 
+// (also factories). 
 @Injectable({
   providedIn: 'root'
 })
@@ -29,11 +33,10 @@ export class CellStoreService {
 
   private _cellSelected = new BehaviorSubject<CellModel | undefined>(undefined);
   private _cellUpdated = new ReplaySubject<CellModel>();
-  private _cells = new BehaviorSubject<CellModel[]>([]);
+  private _cells : CellModel[] = [];
 
   public cellSelected$ = this._cellSelected.asObservable();
   public cellUpdated$ = this._cellUpdated.asObservable();
-  public cells$ = this._cells.asObservable();
 
   updatedCell: BehaviorSubject<CellModel | undefined> = new BehaviorSubject<CellModel | undefined>(undefined);
 
@@ -41,7 +44,6 @@ export class CellStoreService {
   constructor() {
     this.init();
   }
-
 
   private async init() {
     let factoryState: FactoryStateModel | undefined;
@@ -82,7 +84,7 @@ export class CellStoreService {
       this._orderService.applyOrderColor(cell);
     }
 
-    this._cells.next(Object.values(cells));
+    this._cells = Object.values(cells);
     this.subscribe();
   }
 
@@ -108,33 +110,36 @@ export class CellStoreService {
       return;
     }
 
-    const selectedCell = this._cells.getValue().find(c => c.id === id);
+    const selectedCell = this._cells.find(c => c.id === id);
     this._cellSelected.next(selectedCell);
   }
 
-  public moveCell(e: CellLocationModel) {
-    this.factoryMonitorService.moveCell({ body: e }).subscribe({
-      error: err => this.snackbarService.handleError(err)
-    });
+  public async moveItem(item: VisualizableItemModel, update: CellLocationModel) {
+    try {
+      const location = await lastValueFrom(this.factoryMonitorService.moveCell({ body: update }));
+      this.updateCell(<CellModel>{ id: item.id, location: location });
+    } catch (error) {
+      this.snackbarService.handleError(error as HttpErrorResponse);
+      return;
+    }
   }
 
   public getCell(cellId: number) : CellModel {
-    const cell = this._cells.getValue().find(c => c.id === cellId)
+    const cell = this._cells.find(c => c.id === cellId)
     if (!cell) 
       throw Error(`Tried to process unknown cell with id ${cellId}`);
     return cell;
   }
 
   public getCells(factory: FactoryStateModel): CellModel[] {
-    return this._cells.getValue().filter(c => c.factoryId === factory.id);
+    return this._cells.filter(c => c.factoryId === factory.id);
   }
 
   // Cell updates are retrieved as partial updates to the existing cell models, 
   // so we need to merge the incoming data with the existing cell data
   public updateCell(cell: CellModel) {
-    const cells = this._cells.getValue();
-    const indexToUpdate = cells.findIndex(x => x.id === cell.id);
-    let cellToUpdate = cells[indexToUpdate];
+    const indexToUpdate = this._cells.findIndex(x => x.id === cell.id);
+    let cellToUpdate = {... this._cells[indexToUpdate]};
 
     if (cell.iconName != '' && cell.iconName) {
       cellToUpdate.iconName = cell.iconName;
@@ -163,17 +168,15 @@ export class CellStoreService {
     if (cell.operationNumber) {
       cellToUpdate.operationNumber = cell.operationNumber;
     }
-    if (
-      cellToUpdate.orderNumber &&
-      cell.orderNumber != '' &&
-      cellToUpdate.operationNumber &&
-      cell.operationNumber != ''
-    ) {
+    if (cellToUpdate.orderNumber && cell.orderNumber && cellToUpdate.operationNumber &&
+      cell.operationNumber) {
       this._orderService.applyOrderColor(cellToUpdate);
     }
+    if (cell.location) {
+      cellToUpdate.location = cell.location;
+    }
 
-    cells[indexToUpdate] = cellToUpdate;
-    this._cells.next(cells);
+    this._cells[indexToUpdate] = cellToUpdate;
     this._cellUpdated.next(cellToUpdate);
   }
 }
