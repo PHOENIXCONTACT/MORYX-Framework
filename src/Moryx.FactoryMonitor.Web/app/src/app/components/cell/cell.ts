@@ -3,20 +3,20 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, OnInit, OnDestroy, ElementRef, viewChild, input, computed, inject, linkedSignal } from '@angular/core';
+import { CdkDragEnd, DragDropModule } from '@angular/cdk/drag-drop';
+import { CommonModule } from '@angular/common';
+import { Component, computed, ElementRef, inject, input, linkedSignal, OnDestroy, OnInit, viewChild } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { MatIcon } from '@angular/material/icon';
+import { Subscription } from 'rxjs';
+import { VisualizableItemModel } from 'src/app/api/models';
+import { createUpdatedLocation } from 'src/app/extensions/locations';
+import CellModel from 'src/app/models/cellModel';
 import { EditMenuState } from 'src/app/services/EditMenutState';
 import { CellStoreService } from 'src/app/services/cell-store.service';
-import { CellState } from '../../api/models/cell-state';
 import { EditMenuService } from 'src/app/services/edit-menu.service';
 import { OrderStoreService } from 'src/app/services/order-store.service';
-import { CdkDragEnd, DragDropModule } from '@angular/cdk/drag-drop';
-import CellModel from 'src/app/models/cellModel';
-import { CommonModule } from '@angular/common';
-import { MatIcon } from '@angular/material/icon';
-import { VisualizableItemModel } from 'src/app/api/models';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { Subscription } from 'rxjs';
-import { createUpdatedLocation } from 'src/app/extensions/locations';
+import { CellState } from '../../api/models/cell-state';
 
 @Component({
   selector: 'app-cell',
@@ -41,11 +41,7 @@ export class Cell implements OnInit, OnDestroy {
   isEditMode = computed(() => this.editMenuState() === EditMenuState.EditingCells);
   private editMenuState = toSignal(this.editMenuService.activeState$);
   currentCell = linkedSignal<CellModel>(() => this.cellStoreService.getCell(this.parameters().id!));
-  private currentOrder = computed(() => {
-    const cell = this.currentCell();
-    if (!cell?.orderNumber || !cell.operationNumber) return null;
-    return this.orderStoreService.getOrder(cell.orderNumber, cell.operationNumber);
-  });
+  private currentOrder = computed(() => this.orderStoreService.getOrder(this.currentCell()));
   private currentOrderIsToggled = linkedSignal(() => !!this.currentOrder()?.isToggled);
   isHighlighted = computed(() => {
     const cell = this.currentCell();

@@ -6,8 +6,8 @@
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { FactoryStateModel } from '../api/models/factory-state-model';
-import { FactoryMonitorService } from '../api/services';
 import { VisualizableItemModel } from '../api/models/visualizable-item-model';
+import { FactoryMonitorService } from '../api/services';
 
 // ToDo: Make this a route resolver, it loads data and does not need to be a service for that.
 @Injectable({
@@ -36,7 +36,7 @@ export class FactorySelectionService {
       });
   }
 
-  public setDefaultFactory(factory: FactoryStateModel | undefined){
+  public initialize(factory: FactoryStateModel){
     this._defaultFactory.next(factory);
   }
 }

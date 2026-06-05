@@ -3,64 +3,36 @@
  * Licensed under the Apache License, Version 2.0
 */
 
+import { HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
+import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { BehaviorSubject, lastValueFrom, ReplaySubject } from 'rxjs';
+import { VisualizableItemModel } from '../api/models';
+import { CellLocationModel } from '../api/models/cell-location-model';
+import { FactoryStateModel } from '../api/models/factory-state-model';
+import { FactoryMonitorService } from '../api/services';
+import { Converter } from '../extensions/converter';
+import CellModel from '../models/cellModel';
 import { FactoryStateStreamService } from './factory-state-stream.service';
 import { OrderStoreService } from './order-store.service';
-import { FactoryMonitorService } from '../api/services';
-import { CellLocationModel } from '../api/models/cell-location-model';
-import { SnackbarService } from '@moryx/ngx-web-framework/services';
-import CellModel from '../models/cellModel';
-import Order from '../models/order';
-import { Converter } from '../extensions/converter';
-import { FactoryStateModel } from '../api/models/factory-state-model';
-import { FactorySelectionService } from './factory-selection.service';
-import { HttpErrorResponse } from '@angular/common/http';
-import { VisualizableItemModel } from '../api/models';
 
-
-// ToDo: While this is called cell-store service it actually holds all items 
-// (also factories). 
 @Injectable({
   providedIn: 'root'
 })
 export class CellStoreService {
-  private _orderService = inject(OrderStoreService);
-  private factoryStateStreamService = inject(FactoryStateStreamService);
-  private factoryMonitorService = inject(FactoryMonitorService);
-  private factorySelectionService = inject(FactorySelectionService);
-  private snackbarService = inject(SnackbarService);
+  private readonly orderService = inject(OrderStoreService);
+  private readonly factoryStateStreamService = inject(FactoryStateStreamService);
+  private readonly factoryMonitorService = inject(FactoryMonitorService);
+  private readonly snackbarService = inject(SnackbarService);
 
-  private _cellSelected = new BehaviorSubject<CellModel | undefined>(undefined);
-  private _cellUpdated = new ReplaySubject<CellModel>();
+  private readonly _cellSelected = new BehaviorSubject<CellModel | undefined>(undefined);
+  private readonly _cellUpdated = new ReplaySubject<CellModel>();
   private _cells : CellModel[] = [];
 
-  public cellSelected$ = this._cellSelected.asObservable();
-  public cellUpdated$ = this._cellUpdated.asObservable();
+  public readonly cellSelected$ = this._cellSelected.asObservable();
+  public readonly cellUpdated$ = this._cellUpdated.asObservable();
 
-  updatedCell: BehaviorSubject<CellModel | undefined> = new BehaviorSubject<CellModel | undefined>(undefined);
-
-  // ToDo: Move async work to an provideAppInitializer
-  constructor() {
-    this.init();
-  }
-
-  private async init() {
-    let factoryState: FactoryStateModel | undefined;
-    try {
-      factoryState = await lastValueFrom(this.factoryMonitorService.initialFactoryState());
-    } catch (error) {
-      this.snackbarService.handleError(error as HttpErrorResponse);
-    }
-
-    if (!factoryState) {
-      return;
-    }
-
-    this.factorySelectionService.setDefaultFactory(factoryState);
-    // ToDo: Make method call on order service
-    const orders = this.initializeOrders(factoryState);
-
+  public initialize(factoryState: FactoryStateModel) {
     let cells: { [id: string]: CellModel; } = {};
     const initialRecourceChanges = factoryState.resourceChangedModels ?? [];
     for (let raw of initialRecourceChanges) {
@@ -81,25 +53,13 @@ export class CellStoreService {
       if (!raw.resourceId) continue;
       const cell = cells[raw.resourceId];
       Converter.addActivityChangedModelToCell(cell, raw);
-      this._orderService.applyOrderColor(cell);
+      this.orderService.applyOrderColor(cell);
     }
 
+    // Set initial cells
     this._cells = Object.values(cells);
-    this.subscribe();
-  }
-
-  private initializeOrders(factoryState: FactoryStateModel) {
-    let orders: Order[] = [];
-    let orderModels = factoryState.orderModels ?? [];
-
-    orders = orderModels.map(order => Converter.orderModelToOrder(order));
-
-    this._orderService._orders.next(orders);
-    this._orderService.updateRunningOrders();
-    return orders;
-  }
-
-  private subscribe() {
+    
+    // Subscribe to changes after initialization
     this.factoryStateStreamService.updatedCell.subscribe(cell => this.updateCell(cell));
   }
 
@@ -170,7 +130,7 @@ export class CellStoreService {
     }
     if (cellToUpdate.orderNumber && cell.orderNumber && cellToUpdate.operationNumber &&
       cell.operationNumber) {
-      this._orderService.applyOrderColor(cellToUpdate);
+      this.orderService.applyOrderColor(cellToUpdate);
     }
     if (cell.location) {
       cellToUpdate.location = cell.location;
