@@ -18,11 +18,10 @@ internal static class FactoryMonitorHelper
     private const string Activity_Event_Type_Key = "activityChangedModel";
     private const string Recource_Event_Type_Key = "resourceChangedModel";
 
-    public static void OrderStarted(OperationStartedEventArgs orderEventArg, Action<string, object> broadcast)
+    public static void OrderStarted(OperationStartedEventArgs orderEventArg, List<OrderModel> models, Action<string, object> broadcast)
     {
-        var orderModel = Converter.Converter.ToOrderModel(orderEventArg.Operation);
+        var orderModel = models.Single(o => o.Order == orderEventArg.Operation.Order.Number && o.Operation == orderEventArg.Operation.Number);
         broadcast(Order_Event_Type_Key, orderModel);
-
     }
 
     public static void OrderUpdated(OperationChangedEventArgs orderEventArg, Action<string, object> broadcast)

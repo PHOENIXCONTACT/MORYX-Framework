@@ -25,12 +25,13 @@ export class OrderStoreService {
   public readonly runningOrders$ = this._orders.pipe(
     map(orders => orders.filter(o => o.classification === InternalOperationClassification.Running)),
     // Prevent other order state changes from triggering updates in the UI 
-    distinctUntilChanged((previousOrders, newOrders) => this.areSameSet(previousOrders, newOrders)),
+    // ToDo: Reanble when OrderManagement facade fires order-started event before order-changed-to-running event
+    // distinctUntilChanged((previousOrders, newOrders) => this.areSameSet(previousOrders, newOrders)),
     shareReplay(1)
   );
-  private areSameSet(previousOrders: Order[], newOrders: Order[]): boolean {
-    return previousOrders.length === newOrders.length && previousOrders.every((x, i) => x.orderNumber === newOrders[i].orderNumber && x.operationNumber === newOrders[i].operationNumber);
-  }
+  // private areSameSet(previousOrders: Order[], newOrders: Order[]): boolean {
+  //   return previousOrders.length === newOrders.length && previousOrders.every((x, i) => x.orderNumber === newOrders[i].orderNumber && x.operationNumber === newOrders[i].operationNumber);
+  // }
 
   constructor() {
     this.factoryStateStreamService.updatedOrder.subscribe(order => this.updateOrder(order));
@@ -51,17 +52,22 @@ export class OrderStoreService {
     }
 
     const orders = this._orders.getValue();
-    const indexToUpdate = orders.findIndex(o => o.operationNumber === order.operationNumber && o.orderNumber === order.orderNumber);
-    let orderToUpdate = orders[indexToUpdate];
+    let indexToUpdate = orders.findIndex(o => o.operationNumber === order.operationNumber && o.orderNumber === order.orderNumber);
+    if(indexToUpdate === -1) {
+      orders.push(order);
+    } else {
+      
+      let orderToUpdate = orders[indexToUpdate];
 
-    if (order.classification) {
-      orderToUpdate.classification = order.classification;
-    }
-    if (order.orderColor && order.orderColor != '') {
-      orderToUpdate.orderColor = order.orderColor;
-    }
+      if (order.classification) {
+        orderToUpdate.classification = order.classification;
+      }
+      if (order.orderColor && order.orderColor != '') {
+        orderToUpdate.orderColor = order.orderColor;
+      }
 
-    orders[indexToUpdate] = orderToUpdate;
+      orders[indexToUpdate] = orderToUpdate;
+    }
 
     this._orders.next(orders)
   }
