@@ -84,7 +84,7 @@ export class EditMenu implements OnInit {
 
         this.factoryMonitorService.getNavigation({ factoryId: factory }).subscribe(navigation => {
           this.navigationItem = navigation;
-          this.backgroundService.changeLocalBackground(navigation.backgroundURL ?? '');
+          this.backgroundService.updateBackground(navigation.backgroundURL);
 
           if (!navigation.parentId) {
             this.canGoBack.set(false);

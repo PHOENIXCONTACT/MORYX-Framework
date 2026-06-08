@@ -3,19 +3,23 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, ElementRef, inject, signal, computed, input, viewChild, OnInit } from '@angular/core';
+import { Component, ElementRef, inject, computed, input, viewChild, OnInit, linkedSignal } from '@angular/core';
 import { CellStoreService } from 'src/app/services/cell-store.service';
 import { CdkDragEnd, DragDropModule } from '@angular/cdk/drag-drop';
 import { EditMenuState } from 'src/app/services/EditMenutState';
 import { EditMenuService } from 'src/app/services/edit-menu.service';
-import { FactoryStateModel } from 'src/app/api/models/factory-state-model';
 import { FactorySelectionService } from 'src/app/services/factory-selection.service';
 import { CellState } from 'src/app/api/models/cell-state';
-import CellModel from 'src/app/models/cellModel';
-import { VisualizableItemModel } from 'src/app/api/models/visualizable-item-model';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { VisualizableItemModel } from 'src/app/api/models';
+import { createUpdatedLocation } from 'src/app/extensions/locations';
+import { lastValueFrom } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
+import { FactoryMonitorService } from 'src/app/api/services';
+import { SnackbarService } from '@moryx/ngx-web-framework/services';
 
 @Component({
   selector: 'app-factory',
@@ -29,16 +33,16 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class Factory implements OnInit {
   private cellStoreService = inject(CellStoreService);
-  private editMenuService = inject(EditMenuService);
   private factorySelectionService = inject(FactorySelectionService);
+  private factoryMonitorService = inject(FactoryMonitorService);  
+  private snackbarService = inject(SnackbarService);
   private router = inject(Router);
 
-  cellElement = viewChild<ElementRef<HTMLElement>>('FactoryElement');
+  private factoryElement = viewChild.required<ElementRef<HTMLElement>>('FactoryElement');
   container = input.required<ElementRef<HTMLElement>>();
   parameters = input.required<VisualizableItemModel>();
-  factory = computed(() => this.parameters() as FactoryStateModel);
-  cells = signal<CellModel[]>([]);
-  private editMenuState = signal<EditMenuState>(EditMenuState.Closed);
+  cells = linkedSignal(() => this.cellStoreService.getCells(this.parameters()));
+  private editMenuState = toSignal(inject(EditMenuService).activeState$);
 
   backgroundColor = 'white';
 
@@ -51,7 +55,7 @@ export class Factory implements OnInit {
   borderColor = computed(() => {
     const workingCell = this.firstWorkingCell();
     if (this.isHighlighted() && workingCell?.orderColor) return workingCell.orderColor;
-    return 'white';
+    return this.backgroundColor;
   });
 
   iconColor = computed(() => {
@@ -61,79 +65,44 @@ export class Factory implements OnInit {
   });
 
   ngOnInit(): void {
-    // Keep the menu state
-    this.editMenuService.activeState$.subscribe({
-      next: state => this.editMenuState.set(state)
-    });
-
-    this.cellStoreService.cells$.subscribe(c =>
-      this.cells.set(c.filter(cell => cell.factoryId === this.factory().id))
-    );
-
     // React to updates to the cell data
-    this.cellStoreService.cellUpdated$.subscribe(cell => {
-      if (!cell) {
+    this.cellStoreService.cellUpdated$.subscribe(cell => {     
+      if (cell.factoryId != this.parameters().id) {
         return;
       }
 
-      if (cell.id != this.factory().id && !this.cells().some(c => c.id === cell.id)) {
-        return;
-      }
-
-      this.updateFactoryCell(cell);
-    });
-  }
-
-  updateFactoryCell(cell: CellModel) {
-    this.cells.update(cells => {
-      const cellToUpdate = cells.find(c => c.id === cell.id);
-      if (!cellToUpdate) return cells;
-
-      cellToUpdate.iconName = cell.iconName;
-      cellToUpdate.image = cell.image;
-      cellToUpdate.name = cell.name;
-      cellToUpdate.propertySettings = cell.propertySettings;
-      cellToUpdate.state = cell.state;
-      cellToUpdate.classification = cell.classification;
-      cellToUpdate.orderNumber = cell.orderNumber;
-      cellToUpdate.operationNumber = cell.operationNumber;
-      cellToUpdate.orderColor = cell.orderColor;
-      return [...cells];
+      this.cells.update(cells => {
+        const index = cells.findIndex(c => c.id === cell.id);
+        cells[index] = cell;
+        return [... cells];
+      });
     });
   }
 
   onCellClicked() {
     if (this.editMenuState() !== EditMenuState.Closed) return;
 
-    this.router.navigate(['/factory', this.factory().id]).then(() => {
+    // ToDo: Move to a RouteResolver to cleanly load and unload data
+    this.router.navigate(['/factory', this.parameters().id]).then(() => {
       //close the delails on the right if it is openned
       this.cellStoreService.selectCell(undefined);
-      this.factorySelectionService.selectFactory(this.factory().id ?? 0);
+      this.factorySelectionService.selectFactory(this.parameters().id ?? 0);
     });
   }
 
-  onCellMove(event: CdkDragEnd<any>) {
-    if (!this.factory().location) return;
+  async onCellMove(event: CdkDragEnd<any>) {
+    const params = this.parameters();
 
     // Calculate new position as percetage value relative to the cell-container
-    const cellY = this.cellElement()!.nativeElement.offsetTop + event.distance.y;
-    const cellX = this.cellElement()!.nativeElement.offsetLeft + event.distance.x;
-    const containerHeight = this.container().nativeElement.offsetHeight;
-    const containerWidth = this.container().nativeElement.offsetWidth;
-
-    const updatedLocation = {
-      ...this.factory().location,
-      positionX: this.clamp(cellX / containerWidth),
-      positionY: this.clamp(cellY / containerHeight)
-    };
-
+    const updatedLocation = createUpdatedLocation(event, this.factoryElement(), 
+      this.container(), params.location?.id);
+    
     // Save position and reset translation
-    this.cellStoreService.moveCell(updatedLocation);
-    event.source._dragRef.reset();
-  }
-
-  private clamp(x: number) {
-    return Math.max(0, Math.min(x, 1));
+    try {
+      await lastValueFrom(this.factoryMonitorService.moveCell({ body: updatedLocation }));
+    } catch (error) {
+      this.snackbarService.handleError(error as HttpErrorResponse);
+      return;
+    }
   }
 }
-

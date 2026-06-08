@@ -16,10 +16,16 @@
   "ExternalModules": [
     {
       "Title": "Example",
-      "Url": "http://www.example.com",
+      "Url": "https://www.example.com",
       "Icon": "globe",
       "Description": "Example description of the external module.",
       "Route": "example"
+    }
+  ],
+  "Regions": [
+    {
+      "Region": "Top",
+      "Name": "NotificationsBar"
     }
   ],
   "ConfigState": "Valid"

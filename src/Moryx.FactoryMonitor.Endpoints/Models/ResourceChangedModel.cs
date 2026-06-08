@@ -14,6 +14,7 @@ public class ResourceChangedModel : VisualizableItemModel
     [DataMember]
     public virtual string CellName { get; set; }
 
+    // ToDo: Verify why this is duplicated and not using the location of the visual item
     [DataMember]
     public virtual string CellIconName { get; set; }
 
@@ -23,6 +24,7 @@ public class ResourceChangedModel : VisualizableItemModel
     [DataMember]
     public long Id { get; set; }
 
+    // ToDo: Verify why this is duplicated and not using the location of the visual item
     [DataMember]
     public CellLocationModel CellLocation { get; set; }
 
