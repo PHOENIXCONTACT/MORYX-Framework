@@ -150,9 +150,6 @@
   <data name="Layout_AdministrationMode" xml:space="preserve">
     <value>Modalità amministrativa</value>
   </data>
-  <data name="Layout_Details" xml:space="preserve">
-    <value>DETTAGLI</value>
-  </data>
   <data name="Layout_ExitFullscreen" xml:space="preserve">
     <value>Esci a schermo intero</value>
   </data>

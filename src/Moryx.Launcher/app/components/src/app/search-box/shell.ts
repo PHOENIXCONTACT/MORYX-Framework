@@ -4,7 +4,14 @@
 */
 
 import { Observable } from 'rxjs';
-import { Notification } from '../notifications/notifications';
+
+export type Severity = 'Info' | 'Warning' | 'Error' | 'Fatal';
+
+export interface Notification {
+  severity: Severity;
+  title: string;
+}
+
 export interface MoryxShell extends Object {
   initSearchBar(
     callback: SearchRequestCallback,

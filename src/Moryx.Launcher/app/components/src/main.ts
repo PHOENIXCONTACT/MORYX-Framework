@@ -12,11 +12,11 @@ import { Constants } from './app/constants';
 import { DropdownSubItem } from './app/dropdown-sub-item/dropdown-sub-item';
 import { LanguageSelector } from './app/language-selector/language-selector';
 import { PageLayout } from './app/page-layout/page-layout';
-import { Notifications } from './app/notifications/notifications';
 import { SearchBox } from './app/search-box/search-box';
 import { NotificationBadge } from './app/notification-badge/notification-badge';
 import { SignInButton } from './app/auth-button/auth-button';
 import { NavigationButton } from './app/navigation-button/navigation-button';
+import { NotificationsBar } from './app/notifications-bar/notifications-bar';
 
 (async () => {
   const app = await createApplication();
@@ -44,9 +44,6 @@ import { NavigationButton } from './app/navigation-button/navigation-button';
   const searchbox = createCustomElement(SearchBox, {
     injector: app.injector
   });
-  const notifications = createCustomElement(Notifications, {
-    injector: app.injector
-  });
   const notificationBadge = createCustomElement(NotificationBadge, {
     injector: app.injector
   });
@@ -54,6 +51,9 @@ import { NavigationButton } from './app/navigation-button/navigation-button';
     injector: app.injector
   });
   const navButton = createCustomElement(NavigationButton, {
+    injector: app.injector
+  });
+  const notificationsBar = createCustomElement(NotificationsBar, {
     injector: app.injector
   });
 
@@ -64,9 +64,9 @@ import { NavigationButton } from './app/navigation-button/navigation-button';
   customElements.define(Constants.WebComponentNames.LanguageSelector, languageSelector);
   customElements.define(Constants.WebComponentNames.PageLayout, pageLayout);
   customElements.define(Constants.WebComponentNames.Searchbox, searchbox);
-  customElements.define(Constants.WebComponentNames.Notifications, notifications);
   customElements.define(Constants.WebComponentNames.NotificationBadge, notificationBadge);
   customElements.define(Constants.WebComponentNames.SignIn, authButtons);
   customElements.define(Constants.WebComponentNames.NavigationButton, navButton);
+  customElements.define(Constants.WebComponentNames.NotificationsBar, notificationsBar);
 
 })();

@@ -160,15 +160,6 @@ namespace Moryx.Launcher.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Details.
-        /// </summary>
-        internal static string Layout_Details {
-            get {
-                return ResourceManager.GetString("Layout_Details", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Exit fullscreen mode.
         /// </summary>
         internal static string Layout_ExitFullscreen {
