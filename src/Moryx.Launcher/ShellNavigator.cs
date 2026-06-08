@@ -197,7 +197,7 @@ public class ShellNavigator : IShellNavigator, ILauncher
 
     private static void AddNotificationsBarRegion(IConfigManager configManager, LauncherConfig launcherConfig)
     {
-        var topRegion = launcherConfig.Regions?.FirstOrDefault(r => r.Region == LauncherRegion.Top);
+        var topRegion = launcherConfig.Regions.FirstOrDefault(r => r.Region == LauncherRegion.Top);
 
         if (topRegion == null)
         {
@@ -208,12 +208,7 @@ public class ShellNavigator : IShellNavigator, ILauncher
             };
 
             var regions = new List<LauncherRegionConfig>();
-
-            if (launcherConfig.Regions != null)
-            {
-                regions.AddRange(launcherConfig.Regions);
-            }
-
+            regions.AddRange(launcherConfig.Regions);
             regions.Add(topRegion);
 
             launcherConfig.Regions = regions.ToArray();
