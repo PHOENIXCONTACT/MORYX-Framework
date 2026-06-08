@@ -1,7 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -20,6 +19,8 @@ namespace Moryx.Launcher;
 /// <inheritdoc />
 public class ShellNavigator : IShellNavigator, ILauncher
 {
+    private const string NotificationsBarName = "NotificationsBar";
+
     private readonly ILogger _logger;
     private readonly MoryxAccessManagementClient _client;
     private readonly IReadOnlyList<ExternalModuleItem> _externalModules;
@@ -177,7 +178,7 @@ public class ShellNavigator : IShellNavigator, ILauncher
         };
     }
 
-    private LauncherConfig GetConfiguration(IConfigManager configManager)
+    private static LauncherConfig GetConfiguration(IConfigManager configManager)
     {
         var launcherConfig = configManager.GetConfiguration<LauncherConfig>();
 
@@ -185,9 +186,39 @@ public class ShellNavigator : IShellNavigator, ILauncher
         if (launcherConfig.ConfigState == ConfigState.Generated)
         {
             launcherConfig.ConfigState = ConfigState.Valid;
+
             configManager.SaveConfiguration(launcherConfig);
         }
 
+        AddNotificationsBarRegion(configManager, launcherConfig);
+
         return launcherConfig;
+    }
+
+    private static void AddNotificationsBarRegion(IConfigManager configManager, LauncherConfig launcherConfig)
+    {
+        var topRegion = launcherConfig.Regions?.FirstOrDefault(r => r.Region == LauncherRegion.Top);
+
+        if (topRegion == null)
+        {
+            topRegion = new LauncherRegionConfig()
+            {
+                Region = LauncherRegion.Top,
+                Name = NotificationsBarName
+            };
+
+            var regions = new List<LauncherRegionConfig>();
+
+            if (launcherConfig.Regions != null)
+            {
+                regions.AddRange(launcherConfig.Regions);
+            }
+
+            regions.Add(topRegion);
+
+            launcherConfig.Regions = regions.ToArray();
+
+            configManager.SaveConfiguration(launcherConfig);
+        }
     }
 }
