@@ -19,6 +19,11 @@ internal interface IProcessArchive : IPlugin
     Task<IReadOnlyList<Process>> GetProcesses(ProductInstance productInstance, CancellationToken cancellationToken);
 
     /// <summary>
+    /// Retrieve a process by its id.
+    /// </summary>
+    Task<Process> GetProcess(long id, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Retrieve all processes in a certain range
     /// </summary>
     /// <param name="filterType">Type of filtering</param>

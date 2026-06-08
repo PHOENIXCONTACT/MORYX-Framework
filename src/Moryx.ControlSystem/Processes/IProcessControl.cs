@@ -25,6 +25,11 @@ public interface IProcessControl
     IReadOnlyList<Process> GetRunningProcesses(Func<Process, bool> predicate);
 
     /// <summary>
+    /// Retrieve a process by its id.
+    /// </summary>
+    Task<Process> LoadArchivedProcessAsync(long id, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Retrieve all archived processes for a product instance
     /// </summary>
     Task<IReadOnlyList<Process>> LoadArchivedProcessesAsync(ProductInstance productInstance, CancellationToken cancellationToken = default);

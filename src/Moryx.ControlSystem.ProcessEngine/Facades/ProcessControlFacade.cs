@@ -75,6 +75,12 @@ internal class ProcessControlFacade : FacadeBase, IProcessControl
         return ActivityDataPool.GetProcess(process)?.NextTargets() ?? Array.Empty<ICell>();
     }
 
+    public Task<Process> LoadArchivedProcessAsync(long id, CancellationToken cancellationToken = default)
+    {
+        ValidateHealthState();
+        return ProcessArchive.GetProcess(id, cancellationToken);
+    }
+
     public IReadOnlyList<ICell> Targets(Activity activity)
     {
         ValidateHealthState();
