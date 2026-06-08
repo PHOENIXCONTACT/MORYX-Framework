@@ -69,14 +69,15 @@ public class FactoryMonitorController : ControllerBase
     [HttpGet("state")]
     public ActionResult<FactoryStateModel> InitialFactoryState()
     {
-        var locations = _resourceManager.GetResources<IMachineLocation>();
-        var cells = locations.Where(CellFilterBaseOnLocation)
-            .Select(l => l.Machine)
-            .Cast<ICell>().ToList();
         var activityChangedModels = new List<ActivityChangedModel>();
         var cellStateChangedModels = new List<CellStateChangedModel>();
         var resourceChangedModels = new List<ResourceChangedModel>();
 
+        var locations = _resourceManager.GetResources<IMachineLocation>();
+        var cells = locations.Where(CellFilterBaseOnLocation)
+            .Select(l => l.Machine)
+            .Cast<ICell>().ToList();
+        var orders = _orderManager.GetOrderModels(_colorPalette).OrderBy(x => x.Order).ThenBy(x => x.Operation).ToList();
         var activities = _processControl.GetRunningProcesses()
             .Select(p => p.CurrentActivity())
             .Where(a => a is not null && a.Tracing is not null);
@@ -88,7 +89,7 @@ public class FactoryMonitorController : ControllerBase
             {
                 var activity = activities.FirstOrDefault(a => a.Tracing.ResourceId == cell.Id);
                 //to-do: handle multiple activities in one cell
-                activityChangedModels.Add(cell.GetActivityChangedModel(activity, _orderManager.GetOrderModels(_colorPalette)));
+                activityChangedModels.Add(cell.GetActivityChangedModel(activity, orders));
                 cellStateChangedModels.Add(cell.GetCellStateChangedModel(ActivityProgress.Running, _resourceManager.ReadUnsafe(cell.Id, r => r)));
             }
             else
@@ -98,10 +99,9 @@ public class FactoryMonitorController : ControllerBase
             resourceChangedModels.Add(cell.GetResourceChangedModel(converter, _resourceManager, CellFilterBaseOnLocation));
         }
 
-        activityChangedModels = activityChangedModels.OrderBy(x => x.ResourceId).ToList();
-        cellStateChangedModels = cellStateChangedModels.OrderBy(x => x.Id).ToList();
-        resourceChangedModels = resourceChangedModels.OrderBy(x => x.Id).ToList();
-        var orderModels = _orderManager.GetOrderModels(_colorPalette).OrderBy(x => x.Order).ThenBy(x => x.Operation).ToList();
+        activityChangedModels = [.. activityChangedModels.OrderBy(x => x.ResourceId)];
+        cellStateChangedModels = [.. cellStateChangedModels.OrderBy(x => x.Id)];
+        resourceChangedModels = [.. resourceChangedModels.OrderBy(x => x.Id)];
 
         var factory = _resourceManager.GetRootFactory();
 
@@ -109,11 +109,12 @@ public class FactoryMonitorController : ControllerBase
         model.ActivityChangedModels = activityChangedModels;
         model.CellStateChangedModels = cellStateChangedModels;
         model.ResourceChangedModels = resourceChangedModels;
-        model.OrderModels = orderModels;
+        model.OrderModels = orders;
 
         return model;
     }
 
+    // Currently returns a list of all visualizable items and is not used, so remove or at least rename in MORYX 12
     /// <summary>
     /// List of all the cells
     /// </summary>
@@ -128,6 +129,7 @@ public class FactoryMonitorController : ControllerBase
         return cells.Select(x => new SimpleGraph { Id = x.Id }.ToVisualItemModel(_resourceManager, _logger, converter, CellFilterBaseOnLocation)).ToList();
     }
 
+    // ToDo: Endpoints usually return arrays and pagination would be good.
     /// <summary>
     /// Get the list of displayable item for this current factory view
     /// </summary>
@@ -143,7 +145,8 @@ public class FactoryMonitorController : ControllerBase
         var converter = new Converter.Converter(_serialization);
 
         var root = _resourceManager.GetRootFactory();
-        var graph = _resourceManager.ReadUnsafe(factory.Id, e => SimpleGraph.Create(e as ManufacturingFactory));
+        // ToDo: Cannot assume ManufacturingFactory base class
+        var graph = _resourceManager.ReadUnsafe(factory.Id, SimpleGraph.Create);
 
         //root level (Factory)
         if (root.Id == factoryId)
@@ -235,7 +238,7 @@ public class FactoryMonitorController : ControllerBase
                 Broadcast));
 
         var orderStartedEventHandler = new EventHandler<OperationStartedEventArgs>((_, eventArgs) =>
-            FactoryMonitorHelper.OrderStarted(eventArgs, Broadcast));
+            FactoryMonitorHelper.OrderStarted(eventArgs, _orderManager.GetOrderModels(_colorPalette), Broadcast));
 
         var orderEventHandler = new EventHandler<OperationChangedEventArgs>((sender, eventArgs) =>
             FactoryMonitorHelper.OrderUpdated(eventArgs, Broadcast));
@@ -313,6 +316,7 @@ public class FactoryMonitorController : ControllerBase
         }
     }
 
+    // ToDo: Rename to move location in MORYX 12 and 
     /// <summary>
     /// Return the location of the cell in the factory
     /// </summary>

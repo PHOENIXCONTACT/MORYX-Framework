@@ -7,30 +7,37 @@ using Moryx.ControlSystem.Processes;
 using Moryx.Factory;
 using Moryx.FactoryMonitor.Endpoints.Models;
 using Moryx.Orders;
-using Newtonsoft.Json;
 
 namespace Moryx.FactoryMonitor.Endpoints.Extensions;
 
 internal static class FactoryMonitorHelper
 {
-    public static void OrderStarted(OperationStartedEventArgs orderEventArg, Action<string, object> broadcast)
-    {
-        var orderModel = Converter.Converter.ToOrderModel(orderEventArg.Operation);
-        broadcast("processes", orderModel);
+    private const string Order_Event_Type_Key = "order";
+    private const string Order_Changed_Event_Type_Key = "orderChanged";
+    private const string Cell_State_Event_Type_Key = "cellStateChangedModel";
+    private const string Activity_Event_Type_Key = "activityChangedModel";
+    private const string Recource_Event_Type_Key = "resourceChangedModel";
 
+    public static void OrderStarted(OperationStartedEventArgs orderEventArg, List<OrderModel> models, Action<string, object> broadcast)
+    {
+        var orderModel = models.Single(o => o.Order == orderEventArg.Operation.Order.Number && o.Operation == orderEventArg.Operation.Number);
+        broadcast(Order_Event_Type_Key, orderModel);
     }
 
     public static void OrderUpdated(OperationChangedEventArgs orderEventArg, Action<string, object> broadcast)
     {
-        if (orderEventArg.Operation.State is not OperationStateClassification.Running) return;
+        if (orderEventArg.Operation.State is not OperationStateClassification.Running)
+        {
+            return;
+        }
 
         var orderReferenceModel = Converter.Converter.ToOrderChangedModel(orderEventArg.Operation);
-        broadcast("processes", orderReferenceModel);
+        broadcast(Order_Changed_Event_Type_Key, orderReferenceModel);
     }
 
     public static void PublishCellUpdate(CellStateChangedModel cellModel, Action<string, object> broadcast)
     {
-        broadcast("cellStateChangedModel", cellModel);
+        broadcast(Cell_State_Event_Type_Key, cellModel);
     }
 
     public static void ActivityUpdated(ActivityUpdatedEventArgs activityEventArg, List<ICell> cells, Resource resource,
@@ -46,17 +53,16 @@ internal static class FactoryMonitorHelper
             return;
         }
 
-        var cell = resource as ICell;
-        if (cell == null)
+        if (resource is not ICell cell)
         {
             return;
         }
 
         var activityChangedModel = cell.GetActivityChangedModel(activityEventArg.Activity, orderModels);
-        broadcast("activityChangedModel", activityChangedModel);
+        broadcast(Activity_Event_Type_Key, activityChangedModel);
 
         var cellStateChangedModel = cell.GetCellStateChangedModel(activityEventArg.Progress, resource);
-        broadcast("cellStateChangedModel", cellStateChangedModel);
+        broadcast(Cell_State_Event_Type_Key, cellStateChangedModel);
     }
 
     public static void ResourceUpdated(IResourceManagement resourceManager,
@@ -69,7 +75,7 @@ internal static class FactoryMonitorHelper
         foreach (var cell in cells)
         {
             var resourceChangedModel = cell.GetResourceChangedModel(converter, resourceManager, cellFilter);
-            broadcast("resourceChangedModel", resourceChangedModel);
+            broadcast(Recource_Event_Type_Key, resourceChangedModel);
         }
     }
 

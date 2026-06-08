@@ -1,11 +1,13 @@
+@let factory = parameters();
+
 <div
   #FactoryElement
   class="cell-container"
   [ngStyle]="{
     'border-color': borderColor(),
     background: backgroundColor,
-    top: (factory().location?.positionY ?? 0) * 100 + '%',
-    left: (factory().location?.positionX ?? 0) * 100 + '%'
+    top: (factory.location?.positionY ?? 0) * 100 + '%',
+    left: (factory.location?.positionX ?? 0) * 100 + '%'
   }"
   cdkDrag
   cdkDragBoundary=".draggable-area"
@@ -13,6 +15,6 @@
   [cdkDragDisabled]="!isEditMode()"
   (click)="onCellClicked()">
   <mat-icon [ngStyle]="{ color: iconColor() }">{{
-    factory().iconName
+    factory.iconName
   }}</mat-icon>
 </div>

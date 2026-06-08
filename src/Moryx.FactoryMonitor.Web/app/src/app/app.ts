@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { EditMenuService } from './services/edit-menu.service';
 import { EditMenuState } from './services/EditMenutState';
 import { ChangeBackgroundService } from './services/change-background.service';
@@ -16,6 +16,7 @@ import { EditMenu } from './components/edit-menu/edit-menu';
 import { OrdersContainer } from './components/orders-container/orders-container';
 import { CellDetails } from './components/cell-details/cell-details';
 import { RouterOutlet } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-root',
@@ -28,21 +29,20 @@ import { RouterOutlet } from '@angular/router';
     RouterOutlet
   ]
 })
-export class App implements OnInit {
-  private editMenuService = inject(EditMenuService);
-  private backgroundService = inject(ChangeBackgroundService);
+export class App {
   private languageService = inject(LanguageService);
   private translateService = inject(TranslateService);
   private cellStoreService = inject(CellStoreService);
 
-  backgroundImage = signal<string>('');
-  private editMenuState !: EditMenuState;
+  private editMenuState = toSignal(inject(EditMenuService).activeState$, { initialValue: EditMenuState.Closed });
+  private background = toSignal(inject(ChangeBackgroundService).backgroundChanged$);
+  backgroundImage = computed(() => {
+    const bg = this.background();
+    return bg ? `url(${bg})` : 'none';
+  });
+  isEditMode = computed(() => this.editMenuState() === EditMenuState.EditingCells);
 
   constructor() {
-    this.editMenuService.activeState$.subscribe({
-      next: state => this.editMenuState = state
-    });
-
     this.translateService.addLangs([
       TranslationConstants.LANGUAGES.EN,
       TranslationConstants.LANGUAGES.DE,
@@ -52,19 +52,8 @@ export class App implements OnInit {
     this.translateService.use(this.languageService.getDefaultLanguage());
   }
 
-  ngOnInit(): void {
-    this.backgroundService.backgroundChanged$.subscribe({
-      next: url => this.backgroundImage.update(_ => url)
-    });
-  }
-
   getCell(cellId: number): CellModel {
     const output = this.cellStoreService.getCell(cellId) ?? <CellModel>{};
     return output;
   }
-
-  get isEditMode() {
-    return this.editMenuState === EditMenuState.EditingCells;
-  }
 }
-
