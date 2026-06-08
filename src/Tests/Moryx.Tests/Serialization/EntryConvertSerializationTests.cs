@@ -1,9 +1,12 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System;
+using System.Globalization;
+using System.Linq;
+using System.Threading;
 using Moryx.Serialization;
 using NUnit.Framework;
-using System.Linq;
 
 namespace Moryx.Tests.Serialization;
 
@@ -53,8 +56,77 @@ public class EntryConvertSerializationTests
         var entry = EntryConvert.EncodeObject(myObject);
 
         // Assert
-        Assert.That(entry.SubEntries
-                .FirstOrDefault(x => x.DisplayName == nameof(DummyClass.Number)).Value.Current,
-            Is.EqualTo(myObject.Number.ToString()));
+        Assert.That(entry.SubEntries.FirstOrDefault(x => x.DisplayName == nameof(DummyClass.Number)).Value.Current,
+            Is.EqualTo(myObject.Number.ToString(Thread.CurrentThread.CurrentCulture)));
     }
+
+    [Test]
+    public void ToObject_UsesProvidedFormatProvider_ForFloatDoubleDecimal()
+    {
+        // Arrange
+        var value = "1234,56"; var provider = new CultureInfo("de-DE"); // uses comma as decimal separator
+
+        // Act
+        var floatResult = (float)EntryConvert.ToObject(typeof(float), value, provider);
+        var doubleResult = (double)EntryConvert.ToObject(typeof(double), value, provider);
+        var decimalResult = (decimal)EntryConvert.ToObject(typeof(decimal), value, provider);
+
+        // Assert
+        Assert.That(floatResult, Is.EqualTo(1234.56f).Within(1e-5));
+        Assert.That(doubleResult, Is.EqualTo(1234.56d).Within(1e-10));
+        Assert.That(decimalResult, Is.EqualTo(1234.56m));
+    }
+
+    [Test]
+    public void ToObject_FallsBackToInvariantCulture_WhenProviderFails_ForFloatDoubleDecimal()
+    {
+        // Arrange
+        var value = "1234.56";
+        var provider = new CultureInfo("de-DE"); // dot fails in de-DE, should fallback to invariant
+
+        // Act
+        var floatResult = (float)EntryConvert.ToObject(typeof(float), value, provider);
+        var doubleResult = (double)EntryConvert.ToObject(typeof(double), value, provider);
+        var decimalResult = (decimal)EntryConvert.ToObject(typeof(decimal), value, provider);
+
+        // Assert
+        Assert.That(floatResult, Is.EqualTo(1234.56f).Within(1e-5));
+        Assert.That(doubleResult, Is.EqualTo(1234.56d).Within(1e-10));
+        Assert.That(decimalResult, Is.EqualTo(1234.56m));
+    }
+
+    [Test]
+    public void ToObject_ThrowsFormatException_WhenParsingFails()
+    {
+        // Arrange
+        var value = "not-a-number";
+
+        // Act + Assert
+        Assert.Throws<FormatException>(() =>
+            EntryConvert.ToObject(typeof(float), value, CultureInfo.InvariantCulture));
+
+        Assert.Throws<FormatException>(() =>
+            EntryConvert.ToObject(typeof(decimal), value, CultureInfo.InvariantCulture));
+
+        Assert.Throws<FormatException>(() =>
+            EntryConvert.ToObject(typeof(double), value, CultureInfo.InvariantCulture));
+    }
+
+    [Test]
+    public void ToObject_ByEntryValueType_AlsoUsesParseWithFallback()
+    {
+        // Arrange
+        var provider = new CultureInfo("de-DE");
+        var valueComma = "3,14"; // should parse with provider
+        var valueDot = "3.14";   // should parse via fallback to invariant
+
+        // Act
+        var singleWithProvider = (float)EntryConvert.ToObject(EntryValueType.Single, valueComma, provider);
+        var doubleWithFallback = (double)EntryConvert.ToObject(EntryValueType.Double, valueDot, provider);
+
+        // Assert
+        Assert.That(singleWithProvider, Is.EqualTo(3.14f).Within(1e-5));
+        Assert.That(doubleWithFallback, Is.EqualTo(3.14d).Within(1e-10));
+    }
+
 }
