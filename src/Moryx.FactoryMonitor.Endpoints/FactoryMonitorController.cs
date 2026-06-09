@@ -270,6 +270,10 @@ public class FactoryMonitorController : ControllerBase
 
             await result.ExecuteAsync(HttpContext);
         }
+        catch (OperationCanceledException)
+        {
+            // client disconnected — this is expected, not an error
+        }
         finally
         {
             // Unregister handlers
@@ -316,7 +320,7 @@ public class FactoryMonitorController : ControllerBase
         }
     }
 
-    // ToDo: Rename to move location in MORYX 12 and 
+    // ToDo: Rename to move location in MORYX 12 and
     /// <summary>
     /// Return the location of the cell in the factory
     /// </summary>
