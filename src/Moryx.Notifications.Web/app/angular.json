@@ -21,7 +21,7 @@
           "builder": "@angular/build:application",
           "options": {
             "outputPath": {
-              "base": "../wwwroot",
+              "base": "../wwwroot/app",
               "browser": ""
             },
             "index": "src/index.html",

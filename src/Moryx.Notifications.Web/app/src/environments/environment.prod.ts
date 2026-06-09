@@ -9,7 +9,7 @@ let path_base = getPathBase("/Notifications");
 
 export const environment = {
   production: true,
-  assets: path_base + "/_content/Moryx.Notifications.Web/",
+  assets: path_base + "/_content/Moryx.Notifications.Web/app/",
   rootUrl: path_base,
 };
 
