@@ -3,14 +3,13 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, input, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { TranslateModule } from '@ngx-translate/core';
-import { ProductPartModel } from '../../../api/models';
-import { OrderManagementService } from 'src/app/api/services';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
+import { ProductPartModel } from '@api/models';
+import { OrderManagementService } from '@api/services';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 
 @Component({
   selector: 'app-part-list',

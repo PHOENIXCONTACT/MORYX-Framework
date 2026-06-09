@@ -17,11 +17,10 @@ import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
-import { DocumentModel } from "../../api/models";
-import { OperationModel } from "../../api/models";
-import { OrderManagementService } from 'src/app/api/services';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import { environment } from 'src/environments/environment';
+import { DocumentModel, OperationModel } from "@api/models";
+import { OrderManagementService } from '@api/services/order-management.service';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-operation-documents',

@@ -5,17 +5,19 @@
 
 import { Component, computed, inject, OnInit, signal, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { BeginModel } from '../../api/models';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import { OperationViewModel } from 'src/app/models/operation-view-model';
+import { TranslateModule } from '@ngx-translate/core';
+import {
+  BeginModel,
+  BeginContext,
+  AssignableOperator,
+  RestrictionDescription,
+  OperationStateClassification
+} from '@api/models';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { OperationViewModel } from '@app/models/operation-view-model';
 import { FormControl, FormsModule, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
-import { RestrictionDescription } from '../../api/models';
-import { OperatorsService } from 'src/app/services/operators.service';
-import { AssignableOperator } from '../../api/models';
+import { OperatorsService } from '@app/services/operators.service';
 import { map, Observable, startWith } from 'rxjs';
-import { BeginContext } from '../../api/models';
-import { OperationStateClassification } from '../../api/models';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
@@ -25,7 +27,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { MultiProgressBar } from "../../multi-progress-bar/multi-progress-bar";
+import { MultiProgressBar } from "@app/multi-progress-bar/multi-progress-bar";
 
 @Component({
   selector: 'app-begin-dialog',

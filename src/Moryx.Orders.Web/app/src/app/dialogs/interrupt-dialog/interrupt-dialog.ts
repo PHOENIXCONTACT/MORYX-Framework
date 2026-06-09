@@ -9,7 +9,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from "@angular/material/dialog";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { TranslateModule } from "@ngx-translate/core";
-import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
+import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
 import { InterruptDialogData } from "./interrupt-dialog-data";
 
 @Component({

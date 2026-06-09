@@ -7,11 +7,9 @@ import { Component, computed, inject, OnInit, signal, ChangeDetectionStrategy } 
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from "@angular/material/dialog";
 import { TranslateModule } from "@ngx-translate/core";
 import { Observable } from "rxjs";
-import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
-import { OperationViewModel } from "../../models/operation-view-model";
-import { ConfirmationType } from '../../api/models';
-import { ReportModel } from '../../api/models';
-import { ReportContext } from '../../api/models';
+import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
+import { OperationViewModel } from "@app/models/operation-view-model";
+import { ConfirmationType, ReportModel, ReportContext } from '@api/models';
 import { CommonModule } from "@angular/common";
 import { MatGridListModule } from "@angular/material/grid-list";
 import { MatFormFieldModule } from "@angular/material/form-field";

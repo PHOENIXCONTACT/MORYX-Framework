@@ -20,11 +20,18 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { lastValueFrom } from "rxjs";
-import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
-import { OperationNumberValidations } from "src/app/validations/operationNumberValidations";
-import { OperationCreationContextModel, ProductModel, ProductQuery, RecipeClassificationModel, RecipeFilter, RecipeModel, RevisionFilter } from '../../api/models';
-import { OrderManagementService } from "../../api/services/order-management.service";
-import { ProductManagementService } from "../../api/services/product-management.service";
+import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
+import { OperationNumberValidations } from "@app/validations/operationNumberValidations";
+import {
+  OperationCreationContextModel,
+  ProductModel,
+  ProductQuery,
+  RecipeFilter,
+  RecipeModel,
+  RevisionFilter
+} from '@api/models';
+import { OrderManagementService } from "@api/services/order-management.service";
+import { ProductManagementService } from "@api/services/product-management.service";
 import { HttpErrorResponse } from "@angular/common/http";
 
 enum Action {
@@ -59,7 +66,7 @@ enum Action {
 })
 export class CreateDialog {
   TranslationConstants = TranslationConstants;
-  
+
   private orderManagementService = inject(OrderManagementService);
   private productManagementService = inject(ProductManagementService);
   private dialog = inject(MatDialogRef<CreateDialog>);
@@ -100,7 +107,7 @@ export class CreateDialog {
 
   productInput = viewChild.required<ElementRef<HTMLInputElement>>('productInput');
   private productsLoader = resource<ProductModel[], { query: ProductQuery }>({
-    params: () => ({ query: 
+    params: () => ({ query:
       <ProductQuery>{
         recipeFilter: RecipeFilter.WithRecipe,
         revisionFilter: RevisionFilter.All,
@@ -119,7 +126,7 @@ export class CreateDialog {
     return this.productsLoader.value().sort((a, b) => this.byProductNameAndRevision(a, b));
   });
   filteredProducts = linkedSignal(this.possibleProducts)
-  selectedProduct = signal<ProductModel | undefined>(undefined);  
+  selectedProduct = signal<ProductModel | undefined>(undefined);
   productFormControl = new FormControl<ProductModel | undefined>(undefined);
 
   recipeInput = viewChild.required<ElementRef<HTMLInputElement>>('recipeInput');
@@ -157,16 +164,16 @@ export class CreateDialog {
   constructor() {
     effect(() => this.processLoading());
     effect(() => this.productFormControl.setValue(this.selectedProduct()));
-    effect(() => this.recipeFormControl.setValue(this.selectedRecipe()));    
+    effect(() => this.recipeFormControl.setValue(this.selectedRecipe()));
   }
-  
+
   private processLoading(): void {
     const isLoading = this.productsLoader.isLoading() || this.recipesLoader.isLoading();
     const error = !!this.productsLoader.error() || !!this.recipesLoader.error() ;
-    
+
     untracked(() => {
       this.isLoading.set(isLoading);
-      
+
       if(isLoading)
         this.operationNumberFormControl.disable();
       else
@@ -293,7 +300,7 @@ export class CreateDialog {
       this.addOperation();
     }
   }
-  
+
   filterProduct(): void {
     const filterValue = this.productInput().nativeElement.value.toLowerCase();
     const filtered = this.possibleProducts().filter(p => this.productToString(p).toLowerCase().includes(filterValue));
@@ -302,7 +309,7 @@ export class CreateDialog {
       this.selectedProduct.set(filtered[0]);
     }
   }
-  
+
   filterRecipe(): void {
     const filterValue = this.recipeInput()?.nativeElement.value.toLowerCase();
     const filtered = this.possibleRecipes().filter(r => this.recipeToString(r).toLowerCase().includes(filterValue));
@@ -315,7 +322,7 @@ export class CreateDialog {
   private async loadRecipes(productIdentifier: string, productRevision: number): Promise<RecipeModel[]> {
     const assignableRecipes = await lastValueFrom(this.orderManagementService
       .getAssignableRecipes({ identifier: productIdentifier, revision: productRevision }));
-    
+
     return await Promise.all(assignableRecipes.map(async (ar) => await this.loadRecipe(ar.id!)));
   }
 
@@ -329,11 +336,11 @@ export class CreateDialog {
     if (a.name !== b.name) return a.name.localeCompare(b.name);
     return (b.revision ?? 0) - (a.revision ?? 0);
   }
-    
+
   productToString(value: ProductModel) {
     return value ? `${value.identifier}-${String(value.revision).padStart(2, '0')} ${value.name}` : '';
   }
-  
+
   recipeToString(value: RecipeModel) {
     return value ? `\[${value.type}\] ${value.name}` : '';
   }
