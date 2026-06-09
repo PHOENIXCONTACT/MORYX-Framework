@@ -4,7 +4,7 @@
 */
 
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, computed, effect, inject, OnInit, signal, untracked } from "@angular/core";
+import { Component, computed, effect, inject, OnInit, signal, untracked, ChangeDetectionStrategy } from "@angular/core";
 import { ActivatedRoute, RouterLink } from "@angular/router";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
 import { NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
@@ -34,6 +34,7 @@ import { MatSelectModule } from '@angular/material/select';
   selector: "app-operation-recipes",
   templateUrl: "./operation-recipes.html",
   styleUrls: ["./operation-recipes.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatProgressBarModule,
     MatSidenavModule,

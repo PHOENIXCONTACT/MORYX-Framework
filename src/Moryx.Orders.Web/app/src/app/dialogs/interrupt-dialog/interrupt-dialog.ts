@@ -4,7 +4,7 @@
 */
 
 import { CommonModule } from "@angular/common";
-import { Component, inject, signal } from "@angular/core";
+import { Component, inject, signal, ChangeDetectionStrategy } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from "@angular/material/dialog";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
@@ -16,6 +16,7 @@ import { InterruptDialogData } from "./interrupt-dialog-data";
   selector: "app-interrupt-dialog",
   templateUrl: "./interrupt-dialog.html",
   styleUrls: ["./interrupt-dialog.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CommonModule,
     MatDialogModule,

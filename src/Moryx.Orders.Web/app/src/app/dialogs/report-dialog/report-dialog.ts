@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, computed, inject, OnInit, signal } from "@angular/core";
+import { Component, computed, inject, OnInit, signal, ChangeDetectionStrategy } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from "@angular/material/dialog";
 import { TranslateModule } from "@ngx-translate/core";
 import { Observable } from "rxjs";
@@ -26,6 +26,7 @@ import { MatInputModule } from "@angular/material/input";
   selector: "app-report-dialog",
   templateUrl: "./report-dialog.html",
   styleUrls: ["./report-dialog.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CommonModule,
     MatDialogModule,

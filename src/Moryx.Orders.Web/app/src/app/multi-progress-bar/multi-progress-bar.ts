@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, input, ChangeDetectionStrategy } from '@angular/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslationConstants } from '../extensions/translation-constants.extensions';
@@ -13,6 +13,7 @@ import { TranslationConstants } from '../extensions/translation-constants.extens
   standalone: true,
   templateUrl: './multi-progress-bar.html',
   styleUrls: ['./multi-progress-bar.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatTooltipModule,
     TranslateModule

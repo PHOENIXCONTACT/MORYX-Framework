@@ -5,7 +5,7 @@
 
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
@@ -27,6 +27,7 @@ import { environment } from 'src/environments/environment';
   selector: 'app-operation-documents',
   templateUrl: './operation-documents.html',
   styleUrls: ['./operation-documents.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatProgressBarModule,
     MatSidenavModule,

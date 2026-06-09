@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FilterService } from '../../../services/filter.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslationConstants } from '../../../extensions/translation-constants.extensions';
@@ -12,6 +12,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     TranslateModule
   ],
   templateUrl: './operations-filter.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './operations-filter.scss',
 })
 export class OperationsFilter {

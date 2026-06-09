@@ -4,7 +4,7 @@
 */
 
 import { CommonModule } from "@angular/common";
-import { Component, computed, effect, ElementRef, inject, linkedSignal, resource, signal, untracked, viewChild, ViewChild } from "@angular/core";
+import { Component, computed, effect, ElementRef, inject, linkedSignal, resource, signal, untracked, viewChild, ViewChild, ChangeDetectionStrategy } from "@angular/core";
 import { FormControl, FormsModule, ReactiveFormsModule, UntypedFormControl } from "@angular/forms";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { MatButtonModule } from "@angular/material/button";
@@ -54,6 +54,7 @@ enum Action {
     MatTooltipModule,
     MatAutocompleteModule
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: []
 })
 export class CreateDialog {

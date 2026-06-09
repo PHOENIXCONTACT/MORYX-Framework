@@ -4,7 +4,7 @@
 */
 
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, input, OnInit, signal, untracked } from '@angular/core';
+import { Component, effect, inject, input, OnInit, signal, untracked, ChangeDetectionStrategy } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { delay, tap } from 'rxjs';
@@ -17,6 +17,7 @@ import { TranslationConstants } from 'src/app/extensions/translation-constants.e
   selector: 'app-log-message-list',
   templateUrl: './log-message-list.html',
   styleUrls: ['./log-message-list.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CommonModule,
     MatExpansionModule,

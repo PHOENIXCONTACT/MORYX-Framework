@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, computed, inject, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { BeginModel } from '../../api/models';
@@ -31,6 +31,7 @@ import { MultiProgressBar } from "../../multi-progress-bar/multi-progress-bar";
   selector: 'app-begin-dialog',
   templateUrl: './begin-dialog.html',
   styleUrls: ['./begin-dialog.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatDialogModule,
     CommonModule,
