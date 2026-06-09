@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, linkedSignal } from '@angular/core';
+import { Component, inject, linkedSignal, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
@@ -17,6 +17,7 @@ import { RecipeModel } from 'src/app/api/models';
   selector: 'app-product-recipes-details',
   templateUrl: './product-recipes-details.html',
   styleUrls: ['./product-recipes-details.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ProductRecipesDetailsHeader,
     NavigableEntryEditor,

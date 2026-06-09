@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, signal, linkedSignal } from "@angular/core";
+import { Component, inject, signal, linkedSignal, ChangeDetectionStrategy } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
 import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
 import { EditProductsService } from "src/app/services/edit-products.service";
@@ -21,6 +21,7 @@ import { toSignal } from "@angular/core/rxjs-interop";
   selector: "app-products-details-header",
   templateUrl: "./products-details-header.html",
   styleUrls: ["./products-details-header.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatInputModule,
     TranslateModule,

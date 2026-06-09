@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
@@ -22,6 +22,7 @@ import { MatInputModule } from '@angular/material/input';
   selector: 'app-dialog-create-recipe',
   templateUrl: './dialog-create-recipe.html',
   styleUrls: ['./dialog-create-recipe.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatFormFieldModule,
     FormsModule,

@@ -11,7 +11,8 @@ import {
   OnDestroy,
   OnInit,
   signal,
-  viewChild
+  viewChild,
+  ChangeDetectionStrategy
 } from "@angular/core";
 import { toSignal } from "@angular/core/rxjs-interop";
 import { MatDialog } from "@angular/material/dialog";
@@ -80,6 +81,7 @@ import { MatInputModule } from "@angular/material/input";
     RouterOutlet,
     MatInputModule
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: {
     '(window:beforeunload)': 'beforeUnloadHander()'
   }

@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, computed, effect, inject, signal, untracked } from "@angular/core";
+import { Component, computed, effect, inject, signal, untracked, ChangeDetectionStrategy } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Entry, EntryValueType, NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
 import { TranslateModule } from "@ngx-translate/core";
@@ -30,6 +30,7 @@ import { MatToolbarModule } from "@angular/material/toolbar";
   selector: "app-products-importer",
   templateUrl: "./products-importer.html",
   styleUrls: ["./products-importer.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     TranslateModule,
     MatFormFieldModule,

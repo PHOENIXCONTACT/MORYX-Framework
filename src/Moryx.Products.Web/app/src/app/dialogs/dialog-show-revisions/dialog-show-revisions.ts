@@ -4,7 +4,7 @@
 */
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
@@ -20,6 +20,7 @@ import { MatButtonModule } from '@angular/material/button';
   selector: 'app-dialog-show-revisions',
   templateUrl: './dialog-show-revisions.html',
   styleUrls: ['./dialog-show-revisions.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     TranslateModule,
     MatActionList,

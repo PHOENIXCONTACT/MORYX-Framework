@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, linkedSignal } from '@angular/core';
+import { Component, inject, linkedSignal, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
@@ -16,6 +16,7 @@ import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
   selector: 'app-product-parts-details',
   templateUrl: './product-parts-details.html',
   styleUrls: ['./product-parts-details.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     EmptyState,
     NavigableEntryEditor,

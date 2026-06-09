@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, linkedSignal } from '@angular/core';
+import { Component, inject, linkedSignal, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, RouterLink } from '@angular/router';
@@ -25,6 +25,7 @@ import { MatTooltip } from "@angular/material/tooltip";
   selector: 'app-product-parts',
   templateUrl: './product-parts.html',
   styleUrls: ['./product-parts.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CommonModule,
     MatExpansionModule,

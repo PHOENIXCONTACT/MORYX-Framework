@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, computed, effect, inject, linkedSignal, signal, untracked } from "@angular/core";
+import { Component, computed, effect, inject, linkedSignal, signal, untracked, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
 import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
@@ -21,6 +21,7 @@ import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
   selector: "app-product-recipes-details-header",
   templateUrl: "./product-recipes-details-header.html",
   styleUrls: ["./product-recipes-details-header.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatInputModule,
     TranslateModule,

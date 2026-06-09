@@ -4,7 +4,7 @@
 */
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { TranslateModule } from '@ngx-translate/core';
@@ -25,6 +25,7 @@ import { MatIconModule } from '@angular/material/icon';
   selector: 'app-dialog-add-part',
   templateUrl: './dialog-add-part.html',
   styleUrls: ['./dialog-add-part.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CommonModule,
     TranslateModule,

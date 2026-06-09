@@ -4,7 +4,7 @@
 */
 
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, inject, linkedSignal } from "@angular/core";
+import { Component, inject, linkedSignal, ChangeDetectionStrategy } from "@angular/core";
 import { toSignal } from "@angular/core/rxjs-interop";
 import { MatDialog } from "@angular/material/dialog";
 import { Router, RouterOutlet } from "@angular/router";
@@ -25,6 +25,7 @@ import { lastValueFrom, map } from "rxjs";
   selector: "app-product-recipes",
   templateUrl: "./product-recipes.html",
   styleUrls: ["./product-recipes.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatListModule,
     MatIconModule,

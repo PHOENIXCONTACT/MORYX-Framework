@@ -25,7 +25,7 @@
                     [queryParamsHandling]="'preserve'"
                     class="parts-part-list-list-item"
                     [class.moryx-selected]="currentPart?.id == partElement.id">
-                    <a matListItemMeta 
+                    <a matListItemMeta
                       class="product-link"
                       [matTooltip]="TranslationConstants.PARTS.OPEN | translate"
                       aria-label="Go to referenced product"
@@ -41,7 +41,7 @@
               <app-product-parts-details class="parts-part-list-details" />
             </div>
           } @else{
-            <app-product-parts-details class="parts-part-list-details" />     
+            <app-product-parts-details class="parts-part-list-details" />
           }
         }
         <mat-action-row>

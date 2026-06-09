@@ -4,7 +4,7 @@
 */
 
 
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
 import { TranslateService } from '@ngx-translate/core';
@@ -14,6 +14,7 @@ import { TranslationConstants } from 'src/app/extensions/translation-constants.e
   selector: 'app-default-view',
   templateUrl: './default-view.html',
   styleUrls: ['./default-view.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     EmptyState
   ]

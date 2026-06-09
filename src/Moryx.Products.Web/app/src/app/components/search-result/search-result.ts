@@ -4,7 +4,7 @@
 */
 
 
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatListModule } from '@angular/material/list';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
@@ -16,6 +16,7 @@ import { EditProductsService } from 'src/app/services/edit-products.service';
   selector: 'app-search-result',
   templateUrl: './search-result.html',
   styleUrls: ['./search-result.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatListModule,
     EmptyState

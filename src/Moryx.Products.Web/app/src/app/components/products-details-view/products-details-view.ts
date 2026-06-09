@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationCancel, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -19,6 +19,7 @@ import { ProductModel } from 'src/app/api/models';
   selector: 'app-products-details-view',
   templateUrl: './products-details-view.html',
   styleUrls: ['./products-details-view.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ProductsDetailsHeader,
     MatDividerModule,

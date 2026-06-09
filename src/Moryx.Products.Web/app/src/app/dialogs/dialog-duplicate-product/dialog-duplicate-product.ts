@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
@@ -19,6 +19,7 @@ import { MatButtonModule } from '@angular/material/button';
   selector: 'app-dialog-duplicate-product',
   templateUrl: './dialog-duplicate-product.html',
   styleUrls: ['./dialog-duplicate-product.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatFormFieldModule,
     FormsModule,

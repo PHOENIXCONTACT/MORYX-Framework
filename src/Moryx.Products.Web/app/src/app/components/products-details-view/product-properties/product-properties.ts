@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject } from "@angular/core";
+import { Component, inject, ChangeDetectionStrategy } from "@angular/core";
 import { toSignal } from "@angular/core/rxjs-interop";
 import { NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
 import { EditProductsService } from "../../../services/edit-products.service";
@@ -13,6 +13,7 @@ import { map } from 'rxjs';
   selector: "app-product-properties",
   templateUrl: "./product-properties.html",
   styleUrls: ["./product-properties.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [NavigableEntryEditor]
 })
 export class ProductProperties {
