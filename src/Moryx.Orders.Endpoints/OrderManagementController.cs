@@ -114,6 +114,10 @@ public class OrderManagementController : ControllerBase
 
             await result.ExecuteAsync(HttpContext);
         }
+        catch (OperationCanceledException)
+        {
+            // client disconnected — this is expected, not an error
+        }
         finally
         {
             _orderManagement.OperationUpdated -= updateEventHandler;
