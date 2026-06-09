@@ -8,9 +8,9 @@ import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@ang
 import { MatListModule } from '@angular/material/list';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
-import { ProductModel, RevisionFilter, Selector } from 'src/app/api/models';
-import { ProductManagementService } from 'src/app/api/services';
-import { EditProductsService } from 'src/app/services/edit-products.service';
+import { ProductModel, RevisionFilter, Selector } from '@api/models';
+import { ProductManagementService } from '@api/services';
+import { EditProductsService } from '@app/services/edit-products.service';
 
 @Component({
   selector: 'app-search-result',

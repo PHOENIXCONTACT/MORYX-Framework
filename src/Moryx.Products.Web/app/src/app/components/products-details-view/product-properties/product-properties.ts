@@ -6,7 +6,7 @@
 import { Component, inject, ChangeDetectionStrategy } from "@angular/core";
 import { toSignal } from "@angular/core/rxjs-interop";
 import { NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
-import { EditProductsService } from "../../../services/edit-products.service";
+import { EditProductsService } from "@app/services/edit-products.service";
 import { map } from 'rxjs';
 
 @Component({

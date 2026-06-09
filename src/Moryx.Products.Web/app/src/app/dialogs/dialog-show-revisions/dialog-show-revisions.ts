@@ -9,10 +9,10 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/materia
 import { Router } from '@angular/router';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { TranslateModule } from '@ngx-translate/core';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import { ProductModel, RevisionFilter } from '../../api/models';
-import { ProductManagementService } from '../../api/services';
-import { EditProductsService } from '../../services/edit-products.service';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { ProductModel, RevisionFilter } from '@api/models';
+import { ProductManagementService } from '@api/services';
+import { EditProductsService } from '@app/services/edit-products.service';
 import { MatActionList, MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 

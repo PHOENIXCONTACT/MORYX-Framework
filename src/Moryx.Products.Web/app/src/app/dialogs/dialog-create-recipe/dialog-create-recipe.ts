@@ -6,9 +6,9 @@
 import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { RecipeDefinitionModel, WorkplanModel } from '../../api/models';
-import { CacheProductsService } from '../../services/cache-products.service';
+import { CacheProductsService } from '@app/services/cache-products.service';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';

@@ -3,15 +3,14 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { TranslateModule } from '@ngx-translate/core';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { PartConnector, ProductModel, ProductQuery, RevisionFilter, Selector } from '../../api/models';
 import { ProductManagementService } from '../../api/services';
-import { EditProductsService } from '../../services/edit-products.service';
+import { EditProductsService } from '@app/services/edit-products.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -68,7 +67,7 @@ export class DialogAddPart {
         if (currentParts?.length && !this.data.isCollection) {
           possibleParts = possibleParts.filter((p) => currentParts[0]?.id !== p.id);
         }
-        
+
         // Todo: Make possible parts a resource signal
         this.possibleParts.update(_ => possibleParts);
         this.filteredPossibleParts.update(_ => possibleParts);

@@ -5,12 +5,12 @@
 
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, RedirectCommand, ResolveFn, Router } from '@angular/router';
-import { RecipeModel } from 'src/app/api/models';
-import { EditProductsService } from 'src/app/services/edit-products.service';
+import { RecipeModel } from '@api/models';
+import { EditProductsService } from '@app/services/edit-products.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 /**
- * Sets the current recipe in the EditProductsService based on the recipeId route parameter. 
+ * Sets the current recipe in the EditProductsService based on the recipeId route parameter.
  * If the recipe is not found, it redirects to the product details page.
  */
 export const RecipeResolver: ResolveFn<RecipeModel> = async (route: ActivatedRouteSnapshot) => {

@@ -6,7 +6,6 @@
 import { FlatTreeControl } from "@angular/cdk/tree";
 import {
   Component,
-  computed,
   inject,
   OnDestroy,
   OnInit,
@@ -32,7 +31,7 @@ import {
   SearchSuggestion,
 } from "@moryx/ngx-web-framework/services";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import { environment } from "src/environments/environment";
+import { environment } from "../environments/environment";
 import {
   ProductDefinitionModel,
   ProductModel,
@@ -88,7 +87,6 @@ import { MatInputModule } from "@angular/material/input";
 })
 export class App implements OnInit, OnDestroy {
   private router = inject(Router);
-  private route = inject(ActivatedRoute);
   private dialog = inject(MatDialog);
   private searchbar = inject(SearchBarService);
   private cacheService = inject(CacheProductsService);
@@ -163,15 +161,15 @@ export class App implements OnInit, OnDestroy {
   onSearch(result: SearchRequest) {
     if (!this.products().length) return;
 
-    const searchterm = result.term;
+    const searchTerm = result.term;
     let products = this.products().filter((p) =>
-      this.editService.createProductNameWithIdentity(p).includes(searchterm)
+      this.editService.createProductNameWithIdentity(p).includes(searchTerm)
     );
     if (!products.length) products = [];
     if (result.submitted) {
       this.searchbar.clearSuggestions();
       if (products.length > 1)
-        this.router.navigate(["search"], {queryParams: {q: searchterm}});
+        this.router.navigate(["search"], {queryParams: {q: searchTerm}});
       else if (products.length === 1)
         this.router.navigate(['/details', products[0].id ?? 0]);
       this.searchbar.subscribe({
@@ -350,7 +348,7 @@ export class App implements OnInit, OnDestroy {
     this.trigger().openMenu();
   }
 
-  async onDeselect() {    
+  async onDeselect() {
     if (this.isEditMode()) {
       await this.editService.onCancel();
     }

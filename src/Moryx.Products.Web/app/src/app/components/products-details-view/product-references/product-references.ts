@@ -5,8 +5,8 @@
 
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import { EditProductsService } from '../../../services/edit-products.service';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { EditProductsService } from '@app/services/edit-products.service';
 import { MatTableModule } from '@angular/material/table';
 import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';

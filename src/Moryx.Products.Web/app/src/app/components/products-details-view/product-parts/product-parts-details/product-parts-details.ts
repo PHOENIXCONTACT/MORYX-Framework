@@ -6,8 +6,8 @@
 import { Component, inject, linkedSignal, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslateModule } from '@ngx-translate/core';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import { EditProductsService } from '../../../../services/edit-products.service';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { EditProductsService } from '@app/services/edit-products.service';
 
 import { NavigableEntryEditor } from '@moryx/ngx-web-framework/entry-editor';
 import { EmptyState } from '@moryx/ngx-web-framework/empty-state';

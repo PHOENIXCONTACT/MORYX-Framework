@@ -6,9 +6,9 @@
 import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import { DuplicateProductInfos } from 'src/app/models/DuplicateProductInfos';
-import { ProductModel } from '../../api/models';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { DuplicateProductInfos } from '@app/models/DuplicateProductInfos';
+import { ProductModel } from '@api/models';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';

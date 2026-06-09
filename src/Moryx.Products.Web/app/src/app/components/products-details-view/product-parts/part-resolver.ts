@@ -5,12 +5,12 @@
 
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, RedirectCommand, ResolveFn, Router } from '@angular/router';
-import { PartModel } from 'src/app/api/models';
-import { EditProductsService } from 'src/app/services/edit-products.service';
+import { PartModel } from '@api/models';
+import { EditProductsService } from '@app/services/edit-products.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 /**
- * Sets the current part connector and part in the EditProductsService based on the partName and partId route parameter. 
+ * Sets the current part connector and part in the EditProductsService based on the partName and partId route parameter.
  * If the either of them is not found, it redirects to the base connector or the first index of the connector page.
  */
 export const PartsResolver: ResolveFn<PartModel | undefined> = async (route: ActivatedRouteSnapshot) => {

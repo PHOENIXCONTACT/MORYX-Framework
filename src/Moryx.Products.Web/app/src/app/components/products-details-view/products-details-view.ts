@@ -7,13 +7,13 @@ import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/cor
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationCancel, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import { EditProductsService } from '../../services/edit-products.service';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { EditProductsService } from '@app/services/edit-products.service';
 import { ProductsDetailsHeader } from './products-details-header/products-details-header';
 
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTabsModule } from '@angular/material/tabs';
-import { ProductModel } from 'src/app/api/models';
+import { ProductModel } from '@api/models';
 
 @Component({
   selector: 'app-products-details-view',
