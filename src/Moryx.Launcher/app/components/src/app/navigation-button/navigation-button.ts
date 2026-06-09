@@ -3,12 +3,13 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'app-navigation-button',
   imports: [],
   templateUrl: './navigation-button.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './navigation-button.css'
 })
 export class NavigationButton {

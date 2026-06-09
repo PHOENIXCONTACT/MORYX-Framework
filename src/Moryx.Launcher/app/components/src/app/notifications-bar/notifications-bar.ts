@@ -4,7 +4,7 @@
 */
 
 import { CommonModule } from '@angular/common';
-import { Component, computed, ElementRef, input, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, computed, ElementRef, input, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 
 
@@ -21,6 +21,7 @@ export interface Notification {
   providers: [],
   templateUrl: './notifications-bar.html',
   styleUrl: './notifications-bar.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: {
     '[style.--severity-background-color]': 'getSeverityBackgroundColor(currentNotification()?.severity, errorAvailable())'
   }
