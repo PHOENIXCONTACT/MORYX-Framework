@@ -13,6 +13,7 @@ using Moryx.Configuration;
 using Moryx.Identity;
 using Moryx.Modules;
 using Moryx.Tools;
+using Moryx.Web;
 
 namespace Moryx.Launcher;
 
@@ -21,8 +22,6 @@ namespace Moryx.Launcher;
 /// </summary>
 internal class Navigation : INavigation
 {
-    private const string NotificationsBarName = "NotificationsBar";
-
     private readonly MoryxAccessManagementClient _client;
     private readonly IReadOnlyList<ExternalModuleItem> _externalModules;
     private readonly LauncherConfig _launcherConfig;
@@ -117,7 +116,7 @@ internal class Navigation : INavigation
         {
             try
             {
-                var types = assembly.GetTypes().Where(t => t.IsClass && t.GetCustomAttribute<LauncherRegionAttribute>() != null);
+                var types = assembly.GetTypes().Where(t => t.IsClass && t.GetCustomAttribute<ViewRegionAttribute>() != null);
                 partialViews.AddRange(types);
             }
             catch (Exception ex)
@@ -128,7 +127,7 @@ internal class Navigation : INavigation
 
         // Transform to models
         var configuredRegions = from pV in partialViews
-                                let regionAttr = pV.GetCustomAttribute<LauncherRegionAttribute>()
+                                let regionAttr = pV.GetCustomAttribute<ViewRegionAttribute>()
                                 let config = _launcherConfig.Regions.FirstOrDefault(x => x.Name == regionAttr.Name)
                                 where config != null
                                 select new RegionItem { PartialView = regionAttr.Name, Region = config.Region };
@@ -187,30 +186,6 @@ internal class Navigation : INavigation
             configManager.SaveConfiguration(launcherConfig);
         }
 
-        AddNotificationsBarRegion(configManager, launcherConfig);
-
         return launcherConfig;
-    }
-
-    private static void AddNotificationsBarRegion(IConfigManager configManager, LauncherConfig launcherConfig)
-    {
-        var topRegion = launcherConfig.Regions.FirstOrDefault(r => r.Region == LauncherRegion.Top);
-
-        if (topRegion == null)
-        {
-            topRegion = new LauncherRegionConfig()
-            {
-                Region = LauncherRegion.Top,
-                Name = NotificationsBarName
-            };
-
-            var regions = new List<LauncherRegionConfig>();
-            regions.AddRange(launcherConfig.Regions);
-            regions.Add(topRegion);
-
-            launcherConfig.Regions = regions.ToArray();
-
-            configManager.SaveConfiguration(launcherConfig);
-        }
     }
 }

@@ -1,7 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Launcher;
+namespace Moryx.Web;
 
 /// <summary>
 /// Decorator for partial view (Region)
@@ -9,7 +9,8 @@ namespace Moryx.Launcher;
 /// <remarks>
 /// Export view as region under given name
 /// </remarks>
-public class LauncherRegionAttribute(string name) : Attribute
+[AttributeUsage(AttributeTargets.Class)]
+public class ViewRegionAttribute(string name) : Attribute
 {
     /// <summary>
     /// Unique name of the region

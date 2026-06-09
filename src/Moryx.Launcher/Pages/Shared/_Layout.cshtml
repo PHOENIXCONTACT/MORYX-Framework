@@ -22,7 +22,6 @@
     var userModules = modules.Where(m => m.Category == ModuleCategory.User).ToArray();
     var currentPageRoute = Url.RouteUrl(ViewContext.RouteData.Values);
     var currentPageParts = currentPageRoute.Split('/');
-    var shouldShowNotificationBar = currentPageParts.Length > 1 && !currentPageParts[1].Contains("Notifications");
     var identityOptionsAvailable = !string.IsNullOrEmpty(_identityOptions.CurrentValue.BaseAddress);
 }
 
@@ -56,9 +55,9 @@
                 </a>
 
                 <div class="tw-flex-1 tw-min-w-0 tw-overflow-hidden">
-		    @{
-	                var topRegion = _navigation.GetRegion(LauncherRegion.Top);
-	            }
+                    @{
+                        var topRegion = _navigation.GetRegion(LauncherRegion.Top);
+                    }
                     @if (topRegion != null)
                     {
                         @await Html.PartialAsync(topRegion.PartialView)

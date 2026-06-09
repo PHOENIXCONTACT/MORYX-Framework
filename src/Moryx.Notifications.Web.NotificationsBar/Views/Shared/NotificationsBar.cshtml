@@ -1,0 +1,19 @@
+﻿@using Moryx.Web
+@attribute [ViewRegion("NotificationsBar")]
+
+@{
+// Sections do not work with partial views, so we import the dependencies via script.
+}
+<script type="module">
+    const tag = 'moryx-notifications-bar';
+    const jsSrc = '@(Url.Content("~/_content/Moryx.Notifications.Web.NotificationsBar/main.js"))';
+
+    if (!customElements.get(tag)) {
+        import(jsSrc).catch(err =>
+            console.error("Failed to load notifications bar", err)
+        );
+    }
+</script>
+
+<moryx-notifications-bar style="min-width: 0" api="@(Url.Content("~/api/moryx/notifications/stream"))"></moryx-notifications-bar>
+

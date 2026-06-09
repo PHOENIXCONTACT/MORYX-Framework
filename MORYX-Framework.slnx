@@ -44,6 +44,7 @@
   <Folder Name="/Notifications/">
     <Project Path="src/Moryx.Notifications.Endpoints/Moryx.Notifications.Endpoints.csproj" />
     <Project Path="src/Moryx.Notifications.Publisher/Moryx.Notifications.Publisher.csproj" />
+    <Project Path="src/Moryx.Notifications.Web.NotificationsBar/Moryx.Notifications.Web.NotificationsBar.csproj" />
     <Project Path="src/Moryx.Notifications.Web/Moryx.Notifications.Web.csproj" />
     <Project Path="src/Moryx.Notifications/Moryx.Notifications.csproj" />
   </Folder>
@@ -179,6 +180,7 @@
   <Project Path="src/Moryx.Communication.Serial/Moryx.Communication.Serial.csproj" />
   <Project Path="src/Moryx.Container/Moryx.Container.csproj" />
   <Project Path="src/Moryx.Launcher/Moryx.Launcher.csproj" />
+  <Project Path="src/Moryx.Web/Moryx.Web.csproj" />
   <Project Path="src/Moryx/Moryx.csproj" />
   <Project Path="src/StartProject.Asp/StartProject.Asp.csproj" />
 </Solution>
