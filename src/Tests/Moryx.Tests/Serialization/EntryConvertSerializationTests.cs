@@ -128,5 +128,27 @@ public class EntryConvertSerializationTests
         Assert.That(singleWithProvider, Is.EqualTo(3.14f).Within(1e-5));
         Assert.That(doubleWithFallback, Is.EqualTo(3.14d).Within(1e-10));
     }
+     
+    [Test]
+    public void ParametersShouldRespectRequiredAttribute()
+    {
+        // Arrange
+        var myClass = typeof(EntrySerialize_Methods);
+        var method = myClass.GetMethod(nameof(EntrySerialize_Methods.MethodWithRequiredAndOptionalParameters));
+
+        // Act
+        var entry = EntryConvert.EncodeMethod(method);
+      
+        var demoValidation = entry.Parameters.SubEntries.First(x => x.DisplayName == "demo").Validation;
+        var exampleValidation = entry.Parameters.SubEntries.First(x => x.DisplayName == "exmaplestring").Validation;
+        var nullableValidation = entry.Parameters.SubEntries.First(x => x.DisplayName == "nullableString").Validation;
+        var defaultValueValidation = entry.Parameters.SubEntries.First(x => x.DisplayName == "defaultValkueString").Validation;
+
+        // Assert
+        Assert.That(demoValidation.IsRequired, Is.True);
+        Assert.That(exampleValidation.IsRequired, Is.True);
+        Assert.That(nullableValidation.IsRequired, Is.False);
+        Assert.That(defaultValueValidation.IsRequired, Is.False);
+    }
 
 }
