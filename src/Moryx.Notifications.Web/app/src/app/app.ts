@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnDestroy, OnInit, signal } from "@angular/core";
+import { Component, inject, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from "@angular/core";
 import { LanguageService } from "@moryx/ngx-web-framework/services";
 import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
@@ -24,6 +24,7 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
   selector: "app-root",
   templateUrl: "./app.html",
   styleUrls: ["./app.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CommonModule,
     MatSidenavModule,

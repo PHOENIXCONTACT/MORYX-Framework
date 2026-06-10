@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { NotificationModel } from '../../api/models/notification-model';
 import { NotificationService } from 'src/app/services/notification.service';
 import { Subscription } from 'rxjs';
@@ -16,6 +16,7 @@ import { getIcon } from 'src/app/utils';
     selector: 'moryx-notifications',
     templateUrl: './notifications.html',
     styleUrls: ['./notifications.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
       CommonModule,
       MatCardModule,

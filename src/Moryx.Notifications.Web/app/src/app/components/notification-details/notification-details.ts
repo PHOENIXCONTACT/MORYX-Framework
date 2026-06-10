@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { NotificationService } from 'src/app/services/notification.service';
@@ -31,6 +31,7 @@ import { MatButtonModule } from '@angular/material/button';
     NavigableEntryEditor,
     MatButtonModule
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [MarkdownService]
 })
 export class NotificationDetails implements OnInit, OnDestroy {
