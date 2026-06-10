@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { EditMenuService } from './services/edit-menu.service';
 import { EditMenuState } from './services/EditMenutState';
 import { ChangeBackgroundService } from './services/change-background.service';
@@ -22,6 +22,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
   selector: 'app-root',
   templateUrl: './app.html',
   styleUrls: ['./app.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     EditMenu,
     OrdersContainer,

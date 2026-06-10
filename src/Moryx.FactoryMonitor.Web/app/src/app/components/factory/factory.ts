@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, ElementRef, inject, computed, input, viewChild, OnInit, linkedSignal } from '@angular/core';
+import { Component, ElementRef, inject, computed, input, viewChild, OnInit, linkedSignal, ChangeDetectionStrategy } from '@angular/core';
 import { CellStoreService } from 'src/app/services/cell-store.service';
 import { CdkDragEnd, DragDropModule } from '@angular/cdk/drag-drop';
 import { EditMenuState } from 'src/app/services/EditMenutState';
@@ -29,6 +29,7 @@ import { SnackbarService } from '@moryx/ngx-web-framework/services';
     DragDropModule,
     MatIconModule
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./factory.scss']
 })
 export class Factory implements OnInit {

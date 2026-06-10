@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CellImageDialog } from 'src/app/dialogs/cell-image-dialog/cell-image-dialog';
 import { CellStoreService } from 'src/app/services/cell-store.service';
@@ -21,6 +21,7 @@ import { DetailsItem } from '../details-item/details-item';
   selector: 'app-cell-details',
   templateUrl: './cell-details.html',
   styleUrls: ['./cell-details.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CommonModule,
     TrafficLight,

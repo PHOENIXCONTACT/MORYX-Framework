@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { OrderStoreService } from 'src/app/services/order-store.service';
 import { CommonModule } from '@angular/common';
@@ -14,6 +14,7 @@ import Order from 'src/app/models/order';
     selector: 'app-orders-container',
     templateUrl: './orders-container.html',
     styleUrls: ['./orders-container.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [CommonModule]
 })
 export class OrdersContainer {

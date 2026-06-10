@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, ElementRef, inject, OnInit } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FactorySelectionService } from 'src/app/services/factory-selection.service';
 import { Cell } from '../cell/cell';
@@ -19,6 +19,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
     Factory,
     CommonModule
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './factory-board.scss'
 })
 export class FactoryBoard implements OnInit {

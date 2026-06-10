@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { lastValueFrom } from 'rxjs';
 import { CellState } from 'src/app/api/models/cell-state';
@@ -15,6 +15,7 @@ import { CellStoreService } from 'src/app/services/cell-store.service';
   selector: 'app-traffic-light',
   templateUrl: './traffic-light.html',
   styleUrls: ['./traffic-light.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: []
 })
 export class TrafficLight implements OnInit {

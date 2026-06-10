@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   MatDialogRef,
   MatDialog,
@@ -29,6 +29,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   selector: 'app-cell-image-dialog',
   templateUrl: './cell-image-dialog.html',
   styleUrls: ['./cell-image-dialog.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatDialogModule,
     MatButtonModule,

@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   MatDialogRef,
@@ -23,6 +23,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   selector: 'app-change-background-dialog',
   templateUrl: './change-background-dialog.html',
   styleUrls: ['./change-background-dialog.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatDialogModule,
     CdkScrollable,

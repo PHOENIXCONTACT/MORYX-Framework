@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ChangeBackgroundDialog } from 'src/app/dialogs/change-background-dialog/change-background-dialog';
@@ -25,6 +25,7 @@ import { MatIconModule } from '@angular/material/icon';
   selector: 'app-edit-menu',
   templateUrl: './edit-menu.html',
   styleUrls: ['./edit-menu.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatTooltipModule,
     MatIconModule,
