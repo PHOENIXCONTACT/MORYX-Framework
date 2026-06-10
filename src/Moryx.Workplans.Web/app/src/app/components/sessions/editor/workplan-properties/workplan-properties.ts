@@ -5,10 +5,10 @@
 
 import { Component, inject, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { WorkplanState } from '../../../../api/models';
-import { TranslationConstants } from '../../../../extensions/translation-constants.extensions';
-import { EditorStateService } from '../../../../services/editor-state.service';
-import { SessionsService } from '../../../../services/sessions.service';
+import { WorkplanState } from '@api/models';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { EditorStateService } from '@app/services/editor-state.service';
+import { SessionsService } from '@app/services/sessions.service';
 
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';

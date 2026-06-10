@@ -8,10 +8,10 @@ import { Component, inject, OnDestroy, OnInit, ChangeDetectionStrategy } from '@
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { TranslateModule } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
-import { WorkplanNodeClassification, WorkplanStepRecipe } from '../../api/models';
-import { WorkplanEditingService } from '../../api/services';
-import { TranslationConstants } from '../../extensions/translation-constants.extensions';
-import { SessionsService } from '../../services/sessions.service';
+import { WorkplanNodeClassification, WorkplanStepRecipe } from '@api/models';
+import { WorkplanEditingService } from '@api/services';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { SessionsService } from '@app/services/sessions.service';
 import { CommonModule } from '@angular/common';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';

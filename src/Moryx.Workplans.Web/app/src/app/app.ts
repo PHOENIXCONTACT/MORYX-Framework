@@ -8,7 +8,7 @@ import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { LanguageService, SnackbarService } from '@moryx/ngx-web-framework/services';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { filter, Subscription } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { environment } from '../environments/environment';
 import { TranslationConstants } from './extensions/translation-constants.extensions';
 import { SessionsService } from './services/sessions.service';
 import { HttpErrorResponse } from '@angular/common/http';

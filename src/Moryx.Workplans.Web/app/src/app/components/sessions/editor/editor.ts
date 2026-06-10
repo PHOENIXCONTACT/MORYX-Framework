@@ -16,11 +16,11 @@ import {
   WorkplanNodeClassification,
   WorkplanNodeModel,
   WorkplanStepRecipe
-} from '../../../api/models';
-import { WorkplanEditingService } from '../../../api/services';
-import { TranslationConstants } from '../../../extensions/translation-constants.extensions';
-import { EditorStateService } from '../../../services/editor-state.service';
-import { SessionsService } from '../../../services/sessions.service';
+} from '@api/models';
+import { WorkplanEditingService } from '@api/services';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { EditorStateService } from '@app/services/editor-state.service';
+import { SessionsService } from '@app/services/sessions.service';
 import { Position } from './position';
 import { NodeConnectionPath, Segment } from './workplan-path';
 import { CommonModule } from '@angular/common';

@@ -7,8 +7,8 @@ import { Component, inject, input, OnDestroy, OnInit, output, signal, ChangeDete
 import { ActivatedRoute } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
-import { WorkplanStepRecipe } from '../../../../api/models';
-import { TranslationConstants } from '../../../../extensions/translation-constants.extensions';
+import { WorkplanStepRecipe } from '@api/models';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 
 import { NavigableEntryEditor } from '@moryx/ngx-web-framework/entry-editor';
 import { MatSelectModule } from '@angular/material/select';

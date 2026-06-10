@@ -10,16 +10,16 @@ import { Router, RouterOutlet } from '@angular/router';
 import { SnackbarService, SearchBarService, SearchRequest, SearchSuggestion } from '@moryx/ngx-web-framework/services';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { SubscriptionLike } from 'rxjs';
-import { WorkplanSessionModel } from '../../api/models';
-import { WorkplanEditingService } from '../../api/services';
+import { WorkplanSessionModel } from '@api/models';
+import { WorkplanEditingService } from '@api/services';
 import {
   ConfirmDialogButton,
   ConfirmDialog,
   ConfirmDialogData
-} from '../../dialogs/dialog-confirm/dialog-confirm';
-import { TranslationConstants } from '../../extensions/translation-constants.extensions';
-import { SessionsService } from '../../services/sessions.service';
-import { EditorStateService } from '../../services/editor-state.service';
+} from '@app/dialogs/dialog-confirm/dialog-confirm';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { SessionsService } from '@app/services/sessions.service';
+import { EditorStateService } from '@app/services/editor-state.service';
 
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';

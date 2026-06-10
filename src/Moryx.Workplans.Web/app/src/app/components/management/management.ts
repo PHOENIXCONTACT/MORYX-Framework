@@ -10,13 +10,13 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { SnackbarService, SearchBarService, SearchRequest } from '@moryx/ngx-web-framework/services';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { WorkplanModel, WorkplanSessionModel } from '../../api/models';
-import { WorkplanService } from '../../api/services';
-import { ConfirmDialogButton, ConfirmDialog, ConfirmDialogData } from '../../dialogs/dialog-confirm/dialog-confirm';
+import { WorkplanModel, WorkplanSessionModel } from '@api/models';
+import { WorkplanService } from '@api/services';
+import { ConfirmDialogButton, ConfirmDialog, ConfirmDialogData } from '@app/dialogs/dialog-confirm/dialog-confirm';
 import '../../extensions/array.extensions';
 import '../../extensions/observable.extensions';
-import { SessionsService } from '../../services/sessions.service';
-import { TranslationConstants } from '../../extensions/translation-constants.extensions';
+import { SessionsService } from '@app/services/sessions.service';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { Subscription } from 'rxjs';
 
 import { MatTooltipModule } from '@angular/material/tooltip';

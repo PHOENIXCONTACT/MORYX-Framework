@@ -3,8 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { NodeConnectionPoint, NodeConnector } from "../../../api/models";
-import { WorkplanNodeModel } from "../../../api/models/workplan-node-model";
+import { NodeConnectionPoint, NodeConnector } from "@api/models";
+import { WorkplanNodeModel } from "@api/models/workplan-node-model";
 import { Position } from "./position";
 
 export class Segment {
@@ -45,12 +45,12 @@ export class NodeConnectionPath {
         let path = new NodeConnectionPath();
         path.startNode = node;
         path.startInput = output;
-        
+
         // Get start (output-span) and end (input-span)
         let start = document.getElementById(startId);
         let end = document.getElementById(endId);
 
-        if(!start ||  !start.parentElement ||  !start.parentElement.parentElement || 
+        if(!start ||  !start.parentElement ||  !start.parentElement.parentElement ||
            !end || !end.parentElement || !end.parentElement.parentElement)
             return path;
 
@@ -59,7 +59,7 @@ export class NodeConnectionPath {
 
         // Calculate absolute end position from DOM element dimensions
         let endPosition = this.calculatePosition(end, scale);
-        
+
         // Determine intermediate steps
         if(startPosition.top < endPosition.top)
         {
@@ -84,7 +84,7 @@ export class NodeConnectionPath {
             path.segments.push(new Segment(secondStop, thirdStop));
             path.segments.push(new Segment(thirdStop, fourthStop));
             path.segments.push(new Segment(fourthStop, endPosition));
-        }       
+        }
 
         return path;
     }

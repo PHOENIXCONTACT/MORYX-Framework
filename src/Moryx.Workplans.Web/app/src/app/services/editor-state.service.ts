@@ -5,8 +5,8 @@
 
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { WorkplanSessionModel } from '../api/models/workplan-session-model';
-import { WorkplanNodeModel } from '../api/models';
+import { WorkplanSessionModel } from '@api/models/workplan-session-model';
+import { WorkplanNodeModel } from '@api/models';
 
 @Injectable({
   providedIn: 'root',
