@@ -11,9 +11,8 @@ import {
   MatDialogModule,
 } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { MyErrorStateMatcher } from '../MyErrorStateMatcher';
-import { CdkScrollable } from '@angular/cdk/scrolling';
 import { MatInputModule } from '@angular/material/input';
 
 import { MatIconModule } from '@angular/material/icon';
@@ -27,7 +26,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatDialogModule,
-    CdkScrollable,
     MatFormFieldModule,
     MatInputModule,
     FormsModule,

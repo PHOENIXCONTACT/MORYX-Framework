@@ -4,11 +4,11 @@
 */
 
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import { OrderStoreService } from 'src/app/services/order-store.service';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { OrderStoreService } from '@app/services/order-store.service';
 import { CommonModule } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
-import Order from 'src/app/models/order';
+import Order from '@app/models/order';
 
 @Component({
     selector: 'app-orders-container',

@@ -7,10 +7,10 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { BehaviorSubject, lastValueFrom, ReplaySubject } from 'rxjs';
-import { VisualizableItemModel } from '../api/models';
-import { CellLocationModel } from '../api/models/cell-location-model';
-import { FactoryStateModel } from '../api/models/factory-state-model';
-import { FactoryMonitorService } from '../api/services';
+import { VisualizableItemModel } from '@api/models';
+import { CellLocationModel } from '@api/models/cell-location-model';
+import { FactoryStateModel } from '@api/models/factory-state-model';
+import { FactoryMonitorService } from '@api/services';
 import { Converter } from '../extensions/converter';
 import CellModel from '../models/cellModel';
 import { FactoryStateStreamService } from './factory-state-stream.service';
@@ -58,7 +58,7 @@ export class CellStoreService {
 
     // Set initial cells
     this._cells = Object.values(cells);
-    
+
     // Subscribe to changes after initialization
     this.factoryStateStreamService.updatedCell.subscribe(cell => this.updateCell(cell));
   }
@@ -86,7 +86,7 @@ export class CellStoreService {
 
   public getCell(cellId: number) : CellModel {
     const cell = this._cells.find(c => c.id === cellId)
-    if (!cell) 
+    if (!cell)
       throw Error(`Tried to process unknown cell with id ${cellId}`);
     return cell;
   }
@@ -95,7 +95,7 @@ export class CellStoreService {
     return this._cells.filter(c => c.factoryId === factory.id);
   }
 
-  // Cell updates are retrieved as partial updates to the existing cell models, 
+  // Cell updates are retrieved as partial updates to the existing cell models,
   // so we need to merge the incoming data with the existing cell data
   public updateCell(cell: CellModel) {
     const indexToUpdate = this._cells.findIndex(x => x.id === cell.id);

@@ -9,14 +9,14 @@ import { Component, computed, ElementRef, inject, input, linkedSignal, OnDestroy
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatIcon } from '@angular/material/icon';
 import { Subscription } from 'rxjs';
-import { VisualizableItemModel } from 'src/app/api/models';
-import { createUpdatedLocation } from 'src/app/extensions/locations';
-import CellModel from 'src/app/models/cellModel';
-import { EditMenuState } from 'src/app/services/EditMenutState';
-import { CellStoreService } from 'src/app/services/cell-store.service';
-import { EditMenuService } from 'src/app/services/edit-menu.service';
-import { OrderStoreService } from 'src/app/services/order-store.service';
-import { CellState } from '../../api/models/cell-state';
+import { VisualizableItemModel } from '@api/models';
+import { createUpdatedLocation } from '@app/extensions/locations';
+import CellModel from '@app/models/cellModel';
+import { EditMenuState } from '@app/services/EditMenutState';
+import { CellStoreService } from '@app/services/cell-store.service';
+import { EditMenuService } from '@app/services/edit-menu.service';
+import { OrderStoreService } from '@app/services/order-store.service';
+import { CellState } from '@api/models/cell-state';
 
 @Component({
   selector: 'app-cell',
@@ -101,11 +101,11 @@ export class Cell implements OnInit, OnDestroy {
     const params = this.parameters();
 
     // Calculate new position as percetage value relative to the cell-container
-    const updatedLocation = createUpdatedLocation(event, this.cellElement(), 
+    const updatedLocation = createUpdatedLocation(event, this.cellElement(),
       this.container(), params.location?.id);
 
     // Save position and reset translation as the new position is immediately applied
     await this.cellStoreService.moveItem(params, updatedLocation);
     event.source._dragRef.reset();
-  }  
+  }
 }

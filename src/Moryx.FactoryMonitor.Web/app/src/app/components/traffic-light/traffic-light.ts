@@ -6,10 +6,10 @@
 import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { lastValueFrom } from 'rxjs';
-import { CellState } from 'src/app/api/models/cell-state';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import CellModel from 'src/app/models/cellModel';
-import { CellStoreService } from 'src/app/services/cell-store.service';
+import { CellState } from '@api/models/cell-state';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import CellModel from '@app/models/cellModel';
+import { CellStoreService } from '@app/services/cell-store.service';
 
 @Component({
   selector: 'app-traffic-light',

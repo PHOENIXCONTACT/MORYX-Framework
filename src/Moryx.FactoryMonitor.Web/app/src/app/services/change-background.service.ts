@@ -5,10 +5,10 @@
 
 import { computed, inject, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { FactoryMonitorService } from '../api/services';
+import { FactoryMonitorService } from '@api/services';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { FactorySelectionService } from './factory-selection.service';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../environments/environment';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 @Injectable({
@@ -48,10 +48,10 @@ export class ChangeBackgroundService {
     if (!this.isAbsoluteUrl(url)) {
       url = environment.rootUrl + url;
     }
-    
+
     this._backgroundChanged.next(url);
   }
-  
+
   private isAbsoluteUrl(url: string): boolean {
     try {
       return Boolean(new URL(url).origin);

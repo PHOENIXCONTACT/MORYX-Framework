@@ -5,7 +5,7 @@
 
 import { Component, ElementRef, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FactorySelectionService } from 'src/app/services/factory-selection.service';
+import { FactorySelectionService } from '@app/services/factory-selection.service';
 import { Cell } from '../cell/cell';
 import { Factory } from '../factory/factory';
 import { CommonModule } from '@angular/common';

@@ -4,7 +4,7 @@
 */
 
 import { Component, input, ChangeDetectionStrategy } from '@angular/core';
-import { CellPropertySettings } from 'src/app/api/models/cell-property-settings';
+import { CellPropertySettings } from '@api/models/cell-property-settings';
 import { CommonModule } from '@angular/common';
 
 @Component({

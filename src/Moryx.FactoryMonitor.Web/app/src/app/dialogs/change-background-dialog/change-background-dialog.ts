@@ -9,11 +9,10 @@ import {
   MatDialogRef,
   MatDialogModule,
 } from '@angular/material/dialog';
-import { ChangeBackgroundService } from 'src/app/services/change-background.service';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
+import { ChangeBackgroundService } from '@app/services/change-background.service';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { TranslateModule } from '@ngx-translate/core';
 import { MyErrorStateMatcher } from '../MyErrorStateMatcher';
-import { CdkScrollable } from '@angular/cdk/scrolling';
 import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -26,7 +25,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatDialogModule,
-    CdkScrollable,
     CommonModule,
     MatFormFieldModule,
     MatInputModule,
