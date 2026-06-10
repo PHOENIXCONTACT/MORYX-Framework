@@ -4,10 +4,10 @@
 */
 
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
-import { ApplicationConfig, importProvidersFrom, Injectable } from "@angular/core";
+import { ApplicationConfig, importProvidersFrom } from "@angular/core";
 import { environment } from "src/environments/environment";
 import { ApiModule } from "./api/api.module";
-import { BrowserModule, HAMMER_GESTURE_CONFIG, HammerGestureConfig, HammerModule } from "@angular/platform-browser";
+import { BrowserModule } from "@angular/platform-browser";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
 import { MatDialogModule } from "@angular/material/dialog";
@@ -27,12 +27,6 @@ import { MarkdownModule } from "ngx-markdown";
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
-@Injectable()
-export class AppHammerConfig extends HammerGestureConfig {
-  override overrides = <any>{
-    swipe: {direction: Hammer.DIRECTION_HORIZONTAL},
-  };
-}
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -50,12 +44,7 @@ export const appConfig: ApplicationConfig = {
       MatSnackBarModule,
       NgxDocViewerModule,
       MarkdownModule.forRoot(),
-      HammerModule
     ),
-    {
-      provide: HAMMER_GESTURE_CONFIG,
-      useClass: AppHammerConfig
-    },
     ApiInterceptor,
     API_INTERCEPTOR_PROVIDER,
     SnackbarService,

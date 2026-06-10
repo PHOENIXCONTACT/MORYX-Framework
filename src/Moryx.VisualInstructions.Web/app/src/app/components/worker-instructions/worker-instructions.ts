@@ -4,7 +4,7 @@
 */
 
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, effect, inject, model, OnDestroy, OnInit, signal, untracked } from "@angular/core";
+import { Component, effect, inject, model, OnDestroy, OnInit, signal, untracked, ChangeDetectionStrategy } from "@angular/core";
 import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
 import { Entry, NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
@@ -35,6 +35,7 @@ import { InstructionStateService } from 'src/app/services/instruction-state.serv
   selector: "app-worker-instructions",
   templateUrl: "./worker-instructions.html",
   styleUrls: ["./worker-instructions.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatCardModule,
     MediaContents,

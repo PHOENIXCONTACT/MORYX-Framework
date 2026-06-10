@@ -5,7 +5,7 @@
 
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatListOption, MatSelectionList } from '@angular/material/list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -18,6 +18,7 @@ import { TranslationConstants } from 'src/app/extensions/translation-constants.e
   selector: 'app-configuration-dialog',
   templateUrl: './configuration-dialog.html',
   styleUrls: ['./configuration-dialog.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatSelectionList,
     MatListOption,
