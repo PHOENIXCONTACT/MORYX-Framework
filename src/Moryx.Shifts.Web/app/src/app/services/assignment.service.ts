@@ -7,12 +7,12 @@ import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { AssignmentCardModel } from '../models/assignment-card-model';
 import AssignmentData from '../models/assignment-data';
-import { ShiftManagementService } from '../api/services';
-import { ShiftAssignementModel } from '../api/models/shift-assignement-model';
+import { ShiftManagementService } from '@api/services';
+import { ShiftAssignementModel } from '@api/models/shift-assignement-model';
 import {
   calendarDatesToFlagEnumString
 } from '../models/model-converter';
-import { ShiftAssignementCreationContextModel } from '../api/models/shift-assignement-creation-context-model';
+import { ShiftAssignementCreationContextModel } from '@api/models/shift-assignement-creation-context-model';
 
 @Injectable({
   providedIn: 'root',

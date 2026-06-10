@@ -37,7 +37,7 @@ import {
   totalOrderHours
 } from './models/order-model';
 import { addCalendarDaysToAssignment } from './models/model-converter';
-import { AttendableResourceModel } from './api/models/attendable-resource-model';
+import { AttendableResourceModel } from '@api/models/attendable-resource-model';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from './extensions/translation-constants.extensions';
 import { LanguageService, SnackbarService } from '@moryx/ngx-web-framework/services';

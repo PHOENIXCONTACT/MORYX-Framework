@@ -6,7 +6,7 @@
 import { Component, Inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import AssignmentData from '../../models/assignment-data';
-import { OperatorModel, OperatorStatus } from 'src/app/models/operator-model';
+import { OperatorModel, OperatorStatus } from '@app/models/operator-model';
 import {
   FormControl,
   FormGroup,
@@ -21,15 +21,15 @@ import {
   isDayInInterval,
   localizedDayName,
   shortDayName,
-} from 'src/app/utils';
-import { CalendarDate } from 'src/app/models/calendar-state';
+} from '@app/utils';
+import { CalendarDate } from '@app/models/calendar-state';
 import  moment from 'moment';
-import { AppStoreService } from 'src/app/services/app-store.service';
-import { AttendableResourceModel } from 'src/app/api/models/attendable-resource-model';
+import { AppStoreService } from '@app/services/app-store.service';
+import { AttendableResourceModel } from '@app/api/models/attendable-resource-model';
 import { MatSelectModule } from '@angular/material/select';
 import { firstValueFrom } from 'rxjs';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import { ShiftInstanceModel } from 'src/app/models/shift-instance-model';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { ShiftInstanceModel } from '@app/models/shift-instance-model';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -37,7 +37,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { WeekDayToggleButton } from 'src/app/week-day-toggle-button/week-day-toggle-button';
+import { WeekDayToggleButton } from '@app/week-day-toggle-button/week-day-toggle-button';
 
 @Component({
   selector: 'app-week-assignment-dialog',
