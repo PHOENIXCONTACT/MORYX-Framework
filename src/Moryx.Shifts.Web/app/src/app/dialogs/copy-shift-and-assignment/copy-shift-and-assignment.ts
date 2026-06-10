@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, Inject, signal } from '@angular/core';
+import { Component, Inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ShiftInstanceModel } from 'src/app/models/shift-instance-model';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import AssignmentData from 'src/app/models/assignment-data';
@@ -24,6 +24,7 @@ import { MatInputModule } from '@angular/material/input';
   selector: 'app-copy-shift-and-assignment',
   templateUrl: './copy-shift-and-assignment.html',
   styleUrl: './copy-shift-and-assignment.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatFormFieldModule,
     MatInputModule,

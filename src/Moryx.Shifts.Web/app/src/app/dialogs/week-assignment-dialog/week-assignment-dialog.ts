@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, Inject, OnInit, signal } from '@angular/core';
+import { Component, Inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import AssignmentData from '../../models/assignment-data';
 import { OperatorModel, OperatorStatus } from 'src/app/models/operator-model';
@@ -43,6 +43,7 @@ import { WeekDayToggleButton } from 'src/app/week-day-toggle-button/week-day-tog
   selector: 'app-week-assignment-dialog',
   templateUrl: './week-assignment-dialog.html',
   styleUrl: './week-assignment-dialog.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatDialogModule,
     MatFormFieldModule,

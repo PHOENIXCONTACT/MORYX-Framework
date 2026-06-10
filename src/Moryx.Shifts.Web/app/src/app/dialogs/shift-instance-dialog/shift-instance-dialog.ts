@@ -4,7 +4,7 @@
 */
 
 
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -20,6 +20,7 @@ import { MatButtonModule } from '@angular/material/button';
   selector: 'app-shift-instance-dialog',
   templateUrl: './shift-instance-dialog.html',
   styleUrl: './shift-instance-dialog.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatDialogModule,
     FormsModule,

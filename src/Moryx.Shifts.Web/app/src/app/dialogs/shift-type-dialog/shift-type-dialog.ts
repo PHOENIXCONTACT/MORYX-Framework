@@ -4,7 +4,7 @@
 */
 
 import { Time } from '@angular/common';
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -18,6 +18,7 @@ import { MatButtonModule } from '@angular/material/button';
   selector: 'app-shift-type-dialog',
   templateUrl: './shift-type-dialog.html',
   styleUrl: './shift-type-dialog.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ReactiveFormsModule,
     MatDialogModule,

@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, input, output } from '@angular/core';
+import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
 import { CalendarDate, CalendarState } from '../models/calendar-state';
 import { TranslationConstants } from '../extensions/translation-constants.extensions';
 import { formatDateDigits, getDayName, getShortDayName, isDayInInterval, localizedDayName, shortDayName } from '../utils';
@@ -18,6 +18,7 @@ import { TranslateModule } from '@ngx-translate/core';
   selector: 'app-week-day-toggle-button',
   templateUrl: './week-day-toggle-button.html',
   styleUrl: './week-day-toggle-button.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CommonModule,
     MatDialogModule,

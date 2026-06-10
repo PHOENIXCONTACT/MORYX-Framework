@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, effect, inject, input, model, signal, untracked } from '@angular/core';
+import { Component, effect, inject, input, model, signal, untracked, ChangeDetectionStrategy } from '@angular/core';
 import { AssignmentCardModel } from '../models/assignment-card-model';
 import { MatDialog } from '@angular/material/dialog';
 import { ShiftCardModel } from '../models/shift-card-model';
@@ -24,6 +24,7 @@ import { MatIconModule } from '@angular/material/icon';
   selector: 'app-assignment',
   templateUrl: './assignment.html',
   styleUrl: './assignment.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CommonModule,
     MatButtonModule,

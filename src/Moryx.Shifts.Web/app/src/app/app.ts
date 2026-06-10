@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { OperatorModel, instanceOfOperator } from './models/operator-model';
 import { CalendarDate, CalendarState } from './models/calendar-state';
@@ -62,6 +62,7 @@ import { OrderItem } from './order-item/order-item';
   selector: 'app-root',
   templateUrl: './app.html',
   styleUrls: ['./app.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CommonModule,
     MatButtonModule,
