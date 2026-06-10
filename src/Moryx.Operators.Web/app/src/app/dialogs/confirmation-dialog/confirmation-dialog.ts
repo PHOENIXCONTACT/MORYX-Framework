@@ -6,7 +6,7 @@
 
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({

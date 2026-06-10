@@ -5,7 +5,7 @@
 
 import { Component, computed, input, ChangeDetectionStrategy } from "@angular/core";
 import { OperatorSkill } from "../models/operator-skill-model";
-import { SkillTypeModel } from "../api/models/skill-type-model";
+import { SkillTypeModel } from "@api/models/skill-type-model";
 
 import { MatTooltipModule } from "@angular/material/tooltip";
 import {MatChipsModule} from '@angular/material/chips';

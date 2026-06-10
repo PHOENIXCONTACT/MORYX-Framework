@@ -11,7 +11,7 @@ import { AddOperatorDialog } from "../dialogs/add-operator/add-operator";
 import { TranslationConstants } from "../extensions/translation-constants.extensions";
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { OperatorSkill } from "../models/operator-skill-model";
-import { SkillTypeModel } from "../api/models/skill-type-model";
+import { SkillTypeModel } from "@api/models/skill-type-model";
 import { skillTypeToModel } from "../models/model-converter";
 import { Router, RouterLink } from "@angular/router";
 import { AppStoreService } from "../services/app-store.service";

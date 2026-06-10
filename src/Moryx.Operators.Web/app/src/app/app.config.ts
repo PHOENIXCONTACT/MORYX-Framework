@@ -4,9 +4,9 @@
 */
 
 import { ApplicationConfig, importProvidersFrom } from "@angular/core";
-import { environment } from "src/environments/environment";
+import { environment } from "../environments/environment";
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from "@angular/common/http";
-import { ApiModule } from "./api/api.module";
+import { ApiModule } from "@api/api.module";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatBadgeModule } from "@angular/material/badge";
 import { MatButtonModule } from "@angular/material/button";

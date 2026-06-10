@@ -10,10 +10,10 @@ import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from "@angular/material/dialog";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatSelectModule } from "@angular/material/select";
-import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
-import { OperatorSkill } from "src/app/models/operator-skill-model";
-import { SkillType } from "src/app/models/skill-type-model";
-import { AppStoreService } from "src/app/services/app-store.service";
+import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
+import { OperatorSkill } from "@app/models/operator-skill-model";
+import { SkillType } from "@app/models/skill-type-model";
+import { AppStoreService } from "@app/services/app-store.service";
 import { TranslateModule } from '@ngx-translate/core';
 import { MatInputModule } from "@angular/material/input";
 
