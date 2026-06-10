@@ -5,7 +5,7 @@
 
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { provideRouter } from "@angular/router";
-import { environment } from "src/environments/environment";
+import { environment } from "../environments/environment";
 import { routes } from "./app.routes";
 import { ApplicationConfig, importProvidersFrom } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
@@ -19,7 +19,7 @@ import { MatToolbarModule } from "@angular/material/toolbar";
 import { provideAnimationsAsync } from "@angular/platform-browser/animations/async";
 import { ApiInterceptor, API_INTERCEPTOR_PROVIDER } from "@moryx/ngx-web-framework/interceptors";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
-import { ApiModule } from "./api/api.module";
+import { ApiModule } from "@api/api.module";
 import { MarkdownModule } from "ngx-markdown";
 
 import { provideTranslateService } from '@ngx-translate/core';

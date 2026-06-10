@@ -4,13 +4,13 @@
 */
 
 import { Component, inject, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
-import { NotificationModel } from '../../api/models/notification-model';
-import { NotificationService } from 'src/app/services/notification.service';
+import { NotificationModel } from '@api/models/notification-model';
+import { NotificationService } from '@app/services/notification.service';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { getIcon } from 'src/app/utils';
+import { getIcon } from '@app/utils';
 
 @Component({
     selector: 'moryx-notifications',

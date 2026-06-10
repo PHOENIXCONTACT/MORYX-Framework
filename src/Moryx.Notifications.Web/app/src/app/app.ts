@@ -7,7 +7,7 @@ import { Component, inject, OnDestroy, OnInit, signal, ChangeDetectionStrategy }
 import { LanguageService } from "@moryx/ngx-web-framework/services";
 import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import { environment } from "src/environments/environment";
+import { environment } from "../environments/environment";
 import { TranslationConstants } from "./extensions/translation-constants.extensions";
 import { NotificationService } from "./services/notification.service";
 import ConnectionState from "./models/ConnectionState";
