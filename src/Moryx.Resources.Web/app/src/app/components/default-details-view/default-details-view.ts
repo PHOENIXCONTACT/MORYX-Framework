@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
@@ -12,6 +12,7 @@ import { TranslationConstants } from 'src/app/extensions/translation-constants.e
   selector: 'app-default-details-view',
   templateUrl: './default-details-view.html',
   styleUrls: ['./default-details-view.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TranslateModule, EmptyState,]
 })
 export class DefaultDetailsView {

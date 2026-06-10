@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, effect, inject, linkedSignal, untracked } from "@angular/core";
+import { Component, effect, inject, linkedSignal, untracked, ChangeDetectionStrategy } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
 import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
 import { FormControlService } from "src/app/services/form-control-service.service";
@@ -20,6 +20,7 @@ import { toSignal } from "@angular/core/rxjs-interop";
   selector: "app-details-header",
   templateUrl: "./details-header.html",
   styleUrls: ["./details-header.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     FormsModule,
     MatDividerModule,

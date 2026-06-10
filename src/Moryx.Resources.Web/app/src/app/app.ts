@@ -4,7 +4,7 @@
 */
 
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { Component, effect, inject, OnDestroy, OnInit, signal, untracked, viewChild } from '@angular/core';
+import { Component, effect, inject, OnDestroy, OnInit, signal, untracked, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
@@ -60,6 +60,7 @@ import { HttpErrorResponse } from '@angular/common/http';
     RouterOutlet,
     TranslateModule,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: {
     '(window:beforeunload)': 'beforeUnloadHander()'
   }

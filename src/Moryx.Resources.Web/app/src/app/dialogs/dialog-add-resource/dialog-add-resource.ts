@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
@@ -23,6 +23,7 @@ import { MatButtonModule } from '@angular/material/button';
   selector: 'app-dialog-add-resource',
   templateUrl: './dialog-add-resource.html',
   styleUrls: ['./dialog-add-resource.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     TranslateModule,
     CommonModule,

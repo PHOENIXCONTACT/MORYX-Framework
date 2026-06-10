@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -29,6 +29,7 @@ import { HttpErrorResponse } from '@angular/common/http';
   selector: 'app-resource-methods',
   templateUrl: './resource-methods.html',
   styleUrls: ['./resource-methods.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     EntryEditor,
     MatExpansionModule,

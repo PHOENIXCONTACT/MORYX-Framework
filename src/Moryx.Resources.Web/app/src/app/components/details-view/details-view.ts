@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, effect, inject, linkedSignal, signal, untracked } from '@angular/core';
+import { Component, effect, inject, linkedSignal, signal, untracked, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Event, NavigationCancel, NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -17,6 +17,7 @@ import { DetailsHeader } from './details-header/details-header';
   selector: 'app-details-view',
   templateUrl: './details-view.html',
   styleUrls: ['./details-view.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [RouterOutlet, TranslateModule, MatTabsModule, RouterLink, DetailsHeader]
 })
 export class DetailsView {

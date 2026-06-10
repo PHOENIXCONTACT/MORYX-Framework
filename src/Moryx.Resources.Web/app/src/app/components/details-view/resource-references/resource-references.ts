@@ -3,15 +3,14 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, effect, inject, OnDestroy, OnInit, signal, untracked } from '@angular/core';
+import { Component, effect, inject, signal, untracked, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatTable, MatTableModule } from '@angular/material/table';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { ReferenceTypeModel, ResourceModel, ResourceReferenceModel } from '../../../api/models';
 import { CacheResourceService } from '../../../services/cache-resource.service';
 import { EditResourceService } from '../../../services/edit-resource.service';
-import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
@@ -25,6 +24,7 @@ import { MatButtonModule } from '@angular/material/button';
   selector: 'app-resource-references',
   templateUrl: './resource-references.html',
   styleUrls: ['./resource-references.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatExpansionModule,
     MatFormFieldModule,
