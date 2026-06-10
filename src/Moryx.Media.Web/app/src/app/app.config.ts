@@ -4,7 +4,7 @@
 */
 
 import { ClipboardModule } from "@angular/cdk/clipboard";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from "@angular/common/http";
 import { ApplicationConfig, importProvidersFrom } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatBadgeModule } from "@angular/material/badge";
@@ -63,7 +63,7 @@ export const appConfig: ApplicationConfig = {
     ApiInterceptor,
     API_INTERCEPTOR_PROVIDER,
     SnackbarService,
-    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(withXhr(), withInterceptorsFromDi()),
     provideTranslateService({
       loader: provideTranslateHttpLoader({
         prefix: environment.assets + 'assets/languages/',

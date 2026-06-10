@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
   MatDialogRef,
   MAT_DIALOG_DATA,
@@ -23,6 +23,7 @@ import { DecimalPipe } from '@angular/common';
   selector: 'app-dialog-variant-info',
   templateUrl: './dialog-variant-info.html',
   styleUrls: ['./dialog-variant-info.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatDialogTitle,
     MatDialogContent,

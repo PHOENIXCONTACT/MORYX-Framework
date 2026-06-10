@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { VariantDescriptor } from '../../api/models';
 import { ContentDescriptorModel } from '../../api/models/content-descriptor-model';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -34,6 +34,7 @@ import { NgxDocViewerModule } from 'ngx-doc-viewer';
   selector: 'app-variant-overview',
   templateUrl: './variant-overview.html',
   styleUrls: ['./variant-overview.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatSidenavModule,
     MatToolbarModule,

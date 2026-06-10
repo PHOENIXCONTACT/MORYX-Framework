@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnInit, model, signal, output } from '@angular/core';
+import { Component, inject, OnInit, model, signal, output, ChangeDetectionStrategy } from '@angular/core';
 import { ContentDescriptorModel } from '../../../api/models';
 import { MediaService } from '../../../services/media-service/media.service';
 import { environment } from 'src/environments/environment';
@@ -20,6 +20,7 @@ import { MatIconModule } from '@angular/material/icon';
   selector: 'app-media-file',
   templateUrl: './media-file.html',
   styleUrls: ['./media-file.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatProgressSpinner,
     TranslateModule,

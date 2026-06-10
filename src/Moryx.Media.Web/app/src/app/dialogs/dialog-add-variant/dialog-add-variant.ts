@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   MatDialogRef,
   MAT_DIALOG_DATA,
@@ -24,6 +24,7 @@ import { MatIcon } from '@angular/material/icon';
   selector: 'app-dialog-add-variant',
   templateUrl: './dialog-add-variant.html',
   styleUrls: ['./dialog-add-variant.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatDialogTitle, MatDialogContent,
     MatFormField, MatLabel, MatInput,

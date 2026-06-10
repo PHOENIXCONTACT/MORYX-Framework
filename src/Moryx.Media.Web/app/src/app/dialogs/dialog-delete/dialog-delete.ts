@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
   MatDialogRef,
   MAT_DIALOG_DATA,
@@ -20,6 +20,7 @@ import { MatButton } from '@angular/material/button';
   selector: 'app-dialog-delete',
   templateUrl: './dialog-delete.html',
   styleUrls: ['./dialog-delete.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatDialogTitle,
     MatDialogContent,

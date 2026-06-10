@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuTrigger, MatMenu, MatMenuContent, MatMenuItem } from '@angular/material/menu';
@@ -27,6 +27,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
   selector: 'app-media-overview',
   templateUrl: './media-overview.html',
   styleUrls: ['./media-overview.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     FileDragAndDropDirective, NgStyle, CommonModule,
     MediaFile, MatMenu, MatMenuContent,
