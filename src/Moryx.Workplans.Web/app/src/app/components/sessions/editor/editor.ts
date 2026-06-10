@@ -5,7 +5,7 @@
 
 import { CdkDragDrop, CdkDragEnd, CdkDragStart, DragDropModule, DragRef } from '@angular/cdk/drag-drop';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject, OnInit, signal, viewChild } from '@angular/core';
+import { Component, inject, OnInit, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatDrawer, MatDrawerMode, MatSidenavModule } from '@angular/material/sidenav';
 import { ActivatedRoute, ActivatedRouteSnapshot, ParamMap, Params, Router } from '@angular/router';
@@ -44,6 +44,7 @@ enum EditQueries {
   selector: 'app-editor',
   templateUrl: './editor.html',
   styleUrls: ['./editor.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CommonModule,
     MatSidenavModule,

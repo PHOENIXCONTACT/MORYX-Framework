@@ -4,7 +4,7 @@
 */
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { TranslateModule } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -21,6 +21,7 @@ import { MatCardModule } from '@angular/material/card';
   selector: 'app-toolbox',
   templateUrl: './toolbox.html',
   styleUrls: ['./toolbox.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CommonModule,
     MatExpansionModule,

@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnDestroy } from '@angular/core';
+import { Component, inject, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { WorkplanState } from '../../../../api/models';
 import { TranslationConstants } from '../../../../extensions/translation-constants.extensions';
@@ -19,6 +19,7 @@ import { MatSelectModule } from '@angular/material/select';
   selector: 'app-workplan-properties',
   templateUrl: './workplan-properties.html',
   styleUrls: ['./workplan-properties.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     FormsModule,
     MatFormFieldModule,

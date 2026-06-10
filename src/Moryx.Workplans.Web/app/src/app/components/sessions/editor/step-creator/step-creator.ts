@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, input, OnDestroy, OnInit, output, signal } from '@angular/core';
+import { Component, inject, input, OnDestroy, OnInit, output, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -18,6 +18,7 @@ import { MatButtonModule } from '@angular/material/button';
   selector: 'app-step-creator',
   templateUrl: './step-creator.html',
   styleUrls: ['./step-creator.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     NavigableEntryEditor,
     TranslateModule,

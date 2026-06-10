@@ -4,7 +4,7 @@
 */
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, RouterOutlet } from '@angular/router';
 import { SnackbarService, SearchBarService, SearchRequest, SearchSuggestion } from '@moryx/ngx-web-framework/services';
@@ -32,6 +32,7 @@ import { MatButtonModule } from '@angular/material/button';
   selector: 'app-sessions',
   templateUrl: './sessions.html',
   styleUrls: ['./sessions.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatTabsModule,
     MatProgressSpinnerModule,

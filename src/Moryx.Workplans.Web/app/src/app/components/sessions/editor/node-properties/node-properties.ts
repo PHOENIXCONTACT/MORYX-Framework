@@ -4,7 +4,7 @@
 */
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject, OnDestroy, signal } from '@angular/core';
+import { Component, inject, OnDestroy, signal, ChangeDetectionStrategy } from '@angular/core';
 import { Entry, NavigableEntryEditor, PrototypeToEntryConverter } from '@moryx/ngx-web-framework/entry-editor';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { TranslateModule } from '@ngx-translate/core';
@@ -25,6 +25,7 @@ import { MatInputModule } from '@angular/material/input';
   selector: 'app-node-properties',
   templateUrl: './node-properties.html',
   styleUrls: ['./node-properties.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatSelectModule,
     FormsModule,
