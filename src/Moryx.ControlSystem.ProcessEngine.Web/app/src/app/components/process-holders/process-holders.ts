@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnInit, signal, viewChild } from "@angular/core";
+import { Component, inject, OnInit, signal, viewChild, ChangeDetectionStrategy } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { MatTree, MatTreeModule } from "@angular/material/tree";
 import { MatIconModule } from "@angular/material/icon";
@@ -44,6 +44,7 @@ import { ProcessHolderGroupModelArrayApiResponse } from "src/app/api/models/proc
     TranslateModule
   ],
   templateUrl: "./process-holders.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: "./process-holders.scss",
 })
 export class ProcessHolders implements OnInit {

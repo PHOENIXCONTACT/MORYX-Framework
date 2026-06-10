@@ -5,7 +5,7 @@
 
 import { CommonModule } from "@angular/common";
 import { HttpErrorResponse } from "@angular/common/http";
-import { ChangeDetectorRef, Component, computed, inject, input, OnDestroy, OnInit, signal } from "@angular/core";
+import { ChangeDetectorRef, Component, computed, inject, input, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from "@angular/core";
 import { MatListModule } from "@angular/material/list";
 import { MatSlideToggleChange, MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
@@ -34,6 +34,7 @@ import { ProcessEngineStreamService } from "src/app/services/process-engine-stre
     ProcessEngineStreamService,
     SnackbarService,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./processes.scss"]
 })
 export class Processes implements OnInit, OnDestroy {

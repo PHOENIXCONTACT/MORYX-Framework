@@ -1,4 +1,4 @@
-import { Component, inject, signal } from "@angular/core";
+import { Component, inject, signal, ChangeDetectionStrategy } from "@angular/core";
 import { TranslationConstants } from "./extensions/translation-constants.extensions";
 import { TranslateService } from "@ngx-translate/core";
 import { LanguageService } from "@moryx/ngx-web-framework/services";
@@ -17,6 +17,7 @@ import { MatIconModule } from "@angular/material/icon";
   templateUrl: "./app.html",
   styleUrls: ["./app.scss"],
   imports: [RouterOutlet, MatIconModule, MatButtonModule, RouterLink, RouterLinkActive],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: []
 })
 export class App {

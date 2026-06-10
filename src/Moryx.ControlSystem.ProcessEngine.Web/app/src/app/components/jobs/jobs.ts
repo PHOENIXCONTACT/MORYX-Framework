@@ -4,7 +4,7 @@
 */
 
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, inject, OnInit, signal, ChangeDetectorRef } from "@angular/core";
+import { Component, inject, OnInit, signal, ChangeDetectorRef, ChangeDetectionStrategy } from "@angular/core";
 import { JobManagementService, OrderManagementService } from "src/app/api/services";
 import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
 import { JobViewModel } from "src/app/models/job-view-model";
@@ -42,6 +42,7 @@ import { OperationModel } from "src/app/api/models/operation-model";
     MatProgressBarModule,
     MatButtonModule
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: []
 })
 export class Jobs implements OnInit {
