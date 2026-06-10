@@ -11,8 +11,8 @@ import { MatListOption, MatSelectionList } from '@angular/material/list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { TranslateModule } from '@ngx-translate/core';
-import { VisualInstructionsService } from 'src/app/api/services/visual-instructions.service';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
+import { VisualInstructionsService } from '@app/api/services/visual-instructions.service';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 
 @Component({
   selector: 'app-configuration-dialog',

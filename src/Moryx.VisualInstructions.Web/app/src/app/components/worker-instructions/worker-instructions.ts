@@ -10,8 +10,8 @@ import { Entry, NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-edit
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { ReplaySubject, Subject, Subscription, switchMap } from "rxjs";
-import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
-import { environment } from "src/environments/environment";
+import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
+import { environment } from "../../../environments/environment";
 import {
   InstructionContentType,
   InstructionItemModel,
@@ -20,8 +20,8 @@ import {
   InstructionType,
 } from "../../api/models";
 import { VisualInstructionsService } from "../../api/services";
-import { InstructionService } from "src/app/services/instruction.service";
-import { InstructionResponseModel } from "src/app/api/models/instruction-response-model";
+import { InstructionService } from "@app/services/instruction.service";
+import { InstructionResponseModel } from "@app/api/models/instruction-response-model";
 import { DisplayedMediaContent } from "../media-contents/displayed-media-content";
 
 import { MatCardModule } from "@angular/material/card";
@@ -29,7 +29,7 @@ import { MediaContents } from "../media-contents/media-contents";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatButtonModule } from "@angular/material/button";
 import { MarkdownComponent } from "ngx-markdown";
-import { InstructionStateService } from 'src/app/services/instruction-state.service';
+import { InstructionStateService } from '@app/services/instruction-state.service';
 
 @Component({
   selector: "app-worker-instructions",
