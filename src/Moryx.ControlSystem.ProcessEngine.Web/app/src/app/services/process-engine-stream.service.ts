@@ -5,9 +5,9 @@
 
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { ProcessEngineService } from '../api/services';
-import { JobProcessModel } from '../api/models/job-process-model';
-import { ProcessActivityModel } from '../api/models/process-activity-model';
+import { ProcessEngineService } from '@api/services';
+import { JobProcessModel } from '@api/models/job-process-model';
+import { ProcessActivityModel } from '@api/models/process-activity-model';
 
 @Injectable({
   providedIn: 'root'

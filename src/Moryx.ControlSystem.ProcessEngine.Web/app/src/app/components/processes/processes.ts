@@ -12,12 +12,12 @@ import { SnackbarService } from "@moryx/ngx-web-framework/services";
 import { NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
 import { TranslateModule } from "@ngx-translate/core";
 import { Subscription } from "rxjs";
-import { JobProcessModel } from "src/app/api/models/job-process-model";
-import { ProcessActivityModel } from "src/app/api/models/process-activity-model";
-import { ProcessEngineService } from "src/app/api/services";
-import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
-import { JobViewModel } from "src/app/models/job-view-model";
-import { ProcessEngineStreamService } from "src/app/services/process-engine-stream.service";
+import { JobProcessModel } from "@api/models/job-process-model";
+import { ProcessActivityModel } from "@api/models/process-activity-model";
+import { ProcessEngineService } from "@api/services";
+import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
+import { JobViewModel } from "@app/models/job-view-model";
+import { ProcessEngineStreamService } from "@app/services/process-engine-stream.service";
 
 @Component({
   selector: "app-processes",
