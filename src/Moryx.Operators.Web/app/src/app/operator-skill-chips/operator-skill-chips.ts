@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, computed, input } from "@angular/core";
+import { Component, computed, input, ChangeDetectionStrategy } from "@angular/core";
 import { OperatorSkill } from "../models/operator-skill-model";
 import { SkillTypeModel } from "../api/models/skill-type-model";
 
@@ -13,6 +13,7 @@ import {MatChipsModule} from '@angular/material/chips';
     selector: "app-operator-skill-chips",
     templateUrl: "./operator-skill-chips.html",
     styleUrl: "./operator-skill-chips.scss",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
     MatTooltipModule,
     MatChipsModule

@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, computed, input, output } from '@angular/core';
+import { Component, computed, input, output, ChangeDetectionStrategy } from '@angular/core';
 import { OperatorViewModel } from '../models/operator-view-model';
 import { TranslationConstants } from '../extensions/translation-constants.extensions';
 import { CommonModule } from '@angular/common';
@@ -13,6 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
     selector: 'app-operator-card',
     templateUrl: './operator-card.html',
     styleUrl: './operator-card.scss',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
       CommonModule,
       MatIconModule

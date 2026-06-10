@@ -4,7 +4,7 @@
 */
 
 
-import { Component, inject } from "@angular/core";
+import { Component, inject, ChangeDetectionStrategy } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from "@angular/material/dialog";
@@ -15,6 +15,7 @@ import { MatInputModule } from "@angular/material/input";
     selector: "app-attandance-dialog",
     templateUrl: "./availability-dialog.html",
     styleUrl: "./availability-dialog.scss",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
     MatDialogModule,
     MatFormFieldModule,

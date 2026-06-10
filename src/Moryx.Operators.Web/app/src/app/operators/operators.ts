@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, input, OnInit, signal } from "@angular/core";
+import { Component, inject, input, OnInit, signal, ChangeDetectionStrategy } from "@angular/core";
 import { OperatorViewModel } from "../models/operator-view-model";
 import { TranslationConstants } from "../extensions/translation-constants.extensions";
 import { WorkstationViewModel } from "../models/workstation-view-model";
@@ -20,6 +20,7 @@ import { TranslateModule } from '@ngx-translate/core';
   selector: "app-operators",
   templateUrl: "./operators.html",
   styleUrl: "./operators.scss",
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     OperatorCard,
     EmptyState,

@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, effect, inject, input, OnInit, signal, untracked } from "@angular/core";
+import { Component, effect, inject, input, OnInit, signal, untracked, ChangeDetectionStrategy } from "@angular/core";
 import { TranslationConstants } from "../extensions/translation-constants.extensions";
 import { SkillType } from "../models/skill-type-model";
 import { Router, RouterLink } from "@angular/router";
@@ -24,6 +24,7 @@ import { MatInputModule } from "@angular/material/input";
   selector: "app-skill-type-details",
   templateUrl: "./skill-type-details.html",
   styleUrl: "./skill-type-details.scss",
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ReactiveFormsModule,
     FormsModule,

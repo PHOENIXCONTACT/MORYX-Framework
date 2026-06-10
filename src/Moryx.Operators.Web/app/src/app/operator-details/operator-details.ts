@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, effect, inject, input, OnInit, signal, untracked } from "@angular/core";
+import { Component, effect, inject, input, OnInit, signal, untracked, ChangeDetectionStrategy } from "@angular/core";
 import { RouterLink } from "@angular/router";
 import { TranslationConstants } from "../extensions/translation-constants.extensions";
 import { OperatorSkillView } from "../models/type";
@@ -33,6 +33,7 @@ import { MatButtonModule } from "@angular/material/button";
   selector: "app-operator-details",
   templateUrl: "./operator-details.html",
   styleUrl: "./operator-details.scss",
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatIconModule,
     MatSidenavModule,

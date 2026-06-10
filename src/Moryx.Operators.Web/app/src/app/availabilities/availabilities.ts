@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { TranslationConstants } from '../extensions/translation-constants.extensions';
 import { MatDialog } from '@angular/material/dialog';
 import { CalendarState } from '../models/calendar-state';
@@ -19,6 +19,7 @@ import { RouterLink } from '@angular/router';
     selector: 'app-attandances',
     templateUrl: './availabilities.html',
     styleUrl: './availabilities.scss',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
       CommonModule,
       MatIconModule,
