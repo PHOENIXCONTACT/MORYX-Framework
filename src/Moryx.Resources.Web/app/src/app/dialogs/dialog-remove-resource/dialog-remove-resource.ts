@@ -8,8 +8,8 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/materia
 
 import { MatButtonModule } from '@angular/material/button';
 import { TranslateModule } from '@ngx-translate/core';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import { ResourceModel } from 'src/app/api/models/resource-model';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { ResourceModel } from '@api/models/resource-model';
 
 @Component({
   selector: 'app-dialog-remove-resource',

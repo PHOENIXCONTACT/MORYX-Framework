@@ -29,9 +29,9 @@ import { provideAppInitializer, inject, importProvidersFrom } from '@angular/cor
 import { ApiInterceptor, API_INTERCEPTOR_PROVIDER } from '@moryx/ngx-web-framework/interceptors';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { environment } from "src/environments/environment";
+import { environment } from "../environments/environment";
 import { BrowserModule } from "@angular/platform-browser";
-import { ApiModule } from "./api/api.module";
+import { ApiModule } from "@api/api.module";
 import { CacheResourceService } from "./services/cache-resource.service";
 import { FormControlService } from "./services/form-control-service.service";
 import { provideRouter } from "@angular/router";

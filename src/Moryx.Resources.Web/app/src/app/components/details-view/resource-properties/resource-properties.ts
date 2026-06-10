@@ -5,7 +5,7 @@
 
 import { Component, inject, linkedSignal, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { EditResourceService } from '../../../services/edit-resource.service';
+import { EditResourceService } from '@app/services/edit-resource.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Entry, NavigableEntryEditor } from '@moryx/ngx-web-framework/entry-editor';
 

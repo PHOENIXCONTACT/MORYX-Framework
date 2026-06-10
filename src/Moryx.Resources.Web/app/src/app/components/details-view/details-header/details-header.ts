@@ -5,15 +5,15 @@
 
 import { Component, effect, inject, linkedSignal, untracked, ChangeDetectionStrategy } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
-import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
-import { FormControlService } from "src/app/services/form-control-service.service";
+import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
+import { FormControlService } from "@app/services/form-control-service.service";
 import { ResourceModel } from "../../../api/models";
 import { MatDividerModule } from "@angular/material/divider";
 
 import { FormsModule } from "@angular/forms";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
-import { EditResourceService } from "src/app/services/edit-resource.service";
+import { EditResourceService } from "@app/services/edit-resource.service";
 import { toSignal } from "@angular/core/rxjs-interop";
 
 @Component({
@@ -44,7 +44,7 @@ export class DetailsHeader {
         return;
       }
       untracked(() => this.formControlService.onCanSave(!!resource.name?.length));
-    });  
+    });
   }
 
   onNameChanged() {

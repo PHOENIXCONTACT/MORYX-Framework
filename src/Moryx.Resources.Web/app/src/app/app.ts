@@ -14,7 +14,7 @@ import {
   LanguageService,
   SnackbarService} from '@moryx/ngx-web-framework/services';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { environment } from 'src/environments/environment';
+import { environment } from '../environments/environment';
 import { ResourceModel, ResourceReferenceModel } from './api/models';
 import { ResourceModificationService } from './api/services';
 import { DialogAddResource } from './dialogs/dialog-add-resource/dialog-add-resource';
@@ -135,7 +135,7 @@ export class App implements OnInit, OnDestroy {
     this.translateService.setFallbackLang('en');
     this.translateService.use(this.languageService.getDefaultLanguage());
     this.formControlService.canSave.subscribe(state => (this.canSave = state));
-    
+
     effect(() => {
       const resource = this.editResourceService.activeResource();
       if (this.selected()?.id === resource?.id) {
@@ -222,7 +222,7 @@ export class App implements OnInit, OnDestroy {
           body: result.method?.parameters,
         }))
       .catch(async (e: HttpErrorResponse) => await this.snackbarService.handleError(e));
-      
+
       if (!constructed) return;
       this.editResourceService.registerNewResource(constructed);
       this.router.navigate(['details', constructed.id]);

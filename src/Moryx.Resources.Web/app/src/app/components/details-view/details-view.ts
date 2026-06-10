@@ -7,9 +7,9 @@ import { Component, effect, inject, linkedSignal, signal, untracked, ChangeDetec
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Event, NavigationCancel, NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { ResourceModel } from '../../api/models';
-import { EditResourceService } from '../../services/edit-resource.service';
+import { EditResourceService } from '@app/services/edit-resource.service';
 import { MatTabsModule } from '@angular/material/tabs';
 import { DetailsHeader } from './details-header/details-header';
 

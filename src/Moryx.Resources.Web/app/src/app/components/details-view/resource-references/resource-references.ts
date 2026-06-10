@@ -7,10 +7,10 @@ import { Component, effect, inject, signal, untracked, ChangeDetectionStrategy }
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatTable, MatTableModule } from '@angular/material/table';
 import { TranslateModule } from '@ngx-translate/core';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { ReferenceTypeModel, ResourceModel, ResourceReferenceModel } from '../../../api/models';
-import { CacheResourceService } from '../../../services/cache-resource.service';
-import { EditResourceService } from '../../../services/edit-resource.service';
+import { CacheResourceService } from '@app/services/cache-resource.service';
+import { EditResourceService } from '@app/services/edit-resource.service';
 import { Router } from '@angular/router';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';

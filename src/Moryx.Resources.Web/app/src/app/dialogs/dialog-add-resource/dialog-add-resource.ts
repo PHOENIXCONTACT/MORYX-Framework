@@ -6,11 +6,11 @@
 import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { ResourceModel, ResourceTypeModel } from '../../api/models';
 import { MatListModule, MatSelectionListChange } from '@angular/material/list';
-import { CacheResourceService } from 'src/app/services/cache-resource.service';
-import { ResourceConstructionParameters } from 'src/app/models/ResourceConstructionParameters';
+import { CacheResourceService } from '@app/services/cache-resource.service';
+import { ResourceConstructionParameters } from '@app/models/ResourceConstructionParameters';
 import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { CommonModule } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';

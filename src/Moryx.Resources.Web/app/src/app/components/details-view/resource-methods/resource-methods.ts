@@ -5,12 +5,12 @@
 
 import { Component, effect, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatButtonModule } from '@angular/material/button';
-import { EditResourceService } from '../../../services/edit-resource.service';
+import { EditResourceService } from '@app/services/edit-resource.service';
 import { Router } from '@angular/router';
-import { ResourceModificationService } from '../../../api/services/resource-modification.service';
+import { ResourceModificationService } from '@api/services/resource-modification.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 
