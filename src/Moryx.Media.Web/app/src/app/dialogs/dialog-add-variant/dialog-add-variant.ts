@@ -13,7 +13,7 @@ import {
   MatDialogClose
 } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';

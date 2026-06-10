@@ -28,8 +28,8 @@ import { provideRouter } from "@angular/router";
 import { ApiInterceptor, API_INTERCEPTOR_PROVIDER } from "@moryx/ngx-web-framework/interceptors";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
 import { NgxDocViewerModule } from "ngx-doc-viewer";
-import { environment } from "src/environments/environment";
-import { ApiModule } from "./api/api.module";
+import { environment } from "../environments/environment";
+import { ApiModule } from "@api/api.module";
 import { routes } from "./app.routes";
 
 import { provideTranslateService } from '@ngx-translate/core';
