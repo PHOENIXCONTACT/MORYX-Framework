@@ -10,13 +10,15 @@ internal static class OrderManagementExtensions
 {
     public static List<OrderModel> GetOrderModels(this IOrderManagement orderManager, string[] colorPalette)
     {
-        var orders = orderManager.GetOperations(x => x.State is OperationStateClassification.Running)
-            .Select(Converter.Converter.ToOrderModel).ToList();
+        var orderModels = orderManager.GetOperations(x => x.State is OperationStateClassification.Running)
+                .Select(Converter.Converter.ToOrderModel).OrderBy(x => x.Order).ThenBy(x => x.Operation).ToList();
 
         // Assign color to order
-        for (int i = 0; i < orders.Count; i++)
-            orders[i].Color = colorPalette[i % colorPalette.Length];
+        for (var i = 0; i < orderModels.Count; i++)
+        {
+            orderModels[i].Color = colorPalette[i % colorPalette.Length];
+        }
 
-        return orders;
+        return orderModels;
     }
 }

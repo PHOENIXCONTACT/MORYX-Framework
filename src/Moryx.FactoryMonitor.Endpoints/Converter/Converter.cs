@@ -14,19 +14,10 @@ namespace Moryx.FactoryMonitor.Endpoints.Converter;
 /// <summary>
 /// Provide convertion for resources and models
 /// </summary>
-internal class Converter
+/// <param name="serialization">Serialization for resource entry conversions</param>
+internal class Converter(ICustomSerialization serialization)
 {
-
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="serialization"></param>
-    public Converter(ICustomSerialization serialization)
-    {
-        Serialization = serialization;
-    }
-
-    protected ICustomSerialization Serialization { get; }
+    protected ICustomSerialization Serialization { get; } = serialization;
 
     public ResourceChangedModel ToResourceChangedModel(Resource current)
     {
@@ -39,26 +30,6 @@ internal class Converter
             Id = current.Id,
             CellPropertySettings = ToCellPropertySettings(cellEntry, current.GetType()),
             CellName = current.Name,
-        };
-    }
-
-    public static ActivityChangedModel ToActivityChangedModel(ICell current)
-    {
-        if (current == null) return null;
-
-        return new ActivityChangedModel
-        {
-            ResourceId = current.Id,
-        };
-    }
-
-    public static CellStateChangedModel ToCellStateChangedModel(Resource current)
-    {
-        if (current == null) return null;
-
-        return new CellStateChangedModel
-        {
-            Id = current.Id,
         };
     }
 
@@ -159,21 +130,6 @@ internal class Converter
     }
 
     /// <summary>
-    /// Convert Transport path to TransportModelPath
-    /// </summary>
-    /// <param name="transportPath"></param>
-    /// <returns><see cref="TransportPathModel"/></returns>
-    public static TransportPathModel ToTransportPathModel(ITransportPath transportPath)
-    {
-        return new TransportPathModel
-        {
-            Destination = ToCellLocationModel(transportPath.Destination),
-            Origin = ToCellLocationModel(transportPath.Origin),
-            WayPoints = transportPath.WayPoints
-        };
-    }
-
-    /// <summary>
     /// Convert TransportPathModel to TransportRouteModel
     /// </summary>
     /// <param name="pathModel"></param>
@@ -187,6 +143,4 @@ internal class Converter
             Paths = pathModel.WayPoints
         };
     }
-
-    public static FactoryStateModel ToFactoryStateModel(IManufacturingFactory factory) => new() { Id = factory.Id };
 }
