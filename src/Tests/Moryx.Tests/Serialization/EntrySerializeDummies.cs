@@ -173,7 +173,7 @@ public class EntrySerialize_Methods : EntrySerialize_InheritedBase
     }
 
     [EntrySerialize]
-    public async Task<string> MethodWithRequiredAndOptionalParameters(string demo, [Required] string exmaplestring, string nullableString = null, string defaultValkueString = "Some test string")
+    public async Task<string> MethodWithRequiredAndOptionalParameters(string plainParameter, [Required] string requiredParameter, string nullableString = null, string defaultValueString = "Some test string")
     {
         return "Done";
     }

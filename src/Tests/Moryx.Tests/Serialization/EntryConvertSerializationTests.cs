@@ -139,16 +139,19 @@ public class EntryConvertSerializationTests
         // Act
         var entry = EntryConvert.EncodeMethod(method);
       
-        var demoValidation = entry.Parameters.SubEntries.First(x => x.DisplayName == "demo").Validation;
-        var exampleValidation = entry.Parameters.SubEntries.First(x => x.DisplayName == "exmaplestring").Validation;
+        var plainParameterValidation = entry.Parameters.SubEntries.First(x => x.DisplayName == "plainParameter").Validation;
+        var requiredParameterValidation = entry.Parameters.SubEntries.First(x => x.DisplayName == "requiredParameter").Validation;
         var nullableValidation = entry.Parameters.SubEntries.First(x => x.DisplayName == "nullableString").Validation;
-        var defaultValueValidation = entry.Parameters.SubEntries.First(x => x.DisplayName == "defaultValkueString").Validation;
+        var defaultValueValidation = entry.Parameters.SubEntries.First(x => x.DisplayName == "defaultValueString").Validation;
 
         // Assert
-        Assert.That(demoValidation.IsRequired, Is.True);
-        Assert.That(exampleValidation.IsRequired, Is.True);
-        Assert.That(nullableValidation.IsRequired, Is.False);
-        Assert.That(defaultValueValidation.IsRequired, Is.False);
+        Assert.Multiple(() =>
+        {
+            Assert.That(plainParameterValidation.IsRequired, Is.True ,"Plain parameter should be reuired");
+            Assert.That(requiredParameterValidation.IsRequired, Is.True , "Required parameter should be required");
+            Assert.That(nullableValidation.IsRequired, Is.False, "Nullable parameter should not be required");
+            Assert.That(defaultValueValidation.IsRequired, Is.False, "Default value shuold not be required");
+        });
     }
 
 }
