@@ -15,7 +15,7 @@ graph TB
     subgraph External["External Dependencies"]
         IOrderMgmt["IOrderManagement Facade<br/>(from Moryx.Orders)"]
         Order["Order Business Model<br/>(from Moryx.Orders)"]
-        ResourceMgmt["IResourceManagement<br/>(from Moryx.AbstractionLayer)"]
+        IResourceMgmt["IResourceManagement<br/>(from Moryx.AbstractionLayer)"]
         IResource["IResource<br/>(from Moryx.AbstractionLayer)"]
     end
 
@@ -36,11 +36,9 @@ graph TB
         MgmtFacade --> MgmtFacadeInterface
     end
 
-    subgraph OrderIntegration["Moryx.Material.Integrations.Orders"]
-        IOMC["IOrderLinkedMaterialContainer"]
-        LinkingHookMgr["LinkingHookManager<br/>(module component)"]
+    subgraph OrderIntegrationCore["Moryx.Material.Integrations.Orders"]
+        IOMC["IOrderLinkedMaterialContainer"]        
         HookBase["LinkingHook<br/>(plugin base class)"]
-        OrderContainerMgr["OrderContainerManager<br/>(component)"]
         OrderEvents["Order-Linking EventArgs<br/>OrderLinkRequested<br/>OrderLinkApplied"]
         OrderLineageType["Order Lineage Event Type<br/>OrderLink"]
         OrderRef["OrderReference"]
@@ -48,19 +46,24 @@ graph TB
         IOMC --> OrderRef
         IOMC --> IMC
         IOMC --> OrderEvents
-        LinkingHookMgr -.listens.-> OrderEvents
-        LinkingHookMgr -.orchestrates.-> HookBase
         HookBase -.accesses.-> OrderRef
         HookBase -.accesses.-> IOMC
         HookBase -.readonly.-> Order
+    end
+
+    subgraph OrderIntegration["Moryx.Material.Integrations.Orders.Integrator"]
+        LinkingHookMgr["LinkingHookManager<br/>(module component)"]
+        OrderContainerMgr["OrderContainerManager<br/>(component)"]
+        
+        LinkingHookMgr -.listens.-> OrderEvents
+        LinkingHookMgr -.orchestrates.-> HookBase
         OrderContainerMgr --> IOrderMgmt
         OrderContainerMgr -.manages lifecycle.-> OrderRef
-        OrderRef -.internal.-> Order
     end
 
     OrderRef -.-> Order
     IMC -.-> IResource
-    MgmtFacade -.-> ResourceMgmt
+    MgmtFacade -.-> IResourceMgmt
 
     style Core fill:#e1f5ff
     style OrderIntegration fill:#f3e5f5
