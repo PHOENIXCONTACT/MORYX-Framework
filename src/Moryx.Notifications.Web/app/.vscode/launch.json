@@ -3,16 +3,8 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Launch Edge",
-      "request": "launch",
-      "type": "pwa-msedge",
-      "preLaunchTask": "npm: start",
-      "url": "http://localhost:4200",
-      "webRoot": "${workspaceFolder}"
-    },
-    {
       "name": "ng serve",
-      "type": "pwa-chrome",
+      "type": "chrome",
       "request": "launch",
       "preLaunchTask": "npm: start",
       "url": "http://localhost:4200/"

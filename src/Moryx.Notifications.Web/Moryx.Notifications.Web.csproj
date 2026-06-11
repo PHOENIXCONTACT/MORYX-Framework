@@ -39,11 +39,10 @@
   </ItemGroup>
 
   <Import Project="..\..\.build\WebProjects.props"/>
-  <Target Name="BuildUI" Condition="('$(Configuration)'!='Debug' Or !Exists('wwwroot\app\main.js') Or !Exists('wwwroot\components\main.js')) And ('$(NoBuild)' != 'true') ">
+  <Target Name="BuildUI" Condition="('$(Configuration)'!='Debug' Or !Exists('wwwroot\notifications\main.js') Or !Exists('wwwroot\notifications-bar\main.js')) And ('$(NoBuild)' != 'true') ">
     <Exec WorkingDirectory=".\app\" Command="npm ci" />
-    <Exec WorkingDirectory=".\app\" Command="npm run build:prod" />
-    <Exec WorkingDirectory=".\components\" Command="npm ci" />
-    <Exec WorkingDirectory=".\components\" Command="npm run build:prod" />
+    <Exec WorkingDirectory=".\app\" Command="npm run build notifications" />
+    <Exec WorkingDirectory=".\app\" Command="npm run build notifications-bar" />
   </Target>
 
 </Project>

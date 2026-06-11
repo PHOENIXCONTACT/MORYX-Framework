@@ -6,10 +6,4 @@
     <IsPackable>true</IsPackable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
-  </ItemGroup>
-
-  <Import Project="..\..\.build\WebProjects.props" />
-
 </Project>

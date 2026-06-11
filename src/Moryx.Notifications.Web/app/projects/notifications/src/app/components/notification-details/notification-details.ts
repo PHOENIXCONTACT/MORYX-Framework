@@ -5,15 +5,15 @@
 
 import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import { NotificationService } from 'src/app/services/notification.service';
-import { environment } from 'src/environments/environment';
+import { TranslationConstants } from '../../extensions/translation-constants.extensions';
+import { NotificationService } from '../../services/notification.service';
+import { environment } from '../../../environments/environment';
 import { NotificationModel } from '../../api/models/notification-model';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { getIcon } from 'src/app/utils';
+import { getIcon } from '../../utils';
 import { MarkdownComponent, MarkdownService } from 'ngx-markdown';
 import { NavigableEntryEditor } from '@moryx/ngx-web-framework/entry-editor';
 import { MatButtonModule } from '@angular/material/button';
