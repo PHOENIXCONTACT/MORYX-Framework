@@ -298,68 +298,12 @@
             class="tree-container"
           ></div>
 
-          <mat-tree
-            class="overview-tree-content-tree"
-            [dataSource]="treeData"
-            [childrenAccessor]="childrenAccessor"
-          >
-            <mat-tree-node
-              *matTreeNodeDef="let node"
-              (click)="onSelect(node.id)"
-              (contextmenu)="onProductContext($event, node.id)"
-              class="overview-tree-content-tree-items"
-              [ngClass]="{
-                'moryx-selected': selected()?.id == node.id
-              }"
-            >
-              <button mat-icon-button title="Disabled toggle" disabled></button>
-              @if (node.id === 0) {
-                <span class="overview-tree-content-tree-items-text">{{
-                  node.name
-                }}</span>
-              } @else {
-                <span class="overview-tree-content-tree-items-text">
-                  {{ createProductIdentity(node.identifier, node.revision) }} {{ node.name }}
-                </span>
-              }
-            </mat-tree-node>
-            <mat-tree-node
-              *matTreeNodeDef="let node; when: hasChild"
-              #treeNode="matTreeNode"
-              (click)="onSelect(node.id)"
-              (contextmenu)="onProductContext($event, node.id)"
-              class="overview-tree-content-tree-items"
-              [ngClass]="{
-                'moryx-selected': selected()?.id == node.id
-              }"
-            >
-              <button
-                mat-icon-button
-                matTreeNodeToggle
-                [attr.aria-label]="'toggle ' + node.name"
-                (click)="onExpandOrCollapseNode(node)"
-              >
-                <mat-icon class="mat-icon-rtl-mirror">
-                  {{ treeNode.isExpanded ? "expand_more" : "chevron_right" }}
-                </mat-icon>
-              </button>
-              @if (node.id === 0) {
-                <span class="overview-tree-content-tree-items-text">{{
-                  node.name
-                }}</span>
-              } @else {
-                <span class="overview-tree-content-tree-items-text"
-                  >{{
-                    createProductIdentity(
-                      node.identifier,
-                      node.revision
-                    )
-                  }}
-                  {{ node.name }}</span
-                >
-              }
-            </mat-tree-node>
-          </mat-tree>
+          <app-product-tree
+            [treeData]="treeData()"
+            [selected]="selected()"
+            (nodeSelected)="onSelect($event)"
+            (nodeContextMenu)="onProductContext($event.event, $event.id)"
+          />
         </mat-drawer-content>
       </mat-drawer-container>
     </div>

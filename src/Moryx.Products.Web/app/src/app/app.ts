@@ -17,10 +17,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { MatMenuModule, MatMenuTrigger } from "@angular/material/menu";
 import { MatDrawer, MatSidenavModule } from "@angular/material/sidenav";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import {
-  MatTree,
-  MatTreeModule,
-} from "@angular/material/tree";
+import { ProductTree } from "./components/product-tree/product-tree";
 import { Router, RouterOutlet } from "@angular/router";
 import {
   LanguageService,
@@ -74,7 +71,7 @@ import { MatInputModule } from "@angular/material/input";
     MatFormFieldModule,
     MatSelectModule,
     MatMenuModule,
-    MatTreeModule,
+    ProductTree,
     RouterOutlet,
     MatInputModule
   ],
@@ -192,13 +189,7 @@ export class App implements OnInit, OnDestroy {
     }
   }
 
-  tree = viewChild.required<MatTree<ProductNode>>(MatTree);
-
-  childrenAccessor = (node: ProductNode) => node.children ?? [];
-
-  treeData: ProductNode[] = [];
-
-  hasChild = (_: number, node: ProductNode) => !!node.children?.length;
+  treeData = signal<ProductNode[]>([]);
 
   createDatasource(hierarchic: boolean) {
     if (this.productDefinitions().length === 0) return;
@@ -233,9 +224,7 @@ export class App implements OnInit, OnDestroy {
         }
       }
     }
-    this.treeData = dataSource;
-    const expandedNames = this.sessionService.getExpandedNodeNames();
-    this.expandSavedNodes(dataSource, expandedNames);
+    this.treeData.set(dataSource);
   }
 
   beforeUnloadHander() {
@@ -262,21 +251,6 @@ export class App implements OnInit, OnDestroy {
   setHierarchy(hierarchy: boolean) {
     this.sessionService.setProductTreeHierarchy(hierarchy);
     this.createDatasource(hierarchy);
-  }
-
-  onExpandOrCollapseNode(node: ProductNode) {
-    this.sessionService.saveProductTreeExpansion(node, this.tree().isExpanded(node));
-  }
-
-  private expandSavedNodes(nodes: ProductNode[], expandedNames: string[]) {
-    for (const node of nodes) {
-      if (expandedNames.includes(node.name)) {
-        this.tree().expand(node);
-      }
-      if (node.children) {
-        this.expandSavedNodes(node.children, expandedNames);
-      }
-    }
   }
 
   private SortTypesToDefinitions(): ProductNode[] {
@@ -476,10 +450,6 @@ export class App implements OnInit, OnDestroy {
   filter(drawer: MatDrawer) {
     this.cacheService.loadProductsForTree();
     drawer.toggle();
-  }
-
-  createProductIdentity(identifier: string | undefined | null, revision: number | undefined): string {
-    return this.editService.createProductIdentity(identifier, revision);
   }
 
   get filterOptions() {
