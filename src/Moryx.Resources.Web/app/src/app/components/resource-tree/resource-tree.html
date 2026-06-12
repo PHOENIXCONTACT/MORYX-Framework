@@ -1,19 +1,12 @@
-<mat-tree
-  [dataSource]="resources()"
-  [childrenAccessor]="childrenAccessor"
->
+<mat-tree [dataSource]="resources()" [childrenAccessor]="childrenAccessor">
   <mat-tree-node
     *matTreeNodeDef="let node"
     matTreeNodePadding
     [matTreeNodePaddingIndent]="10"
     (click)="onNodeClick(node.id)"
     (contextmenu)="onContextMenu($event, node.id)"
-    class="resources-tree-item"
-    [ngClass]="{
-      'moryx-selected': selected()?.id == node.id,
-      'italic': !(node.name && node.name.trim())
-    }"
-  >
+    class="tree-item"
+    [ngClass]="{ 'moryx-selected': selected()?.id == node.id, 'italic': !(node.name && node.name.trim()) }">
     <button mat-icon-button title="Disabled toggle" disabled></button>
     {{ (node.name && node.name.trim()) ? node.name : TranslationConstants.APP.NO_NAME | translate }}
   </mat-tree-node>
@@ -25,19 +18,14 @@
     [matTreeNodePaddingIndent]="10"
     (click)="onNodeClick(node.id)"
     (contextmenu)="onContextMenu($event, node.id)"
-    class="resources-tree-item"
-    [ngClass]="{
-      'moryx-selected': selected()?.id == node.id,
-      'italic': !(node.name && node.name.trim())
-    }"
-  >
+    class="tree-item"
+    [ngClass]="{ 'moryx-selected': selected()?.id == node.id, 'italic': !(node.name && node.name.trim()) }">
     <button
       mat-icon-button
       matTreeNodeToggle
-      [attr.aria-label]="'Toggle ' + node.name"
       type="button"
-      (click)="onExpandOrCollapseNode()"
-    >
+      [attr.aria-label]="'Toggle ' + node.name"
+      (click)="onExpandOrCollapseNode()">
       <mat-icon class="mat-icon-rtl-mirror">
         {{ treeNode.isExpanded ? "expand_more" : "chevron_right" }}
       </mat-icon>

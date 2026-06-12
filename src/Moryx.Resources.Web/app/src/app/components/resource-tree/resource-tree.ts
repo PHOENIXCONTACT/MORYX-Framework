@@ -10,9 +10,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { ResourceModel } from '../../api/models';
-import { SessionService } from '../../services/session.service';
-import { TranslationConstants } from '../../extensions/translation-constants.extensions';
-import { getHierarchieLineFor } from '../../models/TypeTree';
+import { SessionService } from '@app/services/session.service';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { getHierarchieLineFor } from '@app/models/TypeTree';
 
 @Component({
   selector: 'app-resource-tree',
@@ -44,7 +44,9 @@ export class ResourceTree {
     effect(() => {
       const data = this.resources();
       const tree = this.tree();
-      if (!tree || !data.length) return;
+      if (!tree || !data.length) {
+        return;
+      }
 
       const expandedIds = this.sessionService.getExpandedIds();
       if (expandedIds.length > 0) {
@@ -87,21 +89,27 @@ export class ResourceTree {
 
   private collectExpandedIds(nodes: ResourceModel[], ids: number[]) {
     for (const node of nodes) {
-      if (this.tree()!.isExpanded(node)) ids.push(node.id);
+      if (this.tree()!.isExpanded(node)) {
+        ids.push(node.id!);
+      }
       this.collectExpandedIds(this.childrenAccessor(node), ids);
     }
   }
 
   private restoreExpandedNodes(nodes: ResourceModel[], expandedIds: number[]) {
     for (const node of nodes) {
-      if (expandedIds.includes(node.id)) this.tree()!.expand(node);
+      if (expandedIds.includes(node.id!)) {
+        this.tree()!.expand(node);
+      }
       this.restoreExpandedNodes(this.childrenAccessor(node), expandedIds);
     }
   }
 
   private expandNodesById(nodes: ResourceModel[], ids: (number | undefined)[]) {
     for (const node of nodes) {
-      if (ids.includes(node.id)) this.tree()!.expand(node);
+      if (ids.includes(node.id)) {
+        this.tree()!.expand(node);
+      }
       this.expandNodesById(this.childrenAccessor(node), ids);
     }
   }

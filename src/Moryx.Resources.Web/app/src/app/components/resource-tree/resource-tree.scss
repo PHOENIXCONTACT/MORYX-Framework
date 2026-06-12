@@ -14,19 +14,19 @@
   ));
 }
 
-.resources-tree-item {
+.tree-item {
   cursor: pointer !important;
   width: 100%;
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   -webkit-touch-callout: none;
-}
 
-.resources-tree-item:hover {
-  background-color: $light-background-hover;
-}
+  &:hover {
+    background-color: $light-background-hover;
+  }
 
-.italic {
-  font-style: italic;
+  &.italic {
+    font-style: italic;
+  }
 }
