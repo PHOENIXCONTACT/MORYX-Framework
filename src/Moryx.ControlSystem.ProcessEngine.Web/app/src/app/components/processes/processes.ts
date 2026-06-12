@@ -5,7 +5,17 @@
 
 import { CommonModule } from "@angular/common";
 import { HttpErrorResponse } from "@angular/common/http";
-import { ChangeDetectorRef, Component, computed, inject, input, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from "@angular/core";
+import {
+  ChangeDetectorRef,
+  Component,
+  computed,
+  inject,
+  input,
+  OnDestroy,
+  OnInit,
+  signal,
+  ChangeDetectionStrategy
+} from "@angular/core";
 import { MatListModule } from "@angular/material/list";
 import { MatSlideToggleChange, MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
@@ -59,10 +69,6 @@ export class Processes implements OnInit, OnDestroy {
   private processSubscription!: Subscription;
   private activitySubscription!: Subscription;
 
-  constructor() {
-    console.log('loadede')
-  }
-
   ngOnInit(): void {
     this.processEngineService
       .getRunningProcessesOfJob({
@@ -100,7 +106,7 @@ export class Processes implements OnInit, OnDestroy {
       // Extract job id
       // TODO: Extend model
       const jobId = BigInt(updatedProcess.id!) >> 14n;
-      if (jobId !== BigInt(this.job().model.id!)){
+      if (jobId !== BigInt(this.job().model.id!)) {
         return;
       }
 
@@ -151,8 +157,7 @@ export class Processes implements OnInit, OnDestroy {
       // Replace with new object from stream
       process.activities![index!] = updatedActivity;
 
-    }
-    else {
+    } else {
       // Or add to activities of the process
       process.activities?.push(updatedActivity);
     }

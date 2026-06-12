@@ -3,14 +3,12 @@
     <div class="processes-activities">
       <h2>{{ TranslationConstants.PROCESSES.TITLE | translate }}</h2>
       <mat-list class="processes-list">
-        @for(process of processes(); track process.id)
-          {
+        @for (process of processes(); track process.id) {
           @if (process.recipeId === job().model.recipeId) {
             <mat-list-item
               [ngClass]="{ 'moryx-selected': selectedProcess()?.id == process.id }"
               (click)="onSelectProcess(process)"
-              class="processes-list-item"
-              >
+              class="processes-list-item">
               <div matListItemTitle>Id: {{ process.id }} {{ process.state }}</div>
               <div matListItemLine>{{ process.started | date: "dd.LL.YYYY HH:mm:ss" }}</div>
             </mat-list-item>
@@ -21,18 +19,14 @@
   }
   <mat-divider [vertical]="true"></mat-divider>
   @if (selectedProcess() && selectedProcess()?.recipeId === job().model.recipeId) {
-    <div
-      class="processes-activities"
-      >
+    <div class="processes-activities">
       <h2>{{ TranslationConstants.PROCESSES.ACTIVITIES | translate }}</h2>
       <mat-list class="processes-list">
-        @for(activity of selectedProcess()?.activities; track activity.id)
-          {
+        @for (activity of selectedProcess()?.activities; track activity.id) {
           <mat-list-item
             [ngClass]="{ 'moryx-selected': selectedActivity()?.id == activity.id }"
             (click)="onSelectActivity(activity)"
-            class="processes-list-item"
-            >
+            class="processes-list-item">
             <div matListItemTitle>{{ activity.type }}</div>
             <div matListItemLine>{{ activity.state }} {{ activity.resultName }}</div>
           </mat-list-item>
@@ -41,17 +35,10 @@
     </div>
   }
   @if (selectedProcess() && selectedProcess()?.recipeId === job().model.recipeId) {
-    <mat-divider
-      [vertical]="true"
-    ></mat-divider>
+    <mat-divider [vertical]="true"></mat-divider>
   }
-  @if (
-    selectedActivity() &&
-    selectedProcess()?.recipeId === job().model.recipeId
-    ) {
-    <div
-      class="processes-activity-tracing"
-      >
+  @if (selectedActivity() && selectedProcess()?.recipeId === job().model.recipeId) {
+    <div class="processes-activity-tracing">
       <h2>{{ TranslationConstants.PROCESSES.ACTIVITY_DETAILS | translate }}</h2>
       <div class="processes-activity-details-container">
         <div class="processes-activity-details">
@@ -61,9 +48,7 @@
           </div>
           <div>
             {{ TranslationConstants.PROCESSES.COMPLETED | translate }}:
-            {{
-            selectedActivity()?.tracing?.completed | date: "dd.LL.YYYY HH:mm:ss"
-            }}
+            {{ selectedActivity()?.tracing?.completed | date: "dd.LL.YYYY HH:mm:ss" }}
           </div>
           <div>
             {{ TranslationConstants.PROCESSES.CAPABILITIES | translate }}:
@@ -95,28 +80,19 @@
           selectedActivity()?.tracing?.properties &&
           selectedActivity()?.tracing?.properties?.subEntries &&
           selectedActivity()?.tracing?.properties?.subEntries!.length > 0
-          ) {
-          <div
-            class="processes-activity-tracing-details"
-            >
+        ) {
+          <div class="processes-activity-tracing-details">
             <navigable-entry-editor
               [entry]="selectedActivity()?.tracing?.properties!"
               [disabled]="true"
-              queryParam="tracingProperties"
-            ></navigable-entry-editor>
+              queryParam="tracingProperties">
+            </navigable-entry-editor>
           </div>
         }
       </div>
     </div>
   }
 </div>
-@if (processesAvailable() || !showAll()) {
-  <mat-slide-toggle
-    class="process-option"
-    [checked]="showAll()"
-    (change)="setShowAll($event)"
-    >{{
-    TranslationConstants.PROCESSES.SHOW_ALL_PROCESSES | translate
-    }}</mat-slide-toggle
-    >
-  }
+<mat-slide-toggle class="process-option" [checked]="showAll()" (change)="setShowAll($event)">
+  {{ TranslationConstants.PROCESSES.SHOW_ALL_PROCESSES | translate }}
+</mat-slide-toggle>
