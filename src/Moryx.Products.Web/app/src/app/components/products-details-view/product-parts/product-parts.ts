@@ -6,7 +6,7 @@
 import { Component, inject, linkedSignal, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { PartConnector, PartModel, ProductModel } from '@api/models';
@@ -35,7 +35,6 @@ import { MatTooltip } from "@angular/material/tooltip";
     TranslateModule,
     MatIcon,
     MatTooltip,
-    RouterLink
 ]
 })
 export class ProductParts {
@@ -48,6 +47,10 @@ export class ProductParts {
   expandedPart = linkedSignal(this.editProductsService.currentPartConnector);
   selectedPart = linkedSignal(this.editProductsService.currentPart);
   TranslationConstants = TranslationConstants;
+
+  selectPart(part: PartModel) {
+    this.router.navigate(['details', this.currentProduct()!.id, 'parts', this.expandedPart()!.name, part.id], { queryParamsHandling: 'preserve' });
+  }
 
   onSelectPartConnector(connector: PartConnector) {
     const firstPartId = connector.parts && connector.parts.length > 0 ? connector.parts[0].id : 0;
