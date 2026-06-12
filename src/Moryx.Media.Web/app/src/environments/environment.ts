@@ -10,5 +10,5 @@
 export const environment = {
   production: false,
   assets: '/',
-  rootUrl: 'https://localhost:7266',
+  rootUrl: 'https://localhost:5000',
 };
