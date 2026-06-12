@@ -11,7 +11,7 @@
   display: block;
 }
 
-.overview-tree-content-tree-items {
+.tree-node {
   cursor: pointer !important;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -23,12 +23,12 @@
   -webkit-user-select: none;
   -moz-user-select: none;
   @include mat.tree-overrides((node-min-height: 40px));
-}
 
-.overview-tree-content-tree-items:hover {
-  background-color: $light-background-hover;
-}
+  &:hover {
+    background-color: $light-background-hover;
+  }
 
-.overview-tree-content-tree-items-text {
-  flex: 1 1;
+  .node-label {
+    flex: 1 1;
+  }
 }

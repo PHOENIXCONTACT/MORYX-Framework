@@ -3,14 +3,14 @@
     *matTreeNodeDef="let node"
     (click)="onNodeClick(node.id)"
     (contextmenu)="onContextMenu($event, node.id)"
-    class="overview-tree-content-tree-items"
+    class="tree-node"
     [ngClass]="{ 'moryx-selected': selected()?.id == node.id }"
   >
     <button mat-icon-button title="Disabled toggle" disabled></button>
     @if (node.id === 0) {
-      <span class="overview-tree-content-tree-items-text">{{ node.name }}</span>
+      <span class="node-label">{{ node.name }}</span>
     } @else {
-      <span class="overview-tree-content-tree-items-text">
+      <span class="node-label">
         {{ createProductIdentity(node.identifier, node.revision) }} {{ node.name }}
       </span>
     }
@@ -21,7 +21,7 @@
     #treeNode="matTreeNode"
     (click)="onNodeClick(node.id)"
     (contextmenu)="onContextMenu($event, node.id)"
-    class="overview-tree-content-tree-items"
+    class="tree-node"
     [ngClass]="{ 'moryx-selected': selected()?.id == node.id }"
   >
     <button
@@ -35,9 +35,9 @@
       </mat-icon>
     </button>
     @if (node.id === 0) {
-      <span class="overview-tree-content-tree-items-text">{{ node.name }}</span>
+      <span class="node-label">{{ node.name }}</span>
     } @else {
-      <span class="overview-tree-content-tree-items-text">
+      <span class="node-label">
         {{ createProductIdentity(node.identifier, node.revision) }} {{ node.name }}
       </span>
     }

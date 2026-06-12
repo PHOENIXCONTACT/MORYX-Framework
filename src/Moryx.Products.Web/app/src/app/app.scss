@@ -68,15 +68,6 @@
   padding-right: 15px;
 }
 
-.delete-resource-button {
-  background-color: $mat-background;
-  color: $mat-color;
-}
-
-.delete-resource-button:hover {
-  background-color: $light-background-hover;
-}
-
 .overview-import-button {
   position: absolute;
   top: 75px;
@@ -84,12 +75,6 @@
   z-index: 10;
 }
 
-.overview-side-bar-right {
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: flex-start;
-  width: fit-content;
-}
 .overview-details {
   flex: 1 1 auto;
   align-items: center;
