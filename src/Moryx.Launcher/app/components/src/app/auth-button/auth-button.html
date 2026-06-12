@@ -1,22 +1,14 @@
 @if (authurl()) {
   @if (!isLoggedIn()) {
-    <button
-      type="button"
-      (click)="signIn()"
-      class="tw-flex tw-flex-row tw-justify-between tw-items-center tw-gap-2 tw-px-4 tw-py-2 tw-border tw-border-primary-600 hover:tw-bg-primary-600 hover:tw-text-white tw-rounded"
-    >
+    <button type="button" mat-stroked-button color="primary" (click)="signIn()">
       <span class="material-symbols-outlined">account_circle</span>
       <ng-content select="[sign-in]"></ng-content>
     </button>
   }
   @if (isLoggedIn()) {
-    <button
-      type="button"
-      (click)="signOut()"
-      class="tw-flex tw-flex-row tw-justify-between tw-items-center tw-gap-2 tw-px-4 tw-py-2 tw-border tw-border-primary-600 hover:tw-bg-primary-600 hover:tw-text-white tw-rounded"
-    >
+    <button type="button" mat-stroked-button color="primary" (click)="signOut()">
       <span class="material-symbols-outlined">logout</span>
-      <p class="">{{ userName() }}</p>
+      {{ userName() }}
     </button>
   }
 }

@@ -6,12 +6,16 @@
 
 import { Component, ElementRef, inject, input, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { MoryxShell, SearchRequestCallback, SearchSuggestion } from './shell';
 import { localLanguage } from '../utils';
 
 @Component({
   selector: 'app-search-box',
-  imports: [FormsModule],
+  imports: [FormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule],
   templateUrl: './search-box.html',
   styleUrl: './search-box.css',
   changeDetection: ChangeDetectionStrategy.Eager,

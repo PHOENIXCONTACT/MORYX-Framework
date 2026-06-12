@@ -4,10 +4,11 @@
 */
 
 import { Component, input, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-auth-button',
-  imports: [],
+  imports: [MatButtonModule],
   templateUrl: './auth-button.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './auth-button.css'

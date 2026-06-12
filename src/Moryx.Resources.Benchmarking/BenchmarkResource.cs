@@ -190,7 +190,20 @@ public class BenchmarkResource : Cell, IBenchmarkResource, INotificationSender
                       "| Pressure | 1013 | hPa |\n" +
                       "| Humidity | 60 | % |\n";
         var notification = new Notification("Markdown Notification", message, Severity.Info, false);
-        NotificationAdapter.Publish(this, notification);
+        //NotificationAdapter.Publish(this, notification);
+
+        VisualInstructor.Display(new ActiveInstruction
+        {
+            Title = "Markdown Instruction",
+            Instructions =
+            [
+                new VisualInstruction
+                {
+                    Content = message,
+                    Type = InstructionContentType.Text
+                }
+            ]
+        });
     }
 
     [EntrySerialize]
