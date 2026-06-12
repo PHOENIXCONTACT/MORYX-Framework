@@ -26,7 +26,6 @@ export class App {
   private router = inject(Router);
 
   title = "Moryx.ControlSystem.ProcessEngine.Web";
-  header = signal("Processes");
 
   constructor() {
     this.translateService.addLangs([
@@ -36,37 +35,6 @@ export class App {
     ]);
     this.translateService.setFallbackLang("en");
     this.translateService.use(this.languageService.getDefaultLanguage());
-    this.router.events.subscribe((event) => {
-      event instanceof NavigationEnd ? this.updateTitle(event) : null;
-    });
   }
-
-  private async getTranslations(): Promise<{ [key: string]: string }> {
-    return await this.translateService
-      .get([TranslationConstants.PROCESS_HOLDER_GROUPS.PROCESS_HOLDER_GROUP_TITLE,
-        TranslationConstants.PROCESS_HOLDER_GROUPS.PROCESSES_TITLE,
-      ])
-      .toAsync();
-  }
-
-  updateTitle(event: NavigationEnd) {
-    switch (event.url) {
-      case "/jobs":
-        this.getTranslations().then(
-          values =>
-            this.header.set(values[TranslationConstants.PROCESS_HOLDER_GROUPS.PROCESSES_TITLE])
-        )
-        break;
-      case "/process-holders":
-       this.getTranslations().then(
-          values =>
-            this.header.set(values[TranslationConstants.PROCESS_HOLDER_GROUPS.PROCESS_HOLDER_GROUP_TITLE])
-        )
-        break;
-      default:
-        break;
-    }
-  }
-
 }
 
