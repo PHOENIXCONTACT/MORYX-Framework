@@ -22,7 +22,10 @@
   </p>
   <p matLine class="info-content-line">
     <span class="info-content-line-label"> {{ TranslationConstants.VARIANT_INFO_DIALOG.LINK | translate }}: </span>
-    <a class="info-content-line-value" (click)="$event.preventDefault()" [href]="data.url" [cdkCopyToClipboard]="data.url"> {{ TranslationConstants.VARIANT_INFO_DIALOG.COPY_TO_CLIPBOARD | translate }} </a>
+    <a class="info-content-line-value" (click)="$event.preventDefault()"
+       [href]="data.url" [cdkCopyToClipboard]="data.url">
+      {{ TranslationConstants.VARIANT_INFO_DIALOG.COPY_TO_CLIPBOARD | translate }}
+    </a>
   </p>
 </mat-dialog-content>
 
