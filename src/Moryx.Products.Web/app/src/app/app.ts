@@ -3,7 +3,6 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { FlatTreeControl } from "@angular/cdk/tree";
 import {
   Component,
   inject,
@@ -19,11 +18,10 @@ import { MatMenuModule, MatMenuTrigger } from "@angular/material/menu";
 import { MatDrawer, MatSidenavModule } from "@angular/material/sidenav";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import {
-  MatTreeFlatDataSource,
-  MatTreeFlattener,
+  MatTree,
   MatTreeModule,
 } from "@angular/material/tree";
-import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from "@angular/router";
+import { Router, RouterOutlet } from "@angular/router";
 import {
   LanguageService,
   SearchBarService,
@@ -194,32 +192,13 @@ export class App implements OnInit, OnDestroy {
     }
   }
 
-  private _transformer = (node: ProductNode, level: number) => {
-    return {
-      expandable: !!node.children && node.children.length > 0,
-      name: node.name,
-      level: level,
-      id: node.id,
-      identifier: node.identifier,
-      revision: node.revision,
-    } as FlatNode;
-  };
+  tree = viewChild.required<MatTree<ProductNode>>(MatTree);
 
-  treeControl = new FlatTreeControl<FlatNode>(
-    (node) => node.level,
-    (node) => node.expandable
-  );
+  childrenAccessor = (node: ProductNode) => node.children ?? [];
 
-  treeFlattener = new MatTreeFlattener(
-    this._transformer,
-    (node) => node.level,
-    (node) => node.expandable,
-    (node) => node.children
-  );
+  treeData: ProductNode[] = [];
 
-  dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
-
-  hasChild = (_: number, node: FlatNode) => node.expandable;
+  hasChild = (_: number, node: ProductNode) => !!node.children?.length;
 
   createDatasource(hierarchic: boolean) {
     if (this.productDefinitions().length === 0) return;
@@ -254,8 +233,9 @@ export class App implements OnInit, OnDestroy {
         }
       }
     }
-    this.dataSource.data = dataSource;
-    this.sessionService.expandNodesAccordingToStorage(this.treeControl);
+    this.treeData = dataSource;
+    const expandedNames = this.sessionService.getExpandedNodeNames();
+    this.expandSavedNodes(dataSource, expandedNames);
   }
 
   beforeUnloadHander() {
@@ -284,11 +264,19 @@ export class App implements OnInit, OnDestroy {
     this.createDatasource(hierarchy);
   }
 
-  onExpandOrCollapseNode(node: FlatNode) {
-    this.sessionService.saveProductTreeExpansion(
-      node,
-      this.treeControl.isExpanded(node)
-    );
+  onExpandOrCollapseNode(node: ProductNode) {
+    this.sessionService.saveProductTreeExpansion(node, this.tree().isExpanded(node));
+  }
+
+  private expandSavedNodes(nodes: ProductNode[], expandedNames: string[]) {
+    for (const node of nodes) {
+      if (expandedNames.includes(node.name)) {
+        this.tree().expand(node);
+      }
+      if (node.children) {
+        this.expandSavedNodes(node.children, expandedNames);
+      }
+    }
   }
 
   private SortTypesToDefinitions(): ProductNode[] {
@@ -503,16 +491,7 @@ export class App implements OnInit, OnDestroy {
   }
 }
 
-export interface FlatNode {
-  expandable: boolean;
-  name: string;
-  level: number;
-  id: number;
-  identifier: string;
-  revision: number;
-}
-
-interface ProductNode {
+export interface ProductNode {
   name: string;
   typeName: string | undefined;
   baseType: string | undefined;
