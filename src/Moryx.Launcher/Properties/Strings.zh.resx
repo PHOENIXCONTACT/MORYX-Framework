@@ -150,9 +150,6 @@
   <data name="Layout_AdministrationMode" xml:space="preserve">
     <value>管理模式</value>
   </data>
-  <data name="Layout_Details" xml:space="preserve">
-    <value>细节</value>
-  </data>
   <data name="Layout_ExitFullscreen" xml:space="preserve">
     <value>退出全屏</value>
   </data>

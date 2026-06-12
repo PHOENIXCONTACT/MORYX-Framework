@@ -12,17 +12,13 @@
   </head>
 
   <body class="w-full h-full">
-  
+
     <moryx-layout button="fullscreen">
       <div class="flex justify-center gap-2 border-r-yellow-200 w-full" topbar>
         <span> This is top bar</span>
         <!-- Search box -->
         <moryx-searchbox placeholder="Search ...."/>
 
-        <!-- Notification -->
-        <moryx-notifications-bar>
-          This is the title of the notification button
-        </moryx-notifications-bar>
         <!-- <moryx-notification-badge eventstream="" class=""></moryx-notification-badge> -->
         <button class="border" id="fullscreen">fullscreen</button>
         <button class="border" id="operator-mode">operator mode</button>
@@ -62,7 +58,7 @@
                 class="px-2 text-nowrap w-full hover:bg-yellow-200 hover:cursor-pointer border-b border-gray-200"
                 >Item 1</moryx-dropdown-item
               >
-  
+
               <moryx-dropdown-subitem
                 class="w-full hover:bg-yellow-200 hover:cursor-pointer border-b border-gray-200"
               >
@@ -76,7 +72,7 @@
                   >
                 </moryx-dropdown-container>
               </moryx-dropdown-subitem>
-  
+
               <moryx-dropdown-item
                 class="px-2 text-nowrap w-full hover:bg-yellow-200 hover:cursor-pointer"
                 >Item 3</moryx-dropdown-item
@@ -108,7 +104,7 @@
                 text: "This is another facebook website"
             }
         ]
-        
+
       if(window.shell){
         window.shell.initSearchBar((filter,complete) => {
             window.shell.updateSuggestions(suggestions);

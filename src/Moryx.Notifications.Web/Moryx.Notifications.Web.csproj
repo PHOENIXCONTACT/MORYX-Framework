@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor" InitialTargets="BuildUI">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor" InitialTargets="BuildUI">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -7,11 +7,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="components\**" />
+    <Content Remove="components\**" />
+    <EmbeddedResource Remove="components\**" />
+    <None Remove="components\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Moryx.Notifications.Endpoints\Moryx.Notifications.Endpoints.csproj" />
+    <ProjectReference Include="..\Moryx.Web\Moryx.Web.csproj" />
     <ProjectReference Include="..\Moryx\Moryx.csproj" />
   </ItemGroup>
 
@@ -31,9 +39,10 @@
   </ItemGroup>
 
   <Import Project="..\..\.build\WebProjects.props"/>
-  <Target Name="BuildUI" Condition="('$(Configuration)'!='Debug' Or !Exists('wwwroot\main.js')) And ('$(NoBuild)' != 'true') ">
+  <Target Name="BuildUI" Condition="('$(Configuration)'!='Debug' Or !Exists('wwwroot\notifications\main.js') Or !Exists('wwwroot\notifications-bar\main.js')) And ('$(NoBuild)' != 'true') ">
     <Exec WorkingDirectory=".\app\" Command="npm ci" />
-    <Exec WorkingDirectory=".\app\" Command="npm run build:prod" />
+    <Exec WorkingDirectory=".\app\" Command="npm run build notifications" />
+    <Exec WorkingDirectory=".\app\" Command="npm run build notifications-bar" />
   </Target>
 
 </Project>

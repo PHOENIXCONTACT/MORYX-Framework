@@ -37,14 +37,17 @@ internal class SimpleGraph
     /// </summary>
     public static SimpleGraph Create(Resource resource)
     {
-        if (resource is not ManufacturingFactory factory) return null;
+        if (resource is not IManufacturingFactory factory)
+        {
+            return null;
+        }
 
         var graph = new SimpleGraph
         {
             Id = factory.Id,
-            Type = nameof(ManufacturingFactory)
+            Type = nameof(IManufacturingFactory)
         };
-        factory.Children.ForEach(graph.Append);
+        resource.Children.ForEach(graph.Append);
         return graph;
     }
 
@@ -61,7 +64,7 @@ internal class SimpleGraph
             }
 
             var resourcesAtThisLocation = resource.Children.Where(x => x is ICell || x is IManufacturingFactory).ToArray();
-            if(resource is ICell)
+            if(resource is ICell || resource is IManufacturingFactory)
             {
                 resourcesAtThisLocation = [resource];
             }
@@ -83,16 +86,16 @@ internal class SimpleGraph
 
             switch (resourceAtThisLocation)
             {
-                case IManufacturingFactory factory:
-                    model = Converter.Converter.ToFactoryStateModel(factory);
-                    break;
                 case ICell cell:
                     model = cell.GetResourceChangedModel(converter, resourceManager, filter);
                     model.IsACell = true;
                     break;
+                case IManufacturingFactory factory:
+                    model = Converter.Converter.ToFactoryStateModel(factory);
+                    break;
             }
             model.IconName = machineLocation.SpecificIcon;
-            model.Id = resourceAtThisLocation?.Id ?? 0;
+            model.Id = resourceAtThisLocation.Id;
             model.Location = Converter.Converter.ToCellLocationModel(machineLocation);
             return model;
         });
@@ -102,13 +105,18 @@ internal class SimpleGraph
 
     public SimpleGraph GetSubGraphById(long id)
     {
-        if (Type == nameof(ManufacturingFactory) && Id == id) return this;
+        if (Type == nameof(IManufacturingFactory) && Id == id)
+        {
+            return this;
+        }
 
         foreach (var child in Children)
         {
             var result = child.GetSubGraphById(id);
             if (result is not null)
+            {
                 return result;
+            }
         }
         return null;
     }
@@ -117,14 +125,14 @@ internal class SimpleGraph
     {
         switch (addition)
         {
-            case MachineLocation:
-            case ManufacturingFactory:
-            case Cell:
+            case IMachineLocation:
+            case IManufacturingFactory:
+            case ICell:
                 AddSubGraph(addition);
                 return;
 
-            case MachineGroup group:
-                group.Children?.ForEach(Append);
+            case IMachineGroup group:
+                addition.Children?.ForEach(Append);
                 return;
         }
     }
@@ -137,8 +145,10 @@ internal class SimpleGraph
             Type = addition.GetType().Name
         };
 
-        if (addition is not Cell)
+        if (addition is not ICell)
+        {
             addition.Children.ForEach(subGraph.Append);
+        }
 
         Children.Add(subGraph);
     }

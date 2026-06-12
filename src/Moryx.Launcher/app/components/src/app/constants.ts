@@ -13,10 +13,9 @@ export class Constants {
         LanguageSelector: "moryx-language-selector",
         PageLayout: "moryx-layout",
         Searchbox: "moryx-searchbox",
-        Notifications: "moryx-notifications-bar",
         NotificationProvider: "moryx-notification-provider",
         NotificationBadge: "moryx-notification-badge",
         SignIn: "moryx-auth-buttons",
-        NavigationButton: "moryx-nav-button",
+        NavigationButton: "moryx-nav-button"
     }
 }

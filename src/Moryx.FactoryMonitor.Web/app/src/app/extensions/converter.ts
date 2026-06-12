@@ -37,11 +37,30 @@ export class Converter {
   }
 
   public static resourceChangedModelToCell(resourceModel: ResourceChangedModel): CellModel {
-    if (!resourceModel.id) throw new TypeError("cannot create resource without id");
+    if (!resourceModel.id) throw new TypeError("Cannot create resource without id");
     const cell = <CellModel>{};
     cell.id = resourceModel.id;
 
-    return this.addResourceDataToCell(cell, resourceModel)
+    if (resourceModel.cellName) {
+      cell.name = resourceModel.cellName
+    }
+    if (resourceModel.factoryId) {
+      cell.factoryId= resourceModel.factoryId
+    }
+    if (resourceModel.cellIconName) {
+      cell.iconName = resourceModel.cellIconName
+    }
+    if (resourceModel.cellImageURL) {
+      cell.image = resourceModel.cellImageURL
+    }
+    if (resourceModel.cellLocation) {
+      cell.location = resourceModel.cellLocation
+    }
+    if (resourceModel.cellPropertySettings) {
+      cell.propertySettings = resourceModel.cellPropertySettings
+    }
+
+    return cell;
   }
 
   public static orderModelToOrder(orderModel: OrderModel): Order {
@@ -67,43 +86,11 @@ export class Converter {
     return order
   }
 
-  public static addResourceDataToCell(cell: CellModel, model: ResourceChangedModel): CellModel {
-    if (model.cellName) {
-      cell.name = model.cellName ?? ''
-    }
-    if (model.factoryId) {
-      cell.factoryId= model.factoryId ?? ''
-    }
-    if (model.cellIconName) {
-      cell.iconName = model.cellIconName ?? ''
-    }
-    if (model.cellImageURL) {
-      cell.image = model.cellImageURL ?? ''
-    }
-    if (model.cellLocation) {
-      cell.location = model.cellLocation
-    }
-    if (model.cellPropertySettings) {
-      cell.propertySettings = model.cellPropertySettings
-    }
-
-    return cell
-  }
-
   public static addStateDataToCell(cell: CellModel, model: CellStateChangedModel): CellModel {
-    if (!cell.state) {
+    if (model.state) {
       cell.state = model.state
     }
 
     return cell
-  }
-
-  public static modelToOrder(order: OrderModel): Order {
-    return <Order>{
-      isToggled: true,
-      operationNumber: order.operation,
-      orderColor: order.color,
-      orderNumber: order.order,
-    };
   }
 }

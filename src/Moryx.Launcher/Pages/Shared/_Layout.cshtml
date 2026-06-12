@@ -22,7 +22,7 @@
     var userModules = modules.Where(m => m.Category == ModuleCategory.User).ToArray();
     var currentPageRoute = Url.RouteUrl(ViewContext.RouteData.Values);
     var currentPageParts = currentPageRoute.Split('/');
-    var shouldShowNotificationBar = currentPageParts.Length > 1 && !currentPageParts[1].Contains("Notifications");
+    var identityOptionsAvailable = !string.IsNullOrEmpty(_identityOptions.CurrentValue.BaseAddress);
 }
 
 <!DOCTYPE html>
@@ -42,20 +42,31 @@
     <link rel="stylesheet" href="~/_content/Moryx.Launcher/css/app.min.css" />
     @RenderSection("Styles", false)
 </head>
-<body class="tw-flex tw-flex-col mat-typography ">
+<body class="tw-flex tw-flex-col mat-typography">
     <moryx-layout fullscreenButton="fullscreen" operatorMode="operator-mode" class="tw-relative">
         <div style="z-index:1000;" class="tw-w-full tw-h-full tw-bg-white tw-absolute" overlay></div>
         <span style="z-index:999;" class="tw-px-4 tw-py-1 tw-rounded-full tw-shadow tw-border tw-border-gray-200 tw-bg-primary-600 tw-text-white" floatingbar>
             @Strings.Layout_ExitFullscreen
         </span>
         <header class="tw-relative tw-flex tw-flex-col tw-w-full tw-border-b tw-border-gray-100 tw-z-100 tw-bg-white" role="navigation" aria-label="main navigation" topbar>
-            <div class="tw-relative tw-flex tw-items-center tw-shadow tw-justify-between tw-gap-2 tw-px-2">
-                <a class="tw-py-[8px] tw-h-[48px] tw-w-[157px] tw-box-content" asp-area="" asp-page="Index">
+            <div class="tw-relative tw-flex tw-shadow tw-gap-2 tw-px-2 tw-w-full tw-items-center">
+                <a class="tw-py-[8px] tw-w-[157px] tw-box-content tw-flex-shrink-0" asp-area="" asp-page="Index">
                     <img class="moryx-logo" src="~/_content/Moryx.Launcher/assets/moryx-banner-small.svg" alt="Moryx Home Logo">
                 </a>
+
+                <div class="tw-flex-1 tw-min-w-0 tw-overflow-hidden">
+                    @{
+                        var topRegion = _navigation.GetRegion(LauncherRegion.Top);
+                    }
+                    @if (topRegion != null)
+                    {
+                        @await Html.PartialAsync(topRegion.PartialView)
+                    }
+                </div>
+
                 <moryx-searchbox placeholder="@Strings.Layout_Search ..."></moryx-searchbox>
 
-                <div class="tw-flex tw-gap-x-2 tw-flew-row tw-justify-between tw-items-center tw-relative">
+                <div class="tw-flex tw-gap-x-2 tw-flex-row tw-justify-between tw-items-center tw-relative tw-mr-[8px]">
                     <moryx-dropdown-menu>
                         <button class="tw-flex tw-items-center tw-justify-center tw-rounded-full tw-p-3 hover:tw-bg-primary-200 group-hover:tw-border-1 hover:tw-border-1 group-hover:tw-border-gray-300 hover:tw-border-gray-300" button>
                             <span class="material-symbols-outlined">more_vert</span>
@@ -127,10 +138,13 @@
                         </moryx-dropdown-container>
                     </moryx-dropdown-menu>
 
-                    <!-- Use sign-in module if there is one in the shell-->
-                    <moryx-auth-buttons authUrl="@(_identityOptions.CurrentValue.BaseAddress)">
-                        <span sign-in>@Strings.Layout_SignIn</span>
-                    </moryx-auth-buttons>
+                    @if (identityOptionsAvailable)
+                    {
+                        <!-- Use sign-in module if there is one in the shell-->
+                        <moryx-auth-buttons authUrl="@(_identityOptions.CurrentValue.BaseAddress)">
+                            <span sign-in>@Strings.Layout_SignIn</span>
+                        </moryx-auth-buttons>
+                    }
                 </div>
             </div>
         </header>
@@ -169,13 +183,6 @@
         <div class="tw-flex tw-h-full tw-w-full tw-box-border tw-overflow-hidden tw-flex-row" main>
             <div class="tw-flex-1 tw-flex tw-h-full tw-box-border tw-overflow-hidden tw-flex-col">
                 @Html.Partial("AboutModal")
-
-                @if (shouldShowNotificationBar)
-                {
-                    <moryx-notifications-bar api="@(Url.Content("~/api/moryx/notifications/stream"))">
-                        @Strings.Layout_Details
-                    </moryx-notifications-bar>
-                }
 
                 <div class="tw-overflow-hidden tw-h-screen tw-w-full tw-box-border">
                     @RenderBody()

@@ -1,7 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -14,6 +13,7 @@ using Moryx.Configuration;
 using Moryx.Identity;
 using Moryx.Modules;
 using Moryx.Tools;
+using Moryx.Web;
 
 namespace Moryx.Launcher;
 
@@ -116,7 +116,7 @@ internal class Navigation : INavigation
         {
             try
             {
-                var types = assembly.GetTypes().Where(t => t.IsClass && t.GetCustomAttribute<LauncherRegionAttribute>() != null);
+                var types = assembly.GetTypes().Where(t => t.IsClass && t.GetCustomAttribute<ViewRegionAttribute>() != null);
                 partialViews.AddRange(types);
             }
             catch (Exception ex)
@@ -127,7 +127,7 @@ internal class Navigation : INavigation
 
         // Transform to models
         var configuredRegions = from pV in partialViews
-                                let regionAttr = pV.GetCustomAttribute<LauncherRegionAttribute>()
+                                let regionAttr = pV.GetCustomAttribute<ViewRegionAttribute>()
                                 let config = _launcherConfig.Regions.FirstOrDefault(x => x.Name == regionAttr.Name)
                                 where config != null
                                 select new RegionItem { PartialView = regionAttr.Name, Region = config.Region };
@@ -174,7 +174,7 @@ internal class Navigation : INavigation
         };
     }
 
-    private LauncherConfig GetConfiguration(IConfigManager configManager)
+    private static LauncherConfig GetConfiguration(IConfigManager configManager)
     {
         var launcherConfig = configManager.GetConfiguration<LauncherConfig>();
 
@@ -182,6 +182,7 @@ internal class Navigation : INavigation
         if (launcherConfig.ConfigState == ConfigState.Generated)
         {
             launcherConfig.ConfigState = ConfigState.Valid;
+
             configManager.SaveConfiguration(launcherConfig);
         }
 

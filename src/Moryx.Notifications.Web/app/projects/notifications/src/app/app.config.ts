@@ -4,9 +4,7 @@
 */
 
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
-import { provideRouter } from "@angular/router";
-import { environment } from "src/environments/environment";
-import { routes } from "./app.routes";
+import { environment } from "../environments/environment";
 import { ApplicationConfig, importProvidersFrom } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { MatButtonModule } from "@angular/material/button";
@@ -27,7 +25,6 @@ import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideRouter(routes),
     importProvidersFrom([
       MarkdownModule.forRoot(),
       BrowserModule,
