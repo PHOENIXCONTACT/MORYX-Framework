@@ -21,6 +21,7 @@ public static class KernelServiceCollectionExtensions
         /// <summary>
         /// Link MORYX kernel to the service collection
         /// </summary>
+        /// <param name="configurationIntegration">opt-in to inject asp.net core configuration into module configs</param>
         public void AddMoryxKernel(bool configurationIntegration = false)
         {
             // Register config manager

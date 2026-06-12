@@ -12,15 +12,15 @@ namespace Moryx.Configuration;
 /// <example>
 /// Use abolute config key
 /// <code>
-/// [InjectedConfig("Secrets:ApiKey")]
+/// [ProvidedConfig("Secrets:ApiKey")]
 /// </code>
 /// Use path relative to the current object
 /// <code>
-/// [InjectedConfig(".:ApiKey")]
+/// [ProvidedConfig(".:ApiKey")]
 /// </code>
 /// Load the actual config key from the `ConfigKey` property
 /// <code>
-/// [InjectedConfig(nameof(ConfigKey), fromProperty: true)]
+/// [ProvidedConfig(nameof(ConfigKey), fromProperty: true)]
 /// </code>
 /// </example>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Class)]

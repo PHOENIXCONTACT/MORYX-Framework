@@ -54,7 +54,6 @@ public class ConfigManagerWithConfigProviderTests
         return manager;
     }
 
-    // TODO: Consider removing -> Tested by MicrsoftExtensionConfigProviderTests
     [Test(Description = "Resolves an explicit configuration key placeholder from IConfiguration.")]
     public void ExplicitConfigurationKeyIsResolvedFromConfiguration()
     {
@@ -115,7 +114,6 @@ public class ConfigManagerWithConfigProviderTests
         Assert.That(writtenConfig, Does.Not.Contain("from-provider"));
     }
 
-    // TODO: Consider removing -> Tested by MicrsoftExtensionConfigProviderTests
     [Test(Description = "Applies provider values to generated configs when no JSON file exists.")]
     public void ReceivesValuesFromConfiguration()
     {
@@ -135,7 +133,6 @@ public class ConfigManagerWithConfigProviderTests
         Assert.That(config.ConfigState, Is.EqualTo(ConfigState.Generated));
     }
 
-    // TODO: Consider removing -> Tested by MicrsoftExtensionConfigProviderTests
     [Test(Description = "Configurable config key is supported through second field")]
     public void CanReceiveFromConfigurableConfigKey()
     {
