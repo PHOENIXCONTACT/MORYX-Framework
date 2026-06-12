@@ -32,6 +32,7 @@
     "rxjs": "~7.8.0",
     "style-loader": "^4.0.0",
     "tailwindcss": "^3.4.10",
+    "@moryx/ngx-web-framework": "^21.1.0",
     "tslib": "^2.3.0"
   },
   "devDependencies": {

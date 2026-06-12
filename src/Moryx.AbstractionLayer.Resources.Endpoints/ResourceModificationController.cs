@@ -1,21 +1,21 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Reflection;
+using System.Runtime.Serialization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Moryx.Serialization;
-using Moryx.Tools;
-using Moryx.Runtime.Modules;
-using Moryx.Configuration;
-using System.Runtime.Serialization;
-using System.ComponentModel.DataAnnotations;
 using Moryx.AbstractionLayer.Resources.Endpoints.Models;
 using Moryx.AbstractionLayer.Resources.Endpoints.Properties;
 using Moryx.AspNetCore;
+using Moryx.Configuration;
+using Moryx.Runtime.Modules;
+using Moryx.Serialization;
+using Moryx.Tools;
 
 namespace Moryx.AbstractionLayer.Resources.Endpoints;
 
@@ -63,7 +63,9 @@ public class ResourceModificationController : ControllerBase
         var converter = new ResourceToModelConverter(_resourceTypeTree, _serialization);
 
         if (ids is null || ids.Length == 0)
+        {
             ids = _resourceManagement.GetResources<IResource>().Select(r => r.Id).ToArray();
+        }
 
         return ids.Select(id => _resourceManagement.ReadUnsafe(id, r => converter.GetDetails(r)))
             .Where(details => details != null).ToArray();
@@ -93,9 +95,11 @@ public class ResourceModificationController : ControllerBase
     public ActionResult<ResourceModel> GetDetails(long id)
     {
         var converter = new ResourceToModelConverter(_resourceTypeTree, _serialization);
-        var resourceModel = _resourceManagement.ReadUnsafe(id, r => converter.GetDetails(r));
+        var resourceModel = _resourceManagement.ReadUnsafe(id, converter.GetDetails);
         if (resourceModel is null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ResourceNotFoundException_ById_Message, id) });
+        }
 
         return resourceModel;
     }
@@ -110,7 +114,9 @@ public class ResourceModificationController : ControllerBase
     public async Task<ActionResult<Entry>> InvokeMethod(long id, string method, Entry parameters)
     {
         if (_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == id) is null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ResourceNotFoundException_ById_Message, id) });
+        }
 
         Entry entry = null;
         try
@@ -143,7 +149,9 @@ public class ResourceModificationController : ControllerBase
     {
         var trustedType = WebUtility.HtmlEncode(type);
         if (method is null)
+        {
             return Construct(trustedType);
+        }
 
         return Construct(trustedType, new MethodEntry { Name = method, Parameters = arguments });
     }
@@ -186,7 +194,10 @@ public class ResourceModificationController : ControllerBase
         catch (Exception e)
         {
             if (e is ArgumentException or SerializationException or ValidationException)
+            {
                 return BadRequest(e.Message);
+            }
+
             throw;
         }
     }
@@ -200,14 +211,18 @@ public class ResourceModificationController : ControllerBase
     public async Task<ActionResult<ResourceModel>> Save(ResourceModel model)
     {
         if (_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == model.Id).Any())
+        {
             return Conflict($"The resource '{model.Id}' already exists.");
+        }
+
         try
         {
             var id = await _resourceManagement.CreateUnsafeAsync(_resourceTypeTree[model.Type].ResourceType, async (r) =>
             {
                 var resourcesToSave = new HashSet<long>();
                 var resourceCache = new Dictionary<long, Resource>();
-                await FromModel(model, resourcesToSave, resourceCache, r);
+                var converter = new ModelToResourceConverter(_resourceManagement, _resourceTypeTree, _serialization);
+                await converter.FromModel(model, resourcesToSave, resourceCache, r);
                 foreach (var resource in resourcesToSave.Skip(1))
                 {
                     await _resourceManagement.ModifyUnsafeAsync(resource, r => Task.FromResult(true));
@@ -219,127 +234,11 @@ public class ResourceModificationController : ControllerBase
         catch (Exception e)
         {
             if (e is ArgumentException or SerializationException or ValidationException)
+            {
                 return BadRequest(e.Message);
+            }
+
             throw;
-        }
-    }
-
-    /// <summary>
-    /// Convert ResourceModel back to resource and/or update its properties
-    /// </summary>
-    private async Task<Resource> FromModel(ResourceModel model, HashSet<long> resourcesToSave, Dictionary<long, Resource> cache, Resource resource = null)
-    {
-        // Break recursion if we converted this instance already
-        // Try to load by real id first
-        if (cache.ContainsKey(model.Id))
-            return cache[model.Id];
-        // Otherwise by reference id
-        if (model.Id == 0 && cache.ContainsKey(model.ReferenceId))
-            return cache[model.ReferenceId];
-
-        // Only fetch resource object if it was not given
-        if (resource is null)
-            if (model.Id == 0 && model.PartiallyLoaded)
-                resource = (Resource)Activator.CreateInstance(_resourceTypeTree[model.Type].ResourceType);
-            else if (model.Id == 0)
-            {
-                var id = await _resourceManagement.CreateUnsafeAsync(_resourceTypeTree[model.Type].ResourceType, r => Task.CompletedTask);
-                resource = _resourceManagement.ReadUnsafe(id, r => r);
-            }
-            else
-                resource = _resourceManagement.ReadUnsafe(model.Id, r => r);
-
-        // Write to cache because following calls might only have an empty reference
-        if (model.Id == 0)
-            cache[model.ReferenceId] = resource;
-        else
-            cache[model.Id] = resource;
-
-        // Do not copy values from partially loaded models
-        if (model.PartiallyLoaded)
-            return resource;
-
-        // Add to list if object was created or modified
-        if (model.Id == 0 || model.DifferentFrom(resource, _serialization))
-            resourcesToSave.Add(resource.Id);
-
-        // Copy standard properties
-        resource.Name = model.Name;
-        resource.Description = model.Description;
-
-        // Copy extended properties
-        EntryConvert.UpdateInstance(resource.Descriptor, model.Properties, _serialization);
-
-        // Set all other references
-        await UpdateReferences(resource, resourcesToSave, cache, model);
-
-        return resource;
-    }
-
-    /// <summary>
-    /// Updates the references of a resource
-    /// </summary>
-    private async Task UpdateReferences(Resource instance, HashSet<long> resourcesToSave, Dictionary<long, Resource> cache, ResourceModel model)
-    {
-        var type = instance.GetType();
-        foreach (var reference in model.References)
-        {
-            // Skip references that were not set
-            if (reference.Targets == null)
-                continue;
-
-            var property = type.GetProperty(reference.Name);
-            if (property.GetValue(instance) is IReferenceCollection asCollection)
-            {
-                var collection = asCollection.UnderlyingCollection;
-                // Add new items and update existing ones
-                foreach (var targetModel in reference.Targets)
-                {
-                    Resource target;
-                    if (targetModel.Id == 0 || collection.All(r => r.Id != targetModel.Id))
-                    {
-                        // New reference added to the collection
-                        target = await FromModel(targetModel, resourcesToSave, cache);
-                        collection.Add(target);
-                        resourcesToSave.Add(target.Id);
-                    }
-                    else
-                    {
-                        // Element already exists in the collection
-                        target = (Resource)collection.First(r => r.Id == targetModel.Id);
-                        await FromModel(targetModel, resourcesToSave, cache, target);
-                    }
-                }
-                // Remove deleted items
-                var targetIds = reference.Targets.Select(t => t.Id).Distinct().ToArray();
-                var deletedItems = collection.Where(r => !targetIds.Contains(r.Id)).ToArray();
-                foreach (var deletedItem in deletedItems)
-                    collection.Remove(deletedItem);
-
-                if (deletedItems.Any())
-                {
-                    resourcesToSave.Add(instance.Id);
-                }
-            }
-            else
-            {
-                var targetModel = reference.Targets.FirstOrDefault();
-                var value = (Resource)property.GetValue(instance);
-
-                Resource target;
-                if (targetModel == null)
-                    target = null;
-                else if (targetModel.Id == value?.Id)
-                    target = await FromModel(targetModel, resourcesToSave, cache, value);
-                else
-                    target = await FromModel(targetModel, resourcesToSave, cache);
-
-                if (target != value)
-                {
-                    property.SetValue(instance, target);
-                    resourcesToSave.Add(instance.Id);
-                }
-            }
         }
     }
 
@@ -353,7 +252,9 @@ public class ResourceModificationController : ControllerBase
     public ActionResult<ResourceModel> Update(long id, ResourceModel model)
     {
         if (_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == id) is null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ResourceNotFoundException_ById_Message, id) });
+        }
 
         try
         {
@@ -361,7 +262,8 @@ public class ResourceModificationController : ControllerBase
             {
                 var resourcesToSave = new HashSet<long>();
                 var resourceCache = new Dictionary<long, Resource>();
-                await FromModel(model, resourcesToSave, resourceCache, r);
+                var converter = new ModelToResourceConverter(_resourceManagement, _resourceTypeTree, _serialization);
+                await converter.FromModel(model, resourcesToSave, resourceCache, r);
                 resourcesToSave.ForEach(id => _resourceManagement.ModifyUnsafeAsync(id, _ => Task.FromResult(true)));
                 return true;
             });
@@ -369,7 +271,10 @@ public class ResourceModificationController : ControllerBase
         catch (Exception e)
         {
             if (e is ArgumentException or SerializationException or ValidationException)
+            {
                 return BadRequest(e.Message);
+            }
+
             throw;
         }
 
@@ -386,16 +291,20 @@ public class ResourceModificationController : ControllerBase
     public async Task<ActionResult> Remove(long id)
     {
         if (_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == id) is null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ResourceNotFoundException_ById_Message, id) });
+        }
 
         var deleted = await _resourceManagement.DeleteAsync(id);
         if (!deleted)
+        {
             return Conflict($"Unable to delete {id}");
+        }
 
         return Accepted();
     }
 
-    private class ResourceQueryFilter
+    private sealed class ResourceQueryFilter
     {
         private readonly ResourceQuery _query;
         private readonly IReadOnlyList<IResourceTypeNode> _typeNodes;
@@ -412,19 +321,23 @@ public class ResourceModificationController : ControllerBase
         {
             // Check type of instance, if filter is set
             if (_typeNodes != null && _typeNodes.All(tn => !tn.ResourceType.IsInstanceOfType(instance)))
+            {
                 return false;
+            }
 
             // Next check for reference filters
             if (_query.ReferenceCondition == null)
+            {
                 return true;
+            }
 
             var node = _resourceTypeTree[instance.GetType().FullName];
 
             var referenceCondition = _query.ReferenceCondition;
             var references = (from property in node.PropertiesOfResourceType
-                let att = property.GetCustomAttribute<ResourceReferenceAttribute>()
-                where att != null
-                select new { property, att }).ToList();
+                              let att = property.GetCustomAttribute<ResourceReferenceAttribute>()
+                              where att != null
+                              select new { property, att }).ToList();
 
             // Find properties matching the condition
             PropertyInfo[] matches;
@@ -440,17 +353,25 @@ public class ResourceModificationController : ControllerBase
                     .Select(r => r.property).ToArray();
             }
             if (matches.Length != 1)
+            {
                 return false;
+            }
 
             if (referenceCondition.ValueConstraint == ReferenceValue.Irrelevant)
+            {
                 return true;
+            }
 
             var propertyValue = matches[0].GetValue(instance);
             if (referenceCondition.ValueConstraint == ReferenceValue.NullOrEmpty)
+            {
                 return propertyValue == null || (propertyValue as IReferenceCollection)?.UnderlyingCollection.Count == 0;
+            }
 
             if (referenceCondition.ValueConstraint == ReferenceValue.NotEmpty)
+            {
                 return (propertyValue as IReferenceCollection)?.UnderlyingCollection.Count > 0 || propertyValue != null;
+            }
 
             return true;
         }

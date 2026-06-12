@@ -13,8 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Moryx\Moryx.csproj"/>
-    <ProjectReference Include="..\Moryx.Identity\Moryx.Identity.csproj"/>
+    <ProjectReference Include="..\Moryx\Moryx.csproj" />
+    <ProjectReference Include="..\Moryx.Identity\Moryx.Identity.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,18 +27,18 @@
 
   <ItemGroup>
     <EmbeddedResource Update="Properties\Strings.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
+      <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Strings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 
-  <Import Project="..\..\.build\WebProjects.props"/>
+  <Import Project="..\..\.build\WebProjects.props" />
   <Target Name="BuildUI" Condition="('$(Configuration)'!='Debug' Or !Exists('wwwroot\js\dist\main.js')) And ('$(NoBuild)' != 'true')">
     <Exec Command="dotnet tool restore" />
     <Exec Command="dotnet libman restore" />
     <Exec WorkingDirectory=".\app\" Command="npm ci" />
-    <Exec WorkingDirectory=".\app\" Command="npm run build:prod"/>
-    <Exec WorkingDirectory=".\app\" Command="npm run build:css"/>
-    <Exec WorkingDirectory=".\app\" Command="npm run copy:componentsfiles"/>
+    <Exec WorkingDirectory=".\app\" Command="npm run build:prod" />
+    <Exec WorkingDirectory=".\app\" Command="npm run build:css" />
+    <Exec WorkingDirectory=".\app\" Command="npm run copy:componentsfiles" />
   </Target>
 </Project>

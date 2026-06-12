@@ -28,5 +28,5 @@ public class SimpleFactoryGraph
     /// <summary>
     /// Contains the elements that should be displayed in the current factory
     /// </summary>
-    public List<SimpleFactoryGraph> Children { get; set; } = new List<SimpleFactoryGraph>();
+    public List<SimpleFactoryGraph> Children { get; set; } = [];
 }

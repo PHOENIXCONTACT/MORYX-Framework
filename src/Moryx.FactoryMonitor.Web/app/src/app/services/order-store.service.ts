@@ -4,11 +4,13 @@
 */
 
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { OrderModel } from '../api/models/order-model';
-import { FactoryStateStreamService } from './factory-state-stream.service';
-import Order from '../models/order';
+import { BehaviorSubject, distinctUntilChanged, map, shareReplay, Subject } from 'rxjs';
+import { FactoryStateModel } from '../api/models';
 import { InternalOperationClassification } from '../api/models/internal-operation-classification';
+import { Converter } from '../extensions/converter';
+import CellModel from '../models/cellModel';
+import Order from '../models/order';
+import { FactoryStateStreamService } from './factory-state-stream.service';
 
 @Injectable({
   providedIn: 'root',
@@ -16,50 +18,67 @@ import { InternalOperationClassification } from '../api/models/internal-operatio
 export class OrderStoreService {
   private factoryStateStreamService = inject(FactoryStateStreamService);
 
-  public _orders = new BehaviorSubject<Order[]>([]);
-  private _runningOrders = new BehaviorSubject<Order[]>([]);
-  private _toggledOrder = new Subject<Order>();
+  private readonly _orders = new BehaviorSubject<Order[]>([]);
+  private readonly _toggledOrder = new Subject<Order>();
 
-  public orders$: Observable<Order[]>;
-  public runningOrders$: Observable<Order[]>;
-  public toggledOrder$: Observable<Order>;
+  public readonly toggledOrder$ = this._toggledOrder.asObservable();
+  public readonly runningOrders$ = this._orders.pipe(
+    map(orders => orders.filter(o => o.classification === InternalOperationClassification.Running)),
+    // Prevent other order state changes from triggering updates in the UI 
+    // ToDo: Reanble when OrderManagement facade fires order-started event before order-changed-to-running event
+    // distinctUntilChanged((previousOrders, newOrders) => this.areSameSet(previousOrders, newOrders)),
+    shareReplay(1)
+  );
+  // private areSameSet(previousOrders: Order[], newOrders: Order[]): boolean {
+  //   return previousOrders.length === newOrders.length && previousOrders.every((x, i) => x.orderNumber === newOrders[i].orderNumber && x.operationNumber === newOrders[i].operationNumber);
+  // }
 
   constructor() {
-    this.factoryStateStreamService.updatedOrder.subscribe({
-      next: order => {
-        if (!order?.orderNumber) return;
-
-        if (!this._orders.getValue().length) return;
-
-        this.updateOrder(order);
-      },
-    });
-
-    this.orders$ = this._orders.asObservable();
-    this._runningOrders.next(this._orders.getValue().filter(o => o.classification == InternalOperationClassification.Running))
-    this.runningOrders$ = this._runningOrders.asObservable();
-    this.toggledOrder$ = this._toggledOrder.asObservable();
+    this.factoryStateStreamService.updatedOrder.subscribe(order => this.updateOrder(order));
   }
 
-  private getUpdateOrders(orders: Order[]): Order[] {
-    // Unselect orders that existed but were unselected
-    const currentlyUnselectedOrders = this._orders.getValue().filter(order => !order.isToggled);
-    orders.forEach(
-      no =>
-        (no.isToggled = !!!currentlyUnselectedOrders.find(
-          co =>
-            no.orderNumber === co.orderNumber &&
-            no.operationNumber === co.operationNumber
-        ))
-    );
+  public initialize(factoryState: FactoryStateModel) {
+    const orderModels = factoryState.orderModels ?? [];
 
-    return orders;
+    const orders = orderModels.map(order => Converter.orderModelToOrder(order));
+
+    this._orders.next(orders);
   }
 
-  public getOrder(orderNumber: string, operationNumber: string): Order | undefined {
-    return this._orders
-      .getValue()
-      .find(o => o.operationNumber === operationNumber && o.orderNumber === orderNumber);
+  // We update orders partially to retain the toggled state through order updates from the backend
+  public updateOrder(order: Order) {
+    if (!order?.orderNumber || !order.operationNumber) {
+      return;
+    }
+
+    const orders = this._orders.getValue();
+    let indexToUpdate = orders.findIndex(o => o.operationNumber === order.operationNumber && o.orderNumber === order.orderNumber);
+    if(indexToUpdate === -1) {
+      orders.push(order);
+    } else {
+      
+      let orderToUpdate = orders[indexToUpdate];
+
+      if (order.classification) {
+        orderToUpdate.classification = order.classification;
+      }
+      if (order.orderColor && order.orderColor != '') {
+        orderToUpdate.orderColor = order.orderColor;
+      }
+
+      orders[indexToUpdate] = orderToUpdate;
+    }
+
+    this._orders.next(orders)
+  }
+
+  public getOrder(cell: CellModel): Order | undefined {
+    if (!cell?.orderNumber || !cell.operationNumber) {
+      return undefined;
+    }
+
+    return this._orders.getValue()
+      .find(o => o.operationNumber === cell.operationNumber && o.orderNumber === cell.orderNumber);
   }
 
   public toggleOrder(order: Order) {
@@ -67,52 +86,9 @@ export class OrderStoreService {
     this._toggledOrder.next(order);
   }
 
-  //Groupes the orders to creates a Map<string,OrderModel[]>
-  groupBy(list: OrderModel[], keyGetter: (orderType: OrderModel) => string) {
-    const map = new Map();
-    list.forEach(item => {
-      const key = keyGetter(item);
-      const collection = map.get(key);
-      if (!collection) {
-        map.set(key, [item]);
-      } else {
-        collection.push(item);
-      }
-    });
-    return map;
-  }
-
-  // flatten the grouped order that has the format Map<string, OrderModel[]> to a simple OrderModel[]
-  flattenOrders(groupedOrders: Map<string, OrderModel[]>) {
-    let orders: OrderModel[] = [];
-    groupedOrders.forEach((value: OrderModel[], key: string) =>
-      orders.push(...orders, <OrderModel>{ order: key, operation: value[0]?.operation, color: value[0]?.color })
-    );
-
-    return orders;
-  }
-
-  public updateOrder(order: Order) {
-    const orders = this._orders.getValue();
-    const indexToUpdate = orders.findIndex(o => o.operationNumber === order.operationNumber && o.orderNumber === order.orderNumber);
-    let orderToUpdate = orders[indexToUpdate];
-
-    if(order.classification){
-      orderToUpdate.classification = order.classification;
-    }
-    if(order.orderColor && order.orderColor != ''){
-      orderToUpdate.orderColor = order.orderColor;
-    }
-
-    orders[indexToUpdate] = orderToUpdate;
-
-    this._runningOrders.next(orders.filter(o => o.classification == InternalOperationClassification.Running))
-    this._orders.next(orders)
-  }
-
-  public updateRunningOrders(){
-    const orders = this._orders.getValue();
-    this._runningOrders.next(orders.filter(o => o.classification == InternalOperationClassification.Running))
+  public applyOrderColor(cell: CellModel): CellModel {
+    const color = this._orders.getValue().find(o => o.operationNumber === cell.operationNumber && o.orderNumber === cell.orderNumber)?.orderColor;
+    cell.orderColor = color ?? '';
+    return cell;
   }
 }
-

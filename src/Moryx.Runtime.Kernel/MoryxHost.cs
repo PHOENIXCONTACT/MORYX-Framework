@@ -12,7 +12,7 @@ namespace Moryx.Runtime.Kernel;
 /// A background service that handles starting and stopping the moryx modules.
 /// On windows, it also provides gracefully shutdown when the console window is closed.
 /// </summary>
-public class MoryxHost : BackgroundService
+public partial class MoryxHost : BackgroundService
 {
     private readonly IModuleManager _moduleManager;
     private readonly IHost _lifeTime;
@@ -24,8 +24,9 @@ public class MoryxHost : BackgroundService
     /// <param name="Handler"></param>
     /// <param name="Add"></param>
     /// <returns></returns>
-    [DllImport("Kernel32")]
-    private static extern bool SetConsoleCtrlHandler(HandlerRoutine Handler, bool Add);
+    [LibraryImport("Kernel32")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool SetConsoleCtrlHandler(HandlerRoutine Handler, [MarshalAs(UnmanagedType.Bool)] bool Add);
 
     /// <summary>
     /// A delegate type to be used as the handler routine
@@ -34,6 +35,8 @@ public class MoryxHost : BackgroundService
     /// <param name="CtrlType"></param>
     /// <returns></returns>
     private delegate bool HandlerRoutine(CtrlTypes CtrlType);
+
+    private HandlerRoutine _handler;
 
     /// <summary>
     /// An enumerated type for the control messages
@@ -121,7 +124,8 @@ public class MoryxHost : BackgroundService
         // Only register on windows, because the behavior is os specific
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            SetConsoleCtrlHandler(ConsoleCtrlCheck, true);
+            _handler = new HandlerRoutine(ConsoleCtrlCheck);
+            SetConsoleCtrlHandler(_handler, true);
         }
         await _moduleManager.StartModulesAsync(cancellationToken);
 
@@ -142,10 +146,12 @@ public class MoryxHost : BackgroundService
     public override async Task StopAsync(CancellationToken cancellationToken)
     {
         State = MoryxHostState.Stopping;
+        _logger.LogInformation("Stopping moryx service");
         StateChanged?.Invoke(this, State);
 
         await _moduleManager.StopModulesAsync(cancellationToken);
 
+        _logger.LogInformation("Stopped moryx modules");
         await base.StopAsync(cancellationToken);
 
         State = MoryxHostState.Stopped;
