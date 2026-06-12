@@ -3,12 +3,11 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { FlatTreeControl } from '@angular/cdk/tree';
 import { Component, effect, inject, OnDestroy, OnInit, signal, untracked, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
-import { MatTreeFlatDataSource, MatTreeFlattener, MatTreeModule } from '@angular/material/tree';
+import { MatTree, MatTreeModule } from '@angular/material/tree';
 import { Router, RouterOutlet } from '@angular/router';
 import {
   LanguageService,
@@ -24,7 +23,7 @@ import { TranslationConstants } from './extensions/translation-constants.extensi
 import { CacheResourceService } from './services/cache-resource.service';
 import { EditResourceService } from './services/edit-resource.service';
 import { FormControlService } from './services/form-control-service.service';
-import { FlatNode, SessionService } from './services/session.service';
+import { SessionService } from './services/session.service';
 import { lastValueFrom, Subscription } from 'rxjs';
 import { getHierarchieLineFor } from './models/TypeTree';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -78,12 +77,13 @@ export class App implements OnInit, OnDestroy {
   private formControlService = inject(FormControlService);
 
   private readonly trigger = viewChild.required(MatMenuTrigger);
+  private readonly tree = viewChild.required<MatTree<ResourceModel>>(MatTree);
   isEditMode = toSignal(this.editResourceService.edit$, { initialValue: false });
   menuTopLeftPosition = signal<Position>({x: '0px', y: '0px'});
 
   readonly resourceToolbarImage = environment.assets + 'assets/resource-toolbar.jpg';
 
-  resources?: ResourceModel[];
+  resources: ResourceModel[] = [];
   resourcesFlat?: ResourceModel[];
   selected = signal<ResourceModel | undefined>(undefined);
   canSave!: boolean;
@@ -91,38 +91,15 @@ export class App implements OnInit, OnDestroy {
   private treeStateIsInitialized: boolean = false;
   private subscriptions: Subscription[] = [];
 
-  private _transformer = (node: ResourceModel, level: number) => {
-    const childReferences = node.references?.find(ref => ref.name == 'Children')?.targets ?? [];
-    return {
-      expandable: !!childReferences.length,
-      name: node.name,
-      level: level,
-      id: node.id,
-    } as FlatNode;
-  };
+  childrenAccessor = (node: ResourceModel) =>
+    (node.references?.find(ref => ref.name === 'Children')?.targets ?? []) as ResourceModel[];
 
-  treeControl = new FlatTreeControl<FlatNode>(
-    node => node.level,
-    node => node.expandable
-  );
-
-  treeFlattener = new MatTreeFlattener(
-    this._transformer,
-    node => node.level,
-    node => node.expandable,
-    node => {
-      if (node.references) return node.references.find(ref => ref.name == 'Children')?.targets;
-      else return null;
-    }
-  );
-
-  dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
-
-  hasChild = (_: number, node: FlatNode) => node.expandable;
+  hasChild = (_: number, node: ResourceModel) =>
+    !!(node.references?.find(ref => ref.name === 'Children')?.targets?.length);
 
   beforeUnloadHander() {
     if (this.isEditMode()) this.editResourceService.stashResource();
-    this.sessionService.storeTreeState(this.treeControl);
+    this.sessionService.storeTreeState(this.getExpandedIds());
   }
 
   constructor() {
@@ -153,11 +130,10 @@ export class App implements OnInit, OnDestroy {
   async ngOnInit() {
     this.subscriptions.push(
       this.cacheResourceService.resources.subscribe(resources => {
-        if (this.treeStateIsInitialized) this.sessionService.storeTreeState(this.treeControl);
+        if (this.treeStateIsInitialized) this.sessionService.storeTreeState(this.getExpandedIds());
         else this.treeStateIsInitialized = true;
-        this.resources = resources;
-        this.dataSource.data = resources ?? [];
-        this.sessionService.restoreTreeState(this.treeControl);
+        this.resources = resources ?? [];
+        this.restoreExpandedNodes(this.resources, this.sessionService.getExpandedIds());
       })
     );
 
@@ -176,8 +152,35 @@ export class App implements OnInit, OnDestroy {
 
   private expandSelectedBranch() {
     const toExpand = getHierarchieLineFor(this.selected()?.id, this.resources);
-    this.treeControl.dataNodes.filter(n => toExpand.find(e => e === n.id)).forEach(n => this.treeControl.expand(n));
+    this.expandNodesById(this.resources, toExpand);
     this.treeStateIsInitialized = true;
+  }
+
+  private expandNodesById(nodes: ResourceModel[], ids: (number | undefined)[]) {
+    for (const node of nodes) {
+      if (ids.includes(node.id)) this.tree().expand(node);
+      this.expandNodesById(this.childrenAccessor(node), ids);
+    }
+  }
+
+  private getExpandedIds(): number[] {
+    const ids: number[] = [];
+    this.collectExpandedIds(this.resources, ids);
+    return ids;
+  }
+
+  private collectExpandedIds(nodes: ResourceModel[], ids: number[]) {
+    for (const node of nodes) {
+      if (this.tree().isExpanded(node)) ids.push(node.id);
+      this.collectExpandedIds(this.childrenAccessor(node), ids);
+    }
+  }
+
+  private restoreExpandedNodes(nodes: ResourceModel[], expandedIds: number[]) {
+    for (const node of nodes) {
+      if (expandedIds.includes(node.id)) this.tree().expand(node);
+      this.restoreExpandedNodes(this.childrenAccessor(node), expandedIds);
+    }
   }
 
   private openContextMenu(resourceId: number, xCoordinate: number, yCoordinate: number) {

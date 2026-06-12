@@ -143,8 +143,8 @@
 
       <mat-tree
         class="resources-tree-contents"
-        [dataSource]="dataSource"
-        [treeControl]="treeControl"
+        [dataSource]="resources"
+        [childrenAccessor]="childrenAccessor"
         >
         <mat-tree-node
           *matTreeNodeDef="let node"
@@ -163,6 +163,7 @@
         </mat-tree-node>
         <mat-tree-node
           *matTreeNodeDef="let node; when: hasChild"
+          #treeNode="matTreeNode"
           matTreeNodePadding
           [matTreeNodePaddingIndent]="10"
           (click)="selectResource(node.id)"
@@ -180,9 +181,7 @@
             type="button"
             >
             <mat-icon class="mat-icon-rtl-mirror">
-              {{
-              treeControl.isExpanded(node) ? "expand_more" : "chevron_right"
-              }}
+              {{ treeNode.isExpanded ? "expand_more" : "chevron_right" }}
             </mat-icon>
           </button>
           {{ (node.name && node.name.trim()) ? node.name : TranslationConstants.APP.NO_NAME | translate }}
