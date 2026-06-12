@@ -7,7 +7,7 @@ import { Component, effect, inject, OnDestroy, OnInit, signal, untracked, viewCh
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
-import { MatTree, MatTreeModule } from '@angular/material/tree';
+import { ResourceTree } from './components/resource-tree/resource-tree';
 import { Router, RouterOutlet } from '@angular/router';
 import {
   LanguageService,
@@ -23,9 +23,7 @@ import { TranslationConstants } from './extensions/translation-constants.extensi
 import { CacheResourceService } from './services/cache-resource.service';
 import { EditResourceService } from './services/edit-resource.service';
 import { FormControlService } from './services/form-control-service.service';
-import { SessionService } from './services/session.service';
 import { lastValueFrom, Subscription } from 'rxjs';
-import { getHierarchieLineFor } from './models/TypeTree';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -55,7 +53,7 @@ import { HttpErrorResponse } from '@angular/common/http';
     MatSidenavModule,
     MatToolbarModule,
     MatTooltipModule,
-    MatTreeModule,
+    ResourceTree,
     RouterOutlet,
     TranslateModule,
   ],
@@ -70,14 +68,12 @@ export class App implements OnInit, OnDestroy {
   private cacheResourceService = inject(CacheResourceService);
   private editResourceService = inject(EditResourceService);
   private modificationService = inject(ResourceModificationService);
-  private sessionService = inject(SessionService);
   private translateService = inject(TranslateService);
   private languageService = inject(LanguageService);
   private snackbarService = inject(SnackbarService);
   private formControlService = inject(FormControlService);
 
   private readonly trigger = viewChild.required(MatMenuTrigger);
-  private readonly tree = viewChild.required<MatTree<ResourceModel>>(MatTree);
   isEditMode = toSignal(this.editResourceService.edit$, { initialValue: false });
   menuTopLeftPosition = signal<Position>({x: '0px', y: '0px'});
 
@@ -88,18 +84,10 @@ export class App implements OnInit, OnDestroy {
   selected = signal<ResourceModel | undefined>(undefined);
   canSave!: boolean;
   TranslationConstants = TranslationConstants;
-  private treeStateIsInitialized: boolean = false;
   private subscriptions: Subscription[] = [];
-
-  childrenAccessor = (node: ResourceModel) =>
-    (node.references?.find(ref => ref.name === 'Children')?.targets ?? []) as ResourceModel[];
-
-  hasChild = (_: number, node: ResourceModel) =>
-    !!(node.references?.find(ref => ref.name === 'Children')?.targets?.length);
 
   beforeUnloadHander() {
     if (this.isEditMode()) this.editResourceService.stashResource();
-    this.sessionService.storeTreeState(this.getExpandedIds());
   }
 
   constructor() {
@@ -130,10 +118,7 @@ export class App implements OnInit, OnDestroy {
   async ngOnInit() {
     this.subscriptions.push(
       this.cacheResourceService.resources.subscribe(resources => {
-        if (this.treeStateIsInitialized) this.sessionService.storeTreeState(this.getExpandedIds());
-        else this.treeStateIsInitialized = true;
         this.resources = resources ?? [];
-        this.restoreExpandedNodes(this.resources, this.sessionService.getExpandedIds());
       })
     );
 
@@ -146,41 +131,6 @@ export class App implements OnInit, OnDestroy {
 
   private select(resource: ResourceModel | undefined): void {
     this.selected.set(resource);
-    if (this.treeStateIsInitialized || !resource) return;
-    this.expandSelectedBranch();
-  }
-
-  private expandSelectedBranch() {
-    const toExpand = getHierarchieLineFor(this.selected()?.id, this.resources);
-    this.expandNodesById(this.resources, toExpand);
-    this.treeStateIsInitialized = true;
-  }
-
-  private expandNodesById(nodes: ResourceModel[], ids: (number | undefined)[]) {
-    for (const node of nodes) {
-      if (ids.includes(node.id)) this.tree().expand(node);
-      this.expandNodesById(this.childrenAccessor(node), ids);
-    }
-  }
-
-  private getExpandedIds(): number[] {
-    const ids: number[] = [];
-    this.collectExpandedIds(this.resources, ids);
-    return ids;
-  }
-
-  private collectExpandedIds(nodes: ResourceModel[], ids: number[]) {
-    for (const node of nodes) {
-      if (this.tree().isExpanded(node)) ids.push(node.id);
-      this.collectExpandedIds(this.childrenAccessor(node), ids);
-    }
-  }
-
-  private restoreExpandedNodes(nodes: ResourceModel[], expandedIds: number[]) {
-    for (const node of nodes) {
-      if (expandedIds.includes(node.id)) this.tree().expand(node);
-      this.restoreExpandedNodes(this.childrenAccessor(node), expandedIds);
-    }
   }
 
   private openContextMenu(resourceId: number, xCoordinate: number, yCoordinate: number) {

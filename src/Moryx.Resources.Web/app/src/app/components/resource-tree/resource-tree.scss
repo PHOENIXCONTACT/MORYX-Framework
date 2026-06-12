@@ -1,0 +1,32 @@
+@use '../../../styles.scss' as *;
+@use '@angular/material' as mat;
+
+:host {
+  flex: 1 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: $mat-background-light;
+  padding-bottom: 48px;
+  touch-action: auto;
+  display: block;
+  @include mat.tree-overrides((
+    node-min-height: 40px
+  ));
+}
+
+.resources-tree-item {
+  cursor: pointer !important;
+  width: 100%;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.resources-tree-item:hover {
+  background-color: $light-background-hover;
+}
+
+.italic {
+  font-style: italic;
+}
