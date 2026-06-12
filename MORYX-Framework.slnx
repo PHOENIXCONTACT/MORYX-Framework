@@ -28,6 +28,12 @@
     <Project Path="src/Moryx.Identity.AccessManagement/Moryx.Identity.AccessManagement.csproj" />
     <Project Path="src/Moryx.Identity/Moryx.Identity.csproj" />
   </Folder>
+  <Folder Name="/Material/">
+    <Project Path="src/Moryx.Material.Integrations.Orders.Integrator/Moryx.Material.Integrations.Orders.Integrator.csproj" />
+    <Project Path="src/Moryx.Material.Integrations.Orders/Moryx.Material.Integrations.Orders.csproj" Id="d57e85db-8cee-4567-bd80-8fd8fece2c71" />
+    <Project Path="src/Moryx.Material.Management/Moryx.Material.Management.csproj" Id="5934fd23-97b6-424f-916d-aea4741b36ef" />
+    <Project Path="src/Moryx.Material/Moryx.Material.csproj" Id="644a3746-01f6-4cf0-a5be-7380559edc16" />
+  </Folder>
   <Folder Name="/Media/">
     <Project Path="src/Moryx.Media.Endpoints/Moryx.Media.Endpoints.csproj" />
     <Project Path="src/Moryx.Media.Server/Moryx.Media.Server.csproj" />
@@ -118,8 +124,8 @@
     <Project Path="src/Tests/Moryx.Shifts.Management.IntegrationTests/Moryx.Shifts.Management.IntegrationTests.csproj" />
   </Folder>
   <Folder Name="/Tests/UnitTests/">
-    <Project Path="src/Tests/Moryx.AspNetCore.Mqtt.Tests/Moryx.AspNetCore.Mqtt.Tests.csproj" />
     <Project Path="src/Tests/Moryx.AbstractionLayer.Tests/Moryx.AbstractionLayer.Tests.csproj" />
+    <Project Path="src/Tests/Moryx.AspNetCore.Mqtt.Tests/Moryx.AspNetCore.Mqtt.Tests.csproj" />
     <Project Path="src/Tests/Moryx.Container.Tests/Moryx.Container.Tests.csproj" />
     <Project Path="src/Tests/Moryx.ControlSystem.ProcessEngine.Tests/Moryx.ControlSystem.ProcessEngine.Tests.csproj" />
     <Project Path="src/Tests/Moryx.ControlSystem.SetupProvider.Tests/Moryx.ControlSystem.SetupProvider.Tests.csproj" />
@@ -144,10 +150,10 @@
     <Project Path="src/Tests/Moryx.Runtime.Tests/Moryx.Runtime.Tests.csproj" />
     <Project Path="src/Tests/Moryx.Simulation.Tests/Moryx.Simulation.Tests.csproj" />
     <Project Path="src/Tests/Moryx.Tests/Moryx.Tests.csproj" />
-    <Project Path="src/Tests/Moryx.VisualInstructions.Tests/Moryx.VisualInstructions.Tests.csproj" />
-    <Project Path="src/Tests/Moryx.Workplans.Editing.Tests/Moryx.Workplans.Editing.Tests.csproj" />
     <Project Path="src/Tests/Moryx.VisualInstructions.Controller.Tests/Moryx.VisualInstructions.Controller.Tests.csproj" />
     <Project Path="src/Tests/Moryx.VisualInstructions.Endpoints.Tests/Moryx.VisualInstructions.Endpoints.Tests.csproj" />
+    <Project Path="src/Tests/Moryx.VisualInstructions.Tests/Moryx.VisualInstructions.Tests.csproj" />
+    <Project Path="src/Tests/Moryx.Workplans.Editing.Tests/Moryx.Workplans.Editing.Tests.csproj" />
   </Folder>
   <Folder Name="/TestTools/">
     <Project Path="src/Moryx.AbstractionLayer.TestTools/Moryx.AbstractionLayer.TestTools.csproj" />
@@ -163,11 +169,11 @@
     <Project Path="src/Tests/Moryx.Container.TestTools/Moryx.Container.TestTools.csproj" />
   </Folder>
   <Folder Name="/VisualInstructions/">
-    <Project Path="src/Moryx.VisualInstructions/Moryx.VisualInstructions.csproj" />
     <Project Path="src/Moryx.Resources.VisualInstructions/Moryx.Resources.VisualInstructions.csproj" />
     <Project Path="src/Moryx.VisualInstructions.Controller/Moryx.VisualInstructions.Controller.csproj" />
     <Project Path="src/Moryx.VisualInstructions.Endpoints/Moryx.VisualInstructions.Endpoints.csproj" />
     <Project Path="src/Moryx.VisualInstructions.Web/Moryx.VisualInstructions.Web.csproj" />
+    <Project Path="src/Moryx.VisualInstructions/Moryx.VisualInstructions.csproj" />
   </Folder>
   <Folder Name="/Workplans/">
     <Project Path="src/Moryx.Workplans.Editing/Moryx.Workplans.Editing.csproj" />
