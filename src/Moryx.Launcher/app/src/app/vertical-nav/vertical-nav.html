@@ -1,16 +1,16 @@
 <mat-nav-list>
   @for (moduleItem of moduleItems(); track moduleItem.route) {
-    <a mat-list-item [href]="moduleItem.route" [title]="moduleItem.description">
-      <span matListItemIcon style="position: relative">
-        <mat-icon>{{ moduleItem.icon }}</mat-icon>
-        @if (asWeb(moduleItem); as webItem) {
-          <app-notification-badge [eventStream]="webItem.eventStream ?? ''"></app-notification-badge>
+    <div class="nav-item-wrapper">
+      <a mat-list-item [href]="moduleItem.route" [title]="moduleItem.description">
+        <mat-icon matListItemIcon>{{ moduleItem.icon }}</mat-icon>
+        @if (!collapsed()) {
+          <span matListItemTitle>{{ moduleItem.title }}</span>
         }
-      </span>
-      @if (!collapsed()) {
-        <span matListItemTitle>{{ moduleItem.title }}</span>
+      </a>
+      @if (asWeb(moduleItem); as webItem) {
+        <app-notification-badge [eventStream]="webItem.eventStream ?? ''"></app-notification-badge>
       }
-    </a>
+    </div>
   } @empty {
     <mat-list-item>No items.</mat-list-item>
   }

@@ -1,27 +1,19 @@
 :host {
-    width: 100%;
-    height: 100%;
-}
-
-.badge-wrapper {
     position: absolute;
     left: 0;
     top: 0;
     z-index: 1;
+    pointer-events: none;
 }
 
 .badge-ring {
     position: relative;
     display: flex;
-    height: 100%;
-    width: 100%;
 }
 
 .badge-ping {
     position: absolute;
-    display: inline-flex;
-    height: 100%;
-    width: 100%;
+    inset: 0;
     border-radius: 9999px;
     background-color: #f87171;
     opacity: 0.75;
@@ -29,7 +21,6 @@
 }
 
 .badge-count {
-    position: relative;
     display: inline-flex;
     border-radius: 9999px;
     min-height: 1.25rem;

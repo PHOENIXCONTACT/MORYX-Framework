@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, input, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, HostListener, input, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'app-notification-badge',
@@ -27,8 +27,14 @@ export class NotificationBadge implements OnInit, OnDestroy {
     this.eventSource.onmessage = this.onReceived.bind(this);
   }
 
+  @HostListener('window:unload')
+  onUnload(): void {
+    this.eventSource?.close();
+  }
+
   ngOnDestroy(): void {
     this.eventSource?.removeEventListener('message', this.onReceived);
+    this.eventSource?.close();
   }
 
   onReceived(event: any) {

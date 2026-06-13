@@ -20,6 +20,10 @@ mat-nav-list {
   --mat-list-list-item-leading-icon-end-space: 8px;
 }
 
+.nav-item-wrapper {
+  position: relative;
+}
+
 a[mat-list-item] {
   border-radius: 4px;
   position: relative;
