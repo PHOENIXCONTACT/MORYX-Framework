@@ -27,4 +27,12 @@ public class ApplicationInformationResponse
     /// Description of this application
     /// </summary>
     public string AssemblyDescription { get; set; }
+
+    public string AssemblyCompanyName { get; set; }
+    public string AssemblyTitle { get; set; }
+    public string AssemblyConfiguration { get; set; }
+    public string TargetFramework { get; set; }
+    public string AssemblyCopyright { get; set; }
+    public string AssemblyTrademark { get; set; }
+
 }

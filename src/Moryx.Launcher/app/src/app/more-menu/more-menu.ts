@@ -1,10 +1,12 @@
-import {Component, computed, input} from '@angular/core';
+import {Component, computed, inject, input} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatDividerModule} from '@angular/material/divider';
+import {MatDialog} from '@angular/material/dialog';
 import {CultureModel, ModuleItem} from '../web-module-item';
 import {localLanguage} from '../utils';
+import {AboutDialog} from '../about-dialog/about-dialog';
 
 @Component({
   selector: 'app-more-menu',
@@ -17,6 +19,12 @@ export class MoreMenu {
   modules = input.required<ModuleItem[]>();
 
   currentCulture = computed(() => localLanguage());
+
+  private dialog = inject(MatDialog);
+
+  openAbout() {
+    this.dialog.open(AboutDialog);
+  }
 
   selectCulture(culture: CultureModel) {
     let cookieDate = new Date;

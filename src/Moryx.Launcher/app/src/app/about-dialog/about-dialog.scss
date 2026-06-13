@@ -1,0 +1,27 @@
+dl {
+  margin: 0;
+}
+
+.entry {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+dt {
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 0.85rem;
+}
+
+dd {
+  margin: 0;
+  font-size: 0.85rem;
+  word-break: break-word;
+}
