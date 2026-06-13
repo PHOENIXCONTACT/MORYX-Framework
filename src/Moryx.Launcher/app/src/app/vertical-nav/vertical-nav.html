@@ -1,5 +1,5 @@
 <mat-nav-list>
-  @for (moduleItem of moduleItems(); track moduleItem.route) {
+  @for (moduleItem of modules(); track moduleItem.route) {
     <div class="nav-item-wrapper">
       <a mat-list-item [href]="moduleItem.route" [title]="moduleItem.description">
         <mat-icon matListItemIcon>{{ moduleItem.icon }}</mat-icon>

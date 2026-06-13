@@ -1,49 +1,25 @@
-import {Component, computed, effect, input, signal, ViewEncapsulation} from '@angular/core';
-import {RouterOutlet} from '@angular/router';
-import {MatToolbarModule} from '@angular/material/toolbar';
-import {MatIconModule} from '@angular/material/icon';
-import {MatButtonModule} from '@angular/material/button';
-import {MatSidenavModule} from '@angular/material/sidenav';
-import {MatMenuModule} from '@angular/material/menu';
-import {MatDividerModule} from '@angular/material/divider';
-import {ExternalModuleItem, ModuleCategory, WebModuleItem} from './web-module-item';
-import {VerticalNav} from './vertical-nav/vertical-nav';
-import {MoryxLogo} from './moryx-logo/moryx-logo';
+import {Component, effect, input, ViewEncapsulation} from '@angular/core';
+import {CultureModel, ExternalModuleItem, WebModuleItem} from './web-module-item';
+import {FullLayout} from './full-layout/full-layout';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, VerticalNav, MatToolbarModule, MatIconModule, MatButtonModule, MatSidenavModule, MatMenuModule, MatDividerModule, MoryxLogo],
+  imports: [FullLayout],
   templateUrl: './app.html',
   styleUrl: './app.scss',
   encapsulation: ViewEncapsulation.ShadowDom
 })
 export class App {
 
-  // Web components inputs
+  // Web component inputs
   webModuleItems = input.required<WebModuleItem[]>();
   externalModuleItems = input.required<ExternalModuleItem[]>();
-
-  userModules = computed(() => {
-    return [...this.webModuleItems(), ...this.externalModuleItems()]
-      .filter(m => m.category === ModuleCategory.User)
-      .sort((a, b) => a.sortIndex - b.sortIndex);
-  });
-
-  otherModules = computed(() => {
-    return this.webModuleItems()
-      .filter(m => m.category !== ModuleCategory.User)
-      .sort((a, b) => a.sortIndex - b.sortIndex);
-  })
-
-  navCollapsed = signal(false);
+  supportedCultures = input.required<CultureModel[]>();
 
   constructor() {
     effect(() => {
-      console.log('Module items changed', this.userModules());
+      console.log('Module items changed', [...this.webModuleItems(), ...this.externalModuleItems()]);
+      console.log('Supported cultures changed', this.supportedCultures());
     });
-  }
-
-  toggleNav() {
-    this.navCollapsed.update(v => !v);
   }
 }

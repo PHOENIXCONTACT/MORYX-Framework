@@ -1,0 +1,52 @@
+<button mat-icon-button aria-label="More options" [matMenuTriggerFor]="appMenu">
+  <mat-icon>more_vert</mat-icon>
+</button>
+
+<mat-menu #appMenu="matMenu">
+  <button mat-menu-item [matMenuTriggerFor]="languageMenu">
+    <mat-icon>language</mat-icon>
+    <span>Language</span>
+  </button>
+  <button mat-menu-item [matMenuTriggerFor]="viewsMenu">
+    <mat-icon>visibility</mat-icon>
+    <span>Views</span>
+  </button>
+  <mat-divider></mat-divider>
+
+  @for (module of modules(); track module.route) {
+    <a mat-menu-item [href]="module.route" title="{{ module.description }}">
+      <mat-icon>{{ module.icon }}</mat-icon>
+      <span>{{ module.title }}</span>
+    </a>
+  }
+
+  <mat-divider></mat-divider>
+  <button mat-menu-item>
+    <mat-icon>info_outline</mat-icon>
+    <span>About</span>
+  </button>
+</mat-menu>
+
+<mat-menu #viewsMenu="matMenu">
+  <button mat-menu-item>
+    <mat-icon>fullscreen</mat-icon>
+    <span>Fullscreen mode</span>
+  </button>
+  <button mat-menu-item>
+    <mat-icon>engineering</mat-icon>
+    <span>Operator mode</span>
+  </button>
+</mat-menu>
+
+<mat-menu #languageMenu="matMenu">
+  @for (culture of supportedCultures(); track culture.name) {
+    <button mat-menu-item (click)="selectCulture(culture)">
+      @if (culture.name === currentCulture()) {
+        <mat-icon>check</mat-icon>
+      } @else {
+        <mat-icon></mat-icon>
+      }
+      <span>{{ culture.displayName }}</span>
+    </button>
+  }
+</mat-menu>

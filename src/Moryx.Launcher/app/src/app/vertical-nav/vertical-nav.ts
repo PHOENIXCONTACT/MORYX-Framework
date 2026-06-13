@@ -14,7 +14,7 @@ import {NotificationBadge} from '../notification-badge/notification-badge';
   }
 })
 export class VerticalNav {
-  moduleItems = input.required<(WebModuleItem | ExternalModuleItem)[]>();
+  modules = input.required<(WebModuleItem | ExternalModuleItem)[]>();
   collapsed = input(false);
 
   asWeb(item: WebModuleItem | ExternalModuleItem): WebModuleItem | null {

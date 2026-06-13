@@ -1,0 +1,22 @@
+<mat-toolbar>
+  <button mat-icon-button aria-label="Menu" (click)="toggleNav()">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <app-moryx-logo></app-moryx-logo>
+  <span class="toolbar-spacer"></span>
+  <slot name="topRegion"></slot>
+  <span class="toolbar-spacer"></span>
+  <app-more-menu [modules]="otherModules()" [supportedCultures]="supportedCultures()"></app-more-menu>
+</mat-toolbar>
+
+<mat-sidenav-container autosize>
+  <mat-sidenav mode="side" opened style="width: fit-content">
+    <app-vertical-nav [modules]="userModules()" [collapsed]="navCollapsed()"></app-vertical-nav>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <slot name="app"></slot>
+    <router-outlet />
+  </mat-sidenav-content>
+</mat-sidenav-container>
+<slot name="rightRegion"></slot>

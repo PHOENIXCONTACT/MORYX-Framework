@@ -20,3 +20,9 @@ export enum ModuleCategory {
   Diagnostics = 'Diagnostics',
   Help = 'Help'
 }
+
+
+export interface CultureModel {
+  name : string,
+  displayName : string
+}

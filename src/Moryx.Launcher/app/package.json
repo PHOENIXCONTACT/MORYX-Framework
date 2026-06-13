@@ -20,6 +20,8 @@
     "@angular/platform-browser": "^22.0.0",
     "@angular/router": "^22.0.0",
     "@moryx/ngx-web-framework": "^21.1.1-future.198",
+    "material-icons": "^1.13.14",
+    "roboto-fontface": "^0.10.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
