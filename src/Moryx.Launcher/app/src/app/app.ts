@@ -4,13 +4,15 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatDividerModule} from '@angular/material/divider';
 import {ExternalModuleItem, ModuleCategory, WebModuleItem} from './web-module-item';
 import {VerticalNav} from './vertical-nav/vertical-nav';
 import {MoryxLogo} from './moryx-logo/moryx-logo';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, VerticalNav, MatToolbarModule, MatIconModule, MatButtonModule, MatSidenavModule, MoryxLogo],
+  imports: [RouterOutlet, VerticalNav, MatToolbarModule, MatIconModule, MatButtonModule, MatSidenavModule, MatMenuModule, MatDividerModule, MoryxLogo],
   templateUrl: './app.html',
   styleUrl: './app.scss',
   encapsulation: ViewEncapsulation.ShadowDom
@@ -26,6 +28,12 @@ export class App {
       .filter(m => m.category === ModuleCategory.User)
       .sort((a, b) => a.sortIndex - b.sortIndex);
   });
+
+  otherModules = computed(() => {
+    return this.webModuleItems()
+      .filter(m => m.category !== ModuleCategory.User)
+      .sort((a, b) => a.sortIndex - b.sortIndex);
+  })
 
   navCollapsed = signal(false);
 
