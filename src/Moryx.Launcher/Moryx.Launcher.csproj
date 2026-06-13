@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Razor" InitialTargets="BuildUI">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -32,13 +32,14 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\assets\moryx-banner-small.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\moryx_transparent_colored.webp" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\dist\main.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\dist\polyfills.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\shell.js" />
+  </ItemGroup>
+
   <Import Project="..\..\.build\WebProjects.props" />
-  <Target Name="BuildUI" Condition="('$(Configuration)'!='Debug' Or !Exists('wwwroot\js\dist\main.js')) And ('$(NoBuild)' != 'true')">
-    <Exec Command="dotnet tool restore" />
-    <Exec Command="dotnet libman restore" />
-    <Exec WorkingDirectory=".\app\" Command="npm ci" />
-    <Exec WorkingDirectory=".\app\" Command="npm run build:prod" />
-    <Exec WorkingDirectory=".\app\" Command="npm run build:css" />
-    <Exec WorkingDirectory=".\app\" Command="npm run copy:componentsfiles" />
-  </Target>
+ 
 </Project>

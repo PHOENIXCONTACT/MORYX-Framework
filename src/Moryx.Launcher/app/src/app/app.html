@@ -1,0 +1,27 @@
+<mat-toolbar>
+  <button mat-icon-button aria-label="Menu" (click)="toggleNav()">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <app-moryx-logo></app-moryx-logo>
+  <span class="toolbar-spacer"></span>
+  <slot name="topRegion"></slot>
+  <span class="toolbar-spacer"></span>
+  <button mat-icon-button aria-label="Favorite">
+    <mat-icon>favorite</mat-icon>
+  </button>
+  <button mat-icon-button aria-label="Share">
+    <mat-icon>share</mat-icon>
+  </button>
+</mat-toolbar>
+
+<mat-sidenav-container autosize>
+  <mat-sidenav mode="side" opened style="width: fit-content">
+    <app-vertical-nav [moduleItems]="userModules()" [collapsed]="navCollapsed()"></app-vertical-nav>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <slot name="app"></slot>
+    <router-outlet />
+  </mat-sidenav-content>
+</mat-sidenav-container>
+<slot name="rightRegion"></slot>
