@@ -1,10 +1,15 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Resources;
+using Moryx.Material.Events;
 using Moryx.Material.States;
+using Moryx.Serialization;
+using Moryx.StateMachines;
 
 namespace Moryx.Material;
 
@@ -12,34 +17,44 @@ namespace Moryx.Material;
 /// Default base class for <see cref="IMaterialContainer"/> implementations.
 /// </summary>
 /// <remarks>
-/// State changes are mediated through <see cref="TransitionTo(MaterialContainerStateBase)"/>;
-/// this is internal-friendly so the management module can drive transitions while the
-/// resource still owns the state. Application engineers may extend this class to add
-/// custom properties and behavior.
+/// Application engineers may extend this class to add custom properties and behavior.
 /// </remarks>
 [DataContract]
-public abstract class MaterialContainer : Resource, IMaterialContainer
+public abstract class MaterialContainer : Resource, IMaterialContainer, IStateContext
 {
-    private MaterialContainerStateBase _state = new RequestedState();
-    private string? _material;
-    private decimal _quantity;
+    #region IMaterialContainer
 
     /// <inheritdoc />
+    [ResourceReference(ResourceRelationType.Aggregation, ResourceReferenceRole.Source, "Test Name", IsRequired = false)]
+    [Display(Name = "Host", Description = "Resource that hosts or holds this container (e.g., carrier, machine, shelf slot).")]
+    public IResource? ContainerHost { get; set; }
+
+    /// <summary>
+    /// Optional scannable identityType of the physical container (e.g., barcode, QR code).
+    /// May be null for "virtual" containers in <see cref="RequestedStateInformation"/> or unlabeld container types.
+    /// </summary>
     [DataMember]
+    [EntrySerialize]
+    [Display(Name = "Container Identity", Description = "Optional scannable identity of the physical container (e.g., barcode, QR code). May be null for virtual or unlabelled containers."), PossibleTypes(typeof(IIdentity))]
     public IIdentity? Identity { get; set; }
 
+    // ToDo: Should we lock modifications in pre-advises and deregistered state?
     /// <inheritdoc />
     [DataMember]
+    [EntrySerialize]
+    [Display(Name = "Material", Description = "Material reference contained in this container (e.g., product number).")]
     public string? Material
     {
-        get => _material;
+        get => field;
         set
         {
-            if (string.Equals(_material, value, StringComparison.Ordinal))
+            if (string.Equals(field, value, StringComparison.Ordinal))
+            {
                 return;
+            }
 
-            var oldMaterial = _material;
-            _material = value;
+            var oldMaterial = field;
+            field = value;
             MaterialChanged?.Invoke(this, new MaterialChangedEventArgs(this, oldMaterial, value));
             RaiseResourceChanged();
         }
@@ -47,16 +62,25 @@ public abstract class MaterialContainer : Resource, IMaterialContainer
 
     /// <inheritdoc />
     [DataMember]
+    [EntrySerialize]
+    [Display(Name = "Quantity", Description = "Current amount of material held by this container.")]
     public decimal Quantity
     {
-        get => _quantity;
+        get => field;
         set
         {
-            if (_quantity == value)
-                return;
+            if (field < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(Quantity), $"{nameof(MaterialContainer)} cannot hold negative quantities");
+            }
 
-            var oldQuantity = _quantity;
-            _quantity = value;
+            if (field == value)
+            {
+                return;
+            }
+
+            var oldQuantity = field;
+            field = value;
             FillingLevelChanged?.Invoke(this, new FillingLevelChangedEventArgs(this, oldQuantity, value));
             RaiseResourceChanged();
         }
@@ -64,11 +88,14 @@ public abstract class MaterialContainer : Resource, IMaterialContainer
 
     /// <inheritdoc />
     [DataMember]
+    [EntrySerialize]
+    [Display(Name = "Unit", Description = "Unit of measure for the quantity (e.g., kg, pcs).")]
     public string? Unit { get; set; }
 
     /// <inheritdoc />
-    [DataMember]
-    public MaterialContainerStateBase State => _state;
+    [EntrySerialize, ReadOnly(true)]
+    [Display(Name = "State", Description = "Current lifecycle state classification of the container.")]
+    public StateClassification State => _state?.Classification ?? StateClassification.Uninitialized;
 
     /// <inheritdoc />
     public event EventHandler<MaterialChangedEventArgs>? MaterialChanged;
@@ -79,22 +106,90 @@ public abstract class MaterialContainer : Resource, IMaterialContainer
     /// <inheritdoc />
     public event EventHandler<StateChangedEventArgs>? StateChanged;
 
-    /// <summary>
-    /// Transitions the container to a new state and raises <see cref="StateChanged"/>.
-    /// Intended to be called by the management module's state handler or by subclasses.
-    /// </summary>
-    protected internal virtual void TransitionTo(MaterialContainerStateBase newState)
+    #endregion
+
+    #region IStateContext
+
+    private MaterialContainerState? _state;
+    private readonly Lock _stateLock = new();
+
+    /// <inheritdoc/>
+    void IStateContext.SetState(StateBase state)
     {
-        if (newState == null)
-            throw new ArgumentNullException(nameof(newState));
+        _state = (MaterialContainerState)state;
 
-        var oldState = _state;
-        if (ReferenceEquals(oldState, newState))
+        if (state is UninitializedState)
+        {
             return;
+        }
 
-        newState.EnteredAt = DateTime.UtcNow;
-        _state = newState;
-        StateChanged?.Invoke(this, new StateChangedEventArgs(this, oldState, newState));
-        RaiseResourceChanged();
+        // ToDo: Can we even publish the old information?
+        StateChanged?.Invoke(this, new StateChangedEventArgs(this, default, StateInformation!));
+        OnStateChanged();
     }
+
+    /// <summary>
+    /// Will be called after a state change of the <see cref="MaterialContainer"/>
+    /// </summary>
+    protected virtual void OnStateChanged()
+    {
+    }
+
+    #endregion
+
+    #region Resource
+    /// <inheritdoc/>
+    protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
+    {
+        await base.OnInitializeAsync(cancellationToken);
+        StateMachine.ForContext(this).With<MaterialContainerState>();
+    }
+    #endregion
+
+    /// <summary>
+    /// Resource constructor method bringing a <see cref="MaterialContainer"/> from the <see cref="StateClassification.Uninitialized"/>
+    /// state into the <see cref="StateClassification.Requested"/> state using information provided by the <paramref name="request"/>.
+    /// </summary>
+    /// <param name="request">Information specifying the material request</param>
+    [ResourceConstructor]
+    [Display(Name = "Material Request", Description = "Create a virtual container to request material")]
+    public virtual void With([Display(Name = "Request Information", Description = "Specifications for the material request")] MaterialRequest request)
+    {
+        StateInformation = new RequestedStateInformation()
+        {
+            RequestId = request.Id,
+            ExpectedArrival = request.ExpectedArrival,
+        };
+        Identity = request.ContainerIdentity;
+        Material = request.Material;
+        Quantity = request.RequestedQuantity;
+        Unit = request.Unit;
+    }
+
+    // ToDo: Check whether PossibleTypes can/should allow modifying the types properties/constructors right away
+    /// <summary>
+    /// Resource constructor method bringing a <see cref="MaterialContainer"/> from the <see cref="StateClassification.Uninitialized"/>
+    /// state into the <see cref="StateClassification.Available"/> state using provided information.
+    /// </summary>
+    [ResourceConstructor]
+    [Display(Name = "Material Registration", Description = "Create a material container in the system")]
+    public virtual void With(
+        [Display(Name = "Identity Kind", Description = "Type of identity for the Container (e.g. Serialnumber)"), PossibleTypes(typeof(IIdentity))] IIdentity? identityType = null,
+        [Display(Name = "Identity", Description = "Identity unique to the Container (e.g. 123-456-789)")] string? identity = null,
+        [Display(Name = "Material", Description = "The material in the container")] string? material = null,
+        [Display(Name = "Quantity", Description = "Amount of material in the container")] decimal quantity = 0,
+        [Display(Name = "Unit", Description = "Unit the qunatity is given in")] string? unit = null)
+    {
+        StateInformation = new AvailableStateInformation();
+        Identity = identityType;
+        Identity?.SetIdentifier(identity);
+        Material = material;
+        Quantity = quantity;
+        Unit = unit;
+    }
+
+    // ToDo: Should this be part of the interface? How do we match requests and announcements otherwise?
+    [DataMember]
+    [EntrySerialize, ReadOnly(true)]
+    public StateInformation? StateInformation { get; set; }
 }

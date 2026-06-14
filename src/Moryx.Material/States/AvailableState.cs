@@ -1,16 +1,26 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Runtime.Serialization;
-
 namespace Moryx.Material.States;
 
-/// <summary>
-/// State of a registered, in-use container.
-/// </summary>
-[DataContract]
-public class AvailableState : MaterialContainerStateBase
+internal class AvailableState(MaterialContainer context, StateMachines.StateBase.StateMap stateMap) :
+    MaterialContainerState(context, stateMap)
 {
-    /// <inheritdoc />
-    public override MaterialContainerStateClassification Classification => MaterialContainerStateClassification.Available;
+    public override StateClassification Classification => StateClassification.Available;
+
+    public override void Advance(StateInformation info)
+    {
+        switch (Context.StateInformation)
+        {
+            case OutboundStateInformation:
+                NextState(StateOutbound);
+                return;
+            case DeregisteredStateInformation:
+                NextState(StateDeregistered);
+                return;
+            default:
+                InvalidState();
+                return;
+        }
+    }
 }

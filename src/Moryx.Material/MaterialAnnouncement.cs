@@ -8,42 +8,19 @@ namespace Moryx.Material;
 /// <summary>
 /// Announcement that material is inbound to the system.
 /// </summary>
-public class MaterialAnnouncement
+/// <param name="RequestReference"> Optional cross-reference to an existing <see cref="MaterialRequest"/>. </param>
+/// <param name="Material"> Material reference. May be omitted if a request is referenced. </param>
+/// <param name="AnnouncedQuantity"> Announced quantity. </param>
+/// <param name="Unit"> Optional unit of <see cref="AnnouncedQuantity"/>. </param>
+/// <param name="ContainerIdentity"> Optional identity of a specific announced container. </param>
+/// <param name="ExpectedArrival"> Optional expected arrival. </param>
+public record MaterialAnnouncement(string? RequestReference, string? Material, decimal AnnouncedQuantity,
+    string? Unit, IIdentity? ContainerIdentity, DateTime? ExpectedArrival)
 {
     /// <summary>
-    /// Optional unique identifier of the announcement. Generated if not set.
+    /// Optional unique identifier of the request. Generated if not set.
     /// </summary>
-    public Guid? Id { get; set; }
-
-    /// <summary>
-    /// Optional cross-reference to an existing <see cref="MaterialRequest"/>.
-    /// </summary>
-    public Guid? RequestReference { get; set; }
-
-    /// <summary>
-    /// Material reference. May be omitted if a request is referenced.
-    /// </summary>
-    public string? Material { get; set; }
-
-    /// <summary>
-    /// Announced quantity.
-    /// </summary>
-    public decimal AnnouncedQuantity { get; set; }
-
-    /// <summary>
-    /// Optional unit of <see cref="AnnouncedQuantity"/>.
-    /// </summary>
-    public string? Unit { get; set; }
-
-    /// <summary>
-    /// Optional identity of a specific announced container.
-    /// </summary>
-    public IIdentity? ContainerIdentity { get; set; }
-
-    /// <summary>
-    /// Optional expected arrival.
-    /// </summary>
-    public DateTime? ExpectedArrival { get; set; }
+    public string? Id { get; set; } = Guid.NewGuid().ToString();
 
     /// <summary>
     /// Creation timestamp.
