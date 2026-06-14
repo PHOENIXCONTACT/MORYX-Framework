@@ -1,5 +1,11 @@
 @switch (layout()) {
-  @case ('fullscreen') { <app-fullscreen-layout></app-fullscreen-layout> }
-  @case ('operator') { <app-operator-layout></app-operator-layout> }
-  @default { <app-full-layout></app-full-layout> }
+  @case ('fullscreen') {
+    <app-fullscreen-layout></app-fullscreen-layout>
+  }
+  @case ('operator') {
+    <app-operator-layout></app-operator-layout>
+  }
+  @default {
+    <app-full-layout></app-full-layout>
+  }
 }
