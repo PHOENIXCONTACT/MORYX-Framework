@@ -1,3 +1,5 @@
+@use "@moryx/ngx-web-framework/styles/variables" as *;
+
 :host {
   display: block;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
@@ -27,7 +29,8 @@ nav {
   transition: background 0.15s ease;
 
   &:hover {
-    background: rgba(0, 0, 0, 0.05);
+    background: rgba($primary, 0.3);
+    color: $primary;
   }
 }
 
