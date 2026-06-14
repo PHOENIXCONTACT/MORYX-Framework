@@ -4,6 +4,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatMenu, MatMenuModule} from '@angular/material/menu';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatDialog} from '@angular/material/dialog';
+import {LauncherStateService} from '../services/launcher-state.service';
 import {localLanguage} from '../utils';
 import {AboutDialog} from '../about-dialog/about-dialog';
 import {ModuleItem} from '../models/module-item';
@@ -22,6 +23,16 @@ export class MoreMenu {
   @ViewChild('appMenu') appMenu!: MatMenu;
 
   currentCulture = computed(() => localLanguage());
+
+  private launcherStateService = inject(LauncherStateService);
+  currentState = this.launcherStateService.state;
+
+  setLayout(mode: 'full' | 'operator' | 'fullscreen') {
+    this.launcherStateService.updateState({
+      fullscreen: mode === 'fullscreen',
+      operatorMode: mode === 'operator',
+    });
+  }
 
   private dialog = inject(MatDialog);
 

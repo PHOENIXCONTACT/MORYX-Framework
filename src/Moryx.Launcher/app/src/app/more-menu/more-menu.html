@@ -24,13 +24,29 @@
 </mat-menu>
 
 <mat-menu #viewsMenu="matMenu">
-  <button mat-menu-item>
-    <mat-icon>fullscreen</mat-icon>
-    <span>Fullscreen mode</span>
+  <button mat-menu-item (click)="setLayout('full')">
+    @if (!currentState().fullscreen && !currentState().operatorMode) {
+      <mat-icon>check</mat-icon>
+    } @else {
+      <mat-icon></mat-icon>
+    }
+    <span>Full mode</span>
   </button>
-  <button mat-menu-item>
-    <mat-icon>engineering</mat-icon>
+  <button mat-menu-item (click)="setLayout('operator')">
+    @if (currentState().operatorMode) {
+      <mat-icon>check</mat-icon>
+    } @else {
+      <mat-icon></mat-icon>
+    }
     <span>Operator mode</span>
+  </button>
+  <button mat-menu-item (click)="setLayout('fullscreen')">
+    @if (currentState().fullscreen) {
+      <mat-icon>check</mat-icon>
+    } @else {
+      <mat-icon></mat-icon>
+    }
+    <span>Fullscreen mode</span>
   </button>
 </mat-menu>
 

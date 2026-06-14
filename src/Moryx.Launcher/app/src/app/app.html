@@ -1,10 +1,23 @@
-<!--<app-full-layout-->
-<!--  [webModuleItems]="webModuleItems()"-->
-<!--  [externalModuleItems]="externalModuleItems()"-->
-<!--  [supportedCultures]="supportedCultures()">-->
-<!--</app-full-layout>-->
-<app-operator-layout
-  [webModuleItems]="webModuleItems()"
-  [externalModuleItems]="externalModuleItems()"
-  [supportedCultures]="supportedCultures()">
-</app-operator-layout>
+@switch (layout()) {
+  @case ('fullscreen') {
+    <app-fullscreen-layout
+      [webModuleItems]="webModuleItems()"
+      [externalModuleItems]="externalModuleItems()"
+      [supportedCultures]="supportedCultures()">
+    </app-fullscreen-layout>
+  }
+  @case ('operator') {
+    <app-operator-layout
+      [webModuleItems]="webModuleItems()"
+      [externalModuleItems]="externalModuleItems()"
+      [supportedCultures]="supportedCultures()">
+    </app-operator-layout>
+  }
+  @default {
+    <app-full-layout
+      [webModuleItems]="webModuleItems()"
+      [externalModuleItems]="externalModuleItems()"
+      [supportedCultures]="supportedCultures()">
+    </app-full-layout>
+  }
+}
