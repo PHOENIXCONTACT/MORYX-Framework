@@ -1,7 +1,7 @@
-import {Component, computed, inject, input} from '@angular/core';
+import {Component, computed, inject, input, ViewChild} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
-import {MatMenuModule} from '@angular/material/menu';
+import {MatMenu, MatMenuModule} from '@angular/material/menu';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatDialog} from '@angular/material/dialog';
 import {localLanguage} from '../utils';
@@ -18,6 +18,8 @@ import {CultureModel} from '../models/culture-model';
 export class MoreMenu {
   supportedCultures = input.required<CultureModel[]>();
   modules = input.required<ModuleItem[]>();
+
+  @ViewChild('appMenu') appMenu!: MatMenu;
 
   currentCulture = computed(() => localLanguage());
 

@@ -1,5 +1,5 @@
 <nav #navEl>
-  <button class="nav-item grid-trigger" [matMenuTriggerFor]="moduleGrid">
+  <button class="nav-item" [matMenuTriggerFor]="moduleGrid">
     <div class="icon-wrapper">
       <mat-icon>view_module</mat-icon>
     </div>
@@ -19,7 +19,16 @@
   } @empty {
     <span class="empty">No items.</span>
   }
+
+  <button class="nav-item" [matMenuTriggerFor]="moreMenu.appMenu">
+    <div class="icon-wrapper">
+      <mat-icon>more_horiz</mat-icon>
+    </div>
+    <span class="nav-title">More</span>
+  </button>
 </nav>
+
+<app-more-menu #moreMenu [modules]="otherModules()" [supportedCultures]="supportedCultures()"></app-more-menu>
 
 <mat-menu #moduleGrid="matMenu" panelClass="module-grid-panel">
   <div class="module-grid" (click)="$event.stopPropagation()">

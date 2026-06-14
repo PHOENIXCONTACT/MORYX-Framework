@@ -23,4 +23,10 @@ export class OperatorLayout {
       .filter(m => m.category === ModuleCategory.User)
       .sort((a, b) => a.sortIndex - b.sortIndex);
   });
+
+  otherModules = computed(() => {
+    return this.webModuleItems()
+      .filter(m => m.category !== ModuleCategory.User)
+      .sort((a, b) => a.sortIndex - b.sortIndex);
+  });
 }

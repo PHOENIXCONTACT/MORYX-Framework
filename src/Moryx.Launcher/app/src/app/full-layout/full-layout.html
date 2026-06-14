@@ -6,7 +6,10 @@
   <span class="toolbar-spacer"></span>
   <slot name="topRegion"></slot>
   <span class="toolbar-spacer"></span>
-  <app-more-menu [modules]="otherModules()" [supportedCultures]="supportedCultures()"></app-more-menu>
+  <button mat-icon-button aria-label="More options" [matMenuTriggerFor]="moreMenu.appMenu">
+    <mat-icon>more_vert</mat-icon>
+  </button>
+  <app-more-menu #moreMenu [modules]="otherModules()" [supportedCultures]="supportedCultures()"></app-more-menu>
 </mat-toolbar>
 
 <mat-sidenav-container autosize>

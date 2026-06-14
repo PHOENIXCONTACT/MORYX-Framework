@@ -11,10 +11,11 @@ import {MoreMenu} from '../more-menu/more-menu';
 import {ExternalModuleItem} from '../models/external-module-item';
 import {ModuleCategory} from '../models/module-category';
 import {CultureModel} from '../models/culture-model';
+import {MatMenuTrigger} from '@angular/material/menu';
 
 @Component({
   selector: 'app-full-layout',
-  imports: [RouterOutlet, VerticalNav, MatToolbarModule, MatIconModule, MatButtonModule, MatSidenavModule, MoryxLogo, MoreMenu],
+  imports: [RouterOutlet, VerticalNav, MatToolbarModule, MatIconModule, MatButtonModule, MatSidenavModule, MoryxLogo, MoreMenu, MatMenuTrigger],
   templateUrl: './full-layout.html',
   styleUrl: './full-layout.scss'
 })

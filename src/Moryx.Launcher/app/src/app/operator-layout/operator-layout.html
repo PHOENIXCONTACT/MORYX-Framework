@@ -5,4 +5,8 @@
   <router-outlet />
 </div>
 
-<app-horizontal-nav [modules]="userModules()"></app-horizontal-nav>
+<app-horizontal-nav
+  [modules]="userModules()"
+  [otherModules]="otherModules()"
+  [supportedCultures]="supportedCultures()">
+</app-horizontal-nav>
