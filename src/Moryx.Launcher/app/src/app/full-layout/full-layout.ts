@@ -4,10 +4,13 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSidenavModule} from '@angular/material/sidenav';
-import {CultureModel, ExternalModuleItem, ModuleCategory, WebModuleItem} from '../web-module-item';
+import {WebModuleItem} from '../models/web-module-item';
 import {VerticalNav} from '../vertical-nav/vertical-nav';
 import {MoryxLogo} from '../moryx-logo/moryx-logo';
 import {MoreMenu} from '../more-menu/more-menu';
+import {ExternalModuleItem} from '../models/external-module-item';
+import {ModuleCategory} from '../models/module-category';
+import {CultureModel} from '../models/culture-model';
 
 @Component({
   selector: 'app-full-layout',

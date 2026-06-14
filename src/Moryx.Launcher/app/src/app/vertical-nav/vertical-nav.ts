@@ -1,8 +1,9 @@
 import {Component, input} from '@angular/core';
 import {MatListModule} from '@angular/material/list';
 import {MatIconModule} from '@angular/material/icon';
-import {ExternalModuleItem, WebModuleItem} from '../web-module-item';
+import {WebModuleItem} from '../models/web-module-item';
 import {NotificationBadge} from '../notification-badge/notification-badge';
+import {ExternalModuleItem} from '../models/external-module-item';
 
 @Component({
   selector: 'app-vertical-nav',

@@ -1,7 +1,9 @@
 import {Component, effect, inject, input, signal, ViewEncapsulation} from '@angular/core';
-import {CultureModel, ExternalModuleItem, WebModuleItem} from './web-module-item';
+import {WebModuleItem} from './models/web-module-item';
 import {FullLayout} from './full-layout/full-layout';
 import {LauncherState, LauncherStateService} from './services/launcher-state.service';
+import {ExternalModuleItem} from './models/external-module-item';
+import {CultureModel} from './models/culture-model';
 
 @Component({
   selector: 'app-root',

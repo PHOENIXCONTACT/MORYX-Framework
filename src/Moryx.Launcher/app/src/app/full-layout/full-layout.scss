@@ -28,39 +28,3 @@ mat-toolbar {
 .toolbar-spacer {
   flex: 1 1 auto;
 }
-
-.slot-region {
-  border: 2px dashed;
-  border-radius: 4px;
-  padding: 8px;
-  min-height: 40px;
-  position: relative;
-}
-
-.slot-label {
-  position: absolute;
-  top: -10px;
-  left: 8px;
-  font-size: 11px;
-  font-weight: 600;
-  background: white;
-  padding: 0 4px;
-}
-
-.slot-app {
-  border-color: #4f87f5;
-
-  .slot-label { color: #4f87f5; }
-}
-
-.slot-top-region {
-  border-color: #34a853;
-
-  .slot-label { color: #34a853; }
-}
-
-.slot-right-region {
-  border-color: #ea4335;
-
-  .slot-label { color: #ea4335; }
-}
