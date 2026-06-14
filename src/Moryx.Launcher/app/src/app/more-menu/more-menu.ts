@@ -1,14 +1,13 @@
-import {Component, computed, inject, input, ViewChild} from '@angular/core';
+import {Component, inject, ViewChild} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenu, MatMenuModule} from '@angular/material/menu';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatDialog} from '@angular/material/dialog';
 import {LauncherStateService} from '../services/launcher-state.service';
-import {localLanguage} from '../utils';
 import {AboutDialog} from '../about-dialog/about-dialog';
-import {ModuleItem} from '../models/module-item';
-import {CultureModel} from '../models/culture-model';
+import {ModuleService} from '../services/module.service';
+import {CultureService} from '../services/culture.service';
 
 @Component({
   selector: 'app-more-menu',
@@ -17,12 +16,14 @@ import {CultureModel} from '../models/culture-model';
   styleUrl: './more-menu.scss'
 })
 export class MoreMenu {
-  supportedCultures = input.required<CultureModel[]>();
-  modules = input.required<ModuleItem[]>();
+  private moduleService = inject(ModuleService);
+  private cultureService = inject(CultureService);
+
+  modules = this.moduleService.otherModules;
+  supportedCultures = this.cultureService.supportedCultures;
+  currentCulture = this.cultureService.currentCulture;
 
   @ViewChild('appMenu') appMenu!: MatMenu;
-
-  currentCulture = computed(() => localLanguage());
 
   private launcherStateService = inject(LauncherStateService);
   currentState = this.launcherStateService.state;
@@ -40,11 +41,5 @@ export class MoreMenu {
     this.dialog.open(AboutDialog);
   }
 
-  selectCulture(culture: CultureModel) {
-    let cookieDate = new Date;
-    cookieDate.setFullYear(cookieDate.getFullYear() + 1);
-    const value = encodeURIComponent(`c=${culture.name}|uic=${culture.name}`);
-    document.cookie = `.AspNetCore.Culture=${value};path=/;expires=${cookieDate.toUTCString()}`;
-    window.location.reload();
-  }
+  selectCulture = this.cultureService.selectCulture.bind(this.cultureService);
 }

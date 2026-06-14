@@ -6,7 +6,7 @@ import {of} from 'rxjs';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule} from '@angular/material/dialog';
 import {CommonService} from '@api/services/common.service';
-import {localLanguage} from '../utils';
+import {CultureService} from '../services/culture.service';
 
 @Component({
   selector: 'app-about-dialog',
@@ -17,6 +17,7 @@ import {localLanguage} from '../utils';
 export class AboutDialog {
 
   private commonService = inject(CommonService);
+  private cultureService = inject(CultureService);
 
   private applicationInfo = toSignal(this.commonService.getApplicationInfo()
     .pipe(catchError(() => of(null))));
@@ -34,7 +35,7 @@ export class AboutDialog {
     if (!rawServerTime) {
       return null;
     }
-    return new Intl.DateTimeFormat(localLanguage() || undefined, {
+    return new Intl.DateTimeFormat(this.cultureService.currentCulture() || undefined, {
       dateStyle: 'medium',
       timeStyle: 'medium',
     }).format(new Date(rawServerTime));

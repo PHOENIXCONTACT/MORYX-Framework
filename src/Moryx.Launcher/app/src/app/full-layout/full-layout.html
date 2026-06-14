@@ -9,12 +9,12 @@
   <button mat-icon-button aria-label="More options" [matMenuTriggerFor]="moreMenu.appMenu">
     <mat-icon>more_vert</mat-icon>
   </button>
-  <app-more-menu #moreMenu [modules]="otherModules()" [supportedCultures]="supportedCultures()"></app-more-menu>
+  <app-more-menu #moreMenu></app-more-menu>
 </mat-toolbar>
 
 <mat-sidenav-container autosize>
   <mat-sidenav mode="side" opened style="width: fit-content">
-    <app-vertical-nav [modules]="userModules()" [collapsed]="navCollapsed()"></app-vertical-nav>
+    <app-vertical-module-nav [collapsed]="navCollapsed()"></app-vertical-module-nav>
   </mat-sidenav>
 
   <mat-sidenav-content>

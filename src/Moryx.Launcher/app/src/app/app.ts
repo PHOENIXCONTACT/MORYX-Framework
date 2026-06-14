@@ -6,6 +6,8 @@ import {ExternalModuleItem} from './models/external-module-item';
 import {CultureModel} from './models/culture-model';
 import {OperatorLayout} from './operator-layout/operator-layout';
 import {FullscreenLayout} from './fullscreen-layout/fullscreen-layout';
+import {ModuleService} from './services/module.service';
+import {CultureService} from './services/culture.service';
 
 @Component({
   selector: 'app-root',
@@ -22,19 +24,24 @@ export class App {
   supportedCultures = input.required<CultureModel[]>();
 
   private launcherStateService = inject(LauncherStateService);
+  private moduleService = inject(ModuleService);
+  private cultureService = inject(CultureService);
 
   layout = computed(() => {
     const state = this.launcherStateService.state();
-    if (state.fullscreen) return 'fullscreen';
-    if (state.operatorMode) return 'operator';
+    if (state.fullscreen) {
+      return 'fullscreen';
+    }
+    if (state.operatorMode) {
+      return 'operator';
+    }
     return 'full';
   });
 
   constructor() {
     effect(() => {
-      console.log('Module items changed', [...this.webModuleItems(), ...this.externalModuleItems()]);
-      console.log('Supported cultures changed', this.supportedCultures());
-      console.log('Layout changed', this.layout());
+      this.moduleService.modules.set([...this.webModuleItems(), ...this.externalModuleItems()]);
+      this.cultureService.supportedCultures.set(this.supportedCultures());
     });
   }
 }

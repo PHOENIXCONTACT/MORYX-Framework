@@ -1,23 +1,11 @@
 @switch (layout()) {
   @case ('fullscreen') {
-    <app-fullscreen-layout
-      [webModuleItems]="webModuleItems()"
-      [externalModuleItems]="externalModuleItems()"
-      [supportedCultures]="supportedCultures()">
-    </app-fullscreen-layout>
+    <app-fullscreen-layout></app-fullscreen-layout>
   }
   @case ('operator') {
-    <app-operator-layout
-      [webModuleItems]="webModuleItems()"
-      [externalModuleItems]="externalModuleItems()"
-      [supportedCultures]="supportedCultures()">
-    </app-operator-layout>
+    <app-operator-layout></app-operator-layout>
   }
   @default {
-    <app-full-layout
-      [webModuleItems]="webModuleItems()"
-      [externalModuleItems]="externalModuleItems()"
-      [supportedCultures]="supportedCultures()">
-    </app-full-layout>
+    <app-full-layout></app-full-layout>
   }
 }

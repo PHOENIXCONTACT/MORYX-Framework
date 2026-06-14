@@ -1,26 +1,25 @@
-import {afterNextRender, Component, computed, DestroyRef, ElementRef, inject, input, signal, viewChild} from '@angular/core';
+import {afterNextRender, Component, computed, DestroyRef, ElementRef, inject, signal, viewChild} from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatMenuModule} from '@angular/material/menu';
 import {WebModuleItem} from '../models/web-module-item';
 import {ExternalModuleItem} from '../models/external-module-item';
-import {CultureModel} from '../models/culture-model';
-import {ModuleItem} from '../models/module-item';
 import {NotificationBadge} from '../notification-badge/notification-badge';
 import {MoreMenu} from '../more-menu/more-menu';
+import {ModuleService} from '../services/module.service';
 
 const MIN_ITEM_WIDTH = 112; // items shrink below this -> remove from the end
 
 @Component({
-  selector: 'app-horizontal-nav',
+  selector: 'app-horizontal-module-nav',
   imports: [MatIconModule, MatButtonModule, MatMenuModule, NotificationBadge, MoreMenu],
-  templateUrl: './horizontal-nav.html',
-  styleUrl: './horizontal-nav.scss'
+  templateUrl: './horizontal-module-nav.html',
+  styleUrl: './horizontal-module-nav.scss'
 })
-export class HorizontalNav {
-  modules = input.required<(WebModuleItem | ExternalModuleItem)[]>();
-  otherModules = input.required<ModuleItem[]>();
-  supportedCultures = input.required<CultureModel[]>();
+export class HorizontalModuleNav {
+  private moduleService = inject(ModuleService);
+
+  modules = this.moduleService.userModules;
 
   private navEl = viewChild.required<ElementRef<HTMLElement>>('navEl');
   private destroyRef = inject(DestroyRef);
