@@ -13,7 +13,7 @@ public class MaterialPreAdvice
     /// <summary>
     /// The container being announced for departure.
     /// </summary>
-    public IMaterialContainer Container { get; set; } = null!;
+    public required IMaterialContainer Container { get; set; }
 
     /// <summary>
     /// Reason for the departure.

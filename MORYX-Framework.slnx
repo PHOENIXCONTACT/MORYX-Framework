@@ -120,8 +120,9 @@
     <File Path="src/Tests/Directory.Build.props" />
     <File Path="src/Tests/Directory.Build.targets" />
   </Folder>
-  <Folder Name="/Tests/IntegrationTests/">
+    <Folder Name="/Tests/IntegrationTests/">
     <Project Path="src/Tests/Moryx.Communication.Sockets.IntegrationTests/Moryx.Communication.Sockets.IntegrationTests.csproj" />
+    <Project Path="src/Tests/Moryx.Material.IntegrationTests/Moryx.Material.IntegrationTests.csproj" />
     <Project Path="src/Tests/Moryx.Operators.Management.Integration.Tests/Moryx.Operators.Management.Integration.Tests.csproj" />
     <Project Path="src/Tests/Moryx.Products.IntegrationTests/Moryx.Products.IntegrationTests.csproj" />
     <Project Path="src/Tests/Moryx.Runtime.Endpoints.IntegrationTests/Moryx.Runtime.Endpoints.IntegrationTests.csproj" />
