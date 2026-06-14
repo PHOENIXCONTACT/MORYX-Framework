@@ -4,10 +4,11 @@ import {FullLayout} from './full-layout/full-layout';
 import {LauncherState, LauncherStateService} from './services/launcher-state.service';
 import {ExternalModuleItem} from './models/external-module-item';
 import {CultureModel} from './models/culture-model';
+import {OperatorLayout} from './operator-layout/operator-layout';
 
 @Component({
   selector: 'app-root',
-  imports: [FullLayout],
+  imports: [FullLayout, OperatorLayout],
   templateUrl: './app.html',
   styleUrl: './app.scss',
   encapsulation: ViewEncapsulation.ShadowDom,

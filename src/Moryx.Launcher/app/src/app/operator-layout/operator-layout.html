@@ -1,1 +1,8 @@
-<p>operator-layout works!</p>
+<slot name="topRegion"></slot>
+
+<div class="content">
+  <slot name="app"></slot>
+  <router-outlet />
+</div>
+
+<app-horizontal-nav [modules]="userModules()"></app-horizontal-nav>

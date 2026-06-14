@@ -1,0 +1,33 @@
+<nav #navEl>
+  <button class="nav-item grid-trigger" [matMenuTriggerFor]="moduleGrid">
+    <div class="icon-wrapper">
+      <mat-icon>view_module</mat-icon>
+    </div>
+    <span class="nav-title">All</span>
+  </button>
+
+  @for (module of visibleModules(); track module.route) {
+    <a class="nav-item" [href]="module.route" [title]="module.description">
+      <div class="icon-wrapper">
+        <mat-icon>{{ module.icon }}</mat-icon>
+        @if (asWeb(module); as webItem) {
+          <app-notification-badge [eventStream]="webItem.eventStream ?? ''"></app-notification-badge>
+        }
+      </div>
+      <span class="nav-title">{{ module.title }}</span>
+    </a>
+  } @empty {
+    <span class="empty">No items.</span>
+  }
+</nav>
+
+<mat-menu #moduleGrid="matMenu" panelClass="module-grid-panel">
+  <div class="module-grid" (click)="$event.stopPropagation()">
+    @for (module of modules(); track module.route) {
+      <a class="module-grid-item" [href]="module.route" [title]="module.description">
+        <mat-icon>{{ module.icon }}</mat-icon>
+        <span>{{ module.title }}</span>
+      </a>
+    }
+  </div>
+</mat-menu>

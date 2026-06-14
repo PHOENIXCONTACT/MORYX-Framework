@@ -1,0 +1,113 @@
+:host {
+  display: block;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 -1px 2px 0 rgba(0, 0, 0, 0.06);
+  background: white;
+}
+
+nav {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  height: 60px;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  gap: 2px;
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+  padding: 8px 4px;
+  border-radius: 4px;
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.05);
+  }
+}
+
+.icon-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  mat-icon {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+  }
+
+  app-notification-badge {
+    position: absolute;
+    top: -4px;
+    right: -8px;
+  }
+}
+
+.nav-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.grid-trigger {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.empty {
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  font-size: 0.85rem;
+  color: rgba(0, 0, 0, 0.4);
+}
+
+// Only the panel wrapper class is added by CDK outside the component template — ::ng-deep required here
+::ng-deep .module-grid-panel .mat-mdc-menu-content {
+  padding: 0 !important;
+}
+
+// .module-grid and .module-grid-item are inside <mat-menu> which is part of the component template,
+// so Angular adds _ngcontent attributes to them — scoped styles work without ::ng-deep
+.module-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 12px;
+}
+
+.module-grid-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 12px 8px;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-align: center;
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  mat-icon, .material-icons {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+  }
+}
