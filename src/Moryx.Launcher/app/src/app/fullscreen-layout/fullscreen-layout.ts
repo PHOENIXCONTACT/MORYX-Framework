@@ -1,6 +1,6 @@
 import {Component, HostListener, inject} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
-import {LauncherStateService} from '../services/launcher-state.service';
+import {LauncherLayout, LauncherStateService} from '../services/launcher-state.service';
 
 @Component({
   selector: 'app-fullscreen-layout',
@@ -14,6 +14,6 @@ export class FullscreenLayout {
 
   @HostListener('window:keydown.escape')
   exitFullscreen() {
-    this.launcherStateService.updateState({ fullscreen: false, operatorMode: false });
+    this.launcherStateService.updateLayout(LauncherLayout.Full);
   }
 }

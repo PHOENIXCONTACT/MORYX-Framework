@@ -24,24 +24,24 @@
 </mat-menu>
 
 <mat-menu #viewsMenu="matMenu">
-  <button mat-menu-item (click)="setLayout('full')">
-    @if (!currentState().fullscreen && !currentState().operatorMode) {
+  <button mat-menu-item (click)="setLayout(LauncherLayout.Full)">
+    @if (currentLayout() === LauncherLayout.Full) {
       <mat-icon>check</mat-icon>
     } @else {
       <mat-icon></mat-icon>
     }
     <span>Full mode</span>
   </button>
-  <button mat-menu-item (click)="setLayout('operator')">
-    @if (currentState().operatorMode) {
+  <button mat-menu-item (click)="setLayout(LauncherLayout.Operator)">
+    @if (currentLayout() === LauncherLayout.Operator) {
       <mat-icon>check</mat-icon>
     } @else {
       <mat-icon></mat-icon>
     }
     <span>Operator mode</span>
   </button>
-  <button mat-menu-item (click)="setLayout('fullscreen')">
-    @if (currentState().fullscreen) {
+  <button mat-menu-item (click)="setLayout(LauncherLayout.Fullscreen)">
+    @if (currentLayout() === LauncherLayout.Fullscreen) {
       <mat-icon>check</mat-icon>
     } @else {
       <mat-icon></mat-icon>

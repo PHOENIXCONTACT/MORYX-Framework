@@ -1,4 +1,4 @@
-import {Component, signal} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatIconModule} from '@angular/material/icon';
@@ -8,6 +8,7 @@ import {VerticalModuleNav} from '../vertical-module-nav/vertical-module-nav';
 import {MoryxLogo} from '../moryx-logo/moryx-logo';
 import {MoreMenu} from '../more-menu/more-menu';
 import {MatMenuTrigger} from '@angular/material/menu';
+import {LauncherStateService} from '../services/launcher-state.service';
 
 @Component({
   selector: 'app-full-layout',
@@ -17,9 +18,11 @@ import {MatMenuTrigger} from '@angular/material/menu';
 })
 export class FullLayout {
 
-  navCollapsed = signal(false);
+  private launcherStateService = inject(LauncherStateService);
+
+  navCollapsed = this.launcherStateService.navCollapsed;
 
   toggleNav() {
-    this.navCollapsed.update(v => !v);
+    this.launcherStateService.updateNavCollapsed(!this.navCollapsed());
   }
 }

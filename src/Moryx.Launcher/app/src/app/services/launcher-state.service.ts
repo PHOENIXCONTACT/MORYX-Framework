@@ -10,24 +10,62 @@ import {Injectable, signal} from '@angular/core';
 })
 export class LauncherStateService {
 
-  stateName = "LauncherState";
+  private readonly stateName = 'LauncherState';
 
-  state = signal<LauncherState>(this.getState() ?? { fullscreen: false, operatorMode: false });
+  layout = signal<LauncherLayout>(this.getLayout());
 
-  public getState(): LauncherState | undefined {
-    const value = window.localStorage.getItem(this.stateName);
-    if (!value) return undefined;
-    return JSON.parse(value) as LauncherState;
+  navCollapsed = signal<boolean>(this.getStoredState()?.navCollapsed ?? false);
+
+  public getLayout(): LauncherLayout {
+    const storedState = this.getStoredState();
+    if (!storedState) {
+      return LauncherLayout.Full;
+    }
+    if (storedState.fullscreen) {
+      return LauncherLayout.Fullscreen;
+    }
+    if (storedState.operatorMode) {
+      return LauncherLayout.Operator;
+    }
+    return LauncherLayout.Full;
   }
 
-  public updateState(value: LauncherState): void {
-    window.localStorage.setItem(this.stateName, JSON.stringify(value));
-    this.state.set(value);
+  public updateLayout(layout: LauncherLayout): void {
+    this.persistState({
+      fullscreen: layout === LauncherLayout.Fullscreen,
+      operatorMode: layout === LauncherLayout.Operator,
+    });
+    this.layout.set(layout);
   }
 
+  public updateNavCollapsed(collapsed: boolean): void {
+    this.persistState({ navCollapsed: collapsed });
+    this.navCollapsed.set(collapsed);
+  }
+
+  private persistState(changes: Partial<LauncherState>): void {
+    const currentState = this.getStoredState() ?? { fullscreen: false, operatorMode: false };
+    window.localStorage.setItem(this.stateName, JSON.stringify({ ...currentState, ...changes }));
+  }
+
+  private getStoredState(): LauncherState | undefined {
+    const storedValue = window.localStorage.getItem(this.stateName);
+    if (!storedValue) {
+      return undefined;
+    }
+    return JSON.parse(storedValue) as LauncherState;
+  }
 }
 
-export interface LauncherState{
+export enum LauncherLayout {
+  Full = 'full',
+  Operator = 'operator',
+  Fullscreen = 'fullscreen',
+}
+
+// Kept for localStorage compatibility — not part of the public API
+interface LauncherState {
   fullscreen: boolean;
   operatorMode: boolean;
+  navCollapsed?: boolean;
 }

@@ -1,4 +1,4 @@
-import {Component, computed, effect, inject, input, ViewEncapsulation} from '@angular/core';
+import {Component, effect, inject, input, ViewEncapsulation} from '@angular/core';
 import {WebModuleItem} from './models/web-module-item';
 import {FullLayout} from './full-layout/full-layout';
 import {LauncherStateService} from './services/launcher-state.service';
@@ -27,16 +27,7 @@ export class App {
   private moduleService = inject(ModuleService);
   private cultureService = inject(CultureService);
 
-  layout = computed(() => {
-    const state = this.launcherStateService.state();
-    if (state.fullscreen) {
-      return 'fullscreen';
-    }
-    if (state.operatorMode) {
-      return 'operator';
-    }
-    return 'full';
-  });
+  layout = this.launcherStateService.layout;
 
   constructor() {
     effect(() => {
