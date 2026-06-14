@@ -1,11 +1,28 @@
 <h2 mat-dialog-title>About</h2>
 
 <mat-dialog-content>
+  <h3 class="section-title">Application</h3>
   <dl>
-    @for (entry of entries(); track entry.label) {
+    @for (entry of appEntries(); track entry.label) {
       <div class="entry">
         <dt>{{ entry.label }}</dt>
         <dd>{{ entry.value }}</dd>
+      </div>
+    }
+  </dl>
+
+  <h3 class="section-title">Host</h3>
+  <dl>
+    @for (entry of hostEntries(); track entry.label) {
+      <div class="entry">
+        <dt>{{ entry.label }}</dt>
+        <dd>{{ entry.value }}</dd>
+      </div>
+    }
+    @if (serverTime()) {
+      <div class="entry">
+        <dt>Server Time</dt>
+        <dd>{{ serverTime() }}</dd>
       </div>
     }
   </dl>
