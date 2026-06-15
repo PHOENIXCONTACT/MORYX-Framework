@@ -13,6 +13,8 @@ namespace Moryx.Runtime.Kernel;
 public class ConfigManager : IConfigManager, IEmptyPropertyProvider
 {
     private readonly ConfigLiveUpdater _liveUpdater = new();
+
+    // TODO: Remove SharedConfigProvider on Future branch
     internal readonly SharedConfigProvider _sharedProvider;
     private IValueProvider[] _valueProviders;
 
