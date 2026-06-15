@@ -9,7 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { SnackbarService, SearchBarService, SearchRequest } from '@moryx/ngx-web-framework/services';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { WorkplanModel, WorkplanSessionModel } from '@api/models';
 import { WorkplanService } from '@api/services';
 import { ConfirmDialogButton, ConfirmDialog, ConfirmDialogData } from '@app/dialogs/dialog-confirm/dialog-confirm';
@@ -35,7 +35,7 @@ import { MatCardModule } from '@angular/material/card';
     MatTooltipModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    TranslateModule,
+    TranslatePipe,
     MatButtonModule,
     MatCardModule
   ]

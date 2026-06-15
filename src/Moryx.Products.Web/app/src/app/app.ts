@@ -25,7 +25,7 @@ import {
   SearchRequest,
   SearchSuggestion,
 } from "@moryx/ngx-web-framework/services";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { environment } from "../environments/environment";
 import {
   ProductDefinitionModel,
@@ -65,7 +65,7 @@ import { MatInputModule } from "@angular/material/input";
     MatToolbarModule,
     MatButtonModule,
     MatTooltipModule,
-    TranslateModule,
+    TranslatePipe,
     MatIconModule,
     FormsModule,
     MatFormFieldModule,
@@ -116,7 +116,7 @@ export class App implements OnInit, OnDestroy {
       TranslationConstants.LANGUAGES.ZH,
     ]);
     this.translateService.setFallbackLang("en");
-    this.translateService.use(this.languageService.getDefaultLanguage());
+    this.translateService.use(this.languageService.getFallbackLang());
   }
 
   private async getTranslations(): Promise<{ [key: string]: string }> {

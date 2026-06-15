@@ -8,7 +8,7 @@ import { lastValueFrom } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuTrigger, MatMenu, MatMenuContent, MatMenuItem } from '@angular/material/menu';
 import { Router } from '@angular/router';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { environment } from '../../../environments/environment';
 import { ContentDescriptorModel } from '@api/models';
@@ -32,7 +32,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     FileDragAndDropDirective, NgStyle, CommonModule,
     MediaFile, MatMenu, MatMenuContent,
     MatMenuItem, MatIcon, MatMenuTrigger,
-    MatFabButton, MatProgressSpinner, TranslateModule,
+    MatFabButton, MatProgressSpinner, TranslatePipe,
     EmptyState]
 })
 export class MediaOverview implements OnInit, OnDestroy {

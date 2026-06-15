@@ -4,7 +4,7 @@
 */
 
 import { Component, inject, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { NotificationService } from '@app/services/notification.service';
 import { environment } from '../../../environments/environment';
@@ -26,7 +26,7 @@ import { MatButtonModule } from '@angular/material/button';
     CommonModule,
     MatCardModule,
     MatIconModule,
-    TranslateModule,
+    TranslatePipe,
     MarkdownComponent,
     NavigableEntryEditor,
     MatButtonModule

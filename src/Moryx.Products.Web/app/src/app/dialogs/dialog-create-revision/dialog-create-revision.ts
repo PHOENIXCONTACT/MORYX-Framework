@@ -5,7 +5,7 @@
 
 import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { DuplicateProductInfos } from '@app/models/DuplicateProductInfos';
 import { ProductModel } from '@api/models';
@@ -22,7 +22,7 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrls: ['./dialog-create-revision.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
-    TranslateModule,
+    TranslatePipe,
     MatFormFieldModule,
     FormsModule,
     MatInputModule,

@@ -6,7 +6,7 @@
 import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationCancel, NavigationEnd, Router, RouterOutlet } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { EditProductsService } from '@app/services/edit-products.service';
 import { ProductsDetailsHeader } from './products-details-header/products-details-header';
@@ -24,7 +24,7 @@ import { ProductModel } from '@api/models';
     ProductsDetailsHeader,
     MatDividerModule,
     MatTabsModule,
-    TranslateModule,
+    TranslatePipe,
     RouterOutlet
   ]
 })

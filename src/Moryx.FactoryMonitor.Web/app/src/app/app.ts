@@ -50,7 +50,7 @@ export class App {
       TranslationConstants.LANGUAGES.IT,
     ]);
     this.translateService.setFallbackLang('en');
-    this.translateService.use(this.languageService.getDefaultLanguage());
+    this.translateService.use(this.languageService.getFallbackLang());
   }
 
   getCell(cellId: number): CellModel {

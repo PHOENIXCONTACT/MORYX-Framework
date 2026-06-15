@@ -7,7 +7,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { ProductModel, ProductQuery, RevisionFilter, Selector } from '../../api/models';
 import { ProductManagementService } from '../../api/services';
@@ -22,7 +22,7 @@ import { MatButtonModule } from '@angular/material/button';
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CommonModule,
-    TranslateModule,
+    TranslatePipe,
     MatListModule,
     MatDialogModule,
     MatButtonModule

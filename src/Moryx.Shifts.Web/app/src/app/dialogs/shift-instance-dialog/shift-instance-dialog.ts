@@ -13,7 +13,7 @@ import { MatInputModule } from '@angular/material/input';
 import  moment from 'moment';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { ShiftInstanceModel } from '@app/models/shift-instance-model';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
@@ -28,7 +28,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatInputModule,
     MatDatepickerModule,
     ReactiveFormsModule,
-    TranslateModule,
+    TranslatePipe,
     MatButtonModule
 ]
 })

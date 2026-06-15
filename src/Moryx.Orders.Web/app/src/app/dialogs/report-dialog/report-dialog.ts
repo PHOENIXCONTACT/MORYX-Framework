@@ -5,7 +5,7 @@
 
 import { Component, computed, inject, OnInit, signal, ChangeDetectionStrategy } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from "@angular/material/dialog";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslatePipe } from "@ngx-translate/core";
 import { Observable } from "rxjs";
 import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
 import { OperationViewModel } from "@app/models/operation-view-model";
@@ -28,7 +28,7 @@ import { MatInputModule } from "@angular/material/input";
   imports: [
     CommonModule,
     MatDialogModule,
-    TranslateModule,
+    TranslatePipe,
     MatGridListModule,
     MatFormFieldModule,
     FormsModule,

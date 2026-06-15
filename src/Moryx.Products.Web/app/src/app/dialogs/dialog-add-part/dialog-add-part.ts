@@ -6,7 +6,7 @@
 import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { PartConnector, ProductModel, ProductQuery, RevisionFilter, Selector } from '../../api/models';
 import { ProductManagementService } from '../../api/services';
@@ -27,7 +27,7 @@ import { MatIconModule } from '@angular/material/icon';
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CommonModule,
-    TranslateModule,
+    TranslatePipe,
     FormsModule,
     ReactiveFormsModule,
     MatFormFieldModule,

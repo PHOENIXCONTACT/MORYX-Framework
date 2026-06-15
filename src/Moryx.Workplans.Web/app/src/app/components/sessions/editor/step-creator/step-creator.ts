@@ -5,7 +5,7 @@
 
 import { Component, inject, input, OnDestroy, OnInit, output, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { WorkplanStepRecipe } from '@api/models';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
@@ -21,7 +21,7 @@ import { MatButtonModule } from '@angular/material/button';
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     NavigableEntryEditor,
-    TranslateModule,
+    TranslatePipe,
     MatSelectModule,
     MatButtonModule
   ]

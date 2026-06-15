@@ -5,7 +5,7 @@
 
 import { Component, computed, effect, inject, linkedSignal, signal, untracked, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from "@angular/forms";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslatePipe } from "@ngx-translate/core";
 import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
 import { RecipeClassificationModel, WorkplanModel } from "@api/models";
 import { CacheProductsService } from "@app/services/cache-products.service";
@@ -24,7 +24,7 @@ import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatInputModule,
-    TranslateModule,
+    TranslatePipe,
     FormsModule,
     MatOptionModule,
     ReactiveFormsModule,

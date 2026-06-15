@@ -7,7 +7,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, OnDestroy, signal, ChangeDetectionStrategy } from '@angular/core';
 import { Entry, NavigableEntryEditor, PrototypeToEntryConverter } from '@moryx/ngx-web-framework/entry-editor';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { WorkplanNodeClassification, WorkplanNodeModel } from '@api/models';
 import { WorkplanEditingService } from '@api/services';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
@@ -30,7 +30,7 @@ import { MatInputModule } from '@angular/material/input';
     MatSelectModule,
     FormsModule,
     NavigableEntryEditor,
-    TranslateModule,
+    TranslatePipe,
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule

@@ -18,7 +18,7 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatSelectModule } from "@angular/material/select";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { lastValueFrom } from "rxjs";
 import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
 import { OperationNumberValidations } from "@app/validations/operationNumberValidations";
@@ -47,7 +47,7 @@ enum Action {
     MatDialogModule,
     MatFormFieldModule,
     FormsModule,
-    TranslateModule,
+    TranslatePipe,
     ReactiveFormsModule,
     FormsModule,
     MatButtonModule,

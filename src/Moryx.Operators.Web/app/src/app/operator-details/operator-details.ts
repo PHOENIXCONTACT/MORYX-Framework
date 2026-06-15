@@ -19,7 +19,7 @@ import { skillToOperatorSkill, skillTypeToModel } from "../models/model-converte
 import { SkillTypeModel } from "@api/models/skill-type-model";
 import { lastValueFrom } from "rxjs";
 import { AppStoreService } from "../services/app-store.service";
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { MatIconModule } from "@angular/material/icon";
 import { MatSidenavModule } from "@angular/material/sidenav";
@@ -38,7 +38,7 @@ import { MatButtonModule } from "@angular/material/button";
     MatIconModule,
     MatSidenavModule,
     MatTooltipModule,
-    TranslateModule,
+    TranslatePipe,
     MatFormFieldModule,
     MatInputModule,
     FormsModule,

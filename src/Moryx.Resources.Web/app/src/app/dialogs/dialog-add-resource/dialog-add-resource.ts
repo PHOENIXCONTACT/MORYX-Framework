@@ -5,7 +5,7 @@
 
 import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { ResourceModel, ResourceTypeModel } from '../../api/models';
 import { MatListModule, MatSelectionListChange } from '@angular/material/list';
@@ -25,7 +25,7 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrls: ['./dialog-add-resource.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
-    TranslateModule,
+    TranslatePipe,
     CommonModule,
     MatButtonModule,
     FormsModule,

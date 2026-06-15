@@ -4,7 +4,7 @@
 */
 
 import { Component, effect, inject, linkedSignal, untracked, ChangeDetectionStrategy } from "@angular/core";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslatePipe } from "@ngx-translate/core";
 import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
 import { FormControlService } from "@app/services/form-control-service.service";
 import { ResourceModel } from "../../../api/models";
@@ -26,7 +26,7 @@ import { toSignal } from "@angular/core/rxjs-interop";
     MatDividerModule,
     MatFormFieldModule,
     MatInputModule,
-    TranslateModule
+    TranslatePipe
   ]
 })
 export class DetailsHeader {

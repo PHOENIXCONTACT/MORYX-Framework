@@ -12,7 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatMenuTrigger, MatMenuModule } from '@angular/material/menu';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { MediaServerService } from '@app/api/services';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { environment } from '../../../environments/environment';
@@ -45,7 +45,7 @@ import { NgxDocViewerModule } from 'ngx-doc-viewer';
     MatTooltip, MatButtonModule,
     NgxDocViewerModule,
     CommonModule,
-    TranslateModule,
+    TranslatePipe,
     MatProgressSpinnerModule
   ]
 })

@@ -12,7 +12,7 @@ import {
   MatDialogActions,
   MatDialogClose
 } from '@angular/material/dialog';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { MatButton } from '@angular/material/button';
 
@@ -27,7 +27,7 @@ import { MatButton } from '@angular/material/button';
     MatDialogActions,
     MatButton,
     MatDialogClose,
-    TranslateModule
+    TranslatePipe
   ]
 })
 export class DialogDelete {

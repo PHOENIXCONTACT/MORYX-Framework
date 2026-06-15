@@ -8,7 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { CellImageDialog } from '@app/dialogs/cell-image-dialog/cell-image-dialog';
 import { CellStoreService } from '@app/services/cell-store.service';
 import { CellSettingsModel } from '@api/models/cell-settings-model';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import CellModel from '@app/models/cellModel';
 import { CommonModule } from '@angular/common';
@@ -26,7 +26,7 @@ import { DetailsItem } from '../details-item/details-item';
     CommonModule,
     TrafficLight,
     DetailsItem,
-    TranslateModule,
+    TranslatePipe,
     MatButtonModule,
     MatIconModule
   ]

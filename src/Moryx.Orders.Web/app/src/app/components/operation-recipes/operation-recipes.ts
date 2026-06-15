@@ -8,7 +8,7 @@ import { Component, computed, effect, inject, OnInit, signal, untracked, ChangeD
 import { ActivatedRoute, RouterLink } from "@angular/router";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
 import { NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslatePipe } from "@ngx-translate/core";
 import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
 import { environment } from "../../../environments/environment";
 import { OrderManagementService, ProductManagementService } from "@api/services";
@@ -37,7 +37,7 @@ import { MatSelectModule } from '@angular/material/select';
     MatSidenavModule,
     MatToolbarModule,
     CommonModule,
-    TranslateModule,
+    TranslatePipe,
     MatListModule,
     MatIconModule,
     MatButtonModule,

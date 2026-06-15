@@ -33,7 +33,7 @@ import { ShiftInstanceModel } from '@app/models/shift-instance-model';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -50,7 +50,7 @@ import { WeekDayToggleButton } from '@app/week-day-toggle-button/week-day-toggle
     MatInputModule,
     ReactiveFormsModule,
     FormsModule,
-    TranslateModule,
+    TranslatePipe,
     MatSelectModule,
     MatButtonModule,
     MatIconModule,

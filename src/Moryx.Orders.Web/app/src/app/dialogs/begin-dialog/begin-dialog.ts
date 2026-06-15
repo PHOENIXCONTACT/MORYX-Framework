@@ -5,7 +5,7 @@
 
 import { Component, computed, inject, OnInit, signal, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import {
   BeginModel,
   BeginContext,
@@ -37,7 +37,7 @@ import { MultiProgressBar } from "@app/multi-progress-bar/multi-progress-bar";
   imports: [
     MatDialogModule,
     CommonModule,
-    TranslateModule,
+    TranslatePipe,
     MatGridListModule,
     MatFormFieldModule,
     ReactiveFormsModule,

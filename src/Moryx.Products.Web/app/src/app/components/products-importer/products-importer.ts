@@ -6,7 +6,7 @@
 import { Component, computed, effect, inject, signal, untracked, ChangeDetectionStrategy } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Entry, EntryValueType, NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslatePipe } from "@ngx-translate/core";
 import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
 import { ProductImporter } from "@api/models";
 import { CacheProductsService } from "@app/services/cache-products.service";
@@ -31,7 +31,7 @@ import { MatToolbarModule } from "@angular/material/toolbar";
   styleUrls: ["./products-importer.scss"],
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
-    TranslateModule,
+    TranslatePipe,
     MatFormFieldModule,
     FormsModule,
     ReactiveFormsModule,

@@ -14,7 +14,7 @@ import { AppStoreService } from "../services/app-store.service";
 import { OperatorCard } from "../operator-card/operator-card";
 
 import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: "app-operators",
@@ -24,7 +24,7 @@ import { TranslateModule } from '@ngx-translate/core';
   imports: [
     OperatorCard,
     EmptyState,
-    TranslateModule
+    TranslatePipe
   ]
 })
 export class Operators implements OnInit {

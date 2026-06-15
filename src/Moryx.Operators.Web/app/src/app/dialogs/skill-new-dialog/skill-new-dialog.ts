@@ -14,7 +14,7 @@ import { TranslationConstants } from '@app/extensions/translation-constants.exte
 import { OperatorSkill } from '@app/models/operator-skill-model';
 import { SkillType } from '@app/models/skill-type-model';
 import { AppStoreService } from '@app/services/app-store.service';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 
@@ -30,7 +30,7 @@ import { MatInputModule } from '@angular/material/input';
     FormsModule,
     ReactiveFormsModule,
     MatDatepickerModule,
-    TranslateModule,
+    TranslatePipe,
     MatButtonModule,
     MatInputModule
   ]

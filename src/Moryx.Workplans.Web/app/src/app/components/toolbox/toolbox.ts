@@ -6,7 +6,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { WorkplanNodeClassification, WorkplanStepRecipe } from '@api/models';
 import { WorkplanEditingService } from '@api/services';
@@ -27,7 +27,7 @@ import { MatCardModule } from '@angular/material/card';
     MatExpansionModule,
     MatIconModule,
     MatCardModule,
-    TranslateModule
+    TranslatePipe
   ]
 })
 export class Toolbox implements OnInit, OnDestroy {

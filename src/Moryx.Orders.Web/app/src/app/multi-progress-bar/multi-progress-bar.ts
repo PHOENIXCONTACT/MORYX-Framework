@@ -5,7 +5,7 @@
 
 import { Component, computed, input, ChangeDetectionStrategy } from '@angular/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '../extensions/translation-constants.extensions';
 
 @Component({
@@ -16,7 +16,7 @@ import { TranslationConstants } from '../extensions/translation-constants.extens
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatTooltipModule,
-    TranslateModule
+    TranslatePipe
   ]
 })
 export class MultiProgressBar {

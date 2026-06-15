@@ -11,7 +11,7 @@ import { CellStoreService } from '@app/services/cell-store.service';
 import { EditMenuService } from '@app/services/edit-menu.service';
 import { EditMenuState } from '@app/services/EditMenutState';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { FactorySelectionService } from '@app/services/factory-selection.service';
 import { FactoryMonitorService } from '@api/services';
 import { ChangeBackgroundService } from '@app/services/change-background.service';
@@ -30,7 +30,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatTooltipModule,
     MatIconModule,
     MatButtonModule,
-    TranslateModule
+    TranslatePipe
 ]
 })
 export class EditMenu implements OnInit {

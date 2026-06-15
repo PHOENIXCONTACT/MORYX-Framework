@@ -13,7 +13,7 @@ import { AppStoreService } from '@app/services/app-store.service';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
@@ -26,7 +26,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatFormFieldModule,
     ReactiveFormsModule,
     MatInputModule,
-    TranslateModule,
+    TranslatePipe,
     MatButtonModule
   ]
 })

@@ -6,7 +6,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, input, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { ProductPartModel } from '@api/models';
 import { OrderManagementService } from '@api/services';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
@@ -17,7 +17,7 @@ import { TranslationConstants } from '@app/extensions/translation-constants.exte
   styleUrls: ['./part-list.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
-    TranslateModule
+    TranslatePipe
   ]
 })
 export class PartList implements OnInit {

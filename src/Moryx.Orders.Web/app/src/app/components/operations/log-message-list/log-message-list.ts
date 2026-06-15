@@ -6,7 +6,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, effect, inject, input, OnInit, signal, untracked, ChangeDetectionStrategy } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { delay, tap } from 'rxjs';
 import { LogLevel, OperationLogMessageModel } from '@api/models';
 import { OrderManagementService } from '@api/services';
@@ -20,7 +20,7 @@ import { TranslationConstants } from '@app/extensions/translation-constants.exte
   imports: [
     CommonModule,
     MatExpansionModule,
-    TranslateModule
+    TranslatePipe
   ]
 })
 export class LogMessageList implements OnInit {

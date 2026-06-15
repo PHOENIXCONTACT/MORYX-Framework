@@ -7,7 +7,7 @@ import { Component, inject, linkedSignal, ChangeDetectionStrategy } from '@angul
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { PartConnector, PartModel, ProductModel } from '@api/models';
 import { DialogAddPart } from '@app/dialogs/dialog-add-part/dialog-add-part';
@@ -32,7 +32,7 @@ import { MatTooltip } from "@angular/material/tooltip";
     MatListModule,
     ProductPartsDetailsComponent,
     MatButtonModule,
-    TranslateModule,
+    TranslatePipe,
     MatIcon,
     MatTooltip,
 ]

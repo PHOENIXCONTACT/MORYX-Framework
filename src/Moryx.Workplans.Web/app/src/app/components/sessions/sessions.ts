@@ -8,7 +8,7 @@ import { Component, inject, OnDestroy, OnInit, signal, ChangeDetectionStrategy }
 import { MatDialog } from '@angular/material/dialog';
 import { Router, RouterOutlet } from '@angular/router';
 import { SnackbarService, SearchBarService, SearchRequest, SearchSuggestion } from '@moryx/ngx-web-framework/services';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { SubscriptionLike } from 'rxjs';
 import { WorkplanSessionModel } from '@api/models';
 import { WorkplanEditingService } from '@api/services';
@@ -40,7 +40,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatIconModule,
     MatTooltipModule,
     FormsModule,
-    TranslateModule,
+    TranslatePipe,
     MatButtonModule
   ]
 })

@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
 import { SearchBarService, SearchRequest } from '@moryx/ngx-web-framework/services';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { OperationService } from '@app/services/operation.service';
@@ -49,7 +49,7 @@ import { MultiProgressBar } from '@app/multi-progress-bar/multi-progress-bar';
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CommonModule,
-    TranslateModule,
+    TranslatePipe,
     MatIconModule,
     MatDrawer,
     MatSidenavModule,

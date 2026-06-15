@@ -6,7 +6,7 @@
 import { Component, effect, inject, signal, untracked, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatTable, MatTableModule } from '@angular/material/table';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { ReferenceTypeModel, ResourceModel, ResourceReferenceModel } from '../../../api/models';
 import { CacheResourceService } from '@app/services/cache-resource.service';
@@ -32,7 +32,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatProgressSpinnerModule,
     MatSelectModule,
     MatTableModule,
-    TranslateModule,
+    TranslatePipe,
     MatButtonModule
 ]
 })

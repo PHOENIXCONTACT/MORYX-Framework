@@ -4,7 +4,7 @@
 */
 
 import { Component, inject, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { WorkplanState } from '@api/models';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { EditorStateService } from '@app/services/editor-state.service';
@@ -25,7 +25,7 @@ import { MatSelectModule } from '@angular/material/select';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    TranslateModule
+    TranslatePipe
   ]
 })
 export class WorkplanProperties implements OnDestroy {

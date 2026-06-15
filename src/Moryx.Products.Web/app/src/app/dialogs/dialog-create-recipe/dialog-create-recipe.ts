@@ -5,7 +5,7 @@
 
 import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { RecipeDefinitionModel, WorkplanModel } from '../../api/models';
 import { CacheProductsService } from '@app/services/cache-products.service';
@@ -27,7 +27,7 @@ import { MatInputModule } from '@angular/material/input';
     MatFormFieldModule,
     FormsModule,
     MatOptionModule,
-    TranslateModule,
+    TranslatePipe,
     MatDialogModule,
     MatListModule,
     MatSelectModule,

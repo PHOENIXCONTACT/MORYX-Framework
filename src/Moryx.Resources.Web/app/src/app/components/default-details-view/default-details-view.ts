@@ -5,7 +5,7 @@
 
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 
 @Component({
@@ -13,7 +13,7 @@ import { TranslationConstants } from '@app/extensions/translation-constants.exte
   templateUrl: './default-details-view.html',
   styleUrls: ['./default-details-view.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [TranslateModule, EmptyState,]
+  imports: [TranslatePipe, EmptyState,]
 })
 export class DefaultDetailsView {
   TranslationConstants = TranslationConstants;

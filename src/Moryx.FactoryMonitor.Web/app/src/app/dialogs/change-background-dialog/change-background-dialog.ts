@@ -11,7 +11,7 @@ import {
 } from '@angular/material/dialog';
 import { ChangeBackgroundService } from '@app/services/change-background.service';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MyErrorStateMatcher } from '../MyErrorStateMatcher';
 import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
@@ -31,7 +31,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     FormsModule,
     ReactiveFormsModule,
     MatButtonModule,
-    TranslateModule,
+    TranslatePipe,
   ]
 })
 export class ChangeBackgroundDialog {

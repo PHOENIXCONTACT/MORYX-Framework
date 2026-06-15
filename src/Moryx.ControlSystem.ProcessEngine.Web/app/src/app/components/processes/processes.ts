@@ -20,7 +20,7 @@ import { MatListModule } from "@angular/material/list";
 import { MatSlideToggleChange, MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
 import { NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslatePipe } from "@ngx-translate/core";
 import { Subscription } from "rxjs";
 import { JobProcessModel } from "@api/models/job-process-model";
 import { ProcessActivityModel } from "@api/models/process-activity-model";
@@ -34,7 +34,7 @@ import { ProcessEngineStreamService } from "@app/services/process-engine-stream.
   templateUrl: "./processes.html",
   imports: [
     CommonModule,
-    TranslateModule,
+    TranslatePipe,
     MatListModule,
     NavigableEntryEditor,
     MatSlideToggleModule,

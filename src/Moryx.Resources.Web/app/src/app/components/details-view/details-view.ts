@@ -6,7 +6,7 @@
 import { Component, effect, inject, linkedSignal, signal, untracked, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Event, NavigationCancel, NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { ResourceModel } from '../../api/models';
 import { EditResourceService } from '@app/services/edit-resource.service';
@@ -18,7 +18,7 @@ import { DetailsHeader } from './details-header/details-header';
   templateUrl: './details-view.html',
   styleUrls: ['./details-view.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [RouterOutlet, TranslateModule, MatTabsModule, RouterLink, DetailsHeader]
+  imports: [RouterOutlet, TranslatePipe, MatTabsModule, RouterLink, DetailsHeader]
 })
 export class DetailsView {
   private router = inject(Router);

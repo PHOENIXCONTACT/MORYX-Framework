@@ -20,7 +20,7 @@ import { Operators } from '../operators/operators';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
@@ -33,7 +33,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatTooltipModule,
     MatIconModule,
     EmptyState,
-    TranslateModule,
+    TranslatePipe,
     MatButtonModule,
     RouterLink
   ]

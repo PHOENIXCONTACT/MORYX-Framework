@@ -9,7 +9,7 @@ import { toSignal } from "@angular/core/rxjs-interop";
 import { MatDialog } from "@angular/material/dialog";
 import { Router, RouterOutlet } from "@angular/router";
 import { SnackbarService, } from "@moryx/ngx-web-framework/services";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslatePipe } from "@ngx-translate/core";
 import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
 import { RecipeModel, WorkplanModel } from "../../../api/models";
 import { ProductManagementService } from "../../../api/services";
@@ -30,7 +30,7 @@ import { lastValueFrom, map } from "rxjs";
     MatListModule,
     MatIconModule,
     MatButtonModule,
-    TranslateModule,
+    TranslatePipe,
     MatExpansionModule,
     RouterOutlet
   ]

@@ -8,7 +8,7 @@ import { Component, inject, signal, ChangeDetectionStrategy } from "@angular/cor
 import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from "@angular/material/dialog";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslatePipe } from "@ngx-translate/core";
 import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
 import { InterruptDialogData } from "./interrupt-dialog-data";
 
@@ -20,7 +20,7 @@ import { InterruptDialogData } from "./interrupt-dialog-data";
   imports: [
     CommonModule,
     MatDialogModule,
-    TranslateModule,
+    TranslatePipe,
     MatProgressBarModule,
     MatButtonModule
   ]

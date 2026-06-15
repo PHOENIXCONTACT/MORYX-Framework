@@ -5,7 +5,7 @@
 
 import { Component, inject, linkedSignal, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { CacheProductsService } from '@app/services/cache-products.service';
 import { EditProductsService } from '@app/services/edit-products.service';
@@ -20,7 +20,7 @@ import { ProductRecipesDetailsHeader } from './product-recipes-details-header/pr
   imports: [
     ProductRecipesDetailsHeader,
     NavigableEntryEditor,
-    TranslateModule
+    TranslatePipe
   ]
 })
 export class ProductRecipesDetails {

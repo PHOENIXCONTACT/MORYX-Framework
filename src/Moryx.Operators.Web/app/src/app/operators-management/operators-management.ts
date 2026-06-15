@@ -9,7 +9,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { ConfirmationDialog } from "../dialogs/confirmation-dialog/confirmation-dialog";
 import { AddOperatorDialog } from "../dialogs/add-operator/add-operator";
 import { TranslationConstants } from "../extensions/translation-constants.extensions";
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { OperatorSkill } from "../models/operator-skill-model";
 import { SkillTypeModel } from "@api/models/skill-type-model";
 import { skillTypeToModel } from "../models/model-converter";
@@ -35,7 +35,7 @@ import { MatButtonModule } from "@angular/material/button";
     MatExpansionModule,
     OperatorSkillChips,
     RouterLink,
-    TranslateModule,
+    TranslatePipe,
     MatButtonModule
   ]
 })

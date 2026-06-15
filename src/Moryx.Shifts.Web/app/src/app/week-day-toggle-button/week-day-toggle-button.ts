@@ -12,7 +12,7 @@ import { MatButtonToggleChange, MatButtonToggleModule } from '@angular/material/
 import { CommonModule } from '@angular/common';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-week-day-toggle-button',
@@ -24,7 +24,7 @@ import { TranslateModule } from '@ngx-translate/core';
     MatDialogModule,
     MatButtonModule,
     MatButtonToggleModule,
-    TranslateModule
+    TranslatePipe
   ]
 })
 export class WeekDayToggleButton {

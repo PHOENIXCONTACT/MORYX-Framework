@@ -4,7 +4,7 @@
 */
 
 import { Component, effect, inject, signal, ChangeDetectionStrategy } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatButtonModule } from '@angular/material/button';
@@ -34,7 +34,7 @@ import { HttpErrorResponse } from '@angular/common/http';
     EntryEditor,
     MatExpansionModule,
     NavigableEntryEditor,
-    TranslateModule,
+    TranslatePipe,
     MatButtonModule
   ]
 })

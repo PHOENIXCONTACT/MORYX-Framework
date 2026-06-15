@@ -4,7 +4,7 @@
 */
 
 import { Component, inject, signal, linkedSignal, ChangeDetectionStrategy } from "@angular/core";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslatePipe } from "@ngx-translate/core";
 import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
 import { EditProductsService } from "@app/services/edit-products.service";
 import { ProductModel, ProductState } from "../../../api/models";
@@ -24,7 +24,7 @@ import { toSignal } from "@angular/core/rxjs-interop";
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatInputModule,
-    TranslateModule,
+    TranslatePipe,
     ReactiveFormsModule,
     FormsModule,
     MatOptionModule,

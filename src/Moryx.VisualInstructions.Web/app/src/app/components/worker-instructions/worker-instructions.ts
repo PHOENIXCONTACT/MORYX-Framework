@@ -8,7 +8,7 @@ import { Component, effect, inject, model, OnDestroy, OnInit, signal, untracked,
 import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
 import { Entry, NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { ReplaySubject, Subject, Subscription, switchMap } from "rxjs";
 import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
 import { environment } from "../../../environments/environment";
@@ -42,7 +42,7 @@ import { InstructionStateService } from '@app/services/instruction-state.service
     MatDividerModule,
     NavigableEntryEditor,
     EmptyState,
-    TranslateModule,
+    TranslatePipe,
     MatButtonModule,
     MatCardModule,
     MarkdownComponent

@@ -7,7 +7,7 @@ import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/cor
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 
 import { MatButtonModule } from '@angular/material/button';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { ResourceModel } from '@api/models/resource-model';
 
@@ -17,7 +17,7 @@ import { ResourceModel } from '@api/models/resource-model';
   styleUrls: ['./dialog-remove-resource.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
-    TranslateModule,
+    TranslatePipe,
     MatDialogModule,
     MatButtonModule
   ]

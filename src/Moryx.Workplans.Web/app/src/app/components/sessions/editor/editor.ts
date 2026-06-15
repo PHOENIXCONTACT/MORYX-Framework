@@ -10,7 +10,7 @@ import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatDrawer, MatDrawerMode, MatSidenavModule } from '@angular/material/sidenav';
 import { ActivatedRoute, ActivatedRouteSnapshot, ParamMap, Params, Router } from '@angular/router';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import {
   NodeConnectionPoint,
   WorkplanNodeClassification,
@@ -54,7 +54,7 @@ enum EditQueries {
     MatDrawer,
     MatTooltipModule,
     DragDropModule,
-    TranslateModule,
+    TranslatePipe,
     MatProgressSpinnerModule,
     MatMenuModule,
     WorkplanProperties,

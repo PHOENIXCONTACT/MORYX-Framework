@@ -18,7 +18,7 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { ProcessEngineService } from "@api/services";
 import { ProcessHolderGroup } from "@app/models/process-holder-group-model";
 import ProcessHolderNode from "../../models/process-holder-node";
@@ -41,7 +41,7 @@ import { ProcessHolderGroupModelArrayApiResponse } from "@api/models/process-hol
     FormsModule,
     MatIconModule,
     MatInputModule,
-    TranslateModule
+    TranslatePipe
   ],
   templateUrl: "./process-holders.html",
   changeDetection: ChangeDetectionStrategy.Eager,

@@ -18,7 +18,7 @@ import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
 import { CommonModule } from "@angular/common";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { MatIconModule } from "@angular/material/icon";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslatePipe } from "@ngx-translate/core";
 import { Processes } from "../processes/processes";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
@@ -34,7 +34,7 @@ import { OperationModel } from "@api/models/operation-model";
     CommonModule,
     MatExpansionModule,
     MatIconModule,
-    TranslateModule,
+    TranslatePipe,
     Processes,
     MatProgressSpinnerModule,
     EmptyState,

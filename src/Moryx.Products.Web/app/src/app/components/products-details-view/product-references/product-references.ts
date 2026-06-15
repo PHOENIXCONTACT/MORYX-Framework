@@ -4,7 +4,7 @@
 */
 
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { EditProductsService } from '@app/services/edit-products.service';
 import { MatTableModule } from '@angular/material/table';
@@ -21,7 +21,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatTableModule,
-    TranslateModule,
+    TranslatePipe,
     EmptyState,
     MatProgressSpinnerModule,
     MatCardModule,

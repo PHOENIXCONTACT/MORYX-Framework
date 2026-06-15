@@ -16,7 +16,7 @@ import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatIconModule } from "@angular/material/icon";
 import { MatFormFieldModule } from "@angular/material/form-field";
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MatButtonModule } from "@angular/material/button";
 import { MatInputModule } from "@angular/material/input";
 
@@ -33,7 +33,7 @@ import { MatInputModule } from "@angular/material/input";
     MatIconModule,
     MatFormFieldModule,
     NavigableEntryEditor,
-    TranslateModule,
+    TranslatePipe,
     MatButtonModule,
     MatInputModule,
     RouterLink

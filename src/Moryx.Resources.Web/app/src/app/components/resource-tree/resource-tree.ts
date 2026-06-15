@@ -8,7 +8,7 @@ import { MatTree, MatTreeModule } from '@angular/material/tree';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { ResourceModel } from '../../api/models';
 import { SessionService } from '@app/services/session.service';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
@@ -19,7 +19,7 @@ import { getHierarchieLineFor } from '@app/models/TypeTree';
   templateUrl: './resource-tree.html',
   styleUrls: ['./resource-tree.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [CommonModule, MatTreeModule, MatIconModule, MatButtonModule, TranslateModule]
+  imports: [CommonModule, MatTreeModule, MatIconModule, MatButtonModule, TranslatePipe]
 })
 export class ResourceTree {
   private sessionService = inject(SessionService);

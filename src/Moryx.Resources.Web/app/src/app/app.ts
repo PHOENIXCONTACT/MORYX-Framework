@@ -12,7 +12,7 @@ import { Router, RouterOutlet } from '@angular/router';
 import {
   LanguageService,
   SnackbarService} from '@moryx/ngx-web-framework/services';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { environment } from '../environments/environment';
 import { ResourceModel, ResourceReferenceModel } from './api/models';
 import { ResourceModificationService } from './api/services';
@@ -55,7 +55,7 @@ import { HttpErrorResponse } from '@angular/common/http';
     MatTooltipModule,
     ResourceTree,
     RouterOutlet,
-    TranslateModule,
+    TranslatePipe,
   ],
   changeDetection: ChangeDetectionStrategy.Eager,
   host: {
@@ -98,7 +98,7 @@ export class App implements OnInit, OnDestroy {
       TranslationConstants.LANGUAGES.ZH,
     ]);
     this.translateService.setFallbackLang('en');
-    this.translateService.use(this.languageService.getDefaultLanguage());
+    this.translateService.use(this.languageService.getFallbackLang());
     this.formControlService.canSave.subscribe(state => (this.canSave = state));
 
     effect(() => {

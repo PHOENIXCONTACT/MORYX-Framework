@@ -6,7 +6,7 @@
 import { Component, inject, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { LanguageService, SnackbarService } from '@moryx/ngx-web-framework/services';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { filter, Subscription } from 'rxjs';
 import { environment } from '../environments/environment';
 import { TranslationConstants } from './extensions/translation-constants.extensions';
@@ -31,7 +31,7 @@ import { MatButtonModule } from '@angular/material/button';
     CommonModule,
     MatTooltipModule,
     MatIconModule,
-    TranslateModule,
+    TranslatePipe,
     Toolbox,
     RouterModule,
     MatButtonModule
@@ -63,7 +63,7 @@ export class App implements OnInit, OnDestroy {
       TranslationConstants.LANGUAGES.IT,
     ]);
     this.translateService.setFallbackLang('en');
-    this.translateService.use(this.languageService.getDefaultLanguage());
+    this.translateService.use(this.languageService.getFallbackLang());
   }
 
   async getTranslations(): Promise<{ [key: string]: string }> {

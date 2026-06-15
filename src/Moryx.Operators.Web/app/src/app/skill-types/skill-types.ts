@@ -13,7 +13,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialog } from '../dialogs/confirmation-dialog/confirmation-dialog';
 import { OperatorSkill } from '../models/operator-skill-model';
 import { AppStoreService } from '../services/app-store.service';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
@@ -29,7 +29,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatTooltipModule,
     MatIconModule,
     RouterLink,
-    TranslateModule,
+    TranslatePipe,
     MatTableModule,
     MatButtonModule
   ]

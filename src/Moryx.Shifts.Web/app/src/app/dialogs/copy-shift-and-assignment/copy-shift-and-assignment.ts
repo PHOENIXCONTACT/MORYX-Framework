@@ -8,7 +8,7 @@ import { ShiftInstanceModel } from '@app/models/shift-instance-model';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import AssignmentData from '@app/models/assignment-data';
 import { CalendarState } from '@app/models/calendar-state';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import  moment from 'moment';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 
@@ -33,7 +33,7 @@ import { MatInputModule } from '@angular/material/input';
     MatDatepickerModule,
     WeekDayToggleButton,
     MatButtonModule,
-    TranslateModule,
+    TranslatePipe,
     MatDialogModule
 ]
 })

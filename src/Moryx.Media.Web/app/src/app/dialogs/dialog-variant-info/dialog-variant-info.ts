@@ -12,7 +12,7 @@ import {
   MatDialogActions,
   MatDialogClose
 } from '@angular/material/dialog';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { MatLine } from '@angular/material/core';
 import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
@@ -33,7 +33,7 @@ import { DecimalPipe } from '@angular/common';
     MatButton,
     MatDialogClose,
     DecimalPipe,
-    TranslateModule
+    TranslatePipe
   ]
 })
 export class DialogVariantInfo {

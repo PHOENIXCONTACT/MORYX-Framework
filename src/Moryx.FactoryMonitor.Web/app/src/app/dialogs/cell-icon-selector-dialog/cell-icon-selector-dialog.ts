@@ -10,7 +10,7 @@ import {
   MAT_DIALOG_DATA,
   MatDialogModule,
 } from '@angular/material/dialog';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { MyErrorStateMatcher } from '../MyErrorStateMatcher';
 import { MatInputModule } from '@angular/material/input';
@@ -32,7 +32,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     ReactiveFormsModule,
     MatIconModule,
     MatButtonModule,
-    TranslateModule
+    TranslatePipe
 ]
 })
 export class CellIconUploaderDialog {

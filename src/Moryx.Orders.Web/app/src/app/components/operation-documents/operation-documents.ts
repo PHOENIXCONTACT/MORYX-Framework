@@ -15,7 +15,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
 import { DocumentModel, OperationModel } from "@api/models";
 import { OrderManagementService } from '@api/services/order-management.service';
@@ -32,7 +32,7 @@ import { environment } from '../../../environments/environment';
     MatSidenavModule,
     MatToolbarModule,
     CommonModule,
-    TranslateModule,
+    TranslatePipe,
     MatListModule,
     NgxDocViewerModule,
     EmptyState,
