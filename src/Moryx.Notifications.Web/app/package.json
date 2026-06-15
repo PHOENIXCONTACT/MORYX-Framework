@@ -3,8 +3,9 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
+    "start": "ng serve --configuration development",
+    "build": "ng build --configuration development",
+    "build:prod": "ng build --progress false",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "generate-api": "NODE_TLS_REJECT_UNAUTHORIZED=0 ng-openapi-gen -c openapi-gen.json && node ../../fix-openapi-gen.js"
