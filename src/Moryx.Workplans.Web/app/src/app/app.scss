@@ -1,4 +1,4 @@
-@use "@moryx/ngx-web-framework/styles/variables" as *; 
+@use "@moryx/ngx-web-framework/styles/variables" as *;
 
 
 .workplans {
@@ -18,7 +18,7 @@
     flex-flow: column nowrap;
     align-items: stretch;
     mat-toolbar{
-        color: $mat-background-light;
+        color: var(--mat-sys-surface-container-lowest);
     }
 }
 
@@ -31,7 +31,7 @@
     flex: 1 1;
     overflow-y: auto;
     overflow-x: hidden;
-    background-color: $mat-background-light;
+    background-color: var(--mat-sys-surface-container-lowest);
 }
 
 .workplans-toolbar > .button-row {
@@ -55,5 +55,5 @@
   z-index: 10;
 }
 .change-view-button-active{
-    color: $mat-background-light;
+    color: var(--mat-sys-surface-container-lowest);
 }

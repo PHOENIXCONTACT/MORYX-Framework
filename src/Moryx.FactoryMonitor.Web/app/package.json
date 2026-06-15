@@ -22,7 +22,7 @@
     "@angular/platform-browser-dynamic": "^22.0.0",
     "@angular/router": "^22.0.0",
     "@fontsource/roboto": "^5.2.9",
-    "@moryx/ngx-web-framework": "^21.1.1-future.196",
+    "@moryx/ngx-web-framework": "^22.0.0-future.200",
     "material-icons": "^1.13.14",
     "material-symbols": "^0.44.12",
     "@ngx-translate/core": "^17.0.0",

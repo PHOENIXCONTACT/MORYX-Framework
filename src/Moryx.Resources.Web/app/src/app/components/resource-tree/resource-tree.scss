@@ -1,16 +1,17 @@
-@use '../../../styles.scss' as *;
 @use '@angular/material' as mat;
+@use "@moryx/ngx-web-framework/styles/colors" as *;
 
 :host {
   flex: 1 1;
   overflow-y: auto;
   overflow-x: hidden;
-  background-color: $mat-background-light;
+  background-color: var(--mat-sys-surface-container-lowest);
   padding-bottom: 48px;
   touch-action: auto;
   display: block;
   @include mat.tree-overrides((
-    node-min-height: 40px
+    node-min-height: 40px,
+    container-background-color: var(--mat-sys-surface-container-lowest),
   ));
 }
 
@@ -23,7 +24,11 @@
   -webkit-touch-callout: none;
 
   &:hover {
-    background-color: $light-background-hover;
+    background-color: var(--mat-sys-surface-container-highest);
+  }
+
+  &.moryx-selected {
+    background: $primary-light;
   }
 
   &.italic {

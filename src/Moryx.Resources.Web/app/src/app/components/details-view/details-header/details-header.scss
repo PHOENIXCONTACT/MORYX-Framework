@@ -1,8 +1,7 @@
-@use "../../../../styles.scss" as *;
 
 .header {
   padding: 16px 26px 4px 26px;
-  background-color: $mat-background-light;
+  background-color: var(--mat-sys-surface-container-lowest);
 }
 
 .form-field {
@@ -18,7 +17,7 @@
 }
 
 .header-subtitle {
-  color: $mat-color-caption-light;
+  color: var(--mat-sys-outline);
 }
 
 @media (max-width: 400px) {

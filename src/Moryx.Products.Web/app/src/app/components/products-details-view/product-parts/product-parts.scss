@@ -10,7 +10,7 @@
   align-items: stretch;
   padding: 8px;
   @include mat.expansion-overrides((
-    container-background-color: $mat-background-light,
+    container-background-color: var(--mat-sys-surface-container-lowest),
   ));
 }
 

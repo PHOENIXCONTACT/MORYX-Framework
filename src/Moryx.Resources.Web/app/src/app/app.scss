@@ -1,4 +1,3 @@
-@use  "../colors.scss" as *;
 
 .resources {
   flex: 1;
@@ -17,7 +16,7 @@
 }
 
 .resources-toolbar {
-  color: $mat-color-light;
+  color: var(--mat-sys-surface-container-low);
   background-color: rgba(0, 0, 0, 0.60);
   background-blend-mode: darken;
 }
@@ -33,9 +32,9 @@
 }
 
 .mat-toolbar-row{
-  color: $mat-background-light;
+  color: var(--mat-sys-surface-container-lowest);
   button{
-    color: $mat-background-light;
+    color: var(--mat-sys-surface-container-lowest);
     margin: 10px;
   }
 }

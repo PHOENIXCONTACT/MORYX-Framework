@@ -42,17 +42,17 @@ mat-card {
 
 .error-restriction {
     background-color: $warn-dark;
-    color: $mat-background
+    color: var(--mat-sys-surface)
 }
 
 .warning-restriction {
     background-color: $warning;
-    color: $mat-background
+    color: var(--mat-sys-surface)
 }
 
 .info-restriction {
     background-color: $info;
-    color: $mat-background
+    color: var(--mat-sys-surface)
 }
 
 /* Hide the spinner for number inputs in all browsers */

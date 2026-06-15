@@ -1,5 +1,4 @@
 @use '@angular/material' as mat;
-@use "@moryx/ngx-web-framework/styles/variables" as *;
 
 .overview {
   flex: 1;
@@ -40,7 +39,7 @@
 .overview-tree-content {
   flex: 1 1;
   overflow: hidden;
-  background-color: $mat-background-light;
+  background-color: var(--mat-sys-surface-container-lowest);
   align-items: stretch;
 }
 

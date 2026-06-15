@@ -32,7 +32,7 @@
     "rxjs": "~7.8.0",
     "style-loader": "^4.0.0",
     "tailwindcss": "^3.4.10",
-    "@moryx/ngx-web-framework": "^21.1.1-future.196",
+    "@moryx/ngx-web-framework": "^22.0.0-future.200",
     "tslib": "^2.8.0"
   },
   "devDependencies": {

@@ -15,7 +15,7 @@
 
 .header {
     margin-left: 15px;
-    color: $mat-color;
+    color: var(--mat-sys-on-surface);
 }
 
 .action-container {
@@ -28,7 +28,7 @@
 }
 
 .nav-button {
-    color: $mat-color;
+    color: var(--mat-sys-on-surface);
 }
 
 .active-link {
