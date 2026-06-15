@@ -6,6 +6,9 @@
   <span class="toolbar-spacer"></span>
   <slot name="topRegion"></slot>
   <span class="toolbar-spacer"></span>
+  @if (authConfigured()) {
+    <app-auth-button></app-auth-button>
+  }
   <button mat-icon-button aria-label="More options" [matMenuTriggerFor]="moreMenu.appMenu">
     <mat-icon>more_vert</mat-icon>
   </button>
@@ -21,4 +24,5 @@
     <slot name="app"></slot>
   </mat-sidenav-content>
 </mat-sidenav-container>
+
 <slot name="rightRegion"></slot>

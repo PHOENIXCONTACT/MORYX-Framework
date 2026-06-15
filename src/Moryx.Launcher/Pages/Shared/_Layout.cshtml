@@ -3,14 +3,16 @@
 @using System.Text.Json.Serialization
 @using Microsoft.AspNetCore.Builder;
 @using Microsoft.Extensions.Options;
+@using Moryx.Identity
 @using Moryx.Launcher
 @using Moryx.Launcher.Models
-@using Moryx.Modules
 @inject IShellNavigator _navigator
 @inject IOptionsMonitor<RequestLocalizationOptions> _localizationOptions
+@inject IOptionsMonitor<MoryxIdentityOptions> _identityOptions
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
+    // Culture
     if (string.IsNullOrWhiteSpace(Context.Request.Cookies[".AspNetCore.Culture"]))
     {
         var culture = _localizationOptions.CurrentValue.DefaultRequestCulture.Culture;
@@ -23,8 +25,8 @@
         DisplayName = c.DisplayName
     }) ?? [];
 
+    // Modules
     var launcher = _navigator as ILauncher;
-
     var allModules = await _navigator.GetModuleItemsAsync(Context);
     var webModuleItems = allModules.OfType<WebModuleItem>().ToList();
     webModuleItems.ForEach(m => m.EventStream = Url.Content(m.EventStream));
@@ -75,8 +77,12 @@
     const el = document.getElementById('launcher');
 
     el.supportedCultures = @Html.Raw(JsonSerializer.Serialize(supportedCultures, jsonOptions));
-    el.webModuleItems = @Html.Raw(JsonSerializer.Serialize(webModuleItems, jsonOptions));;
-    el.externalModuleItems = @Html.Raw(JsonSerializer.Serialize(externalModuleItems, jsonOptions));;
+    el.webModuleItems = @Html.Raw(JsonSerializer.Serialize(webModuleItems, jsonOptions));
+    el.externalModuleItems = @Html.Raw(JsonSerializer.Serialize(externalModuleItems, jsonOptions));
+    @if (!string.IsNullOrEmpty(_identityOptions.CurrentValue.BaseAddress))
+    {
+        <text>el.authBaseAddress = '@_identityOptions.CurrentValue.BaseAddress';</text>
+    }
 </script>
 
 @await RenderSectionAsync("Scripts", required: false)

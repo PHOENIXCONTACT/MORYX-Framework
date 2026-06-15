@@ -8,6 +8,7 @@ import {OperatorLayout} from './operator-layout/operator-layout';
 import {FullscreenLayout} from './fullscreen-layout/fullscreen-layout';
 import {ModuleService} from './services/module.service';
 import {CultureService} from './services/culture.service';
+import {AuthService} from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -22,10 +23,12 @@ export class App {
   webModuleItems = input.required<WebModuleItem[]>();
   externalModuleItems = input.required<ExternalModuleItem[]>();
   supportedCultures = input.required<CultureModel[]>();
+  authBaseAddress = input<string>();
 
   private launcherStateService = inject(LauncherStateService);
   private moduleService = inject(ModuleService);
   private cultureService = inject(CultureService);
+  private authService = inject(AuthService);
 
   layout = this.launcherStateService.layout;
 
@@ -33,6 +36,10 @@ export class App {
     effect(() => {
       this.moduleService.modules.set([...this.webModuleItems(), ...this.externalModuleItems()]);
       this.cultureService.supportedCultures.set(this.supportedCultures());
+
+      const authBaseAddress = this.authBaseAddress();
+      this.authService.authBaseAddress = authBaseAddress;
+      this.authService.authConfigured.set(!!authBaseAddress && authBaseAddress.length > 0);
     });
   }
 }

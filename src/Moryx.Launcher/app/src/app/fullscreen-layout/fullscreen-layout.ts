@@ -1,10 +1,9 @@
 import {Component, HostListener, inject} from '@angular/core';
-import {RouterOutlet} from '@angular/router';
 import {LauncherLayout, LauncherStateService} from '../services/launcher-state.service';
 
 @Component({
   selector: 'app-fullscreen-layout',
-  imports: [RouterOutlet],
+  imports: [],
   templateUrl: './fullscreen-layout.html',
   styleUrl: './fullscreen-layout.scss',
 })
