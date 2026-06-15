@@ -70,7 +70,7 @@ internal class SimpleGraph
 
         if (Children.Count > 1)
         {
-            logger.Log(LogLevel.Warning, "More than one resource were found under {location} '{id}'. The first child will be used",
+            logger.Log(LogLevel.Warning, "More than one resource were found under {location} '{id}'. The first leaf will be used",
                 nameof(IMachineLocation), Id);
         }
 
@@ -117,7 +117,7 @@ internal class SimpleGraph
 
     /// <summary>
     /// Appends a non-location layer, currently only <see cref="IManufacturingFactory"/> and
-    /// <see cref="ICell"/>, the latter of which denote leave notes
+    /// <see cref="ICell"/>, the latter of which denote leaf notes
     /// </summary>
     /// <param name="addition">A possible <see cref="IManufacturingFactory"/>, <see cref="ICell"/> or a parent resource of one</param>
     public void Append(Resource addition)
@@ -134,6 +134,13 @@ internal class SimpleGraph
                 return;
         }
     }
+
+
+    /// <summary>
+    /// Appends a leaf node to the current <see cref="SimpleGraph"/>
+    /// </summary>
+    /// <param name="leave">Any resource which denotes a leaf to the graph</param>
+    public void AppendLeaf(Resource leave) => AddSubGraphRoot(leave);
 
     /// <summary>
     /// Appends a location level to the current <see cref="SimpleGraph"/>
@@ -162,8 +169,12 @@ internal class SimpleGraph
             // Prefer machine property as target of the location before using children
             // This unifies behaviour with the gathering of resource changed models in the controller
             // ToDo: With MORYX 12 locations shhould hold a list of targets which should be used exclusively instead of children here
-            case IMachineLocation { Machine: Resource child }:
-                subGraph.Append(child);
+            case IMachineLocation { Machine: Resource leaf }:
+                subGraph.AppendLeaf(leaf);
+                return;
+            // Keep fallback behaviour to use machine location children, except the location is also a cell
+            case IMachineLocation and ICell:
+                subGraph.AppendLeaf(addition);
                 return;
             // Keep fallback behaviour to use machine location children
             case IMachineLocation:
@@ -173,8 +184,9 @@ internal class SimpleGraph
             case IManufacturingFactory:
                 addition.Children.ForEach(subGraph.AppendLocation);
                 return;
-            // Cells denote leave nodes in the Graph
-            // ToDo: MORYX 12: Change behaviour to make all none IManufacturingFactory resources leaves
+            // Cells denote leaf nodes in the Graph
+            // ToDo: MORYX 12: Change behaviour to make all none IManufacturingFactory resources
+            // leaf nodes, when they were registered by a location
             case ICell:
                 return;
             // Skip layers of resources without meaning for the factory monitor
@@ -194,7 +206,7 @@ internal class SimpleGraph
                 IManufacturingFactory => nameof(IManufacturingFactory),
                 IMachineLocation => nameof(IMachineLocation),
                 ICell => nameof(ICell),
-                _ => throw new InvalidOperationException()
+                _ => addition.GetType().Name
             }
         };
         Children.Add(subGraph);
