@@ -4,7 +4,7 @@
 */
 
 import { CommonModule } from '@angular/common';
-import { Component, computed, ElementRef, input, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, computed, ElementRef, HostListener, input, OnDestroy, OnInit, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 
 
@@ -28,7 +28,7 @@ export interface Notification {
 export class NotificationsBar implements OnInit, OnDestroy {
   url = input('notifications');
   api = input('/api/moryx/notifications/stream');
-  eventSource: EventSource | undefined;
+  eventSource: EventSource | null = null;
 
   notifications = signal<Array<Notification>|undefined>(undefined);
   notificationIndex = signal<number>(0);
@@ -121,11 +121,11 @@ export class NotificationsBar implements OnInit, OnDestroy {
   }
 
   private clearEventSource() {
-    if (this.eventSource !== undefined) {
+    if (this.eventSource) {
       this.eventSource.removeEventListener('message', this.onMessageReceived);
       this.eventSource.removeEventListener('error', this.onErrorReceived);
       this.eventSource.close();
-      this.eventSource = undefined;
+      this.eventSource = null;
     }
   }
 
@@ -178,8 +178,17 @@ export class NotificationsBar implements OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy(): void {
+  private clearAll() {
     this.clearEventSource();
     this.clearInterval();
+  }
+
+  ngOnDestroy(): void {
+    this.clearAll();
+  }
+
+  @HostListener('window:beforeunload')
+  onBeforeUnload() {
+    this.clearAll();
   }
 }

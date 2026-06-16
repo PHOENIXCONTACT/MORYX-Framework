@@ -78,6 +78,8 @@ export class Processes implements OnInit, OnDestroy {
           await this.snackbarService.handleError(e)
       });
 
+
+
     this.processSubscription =
       this.processEngineEvents.updatedProcess.subscribe((p) =>
         this.onProcessUpdated(p)

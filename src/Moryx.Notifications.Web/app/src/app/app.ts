@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnDestroy, OnInit, signal } from "@angular/core";
+import { Component, HostListener, inject, OnDestroy, OnInit, signal } from "@angular/core";
 import { LanguageService } from "@moryx/ngx-web-framework/services";
 import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
@@ -62,6 +62,8 @@ export class App implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.notificationService.connect();
+
     this.stateSubscription = this.notificationService.state$.subscribe(
       (state) => {
         if (state == ConnectionState.Connected) this.isLoading.update(_ => false);
@@ -76,6 +78,12 @@ export class App implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.stateSubscription?.unsubscribe();
     this.notificationSubscription?.unsubscribe();
+    this.notificationService.disconnect();
+  }
+
+  @HostListener('window:beforeunload')
+  onBeforeUnload() {
+    this.notificationService.disconnect();
   }
 }
 

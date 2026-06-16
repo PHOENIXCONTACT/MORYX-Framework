@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, input, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, HostListener, input, OnDestroy, OnInit, signal } from '@angular/core';
 
 @Component({
   selector: 'app-notification-badge',
@@ -14,7 +14,7 @@ import { Component, input, OnDestroy, OnInit, signal } from '@angular/core';
 export class NotificationBadge implements OnInit, OnDestroy {
   eventstream = input(''); // Do fix naming here, must be lower-case for HTML attribute
   count = signal(0);
-  eventSource: EventSource | undefined;
+  eventSource: EventSource | null = null;
 
   ngOnInit(): void {
     if (!this.eventstream()) {
@@ -25,8 +25,22 @@ export class NotificationBadge implements OnInit, OnDestroy {
     this.eventSource.onmessage = this.onReceived.bind(this);
   }
 
+  private clearAll() {
+    if (this.eventSource) {
+      this.eventSource.removeEventListener('message', this.onReceived);
+
+      this.eventSource.close();
+      this.eventSource = null;
+    }
+  }
+
   ngOnDestroy(): void {
-    this.eventSource?.removeEventListener('message', this.onReceived);
+    this.clearAll();
+  }
+
+  @HostListener('window:beforeunload')
+  onBeforeUnload() {
+    this.clearAll();
   }
 
   onReceived(event: any) {

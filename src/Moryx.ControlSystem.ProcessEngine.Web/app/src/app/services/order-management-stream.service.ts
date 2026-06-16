@@ -14,10 +14,12 @@ import { OperationModel } from '../api/models/operation-model';
 export class OrderManagementStreamService {
   private config = inject(ApiConfiguration);
 
-  public stream(operationType: OperationType, callbackFunction: Function) {
-    const eventSource = new EventSource(this.config.rootUrl + '/api/moryx/orders/stream');
+  private eventSource: EventSource | null = null;
 
-    eventSource.addEventListener(OperationType[OperationType.Start], event => {
+  public connect(operationType: OperationType, callbackFunction: Function) {
+    this.eventSource = new EventSource(this.config.rootUrl + '/api/moryx/orders/stream');
+
+    this.eventSource.addEventListener(OperationType[OperationType.Start], event => {
       const operationStartedModel = JSON.parse(event.data) as OperationStartedModel;
       if (
         !operationStartedModel.operationModel ||
@@ -30,7 +32,7 @@ export class OrderManagementStreamService {
       callbackFunction(operationStartedModel.operationModel!, operationStartedModel.userId!);
     });
 
-    eventSource.addEventListener(OperationType[OperationType.Progress], event => {
+    this.eventSource.addEventListener(OperationType[OperationType.Progress], event => {
       const operationModel = JSON.parse(event.data) as OperationModel;
       if (!operationModel || operationType !== OperationType.Progress) {
         return;
@@ -39,7 +41,7 @@ export class OrderManagementStreamService {
       callbackFunction(operationModel!);
     });
 
-    eventSource.addEventListener(OperationType[OperationType.Completed], event => {
+    this.eventSource.addEventListener(OperationType[OperationType.Completed], event => {
       const operationReportedModel = JSON.parse(event.data) as OperationReportedModel;
       if (
         !operationReportedModel.operationModel ||
@@ -52,7 +54,7 @@ export class OrderManagementStreamService {
       callbackFunction(operationReportedModel.operationModel!, operationReportedModel.reportModel!);
     });
 
-    eventSource.addEventListener(OperationType[OperationType.Interrupted], event => {
+    this.eventSource.addEventListener(OperationType[OperationType.Interrupted], event => {
       const operationReportedModel = JSON.parse(event.data) as OperationReportedModel;
       if (
         !operationReportedModel.operationModel ||
@@ -65,7 +67,7 @@ export class OrderManagementStreamService {
       callbackFunction(operationReportedModel.operationModel!, operationReportedModel.reportModel!);
     });
 
-    eventSource.addEventListener(OperationType[OperationType.Report], event => {
+    this.eventSource.addEventListener(OperationType[OperationType.Report], event => {
       const operationReportedModel = JSON.parse(event.data) as OperationReportedModel;
       if (
         !operationReportedModel.operationModel ||
@@ -78,7 +80,7 @@ export class OrderManagementStreamService {
       callbackFunction(operationReportedModel.operationModel!, operationReportedModel.reportModel!);
     });
 
-    eventSource.addEventListener(OperationType[OperationType.Advice], event => {
+    this.eventSource.addEventListener(OperationType[OperationType.Advice], event => {
       const operationadvicedModel = JSON.parse(event.data) as OperationAdvicedModel;
       if (
         !operationadvicedModel.operationModel ||
@@ -91,7 +93,7 @@ export class OrderManagementStreamService {
       callbackFunction(operationadvicedModel.operationModel!, operationadvicedModel.adviceModel!);
     });
 
-    eventSource.addEventListener(OperationType[OperationType.Update], event => {
+    this.eventSource.addEventListener(OperationType[OperationType.Update], event => {
       const operationModel = JSON.parse(event.data) as OperationModel;
       if (!operationModel || operationType !== OperationType.Update) {
         return;
@@ -99,6 +101,13 @@ export class OrderManagementStreamService {
 
       callbackFunction(operationModel!);
     });
+  }
+
+  disconnect() {
+    if (this.eventSource) {
+      this.eventSource.close();
+      this.eventSource = null;
+    }
   }
 }
 

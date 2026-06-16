@@ -4,7 +4,7 @@
 */
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, inject, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
@@ -103,11 +103,6 @@ export class Operations implements OnInit, OnDestroy {
 
   private readonly _mobileQueryListener: () => void;
 
-  ngOnDestroy(): void {
-    this.mobileQuery.removeEventListener('change', this._mobileQueryListener);
-    this.searchBarService.unsubscribe();
-  }
-
   ngOnInit() {
     // Get all the operations
     this.orderManagementService.getOperations().subscribe({
@@ -127,7 +122,7 @@ export class Operations implements OnInit, OnDestroy {
     });
 
     // Register events
-    this.operationService.operationChanged((updatedOperation: OperationModel) => {
+    this.operationService.connect((updatedOperation: OperationModel) => {
       if (!updatedOperation) {
         return;
       }
@@ -341,6 +336,17 @@ export class Operations implements OnInit, OnDestroy {
   closeDrawer() {
     this.drawerContent.set(DrawerContent.None);
     this.drawer().close();
+  }
+
+  ngOnDestroy(): void {
+    this.mobileQuery.removeEventListener('change', this._mobileQueryListener);
+    this.searchBarService.unsubscribe();
+    this.operationService.disconnect();
+  }
+
+  @HostListener('window:beforeunload')
+  onBeforeUnload() {
+    this.operationService.disconnect();
   }
 }
 

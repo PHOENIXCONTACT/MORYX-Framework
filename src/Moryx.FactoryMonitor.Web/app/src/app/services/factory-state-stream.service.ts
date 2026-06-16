@@ -26,30 +26,32 @@ export class FactoryStateStreamService {
   private readonly Activity_Event_Type_Key = "activityChangedModel";
   private readonly Recource_Event_Type_Key = "resourceChangedModel";
 
+  private eventSource: EventSource | null = null;
+
   // ToDo: Only make observable public
   updatedCell: ReplaySubject<CellModel> = new ReplaySubject<CellModel>();
   updatedOrder: ReplaySubject<Order> = new ReplaySubject<Order>();
 
-    constructor() {
-    const eventSource = new EventSource(this.factoryMonitorService.rootUrl + FactoryMonitorService.FactoryStatesStreamPath);
+  connect() {
+    this.eventSource = new EventSource(this.factoryMonitorService.rootUrl + FactoryMonitorService.FactoryStatesStreamPath);
 
-    eventSource.addEventListener(this.Order_Event_Type_Key, (event: MessageEvent<any>) => {
+    this.eventSource.addEventListener(this.Order_Event_Type_Key, (event: MessageEvent<any>) => {
       this.transformOrderEvent(event);
     });
 
-    eventSource.addEventListener(this.Order_Changed_Event_Type_Key, (event: MessageEvent<any>) => {
+    this.eventSource.addEventListener(this.Order_Changed_Event_Type_Key, (event: MessageEvent<any>) => {
       this.transformOrderChangedEvent(event);
     });
 
-    eventSource.addEventListener(this.Cell_State_Event_Type_Key, (event: MessageEvent<any>) => {
+    this.eventSource.addEventListener(this.Cell_State_Event_Type_Key, (event: MessageEvent<any>) => {
       this.transformCellStateChangedEvent(event);
     });
 
-    eventSource.addEventListener(this.Activity_Event_Type_Key, (event: MessageEvent<any>) => {
+    this.eventSource.addEventListener(this.Activity_Event_Type_Key, (event: MessageEvent<any>) => {
       this.transformActivityChangedEvent(event);
     });
 
-    eventSource.addEventListener(this.Recource_Event_Type_Key, (event: MessageEvent<any>) => {
+    this.eventSource.addEventListener(this.Recource_Event_Type_Key, (event: MessageEvent<any>) => {
       this.transformResourceEvent(event);
     });
   }
@@ -82,5 +84,12 @@ export class FactoryStateStreamService {
     const orderModel = <OrderModel>JSON.parse(event.data);
     const order = Converter.orderModelToOrder(orderModel);
     this.updatedOrder.next(order);
+  }
+
+  disconnect() {
+    if (this.eventSource) {
+      this.eventSource.close();
+      this.eventSource = null;
+    }
   }
 }

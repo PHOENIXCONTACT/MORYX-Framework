@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, HostListener, inject, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { LanguageService } from '@moryx/ngx-web-framework/services';
@@ -32,7 +32,7 @@ const COOKIE_NAME = 'moryx-client-identifier';
     MatButtonModule
   ]
 })
-export class App implements OnInit {
+export class App implements OnInit, OnDestroy {
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
   private translateService = inject(TranslateService);
@@ -61,6 +61,7 @@ export class App implements OnInit {
   }
 
   ngOnInit(): void {
+     this.instructionService.connect();
   }
 
   openConfigDialog(): void {
@@ -84,7 +85,9 @@ export class App implements OnInit {
   private updateInstructor(result: any): void {
     this.clientIdentifier = result.instructorName;
     this.cookieService.setCookie(COOKIE_NAME, result.instructorName, 365);
-    this.instructionService.subscribeToStream();
+
+    this.instructionService.disconnect();
+    this.instructionService.connect();
   }
 
   private async showNoInstructorWarning(): Promise<void> {
@@ -103,6 +106,15 @@ export class App implements OnInit {
         duration: 5000,
       }
     );
+  }
+
+  ngOnDestroy(): void {
+    this.instructionService.disconnect();
+  }
+
+  @HostListener('window:beforeunload')
+  onBeforeUnload() {
+    this.instructionService.disconnect();
   }
 }
 

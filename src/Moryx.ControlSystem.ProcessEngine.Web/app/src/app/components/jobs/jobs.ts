@@ -4,7 +4,7 @@
 */
 
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, inject, OnInit, signal, ChangeDetectorRef } from "@angular/core";
+import { Component, inject, OnInit, signal, ChangeDetectorRef, OnDestroy, HostListener } from "@angular/core";
 import { JobManagementService, OrderManagementService } from "src/app/api/services";
 import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
 import { JobViewModel } from "src/app/models/job-view-model";
@@ -26,6 +26,7 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatButtonModule } from "@angular/material/button";
 import { JobModel } from "src/app/api/models/job-model";
 import { OperationModel } from "src/app/api/models/operation-model";
+import { ProcessEngineStreamService } from "src/app/services/process-engine-stream.service";
 
 @Component({
   selector: "app-jobs",
@@ -44,11 +45,12 @@ import { OperationModel } from "src/app/api/models/operation-model";
   ],
   providers: []
 })
-export class Jobs implements OnInit {
+export class Jobs implements OnInit, OnDestroy {
   private jobManagementService = inject(JobManagementService);
   private jobManagementEvents = inject(JobManagementStreamService);
   private orderManagementService = inject(OrderManagementService);
   private orderManagementEvents = inject(OrderManagementStreamService);
+  private processEngineEvents = inject(ProcessEngineStreamService);
   private snackbarService = inject(SnackbarService);
   private changeDetectorRef = inject(ChangeDetectorRef);
 
@@ -62,6 +64,9 @@ export class Jobs implements OnInit {
   ngOnInit(): void {
     this.fetchJobs();
 
+    this.jobManagementEvents.connect();
+    this.processEngineEvents.connect();
+
     this.jobManagementEvents.updatedJob.subscribe((updatedJob) =>
       this.updateJobs(updatedJob)
     );
@@ -72,7 +77,7 @@ export class Jobs implements OnInit {
         await this.snackbarService.handleError(e)
     });
 
-    this.orderManagementEvents.stream(OperationType.Update, (updatedOperation: OperationModel) =>
+    this.orderManagementEvents.connect(OperationType.Update, (updatedOperation: OperationModel) =>
         this.updateOperations(updatedOperation)
     );
   }
@@ -151,6 +156,21 @@ export class Jobs implements OnInit {
     if (job.productionJob)
       return this.operations().find(operation => operation.jobIds?.find(j => j === job.id))?.number!;
     return "";
+  }
+
+  ngOnDestroy(): void {
+    this.disconnectEvents();
+  }
+
+  @HostListener('window:beforeunload')
+  onBeforeUnload() {
+    this.disconnectEvents();
+  }
+
+  private disconnectEvents() {
+    this.jobManagementEvents.disconnect();
+    this.processEngineEvents.disconnect();
+    this.orderManagementEvents.disconnect();
   }
 }
 

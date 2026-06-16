@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnInit, signal, viewChild } from "@angular/core";
+import { Component, HostListener, inject, OnDestroy, OnInit, signal, viewChild } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { MatTree, MatTreeModule } from "@angular/material/tree";
 import { MatIconModule } from "@angular/material/icon";
@@ -46,7 +46,7 @@ import { ProcessHolderGroupModelArrayApiResponse } from "src/app/api/models/proc
   templateUrl: "./process-holders.html",
   styleUrl: "./process-holders.scss",
 })
-export class ProcessHolders implements OnInit {
+export class ProcessHolders implements OnInit, OnDestroy {
   processHolderGroups = signal<Array<ProcessHolderGroup>>([]);
   dataSource = signal<Array<ProcessHolderNode>>([]);
   loading = signal(false);
@@ -68,6 +68,7 @@ export class ProcessHolders implements OnInit {
 
   ngOnInit(): void {
     this.loading.set(true);
+    this._processHolderStreamService.connect();
     this._processService.getGroups().subscribe({
       next: (response: ProcessHolderGroupModelArrayApiResponse) => {
         console.log(response);
@@ -164,6 +165,15 @@ export class ProcessHolders implements OnInit {
         )
     );
     this.buildTree(filteredResults);
+  }
+
+  ngOnDestroy(): void {
+    this._processHolderStreamService.disconnect();
+  }
+
+  @HostListener('window:beforeunload')
+  onBeforeUnload() {
+    this._processHolderStreamService.disconnect();
   }
 }
 
