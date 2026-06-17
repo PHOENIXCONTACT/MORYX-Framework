@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Microsoft.Extensions.Logging;
 using Moryx.Drivers.OpcUa.Nodes;
 using Moryx.Logging;
 using Opc.Ua;
@@ -55,8 +56,9 @@ public class OpcUaNodeReader(IModuleLogger logger, IOpcUaDriver driver) : IOpcUa
             var result = ConvertToNode(node, namespaceTable);
             return result;
         }
-        catch
+        catch (Exception ex)
         {
+            logger.LogError(ex, "Error while reading node");
             return null;
         }
     }
