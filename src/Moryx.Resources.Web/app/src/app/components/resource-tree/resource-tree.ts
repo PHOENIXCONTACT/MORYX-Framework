@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, viewChild, input, output, effect, untracked, ChangeDetectionStrategy, HostListener } from '@angular/core';
+import { Component, inject, viewChild, input, output, effect, untracked, ChangeDetectionStrategy } from '@angular/core';
 import { MatTree, MatTreeModule } from '@angular/material/tree';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -19,6 +19,7 @@ import { getHierarchieLineFor } from '@app/models/TypeTree';
   templateUrl: './resource-tree.html',
   styleUrls: ['./resource-tree.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
+  host: { '(window:beforeunload)': 'saveState()' },
   imports: [CommonModule, MatTreeModule, MatIconModule, MatButtonModule, TranslatePipe]
 })
 export class ResourceTree {
@@ -64,7 +65,6 @@ export class ResourceTree {
     });
   }
 
-  @HostListener('window:beforeunload')
   saveState() {
     this.sessionService.storeTreeState(this.getExpandedIds());
   }
