@@ -84,7 +84,6 @@ jobs:
     uses: phoenixcontact/tools/.github/workflows/publish-tool.yml@main
     with:
       dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
-      node_version: ${{ needs.EnvVar.outputs.node_version }}
       REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
       MORYX_PACKAGE_TARGET_DEV: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_DEV }}
       MORYX_PACKAGE_TARGET_V3_DEV: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_V3_DEV }}
