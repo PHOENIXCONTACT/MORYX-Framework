@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import {Injectable, signal} from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'

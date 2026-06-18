@@ -1,7 +1,12 @@
-import {Component, inject, OnInit} from '@angular/core';
-import {MatButton} from '@angular/material/button';
-import {MatIconModule} from '@angular/material/icon';
-import {AuthService} from '../services/auth.service';
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
+import { Component, inject, OnInit } from '@angular/core';
+import { MatButton } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-auth-button',

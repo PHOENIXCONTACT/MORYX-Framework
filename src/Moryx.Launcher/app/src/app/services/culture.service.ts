@@ -3,8 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import {computed, Injectable, signal} from '@angular/core';
-import {CultureModel} from '../models/culture-model';
+import { computed, Injectable, signal } from '@angular/core';
+import { CultureModel } from '../models/culture-model';
 
 @Injectable({
   providedIn: 'root'

@@ -3,9 +3,9 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import {computed, Injectable, signal} from '@angular/core';
-import {ModuleItem} from '../models/module-item';
-import {ModuleCategory} from '../models/module-category';
+import { computed, Injectable, signal } from '@angular/core';
+import { ModuleItem } from '../models/module-item';
+import { ModuleCategory } from '../models/module-category';
 
 @Injectable({
   providedIn: 'root'

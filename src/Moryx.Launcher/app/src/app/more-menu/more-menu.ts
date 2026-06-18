@@ -1,15 +1,20 @@
-import {Component, inject, ViewChild} from '@angular/core';
-import {MatButtonModule} from '@angular/material/button';
-import {MatIconModule} from '@angular/material/icon';
-import {MatMenu, MatMenuModule} from '@angular/material/menu';
-import {MatDividerModule} from '@angular/material/divider';
-import {MatDialog} from '@angular/material/dialog';
-import {LauncherLayout, LauncherStateService} from '../services/launcher-state.service';
-import {AboutDialog} from '../about-dialog/about-dialog';
-import {ModuleService} from '../services/module.service';
-import {CultureService} from '../services/culture.service';
-import {TranslationConstants} from '../translation-constants';
-import {TranslatePipe} from '@ngx-translate/core';
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
+import { Component, inject, ViewChild } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenu, MatMenuModule } from '@angular/material/menu';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatDialog } from '@angular/material/dialog';
+import { LauncherLayout, LauncherStateService } from '../services/launcher-state.service';
+import { AboutDialog } from '../about-dialog/about-dialog';
+import { ModuleService } from '../services/module.service';
+import { CultureService } from '../services/culture.service';
+import { TranslationConstants } from '../translation-constants';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-more-menu',

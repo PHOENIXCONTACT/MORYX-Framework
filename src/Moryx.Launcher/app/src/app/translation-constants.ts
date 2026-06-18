@@ -20,6 +20,14 @@ export class TranslationConstants {
     FULL_MODE: 'MORE.FULL_MODE',
   }
 
+  public static readonly SEARCH = {
+    PLACEHOLDER: 'SEARCH.PLACEHOLDER',
+    NO_PROVIDER: 'SEARCH.NO_PROVIDER',
+    CLEAR: 'SEARCH.CLEAR',
+    NO_RESULTS: 'SEARCH.NO_RESULTS',
+    DIALOG_LABEL: 'SEARCH.DIALOG_LABEL',
+  }
+
   public static readonly ABOUT = {
     TITLE: 'ABOUT.TITLE',
     APPLICATION: 'ABOUT.APPLICATION',

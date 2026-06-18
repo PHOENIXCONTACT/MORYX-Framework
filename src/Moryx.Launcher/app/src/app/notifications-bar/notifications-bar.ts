@@ -4,9 +4,17 @@
 */
 
 import { CommonModule } from '@angular/common';
-import { Component, computed, ElementRef, input, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  computed,
+  ElementRef,
+  input,
+  OnDestroy,
+  OnInit,
+  signal,
+  ChangeDetectionStrategy
+} from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-
 
 export type Severity = 'Info' | 'Warning' | 'Error' | 'Fatal';
 
@@ -31,11 +39,11 @@ export class NotificationsBar implements OnInit, OnDestroy {
   api = input('/api/moryx/notifications/stream');
   eventSource: EventSource | undefined;
 
-  notifications = signal<Array<Notification>|undefined>(undefined);
+  notifications = signal<Array<Notification> | undefined>(undefined);
   notificationIndex = signal<number>(0);
   errorAvailable = signal<boolean>(false);
 
-  currentNotification = computed<Notification|undefined|null>(() => {
+  currentNotification = computed<Notification | undefined | null>(() => {
     const notifications = this.notifications();
 
     if (notifications === undefined)
@@ -47,7 +55,7 @@ export class NotificationsBar implements OnInit, OnDestroy {
     return notifications[this.notificationIndex()];
   });
 
-  private intervalId: number|undefined = undefined;
+  private intervalId: number | undefined = undefined;
 
   private severityRank: Record<Severity, number> = {
     Info: 0,
@@ -56,7 +64,8 @@ export class NotificationsBar implements OnInit, OnDestroy {
     Fatal: 3
   };
 
-  constructor(private elementRef: ElementRef) {}
+  constructor(private elementRef: ElementRef) {
+  }
 
   ngOnInit(): void {
     if (!this.api()) {
@@ -70,7 +79,7 @@ export class NotificationsBar implements OnInit, OnDestroy {
   private connect() {
     this.eventSource = new EventSource(this.api());
     this.eventSource.onmessage = this.onMessageReceived.bind(this);
-    this.eventSource.onerror =  this.onErrorReceived.bind(this);
+    this.eventSource.onerror = this.onErrorReceived.bind(this);
   }
 
   private onMessageReceived(event: any) {
@@ -92,8 +101,7 @@ export class NotificationsBar implements OnInit, OnDestroy {
       this.notifications.set(reducedData);
 
       this.updateInterval();
-    }
-    else {
+    } else {
       this.notificationIndex.set(0);
       this.notifications.set([]);
 
@@ -153,10 +161,10 @@ export class NotificationsBar implements OnInit, OnDestroy {
   getSeverityBackgroundColor(severity: Severity | undefined | null, errorAvailabe: boolean): string {
     const computedStyle = getComputedStyle(this.elementRef.nativeElement);
 
-     if (errorAvailabe)
+    if (errorAvailabe)
       return computedStyle.getPropertyValue('--color-Info').trim();
 
-     if (severity === undefined || severity === null)
+    if (severity === undefined || severity === null)
       return computedStyle.getPropertyValue('--color-Success').trim();
 
     const color = computedStyle.getPropertyValue('--color-' + severity).trim();

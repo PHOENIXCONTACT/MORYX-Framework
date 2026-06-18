@@ -1,12 +1,17 @@
-import {ApplicationConfig, inject, provideAppInitializer, provideBrowserGlobalErrorListeners} from '@angular/core';
-import {provideRouter, withHashLocation} from '@angular/router';
-import {MatIconRegistry} from '@angular/material/icon';
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
 
-import {provideTranslateService} from '@ngx-translate/core';
-import {provideTranslateHttpLoader} from '@ngx-translate/http-loader';
-import {environment} from '../environments/environment';
+import { ApplicationConfig, inject, provideAppInitializer, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { provideRouter, withHashLocation } from '@angular/router';
+import { MatIconRegistry } from '@angular/material/icon';
 
-import {routes} from './app.routes';
+import { provideTranslateService } from '@ngx-translate/core';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+import { environment } from '../environments/environment';
+
+import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [

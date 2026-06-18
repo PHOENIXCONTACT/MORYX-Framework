@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import {Injectable, signal} from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
@@ -39,13 +39,13 @@ export class LauncherStateService {
   }
 
   public updateNavCollapsed(collapsed: boolean): void {
-    this.persistState({ navCollapsed: collapsed });
+    this.persistState({navCollapsed: collapsed});
     this.navCollapsed.set(collapsed);
   }
 
   private persistState(changes: Partial<LauncherState>): void {
-    const currentState = this.getStoredState() ?? { fullscreen: false, operatorMode: false };
-    window.localStorage.setItem(this.stateName, JSON.stringify({ ...currentState, ...changes }));
+    const currentState = this.getStoredState() ?? {fullscreen: false, operatorMode: false};
+    window.localStorage.setItem(this.stateName, JSON.stringify({...currentState, ...changes}));
   }
 
   private getStoredState(): LauncherState | undefined {

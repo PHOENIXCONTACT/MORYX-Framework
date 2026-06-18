@@ -1,5 +1,10 @@
-import {Component, HostListener, inject} from '@angular/core';
-import {LauncherLayout, LauncherStateService} from '../services/launcher-state.service';
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
+import { Component, HostListener, inject } from '@angular/core';
+import { LauncherLayout, LauncherStateService } from '../services/launcher-state.service';
 
 @Component({
   selector: 'app-fullscreen-layout',

@@ -1,14 +1,14 @@
-import {Component, computed, inject} from '@angular/core';
-import {toSignal} from '@angular/core/rxjs-interop';
-import {timer} from 'rxjs';
-import {catchError, switchMap} from 'rxjs/operators';
-import {of} from 'rxjs';
-import {MatButtonModule} from '@angular/material/button';
-import {MatDialogModule} from '@angular/material/dialog';
-import {TranslatePipe} from '@ngx-translate/core';
-import {CommonService} from '@api/services/common.service';
-import {CultureService} from '../services/culture.service';
-import {TranslationConstants} from '../translation-constants';
+import { Component, computed, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { timer } from 'rxjs';
+import { catchError, switchMap } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { TranslatePipe } from '@ngx-translate/core';
+import { CommonService } from '@api/services/common.service';
+import { CultureService } from '../services/culture.service';
+import { TranslationConstants } from '../translation-constants';
 
 @Component({
   selector: 'app-about-dialog',
@@ -32,7 +32,7 @@ export class AboutDialog {
   private rawServerTime = toSignal(timer(0, 1000)
     .pipe(switchMap(() =>
       this.commonService.getServerTime().pipe(catchError(() => of(null))))
-  ));
+    ));
 
   serverTime = computed(() => {
     const rawServerTime = this.rawServerTime()?.serverTime;
@@ -55,7 +55,10 @@ export class AboutDialog {
       {label: TranslationConstants.ABOUT.LABEL_PRODUCT, value: applicationInfo.assemblyProduct},
       {label: TranslationConstants.ABOUT.LABEL_DESCRIPTION, value: applicationInfo.assemblyDescription},
       {label: TranslationConstants.ABOUT.LABEL_VERSION, value: applicationInfo.assemblyVersion},
-      {label: TranslationConstants.ABOUT.LABEL_INFORMATIONAL_VERSION, value: applicationInfo.assemblyInformationalVersion},
+      {
+        label: TranslationConstants.ABOUT.LABEL_INFORMATIONAL_VERSION,
+        value: applicationInfo.assemblyInformationalVersion
+      },
       {label: TranslationConstants.ABOUT.LABEL_COMPANY, value: applicationInfo.assemblyCompanyName},
       {label: TranslationConstants.ABOUT.LABEL_CONFIGURATION, value: applicationInfo.assemblyConfiguration},
       {label: TranslationConstants.ABOUT.LABEL_COPYRIGHT, value: applicationInfo.assemblyCopyright},
@@ -71,7 +74,10 @@ export class AboutDialog {
     return [
       {label: TranslationConstants.ABOUT.LABEL_MACHINE_NAME, value: hostInfo.machineName},
       {label: TranslationConstants.ABOUT.LABEL_OS, value: hostInfo.osInformation},
-      {label: TranslationConstants.ABOUT.LABEL_UPTIME, value: hostInfo.upTime != null ? this.formatUptime(hostInfo.upTime) : null},
+      {
+        label: TranslationConstants.ABOUT.LABEL_UPTIME,
+        value: hostInfo.upTime != null ? this.formatUptime(hostInfo.upTime) : null
+      },
     ].filter(e => e.value);
   });
 
