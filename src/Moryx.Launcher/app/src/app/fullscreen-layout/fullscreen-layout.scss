@@ -1,7 +1,17 @@
+@use "../layouts/layout";
+
 :host {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+}
+
+.main-area {
   display: flex;
   flex-direction: column;
   flex: 1;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .top-region {
@@ -15,5 +25,5 @@
   flex-direction: column;
   flex: 1;
   min-height: 0;
+  position: relative;
 }
-

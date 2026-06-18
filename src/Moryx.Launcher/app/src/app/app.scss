@@ -29,3 +29,8 @@ slot[name="app"] {
   flex: 1;
   min-width: 0;
 }
+
+::slotted([slot="rightRegion"]) {
+  flex: 1;
+  min-height: 0;
+}

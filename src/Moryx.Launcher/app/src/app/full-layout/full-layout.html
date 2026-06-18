@@ -1,31 +1,39 @@
-<mat-toolbar>
-  <button mat-icon-button aria-label="Menu" (click)="toggleNav()">
-    <mat-icon>menu</mat-icon>
-  </button>
-  <div class="logo-host">
-    <img [src]="environment.assets + 'assets/moryx-banner-small.svg'" class="logo" alt="MORYX Logo">
-  </div>
-  <slot name="topRegion"></slot>
-  @if (authConfigured()) {
-    <app-auth-button></app-auth-button>
-  }
-  <button mat-icon-button aria-label="Search" (click)="openSearch()">
-    <mat-icon>search</mat-icon>
-  </button>
-  <button mat-icon-button aria-label="More options" [matMenuTriggerFor]="moreMenu.appMenu">
-    <mat-icon>more_vert</mat-icon>
-  </button>
-  <app-more-menu #moreMenu></app-more-menu>
-</mat-toolbar>
+<div class="main-area">
+  <mat-toolbar>
+    <button mat-icon-button aria-label="Menu" (click)="toggleNav()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <div class="logo-host">
+      <img [src]="environment.assets + 'assets/moryx-banner-small.svg'" class="logo" alt="MORYX Logo">
+    </div>
+    <slot name="topRegion"></slot>
+    @if (authConfigured()) {
+      <app-auth-button></app-auth-button>
+    }
+    <button mat-icon-button aria-label="Search" (click)="openSearch()">
+      <mat-icon>search</mat-icon>
+    </button>
+    <button mat-icon-button aria-label="More options" [matMenuTriggerFor]="moreMenu.appMenu">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <app-more-menu #moreMenu></app-more-menu>
+  </mat-toolbar>
 
-<mat-sidenav-container autosize>
-  <mat-sidenav mode="side" opened style="width: fit-content">
-    <app-vertical-module-nav [collapsed]="navCollapsed()"></app-vertical-module-nav>
-  </mat-sidenav>
+  <mat-sidenav-container autosize>
+    <mat-sidenav mode="side" opened style="width: fit-content">
+      <app-vertical-module-nav [collapsed]="navCollapsed()"></app-vertical-module-nav>
+    </mat-sidenav>
 
-  <mat-sidenav-content>
-    <slot name="app"></slot>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+    <mat-sidenav-content>
+      <slot name="app"></slot>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
 
-<slot name="rightRegion"></slot>
+@if (hasRightRegion()) {
+  <aside class="right-region">
+    <slot name="rightRegion" (slotchange)="onRightRegionSlotChange($event)"></slot>
+  </aside>
+} @else {
+  <slot name="rightRegion" (slotchange)="onRightRegionSlotChange($event)" hidden></slot>
+}

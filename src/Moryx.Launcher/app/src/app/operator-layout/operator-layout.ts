@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { HorizontalModuleNav } from '../horizontal-module-nav/horizontal-module-nav';
 
 @Component({
@@ -13,4 +13,10 @@ import { HorizontalModuleNav } from '../horizontal-module-nav/horizontal-module-
   styleUrl: './operator-layout.scss',
 })
 export class OperatorLayout {
+  hasRightRegion = signal(false);
+
+  onRightRegionSlotChange(event: Event): void {
+    const slot = event.target as HTMLSlotElement;
+    this.hasRightRegion.set(slot.assignedNodes().length > 0);
+  }
 }

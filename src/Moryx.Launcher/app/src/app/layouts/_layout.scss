@@ -1,0 +1,9 @@
+.right-region {
+  display: flex;
+  flex-direction: column;
+  min-width: 200px;
+  position: relative;
+  z-index: 1;
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: -1px 0 2px rgba(0, 0, 0, 0.06);
+}

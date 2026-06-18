@@ -1,9 +1,19 @@
-<div class="top-region">
-  <slot name="topRegion"></slot>
+<div class="main-area">
+  <div class="top-region">
+    <slot name="topRegion"></slot>
+  </div>
+
+  <div class="content">
+    <slot name="app"></slot>
+  </div>
+
+  <app-horizontal-module-nav></app-horizontal-module-nav>
 </div>
 
-<div class="content">
-  <slot name="app"></slot>
-</div>
-
-<app-horizontal-module-nav></app-horizontal-module-nav>
+@if (hasRightRegion()) {
+  <aside class="right-region">
+    <slot name="rightRegion" (slotchange)="onRightRegionSlotChange($event)"></slot>
+  </aside>
+} @else {
+  <slot name="rightRegion" (slotchange)="onRightRegionSlotChange($event)" hidden></slot>
+}

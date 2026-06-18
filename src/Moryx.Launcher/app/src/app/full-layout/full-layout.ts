@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -40,6 +40,12 @@ export class FullLayout {
 
   navCollapsed = this.launcherStateService.navCollapsed;
   authConfigured = this.authService.authConfigured;
+  hasRightRegion = signal(false);
+
+  onRightRegionSlotChange(event: Event): void {
+    const slot = event.target as HTMLSlotElement;
+    this.hasRightRegion.set(slot.assignedNodes().length > 0);
+  }
 
   openSearch(): void {
     this.searchService.open();

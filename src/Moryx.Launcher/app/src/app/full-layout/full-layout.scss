@@ -1,8 +1,18 @@
+@use "../layouts/layout";
+
 :host {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  background: white;
+}
+
+.main-area {
   display: flex;
   flex-direction: column;
   flex: 1;
-  background: white;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .logo-host {
@@ -14,7 +24,6 @@
   height: 46px;
   width: auto;
 }
-
 
 mat-sidenav {
   overflow: visible;
@@ -33,7 +42,6 @@ mat-sidenav-content {
   flex-direction: column;
 }
 
-
 mat-toolbar {
   --mat-toolbar-container-background-color: white;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
@@ -44,10 +52,4 @@ mat-toolbar {
 
 .toolbar-spacer {
   flex: 1 1 auto;
-}
-
-slot[name="topRegion"] {
-  flex: 1 1 auto;
-  display: flex;
-  min-width: 0;
 }

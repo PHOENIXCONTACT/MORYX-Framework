@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, HostListener, inject } from '@angular/core';
+import { Component, HostListener, inject, signal } from '@angular/core';
 import { LauncherLayout, LauncherStateService } from '../services/launcher-state.service';
 
 @Component({
@@ -16,8 +16,15 @@ export class FullscreenLayout {
 
   private launcherStateService = inject(LauncherStateService);
 
+  hasRightRegion = signal(false);
+
   @HostListener('window:keydown.escape')
   exitFullscreen() {
     this.launcherStateService.updateLayout(LauncherLayout.Full);
+  }
+
+  onRightRegionSlotChange(event: Event): void {
+    const slot = event.target as HTMLSlotElement;
+    this.hasRightRegion.set(slot.assignedNodes().length > 0);
   }
 }
