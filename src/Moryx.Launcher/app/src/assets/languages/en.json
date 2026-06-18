@@ -9,6 +9,13 @@
   "LANGUAGE": {
     "LANGUAGE": "Language"
   },
+  "SEARCH": {
+    "PLACEHOLDER": "Search...",
+    "NO_PROVIDER": "No search provider available",
+    "CLEAR": "Clear",
+    "NO_RESULTS": "No results for \"{{query}}\"",
+    "DIALOG_LABEL": "Search"
+  },
   "ABOUT": {
     "TITLE": "About",
     "APPLICATION": "Application",

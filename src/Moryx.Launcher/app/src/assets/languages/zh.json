@@ -9,6 +9,13 @@
   "LANGUAGE": {
     "LANGUAGE": "语言"
   },
+  "SEARCH": {
+    "PLACEHOLDER": "搜索...",
+    "NO_PROVIDER": "没有可用的搜索提供程序",
+    "CLEAR": "清除",
+    "NO_RESULTS": "没有找到 \"{{query}}\" 的结果",
+    "DIALOG_LABEL": "搜索"
+  },
   "ABOUT": {
     "TITLE": "关于",
     "APPLICATION": "应用程序",
