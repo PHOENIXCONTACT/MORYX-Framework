@@ -6,7 +6,12 @@
     <div class="logo-host">
       <img [src]="environment.assets + 'assets/moryx-banner-small.svg'" class="logo" alt="MORYX Logo">
     </div>
-    <slot name="topRegion"></slot>
+    @if (showTopRegion()) {
+      <slot name="topRegion" (slotchange)="onTopRegionSlotChange($event)"></slot>
+    } @else {
+      <div class="toolbar-spacer"></div>
+      <slot name="topRegion" (slotchange)="onTopRegionSlotChange($event)" hidden></slot>
+    }
     @if (authConfigured()) {
       <app-auth-button></app-auth-button>
     }
@@ -30,7 +35,7 @@
   </mat-sidenav-container>
 </div>
 
-@if (hasRightRegion()) {
+@if (showRightRegion()) {
   <aside class="right-region">
     <slot name="rightRegion" (slotchange)="onRightRegionSlotChange($event)"></slot>
   </aside>

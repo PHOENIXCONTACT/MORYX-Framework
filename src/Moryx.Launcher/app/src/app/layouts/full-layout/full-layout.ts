@@ -3,19 +3,19 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { VerticalModuleNav } from '../vertical-module-nav/vertical-module-nav';
-import { MoreMenu } from '../more-menu/more-menu';
+import { VerticalModuleNav } from '../../vertical-module-nav/vertical-module-nav';
+import { MoreMenu } from '../../more-menu/more-menu';
 import { MatMenuTrigger } from '@angular/material/menu';
-import { LauncherStateService } from '../services/launcher-state.service';
-import { AuthButton } from '../auth-button/auth-button';
-import { AuthService } from '../services/auth.service';
-import { environment } from '../../environments/environment';
-import { SearchService } from '../services/search.service';
+import { AuthButton } from '../../auth-button/auth-button';
+import { AuthService } from '../../services/auth.service';
+import { environment } from '../../../environments/environment';
+import { SearchService } from '../../services/search.service';
+import { LayoutBase } from '../layout-base';
 
 @Component({
   selector: 'app-full-layout',
@@ -32,20 +32,13 @@ import { SearchService } from '../services/search.service';
   templateUrl: './full-layout.html',
   styleUrl: './full-layout.scss'
 })
-export class FullLayout {
+export class FullLayout extends LayoutBase {
   private authService = inject(AuthService);
-  private launcherStateService = inject(LauncherStateService);
   private searchService = inject(SearchService);
   environment = environment;
 
   navCollapsed = this.launcherStateService.navCollapsed;
   authConfigured = this.authService.authConfigured;
-  hasRightRegion = signal(false);
-
-  onRightRegionSlotChange(event: Event): void {
-    const slot = event.target as HTMLSlotElement;
-    this.hasRightRegion.set(slot.assignedNodes().length > 0);
-  }
 
   openSearch(): void {
     this.searchService.open();

@@ -13,8 +13,19 @@ export class LauncherStateService {
   private readonly stateName = 'LauncherState';
 
   layout = signal<LauncherLayout>(this.getLayout());
-
   navCollapsed = signal<boolean>(this.getStoredState()?.navCollapsed ?? false);
+
+  /** Whether a top region slot has content projected. Set by layout components. */
+  topRegionAvailable = signal(false);
+
+  /** Whether the user has enabled the top region. Persisted. */
+  topRegionEnabled = signal<boolean>(this.getStoredState()?.topRegionEnabled ?? true);
+
+  /** Whether a right region slot has content projected. Set by layout components. */
+  rightRegionAvailable = signal(false);
+
+  /** Whether the user has enabled the right region. Persisted. */
+  rightRegionEnabled = signal<boolean>(this.getStoredState()?.rightRegionEnabled ?? true);
 
   public getLayout(): LauncherLayout {
     const storedState = this.getStoredState();
@@ -43,6 +54,16 @@ export class LauncherStateService {
     this.navCollapsed.set(collapsed);
   }
 
+  public updateTopRegionEnabled(enabled: boolean): void {
+    this.persistState({topRegionEnabled: enabled});
+    this.topRegionEnabled.set(enabled);
+  }
+
+  public updateRightRegionEnabled(enabled: boolean): void {
+    this.persistState({rightRegionEnabled: enabled});
+    this.rightRegionEnabled.set(enabled);
+  }
+
   private persistState(changes: Partial<LauncherState>): void {
     const currentState = this.getStoredState() ?? {fullscreen: false, operatorMode: false};
     window.localStorage.setItem(this.stateName, JSON.stringify({...currentState, ...changes}));
@@ -68,4 +89,6 @@ interface LauncherState {
   fullscreen: boolean;
   operatorMode: boolean;
   navCollapsed?: boolean;
+  topRegionEnabled?: boolean;
+  rightRegionEnabled?: boolean;
 }

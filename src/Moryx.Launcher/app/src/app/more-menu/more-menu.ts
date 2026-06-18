@@ -25,17 +25,21 @@ import { TranslatePipe } from '@ngx-translate/core';
 export class MoreMenu {
   private moduleService = inject(ModuleService);
   private cultureService = inject(CultureService);
+  private launcherStateService = inject(LauncherStateService);
 
   TranslationConstants = TranslationConstants;
+
+  currentLayout = this.launcherStateService.layout;
+  topRegionAvailable = this.launcherStateService.topRegionAvailable;
+  topRegionEnabled = this.launcherStateService.topRegionEnabled;
+  rightRegionAvailable = this.launcherStateService.rightRegionAvailable;
+  rightRegionEnabled = this.launcherStateService.rightRegionEnabled;
 
   modules = this.moduleService.otherModules;
   supportedCultures = this.cultureService.supportedCultures;
   currentCulture = this.cultureService.currentCulture;
 
   @ViewChild('appMenu') appMenu!: MatMenu;
-
-  private launcherStateService = inject(LauncherStateService);
-  currentLayout = this.launcherStateService.layout;
   protected readonly LauncherLayout = LauncherLayout;
 
   setLayout(layout: LauncherLayout) {
@@ -46,6 +50,14 @@ export class MoreMenu {
 
   openAbout() {
     this.dialog.open(AboutDialog);
+  }
+
+  toggleTopRegion(): void {
+    this.launcherStateService.updateTopRegionEnabled(!this.topRegionEnabled());
+  }
+
+  toggleRightRegion(): void {
+    this.launcherStateService.updateRightRegionEnabled(!this.rightRegionEnabled());
   }
 
   selectCulture = this.cultureService.selectCulture.bind(this.cultureService);

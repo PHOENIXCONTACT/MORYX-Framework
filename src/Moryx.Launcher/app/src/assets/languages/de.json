@@ -4,7 +4,9 @@
     "ABOUT": "Über",
     "FULLSCREEN_MODE": "Vollbild",
     "OPERATOR_MODE": "Bediener",
-    "FULL_MODE": "Vollständig"
+    "FULL_MODE": "Vollständig",
+    "TOP_REGION": "Oberes Panel",
+    "RIGHT_REGION": "Rechtes Panel"
   },
   "LANGUAGE": {
     "LANGUAGE": "Sprache"

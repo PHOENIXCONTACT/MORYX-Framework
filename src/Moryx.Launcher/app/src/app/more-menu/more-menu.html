@@ -48,6 +48,29 @@
     }
     <span>{{ TranslationConstants.MORE.FULLSCREEN_MODE  | translate }}</span>
   </button>
+  @if (topRegionAvailable() || rightRegionAvailable()) {
+    <mat-divider></mat-divider>
+    @if (topRegionAvailable()) {
+      <button mat-menu-item (click)="toggleTopRegion()">
+        @if (topRegionEnabled()) {
+          <mat-icon>check</mat-icon>
+        } @else {
+          <mat-icon></mat-icon>
+        }
+        <span>{{ TranslationConstants.MORE.TOP_REGION  | translate }}</span>
+      </button>
+    }
+    @if (rightRegionAvailable()) {
+      <button mat-menu-item (click)="toggleRightRegion()">
+        @if (rightRegionEnabled()) {
+          <mat-icon>check</mat-icon>
+        } @else {
+          <mat-icon></mat-icon>
+        }
+        <span>{{ TranslationConstants.MORE.RIGHT_REGION  | translate }}</span>
+      </button>
+    }
+  }
 </mat-menu>
 
 <mat-menu #languageMenu="matMenu">

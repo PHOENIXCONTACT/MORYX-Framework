@@ -1,10 +1,9 @@
-@use "../layouts/layout";
+@use "../layout";
 
 :host {
   display: flex;
   flex-direction: row;
   flex: 1;
-  background: white;
 }
 
 .main-area {

@@ -18,6 +18,8 @@ export class TranslationConstants {
     FULLSCREEN_MODE: 'MORE.FULLSCREEN_MODE',
     OPERATOR_MODE: 'MORE.OPERATOR_MODE',
     FULL_MODE: 'MORE.FULL_MODE',
+    TOP_REGION: 'MORE.TOP_REGION',
+    RIGHT_REGION: 'MORE.RIGHT_REGION',
   }
 
   public static readonly SEARCH = {

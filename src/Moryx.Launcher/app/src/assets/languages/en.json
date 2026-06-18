@@ -4,7 +4,9 @@
     "ABOUT": "About",
     "FULLSCREEN_MODE": "Fullscreen",
     "OPERATOR_MODE": "Operator",
-    "FULL_MODE": "Full"
+    "FULL_MODE": "Full",
+    "TOP_REGION": "Top Panel",
+    "RIGHT_REGION": "Right Panel"
   },
   "LANGUAGE": {
     "LANGUAGE": "Language"
