@@ -3,8 +3,9 @@
 
 using Microsoft.Extensions.DependencyInjection;
 using Moryx.Tools;
+using Moryx.Runtime;
 
-namespace Moryx.Startup.Hooks;
+namespace Moryx.Runtime.Kernel;
 
 public static class HookExtension
 {

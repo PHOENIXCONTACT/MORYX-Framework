@@ -1,18 +1,18 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Moryx.Configuration;
 using Moryx.Orders;
 using Moryx.Runtime.Modules;
+using Moryx.Runtime.Modules.Hooks;
 using Moryx.Tools;
 
 namespace Moryx.Startup.Hooks;
 
-public class OrdersHook(IModuleManager moduleManager, ILogger<OrdersHook> logger, IConfiguration configuration)
-    : ModuleStartHook<IOrderManagement, OrdersHookConfig>(moduleManager, configuration, ConfigKey, logger)
+public class OrdersHook(IModuleManager moduleManager, ILogger<OrdersHook> logger, IConfigManager configuration)
+    : ModuleStartHook<IOrderManagement, OrdersHookConfig>(moduleManager, configuration, logger)
 {
-    const string ConfigKey = "Hooks:Orders";
 
     protected override FunctionResult Initialize(OrdersHookConfig config)
     {
@@ -23,11 +23,11 @@ public class OrdersHook(IModuleManager moduleManager, ILogger<OrdersHook> logger
 
         return base.Initialize(config);
     }
-    protected override async Task OnModuleStarted(IServerModule module, IOrderManagement facade, OrdersHookConfig config)
+    protected override async Task OnModuleStarted(IServerModule module, IOrderManagement facade)
     {
         var hasEntries = facade.GetOperations(o => true).Any();
 
-        foreach (var operationDescription in config.Operations)
+        foreach (var operationDescription in _config.Operations)
         {
             if (operationDescription.Disabled || (operationDescription.OnlyOnFreshDb && hasEntries))
             {

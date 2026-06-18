@@ -1,7 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Startup.Hooks;
+namespace Moryx.Runtime;
 
 public interface IStartupHook
 {

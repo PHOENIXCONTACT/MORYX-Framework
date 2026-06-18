@@ -1,9 +1,16 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.ComponentModel;
+using System.Runtime.Serialization;
+using Moryx.Configuration;
+using Moryx.Serialization;
+
 namespace Moryx.Startup.Hooks;
 
-public class OrdersHookConfig
+
+[ProvidedConfig("Hooks:Orders")]
+public class OrdersHookConfig : ConfigBase
 {
     public class ImporterConfig
     {
@@ -35,7 +42,8 @@ public class OrdersHookConfig
         /// <summary>
         /// Maps to OrderCreationContext.OrderType
         /// </summary>
-        public string OrderType { get; set; } = "default";
+        [DefaultValue("default")]
+        public string? OrderType { get; set; }
 
         /// <summary>
         /// Identifier of the product to produce
@@ -65,11 +73,13 @@ public class OrdersHookConfig
         /// <summary>
         /// Unit that the amount is based on
         /// </summary>
-        public string? Unit { get; set; } = "pieces";
+        [DefaultValue("pieces")]
+        public string? Unit { get; set; }
     }
 
     /// <summary>
     /// List of operations to create
     /// </summary>
-    public ImporterConfig[] Operations { get; set; } = [];
+    [DataMember, EntrySerialize]
+    public ImporterConfig[]? Operations { get; set; }
 }
