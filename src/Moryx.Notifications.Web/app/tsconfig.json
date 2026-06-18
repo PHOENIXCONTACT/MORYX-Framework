@@ -20,11 +20,7 @@
     "importHelpers": true,
     "target": "ES2022",
     "module": "ES2022",
-    "useDefineForClassFields": false,
-    "paths": {
-      "@app/*": ["./src/app/*"],
-      "@api/*": ["./src/app/api/*"]
-    }
+    "useDefineForClassFields": false
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

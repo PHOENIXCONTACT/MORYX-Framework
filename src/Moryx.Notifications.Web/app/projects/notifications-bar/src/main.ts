@@ -5,8 +5,8 @@
 
 import { createApplication } from '@angular/platform-browser';
 import { createCustomElement } from '@angular/elements';
-import { Constants } from './app/constants';
-import { NotificationsBar } from './app/notifications-bar/notifications-bar';
+import { Constants } from '@app/constants';
+import { NotificationsBar } from '@app/notifications-bar/notifications-bar';
 
 (async () => {
   const app = await createApplication();

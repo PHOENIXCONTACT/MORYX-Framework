@@ -4,8 +4,10 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --configuration development",
-    "build": "ng build",
-    "build:prod": "ng build --delete-output-path --configuration production --progress false",
+    "build-notifications": "ng build notifications",
+    "build-notifications-bar": "ng build notifications-bar",
+    "build-notifications:prod": "ng build notifications --delete-output-path --configuration production --progress false",
+    "build-notifications-bar:prod": "ng build notifications-bar --delete-output-path --configuration production --progress false",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "generate-api": "NODE_TLS_REJECT_UNAUTHORIZED=0 ng-openapi-gen -c openapi-gen.json && node ../../fix-openapi-gen.js"
@@ -17,6 +19,7 @@
     "@angular/common": "^22.0.0",
     "@angular/compiler": "^22.0.0",
     "@angular/core": "^22.0.0",
+    "@angular/elements": "^22.0.0",
     "@angular/forms": "^22.0.0",
     "@angular/material": "^22.0.0",
     "@angular/platform-browser": "^22.0.0",
