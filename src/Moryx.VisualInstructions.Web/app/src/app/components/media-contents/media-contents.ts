@@ -3,8 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, effect, inject, input, OnInit, signal, untracked } from '@angular/core';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
+import { Component, effect, inject, input, OnInit, signal, untracked, ChangeDetectionStrategy } from '@angular/core';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { DisplayedMediaContent } from './displayed-media-content';
 import { CommonModule } from '@angular/common';
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
@@ -16,6 +16,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
     selector: 'media-contents',
     templateUrl: './media-contents.html',
     styleUrls: ['./media-contents.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
       CommonModule,
       NgxDocViewerModule,

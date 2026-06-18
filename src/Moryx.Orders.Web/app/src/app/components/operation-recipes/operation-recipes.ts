@@ -4,19 +4,16 @@
 */
 
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, computed, effect, inject, OnInit, signal, untracked } from "@angular/core";
+import { Component, computed, effect, inject, OnInit, signal, untracked, ChangeDetectionStrategy } from "@angular/core";
 import { ActivatedRoute, RouterLink } from "@angular/router";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
 import { NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
-import { TranslateModule } from "@ngx-translate/core";
-import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
-import { environment } from "src/environments/environment";
-import { OrderManagementService, ProductManagementService } from "../../api/services";
-import { WorkplanService } from "../../api/services/workplan.service";
-import { RecipeClassificationModel } from "../../api/models";
-import { RecipeModel } from "../../api/models";
-import { WorkplanModel } from "../../api/models";
-import { OperationModel } from "../../api/models";
+import { TranslatePipe } from "@ngx-translate/core";
+import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
+import { environment } from "../../../environments/environment";
+import { OrderManagementService, ProductManagementService } from "@api/services";
+import { WorkplanService } from "@api/services/workplan.service";
+import { RecipeClassificationModel, RecipeModel, WorkplanModel, OperationModel } from "@api/models";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatToolbarModule } from "@angular/material/toolbar";
@@ -34,12 +31,13 @@ import { MatSelectModule } from '@angular/material/select';
   selector: "app-operation-recipes",
   templateUrl: "./operation-recipes.html",
   styleUrls: ["./operation-recipes.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatProgressBarModule,
     MatSidenavModule,
     MatToolbarModule,
     CommonModule,
-    TranslateModule,
+    TranslatePipe,
     MatListModule,
     MatIconModule,
     MatButtonModule,

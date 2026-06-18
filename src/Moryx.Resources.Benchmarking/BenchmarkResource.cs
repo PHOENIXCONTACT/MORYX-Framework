@@ -177,6 +177,23 @@ public class BenchmarkResource : Cell, IBenchmarkResource, INotificationSender
     }
 
     [EntrySerialize]
+    public void PublishMarkdownNotification()
+    {
+        var message = "# 1 Heading\n" +
+                      "This is a **markdown** notification with a [link](https://www.moryx-industry.net/) and an image:\n" +
+                      "![MORYX Logo](https://www.moryx-industry.net/assets/images/MORYX_logo.svg)\n" +
+                      "## 2 Heading\n" +
+                      "Table:\n\n" +
+                      "| Name | Value | Unit |\n" +
+                      "| --- | --- | --- |\n" +
+                      "| Temperature | 23.5 | °C |\n" +
+                      "| Pressure | 1013 | hPa |\n" +
+                      "| Humidity | 60 | % |\n";
+        var notification = new Notification("Markdown Notification", message, Severity.Info, false);
+        NotificationAdapter.Publish(this, notification);
+    }
+
+    [EntrySerialize]
     public void CreateAssemblyInstruction()
     {
         _instructionId = VisualInstructor.Execute(new ActiveInstruction

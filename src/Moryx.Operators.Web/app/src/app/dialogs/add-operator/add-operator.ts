@@ -3,29 +3,30 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { OperatorViewModel } from 'src/app/models/operator-view-model';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import { AssignableOperator } from 'src/app/api/models/assignable-operator';
-import { AppStoreService } from 'src/app/services/app-store.service';
+import { OperatorViewModel } from '@app/models/operator-view-model';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { AssignableOperator } from '@app/api/models/assignable-operator';
+import { AppStoreService } from '@app/services/app-store.service';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-add-operator',
   templateUrl: './add-operator.html',
   styleUrl: './add-operator.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatDialogModule,
     MatFormFieldModule,
     ReactiveFormsModule,
     MatInputModule,
-    TranslateModule,
+    TranslatePipe,
     MatButtonModule
   ]
 })

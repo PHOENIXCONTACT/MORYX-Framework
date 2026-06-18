@@ -1,5 +1,4 @@
-@use "@moryx/ngx-web-framework/styles/variables" as *; 
 
 .management-button{
-    background-color: $mat-background-light;
+    background-color: var(--mat-sys-surface-container-lowest);
 }

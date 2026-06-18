@@ -4,8 +4,7 @@
 */
 
 import { Observable } from "rxjs";
-import { OperationViewModel } from "src/app/models/operation-view-model";
-
+import { OperationViewModel } from "@app/models/operation-view-model";
 
 export interface InterruptDialogData {
   operation: OperationViewModel;

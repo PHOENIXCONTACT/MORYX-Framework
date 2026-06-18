@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, effect, inject, input, model, signal, untracked } from '@angular/core';
+import { Component, effect, inject, input, model, signal, untracked, ChangeDetectionStrategy } from '@angular/core';
 import { AssignmentCardModel } from '../models/assignment-card-model';
 import { MatDialog } from '@angular/material/dialog';
 import { ShiftCardModel } from '../models/shift-card-model';
@@ -14,7 +14,7 @@ import { CalendarDate, CalendarState } from '../models/calendar-state';
 import { AppStoreService } from '../services/app-store.service';
 import moment from 'moment';
 import { TranslationConstants } from '../extensions/translation-constants.extensions';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
@@ -24,12 +24,13 @@ import { MatIconModule } from '@angular/material/icon';
   selector: 'app-assignment',
   templateUrl: './assignment.html',
   styleUrl: './assignment.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CommonModule,
     MatButtonModule,
     MatMenuModule,
     MatIconModule,
-    TranslateModule
+    TranslatePipe
   ]
 })
 export class Assignment {

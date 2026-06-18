@@ -5,22 +5,22 @@
 
 import { CdkDragDrop, CdkDragEnd, CdkDragStart, DragDropModule, DragRef } from '@angular/cdk/drag-drop';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject, OnInit, signal, viewChild } from '@angular/core';
+import { Component, inject, OnInit, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatDrawer, MatDrawerMode, MatSidenavModule } from '@angular/material/sidenav';
 import { ActivatedRoute, ActivatedRouteSnapshot, ParamMap, Params, Router } from '@angular/router';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import {
   NodeConnectionPoint,
   WorkplanNodeClassification,
   WorkplanNodeModel,
   WorkplanStepRecipe
-} from '../../../api/models';
-import { WorkplanEditingService } from '../../../api/services';
-import { TranslationConstants } from '../../../extensions/translation-constants.extensions';
-import { EditorStateService } from '../../../services/editor-state.service';
-import { SessionsService } from '../../../services/sessions.service';
+} from '@api/models';
+import { WorkplanEditingService } from '@api/services';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { EditorStateService } from '@app/services/editor-state.service';
+import { SessionsService } from '@app/services/sessions.service';
 import { Position } from './position';
 import { NodeConnectionPath, Segment } from './workplan-path';
 import { CommonModule } from '@angular/common';
@@ -44,6 +44,7 @@ enum EditQueries {
   selector: 'app-editor',
   templateUrl: './editor.html',
   styleUrls: ['./editor.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CommonModule,
     MatSidenavModule,
@@ -53,7 +54,7 @@ enum EditQueries {
     MatDrawer,
     MatTooltipModule,
     DragDropModule,
-    TranslateModule,
+    TranslatePipe,
     MatProgressSpinnerModule,
     MatMenuModule,
     WorkplanProperties,

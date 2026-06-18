@@ -280,6 +280,10 @@ public class ProcessEngineController : ControllerBase // TODO: Rename to Process
 
             await result.ExecuteAsync(HttpContext);
         }
+        catch (OperationCanceledException)
+        {
+            // client disconnected — this is expected, not an error
+        }
         finally
         {
             _processControl.ActivityUpdated -= eventHandler;

@@ -3,12 +3,12 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { LanguageService, SnackbarService } from '@moryx/ngx-web-framework/services';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { filter, Subscription } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { environment } from '../environments/environment';
 import { TranslationConstants } from './extensions/translation-constants.extensions';
 import { SessionsService } from './services/sessions.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -24,13 +24,14 @@ import { MatButtonModule } from '@angular/material/button';
   selector: 'app-root',
   templateUrl: './app.html',
   styleUrls: ['./app.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatSidenavModule,
     MatToolbarModule,
     CommonModule,
     MatTooltipModule,
     MatIconModule,
-    TranslateModule,
+    TranslatePipe,
     Toolbox,
     RouterModule,
     MatButtonModule
@@ -62,7 +63,7 @@ export class App implements OnInit, OnDestroy {
       TranslationConstants.LANGUAGES.IT,
     ]);
     this.translateService.setFallbackLang('en');
-    this.translateService.use(this.languageService.getDefaultLanguage());
+    this.translateService.use(this.languageService.getFallbackLang());
   }
 
   async getTranslations(): Promise<{ [key: string]: string }> {

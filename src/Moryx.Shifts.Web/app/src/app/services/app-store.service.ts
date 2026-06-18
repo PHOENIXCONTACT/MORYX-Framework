@@ -22,7 +22,7 @@ import {
   OperatorManagementService,
   OrderManagementService,
   ShiftManagementService,
-} from '../api/services';
+} from '@api/services';
 import {
   assignableOperatorToOperatorModel,
   assignmentToAssignmentCardModel,
@@ -30,7 +30,7 @@ import {
   shiftInstanceToShiftCardModel,
 
 } from '../models/model-converter';
-import { AttendableResourceModel } from '../api/models/attendable-resource-model';
+import { AttendableResourceModel } from '@api/models/attendable-resource-model';
 import { CopyShiftAndAssignmentData } from '../dialogs/copy-shift-and-assignment/copy-shift-and-assignment';
 
 @Injectable({

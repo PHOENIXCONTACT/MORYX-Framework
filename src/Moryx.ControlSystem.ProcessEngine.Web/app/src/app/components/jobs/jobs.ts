@@ -4,28 +4,27 @@
 */
 
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, inject, OnInit, signal, ChangeDetectorRef } from "@angular/core";
-import { JobManagementService, OrderManagementService } from "src/app/api/services";
-import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
-import { JobViewModel } from "src/app/models/job-view-model";
-import { OperationType } from "src/app/models/operation-models";
-import { JobManagementStreamService } from "src/app/services/job-management-stream.service";
-import { OrderManagementStreamService } from "src/app/services/order-management-stream.service";
-import { environment } from "src/environments/environment";
+import { Component, inject, OnInit, signal, ChangeDetectorRef, ChangeDetectionStrategy } from "@angular/core";
+import { JobManagementService, OrderManagementService } from "@api/services";
+import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
+import { JobViewModel } from "@app/models/job-view-model";
+import { OperationType } from "@app/models/operation-models";
+import { JobManagementStreamService } from "@app/services/job-management-stream.service";
+import { OrderManagementStreamService } from "@app/services/order-management-stream.service";
+import { environment } from "../../../environments/environment";
 import "../../extensions/observable.extensions";
-import "./../../extensions/observable.extensions";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
 import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
 import { CommonModule } from "@angular/common";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { MatIconModule } from "@angular/material/icon";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslatePipe } from "@ngx-translate/core";
 import { Processes } from "../processes/processes";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatButtonModule } from "@angular/material/button";
-import { JobModel } from "src/app/api/models/job-model";
-import { OperationModel } from "src/app/api/models/operation-model";
+import { JobModel } from "@api/models/job-model";
+import { OperationModel } from "@api/models/operation-model";
 
 @Component({
   selector: "app-jobs",
@@ -35,13 +34,14 @@ import { OperationModel } from "src/app/api/models/operation-model";
     CommonModule,
     MatExpansionModule,
     MatIconModule,
-    TranslateModule,
+    TranslatePipe,
     Processes,
     MatProgressSpinnerModule,
     EmptyState,
     MatProgressBarModule,
     MatButtonModule
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: []
 })
 export class Jobs implements OnInit {

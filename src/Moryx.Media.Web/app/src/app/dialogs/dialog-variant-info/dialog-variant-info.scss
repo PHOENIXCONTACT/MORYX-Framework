@@ -1,22 +1,16 @@
-.info-content {
-  display: flex;
-  flex-flow: column nowrap;
-  align-items: stretch;
-  overflow: hidden;
-}
+.info-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 6px 24px;
+  margin: 0;
 
-.info-content-line {
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: baseline;
-}
+  dt {
+    font-weight: 500;
+    min-width: 100px;
+  }
 
-.info-content-line-label {
-  flex: 1 1 70%;
-  min-width: 100px;
-}
-
-.info-content-line-value {
-  flex: 1 1 30%;
-  min-width: 270px;
+  dd {
+    margin: 0;
+    min-width: 270px;
+  }
 }

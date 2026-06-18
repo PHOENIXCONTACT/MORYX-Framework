@@ -4,8 +4,8 @@
 */
 
 import { Routes } from "@angular/router";
-import { Jobs } from "./app/components/jobs/jobs";
-import { ProcessHolders } from "./app/components/process-holders/process-holders";
+import { Jobs } from "@app/components/jobs/jobs";
+import { ProcessHolders } from "@app/components/process-holders/process-holders";
 
 export const routes: Routes = [
   {
@@ -17,6 +17,6 @@ export const routes: Routes = [
     component: ProcessHolders
   },
   {
-    path: '', redirectTo: "jobs", pathMatch: 'full' 
+    path: '', redirectTo: "jobs", pathMatch: 'full'
   }
   ];

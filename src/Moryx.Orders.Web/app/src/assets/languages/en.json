@@ -55,7 +55,7 @@
   "RECIPES": {
     "RECIPES_OF": "Recipes of",
     "GENERAL": "General",
-    "IDENTIFIER": "Identifier",
+    "NAME": "Name",
     "WORKPLAN": "Workplan",
     "CLASSIFICATION": "Classification",
     "PROPERTIES": "Properties",
@@ -86,7 +86,8 @@
   },
   "INTERRUPT_DIALOG": {
     "TITLE": "Interrupt Operation",
-    "PROMPT": "No new processes are started for the operation. Processes that have already been started are completed normally and the status of the operation then changes to 'Interrupted'."
+    "PROMPT": "No new processes are started for the operation. Processes that have already been started are completed normally and the status of the operation then changes to 'Interrupted'.",
+    "INTERRUPT": "INTERRUPT"
   },
   "CREATE_DIALOG": {
     "TITLE": "New Order",

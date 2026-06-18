@@ -4,7 +4,7 @@
 */
 
 import { CommonModule } from '@angular/common';
-import { AfterContentInit, Component, ElementRef, input } from '@angular/core';
+import { AfterContentInit, Component, ElementRef, input, ChangeDetectionStrategy } from '@angular/core';
 import { LauncherState, LauncherStateService } from '../services/launcher-state.service';
 import { Constants } from '../constants';
 import { NavigationButton } from '../navigation-button/navigation-button';
@@ -15,6 +15,7 @@ import { NavigationButton } from '../navigation-button/navigation-button';
   templateUrl: './page-layout.html',
   styleUrl: './page-layout.css',
   imports: [CommonModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: {
     '(click)': 'onClick($event)',
     '(window:keyup)': 'onKeyUp($event)',

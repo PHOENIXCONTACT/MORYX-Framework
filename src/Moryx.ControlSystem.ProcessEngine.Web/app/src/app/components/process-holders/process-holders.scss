@@ -23,7 +23,7 @@
 .node-with-children{
   position: sticky ;
   top: 0;
-  background-color:  $mat-background-light;
+  background-color:  var(--mat-sys-surface-container-lowest);
   border-bottom: 0.5px solid rgba(0, 0, 0, 0.042);
   width: 100%;
   height: 100%;
@@ -114,7 +114,7 @@
   align-items: center;
   justify-content: flex-end;
   margin-right:  10px;
-  background-color: $mat-background-light;
+  background-color: var(--mat-sys-surface-container-lowest);
 }
 
 .position-details-name-section{
@@ -125,7 +125,7 @@
 }
 
 .indicator{
-  background: $mat-background-light;
+  background: var(--mat-sys-surface-container-lowest);
   padding: 1px;
   display: flex;
   align-items: center;
@@ -144,7 +144,7 @@
   display: flex;
   align-items: center;
   padding: 10px 15px;
-  background: $mat-background-light;
+  background: var(--mat-sys-surface-container-lowest);
   border: 1px solid rgba(0, 0, 0, 0.0532);
   border-bottom: 0px;
 }

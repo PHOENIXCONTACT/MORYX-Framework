@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { IconSize } from '../models/types';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
@@ -12,6 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
   selector: 'app-work-hours-icon',
   templateUrl: './work-hours-icon.html',
   styleUrl: './work-hours-icon.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports : [
     CommonModule,
     MatIconModule,

@@ -3,18 +3,17 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { FlatTreeControl } from '@angular/cdk/tree';
-import { Component, effect, inject, OnDestroy, OnInit, signal, untracked, viewChild } from '@angular/core';
+import { Component, effect, inject, OnDestroy, OnInit, signal, untracked, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
-import { MatTreeFlatDataSource, MatTreeFlattener, MatTreeModule } from '@angular/material/tree';
+import { ResourceTree } from './components/resource-tree/resource-tree';
 import { Router, RouterOutlet } from '@angular/router';
 import {
   LanguageService,
   SnackbarService} from '@moryx/ngx-web-framework/services';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { environment } from 'src/environments/environment';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { environment } from '../environments/environment';
 import { ResourceModel, ResourceReferenceModel } from './api/models';
 import { ResourceModificationService } from './api/services';
 import { DialogAddResource } from './dialogs/dialog-add-resource/dialog-add-resource';
@@ -24,9 +23,7 @@ import { TranslationConstants } from './extensions/translation-constants.extensi
 import { CacheResourceService } from './services/cache-resource.service';
 import { EditResourceService } from './services/edit-resource.service';
 import { FormControlService } from './services/form-control-service.service';
-import { FlatNode, SessionService } from './services/session.service';
 import { lastValueFrom, Subscription } from 'rxjs';
-import { getHierarchieLineFor } from './models/TypeTree';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -56,10 +53,11 @@ import { HttpErrorResponse } from '@angular/common/http';
     MatSidenavModule,
     MatToolbarModule,
     MatTooltipModule,
-    MatTreeModule,
+    ResourceTree,
     RouterOutlet,
-    TranslateModule,
+    TranslatePipe,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: {
     '(window:beforeunload)': 'beforeUnloadHander()'
   }
@@ -70,7 +68,6 @@ export class App implements OnInit, OnDestroy {
   private cacheResourceService = inject(CacheResourceService);
   private editResourceService = inject(EditResourceService);
   private modificationService = inject(ResourceModificationService);
-  private sessionService = inject(SessionService);
   private translateService = inject(TranslateService);
   private languageService = inject(LanguageService);
   private snackbarService = inject(SnackbarService);
@@ -82,46 +79,15 @@ export class App implements OnInit, OnDestroy {
 
   readonly resourceToolbarImage = environment.assets + 'assets/resource-toolbar.jpg';
 
-  resources?: ResourceModel[];
+  resources: ResourceModel[] = [];
   resourcesFlat?: ResourceModel[];
   selected = signal<ResourceModel | undefined>(undefined);
   canSave!: boolean;
   TranslationConstants = TranslationConstants;
-  private treeStateIsInitialized: boolean = false;
   private subscriptions: Subscription[] = [];
-
-  private _transformer = (node: ResourceModel, level: number) => {
-    const childReferences = node.references?.find(ref => ref.name == 'Children')?.targets ?? [];
-    return {
-      expandable: !!childReferences.length,
-      name: node.name,
-      level: level,
-      id: node.id,
-    } as FlatNode;
-  };
-
-  treeControl = new FlatTreeControl<FlatNode>(
-    node => node.level,
-    node => node.expandable
-  );
-
-  treeFlattener = new MatTreeFlattener(
-    this._transformer,
-    node => node.level,
-    node => node.expandable,
-    node => {
-      if (node.references) return node.references.find(ref => ref.name == 'Children')?.targets;
-      else return null;
-    }
-  );
-
-  dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
-
-  hasChild = (_: number, node: FlatNode) => node.expandable;
 
   beforeUnloadHander() {
     if (this.isEditMode()) this.editResourceService.stashResource();
-    this.sessionService.storeTreeState(this.treeControl);
   }
 
   constructor() {
@@ -132,9 +98,9 @@ export class App implements OnInit, OnDestroy {
       TranslationConstants.LANGUAGES.ZH,
     ]);
     this.translateService.setFallbackLang('en');
-    this.translateService.use(this.languageService.getDefaultLanguage());
+    this.translateService.use(this.languageService.getFallbackLang());
     this.formControlService.canSave.subscribe(state => (this.canSave = state));
-    
+
     effect(() => {
       const resource = this.editResourceService.activeResource();
       if (this.selected()?.id === resource?.id) {
@@ -152,11 +118,7 @@ export class App implements OnInit, OnDestroy {
   async ngOnInit() {
     this.subscriptions.push(
       this.cacheResourceService.resources.subscribe(resources => {
-        if (this.treeStateIsInitialized) this.sessionService.storeTreeState(this.treeControl);
-        else this.treeStateIsInitialized = true;
-        this.resources = resources;
-        this.dataSource.data = resources ?? [];
-        this.sessionService.restoreTreeState(this.treeControl);
+        this.resources = resources ?? [];
       })
     );
 
@@ -169,14 +131,6 @@ export class App implements OnInit, OnDestroy {
 
   private select(resource: ResourceModel | undefined): void {
     this.selected.set(resource);
-    if (this.treeStateIsInitialized || !resource) return;
-    this.expandSelectedBranch();
-  }
-
-  private expandSelectedBranch() {
-    const toExpand = getHierarchieLineFor(this.selected()?.id, this.resources);
-    this.treeControl.dataNodes.filter(n => toExpand.find(e => e === n.id)).forEach(n => this.treeControl.expand(n));
-    this.treeStateIsInitialized = true;
   }
 
   private openContextMenu(resourceId: number, xCoordinate: number, yCoordinate: number) {
@@ -221,7 +175,7 @@ export class App implements OnInit, OnDestroy {
           body: result.method?.parameters,
         }))
       .catch(async (e: HttpErrorResponse) => await this.snackbarService.handleError(e));
-      
+
       if (!constructed) return;
       this.editResourceService.registerNewResource(constructed);
       this.router.navigate(['details', constructed.id]);

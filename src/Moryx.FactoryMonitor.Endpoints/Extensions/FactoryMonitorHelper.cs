@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Resources;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.ControlSystem.Cells;
 using Moryx.ControlSystem.Processes;
@@ -40,7 +41,7 @@ internal static class FactoryMonitorHelper
         broadcast(Cell_State_Event_Type_Key, cellModel);
     }
 
-    public static void ActivityUpdated(ActivityUpdatedEventArgs activityEventArg, List<ICell> cells, Resource resource,
+    public static void ActivityUpdated(ActivityUpdatedEventArgs activityEventArg, List<ICell> cells,
         List<OrderModel> orderModels, Action<string, object> broadcast)
     {
         if (activityEventArg.Progress == ActivityProgress.Ready)
@@ -48,12 +49,8 @@ internal static class FactoryMonitorHelper
             return;
         }
 
-        if (cells.All(x => x.Id != activityEventArg.Activity.Tracing.ResourceId))
-        {
-            return;
-        }
-
-        if (resource is not ICell cell)
+        var cell = cells.FirstOrDefault(x => x.Id == activityEventArg.Activity.Tracing.ResourceId);
+        if (cell is null)
         {
             return;
         }
@@ -61,20 +58,24 @@ internal static class FactoryMonitorHelper
         var activityChangedModel = cell.GetActivityChangedModel(activityEventArg.Activity, orderModels);
         broadcast(Activity_Event_Type_Key, activityChangedModel);
 
-        var cellStateChangedModel = cell.GetCellStateChangedModel(activityEventArg.Progress, resource);
+        var cellStateChangedModel = cell.GetCellStateChangedModel(activityEventArg.Progress);
         broadcast(Cell_State_Event_Type_Key, cellStateChangedModel);
     }
 
     public static void ResourceUpdated(IResourceManagement resourceManager,
-        Func<IMachineLocation, bool> cellFilter, Converter.Converter converter, Action<string, object> broadcast)
+        Func<IEnumerable<IMachineLocation>, Dictionary<IMachineLocation, ICell>> mapCellsTo,
+        Converter.Converter converter,
+        Action<string, object> broadcast)
     {
-        var cells = resourceManager.GetResources(cellFilter)
-            .Select(location => location.Machine)
-            .Cast<ICell>();
+        var locations = resourceManager.GetResources<IMachineLocation>();
+        // ToDo: Added and removed resources not reflected
+        var locationToCellMappings = mapCellsTo(locations);
 
-        foreach (var cell in cells)
+        foreach (var l2cMapping in locationToCellMappings)
         {
-            var resourceChangedModel = cell.GetResourceChangedModel(converter, resourceManager, cellFilter);
+            var cell = l2cMapping.Value;
+            var location = l2cMapping.Key;
+            var resourceChangedModel = cell.GetResourceChangedModel(converter, resourceManager, location);
             broadcast(Recource_Event_Type_Key, resourceChangedModel);
         }
     }

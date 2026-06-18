@@ -4,22 +4,22 @@
 */
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, RouterOutlet } from '@angular/router';
 import { SnackbarService, SearchBarService, SearchRequest, SearchSuggestion } from '@moryx/ngx-web-framework/services';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { SubscriptionLike } from 'rxjs';
-import { WorkplanSessionModel } from '../../api/models';
-import { WorkplanEditingService } from '../../api/services';
+import { WorkplanSessionModel } from '@api/models';
+import { WorkplanEditingService } from '@api/services';
 import {
   ConfirmDialogButton,
   ConfirmDialog,
   ConfirmDialogData
-} from '../../dialogs/dialog-confirm/dialog-confirm';
-import { TranslationConstants } from '../../extensions/translation-constants.extensions';
-import { SessionsService } from '../../services/sessions.service';
-import { EditorStateService } from '../../services/editor-state.service';
+} from '@app/dialogs/dialog-confirm/dialog-confirm';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { SessionsService } from '@app/services/sessions.service';
+import { EditorStateService } from '@app/services/editor-state.service';
 
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -32,6 +32,7 @@ import { MatButtonModule } from '@angular/material/button';
   selector: 'app-sessions',
   templateUrl: './sessions.html',
   styleUrls: ['./sessions.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatTabsModule,
     MatProgressSpinnerModule,
@@ -39,7 +40,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatIconModule,
     MatTooltipModule,
     FormsModule,
-    TranslateModule,
+    TranslatePipe,
     MatButtonModule
   ]
 })

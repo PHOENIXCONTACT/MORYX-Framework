@@ -11,7 +11,6 @@ export class TranslationConstants {
   };
 
   public static readonly PROCESSES = {
-    TITLE: 'PROCESSES.TITLE',
     ACTIVITIES: 'PROCESSES.ACTIVITIES',
     ACTIVITY_DETAILS: 'PROCESSES.ACTIVITY_DETAILS',
     STARTED: 'PROCESSES.STARTED',

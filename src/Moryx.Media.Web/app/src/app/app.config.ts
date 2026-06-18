@@ -4,7 +4,7 @@
 */
 
 import { ClipboardModule } from "@angular/cdk/clipboard";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from "@angular/common/http";
 import { ApplicationConfig, importProvidersFrom } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatBadgeModule } from "@angular/material/badge";
@@ -28,8 +28,8 @@ import { provideRouter } from "@angular/router";
 import { ApiInterceptor, API_INTERCEPTOR_PROVIDER } from "@moryx/ngx-web-framework/interceptors";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
 import { NgxDocViewerModule } from "ngx-doc-viewer";
-import { environment } from "src/environments/environment";
-import { ApiModule } from "./api/api.module";
+import { environment } from "../environments/environment";
+import { ApiModule } from "@api/api.module";
 import { routes } from "./app.routes";
 
 import { provideTranslateService } from '@ngx-translate/core';
@@ -63,7 +63,7 @@ export const appConfig: ApplicationConfig = {
     ApiInterceptor,
     API_INTERCEPTOR_PROVIDER,
     SnackbarService,
-    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(withXhr(), withInterceptorsFromDi()),
     provideTranslateService({
       loader: provideTranslateHttpLoader({
         prefix: environment.assets + 'assets/languages/',

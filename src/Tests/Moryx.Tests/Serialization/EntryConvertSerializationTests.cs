@@ -128,5 +128,30 @@ public class EntryConvertSerializationTests
         Assert.That(singleWithProvider, Is.EqualTo(3.14f).Within(1e-5));
         Assert.That(doubleWithFallback, Is.EqualTo(3.14d).Within(1e-10));
     }
+     
+    [Test]
+    public void ParametersShouldRespectRequiredAttribute()
+    {
+        // Arrange
+        var myClass = typeof(EntrySerialize_Methods);
+        var method = myClass.GetMethod(nameof(EntrySerialize_Methods.MethodWithRequiredAndOptionalParameters));
+
+        // Act
+        var entry = EntryConvert.EncodeMethod(method);
+      
+        var plainParameterValidation = entry.Parameters.SubEntries.First(x => x.DisplayName == "plainParameter").Validation;
+        var requiredParameterValidation = entry.Parameters.SubEntries.First(x => x.DisplayName == "requiredParameter").Validation;
+        var nullableValidation = entry.Parameters.SubEntries.First(x => x.DisplayName == "nullableString").Validation;
+        var defaultValueValidation = entry.Parameters.SubEntries.First(x => x.DisplayName == "defaultValueString").Validation;
+
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(plainParameterValidation.IsRequired, Is.True ,"Plain parameter should be reuired");
+            Assert.That(requiredParameterValidation.IsRequired, Is.True , "Required parameter should be required");
+            Assert.That(nullableValidation.IsRequired, Is.False, "Nullable parameter should not be required");
+            Assert.That(defaultValueValidation.IsRequired, Is.False, "Default value shuold not be required");
+        });
+    }
 
 }

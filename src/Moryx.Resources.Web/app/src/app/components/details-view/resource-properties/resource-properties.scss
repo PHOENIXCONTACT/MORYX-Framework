@@ -1,4 +1,3 @@
-@use "../../../../styles.scss" as *;
 
 :host {
   display: flex;
@@ -6,7 +5,7 @@
   width: 100%;
   max-width: 60em;
   height: 100%;
-  background: $mat-background-light;
+  background: var(--mat-sys-surface-container-lowest);
   box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
 }
 

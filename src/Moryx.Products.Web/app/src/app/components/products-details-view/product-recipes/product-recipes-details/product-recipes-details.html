@@ -2,7 +2,7 @@
 
 @if (recipe) {
   <app-product-recipes-details-header />
-  @if (recipe.properties !== undefined) {
+  @if (recipe.properties !== undefined && recipe.properties !== null && recipe.properties.subEntries?.length! > 0) {
     <navigable-entry-editor
       class="product-recipes-details-properties"
       queryParam="productRecipe"

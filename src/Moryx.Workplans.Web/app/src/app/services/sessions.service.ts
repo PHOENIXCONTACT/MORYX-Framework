@@ -6,8 +6,8 @@
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Subject, catchError, from, tap, throwError } from 'rxjs';
 import { Observable } from 'rxjs';
-import { WorkplanSessionModel } from '../api/models';
-import { WorkplanEditingService } from '../api/services';
+import { WorkplanSessionModel } from '@api/models';
+import { WorkplanEditingService } from '@api/services';
 import { PrototypeToEntryConverter } from '@moryx/ngx-web-framework/entry-editor';
 import { BrowserStorageService } from './browser-storage.service';
 import { HttpErrorResponse } from '@angular/common/http';

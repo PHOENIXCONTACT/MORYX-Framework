@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   MatDialogRef,
   MAT_DIALOG_DATA,
@@ -12,24 +12,25 @@ import {
   MatDialogActions,
   MatDialogClose
 } from '@angular/material/dialog';
-import { TranslateModule } from '@ngx-translate/core';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { MatIconButton, MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-dialog-add-variant',
   templateUrl: './dialog-add-variant.html',
   styleUrls: ['./dialog-add-variant.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatDialogTitle, MatDialogContent,
     MatFormField, MatLabel, MatInput,
     FormsModule, MatIconButton, MatSuffix,
     MatIcon, MatDialogActions, MatButton,
-    MatDialogClose, TranslateModule]
+    MatDialogClose, TranslatePipe]
 })
 export class DialogAddVariant {
   private dialogRef = inject(MatDialogRef<DialogAddVariant>);

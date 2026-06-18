@@ -26,6 +26,7 @@
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
+  flex-shrink: 0;
 }
 
 .recipes-overview-list-item-content {

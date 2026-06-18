@@ -4,18 +4,19 @@
 */
 
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-confirmation-dialog',
   templateUrl: './confirmation-dialog.html',
   styleUrl: './confirmation-dialog.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatDialogModule,
-    TranslateModule
+    TranslatePipe
   ]
 })
 export class ConfirmationDialog {
