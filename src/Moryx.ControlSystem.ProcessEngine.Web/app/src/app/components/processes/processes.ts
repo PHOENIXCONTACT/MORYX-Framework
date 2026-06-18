@@ -5,26 +5,36 @@
 
 import { CommonModule } from "@angular/common";
 import { HttpErrorResponse } from "@angular/common/http";
-import { ChangeDetectorRef, Component, computed, inject, input, OnDestroy, OnInit, signal } from "@angular/core";
+import {
+  ChangeDetectorRef,
+  Component,
+  computed,
+  inject,
+  input,
+  OnDestroy,
+  OnInit,
+  signal,
+  ChangeDetectionStrategy
+} from "@angular/core";
 import { MatListModule } from "@angular/material/list";
 import { MatSlideToggleChange, MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
 import { NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslatePipe } from "@ngx-translate/core";
 import { Subscription } from "rxjs";
-import { JobProcessModel } from "src/app/api/models/job-process-model";
-import { ProcessActivityModel } from "src/app/api/models/process-activity-model";
-import { ProcessEngineService } from "src/app/api/services";
-import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
-import { JobViewModel } from "src/app/models/job-view-model";
-import { ProcessEngineStreamService } from "src/app/services/process-engine-stream.service";
+import { JobProcessModel } from "@api/models/job-process-model";
+import { ProcessActivityModel } from "@api/models/process-activity-model";
+import { ProcessEngineService } from "@api/services";
+import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
+import { JobViewModel } from "@app/models/job-view-model";
+import { ProcessEngineStreamService } from "@app/services/process-engine-stream.service";
 
 @Component({
   selector: "app-processes",
   templateUrl: "./processes.html",
   imports: [
     CommonModule,
-    TranslateModule,
+    TranslatePipe,
     MatListModule,
     NavigableEntryEditor,
     MatSlideToggleModule,
@@ -34,6 +44,7 @@ import { ProcessEngineStreamService } from "src/app/services/process-engine-stre
     ProcessEngineStreamService,
     SnackbarService,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./processes.scss"]
 })
 export class Processes implements OnInit, OnDestroy {
@@ -57,10 +68,6 @@ export class Processes implements OnInit, OnDestroy {
 
   private processSubscription!: Subscription;
   private activitySubscription!: Subscription;
-
-  constructor() {
-    console.log('loadede')
-  }
 
   ngOnInit(): void {
     this.processEngineService
@@ -101,7 +108,7 @@ export class Processes implements OnInit, OnDestroy {
       // Extract job id
       // TODO: Extend model
       const jobId = BigInt(updatedProcess.id!) >> 14n;
-      if (jobId !== BigInt(this.job().model.id!)){
+      if (jobId !== BigInt(this.job().model.id!)) {
         return;
       }
 
@@ -152,8 +159,7 @@ export class Processes implements OnInit, OnDestroy {
       // Replace with new object from stream
       process.activities![index!] = updatedActivity;
 
-    }
-    else {
+    } else {
       // Or add to activities of the process
       process.activities?.push(updatedActivity);
     }

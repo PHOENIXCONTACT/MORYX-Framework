@@ -3,10 +3,9 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { AdviceModel } from '../api/models';
-import { OperationModel } from '../api/models';
-import { ReportModel } from '../api/models';
-
+import { AdviceModel } from '@api/models';
+import { OperationModel } from '@api/models';
+import { ReportModel } from '@api/models';
 
 export class OperationChangedModelBase {
   operationModel: OperationModel | undefined;

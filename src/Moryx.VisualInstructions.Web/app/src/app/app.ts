@@ -3,12 +3,12 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, HostListener, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, inject, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { LanguageService } from '@moryx/ngx-web-framework/services';
 import { TranslateService } from '@ngx-translate/core';
-import { environment } from 'src/environments/environment';
+import { environment } from '../environments/environment';
 import {
   ConfigurationDialog,
   DialogData,
@@ -27,6 +27,7 @@ const COOKIE_NAME = 'moryx-client-identifier';
   selector: 'app-root',
   templateUrl: './app.html',
   styleUrls: ['./app.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     WorkerInstructions,
     MatButtonModule
@@ -57,7 +58,7 @@ export class App implements OnInit, OnDestroy {
       TranslationConstants.LANGUAGES.IT,
     ]);
     this.translateService.setFallbackLang('en');
-    this.translateService.use(this.languageService.getDefaultLanguage());
+    this.translateService.use(this.languageService.getFallbackLang());
   }
 
   ngOnInit(): void {

@@ -3,13 +3,13 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, HostListener, inject, OnDestroy, OnInit, signal, viewChild } from "@angular/core";
+import { Component, HostListener, inject, OnDestroy, OnInit, signal, viewChild, ChangeDetectionStrategy } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { MatTree, MatTreeModule } from "@angular/material/tree";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import { ProcessHolderStreamService } from "../../services/process-holder-stream.service";
+import { ProcessHolderStreamService } from "@app/services/process-holder-stream.service";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { HttpErrorResponse } from "@angular/common/http";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
@@ -17,14 +17,14 @@ import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
-import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import { ProcessEngineService } from "src/app/api/services";
-import { ProcessHolderGroup } from "src/app/models/process-holder-group-model";
+import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
+import { TranslatePipe, TranslateService } from "@ngx-translate/core";
+import { ProcessEngineService } from "@api/services";
+import { ProcessHolderGroup } from "@app/models/process-holder-group-model";
 import ProcessHolderNode from "../../models/process-holder-node";
-import { Category } from "src/app/api/models/category";
-import { ConvertToNode, ConvertToProcessHolderGroup } from "src/app/models/converter";
-import { ProcessHolderGroupModelArrayApiResponse } from "src/app/api/models/process-holder-group-model-array-api-response";
+import { Category } from "@api/models/category";
+import { ConvertToNode, ConvertToProcessHolderGroup } from "@app/models/converter";
+import { ProcessHolderGroupModelArrayApiResponse } from "@api/models/process-holder-group-model-array-api-response";
 
 @Component({
   selector: "app-process-holders",
@@ -41,9 +41,10 @@ import { ProcessHolderGroupModelArrayApiResponse } from "src/app/api/models/proc
     FormsModule,
     MatIconModule,
     MatInputModule,
-    TranslateModule
+    TranslatePipe
   ],
   templateUrl: "./process-holders.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: "./process-holders.scss",
 })
 export class ProcessHolders implements OnInit, OnDestroy {

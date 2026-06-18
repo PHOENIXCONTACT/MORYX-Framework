@@ -6,12 +6,12 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, RedirectCommand, ResolveFn, Router } from '@angular/router';
 import { lastValueFrom } from 'rxjs';
-import { EditProductsService } from '../../services/edit-products.service';
+import { EditProductsService } from '@app/services/edit-products.service';
 import { ProductModel } from '../../api/models';
-import { ProductManagementService } from 'src/app/api/services';
+import { ProductManagementService } from '@app/api/services';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { HttpErrorResponse } from '@angular/common/http';
-import { SessionService } from 'src/app/services/session.service';
+import { SessionService } from '@app/services/session.service';
 
 /**
  * Retrieves the product details given the product id from the route before navigating to the details view.

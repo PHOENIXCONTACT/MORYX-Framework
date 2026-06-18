@@ -7,7 +7,6 @@ import { getPathBase } from '@moryx/ngx-web-framework/environments';
 
 let path_base = getPathBase("/Media");
 
-
 export const environment = {
   production: true,
   assets: path_base + "/_content/Moryx.Media.Web/",

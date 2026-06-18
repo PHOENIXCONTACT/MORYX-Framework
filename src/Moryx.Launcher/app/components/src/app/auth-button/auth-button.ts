@@ -3,12 +3,13 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, input, OnInit, signal } from '@angular/core';
+import { Component, input, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'app-auth-button',
   imports: [],
   templateUrl: './auth-button.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './auth-button.css'
 })
 export class SignInButton implements OnInit {

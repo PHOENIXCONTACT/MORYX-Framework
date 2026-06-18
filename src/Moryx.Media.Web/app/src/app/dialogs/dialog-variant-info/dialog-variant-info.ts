@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
   MatDialogRef,
   MAT_DIALOG_DATA,
@@ -12,8 +12,8 @@ import {
   MatDialogActions,
   MatDialogClose
 } from '@angular/material/dialog';
-import { TranslateModule } from '@ngx-translate/core';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
+import { TranslatePipe } from '@ngx-translate/core';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { MatLine } from '@angular/material/core';
 import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
 import { MatButton } from '@angular/material/button';
@@ -23,6 +23,7 @@ import { DecimalPipe } from '@angular/common';
   selector: 'app-dialog-variant-info',
   templateUrl: './dialog-variant-info.html',
   styleUrls: ['./dialog-variant-info.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatDialogTitle,
     MatDialogContent,
@@ -32,7 +33,7 @@ import { DecimalPipe } from '@angular/common';
     MatButton,
     MatDialogClose,
     DecimalPipe,
-    TranslateModule
+    TranslatePipe
   ]
 })
 export class DialogVariantInfo {

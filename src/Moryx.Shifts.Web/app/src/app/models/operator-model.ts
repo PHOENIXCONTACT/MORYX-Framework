@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { AssignableOperator } from "../api/models/assignable-operator";
+import { AssignableOperator } from "@api/models/assignable-operator";
 
 export interface OperatorModel extends AssignableOperator {
     id: string;

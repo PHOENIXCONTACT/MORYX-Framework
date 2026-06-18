@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { OrderModel } from '../models/order-model';
 import prettyMilliseconds from 'pretty-ms';
 
@@ -13,6 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
   selector: 'app-order-item',
   templateUrl: './order-item.html',
   styleUrl: './order-item.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatIconModule
 ]

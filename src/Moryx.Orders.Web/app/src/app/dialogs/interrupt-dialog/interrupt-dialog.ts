@@ -4,22 +4,23 @@
 */
 
 import { CommonModule } from "@angular/common";
-import { Component, inject, signal } from "@angular/core";
+import { Component, inject, signal, ChangeDetectionStrategy } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from "@angular/material/dialog";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
-import { TranslateModule } from "@ngx-translate/core";
-import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
+import { TranslatePipe } from "@ngx-translate/core";
+import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
 import { InterruptDialogData } from "./interrupt-dialog-data";
 
 @Component({
   selector: "app-interrupt-dialog",
   templateUrl: "./interrupt-dialog.html",
   styleUrls: ["./interrupt-dialog.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CommonModule,
     MatDialogModule,
-    TranslateModule,
+    TranslatePipe,
     MatProgressBarModule,
     MatButtonModule
   ]

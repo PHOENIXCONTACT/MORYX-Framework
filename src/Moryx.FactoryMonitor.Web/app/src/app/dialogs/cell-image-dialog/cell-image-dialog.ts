@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   MatDialogRef,
   MatDialog,
@@ -11,34 +11,33 @@ import {
   MatDialogModule,
 } from '@angular/material/dialog';
 import { CellIconUploaderDialog } from '../cell-icon-selector-dialog/cell-icon-selector-dialog';
-import { environment } from 'src/environments/environment';
-import { CellSettingsService } from 'src/app/services/cell-settings.service';
-import { CellSettingsModel } from 'src/app/api/models/cell-settings-model';
+import { environment } from '../../../environments/environment';
+import { CellSettingsService } from '@app/services/cell-settings.service';
+import { CellSettingsModel } from '@app/api/models/cell-settings-model';
 import { FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { MyErrorStateMatcher } from '../MyErrorStateMatcher';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { CdkScrollable } from '@angular/cdk/scrolling';
 
 import { MatInputModule } from '@angular/material/input';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-cell-image-dialog',
   templateUrl: './cell-image-dialog.html',
   styleUrls: ['./cell-image-dialog.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatDialogModule,
     MatButtonModule,
     MatIconModule,
-    CdkScrollable,
     MatFormFieldModule,
     MatInputModule,
     FormsModule,
     ReactiveFormsModule,
-    TranslateModule
+    TranslatePipe
 ]
 })
 export class CellImageDialog {

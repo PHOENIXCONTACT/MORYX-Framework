@@ -3,16 +3,17 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
-import { TranslateModule } from '@ngx-translate/core';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
+import { TranslatePipe } from '@ngx-translate/core';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 
 @Component({
   selector: 'app-default-details-view',
   templateUrl: './default-details-view.html',
   styleUrls: ['./default-details-view.scss'],
-  imports: [TranslateModule, EmptyState,]
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [TranslatePipe, EmptyState,]
 })
 export class DefaultDetailsView {
   TranslationConstants = TranslationConstants;

@@ -5,8 +5,8 @@
 
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { ProcessHolderGroupModel } from '../api/models/process-holder-group-model';
-import { ProcessEngineService } from '../api/services';
+import { ProcessHolderGroupModel } from '@api/models/process-holder-group-model';
+import { ProcessEngineService } from '@api/services';
 
 @Injectable({
   providedIn: 'root'

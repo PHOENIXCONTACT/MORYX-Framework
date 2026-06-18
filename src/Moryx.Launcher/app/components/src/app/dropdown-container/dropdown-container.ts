@@ -4,7 +4,7 @@
 */
 
 
-import { AfterContentInit, Component, ElementRef, inject, input, OnDestroy } from '@angular/core';
+import { AfterContentInit, Component, ElementRef, inject, input, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { Constants } from '../constants';
 import { DropdownItemClickEventArg } from '../dropdown-item/dropdown-item';
 
@@ -12,6 +12,7 @@ import { DropdownItemClickEventArg } from '../dropdown-item/dropdown-item';
   selector: 'app-dropdown-container',
   imports: [],
   templateUrl: './dropdown-container.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './dropdown-container.css'
 })
 export class DropdownContainer implements AfterContentInit, OnDestroy {

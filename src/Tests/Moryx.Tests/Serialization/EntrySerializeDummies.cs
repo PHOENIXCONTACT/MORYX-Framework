@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Moryx.Serialization;
 
@@ -169,5 +170,11 @@ public class EntrySerialize_Methods : EntrySerialize_InheritedBase
     public Task<string> AsyncWithStringResult()
     {
         return Task.FromResult("Test");
+    }
+
+    [EntrySerialize]
+    public async Task<string> MethodWithRequiredAndOptionalParameters(string plainParameter, [Required] string requiredParameter, string nullableString = null, string defaultValueString = "Some test string")
+    {
+        return "Done";
     }
 }

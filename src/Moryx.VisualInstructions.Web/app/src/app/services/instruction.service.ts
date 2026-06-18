@@ -10,7 +10,7 @@ import { BehaviorSubject } from 'rxjs';
 import { DisplayedMediaContent } from '../components/media-contents/displayed-media-content';
 import { HttpErrorResponse, HttpClient, HttpRequest, HttpEvent, HttpEventType } from '@angular/common/http';
 import { DomSanitizer } from '@angular/platform-browser';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../environments/environment';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 
 @Injectable({

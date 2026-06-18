@@ -5,15 +5,15 @@
 
 import { inject, Injectable } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
-import { ActivityChangedModel } from '../api/models/activity-changed-model';
-import { CellStateChangedModel } from '../api/models/cell-state-changed-model';
-import { ResourceChangedModel } from '../api/models/resource-changed-model';
-import { OrderModel } from '../api/models/order-model';
-import { FactoryMonitorService } from '../api/services/factory-monitor.service';
+import { ActivityChangedModel } from '@api/models/activity-changed-model';
+import { CellStateChangedModel } from '@api/models/cell-state-changed-model';
+import { ResourceChangedModel } from '@api/models/resource-changed-model';
+import { OrderModel } from '@api/models/order-model';
+import { FactoryMonitorService } from '@api/services/factory-monitor.service';
 import CellModel from '../models/cellModel';
 import Order from '../models/order';
 import { Converter } from '../extensions/converter';
-import { OrderChangedModel } from '../api/models/order-changed-model';
+import { OrderChangedModel } from '@api/models/order-changed-model';
 
 @Injectable({
   providedIn: 'root'

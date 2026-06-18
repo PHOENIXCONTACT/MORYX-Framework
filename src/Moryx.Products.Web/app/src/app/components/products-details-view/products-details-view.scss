@@ -1,4 +1,3 @@
-@use "@moryx/ngx-web-framework/styles/variables" as *; 
 
 :host {
   display: flex;
@@ -15,14 +14,14 @@
   padding-top: 10px;
   padding-left: 10px;
   padding-right: 10px;
-  background-color: $mat-background-light;
+  background-color: var(--mat-sys-surface-container-lowest);
 }
 
 .product-details-navigation {
   display: flex;
   justify-content: flex-start;
   height: fit-content;
-  background-color: $mat-background-light;
+  background-color: var(--mat-sys-surface-container-lowest);
   margin-top: 5px;
   margin-bottom: 5px;
   padding-top: 10px;

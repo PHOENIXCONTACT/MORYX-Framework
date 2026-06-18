@@ -3,13 +3,13 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, computed, effect, inject, signal, untracked } from "@angular/core";
+import { Component, computed, effect, inject, signal, untracked, ChangeDetectionStrategy } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Entry, EntryValueType, NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
-import { TranslateModule } from "@ngx-translate/core";
-import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
-import { ProductImporter } from "../../api/models";
-import { CacheProductsService } from "../../services/cache-products.service";
+import { TranslatePipe } from "@ngx-translate/core";
+import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
+import { ProductImporter } from "@api/models";
+import { CacheProductsService } from "@app/services/cache-products.service";
 
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
@@ -25,13 +25,13 @@ import { toSignal } from "@angular/core/rxjs-interop";
 import { map } from "rxjs/operators";
 import { MatToolbarModule } from "@angular/material/toolbar";
 
-
 @Component({
   selector: "app-products-importer",
   templateUrl: "./products-importer.html",
   styleUrls: ["./products-importer.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
-    TranslateModule,
+    TranslatePipe,
     MatFormFieldModule,
     FormsModule,
     ReactiveFormsModule,
@@ -77,7 +77,7 @@ export class ProductsImporter {
       });
     });
   }
-  
+
   selectImporter(importer: ProductImporter) {
     this.router.navigate(['import', importer.name]);
   }

@@ -136,8 +136,7 @@ class Database extends React.Component<DatabasesPropsModel & DatabasesDispatchPr
   public render(): React.ReactNode {
     return (
       <Grid container={true} spacing={2}>
-        <Grid size={3}
-              justifyContent={"center"}>
+        <Grid size={3} sx={{ justifyContent: "center" }}>
           <Card className="mcc-menu-card">
             <Tabs value="databases" role="navigation" centered={true}>
               <Tab label="Modules" value="modules" component={Link} to="/modules"/>
@@ -189,4 +188,4 @@ class Database extends React.Component<DatabasesPropsModel & DatabasesDispatchPr
   }
 }
 
-export default connect<DatabasesPropsModel, DatabasesDispatchPropModel>(mapStateToProps, mapDispatchToProps)(Database);
+export default connect<DatabasesPropsModel, DatabasesDispatchPropModel, {}, AppState>(mapStateToProps, mapDispatchToProps)(Database);

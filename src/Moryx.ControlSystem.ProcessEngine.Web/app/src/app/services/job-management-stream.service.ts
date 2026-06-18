@@ -5,8 +5,8 @@
 
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { JobManagementService } from '../api/services';
-import { JobModel } from '../api/models/job-model';
+import { JobManagementService } from '@api/services';
+import { JobModel } from '@api/models/job-model';
 
 @Injectable({
   providedIn: 'root'

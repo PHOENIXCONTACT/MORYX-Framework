@@ -3,22 +3,22 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, ElementRef, inject, computed, input, viewChild, OnInit, linkedSignal } from '@angular/core';
-import { CellStoreService } from 'src/app/services/cell-store.service';
+import { Component, ElementRef, inject, computed, input, viewChild, OnInit, linkedSignal, ChangeDetectionStrategy } from '@angular/core';
+import { CellStoreService } from '@app/services/cell-store.service';
 import { CdkDragEnd, DragDropModule } from '@angular/cdk/drag-drop';
-import { EditMenuState } from 'src/app/services/EditMenutState';
-import { EditMenuService } from 'src/app/services/edit-menu.service';
-import { FactorySelectionService } from 'src/app/services/factory-selection.service';
-import { CellState } from 'src/app/api/models/cell-state';
+import { EditMenuState } from '@app/services/EditMenutState';
+import { EditMenuService } from '@app/services/edit-menu.service';
+import { FactorySelectionService } from '@app/services/factory-selection.service';
+import { CellState } from '@api/models/cell-state';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { VisualizableItemModel } from 'src/app/api/models';
-import { createUpdatedLocation } from 'src/app/extensions/locations';
+import { VisualizableItemModel } from '@api/models';
+import { createUpdatedLocation } from '@app/extensions/locations';
 import { lastValueFrom } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
-import { FactoryMonitorService } from 'src/app/api/services';
+import { FactoryMonitorService } from '@api/services';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 
 @Component({
@@ -29,12 +29,13 @@ import { SnackbarService } from '@moryx/ngx-web-framework/services';
     DragDropModule,
     MatIconModule
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./factory.scss']
 })
 export class Factory implements OnInit {
   private cellStoreService = inject(CellStoreService);
   private factorySelectionService = inject(FactorySelectionService);
-  private factoryMonitorService = inject(FactoryMonitorService);  
+  private factoryMonitorService = inject(FactoryMonitorService);
   private snackbarService = inject(SnackbarService);
   private router = inject(Router);
 
@@ -66,7 +67,7 @@ export class Factory implements OnInit {
 
   ngOnInit(): void {
     // React to updates to the cell data
-    this.cellStoreService.cellUpdated$.subscribe(cell => {     
+    this.cellStoreService.cellUpdated$.subscribe(cell => {
       if (cell.factoryId != this.parameters().id) {
         return;
       }
@@ -94,9 +95,9 @@ export class Factory implements OnInit {
     const params = this.parameters();
 
     // Calculate new position as percetage value relative to the cell-container
-    const updatedLocation = createUpdatedLocation(event, this.factoryElement(), 
+    const updatedLocation = createUpdatedLocation(event, this.factoryElement(),
       this.container(), params.location?.id);
-    
+
     // Save position and reset translation
     try {
       await lastValueFrom(this.factoryMonitorService.moveCell({ body: updatedLocation }));

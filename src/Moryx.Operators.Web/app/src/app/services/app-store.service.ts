@@ -10,20 +10,20 @@ import { OperatorViewModel } from "../models/operator-view-model";
 import {
   OperatorManagementService,
   SkillManagementService,
-} from "../api/services";
+} from "@api/services";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
-import { OperatorModel } from "../api/models/operator-model";
-import { AssignableOperator } from "../api/models/assignable-operator";
+import { OperatorModel } from "@api/models/operator-model";
+import { AssignableOperator } from "@api/models/assignable-operator";
 import { OperatorSkill } from "../models/operator-skill-model";
 import { SkillType } from "../models/skill-type-model";
-import { SkillCreationContextModel } from "../api/models/skill-creation-context-model";
+import { SkillCreationContextModel } from "@api/models/skill-creation-context-model";
 import {
   skillToOperatorSkill,
   skillTypeModelToModel,
 } from "../models/model-converter";
-import { SkillTypeModel } from "../api/models/skill-type-model";
-import { SkillTypeCreationContextModel } from "../api/models/skill-type-creation-context-model";
-import { IOperatorAssignable } from "../api/models/i-operator-assignable";
+import { SkillTypeModel } from "@api/models/skill-type-model";
+import { SkillTypeCreationContextModel } from "@api/models/skill-type-creation-context-model";
+import { IOperatorAssignable } from "@api/models/i-operator-assignable";
 
 @Injectable({
   providedIn: "root",

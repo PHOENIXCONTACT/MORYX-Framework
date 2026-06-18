@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, computed, HostListener, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, computed, HostListener, inject, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { EditMenuService } from './services/edit-menu.service';
 import { EditMenuState } from './services/EditMenutState';
 import { ChangeBackgroundService } from './services/change-background.service';
@@ -23,6 +23,7 @@ import { FactoryStateStreamService } from './services/factory-state-stream.servi
   selector: 'app-root',
   templateUrl: './app.html',
   styleUrls: ['./app.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     EditMenu,
     OrdersContainer,
@@ -51,7 +52,7 @@ export class App implements OnInit, OnDestroy {
       TranslationConstants.LANGUAGES.IT,
     ]);
     this.translateService.setFallbackLang('en');
-    this.translateService.use(this.languageService.getDefaultLanguage());
+    this.translateService.use(this.languageService.getFallbackLang());
   }
 
   ngOnInit(): void {

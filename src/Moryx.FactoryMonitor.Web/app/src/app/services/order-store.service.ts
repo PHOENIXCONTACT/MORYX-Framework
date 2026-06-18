@@ -4,9 +4,9 @@
 */
 
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, distinctUntilChanged, map, shareReplay, Subject } from 'rxjs';
-import { FactoryStateModel } from '../api/models';
-import { InternalOperationClassification } from '../api/models/internal-operation-classification';
+import { BehaviorSubject, map, shareReplay, Subject } from 'rxjs';
+import { FactoryStateModel } from '@api/models';
+import { InternalOperationClassification } from '@api/models/internal-operation-classification';
 import { Converter } from '../extensions/converter';
 import CellModel from '../models/cellModel';
 import Order from '../models/order';
@@ -24,7 +24,7 @@ export class OrderStoreService {
   public readonly toggledOrder$ = this._toggledOrder.asObservable();
   public readonly runningOrders$ = this._orders.pipe(
     map(orders => orders.filter(o => o.classification === InternalOperationClassification.Running)),
-    // Prevent other order state changes from triggering updates in the UI 
+    // Prevent other order state changes from triggering updates in the UI
     // ToDo: Reanble when OrderManagement facade fires order-started event before order-changed-to-running event
     // distinctUntilChanged((previousOrders, newOrders) => this.areSameSet(previousOrders, newOrders)),
     shareReplay(1)
@@ -56,7 +56,7 @@ export class OrderStoreService {
     if(indexToUpdate === -1) {
       orders.push(order);
     } else {
-      
+
       let orderToUpdate = orders[indexToUpdate];
 
       if (order.classification) {

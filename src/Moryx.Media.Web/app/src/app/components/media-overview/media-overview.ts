@@ -3,21 +3,21 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuTrigger, MatMenu, MatMenuContent, MatMenuItem } from '@angular/material/menu';
 import { Router } from '@angular/router';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import { environment } from 'src/environments/environment';
-import { ContentDescriptorModel } from '../../api/models';
-import { DialogDelete } from '../../dialogs/dialog-delete/dialog-delete';
-import { MediaService } from '../../services/media-service/media.service';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { environment } from '../../../environments/environment';
+import { ContentDescriptorModel } from '@api/models';
+import { DialogDelete } from '@app/dialogs/dialog-delete/dialog-delete';
+import { MediaService } from '@app/services/media-service/media.service';
 import { SnackbarService, SearchBarService, SearchRequest, SearchSuggestion, } from '@moryx/ngx-web-framework/services';
 import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
 import { NgStyle, CommonModule } from '@angular/common';
-import { FileDragAndDropDirective } from '../../extensions/file-drag-and-drop.directive';
+import { FileDragAndDropDirective } from '@app/extensions/file-drag-and-drop.directive';
 import { MediaFile } from './media-file/media-file';
 import { MatIcon } from '@angular/material/icon';
 import { MatFabButton } from '@angular/material/button';
@@ -27,11 +27,12 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
   selector: 'app-media-overview',
   templateUrl: './media-overview.html',
   styleUrls: ['./media-overview.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     FileDragAndDropDirective, NgStyle, CommonModule,
     MediaFile, MatMenu, MatMenuContent,
     MatMenuItem, MatIcon, MatMenuTrigger,
-    MatFabButton, MatProgressSpinner, TranslateModule,
+    MatFabButton, MatProgressSpinner, TranslatePipe,
     EmptyState]
 })
 export class MediaOverview implements OnInit, OnDestroy {

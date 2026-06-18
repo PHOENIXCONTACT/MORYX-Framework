@@ -36,7 +36,7 @@
   ));
 }
 .processes-list-item:hover {
-    background-color: $light-background-hover;
+    background-color: var(--mat-sys-surface-container-highest);
 }
 
 .processes-activity-details-container {

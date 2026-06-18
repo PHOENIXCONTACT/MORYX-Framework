@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { AttendableResourceModel } from "../api/models/attendable-resource-model";
+import { AttendableResourceModel } from "@api/models/attendable-resource-model";
 import { CalendarDate, CalendarState } from "./calendar-state";
 import { OperatorModel } from "./operator-model";
 import { ShiftCardModel } from "./shift-card-model";

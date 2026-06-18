@@ -4,9 +4,9 @@
 */
 
 import { inject, Injectable } from '@angular/core';
-import { ApiConfiguration } from 'src/app/api/api-configuration';
-import { OperationModel } from '../api/models';
-import { OperationAdvicedModel, OperationReportedModel, OperationStartedModel, OperationType } from 'src/app/models/operation-models';
+import { ApiConfiguration } from '@api/api-configuration';
+import { OperationModel } from '@api/models';
+import { OperationAdvicedModel, OperationReportedModel, OperationStartedModel, OperationType } from '@app/models/operation-models';
 
 @Injectable({
   providedIn: 'root',

@@ -55,7 +55,7 @@
   "RECIPES": {
     "RECIPES_OF": "Rezepte von",
     "GENERAL": "Allgemein",
-    "IDENTIFIER": "ID",
+    "NAME": "Name",
     "WORKPLAN": "Arbeitsplan",
     "CLASSIFICATION": "Klassifikation",
     "PROPERTIES": "Eigenschaften",
@@ -68,9 +68,7 @@
   },
   "REPORT_DIALOG": {
     "REPORT_TITLE": "Vorgang rückmelden",
-    "INTERRUPT_TITLE": "Vorgang unterbrechen",
     "REPORT": "RÜCKMELDEN",
-    "INTERRUPT": "UNTERBRECHEN",
     "OPERATION": "Vorgang",
     "ORDER": "Auftrag",
     "PRODUCT": "Produkt",
@@ -88,7 +86,8 @@
   },
   "INTERRUPT_DIALOG": {
     "TITLE": "Vorgang unterbrechen",
-    "PROMPT": "Es werden keine neuen Prozesse für den Vorgang gestartet. Bereits gestartete Prozesse werden normal beendet und anschließend wechselt der Status des Vorgangs zu 'Unterbrochen'."
+    "PROMPT": "Es werden keine neuen Prozesse für den Vorgang gestartet. Bereits gestartete Prozesse werden normal beendet und anschließend wechselt der Status des Vorgangs zu 'Unterbrochen'.",
+    "INTERRUPT": "UNTERBRECHEN"
   },
   "CREATE_DIALOG": {
     "TITLE": "Neuer Auftrag",

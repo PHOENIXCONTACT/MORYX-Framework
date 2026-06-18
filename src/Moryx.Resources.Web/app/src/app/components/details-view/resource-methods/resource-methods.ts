@@ -3,14 +3,14 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, effect, inject, signal } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
+import { Component, effect, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatButtonModule } from '@angular/material/button';
-import { EditResourceService } from '../../../services/edit-resource.service';
+import { EditResourceService } from '@app/services/edit-resource.service';
 import { Router } from '@angular/router';
-import { ResourceModificationService } from '../../../api/services/resource-modification.service';
+import { ResourceModificationService } from '@api/services/resource-modification.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 
@@ -29,11 +29,12 @@ import { HttpErrorResponse } from '@angular/common/http';
   selector: 'app-resource-methods',
   templateUrl: './resource-methods.html',
   styleUrls: ['./resource-methods.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     EntryEditor,
     MatExpansionModule,
     NavigableEntryEditor,
-    TranslateModule,
+    TranslatePipe,
     MatButtonModule
   ]
 })

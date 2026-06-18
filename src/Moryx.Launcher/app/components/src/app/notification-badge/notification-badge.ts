@@ -3,12 +3,13 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, HostListener, input, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, HostListener, input, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'app-notification-badge',
   imports: [],
   templateUrl: './notification-badge.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './notification-badge.css'
 })
 export class NotificationBadge implements OnInit, OnDestroy {

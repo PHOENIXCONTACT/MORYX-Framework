@@ -3,17 +3,16 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   MatDialogRef,
   MatDialogModule,
 } from '@angular/material/dialog';
-import { ChangeBackgroundService } from 'src/app/services/change-background.service';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import { TranslateModule } from '@ngx-translate/core';
+import { ChangeBackgroundService } from '@app/services/change-background.service';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MyErrorStateMatcher } from '../MyErrorStateMatcher';
-import { CdkScrollable } from '@angular/cdk/scrolling';
 import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -23,16 +22,16 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   selector: 'app-change-background-dialog',
   templateUrl: './change-background-dialog.html',
   styleUrls: ['./change-background-dialog.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatDialogModule,
-    CdkScrollable,
     CommonModule,
     MatFormFieldModule,
     MatInputModule,
     FormsModule,
     ReactiveFormsModule,
     MatButtonModule,
-    TranslateModule,
+    TranslatePipe,
   ]
 })
 export class ChangeBackgroundDialog {

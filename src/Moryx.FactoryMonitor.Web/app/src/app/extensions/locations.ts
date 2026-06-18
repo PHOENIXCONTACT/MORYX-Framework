@@ -1,8 +1,8 @@
 import { ElementRef } from "@angular/core";
-import { CellLocationModel } from "../api/models";
+import { CellLocationModel } from "@api/models";
 import { CdkDragEnd } from '@angular/cdk/drag-drop';
 
-export function createUpdatedLocation(event: CdkDragEnd<any>, itemElement: ElementRef<HTMLElement>, 
+export function createUpdatedLocation(event: CdkDragEnd<any>, itemElement: ElementRef<HTMLElement>,
   containerElement: ElementRef<HTMLElement>, id: number | undefined) {
 
   const cellY = itemElement.nativeElement.offsetTop! + event.distance.y;

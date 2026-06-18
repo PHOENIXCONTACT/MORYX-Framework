@@ -4,8 +4,8 @@
 */
 
 import { inject, Injectable } from '@angular/core';
-import { NotificationModel } from '../api/models';
-import { NotificationPublisherService } from '../api/services';
+import { NotificationModel } from '@api/models';
+import { NotificationPublisherService } from '@api/services';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ConnectionState } from '../models/ConnectionState';
 import { HttpErrorResponse } from '@angular/common/http';

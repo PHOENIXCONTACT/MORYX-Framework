@@ -3,14 +3,14 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { CellImageDialog } from 'src/app/dialogs/cell-image-dialog/cell-image-dialog';
-import { CellStoreService } from 'src/app/services/cell-store.service';
-import { CellSettingsModel } from 'src/app/api/models/cell-settings-model';
-import { TranslateModule } from '@ngx-translate/core';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import CellModel from 'src/app/models/cellModel';
+import { CellImageDialog } from '@app/dialogs/cell-image-dialog/cell-image-dialog';
+import { CellStoreService } from '@app/services/cell-store.service';
+import { CellSettingsModel } from '@api/models/cell-settings-model';
+import { TranslatePipe } from '@ngx-translate/core';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import CellModel from '@app/models/cellModel';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -21,11 +21,12 @@ import { DetailsItem } from '../details-item/details-item';
   selector: 'app-cell-details',
   templateUrl: './cell-details.html',
   styleUrls: ['./cell-details.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CommonModule,
     TrafficLight,
     DetailsItem,
-    TranslateModule,
+    TranslatePipe,
     MatButtonModule,
     MatIconModule
   ]

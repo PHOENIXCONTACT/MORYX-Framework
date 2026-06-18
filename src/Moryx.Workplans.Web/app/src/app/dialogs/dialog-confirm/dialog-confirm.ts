@@ -4,7 +4,7 @@
 */
 
 
-import { AfterViewInit, Component, inject, viewChildren } from '@angular/core';
+import { AfterViewInit, Component, inject, viewChildren, ChangeDetectionStrategy } from '@angular/core';
 import { MatButton, MatButtonModule } from '@angular/material/button';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 
@@ -12,6 +12,7 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/materia
   selector: 'app-confirm-dialog',
   templateUrl: './dialog-confirm.html',
   styleUrls: ['./dialog-confirm.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatButtonModule,
     MatDialogModule

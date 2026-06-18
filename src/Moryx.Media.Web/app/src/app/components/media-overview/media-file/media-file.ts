@@ -3,16 +3,16 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnInit, model, signal, output } from '@angular/core';
-import { ContentDescriptorModel } from '../../../api/models';
-import { MediaService } from '../../../services/media-service/media.service';
-import { environment } from 'src/environments/environment';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
+import { Component, inject, OnInit, model, signal, output, ChangeDetectionStrategy } from '@angular/core';
+import { ContentDescriptorModel } from '@api/models';
+import { MediaService } from '@app/services/media-service/media.service';
+import { environment } from '../../../../environments/environment';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { retry } from 'rxjs';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -20,9 +20,10 @@ import { MatIconModule } from '@angular/material/icon';
   selector: 'app-media-file',
   templateUrl: './media-file.html',
   styleUrls: ['./media-file.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatProgressSpinner,
-    TranslateModule,
+    TranslatePipe,
     MatCardModule,
     MatButtonModule,
     MatIconModule]

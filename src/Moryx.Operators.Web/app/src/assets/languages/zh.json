@@ -8,19 +8,6 @@
         "EXPAND" : "扩张",
         "GO_BACK" : "回去"
     },
-    "AVAILABILITIES" : {
-        "TITLE": "可用性",
-        "THIS_WEEK": "本星期",
-        "OPERATORS": "运算符"
-    },
-    "AVAILABILITY_DIALOG" : {
-        "TITLE": "新品上市",
-        "DESCRIPTION": "为操作员创建缺勤通知",
-        "FROM": "从",
-        "TO": "到",
-        "CANCEL" : "取消",
-        "SAVE": "节省"
-    },
     "SKILL_TYPES" : {
         "NAME": "姓名",
         "TRAINED_OPERATORS": "训练有素的操作员",
@@ -29,7 +16,6 @@
     "OPERATORS_MANAGEMENT" : {
         "MANAGE_OPERATORS" : "管理操作员",
         "SKILL_TYPES" : "技能类型",
-        "AVAILABILITIES" : "可用性",
         "NAME": "姓名",
         "NUMBER": "数字",
         "SKILLSET": "技能",

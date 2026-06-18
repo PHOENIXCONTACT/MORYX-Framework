@@ -4,9 +4,9 @@
 */
 
 import { inject, Injectable } from '@angular/core';
-import { FactoryMonitorService } from '../api/services';
+import { FactoryMonitorService } from '@api/services';
 import { Subject } from 'rxjs';
-import { CellSettingsModel } from '../api/models/cell-settings-model';
+import { CellSettingsModel } from '@api/models/cell-settings-model';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { CellStoreService } from './cell-store.service';
 import CellModel from '../models/cellModel';

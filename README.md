@@ -33,7 +33,7 @@ It defines the domain independent [meta model](/docs/articles/abstractions/index
 
 To contribute to the developmen of the MORYX, ensure you have the following prerequisites installed:
 
-- **Node.js** ≥ **v22.22.0 LTS**
+- **Node.js** ≥ **^22.22.3 || ^24.15.0 || ^26.0.0**
 - **.NET SDK** ≥ **10.0.101**
 
 ---

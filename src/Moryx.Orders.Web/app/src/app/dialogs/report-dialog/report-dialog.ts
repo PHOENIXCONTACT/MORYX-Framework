@@ -3,15 +3,13 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, computed, inject, OnInit, signal } from "@angular/core";
+import { Component, computed, inject, OnInit, signal, ChangeDetectionStrategy } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from "@angular/material/dialog";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslatePipe } from "@ngx-translate/core";
 import { Observable } from "rxjs";
-import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
-import { OperationViewModel } from "../../models/operation-view-model";
-import { ConfirmationType } from '../../api/models';
-import { ReportModel } from '../../api/models';
-import { ReportContext } from '../../api/models';
+import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
+import { OperationViewModel } from "@app/models/operation-view-model";
+import { ConfirmationType, ReportModel, ReportContext } from '@api/models';
 import { CommonModule } from "@angular/common";
 import { MatGridListModule } from "@angular/material/grid-list";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -26,10 +24,11 @@ import { MatInputModule } from "@angular/material/input";
   selector: "app-report-dialog",
   templateUrl: "./report-dialog.html",
   styleUrls: ["./report-dialog.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CommonModule,
     MatDialogModule,
-    TranslateModule,
+    TranslatePipe,
     MatGridListModule,
     MatFormFieldModule,
     FormsModule,

@@ -8,19 +8,6 @@
         "EXPAND" : "Espandere",
         "GO_BACK" : "Torna indietro"
     },
-    "AVAILABILITIES" : {
-        "TITLE": "Disponibilità",
-        "THIS_WEEK": "Questa settimana",
-        "OPERATORS": "Operatori"
-    },
-    "AVAILABILITY_DIALOG" : {
-        "TITLE": "Nuova disponibilità",
-        "DESCRIPTION": "Creare un avviso di assenza per un operatore",
-        "FROM": "Da",
-        "TO": "A",
-        "CANCEL" : "Cancellare",
-        "SAVE": "Salva"
-    },
     "SKILL_TYPES" : {
         "NAME": "Nome",
         "TRAINED_OPERATORS": "Operatori qualificati",
@@ -29,7 +16,6 @@
     "OPERATORS_MANAGEMENT" : {
         "MANAGE_OPERATORS" : "Gestisci gli operatori",
         "SKILL_TYPES" : "Tipi di abilità",
-        "AVAILABILITIES" : "Disponibilità",
         "NAME": "Nome",
         "NUMBER": "Numero",
         "SKILLSET": "Insieme di abilità",
