@@ -14,7 +14,7 @@ public static class ExpressionConstraint
     /// <summary>
     /// Create a constraint that checks if an expression equals the compare value
     /// </summary>
-    public static IConstraint Equals<TContext>(Func<TContext, object> expression, object compareValue, [CallerArgumentExpression(nameof(expression))]string expressionString = null)
+    public static IConstraint Equals<TContext>(Func<TContext, object> expression, object compareValue, [CallerArgumentExpression(nameof(expression))] string expressionString = null)
         where TContext : class, IConstraintContext
     {
         return new ExpressionEqualsConstraint<TContext>(expression, compareValue, expressionString);
@@ -98,9 +98,6 @@ public static class ExpressionConstraint
     private class ExpressionEqualsConstraint<TContext> : ExpressionConstraintBase<TContext>
         where TContext : class, IConstraintContext
     {
-        public ExpressionEqualsConstraint(Func<TContext, object> expression, object value) : this(expression, value, "Unknown")
-        {
-        }
 
         public ExpressionEqualsConstraint(Func<TContext, object> expression, object value, string expressionString) : base(expression, value, expressionString)
         {
