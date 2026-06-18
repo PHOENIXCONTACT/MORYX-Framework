@@ -1,0 +1,31 @@
+{
+  "MORE": {
+    "VIEWS": "视图",
+    "ABOUT": "关于",
+    "FULLSCREEN_MODE": "全屏",
+    "OPERATOR_MODE": "操作员",
+    "FULL_MODE": "完整"
+  },
+  "LANGUAGE": {
+    "LANGUAGE": "语言"
+  },
+  "ABOUT": {
+    "TITLE": "关于",
+    "APPLICATION": "应用程序",
+    "HOST": "主机",
+    "SERVER_TIME": "服务器时间",
+    "CLOSE": "关闭",
+    "LABEL_TITLE": "标题",
+    "LABEL_PRODUCT": "产品",
+    "LABEL_DESCRIPTION": "描述",
+    "LABEL_VERSION": "版本",
+    "LABEL_INFORMATIONAL_VERSION": "信息版本",
+    "LABEL_COMPANY": "公司",
+    "LABEL_CONFIGURATION": "配置",
+    "LABEL_COPYRIGHT": "版权",
+    "LABEL_TARGET_FRAMEWORK": "目标框架",
+    "LABEL_MACHINE_NAME": "机器名称",
+    "LABEL_OS": "操作系统",
+    "LABEL_UPTIME": "运行时间"
+  }
+}

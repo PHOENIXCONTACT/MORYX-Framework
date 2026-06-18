@@ -1,0 +1,31 @@
+{
+  "MORE": {
+    "VIEWS": "Visualizzazioni",
+    "ABOUT": "Informazioni",
+    "FULLSCREEN_MODE": "Schermo intero",
+    "OPERATOR_MODE": "Operatore",
+    "FULL_MODE": "Completo"
+  },
+  "LANGUAGE": {
+    "LANGUAGE": "Lingua"
+  },
+  "ABOUT": {
+    "TITLE": "Informazioni",
+    "APPLICATION": "Applicazione",
+    "HOST": "Host",
+    "SERVER_TIME": "Ora del server",
+    "CLOSE": "Chiudi",
+    "LABEL_TITLE": "Titolo",
+    "LABEL_PRODUCT": "Prodotto",
+    "LABEL_DESCRIPTION": "Descrizione",
+    "LABEL_VERSION": "Versione",
+    "LABEL_INFORMATIONAL_VERSION": "Versione informativa",
+    "LABEL_COMPANY": "Azienda",
+    "LABEL_CONFIGURATION": "Configurazione",
+    "LABEL_COPYRIGHT": "Copyright",
+    "LABEL_TARGET_FRAMEWORK": "Framework di destinazione",
+    "LABEL_MACHINE_NAME": "Nome macchina",
+    "LABEL_OS": "Sistema operativo",
+    "LABEL_UPTIME": "Tempo di attività"
+  }
+}

@@ -5,6 +5,11 @@
   background: white;
 }
 
+.top-region {
+  flex: 0 0 auto;
+  margin-top: 4px;
+}
+
 .content {
   display: flex;
   flex-direction: column;

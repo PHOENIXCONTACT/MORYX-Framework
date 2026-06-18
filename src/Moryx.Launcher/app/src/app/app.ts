@@ -9,6 +9,10 @@ import {FullscreenLayout} from './fullscreen-layout/fullscreen-layout';
 import {ModuleService} from './services/module.service';
 import {CultureService} from './services/culture.service';
 import {AuthService} from './services/auth.service';
+import {LanguageService} from '@moryx/ngx-web-framework/services';
+import {TranslateService} from '@ngx-translate/core';
+import {TranslationConstants} from './translation-constants';
+import {MoryxLauncherShell} from './moryx-launcher-shell';
 
 @Component({
   selector: 'app-root',
@@ -29,10 +33,14 @@ export class App {
   private moduleService = inject(ModuleService);
   private cultureService = inject(CultureService);
   private authService = inject(AuthService);
+  private languageService = inject(LanguageService);
+  private translateService = inject(TranslateService);
 
   layout = this.launcherStateService.layout;
 
   constructor() {
+    window.shell = new MoryxLauncherShell(this.cultureService);
+
     effect(() => {
       this.moduleService.modules.set([...this.webModuleItems(), ...this.externalModuleItems()]);
       this.cultureService.supportedCultures.set(this.supportedCultures());
@@ -41,5 +49,17 @@ export class App {
       this.authService.authBaseAddress = authBaseAddress;
       this.authService.authConfigured.set(!!authBaseAddress && authBaseAddress.length > 0);
     });
+
+    this.translateService.addLangs([
+      TranslationConstants.LANGUAGES.EN,
+      TranslationConstants.LANGUAGES.DE,
+      TranslationConstants.LANGUAGES.IT,
+      TranslationConstants.LANGUAGES.ZH,
+    ]);
+    this.translateService.setFallbackLang("en");
+
+    console.log("Language: " + this.languageService.getFallbackLang());
+    this.translateService.use(this.languageService.getFallbackLang());
   }
 }
+

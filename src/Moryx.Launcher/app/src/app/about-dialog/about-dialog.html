@@ -1,27 +1,27 @@
-<h2 mat-dialog-title>About</h2>
+<h2 mat-dialog-title>{{ TranslationConstants.ABOUT.TITLE | translate }}</h2>
 
 <mat-dialog-content>
-  <h3 class="section-title">Application</h3>
+  <h3 class="section-title">{{ TranslationConstants.ABOUT.APPLICATION | translate }}</h3>
   <dl>
     @for (entry of appEntries(); track entry.label) {
       <div class="entry">
-        <dt>{{ entry.label }}</dt>
+        <dt>{{ entry.label | translate }}</dt>
         <dd>{{ entry.value }}</dd>
       </div>
     }
   </dl>
 
-  <h3 class="section-title">Host</h3>
+  <h3 class="section-title">{{ TranslationConstants.ABOUT.HOST | translate }}</h3>
   <dl>
     @for (entry of hostEntries(); track entry.label) {
       <div class="entry">
-        <dt>{{ entry.label }}</dt>
+        <dt>{{ entry.label | translate }}</dt>
         <dd>{{ entry.value }}</dd>
       </div>
     }
     @if (serverTime()) {
       <div class="entry">
-        <dt>Server Time</dt>
+        <dt>{{ TranslationConstants.ABOUT.SERVER_TIME | translate }}</dt>
         <dd>{{ serverTime() }}</dd>
       </div>
     }
@@ -29,5 +29,5 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>Close</button>
+  <button mat-button mat-dialog-close>{{ TranslationConstants.ABOUT.CLOSE | translate }}</button>
 </mat-dialog-actions>

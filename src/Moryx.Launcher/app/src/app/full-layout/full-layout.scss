@@ -5,6 +5,17 @@
   background: white;
 }
 
+.logo-host {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 46px;
+  width: auto;
+}
+
+
 mat-sidenav {
   overflow: visible;
   border-right: 1px solid rgba(0, 0, 0, 0.1);

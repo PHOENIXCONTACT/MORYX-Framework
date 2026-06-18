@@ -8,16 +8,20 @@ import {LauncherLayout, LauncherStateService} from '../services/launcher-state.s
 import {AboutDialog} from '../about-dialog/about-dialog';
 import {ModuleService} from '../services/module.service';
 import {CultureService} from '../services/culture.service';
+import {TranslationConstants} from '../translation-constants';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-more-menu',
-  imports: [MatButtonModule, MatIconModule, MatMenuModule, MatDividerModule],
+  imports: [MatButtonModule, MatIconModule, MatMenuModule, MatDividerModule, TranslatePipe],
   templateUrl: './more-menu.html',
   styleUrl: './more-menu.scss'
 })
 export class MoreMenu {
   private moduleService = inject(ModuleService);
   private cultureService = inject(CultureService);
+
+  TranslationConstants = TranslationConstants;
 
   modules = this.moduleService.otherModules;
   supportedCultures = this.cultureService.supportedCultures;

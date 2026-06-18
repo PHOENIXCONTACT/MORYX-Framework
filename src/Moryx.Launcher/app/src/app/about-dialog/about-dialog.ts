@@ -5,16 +5,20 @@ import {catchError, switchMap} from 'rxjs/operators';
 import {of} from 'rxjs';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule} from '@angular/material/dialog';
+import {TranslatePipe} from '@ngx-translate/core';
 import {CommonService} from '@api/services/common.service';
 import {CultureService} from '../services/culture.service';
+import {TranslationConstants} from '../translation-constants';
 
 @Component({
   selector: 'app-about-dialog',
-  imports: [MatDialogModule, MatButtonModule],
+  imports: [MatDialogModule, MatButtonModule, TranslatePipe],
   templateUrl: './about-dialog.html',
   styleUrl: './about-dialog.scss',
 })
 export class AboutDialog {
+
+  protected TranslationConstants = TranslationConstants;
 
   private commonService = inject(CommonService);
   private cultureService = inject(CultureService);
@@ -47,15 +51,15 @@ export class AboutDialog {
       return [];
     }
     return [
-      {label: 'Title', value: applicationInfo.assemblyTitle},
-      {label: 'Product', value: applicationInfo.assemblyProduct},
-      {label: 'Description', value: applicationInfo.assemblyDescription},
-      {label: 'Version', value: applicationInfo.assemblyVersion},
-      {label: 'Informational Version', value: applicationInfo.assemblyInformationalVersion},
-      {label: 'Company', value: applicationInfo.assemblyCompanyName},
-      {label: 'Configuration', value: applicationInfo.assemblyConfiguration},
-      {label: 'Copyright', value: applicationInfo.assemblyCopyright},
-      {label: 'Target Framework', value: applicationInfo.targetFramework},
+      {label: TranslationConstants.ABOUT.LABEL_TITLE, value: applicationInfo.assemblyTitle},
+      {label: TranslationConstants.ABOUT.LABEL_PRODUCT, value: applicationInfo.assemblyProduct},
+      {label: TranslationConstants.ABOUT.LABEL_DESCRIPTION, value: applicationInfo.assemblyDescription},
+      {label: TranslationConstants.ABOUT.LABEL_VERSION, value: applicationInfo.assemblyVersion},
+      {label: TranslationConstants.ABOUT.LABEL_INFORMATIONAL_VERSION, value: applicationInfo.assemblyInformationalVersion},
+      {label: TranslationConstants.ABOUT.LABEL_COMPANY, value: applicationInfo.assemblyCompanyName},
+      {label: TranslationConstants.ABOUT.LABEL_CONFIGURATION, value: applicationInfo.assemblyConfiguration},
+      {label: TranslationConstants.ABOUT.LABEL_COPYRIGHT, value: applicationInfo.assemblyCopyright},
+      {label: TranslationConstants.ABOUT.LABEL_TARGET_FRAMEWORK, value: applicationInfo.targetFramework},
     ].filter(e => e.value);
   });
 
@@ -65,9 +69,9 @@ export class AboutDialog {
       return [];
     }
     return [
-      {label: 'Machine Name', value: hostInfo.machineName},
-      {label: 'OS', value: hostInfo.osInformation},
-      {label: 'Uptime', value: hostInfo.upTime != null ? this.formatUptime(hostInfo.upTime) : null},
+      {label: TranslationConstants.ABOUT.LABEL_MACHINE_NAME, value: hostInfo.machineName},
+      {label: TranslationConstants.ABOUT.LABEL_OS, value: hostInfo.osInformation},
+      {label: TranslationConstants.ABOUT.LABEL_UPTIME, value: hostInfo.upTime != null ? this.formatUptime(hostInfo.upTime) : null},
     ].filter(e => e.value);
   });
 

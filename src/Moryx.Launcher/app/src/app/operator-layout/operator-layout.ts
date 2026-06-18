@@ -4,7 +4,7 @@ import {HorizontalModuleNav} from '../horizontal-module-nav/horizontal-module-na
 
 @Component({
   selector: 'app-operator-layout',
-  imports: [RouterOutlet, HorizontalModuleNav],
+  imports: [HorizontalModuleNav],
   templateUrl: './operator-layout.html',
   styleUrl: './operator-layout.scss',
 })

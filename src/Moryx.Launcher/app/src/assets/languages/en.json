@@ -1,0 +1,31 @@
+{
+  "MORE": {
+    "VIEWS": "Views",
+    "ABOUT": "About",
+    "FULLSCREEN_MODE": "Fullscreen",
+    "OPERATOR_MODE": "Operator",
+    "FULL_MODE": "Full"
+  },
+  "LANGUAGE": {
+    "LANGUAGE": "Language"
+  },
+  "ABOUT": {
+    "TITLE": "About",
+    "APPLICATION": "Application",
+    "HOST": "Host",
+    "SERVER_TIME": "Server Time",
+    "CLOSE": "Close",
+    "LABEL_TITLE": "Title",
+    "LABEL_PRODUCT": "Product",
+    "LABEL_DESCRIPTION": "Description",
+    "LABEL_VERSION": "Version",
+    "LABEL_INFORMATIONAL_VERSION": "Informational Version",
+    "LABEL_COMPANY": "Company",
+    "LABEL_CONFIGURATION": "Configuration",
+    "LABEL_COPYRIGHT": "Copyright",
+    "LABEL_TARGET_FRAMEWORK": "Target Framework",
+    "LABEL_MACHINE_NAME": "Machine Name",
+    "LABEL_OS": "OS",
+    "LABEL_UPTIME": "Uptime"
+  }
+}

@@ -1,11 +1,11 @@
 <mat-menu #appMenu="matMenu">
   <button mat-menu-item [matMenuTriggerFor]="languageMenu">
     <mat-icon>language</mat-icon>
-    <span>Language</span>
+    <span>{{ TranslationConstants.MORE.LANGUAGE  | translate }}</span>
   </button>
   <button mat-menu-item [matMenuTriggerFor]="viewsMenu">
     <mat-icon>visibility</mat-icon>
-    <span>Views</span>
+    <span>{{ TranslationConstants.MORE.VIEWS  | translate }}</span>
   </button>
   <mat-divider></mat-divider>
 
@@ -19,7 +19,7 @@
   <mat-divider></mat-divider>
   <button mat-menu-item (click)="openAbout()">
     <mat-icon>info_outline</mat-icon>
-    <span>About</span>
+    <span>{{ TranslationConstants.MORE.ABOUT  | translate }}</span>
   </button>
 </mat-menu>
 
@@ -30,7 +30,7 @@
     } @else {
       <mat-icon></mat-icon>
     }
-    <span>Full mode</span>
+    <span>{{ TranslationConstants.MORE.FULL_MODE  | translate }}</span>
   </button>
   <button mat-menu-item (click)="setLayout(LauncherLayout.Operator)">
     @if (currentLayout() === LauncherLayout.Operator) {
@@ -38,7 +38,7 @@
     } @else {
       <mat-icon></mat-icon>
     }
-    <span>Operator mode</span>
+    <span>{{ TranslationConstants.MORE.OPERATOR_MODE  | translate }}</span>
   </button>
   <button mat-menu-item (click)="setLayout(LauncherLayout.Fullscreen)">
     @if (currentLayout() === LauncherLayout.Fullscreen) {
@@ -46,7 +46,7 @@
     } @else {
       <mat-icon></mat-icon>
     }
-    <span>Fullscreen mode</span>
+    <span>{{ TranslationConstants.MORE.FULLSCREEN_MODE  | translate }}</span>
   </button>
 </mat-menu>
 
