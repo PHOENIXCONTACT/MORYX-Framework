@@ -24,7 +24,7 @@
     "@angular/platform-browser": "^22.0.0",
     "@angular/platform-browser-dynamic": "^22.0.0",
     "@angular/router": "^22.0.0",
-    "@moryx/ngx-web-framework": "22.0.0-46-merge.201",
+    "@moryx/ngx-web-framework": "^22.0.0",
     "css-loader": "^7.1.0",
     "lit": "^3.3.3",
     "postcss": "^8.5.15",
