@@ -34,3 +34,9 @@ mat-toolbar {
 .toolbar-spacer {
   flex: 1 1 auto;
 }
+
+slot[name="topRegion"] {
+  flex: 1 1 auto;
+  display: flex;
+  min-width: 0;
+}

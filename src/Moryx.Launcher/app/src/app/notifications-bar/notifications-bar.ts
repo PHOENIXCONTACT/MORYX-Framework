@@ -27,7 +27,7 @@ export interface Notification {
   }
 })
 export class NotificationsBar implements OnInit, OnDestroy {
-  url = input('notifications');
+  url = input('Notifications');
   api = input('/api/moryx/notifications/stream');
   eventSource: EventSource | undefined;
 
@@ -83,7 +83,7 @@ export class NotificationsBar implements OnInit, OnDestroy {
     });
 
     if (data.length > 0) {
-      // Reduce to highest severity only
+      // Reduce to the highest severity only
       const firstSeverity = data[0].severity;
       const dataSplit = data.findIndex(x => x.severity !== firstSeverity);
       const reducedData = dataSplit === -1 ? data : data.slice(0, dataSplit);

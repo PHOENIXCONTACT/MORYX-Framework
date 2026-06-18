@@ -50,15 +50,12 @@
     <div slot="app">
         @RenderBody()
     </div>
-    <div slot="topRegion">
-        <div style="width: 100%; background-color: red">
-            TOP REGION
-        </div>
-        @if (launcher != null && launcher.GetRegion(LauncherRegion.Top) is RegionItem topRegion)
-        {
+    @if (launcher != null && launcher.GetRegion(LauncherRegion.Top) is RegionItem topRegion)
+    {
+        <div slot="topRegion">
             @await Html.PartialAsync(topRegion.PartialView)
-        }
-    </div>
+        </div>
+    }
     <div slot="rightRegion">
         @if (launcher != null && launcher.GetRegion(LauncherRegion.Right) is RegionItem rightRegion)
         {
@@ -79,7 +76,7 @@
     el.supportedCultures = @Html.Raw(JsonSerializer.Serialize(supportedCultures, jsonOptions));
     el.webModuleItems = @Html.Raw(JsonSerializer.Serialize(webModuleItems, jsonOptions));
     el.externalModuleItems = @Html.Raw(JsonSerializer.Serialize(externalModuleItems, jsonOptions));
-    @if (!string.IsNullOrEmpty(_identityOptions.CurrentValue.BaseAddress))
+        @if (!string.IsNullOrEmpty(_identityOptions.CurrentValue.BaseAddress))
     {
         <text>el.authBaseAddress = '@_identityOptions.CurrentValue.BaseAddress';</text>
     }

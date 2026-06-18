@@ -23,6 +23,8 @@
   align-items: center;
   overflow: visible;
   background: var(--severity-background-color);
+  color: var(--severity-foreground-color);
+  text-decoration: none;
 }
 
 .content {

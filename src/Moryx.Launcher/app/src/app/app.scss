@@ -24,3 +24,8 @@ slot[name="app"] {
 ::slotted([slot="app"]) {
   height: 100%;
 }
+
+::slotted([slot="topRegion"]) {
+  flex: 1;
+  min-width: 0;
+}
