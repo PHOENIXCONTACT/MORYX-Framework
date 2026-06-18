@@ -4,7 +4,6 @@
 */
 
 import { Routes } from "@angular/router";
-import { Availabilities } from "./availabilities/availabilities";
 import { OperatorDetails } from "./operator-details/operator-details";
 import { OperatorsManagement } from "./operators-management/operators-management";
 import { SkillTypeDetails } from "./skill-type-details/skill-type-details";
@@ -14,7 +13,6 @@ import { WorkstationOperators } from "./workstation-operators/workstation-operat
 export const routes: Routes = [
   { path: "workstations", component: WorkstationOperators },
   { path: "management", component: OperatorsManagement },
-  { path: "availabilities", component: Availabilities },
   { path: "skill-types", component: SkillTypes },
   { path: "skill-types/:id", component: SkillTypeDetails },
   {

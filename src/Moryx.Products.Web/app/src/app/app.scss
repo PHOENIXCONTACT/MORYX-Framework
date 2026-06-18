@@ -1,5 +1,4 @@
 @use '@angular/material' as mat;
-@use "@moryx/ngx-web-framework/styles/variables" as *;
 
 .overview {
   flex: 1;
@@ -40,7 +39,7 @@
 .overview-tree-content {
   flex: 1 1;
   overflow: hidden;
-  background-color: $mat-background-light;
+  background-color: var(--mat-sys-surface-container-lowest);
   align-items: stretch;
 }
 
@@ -68,48 +67,6 @@
   padding-right: 15px;
 }
 
-.overview-tree-content-tree {
-  flex: 1 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  background-color: $mat-background-light;
-  height: 100%;
-  touch-action: auto;
-}
-
-.overview-tree-content-tree-items {
-  cursor: pointer !important;
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  width: 100%;
-  padding-right: 16px;
-  -webkit-touch-callout: none;
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  @include mat.tree-overrides((
-    node-min-height: 40px
-  ));
-}
-
-.overview-tree-content-tree-items:hover {
-  background-color: $light-background-hover;
-}
-
-.overview-tree-content-tree-items-text {
-  flex: 1 1;
-}
-
-.delete-resource-button {
-  background-color: $mat-background;
-  color: $mat-color;
-}
-
-.delete-resource-button:hover {
-  background-color: $light-background-hover;
-}
-
 .overview-import-button {
   position: absolute;
   top: 75px;
@@ -117,12 +74,6 @@
   z-index: 10;
 }
 
-.overview-side-bar-right {
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: flex-start;
-  width: fit-content;
-}
 .overview-details {
   flex: 1 1 auto;
   align-items: center;

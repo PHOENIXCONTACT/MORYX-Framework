@@ -3,8 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Severity } from '../api/models';
-import { NotificationModel } from '../api/models/notification-model';
+import { NotificationModel, Severity } from '@api/models';
 
 declare global {
   interface Array<T> {

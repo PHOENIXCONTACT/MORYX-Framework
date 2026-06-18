@@ -3,10 +3,10 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, signal, linkedSignal } from "@angular/core";
-import { TranslateModule } from "@ngx-translate/core";
-import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
-import { EditProductsService } from "src/app/services/edit-products.service";
+import { Component, inject, signal, linkedSignal, ChangeDetectionStrategy } from "@angular/core";
+import { TranslatePipe } from "@ngx-translate/core";
+import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
+import { EditProductsService } from "@app/services/edit-products.service";
 import { ProductModel, ProductState } from "../../../api/models";
 
 import { MatInputModule } from "@angular/material/input";
@@ -21,9 +21,10 @@ import { toSignal } from "@angular/core/rxjs-interop";
   selector: "app-products-details-header",
   templateUrl: "./products-details-header.html",
   styleUrls: ["./products-details-header.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatInputModule,
-    TranslateModule,
+    TranslatePipe,
     ReactiveFormsModule,
     FormsModule,
     MatOptionModule,
@@ -34,7 +35,7 @@ import { toSignal } from "@angular/core/rxjs-interop";
 })
 export class ProductsDetailsHeader {
   private editService = inject(EditProductsService);
-  
+
   currentProduct = toSignal(this.editService.currentProduct$);
   editMode = toSignal(this.editService.edit$, { initialValue: false });
   identifier = linkedSignal(() => {

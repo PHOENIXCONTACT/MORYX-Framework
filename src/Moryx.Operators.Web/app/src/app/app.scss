@@ -1,6 +1,5 @@
-@use "@moryx/ngx-web-framework/styles/variables" as *; 
 
 
 :host{
-    background-color: $mat-background;
+    background-color: var(--mat-sys-surface);
 }

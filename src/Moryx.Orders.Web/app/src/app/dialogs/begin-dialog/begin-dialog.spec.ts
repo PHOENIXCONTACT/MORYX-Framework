@@ -14,7 +14,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatInputModule } from '@angular/material/input';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { FormsModule } from '@angular/forms';
 import {
@@ -46,7 +46,7 @@ describe('BeginDialog', () => {
         MatFormFieldModule,
         MatInputModule,
         FormsModule,
-        TranslateModule.forRoot(),
+        TranslatePipe.forRoot(),
     ],
 }).compileComponents();
   });

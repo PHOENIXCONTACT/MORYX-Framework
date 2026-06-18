@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { OperatorModel, instanceOfOperator } from './models/operator-model';
 import { CalendarDate, CalendarState } from './models/calendar-state';
@@ -37,8 +37,8 @@ import {
   totalOrderHours
 } from './models/order-model';
 import { addCalendarDaysToAssignment } from './models/model-converter';
-import { AttendableResourceModel } from './api/models/attendable-resource-model';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { AttendableResourceModel } from '@api/models/attendable-resource-model';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from './extensions/translation-constants.extensions';
 import { LanguageService, SnackbarService } from '@moryx/ngx-web-framework/services';
 import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
@@ -62,6 +62,7 @@ import { OrderItem } from './order-item/order-item';
   selector: 'app-root',
   templateUrl: './app.html',
   styleUrls: ['./app.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CommonModule,
     MatButtonModule,
@@ -77,7 +78,7 @@ import { OrderItem } from './order-item/order-item';
     Assignment,
     OrderItem,
     DragDropModule,
-    TranslateModule
+    TranslatePipe
   ]
 })
 export class App implements OnInit {
@@ -145,7 +146,7 @@ export class App implements OnInit {
       TranslationConstants.LANGUAGES.ZH
     ]);
     this.translateService.setFallbackLang('en');
-    this.translateService.use(this.languageService.getDefaultLanguage());
+    this.translateService.use(this.languageService.getFallbackLang());
   }
 
   ngOnInit(): void {

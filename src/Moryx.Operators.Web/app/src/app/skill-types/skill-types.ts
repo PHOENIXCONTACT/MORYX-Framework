@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { TranslationConstants } from '../extensions/translation-constants.extensions';
 import { SkillType } from '../models/skill-type-model';
@@ -13,7 +13,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialog } from '../dialogs/confirmation-dialog/confirmation-dialog';
 import { OperatorSkill } from '../models/operator-skill-model';
 import { AppStoreService } from '../services/app-store.service';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
@@ -24,11 +24,12 @@ import { MatButtonModule } from '@angular/material/button';
   selector: 'app-skill-types',
   templateUrl: './skill-types.html',
   styleUrl: './skill-types.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatTooltipModule,
     MatIconModule,
     RouterLink,
-    TranslateModule,
+    TranslatePipe,
     MatTableModule,
     MatButtonModule
   ]

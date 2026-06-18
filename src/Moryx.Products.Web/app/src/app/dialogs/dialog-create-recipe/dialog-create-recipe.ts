@@ -3,12 +3,12 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { TranslateModule } from '@ngx-translate/core';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
+import { TranslatePipe } from '@ngx-translate/core';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { RecipeDefinitionModel, WorkplanModel } from '../../api/models';
-import { CacheProductsService } from '../../services/cache-products.service';
+import { CacheProductsService } from '@app/services/cache-products.service';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
@@ -22,11 +22,12 @@ import { MatInputModule } from '@angular/material/input';
   selector: 'app-dialog-create-recipe',
   templateUrl: './dialog-create-recipe.html',
   styleUrls: ['./dialog-create-recipe.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatFormFieldModule,
     FormsModule,
     MatOptionModule,
-    TranslateModule,
+    TranslatePipe,
     MatDialogModule,
     MatListModule,
     MatSelectModule,

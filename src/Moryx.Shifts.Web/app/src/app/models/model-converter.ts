@@ -4,21 +4,21 @@
 */
 
 import { Time } from '@angular/common';
-import { ShiftTypeModel as MoryxShiftsEndpointsShiftTypeModel } from '../api/models';
-import { AssignableOperator } from '../api/models/assignable-operator';
-import { ShiftAssignementModel } from '../api/models/shift-assignement-model';
+import { ShiftTypeModel as MoryxShiftsEndpointsShiftTypeModel } from '@api/models';
+import { AssignableOperator } from '@api/models/assignable-operator';
+import { ShiftAssignementModel } from '@api/models/shift-assignement-model';
 import { AssignmentCardModel } from './assignment-card-model';
 import { OperatorModel, OperatorStatus } from './operator-model';
 import { ShiftTypeModel } from './shift-type-model';
 import { ShiftInstanceModel } from './shift-instance-model';
-import { ShiftModel } from '../api/models/shift-model';
+import { ShiftModel } from '@api/models/shift-model';
 import { stringToDate } from '../utils';
 import moment from 'moment';
 import { CalendarDate } from './calendar-state';
 import { PossibleAssignedDays } from './types';
 import { ShiftCardModel } from './shift-card-model';
-import { AttendableResourceModel } from '../api/models/attendable-resource-model';
-import { ExtendedOperatorModel } from '../api/models/extended-operator-model';
+import { AttendableResourceModel } from '@api/models/attendable-resource-model';
+import { ExtendedOperatorModel } from '@api/models/extended-operator-model';
 
 
 

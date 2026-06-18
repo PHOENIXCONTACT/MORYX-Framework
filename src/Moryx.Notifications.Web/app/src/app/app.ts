@@ -3,11 +3,11 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnDestroy, OnInit, signal } from "@angular/core";
+import { Component, inject, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from "@angular/core";
 import { LanguageService } from "@moryx/ngx-web-framework/services";
 import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import { environment } from "src/environments/environment";
+import { TranslatePipe, TranslateService } from "@ngx-translate/core";
+import { environment } from "../environments/environment";
 import { TranslationConstants } from "./extensions/translation-constants.extensions";
 import { NotificationService } from "./services/notification.service";
 import ConnectionState from "./models/ConnectionState";
@@ -24,13 +24,14 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
   selector: "app-root",
   templateUrl: "./app.html",
   styleUrls: ["./app.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CommonModule,
     MatSidenavModule,
     MatToolbarModule,
     Notifications,
     NotificationDetails,
-    TranslateModule,
+    TranslatePipe,
     MatProgressSpinnerModule,
     EmptyState
   ]
@@ -58,7 +59,7 @@ export class App implements OnInit, OnDestroy {
       TranslationConstants.LANGUAGES.IT,
     ]);
     this.translateService.setFallbackLang("en");
-    this.translateService.use(this.languageService.getDefaultLanguage());
+    this.translateService.use(this.languageService.getFallbackLang());
   }
 
   ngOnInit(): void {

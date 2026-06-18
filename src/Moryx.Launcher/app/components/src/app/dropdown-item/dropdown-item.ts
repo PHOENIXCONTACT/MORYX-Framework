@@ -3,13 +3,14 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, input, output } from '@angular/core';
+import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'app-dropdown-item',
   imports: [],
   templateUrl: './dropdown-item.html',
   styleUrl: './dropdown-item.css',
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: {
     '(click)': 'handleClick($event)'
   }

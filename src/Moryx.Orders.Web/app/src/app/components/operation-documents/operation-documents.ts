@@ -5,7 +5,7 @@
 
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
@@ -15,24 +15,24 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
-import { DocumentModel } from "../../api/models";
-import { OperationModel } from "../../api/models";
-import { OrderManagementService } from 'src/app/api/services';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import { environment } from 'src/environments/environment';
+import { DocumentModel, OperationModel } from "@api/models";
+import { OrderManagementService } from '@api/services/order-management.service';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-operation-documents',
   templateUrl: './operation-documents.html',
   styleUrls: ['./operation-documents.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatProgressBarModule,
     MatSidenavModule,
     MatToolbarModule,
     CommonModule,
-    TranslateModule,
+    TranslatePipe,
     MatListModule,
     NgxDocViewerModule,
     EmptyState,

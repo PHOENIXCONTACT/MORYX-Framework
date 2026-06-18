@@ -24,7 +24,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import {
   OperationRecipeModel,
@@ -109,7 +109,7 @@ describe('CreateDialog', () => {
         MatInputModule,
         FormsModule,
         ReactiveFormsModule,
-        TranslateModule.forRoot(),
+        TranslatePipe.forRoot(),
     ],
 }).compileComponents();
   });

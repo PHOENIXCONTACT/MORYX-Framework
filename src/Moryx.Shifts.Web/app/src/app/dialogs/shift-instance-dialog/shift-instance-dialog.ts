@@ -4,22 +4,23 @@
 */
 
 
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import  moment from 'moment';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import { ShiftInstanceModel } from 'src/app/models/shift-instance-model';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { ShiftInstanceModel } from '@app/models/shift-instance-model';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-shift-instance-dialog',
   templateUrl: './shift-instance-dialog.html',
   styleUrl: './shift-instance-dialog.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatDialogModule,
     FormsModule,
@@ -27,7 +28,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatInputModule,
     MatDatepickerModule,
     ReactiveFormsModule,
-    TranslateModule,
+    TranslatePipe,
     MatButtonModule
 ]
 })

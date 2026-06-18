@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, effect, inject, input, OnInit, signal, untracked } from "@angular/core";
+import { Component, effect, inject, input, OnInit, signal, untracked, ChangeDetectionStrategy } from "@angular/core";
 import { TranslationConstants } from "../extensions/translation-constants.extensions";
 import { SkillType } from "../models/skill-type-model";
 import { Router, RouterLink } from "@angular/router";
@@ -16,7 +16,7 @@ import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatIconModule } from "@angular/material/icon";
 import { MatFormFieldModule } from "@angular/material/form-field";
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MatButtonModule } from "@angular/material/button";
 import { MatInputModule } from "@angular/material/input";
 
@@ -24,6 +24,7 @@ import { MatInputModule } from "@angular/material/input";
   selector: "app-skill-type-details",
   templateUrl: "./skill-type-details.html",
   styleUrl: "./skill-type-details.scss",
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ReactiveFormsModule,
     FormsModule,
@@ -32,7 +33,7 @@ import { MatInputModule } from "@angular/material/input";
     MatIconModule,
     MatFormFieldModule,
     NavigableEntryEditor,
-    TranslateModule,
+    TranslatePipe,
     MatButtonModule,
     MatInputModule,
     RouterLink

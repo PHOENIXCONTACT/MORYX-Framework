@@ -4,10 +4,10 @@
 */
 
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
-import { ApplicationConfig, importProvidersFrom, Injectable } from "@angular/core";
-import { environment } from "src/environments/environment";
-import { ApiModule } from "./api/api.module";
-import { BrowserModule, HAMMER_GESTURE_CONFIG, HammerGestureConfig, HammerModule } from "@angular/platform-browser";
+import { ApplicationConfig, importProvidersFrom } from "@angular/core";
+import { environment } from "../environments/environment";
+import { ApiModule } from "@api/api.module";
+import { BrowserModule } from "@angular/platform-browser";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
 import { MatDialogModule } from "@angular/material/dialog";
@@ -22,17 +22,11 @@ import { ApiInterceptor, API_INTERCEPTOR_PROVIDER } from "@moryx/ngx-web-framewo
 import { NgxDocViewerModule } from "ngx-doc-viewer";
 import { provideRouter } from "@angular/router";
 import { routes } from "./app.routes";
-import { MarkdownModule } from "ngx-markdown";
+import { provideMarkdown } from "ngx-markdown";
 
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
-@Injectable()
-export class AppHammerConfig extends HammerGestureConfig {
-  override overrides = <any>{
-    swipe: {direction: Hammer.DIRECTION_HORIZONTAL},
-  };
-}
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -49,13 +43,7 @@ export const appConfig: ApplicationConfig = {
       MatProgressSpinnerModule,
       MatSnackBarModule,
       NgxDocViewerModule,
-      MarkdownModule.forRoot(),
-      HammerModule
     ),
-    {
-      provide: HAMMER_GESTURE_CONFIG,
-      useClass: AppHammerConfig
-    },
     ApiInterceptor,
     API_INTERCEPTOR_PROVIDER,
     SnackbarService,
@@ -67,6 +55,7 @@ export const appConfig: ApplicationConfig = {
       }),
       fallbackLang: 'en'
     }),
+    provideMarkdown(),
     provideAnimationsAsync(),
   ],
 };

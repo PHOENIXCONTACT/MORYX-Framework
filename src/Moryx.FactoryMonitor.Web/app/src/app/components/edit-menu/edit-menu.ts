@@ -3,19 +3,19 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { ChangeBackgroundDialog } from 'src/app/dialogs/change-background-dialog/change-background-dialog';
-import { CellStoreService } from 'src/app/services/cell-store.service';
-import { EditMenuService } from 'src/app/services/edit-menu.service';
-import { EditMenuState } from 'src/app/services/EditMenutState';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
-import { FactorySelectionService } from 'src/app/services/factory-selection.service';
-import { FactoryMonitorService } from 'src/app/api/services';
-import { ChangeBackgroundService } from 'src/app/services/change-background.service';
-import { FactoryModel } from 'src/app/api/models/factory-model';
+import { ChangeBackgroundDialog } from '@app/dialogs/change-background-dialog/change-background-dialog';
+import { CellStoreService } from '@app/services/cell-store.service';
+import { EditMenuService } from '@app/services/edit-menu.service';
+import { EditMenuState } from '@app/services/EditMenutState';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
+import { FactorySelectionService } from '@app/services/factory-selection.service';
+import { FactoryMonitorService } from '@api/services';
+import { ChangeBackgroundService } from '@app/services/change-background.service';
+import { FactoryModel } from '@api/models/factory-model';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
@@ -25,11 +25,12 @@ import { MatIconModule } from '@angular/material/icon';
   selector: 'app-edit-menu',
   templateUrl: './edit-menu.html',
   styleUrls: ['./edit-menu.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatTooltipModule,
     MatIconModule,
     MatButtonModule,
-    TranslateModule
+    TranslatePipe
 ]
 })
 export class EditMenu implements OnInit {

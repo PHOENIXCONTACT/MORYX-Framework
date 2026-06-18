@@ -3,13 +3,13 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, effect, inject, linkedSignal, signal, untracked } from '@angular/core';
+import { Component, effect, inject, linkedSignal, signal, untracked, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Event, NavigationCancel, NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
+import { TranslatePipe } from '@ngx-translate/core';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { ResourceModel } from '../../api/models';
-import { EditResourceService } from '../../services/edit-resource.service';
+import { EditResourceService } from '@app/services/edit-resource.service';
 import { MatTabsModule } from '@angular/material/tabs';
 import { DetailsHeader } from './details-header/details-header';
 
@@ -17,7 +17,8 @@ import { DetailsHeader } from './details-header/details-header';
   selector: 'app-details-view',
   templateUrl: './details-view.html',
   styleUrls: ['./details-view.scss'],
-  imports: [RouterOutlet, TranslateModule, MatTabsModule, RouterLink, DetailsHeader]
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [RouterOutlet, TranslatePipe, MatTabsModule, RouterLink, DetailsHeader]
 })
 export class DetailsView {
   private router = inject(Router);

@@ -1,16 +1,15 @@
 @use '@angular/material' as mat;
-@use "@moryx/ngx-web-framework/styles/variables" as *; 
 
 :host{
-    background-color: $mat-background;
+    background-color: var(--mat-sys-surface);
 }
 
 .main-content{
     @include mat.expansion-overrides((
-        container-background-color: $mat-background-light,
+        container-background-color: var(--mat-sys-surface-container-lowest),
       ));
 }
 
 .secondary-button{
-    background-color: $mat-background-light;
+    background-color: var(--mat-sys-surface-container-lowest);
 }

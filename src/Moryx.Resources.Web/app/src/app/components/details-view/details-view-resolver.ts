@@ -8,10 +8,10 @@ import { ActivatedRouteSnapshot, RedirectCommand, ResolveFn, Router } from '@ang
 import { lastValueFrom } from 'rxjs';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { HttpErrorResponse } from '@angular/common/http';
-import { SessionService } from 'src/app/services/session.service';
-import { ResourceModel } from 'src/app/api/models';
-import { EditResourceService } from 'src/app/services/edit-resource.service';
-import { ResourceModificationService } from 'src/app/api/services';
+import { SessionService } from '@app/services/session.service';
+import { ResourceModel } from '@api/models';
+import { EditResourceService } from '@app/services/edit-resource.service';
+import { ResourceModificationService } from '@api/services';
 
 /**
  * Retrieves the resource details given the resource id from the route before navigating to the details view.
@@ -28,27 +28,27 @@ export const DetailsViewResolver: ResolveFn<ResourceModel> = async (route: Activ
   const router = inject(Router);
   const id = Number(route.paramMap.get('id'));
 
-  // If there is a resource that was work in progress and we are not 
-  // navigating to a different resource, use the resource from the session 
+  // If there is a resource that was work in progress and we are not
+  // navigating to a different resource, use the resource from the session
   // storage instead of retrieving it again from the API.
   const workInProgress = sessionService.removeWipResource();
   if (workInProgress?.resource.id === id) {
     editService.setResourceFromStorage(workInProgress);
     return workInProgress.resource;
   }
- 
-  // If the ID is still 0, we should be currently creating a resource and the 
+
+  // If the ID is still 0, we should be currently creating a resource and the
   // edit service already holds the resource with all changes
   if (id === 0) {
     const resource = editService.activeResource();
     if (resource)
       return resource;
     else
-      return new RedirectCommand(router.parseUrl('')); 
+      return new RedirectCommand(router.parseUrl(''));
   }
 
   // Otherwise, we need to retrieve the resource details from the API
-  try {    
+  try {
     const resource = await lastValueFrom(apiService.getDetails({id: id}));
     editService.setResource(resource);
     return resource;

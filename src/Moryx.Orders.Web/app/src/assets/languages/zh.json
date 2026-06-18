@@ -55,7 +55,7 @@
   "RECIPES": {
     "RECIPES_OF": "配方 -",
     "GENERAL": "常规",
-    "IDENTIFIER": "标识符",
+    "NAME": "名称",
     "WORKPLAN": "工作计划",
     "CLASSIFICATION": "分类",
     "PROPERTIES": "属性",
@@ -86,7 +86,8 @@
   },
   "INTERRUPT_DIALOG": {
     "TITLE": "中断操作",
-    "PROMPT": "接下来的操作不会启动新进程。已经启动的进程将正常完成，操作状态将变为 '中断'。"
+    "PROMPT": "接下来的操作不会启动新进程。已经启动的进程将正常完成，操作状态将变为 '中断'。",
+    "INTERRUPT": "中断"
   },
   "CREATE_DIALOG": {
     "TITLE": "新订单",

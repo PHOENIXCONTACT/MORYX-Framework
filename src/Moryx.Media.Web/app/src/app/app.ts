@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { LanguageService } from '@moryx/ngx-web-framework/services';
 import { TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from './extensions/translation-constants.extensions';
@@ -14,6 +14,7 @@ import { RouterOutlet } from '@angular/router';
     selector: 'app-root',
     templateUrl: './app.html',
     styleUrls: ['./app.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [RouterOutlet]
 })
 export class App implements OnInit {
@@ -32,7 +33,7 @@ export class App implements OnInit {
       TranslationConstants.LANGUAGES.IT,
     ]);
     this.translateService.setFallbackLang('en');
-    this.translateService.use(this.languageService.getDefaultLanguage());
+    this.translateService.use(this.languageService.getFallbackLang());
   }
 
   ngOnInit(): void {

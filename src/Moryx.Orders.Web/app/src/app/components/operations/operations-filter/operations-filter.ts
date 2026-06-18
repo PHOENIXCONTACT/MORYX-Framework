@@ -1,17 +1,18 @@
-import { Component, inject } from '@angular/core';
-import { FilterService } from '../../../services/filter.service';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { FilterService } from '@app/services/filter.service';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { TranslationConstants } from '../../../extensions/translation-constants.extensions';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-operations-filter',
   imports: [
     MatSlideToggleModule,
-    TranslateModule
+    TranslatePipe
   ],
   templateUrl: './operations-filter.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './operations-filter.scss',
 })
 export class OperationsFilter {

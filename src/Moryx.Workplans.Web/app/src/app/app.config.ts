@@ -24,11 +24,11 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { BrowserModule, HammerModule } from '@angular/platform-browser';
+import { BrowserModule } from '@angular/platform-browser';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { ApiInterceptor, API_INTERCEPTOR_PROVIDER } from '@moryx/ngx-web-framework/interceptors';
-import { environment } from 'src/environments/environment';
-import { ApiModule } from './api/api.module';
+import { environment } from '../environments/environment';
+import { ApiModule } from '@api/api.module';
 import { BrowserStorageService } from './services/browser-storage.service';
 import { EditorStateService } from './services/editor-state.service';
 import { SessionsService } from './services/sessions.service';
@@ -45,7 +45,6 @@ export const appConfig: ApplicationConfig = {
       BrowserModule,
       ApiModule.forRoot({ rootUrl: environment.rootUrl }),
       DragDropModule,
-      HammerModule,
       MatListModule,
       MatButtonModule,
       MatTabsModule,

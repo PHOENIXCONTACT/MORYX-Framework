@@ -55,7 +55,7 @@
   "RECIPES": {
     "RECIPES_OF": "Ricette di",
     "GENERAL": "Generale",
-    "IDENTIFIER": "Identificatore",
+    "NAME": "Nome",
     "WORKPLAN": "Piano di Lavoro",
     "CLASSIFICATION": "Classificazione",
     "PROPERTIES": "Proprietà",
@@ -86,7 +86,8 @@
   },
   "INTERRUPT_DIALOG": {
     "TITLE": "Ferma Operazione",
-    "PROMPT": "Per la seguente operazione non vengono avviati nuovi processi. I processi già avviati vengono completati normalmente e lo stato dell'operazione passa a 'Interrotto'."
+    "PROMPT": "Per la seguente operazione non vengono avviati nuovi processi. I processi già avviati vengono completati normalmente e lo stato dell'operazione passa a 'Interrotto'.",
+    "INTERRUPT": "FERMA"
   },
   "CREATE_DIALOG": {
     "TITLE": "Nuovo Ordine",

@@ -3,20 +3,20 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, Inject, signal } from '@angular/core';
-import { ShiftInstanceModel } from 'src/app/models/shift-instance-model';
+import { Component, Inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { ShiftInstanceModel } from '@app/models/shift-instance-model';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import AssignmentData from 'src/app/models/assignment-data';
-import { CalendarState } from 'src/app/models/calendar-state';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import AssignmentData from '@app/models/assignment-data';
+import { CalendarState } from '@app/models/calendar-state';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import  moment from 'moment';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { WeekDayToggleButton } from 'src/app/week-day-toggle-button/week-day-toggle-button';
+import { WeekDayToggleButton } from '@app/week-day-toggle-button/week-day-toggle-button';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 
@@ -24,6 +24,7 @@ import { MatInputModule } from '@angular/material/input';
   selector: 'app-copy-shift-and-assignment',
   templateUrl: './copy-shift-and-assignment.html',
   styleUrl: './copy-shift-and-assignment.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatFormFieldModule,
     MatInputModule,
@@ -32,7 +33,7 @@ import { MatInputModule } from '@angular/material/input';
     MatDatepickerModule,
     WeekDayToggleButton,
     MatButtonModule,
-    TranslateModule,
+    TranslatePipe,
     MatDialogModule
 ]
 })

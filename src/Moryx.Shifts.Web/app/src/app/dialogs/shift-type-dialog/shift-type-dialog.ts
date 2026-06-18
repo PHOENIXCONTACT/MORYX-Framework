@@ -4,26 +4,27 @@
 */
 
 import { Time } from '@angular/common';
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import { ShiftTypeModel } from 'src/app/models/shift-type-model';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { ShiftTypeModel } from '@app/models/shift-type-model';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-shift-type-dialog',
   templateUrl: './shift-type-dialog.html',
   styleUrl: './shift-type-dialog.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ReactiveFormsModule,
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
-    TranslateModule,
+    TranslatePipe,
     MatButtonModule
 ]
 })

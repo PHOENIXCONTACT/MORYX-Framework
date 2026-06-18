@@ -69,7 +69,7 @@ export class TranslationConstants {
   public static readonly RECIPES = {
     RECIPES_OF: 'RECIPES.RECIPES_OF',
     GENERAL: 'RECIPES.GENERAL',
-    IDENTIFIER: 'RECIPES.IDENTIFIER',
+    NAME: 'RECIPES.NAME',
     WORKPLAN: 'RECIPES.WORKPLAN',
     CLASSIFICATION: 'RECIPES.CLASSIFICATION',
     PROPERTIES: 'RECIPES.PROPERTIES',
@@ -104,6 +104,7 @@ export class TranslationConstants {
   public static readonly INTERRUPT_DIALOG = {
     TITLE: 'INTERRUPT_DIALOG.TITLE',
     PROMPT: 'INTERRUPT_DIALOG.PROMPT',
+    INTERRUPT: 'INTERRUPT_DIALOG.INTERRUPT'
   };
 
   public static readonly CREATE_DIALOG = {

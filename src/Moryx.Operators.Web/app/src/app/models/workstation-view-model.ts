@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { AttendableResourceModel } from "../api/models/attendable-resource-model";
+import { AttendableResourceModel } from "@api/models/attendable-resource-model";
 import { OperatorViewModel } from "./operator-view-model";
 
 export class WorkstationViewModel  {
@@ -20,7 +20,7 @@ export class WorkstationViewModel  {
 
     public assignOperatorToCurrentStation(operator: OperatorViewModel)
     {
-       
+
     }
 
 }

@@ -4,23 +4,23 @@
 */
 
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, input, OnInit, signal, untracked } from '@angular/core';
+import { Component, effect, inject, input, OnInit, signal, untracked, ChangeDetectionStrategy } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { delay, tap } from 'rxjs';
-import { LogLevel } from '../../../api/models';
-import { OperationLogMessageModel } from '../../../api/models';
-import { OrderManagementService } from 'src/app/api/services';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
+import { LogLevel, OperationLogMessageModel } from '@api/models';
+import { OrderManagementService } from '@api/services';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 
 @Component({
   selector: 'app-log-message-list',
   templateUrl: './log-message-list.html',
   styleUrls: ['./log-message-list.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CommonModule,
     MatExpansionModule,
-    TranslateModule
+    TranslatePipe
   ]
 })
 export class LogMessageList implements OnInit {

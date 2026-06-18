@@ -3,8 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { OperationModel } from '../api/models';
-import { OperationStateClassification } from '../api/models';
+import { OperationModel } from '@api/models';
+import { OperationStateClassification } from '@api/models';
 
 export class OperationViewModel {
   model: OperationModel;

@@ -3,15 +3,15 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, linkedSignal } from '@angular/core';
+import { Component, inject, linkedSignal, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
-import { Router, RouterLink } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import { PartConnector, PartModel, ProductModel } from '../../../api/models';
-import { DialogAddPart } from '../../../dialogs/dialog-add-part/dialog-add-part';
-import { EditProductsService } from '../../../services/edit-products.service';
+import { Router } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { PartConnector, PartModel, ProductModel } from '@api/models';
+import { DialogAddPart } from '@app/dialogs/dialog-add-part/dialog-add-part';
+import { EditProductsService } from '@app/services/edit-products.service';
 import { CommonModule } from '@angular/common';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatListModule } from '@angular/material/list';
@@ -25,16 +25,16 @@ import { MatTooltip } from "@angular/material/tooltip";
   selector: 'app-product-parts',
   templateUrl: './product-parts.html',
   styleUrls: ['./product-parts.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CommonModule,
     MatExpansionModule,
     MatListModule,
     ProductPartsDetailsComponent,
     MatButtonModule,
-    TranslateModule,
+    TranslatePipe,
     MatIcon,
     MatTooltip,
-    RouterLink
 ]
 })
 export class ProductParts {
@@ -47,6 +47,10 @@ export class ProductParts {
   expandedPart = linkedSignal(this.editProductsService.currentPartConnector);
   selectedPart = linkedSignal(this.editProductsService.currentPart);
   TranslationConstants = TranslationConstants;
+
+  selectPart(part: PartModel) {
+    this.router.navigate(['details', this.currentProduct()!.id, 'parts', this.expandedPart()!.name, part.id], { queryParamsHandling: 'preserve' });
+  }
 
   onSelectPartConnector(connector: PartConnector) {
     const firstPartId = connector.parts && connector.parts.length > 0 ? connector.parts[0].id : 0;
