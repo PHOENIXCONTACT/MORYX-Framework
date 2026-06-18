@@ -48,19 +48,16 @@ public static class ExpressionConstraint
         /// <summary>
         /// Value the expressions return value is compared to
         /// </summary>
-        [EntrySerialize]
         public object Value { get; }
 
         /// <summary>
         /// Expression to retrieve the value
         /// </summary>
-        [EntrySerialize(EntrySerializeMode.Never)]
         protected Func<TContext, object> Expression { get; }
 
         /// <summary>
         /// String used for showing the expression to the user
         /// </summary>
-        [EntrySerialize]
         public string ExpressionString { get; }
 
         /// <summary>
