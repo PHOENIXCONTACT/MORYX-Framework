@@ -3,7 +3,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: rgba(0, 0, 0, 0.4);
+  color: var(--mat-sys-on-surface-variant);
   margin: 16px 0 4px;
 
   &:first-child {
@@ -20,7 +20,7 @@ dl {
   grid-template-columns: 160px 1fr;
   gap: 8px;
   padding: 6px 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
 
   &:last-child {
     border-bottom: none;
@@ -29,7 +29,7 @@ dl {
 
 dt {
   font-weight: 600;
-  color: rgba(0, 0, 0, 0.6);
+  color: var(--mat-sys-on-surface-variant);
   font-size: 0.85rem;
 }
 

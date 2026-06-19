@@ -8,7 +8,7 @@
   --color-Fatal: #{$fatal};
 
   --severity-background-color: var(--color-Success);
-  --severity-foreground-color: white;
+  --severity-foreground-color: var(--mat-sys-on-error);
 }
 
 .outerborder {

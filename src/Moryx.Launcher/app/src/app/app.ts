@@ -15,6 +15,7 @@ import { ModuleService } from './services/module.service';
 import { CultureService } from './services/culture.service';
 import { AuthService } from './services/auth.service';
 import { ShortcutService } from './services/shortcut.service';
+import { ThemeService } from './services/theme.service';
 import { LanguageService } from '@moryx/ngx-web-framework/services';
 import { TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from './translation-constants';

@@ -7,7 +7,11 @@
     "FULL_MODE": "完整",
     "TOP_REGION": "顶部面板",
     "RIGHT_REGION": "右侧面板",
-    "SPOTLIGHT": "聚焦"
+    "SPOTLIGHT": "聚焦",
+    "THEME": "主题",
+    "THEME_LIGHT": "浅色",
+    "THEME_DARK": "深色",
+    "THEME_SYSTEM": "系统"
   },
   "LANGUAGE": {
     "LANGUAGE": "语言"

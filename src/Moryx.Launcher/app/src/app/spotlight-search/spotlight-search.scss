@@ -10,7 +10,7 @@
 .backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);
+  background: color-mix(in srgb, var(--mat-sys-scrim) 45%, transparent);
   backdrop-filter: blur(4px);
   pointer-events: all;
 }

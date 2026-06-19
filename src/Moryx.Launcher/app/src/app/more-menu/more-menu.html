@@ -7,6 +7,10 @@
     <mat-icon>visibility</mat-icon>
     <span>{{ TranslationConstants.MORE.VIEWS  | translate }}</span>
   </button>
+  <button mat-menu-item [matMenuTriggerFor]="themeMenu">
+    <mat-icon>palette</mat-icon>
+    <span>{{ TranslationConstants.MORE.THEME  | translate }}</span>
+  </button>
   <mat-divider></mat-divider>
 
   @for (module of modules(); track module.route) {
@@ -75,6 +79,33 @@
       </button>
     }
   }
+</mat-menu>
+
+<mat-menu #themeMenu="matMenu">
+  <button mat-menu-item (click)="setTheme('light')">
+    @if (currentTheme() === 'light') {
+      <mat-icon>check</mat-icon>
+    } @else {
+      <mat-icon></mat-icon>
+    }
+    <span>{{ TranslationConstants.MORE.THEME_LIGHT | translate }}</span>
+  </button>
+  <button mat-menu-item (click)="setTheme('dark')">
+    @if (currentTheme() === 'dark') {
+      <mat-icon>check</mat-icon>
+    } @else {
+      <mat-icon></mat-icon>
+    }
+    <span>{{ TranslationConstants.MORE.THEME_DARK | translate }}</span>
+  </button>
+  <button mat-menu-item (click)="setTheme('system')">
+    @if (currentTheme() === 'system') {
+      <mat-icon>check</mat-icon>
+    } @else {
+      <mat-icon></mat-icon>
+    }
+    <span>{{ TranslationConstants.MORE.THEME_SYSTEM | translate }}</span>
+  </button>
 </mat-menu>
 
 <mat-menu #languageMenu="matMenu">

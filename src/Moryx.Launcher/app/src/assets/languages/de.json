@@ -7,7 +7,11 @@
     "FULL_MODE": "Vollständig",
     "TOP_REGION": "Oberes Panel",
     "RIGHT_REGION": "Rechtes Panel",
-    "SPOTLIGHT": "Spotlight"
+    "SPOTLIGHT": "Spotlight",
+    "THEME": "Darstellung",
+    "THEME_LIGHT": "Hell",
+    "THEME_DARK": "Dunkel",
+    "THEME_SYSTEM": "System"
   },
   "LANGUAGE": {
     "LANGUAGE": "Sprache"

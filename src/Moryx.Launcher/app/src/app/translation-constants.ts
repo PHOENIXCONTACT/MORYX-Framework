@@ -21,6 +21,10 @@ export class TranslationConstants {
     TOP_REGION: 'MORE.TOP_REGION',
     RIGHT_REGION: 'MORE.RIGHT_REGION',
     SPOTLIGHT: 'MORE.SPOTLIGHT',
+    THEME: 'MORE.THEME',
+    THEME_LIGHT: 'MORE.THEME_LIGHT',
+    THEME_DARK: 'MORE.THEME_DARK',
+    THEME_SYSTEM: 'MORE.THEME_SYSTEM',
   }
 
   public static readonly SEARCH = {

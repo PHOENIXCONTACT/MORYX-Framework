@@ -14,6 +14,7 @@ import { AboutDialog } from '../about-dialog/about-dialog';
 import { ModuleService } from '../services/module.service';
 import { CultureService } from '../services/culture.service';
 import { SearchService } from '../services/search.service';
+import { ThemeMode, ThemeService } from '../services/theme.service';
 import { TranslationConstants } from '../translation-constants';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -28,8 +29,10 @@ export class MoreMenu {
   private cultureService = inject(CultureService);
   private launcherStateService = inject(LauncherStateService);
   private searchService = inject(SearchService);
+  private themeService = inject(ThemeService);
 
   TranslationConstants = TranslationConstants;
+  currentTheme = this.themeService.mode;
 
   currentLayout = this.launcherStateService.layout;
   topRegionAvailable = this.launcherStateService.topRegionAvailable;
@@ -64,6 +67,10 @@ export class MoreMenu {
 
   openSpotlight(): void {
     this.searchService.open();
+  }
+
+  setTheme(mode: ThemeMode): void {
+    this.themeService.setMode(mode);
   }
 
   selectCulture = this.cultureService.selectCulture.bind(this.cultureService);

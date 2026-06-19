@@ -12,7 +12,7 @@
   flex: 1;
   min-width: 0;
   overflow: hidden;
-  background: white;
+  background: var(--mat-sys-surface);
 }
 
 .logo-host {
@@ -28,13 +28,13 @@
 
 mat-sidenav {
   overflow: visible;
-  border-right: 1px solid rgba(0, 0, 0, 0.1);
-  filter: drop-shadow(1px 0 2px rgba(0, 0, 0, 0.06));
+  border-right: 1px solid var(--mat-sys-outline-variant);
+  filter: drop-shadow(1px 0 2px color-mix(in srgb, var(--mat-sys-shadow) 6%, transparent));
 }
 
 mat-sidenav-container {
   flex: 1;
-  --mat-sidenav-container-background-color: white;
+  --mat-sidenav-container-background-color: var(--mat-sys-surface);
   --mat-sidenav-container-shape: 0;
 }
 
@@ -44,9 +44,10 @@ mat-sidenav-content {
 }
 
 mat-toolbar {
-  --mat-toolbar-container-background-color: white;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.06), 0 1px 1px -1px rgba(0, 0, 0, 0.06);
+  --mat-toolbar-container-background-color: var(--mat-sys-surface);
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  box-shadow: 0 1px 2px 0 color-mix(in srgb, var(--mat-sys-shadow) 6%, transparent),
+              0 1px 1px -1px color-mix(in srgb, var(--mat-sys-shadow) 6%, transparent);
   position: relative;
   z-index: 2;
 }

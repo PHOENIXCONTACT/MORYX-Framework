@@ -7,7 +7,11 @@
     "FULL_MODE": "Completo",
     "TOP_REGION": "Pannello superiore",
     "RIGHT_REGION": "Pannello destro",
-    "SPOTLIGHT": "Spotlight"
+    "SPOTLIGHT": "Spotlight",
+    "THEME": "Tema",
+    "THEME_LIGHT": "Chiaro",
+    "THEME_DARK": "Scuro",
+    "THEME_SYSTEM": "Sistema"
   },
   "LANGUAGE": {
     "LANGUAGE": "Lingua"
