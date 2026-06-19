@@ -52,8 +52,14 @@ a[mat-list-item] {
     transition: background 0.2s ease;
   }
 
+  &.active {
+    color: $primary;
+    --mat-list-list-item-label-text-color: #{$primary};
+    --mat-list-list-item-leading-icon-color: #{$primary};
+  }
+
   &.active::after {
-    background: green;
+    background: $primary;
   }
 }
 

@@ -1,7 +1,7 @@
 <mat-nav-list>
   @for (moduleItem of modules(); track moduleItem.route) {
     <div class="nav-item-wrapper">
-      <a mat-list-item [href]="moduleItem.route" [title]="moduleItem.description">
+      <a mat-list-item [href]="moduleItem.route" [title]="moduleItem.description" [class.active]="moduleItem.route === activeRoute()">
         <mat-icon matListItemIcon>{{ moduleItem.icon }}</mat-icon>
         @if (!collapsed()) {
           <span matListItemTitle>{{ moduleItem.title }}</span>

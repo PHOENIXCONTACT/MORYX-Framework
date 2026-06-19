@@ -25,6 +25,7 @@ export class HorizontalModuleNav {
   private moduleService = inject(ModuleService);
 
   modules = this.moduleService.userModules;
+  activeRoute = this.moduleService.activeRoute;
 
   private navEl = viewChild.required<ElementRef<HTMLElement>>('navEl');
   private destroyRef = inject(DestroyRef);

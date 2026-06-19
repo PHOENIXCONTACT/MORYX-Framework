@@ -24,4 +24,23 @@ export class ModuleService {
       .filter(m => m.category !== ModuleCategory.User)
       .sort((a, b) => a.sortIndex - b.sortIndex)
   );
+
+  activeRoute = computed(() => {
+    const pathname = window.location.pathname;
+    let best: string | null = null;
+    for (const module of this.modules()) {
+      const route = module.route;
+      const idx = pathname.indexOf(route);
+      if (idx < 0) {
+        continue;
+      }
+      const afterChar = pathname[idx + route.length];
+      if (afterChar === undefined || afterChar === '/' || afterChar === '?') {
+        if (!best || route.length > best.length) {
+          best = route;
+        }
+      }
+    }
+    return best;
+  });
 }

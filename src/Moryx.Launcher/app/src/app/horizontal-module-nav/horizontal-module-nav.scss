@@ -32,6 +32,10 @@ nav {
     background: rgba($primary, 0.3);
     color: $primary;
   }
+
+  &.active {
+    color: $primary;
+  }
 }
 
 .icon-wrapper {
@@ -106,6 +110,11 @@ button.nav-item {
 
   &:hover {
     background: rgba(0, 0, 0, 0.05);
+  }
+
+  &.active {
+    border-color: $primary;
+    color: $primary;
   }
 
   mat-icon, .material-icons {

@@ -24,6 +24,7 @@ export class VerticalModuleNav {
   private moduleService = inject(ModuleService);
 
   modules = this.moduleService.userModules;
+  activeRoute = this.moduleService.activeRoute;
   collapsed = input(false);
 
   asWeb(item: WebModuleItem | ExternalModuleItem): WebModuleItem | null {

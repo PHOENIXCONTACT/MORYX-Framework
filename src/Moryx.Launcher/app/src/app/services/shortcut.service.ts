@@ -28,7 +28,9 @@ export class ShortcutService {
     this.bindings.push(binding);
     destroyRef.onDestroy(() => {
       const index = this.bindings.indexOf(binding);
-      if (index >= 0) this.bindings.splice(index, 1);
+      if (index >= 0) {
+        this.bindings.splice(index, 1);
+      }
     });
   }
 
@@ -38,12 +40,8 @@ export class ShortcutService {
     for (const binding of this.bindings) {
       const keyMatch = event.key.toLowerCase() === binding.key.toLowerCase()
         || event.code.toLowerCase() === binding.key.toLowerCase();
-      if (
-        keyMatch &&
-        ctrl === !!binding.ctrl &&
-        event.shiftKey === !!binding.shift &&
-        event.altKey === !!binding.alt
-      ) {
+      if (keyMatch && ctrl === !!binding.ctrl && event.shiftKey === !!binding.shift
+        && event.altKey === !!binding.alt) {
         event.preventDefault();
         binding.action();
         return;
