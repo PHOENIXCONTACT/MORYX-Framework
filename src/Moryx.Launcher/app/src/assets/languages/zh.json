@@ -36,6 +36,11 @@
     "LABEL_TARGET_FRAMEWORK": "目标框架",
     "LABEL_MACHINE_NAME": "机器名称",
     "LABEL_OS": "操作系统",
-    "LABEL_UPTIME": "运行时间"
+    "LABEL_UPTIME": "运行时间",
+    "SHORTCUTS": "快捷键",
+    "SHORTCUT_SPOTLIGHT": "聚焦",
+    "SHORTCUT_FULL_MODE": "完整布局",
+    "SHORTCUT_OPERATOR_MODE": "操作员布局",
+    "SHORTCUT_FULLSCREEN_MODE": "全屏布局"
   }
 }

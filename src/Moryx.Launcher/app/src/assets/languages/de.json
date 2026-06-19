@@ -36,6 +36,11 @@
     "LABEL_TARGET_FRAMEWORK": "Zielframework",
     "LABEL_MACHINE_NAME": "Gerätename",
     "LABEL_OS": "Betriebssystem",
-    "LABEL_UPTIME": "Betriebszeit"
+    "LABEL_UPTIME": "Betriebszeit",
+    "SHORTCUTS": "Tastenkürzel",
+    "SHORTCUT_SPOTLIGHT": "Spotlight",
+    "SHORTCUT_FULL_MODE": "Vollständiges Layout",
+    "SHORTCUT_OPERATOR_MODE": "Bediener-Layout",
+    "SHORTCUT_FULLSCREEN_MODE": "Vollbild-Layout"
   }
 }

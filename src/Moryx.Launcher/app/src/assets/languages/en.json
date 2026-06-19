@@ -36,6 +36,11 @@
     "LABEL_TARGET_FRAMEWORK": "Target Framework",
     "LABEL_MACHINE_NAME": "Machine Name",
     "LABEL_OS": "OS",
-    "LABEL_UPTIME": "Uptime"
+    "LABEL_UPTIME": "Uptime",
+    "SHORTCUTS": "Shortcuts",
+    "SHORTCUT_SPOTLIGHT": "Spotlight",
+    "SHORTCUT_FULL_MODE": "Full Layout",
+    "SHORTCUT_OPERATOR_MODE": "Operator Layout",
+    "SHORTCUT_FULLSCREEN_MODE": "Fullscreen Layout"
   }
 }

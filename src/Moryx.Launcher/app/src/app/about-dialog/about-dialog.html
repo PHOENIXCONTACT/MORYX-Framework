@@ -26,6 +26,16 @@
       </div>
     }
   </dl>
+
+  <h3 class="section-title">{{ TranslationConstants.ABOUT.SHORTCUTS | translate }}</h3>
+  <dl>
+    @for (shortcut of shortcuts; track shortcut.label) {
+      <div class="entry">
+        <dt>{{ shortcut.label | translate }}</dt>
+        <dd><kbd>{{ isMac ? shortcut.keys.mac : shortcut.keys.other }}</kbd></dd>
+      </div>
+    }
+  </dl>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">

@@ -36,6 +36,11 @@
     "LABEL_TARGET_FRAMEWORK": "Framework di destinazione",
     "LABEL_MACHINE_NAME": "Nome macchina",
     "LABEL_OS": "Sistema operativo",
-    "LABEL_UPTIME": "Tempo di attività"
+    "LABEL_UPTIME": "Tempo di attività",
+    "SHORTCUTS": "Scorciatoie",
+    "SHORTCUT_SPOTLIGHT": "Spotlight",
+    "SHORTCUT_FULL_MODE": "Layout completo",
+    "SHORTCUT_OPERATOR_MODE": "Layout operatore",
+    "SHORTCUT_FULLSCREEN_MODE": "Layout schermo intero"
   }
 }
