@@ -50,7 +50,7 @@ internal sealed class ActivityDispatcher : IActivityPoolListener, IActivityDispa
     private readonly List<ICell> _cells = new();
 
     /// <summary>
-    /// Sessions that were reported during ControlSystemSync or as RTW.Push but could not yet be processed
+    /// Sessions that were reported during ProcessEngineAttached or as RTW.Push but could not yet be processed
     /// </summary>
     private List<ResourceAndSession> _reportedSessions;
 

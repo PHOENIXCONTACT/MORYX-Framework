@@ -1,6 +1,9 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Runtime.CompilerServices;
+using Moryx.Serialization;
+
 namespace Moryx.AbstractionLayer.Constraints;
 
 /// <summary>
@@ -11,28 +14,28 @@ public static class ExpressionConstraint
     /// <summary>
     /// Create a constraint that checks if an expression equals the compare value
     /// </summary>
-    public static IConstraint Equals<TContext>(Func<TContext, object> expression, object compareValue)
+    public static IConstraint Equals<TContext>(Func<TContext, object> expression, object compareValue, [CallerArgumentExpression(nameof(expression))] string expressionString = null)
         where TContext : class, IConstraintContext
     {
-        return new ExpressionEqualsConstraint<TContext>(expression, compareValue);
+        return new ExpressionEqualsConstraint<TContext>(expression, compareValue, expressionString);
     }
 
     /// <summary>
     /// Create a constraint, that checks if an expression is less or equal to the return value
     /// </summary>
-    public static IConstraint LessOrEqual<TContext>(Func<TContext, IComparable> expression, IComparable compareValue)
+    public static IConstraint LessOrEqual<TContext>(Func<TContext, IComparable> expression, IComparable compareValue, [CallerArgumentExpression(nameof(expression))] string expressionString = null)
         where TContext : class, IConstraintContext
     {
-        return new ExpressionLessConstraint<TContext>(expression, compareValue);
+        return new ExpressionLessConstraint<TContext>(expression, compareValue, expressionString);
     }
 
     /// <summary>
     /// Create a constraint, that checks if an expression is greater or equal to the return value
     /// </summary>
-    public static IConstraint GreaterOrEqual<TContext>(Func<TContext, IComparable> expression, IComparable compareValue)
+    public static IConstraint GreaterOrEqual<TContext>(Func<TContext, IComparable> expression, IComparable compareValue, [CallerArgumentExpression(nameof(expression))] string expressionString = null)
         where TContext : class, IConstraintContext
     {
-        return new ExpressionGreaterConstraint<TContext>(expression, compareValue);
+        return new ExpressionGreaterConstraint<TContext>(expression, compareValue, expressionString);
     }
 
     /// <summary>
@@ -45,7 +48,7 @@ public static class ExpressionConstraint
         /// <summary>
         /// Value the expressions return value is compared to
         /// </summary>
-        protected object Value { get; }
+        public object Value { get; }
 
         /// <summary>
         /// Expression to retrieve the value
@@ -53,12 +56,18 @@ public static class ExpressionConstraint
         protected Func<TContext, object> Expression { get; }
 
         /// <summary>
+        /// String used for showing the expression to the user
+        /// </summary>
+        public string ExpressionString { get; }
+
+        /// <summary>
         /// Create a new expression constraint
         /// </summary>
-        protected ExpressionConstraintBase(Func<TContext, object> expression, object value)
+        protected ExpressionConstraintBase(Func<TContext, object> expression, object value, string expressionString)
         {
             Expression = expression;
             Value = value;
+            ExpressionString = expressionString;
         }
 
         /// <summary>
@@ -74,6 +83,13 @@ public static class ExpressionConstraint
         /// Typed constraint check
         /// </summary>
         protected abstract bool CheckConstraint(TContext context);
+
+        protected abstract string OperatorString { get; }
+
+        public override string ToString()
+        {
+            return $"{ExpressionString} {OperatorString} {Value}";
+        }
     }
 
     /// <summary>
@@ -82,9 +98,12 @@ public static class ExpressionConstraint
     private class ExpressionEqualsConstraint<TContext> : ExpressionConstraintBase<TContext>
         where TContext : class, IConstraintContext
     {
-        public ExpressionEqualsConstraint(Func<TContext, object> expression, object value) : base(expression, value)
+
+        public ExpressionEqualsConstraint(Func<TContext, object> expression, object value, string expressionString) : base(expression, value, expressionString)
         {
         }
+
+        protected override string OperatorString => "=";
 
         protected override bool CheckConstraint(TContext context)
         {
@@ -98,9 +117,11 @@ public static class ExpressionConstraint
     private class ExpressionLessConstraint<TContext> : ExpressionConstraintBase<TContext>
         where TContext : class, IConstraintContext
     {
-        public ExpressionLessConstraint(Func<TContext, object> expression, object value) : base(expression, value)
+        public ExpressionLessConstraint(Func<TContext, object> expression, object value, string expressionString) : base(expression, value, expressionString)
         {
         }
+
+        protected override string OperatorString => "<=";
 
         protected override bool CheckConstraint(TContext context)
         {
@@ -116,9 +137,11 @@ public static class ExpressionConstraint
     private class ExpressionGreaterConstraint<TContext> : ExpressionConstraintBase<TContext>
         where TContext : class, IConstraintContext
     {
-        public ExpressionGreaterConstraint(Func<TContext, object> expression, object value) : base(expression, value)
+        public ExpressionGreaterConstraint(Func<TContext, object> expression, object value, string expressionString) : base(expression, value, expressionString)
         {
         }
+
+        protected override string OperatorString => ">=";
 
         protected override bool CheckConstraint(TContext context)
         {

@@ -13,7 +13,10 @@ namespace Moryx.Runtime.Kernel;
 public class ConfigManager : IConfigManager, IEmptyPropertyProvider
 {
     private readonly ConfigLiveUpdater _liveUpdater = new();
-    private readonly SharedConfigProvider _sharedProvider;
+
+    // TODO: Remove SharedConfigProvider on Future branch
+    internal readonly SharedConfigProvider _sharedProvider;
+    private IValueProvider[] _valueProviders;
 
     /// <summary>
     /// Extension of the config files used in the MORYX
@@ -26,17 +29,23 @@ public class ConfigManager : IConfigManager, IEmptyPropertyProvider
     public ConfigManager()
     {
         _sharedProvider = new SharedConfigProvider(this);
+        _valueProviders = [
+            _sharedProvider,
+            new DefaultValueAttributeProvider(),
+            new ActivatorValueProvider(),
+        ];
     }
 
     /// <summary>
     /// Override ValueProviders to include shared config provider
     /// </summary>
-    protected IValueProvider[] ValueProviders =>
-    [
-        _sharedProvider,
-        new DefaultValueAttributeProvider(),
-        new ActivatorValueProvider()
-    ];
+    protected IValueProvider[] ValueProviders => _valueProviders;
+
+    internal ConfigManager ConfigureValueProviders(Func<IValueProvider[], IValueProvider[]> configure)
+    {
+        _valueProviders = configure(ValueProviders);
+        return this;
+    }
 
     /// <summary>
     /// Directory used to read and write config files
@@ -63,12 +72,16 @@ public class ConfigManager : IConfigManager, IEmptyPropertyProvider
     public ConfigBase GetConfiguration(Type configType, string name, bool getCopy)
     {
         if (getCopy)
+        {
             return TryGetFromDirectory(configType, name);
+        }
 
         lock (ConfigCache)
         {
-            if (ConfigCache.ContainsKey(name) && ConfigCache[name].GetType().Equals(configType))
-                return ConfigCache[name];
+            if (ConfigCache.TryGetValue(name, out var value) && value.GetType().Equals(configType))
+            {
+                return value;
+            }
 
             ConfigCache[name] = TryGetFromDirectory(configType, name);
 
@@ -90,9 +103,9 @@ public class ConfigManager : IConfigManager, IEmptyPropertyProvider
 
         lock (ConfigCache)
         {
-            if (liveUpdate && ConfigCache.ContainsKey(name) && typeof(IUpdatableConfig).IsAssignableFrom(configType))
+            if (liveUpdate && ConfigCache.TryGetValue(name, out var value) && typeof(IUpdatableConfig).IsAssignableFrom(configType))
             {
-                _liveUpdater.UpdateLive(configType, ConfigCache[name], configuration);
+                _liveUpdater.UpdateLive(configType, value, configuration);
             }
             else
             {
