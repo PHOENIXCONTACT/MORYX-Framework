@@ -6,7 +6,8 @@
     "OPERATOR_MODE": "Bediener",
     "FULL_MODE": "Vollständig",
     "TOP_REGION": "Oberes Panel",
-    "RIGHT_REGION": "Rechtes Panel"
+    "RIGHT_REGION": "Rechtes Panel",
+    "SPOTLIGHT": "Spotlight"
   },
   "LANGUAGE": {
     "LANGUAGE": "Sprache"

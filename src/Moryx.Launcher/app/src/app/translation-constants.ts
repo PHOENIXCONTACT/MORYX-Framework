@@ -20,6 +20,7 @@ export class TranslationConstants {
     FULL_MODE: 'MORE.FULL_MODE',
     TOP_REGION: 'MORE.TOP_REGION',
     RIGHT_REGION: 'MORE.RIGHT_REGION',
+    SPOTLIGHT: 'MORE.SPOTLIGHT',
   }
 
   public static readonly SEARCH = {

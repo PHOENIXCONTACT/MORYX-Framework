@@ -17,6 +17,10 @@
   }
 
   <mat-divider></mat-divider>
+  <button mat-menu-item (click)="openSpotlight()">
+    <mat-icon>search</mat-icon>
+    <span>{{ TranslationConstants.MORE.SPOTLIGHT | translate }}</span>
+  </button>
   <button mat-menu-item (click)="openAbout()">
     <mat-icon>info_outline</mat-icon>
     <span>{{ TranslationConstants.MORE.ABOUT  | translate }}</span>

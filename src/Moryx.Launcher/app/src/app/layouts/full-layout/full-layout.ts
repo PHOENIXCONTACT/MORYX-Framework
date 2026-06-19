@@ -14,7 +14,7 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { AuthButton } from '../../auth-button/auth-button';
 import { AuthService } from '../../services/auth.service';
 import { environment } from '../../../environments/environment';
-import { SearchService } from '../../services/search.service';
+import { ToolbarSearch } from '../../toolbar-search/toolbar-search';
 import { LayoutBase } from '../layout-base';
 
 @Component({
@@ -27,22 +27,18 @@ import { LayoutBase } from '../layout-base';
     MatSidenavModule,
     MoreMenu,
     MatMenuTrigger,
-    AuthButton
+    AuthButton,
+    ToolbarSearch
   ],
   templateUrl: './full-layout.html',
   styleUrl: './full-layout.scss'
 })
 export class FullLayout extends LayoutBase {
   private authService = inject(AuthService);
-  private searchService = inject(SearchService);
   environment = environment;
 
   navCollapsed = this.launcherStateService.navCollapsed;
   authConfigured = this.authService.authConfigured;
-
-  openSearch(): void {
-    this.searchService.open();
-  }
 
   toggleNav() {
     this.launcherStateService.updateNavCollapsed(!this.navCollapsed());

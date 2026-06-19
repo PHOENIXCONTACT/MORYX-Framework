@@ -12,12 +12,10 @@
       <div class="toolbar-spacer"></div>
       <slot name="topRegion" (slotchange)="onTopRegionSlotChange($event)" hidden></slot>
     }
+    <app-toolbar-search></app-toolbar-search>
     @if (authConfigured()) {
       <app-auth-button></app-auth-button>
     }
-    <button mat-icon-button aria-label="Search" (click)="openSearch()">
-      <mat-icon>search</mat-icon>
-    </button>
     <button mat-icon-button aria-label="More options" [matMenuTriggerFor]="moreMenu.appMenu">
       <mat-icon>more_vert</mat-icon>
     </button>

@@ -3,10 +3,10 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, effect, inject, input, ViewEncapsulation } from '@angular/core';
+import { Component, DestroyRef, effect, inject, input, ViewEncapsulation } from '@angular/core';
 import { WebModuleItem } from './models/web-module-item';
 import { FullLayout } from './layouts/full-layout/full-layout';
-import { LauncherStateService } from './services/launcher-state.service';
+import { LauncherLayout, LauncherStateService } from './services/launcher-state.service';
 import { ExternalModuleItem } from './models/external-module-item';
 import { CultureModel } from './models/culture-model';
 import { OperatorLayout } from './layouts/operator-layout/operator-layout';
@@ -14,6 +14,7 @@ import { FullscreenLayout } from './layouts/fullscreen-layout/fullscreen-layout'
 import { ModuleService } from './services/module.service';
 import { CultureService } from './services/culture.service';
 import { AuthService } from './services/auth.service';
+import { ShortcutService } from './services/shortcut.service';
 import { LanguageService } from '@moryx/ngx-web-framework/services';
 import { TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from './translation-constants';
@@ -40,14 +41,29 @@ export class App {
   private moduleService = inject(ModuleService);
   private cultureService = inject(CultureService);
   private authService = inject(AuthService);
+  private shortcutService = inject(ShortcutService);
   private languageService = inject(LanguageService);
   private translateService = inject(TranslateService);
   private searchService = inject(SearchService);
+  private destroyRef = inject(DestroyRef);
 
   layout = this.launcherStateService.layout;
 
   constructor() {
     window.shell = new MoryxLauncherShell(this.cultureService, this.searchService);
+
+    this.shortcutService.register(
+      { key: 'Digit1', ctrl: true, alt: true, action: () => this.launcherStateService.updateLayout(LauncherLayout.Full) },
+      this.destroyRef
+    );
+    this.shortcutService.register(
+      { key: 'Digit2', ctrl: true, alt: true, action: () => this.launcherStateService.updateLayout(LauncherLayout.Operator) },
+      this.destroyRef
+    );
+    this.shortcutService.register(
+      { key: 'Digit3', ctrl: true, alt: true, action: () => this.launcherStateService.updateLayout(LauncherLayout.Fullscreen) },
+      this.destroyRef
+    );
 
     effect(() => {
       this.moduleService.modules.set([...this.webModuleItems(), ...this.externalModuleItems()]);

@@ -3,11 +3,12 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, effect, ElementRef, inject, signal, ViewChild } from '@angular/core';
+import { Component, DestroyRef, effect, ElementRef, inject, signal, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { SearchService } from '../services/search.service';
+import { ShortcutService } from '../services/shortcut.service';
 import { SearchSuggestion } from '@moryx/ngx-web-framework/services';
 import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '../translation-constants';
@@ -38,6 +39,11 @@ export class SpotlightSearch {
   disableSearchBox = this.searchService.disableSearchBox;
 
   constructor() {
+    const shortcutService = inject(ShortcutService);
+    const destroyRef = inject(DestroyRef);
+
+    shortcutService.register({ key: 'k', ctrl: true, action: () => this.open() }, destroyRef);
+
     effect(() => {
       if (this.isOpen()) {
         this.query.set('');
@@ -48,18 +54,13 @@ export class SpotlightSearch {
   }
 
   onKeyDown(event: KeyboardEvent): void {
-    if ((event.metaKey || event.ctrlKey) && event.key === 'k') {
-      event.preventDefault();
-      this.open();
-      return;
-    }
-
     if (!this.isOpen()) {
       return;
     }
 
     switch (event.key) {
       case 'Escape':
+        event.preventDefault();
         this.close();
         break;
       case 'ArrowDown':

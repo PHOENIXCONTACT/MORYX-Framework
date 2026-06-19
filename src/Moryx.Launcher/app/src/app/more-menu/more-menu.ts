@@ -13,6 +13,7 @@ import { LauncherLayout, LauncherStateService } from '../services/launcher-state
 import { AboutDialog } from '../about-dialog/about-dialog';
 import { ModuleService } from '../services/module.service';
 import { CultureService } from '../services/culture.service';
+import { SearchService } from '../services/search.service';
 import { TranslationConstants } from '../translation-constants';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -26,6 +27,7 @@ export class MoreMenu {
   private moduleService = inject(ModuleService);
   private cultureService = inject(CultureService);
   private launcherStateService = inject(LauncherStateService);
+  private searchService = inject(SearchService);
 
   TranslationConstants = TranslationConstants;
 
@@ -58,6 +60,10 @@ export class MoreMenu {
 
   toggleRightRegion(): void {
     this.launcherStateService.updateRightRegionEnabled(!this.rightRegionEnabled());
+  }
+
+  openSpotlight(): void {
+    this.searchService.open();
   }
 
   selectCulture = this.cultureService.selectCulture.bind(this.cultureService);

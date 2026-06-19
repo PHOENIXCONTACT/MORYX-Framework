@@ -6,7 +6,8 @@
     "OPERATOR_MODE": "Operatore",
     "FULL_MODE": "Completo",
     "TOP_REGION": "Pannello superiore",
-    "RIGHT_REGION": "Pannello destro"
+    "RIGHT_REGION": "Pannello destro",
+    "SPOTLIGHT": "Spotlight"
   },
   "LANGUAGE": {
     "LANGUAGE": "Lingua"

@@ -6,7 +6,8 @@
     "OPERATOR_MODE": "操作员",
     "FULL_MODE": "完整",
     "TOP_REGION": "顶部面板",
-    "RIGHT_REGION": "右侧面板"
+    "RIGHT_REGION": "右侧面板",
+    "SPOTLIGHT": "聚焦"
   },
   "LANGUAGE": {
     "LANGUAGE": "语言"

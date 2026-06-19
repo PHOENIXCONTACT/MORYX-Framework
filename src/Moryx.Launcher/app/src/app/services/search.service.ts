@@ -37,6 +37,7 @@ export class SearchService {
 
   /** Opens the spotlight search overlay. */
   open(): void {
+    this.clearSuggestions();
     this.isOpen.set(true);
   }
 
