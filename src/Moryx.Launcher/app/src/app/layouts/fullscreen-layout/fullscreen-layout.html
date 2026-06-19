@@ -1,11 +1,14 @@
 <div class="main-area">
-  @if (showTopRegion()) {
-    <div class="top-region">
+  <div class="top-bar">
+    <button mat-icon-button aria-label="Exit fullscreen" (click)="exitFullscreen()">
+      <mat-icon>fullscreen_exit</mat-icon>
+    </button>
+    @if (showTopRegion()) {
       <slot name="topRegion" (slotchange)="onTopRegionSlotChange($event)"></slot>
-    </div>
-  } @else {
-    <slot name="topRegion" (slotchange)="onTopRegionSlotChange($event)" hidden></slot>
-  }
+    } @else {
+      <slot name="topRegion" (slotchange)="onTopRegionSlotChange($event)" hidden></slot>
+    }
+  </div>
 
   <div class="content">
     <slot name="app"></slot>

@@ -4,12 +4,14 @@
 */
 
 import { Component, HostListener } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { LauncherLayout } from '../../services/launcher-state.service';
 import { LayoutBase } from '../layout-base';
 
 @Component({
   selector: 'app-fullscreen-layout',
-  imports: [],
+  imports: [MatButtonModule, MatIconModule],
   templateUrl: './fullscreen-layout.html',
   styleUrl: './fullscreen-layout.scss',
 })
