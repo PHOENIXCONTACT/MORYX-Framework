@@ -4,9 +4,19 @@
 */
 
 import { CommonModule } from '@angular/common';
-import { Component, computed, ElementRef, HostListener, input, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  computed,
+  DestroyRef,
+  effect,
+  ElementRef,
+  inject,
+  input,
+  signal,
+  ChangeDetectionStrategy,
+  OnInit
+} from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-
 
 export type Severity = 'Info' | 'Warning' | 'Error' | 'Fatal';
 
@@ -23,19 +33,21 @@ export interface Notification {
   styleUrl: './notifications-bar.scss',
   changeDetection: ChangeDetectionStrategy.Eager,
   host: {
-    '[style.--severity-background-color]': 'getSeverityBackgroundColor(currentNotification()?.severity, errorAvailable())'
+    '[style.--severity-background-color]': 'getSeverityBackgroundColor(currentNotification()?.severity, errorAvailable())',
+    '(window:beforeunload)': 'clearAll()'
   }
 })
-export class NotificationsBar implements OnInit, OnDestroy {
-  url = input('notifications');
+export class NotificationsBar {
+  private destroyRef = inject(DestroyRef);
+  url = input('Notifications');
   api = input('/api/moryx/notifications/stream');
-  eventSource: EventSource | null = null;
+  private eventSource: EventSource | undefined;
 
-  notifications = signal<Array<Notification>|undefined>(undefined);
+  notifications = signal<Array<Notification> | undefined>(undefined);
   notificationIndex = signal<number>(0);
   errorAvailable = signal<boolean>(false);
 
-  currentNotification = computed<Notification|undefined|null>(() => {
+  currentNotification = computed<Notification | undefined | null>(() => {
     const notifications = this.notifications();
 
     if (notifications === undefined)
@@ -47,7 +59,7 @@ export class NotificationsBar implements OnInit, OnDestroy {
     return notifications[this.notificationIndex()];
   });
 
-  private intervalId: number|undefined = undefined;
+  private intervalId: number | undefined = undefined;
 
   private severityRank: Record<Severity, number> = {
     Info: 0,
@@ -56,21 +68,30 @@ export class NotificationsBar implements OnInit, OnDestroy {
     Fatal: 3
   };
 
-  constructor(private elementRef: ElementRef) {}
+  constructor(private elementRef: ElementRef) {
+    effect((onCleanup) => {
+      const url = this.api();
+      if (!url) {
+        return;
+      }
 
-  ngOnInit(): void {
-    if (!this.api()) {
-      return;
-    }
+      this.eventSource = new EventSource(url);
+      this.eventSource.onmessage = (e) => this.onMessageReceived(e);
+      this.eventSource.onerror = (e) => this.onErrorReceived(e);
 
-    // listen to notification stream
-    this.connect();
+      onCleanup(() => {
+        this.clearAll();
+      });
+    });
+
+    this.destroyRef.onDestroy(() => {
+      this.clearAll()
+    });
   }
 
-  private connect() {
-    this.eventSource = new EventSource(this.api());
-    this.eventSource.onmessage = this.onMessageReceived.bind(this);
-    this.eventSource.onerror =  this.onErrorReceived.bind(this);
+  clearAll() {
+    this.clearEventSource();
+    this.clearInterval();
   }
 
   private onMessageReceived(event: any) {
@@ -83,7 +104,7 @@ export class NotificationsBar implements OnInit, OnDestroy {
     });
 
     if (data.length > 0) {
-      // Reduce to highest severity only
+      // Reduce to the highest severity only
       const firstSeverity = data[0].severity;
       const dataSplit = data.findIndex(x => x.severity !== firstSeverity);
       const reducedData = dataSplit === -1 ? data : data.slice(0, dataSplit);
@@ -92,8 +113,7 @@ export class NotificationsBar implements OnInit, OnDestroy {
       this.notifications.set(reducedData);
 
       this.updateInterval();
-    }
-    else {
+    } else {
       this.notificationIndex.set(0);
       this.notifications.set([]);
 
@@ -111,22 +131,12 @@ export class NotificationsBar implements OnInit, OnDestroy {
       this.notifications.set([]);
       this.clearInterval();
     }
-
-    if (this.eventSource?.readyState == EventSource.CLOSED) {
-      this.clearEventSource();
-
-      setTimeout(() => {
-        this.connect();
-      }, 3000);
-    }
   }
 
   private clearEventSource() {
-    if (this.eventSource) {
-      this.eventSource.removeEventListener('message', this.onMessageReceived);
-      this.eventSource.removeEventListener('error', this.onErrorReceived);
+    if (this.eventSource !== undefined) {
       this.eventSource.close();
-      this.eventSource = null;
+      this.eventSource = undefined;
     }
   }
 
@@ -153,10 +163,10 @@ export class NotificationsBar implements OnInit, OnDestroy {
   getSeverityBackgroundColor(severity: Severity | undefined | null, errorAvailabe: boolean): string {
     const computedStyle = getComputedStyle(this.elementRef.nativeElement);
 
-     if (errorAvailabe)
+    if (errorAvailabe)
       return computedStyle.getPropertyValue('--color-Info').trim();
 
-     if (severity === undefined || severity === null)
+    if (severity === undefined || severity === null)
       return computedStyle.getPropertyValue('--color-Success').trim();
 
     const color = computedStyle.getPropertyValue('--color-' + severity).trim();
@@ -177,19 +187,5 @@ export class NotificationsBar implements OnInit, OnDestroy {
       default:
         return '';
     }
-  }
-
-  private clearAll() {
-    this.clearEventSource();
-    this.clearInterval();
-  }
-
-  ngOnDestroy(): void {
-    this.clearAll();
-  }
-
-  @HostListener('window:beforeunload')
-  onBeforeUnload() {
-    this.clearAll();
   }
 }

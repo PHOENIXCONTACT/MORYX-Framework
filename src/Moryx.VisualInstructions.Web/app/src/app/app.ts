@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, HostListener, inject, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { LanguageService } from '@moryx/ngx-web-framework/services';
@@ -31,15 +31,19 @@ const COOKIE_NAME = 'moryx-client-identifier';
   imports: [
     WorkerInstructions,
     MatButtonModule
-  ]
+  ],
+  host: {
+    '(window:beforeunload)': 'disconnectEvents()'
+  }
 })
-export class App implements OnInit, OnDestroy {
+export class App implements OnInit {
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
   private translateService = inject(TranslateService);
   private cookieService = inject(CookieService);
   private instructionService = inject(InstructionService);
   private languageService = inject(LanguageService);
+  private destroyRef = inject(DestroyRef);
 
   environment = environment;
   clientIdentifier: string = '';
@@ -59,6 +63,7 @@ export class App implements OnInit, OnDestroy {
     ]);
     this.translateService.setFallbackLang('en');
     this.translateService.use(this.languageService.getFallbackLang());
+    this.destroyRef.onDestroy(() => this.disconnectEvents());
   }
 
   ngOnInit(): void {
@@ -109,12 +114,7 @@ export class App implements OnInit, OnDestroy {
     );
   }
 
-  ngOnDestroy(): void {
-    this.instructionService.disconnect();
-  }
-
-  @HostListener('window:beforeunload')
-  onBeforeUnload() {
+  disconnectEvents(): void {
     this.instructionService.disconnect();
   }
 }

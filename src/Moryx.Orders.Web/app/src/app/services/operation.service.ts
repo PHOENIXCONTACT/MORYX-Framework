@@ -13,7 +13,7 @@ import { OperationAdvicedModel, OperationReportedModel, OperationStartedModel, O
 })
 export class OperationService {
   private apiConfiguration = inject(ApiConfiguration);
-  private eventSource: EventSource | null = null;
+  private eventSource?: EventSource;
 
   public connect(callback: (operationModel: OperationModel) => void) {
     this.eventSource = new EventSource(this.apiConfiguration.rootUrl + '/api/moryx/orders/stream');
@@ -126,7 +126,7 @@ export class OperationService {
   disconnect() {
     if (this.eventSource) {
       this.eventSource.close();
-      this.eventSource = null;
+      this.eventSource = undefined;
     }
   }
 }

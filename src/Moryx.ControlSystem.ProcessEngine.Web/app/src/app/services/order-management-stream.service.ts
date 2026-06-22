@@ -14,7 +14,7 @@ import { OperationModel } from '@api/models/operation-model';
 export class OrderManagementStreamService {
   private config = inject(ApiConfiguration);
 
-  private eventSource: EventSource | null = null;
+  private eventSource?: EventSource;
 
   public connect(operationType: OperationType, callbackFunction: Function) {
     this.eventSource = new EventSource(this.config.rootUrl + '/api/moryx/orders/stream');
@@ -106,7 +106,7 @@ export class OrderManagementStreamService {
   disconnect() {
     if (this.eventSource) {
       this.eventSource.close();
-      this.eventSource = null;
+      this.eventSource = undefined;
     }
   }
 }

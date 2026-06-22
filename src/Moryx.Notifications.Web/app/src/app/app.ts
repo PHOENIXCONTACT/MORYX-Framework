@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, HostListener, inject, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from "@angular/core";
+import { Component, inject, OnInit, signal, ChangeDetectionStrategy, DestroyRef } from "@angular/core";
 import { LanguageService } from "@moryx/ngx-web-framework/services";
 import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
@@ -34,12 +34,16 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
     TranslatePipe,
     MatProgressSpinnerModule,
     EmptyState
-  ]
+  ],
+  host: {
+    '(window:beforeunload)': 'disconnectEvents()'
+  }
 })
-export class App implements OnInit, OnDestroy {
+export class App implements OnInit {
   private languageService = inject(LanguageService);
   private translateService = inject(TranslateService);
   private notificationService = inject(NotificationService);
+  private destroyRef = inject(DestroyRef);
 
   isLoading = signal(true);
   isEmpty = signal(true);
@@ -60,6 +64,7 @@ export class App implements OnInit, OnDestroy {
     ]);
     this.translateService.setFallbackLang("en");
     this.translateService.use(this.languageService.getFallbackLang());
+    this.destroyRef.onDestroy(() => this.disconnectEvents());
   }
 
   ngOnInit(): void {
@@ -76,14 +81,9 @@ export class App implements OnInit, OnDestroy {
       });
   }
 
-  ngOnDestroy(): void {
+  disconnectEvents(): void {
     this.stateSubscription?.unsubscribe();
     this.notificationSubscription?.unsubscribe();
-    this.notificationService.disconnect();
-  }
-
-  @HostListener('window:beforeunload')
-  onBeforeUnload() {
     this.notificationService.disconnect();
   }
 }

@@ -13,7 +13,7 @@ import { ProcessEngineService } from '@api/services';
 })
 export class ProcessHolderStreamService {
   private processEngineService = inject(ProcessEngineService);
-  private eventSource: EventSource | null = null;
+  private eventSource?: EventSource;
 
   $updatedProcessHolderGroups = new BehaviorSubject<ProcessHolderGroupModel | undefined>(undefined);
 
@@ -29,7 +29,7 @@ export class ProcessHolderStreamService {
   disconnect() {
     if (this.eventSource) {
       this.eventSource.close();
-      this.eventSource = null;
+      this.eventSource = undefined;
     }
   }
 }

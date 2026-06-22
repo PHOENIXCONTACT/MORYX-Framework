@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, computed, HostListener, inject, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, computed, inject, OnInit, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
 import { EditMenuService } from './services/edit-menu.service';
 import { EditMenuState } from './services/EditMenutState';
 import { ChangeBackgroundService } from './services/change-background.service';
@@ -29,13 +29,17 @@ import { FactoryStateStreamService } from './services/factory-state-stream.servi
     OrdersContainer,
     CellDetails,
     RouterOutlet
-  ]
+  ],
+  host: {
+    '(window:beforeunload)': 'disconnectEvents()'
+  }
 })
-export class App implements OnInit, OnDestroy {
+export class App implements OnInit {
   private factoryStateStreamService = inject(FactoryStateStreamService);
   private languageService = inject(LanguageService);
   private translateService = inject(TranslateService);
   private cellStoreService = inject(CellStoreService);
+  private destroyRef = inject(DestroyRef);
 
   private editMenuState = toSignal(inject(EditMenuService).activeState$, { initialValue: EditMenuState.Closed });
   private background = toSignal(inject(ChangeBackgroundService).backgroundChanged$);
@@ -53,6 +57,7 @@ export class App implements OnInit, OnDestroy {
     ]);
     this.translateService.setFallbackLang('en');
     this.translateService.use(this.languageService.getFallbackLang());
+    this.destroyRef.onDestroy(() => this.disconnectEvents());
   }
 
   ngOnInit(): void {
@@ -64,12 +69,7 @@ export class App implements OnInit, OnDestroy {
     return output;
   }
 
-  ngOnDestroy(): void {
-    this.factoryStateStreamService.disconnect();
-  }
-
-  @HostListener('window:beforeunload')
-  onBeforeUnload() {
+  disconnectEvents(): void {
     this.factoryStateStreamService.disconnect();
   }
 }

@@ -18,7 +18,7 @@ export class NotificationService {
   private notificationPublisherService = inject(NotificationPublisherService);
   private snackbarService = inject(SnackbarService);
 
-  private eventSource: EventSource | null = null;
+  private eventSource?: EventSource;
   private notificationSubject: BehaviorSubject<NotificationModel[]> = new BehaviorSubject<NotificationModel[]>([]);
   private selectionSubject: BehaviorSubject<string | undefined> = new BehaviorSubject<string | undefined>(undefined)
   private stateSubject: BehaviorSubject<ConnectionState> = new BehaviorSubject<ConnectionState>(ConnectionState.Initializing);
@@ -88,7 +88,7 @@ export class NotificationService {
   disconnect() {
     if (this.eventSource) {
       this.eventSource.close();
-      this.eventSource = null;
+      this.eventSource = undefined;
     }
   }
 }

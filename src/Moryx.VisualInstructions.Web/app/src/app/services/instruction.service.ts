@@ -22,7 +22,7 @@ export class InstructionService {
   private snackbarService = inject(SnackbarService);
   private domSanitizer = inject(DomSanitizer);
 
-  private eventSource: EventSource | null = null;
+  private eventSource?: EventSource;
 
   private _instructions = new BehaviorSubject<InstructionModel[]>([]);
   public instructions$ = this._instructions.asObservable();
@@ -76,7 +76,7 @@ export class InstructionService {
 
     if (this.eventSource) {
       this.eventSource.close();
-      this.eventSource = null;
+      this.eventSource = undefined;
     }
   }
 }

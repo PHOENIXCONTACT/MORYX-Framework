@@ -4,7 +4,7 @@
 */
 
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, inject, OnInit, signal, ChangeDetectorRef, ChangeDetectionStrategy, OnDestroy, HostListener } from "@angular/core";
+import { Component, inject, OnInit, signal, ChangeDetectorRef, ChangeDetectionStrategy, DestroyRef } from "@angular/core";
 import { JobManagementService, OrderManagementService } from "@api/services";
 import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
 import { JobViewModel } from "@app/models/job-view-model";
@@ -43,9 +43,13 @@ import { ProcessEngineStreamService } from "@app/services/process-engine-stream.
     MatButtonModule
   ],
   changeDetection: ChangeDetectionStrategy.Eager,
-  providers: []
+  providers: [],
+  host: {
+    '(window:beforeunload)': 'disconnectEvents()'
+  }
 })
-export class Jobs implements OnInit, OnDestroy {
+export class Jobs implements OnInit {
+  private destroyRef = inject(DestroyRef);
   private jobManagementService = inject(JobManagementService);
   private jobManagementEvents = inject(JobManagementStreamService);
   private orderManagementService = inject(OrderManagementService);
@@ -60,6 +64,10 @@ export class Jobs implements OnInit, OnDestroy {
 
   environment = environment;
   TranslationConstants = TranslationConstants;
+
+  constructor() {
+      this.destroyRef.onDestroy(() => this.disconnectEvents());
+  }
 
   ngOnInit(): void {
     this.fetchJobs();
@@ -158,16 +166,7 @@ export class Jobs implements OnInit, OnDestroy {
     return "";
   }
 
-  ngOnDestroy(): void {
-    this.disconnectEvents();
-  }
-
-  @HostListener('window:beforeunload')
-  onBeforeUnload() {
-    this.disconnectEvents();
-  }
-
-  private disconnectEvents() {
+  disconnectEvents() {
     this.jobManagementEvents.disconnect();
     this.processEngineEvents.disconnect();
     this.orderManagementEvents.disconnect();

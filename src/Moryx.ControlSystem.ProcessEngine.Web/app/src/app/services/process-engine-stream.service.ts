@@ -14,8 +14,8 @@ import { ProcessActivityModel } from '@api/models/process-activity-model';
 })
 export class ProcessEngineStreamService {
   private processEngineService = inject(ProcessEngineService);
-  private processEventSource: EventSource | null = null;
-  private activitiesEventSource: EventSource | null = null;
+  private processEventSource?: EventSource;
+  private activitiesEventSource?: EventSource;
 
   updatedProcess: BehaviorSubject<JobProcessModel | undefined> = new BehaviorSubject<JobProcessModel | undefined>(undefined);
   updatedActivity: BehaviorSubject<ProcessActivityModel | undefined> = new BehaviorSubject<ProcessActivityModel | undefined>(undefined);
@@ -44,12 +44,12 @@ export class ProcessEngineStreamService {
   disconnect() {
     if (this.processEventSource) {
       this.processEventSource.close();
-      this.processEventSource = null;
+      this.processEventSource = undefined;
     }
 
     if (this.activitiesEventSource) {
       this.activitiesEventSource.close();
-      this.activitiesEventSource = null;
+      this.activitiesEventSource = undefined;
     }
   }
 }

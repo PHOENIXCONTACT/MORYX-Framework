@@ -26,7 +26,7 @@ export class FactoryStateStreamService {
   private readonly Activity_Event_Type_Key = "activityChangedModel";
   private readonly Recource_Event_Type_Key = "resourceChangedModel";
 
-  private eventSource: EventSource | null = null;
+  private eventSource?: EventSource;
 
   // ToDo: Only make observable public
   updatedCell: ReplaySubject<CellModel> = new ReplaySubject<CellModel>();
@@ -89,7 +89,7 @@ export class FactoryStateStreamService {
   disconnect() {
     if (this.eventSource) {
       this.eventSource.close();
-      this.eventSource = null;
+      this.eventSource = undefined;
     }
   }
 }

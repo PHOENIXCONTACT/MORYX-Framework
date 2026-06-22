@@ -14,7 +14,7 @@ import { JobModel } from '@api/models/job-model';
 export class JobManagementStreamService {
   private jobManagementService = inject(JobManagementService);
 
-  private eventSource: EventSource | null = null;
+  private eventSource?: EventSource;
   updatedJob: BehaviorSubject<JobModel | undefined> = new BehaviorSubject<JobModel | undefined>(undefined);
 
   connect() {
@@ -37,7 +37,7 @@ export class JobManagementStreamService {
   disconnect() {
     if (this.eventSource) {
       this.eventSource.close();
-      this.eventSource = null;
+      this.eventSource = undefined;
     }
   }
 }
