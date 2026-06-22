@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Component, computed, input } from '@angular/core';
 import { ModuleCategory } from '../models/module-category';
 import { WebModuleItem } from '../models/web-module-item';
