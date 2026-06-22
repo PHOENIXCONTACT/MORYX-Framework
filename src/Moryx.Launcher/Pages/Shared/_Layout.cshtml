@@ -15,7 +15,6 @@
     // Culture
     if (string.IsNullOrWhiteSpace(Context.Request.Cookies[".AspNetCore.Culture"]))
     {
-        var culture = _localizationOptions.CurrentValue.DefaultRequestCulture.Culture;
         Context.Response.Cookies.Append(".AspNetCore.Culture", "c=en-US|uic=en-US");
     }
 
@@ -42,7 +41,7 @@
     <title>@ViewData["Title"]</title>
     <base href="~/@ViewData["BaseRef"]">
     <link rel="stylesheet" href="~/_content/Moryx.Launcher/styles.css"/>
-    <link rel="icon" type="image/x-icon" href="~/_content/Moryx.Launcher/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="~/_content/Moryx.Launcher/assets/favicon.ico">
     @await RenderSectionAsync("Styles", false)
 </head>
 <body>
@@ -71,14 +70,14 @@
         var jsonOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
         jsonOptions.Converters.Add(new JsonStringEnumConverter());
     }
-    const el = document.getElementById('launcher');
+    const launcher = document.getElementById('launcher');
 
-    el.supportedCultures = @Html.Raw(JsonSerializer.Serialize(supportedCultures, jsonOptions));
-    el.webModuleItems = @Html.Raw(JsonSerializer.Serialize(webModuleItems, jsonOptions));
-    el.externalModuleItems = @Html.Raw(JsonSerializer.Serialize(externalModuleItems, jsonOptions));
-        @if (!string.IsNullOrEmpty(_identityOptions.CurrentValue.BaseAddress))
+    launcher.supportedCultures = @Html.Raw(JsonSerializer.Serialize(supportedCultures, jsonOptions));
+    launcher.webModuleItems = @Html.Raw(JsonSerializer.Serialize(webModuleItems, jsonOptions));
+    launcher.externalModuleItems = @Html.Raw(JsonSerializer.Serialize(externalModuleItems, jsonOptions));
+    @if (!string.IsNullOrEmpty(_identityOptions.CurrentValue.BaseAddress))
     {
-        <text>el.authBaseAddress = '@_identityOptions.CurrentValue.BaseAddress';</text>
+        <text>launcher.authBaseAddress = '@_identityOptions.CurrentValue.BaseAddress';</text>
     }
 </script>
 
