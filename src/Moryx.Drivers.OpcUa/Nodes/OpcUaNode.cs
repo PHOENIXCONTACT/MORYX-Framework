@@ -60,7 +60,7 @@ public class OpcUaNode : IMessageChannel
     public string Description { get; set; }
 
     /// <summary>
-    /// List of all Subnodes. This property is null, when the node is no object node
+    /// List of all Subnodes. This list will be empty, when the node is no object node
     /// </summary>
     public List<OpcUaNode> Nodes { get; set; } = [];
 
@@ -128,12 +128,13 @@ public class OpcUaNode : IMessageChannel
     }
 
     /// <inheritdoc />
-    public OpcUaNode(IOpcUaDriver driver, IModuleLogger logger, string identifier, NodeClass nodeClass)
+    [Obsolete("Not needed, as there doesn't seem to be any use for this variant.")]
+    public OpcUaNode(IOpcUaDriver driver, IModuleLogger logger, string identifier)
         : this(driver, logger)
     {
         NodeId = ExpandedNodeId.Parse(identifier);
-        NodeClass = nodeClass;
     }
+
     #endregion
 
     /// <summary>
