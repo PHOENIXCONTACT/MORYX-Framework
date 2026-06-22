@@ -1,4 +1,4 @@
-@use "@moryx/ngx-web-framework/styles/colors" as *;
+@use "@moryx/ngx-web-framework/styles/variables" as *;
 
 :host {
   overflow: hidden;
@@ -34,6 +34,20 @@
   z-index: 10;
 }
 
+.variant-list {
+  flex: 1 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: var(--mat-sys-surface-container-lowest);
+  padding: 0 !important;
+  --mat-list-active-indicator-color: #{$primary};
+  --mat-list-active-indicator-shape: 0;
+
+  ::ng-deep .mdc-list-item__content {
+    pointer-events: auto;
+  }
+}
+
 .variant-item {
   cursor: pointer;
   width: 100%;
@@ -41,68 +55,45 @@
   -webkit-user-select: none;
   -moz-user-select: none;
   -webkit-touch-callout: none;
-
-  &:hover {
-    background-color: var(--mat-sys-surface-container-highest);
-  }
-
-  &.selected {
-    background: $primary-light;
-  }
-}
-
-.variant-list {
-  flex: 1 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  background-color: var(--mat-sys-surface-container-lowest);
-  padding: 0 !important;
-}
-
-::ng-deep .variant-item {
+  box-sizing: border-box;
+  flex-shrink: 0;
   height: fit-content !important;
-  padding: 4px  !important;
-}
+  padding: 4px !important;
 
-::ng-deep .variant-item .mdc-list-item__content {
-  height: 100%;
-  justify-content: flex-start;
-  display: flex;
-  padding-left: 16px;
-}
-
-::ng-deep .variant-item .mat-mdc-list-item-unscoped-content {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  img {
-    border-radius: 50%;
-    height: 40px;
-    width: 40px;
-  }
-
-  .variant-item-details {
+  .variant-item-content {
     display: flex;
-    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
     padding-left: 16px;
-    white-space: nowrap;
-    overflow: hidden;
 
-    h3 {
-      margin: 0;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    img {
+      border-radius: 50%;
+      height: 40px;
+      width: 40px;
     }
 
-    p {
-      margin: 0;
-      font-size: 14px;
-      height: 20px;
+    .variant-item-details {
+      display: flex;
+      flex-direction: column;
+      padding-left: 16px;
       white-space: nowrap;
       overflow: hidden;
-      text-overflow: ellipsis;
+
+      h3 {
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      p {
+        margin: 0;
+        font-size: 14px;
+        height: 20px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
   }
 }

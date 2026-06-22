@@ -69,7 +69,7 @@ export class MediaService {
             if (x !== undefined) {
               // Delay until server generate the preview
               this.wait(1000).then(() => {
-                this.contents.value.push(x);
+                this.contents.next([...this.contents.value, x]);
               });
             }
           },
