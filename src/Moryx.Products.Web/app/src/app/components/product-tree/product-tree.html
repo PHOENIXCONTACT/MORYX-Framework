@@ -4,7 +4,7 @@
     (click)="onNodeClick(node.id)"
     (contextmenu)="onContextMenu($event, node.id)"
     class="tree-node"
-    [ngClass]="{ 'moryx-selected': selected()?.id == node.id }"
+    [class.selected]="selected()?.id == node.id"
   >
     <button mat-icon-button title="Disabled toggle" disabled></button>
     @if (node.id === 0) {
@@ -22,7 +22,7 @@
     (click)="onNodeClick(node.id)"
     (contextmenu)="onContextMenu($event, node.id)"
     class="tree-node"
-    [ngClass]="{ 'moryx-selected': selected()?.id == node.id }"
+    [class.selected]="selected()?.id == node.id"
   >
     <button
       mat-icon-button

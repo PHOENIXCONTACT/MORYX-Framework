@@ -27,7 +27,6 @@ import { DecimalPipe } from '@angular/common';
   imports: [
     MatDialogTitle,
     MatDialogContent,
-    MatLine,
     CdkCopyToClipboard,
     MatDialogActions,
     MatButton,

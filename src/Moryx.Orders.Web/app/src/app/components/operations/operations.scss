@@ -6,7 +6,7 @@ $state-colors: (
   interrupting: goldenrod,
   canbegin: $primary,
   running: $success,
-  completed: #000
+  completed: var(--mat-sys-on-surface)
 );
 
 mat-panel-title,
@@ -49,7 +49,7 @@ mat-grid-list {
   align-items: center;
   flex-flow: row nowrap;
   height: 52px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
 
   h2 {
     width: 100%;
@@ -57,7 +57,7 @@ mat-grid-list {
   }
 
   a {
-    color: rgba(0, 0, 0, 0.54);
+    color: var(--mat-sys-on-surface-variant);
     margin-right: 10px;
   }
 }
@@ -204,7 +204,7 @@ mat-grid-list {
 
 .sidenav-container {
   @include mat.sidenav-overrides((
-    container-background-color: white,
+    container-background-color: var(--mat-sys-surface-container-lowest),
   ));
   height: 100%;
 }
@@ -244,14 +244,14 @@ mat-grid-list {
   .label {
     font-size: 12px;
     text-align: center;
-    color: rgba(0, 0, 0, 0.87);
+    color: var(--mat-sys-on-surface);
   }
 
   &:hover .material-symbols-outlined {
-    background-color: rgba(0, 0, 0, 0.08);
+    background-color: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
   }
 
   &:active .material-symbols-outlined {
-    background-color: rgba(0, 0, 0, 0.12);
+    background-color: color-mix(in srgb, var(--mat-sys-on-surface) 12%, transparent);
   }
 }

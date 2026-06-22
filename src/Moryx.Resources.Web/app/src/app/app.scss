@@ -16,7 +16,7 @@
 }
 
 .resources-toolbar {
-  color: var(--mat-sys-surface-container-low);
+  color: white;
   background-color: rgba(0, 0, 0, 0.60);
   background-blend-mode: darken;
 }
@@ -32,9 +32,9 @@
 }
 
 .mat-toolbar-row{
-  color: var(--mat-sys-surface-container-lowest);
+  color: white;
   button{
-    color: var(--mat-sys-surface-container-lowest);
+    color: white;
     margin: 10px;
   }
 }

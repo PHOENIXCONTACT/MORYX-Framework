@@ -1,5 +1,5 @@
 @use '@angular/material' as mat;
-@use "@moryx/ngx-web-framework/styles/colors" as *;
+@use "@moryx/ngx-web-framework/styles/variables" as *;
 
 :host {
   flex: 1 1;
@@ -31,8 +31,8 @@
     background-color: var(--mat-sys-surface-container-highest);
   }
 
-  &.moryx-selected {
-    background: $primary-light;
+  &.selected {
+    background-color: $primary;
   }
 
   .node-label {

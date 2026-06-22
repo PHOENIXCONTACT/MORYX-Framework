@@ -1,8 +1,8 @@
-@use "@moryx/ngx-web-framework/styles/theme"; 
+@use "@moryx/ngx-web-framework/styles/theme";
 @use "@moryx/ngx-web-framework/styles/variables";
 @use "@angular/material" as mat;
 
-html, body { 
+html, body {
   height: 100%;
   font-family: Roboto;
 }
@@ -115,15 +115,15 @@ app-product-importer{
 }
 
 .mat-expansion-panel-header .mat-expansion-panel-header-title {
-  min-width: 0; 
-  overflow: hidden; 
-  text-overflow: ellipsis; 
-  white-space: nowrap; 
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.mat-expansion-panel-header .mat-expansion-panel-header-description {  
-  min-width: 0; 
-  overflow: hidden; 
-  text-overflow: ellipsis; 
+.mat-expansion-panel-header .mat-expansion-panel-header-description {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }

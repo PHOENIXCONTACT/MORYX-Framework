@@ -1,13 +1,13 @@
-<div class="recipes-overview">
-  <mat-list class="recipes-overview-list">
+<div class="overview">
+  <mat-nav-list class="overview-list">
     @for (recipe of recipes(); track recipe) {
       <mat-list-item
         (click)="onSelect(recipe)"
-        [class.moryx-selected]="selectedRecipe()?.id == recipe.id"
-        class="recipes-overview-list-item"
+        [activated]="selectedRecipe()?.id == recipe.id"
+        class="overview-item"
         >
-        <div class="recipes-overview-list-item-content">
-          <span class="recipes-overview-list-item-content-name truncate-name">{{
+        <div class="overview-item-content">
+          <span class="overview-item-name">{{
             recipe.name
           }}</span>
           <button
@@ -20,8 +20,8 @@
         </div>
       </mat-list-item>
     }
-  </mat-list>
-  <div class="recipes-overview-actions" align="end">
+  </mat-nav-list>
+  <div class="overview-actions" align="end">
     <button
       mat-flat-button
       class="add-recipe-button"
@@ -34,6 +34,6 @@
   </div>
 </div>
 
-<div class="recipes-details">
+<div class="details">
   <router-outlet></router-outlet>
 </div>

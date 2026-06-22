@@ -1,6 +1,6 @@
-@use '@angular/material' as mat;
-@use "@moryx/ngx-web-framework/styles/colors" as *;
+@use "@moryx/ngx-web-framework/styles/variables" as *;
 
+@use '@angular/material' as mat;
 :host {
   flex: 1 1;
   overflow-y: auto;
@@ -27,8 +27,8 @@
     background-color: var(--mat-sys-surface-container-highest);
   }
 
-  &.moryx-selected {
-    background: $primary-light;
+  &.selected {
+    background-color: $primary;
   }
 
   &.italic {

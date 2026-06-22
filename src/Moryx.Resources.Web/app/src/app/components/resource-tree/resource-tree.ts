@@ -7,7 +7,6 @@ import { Component, inject, viewChild, input, output, effect, untracked, ChangeD
 import { MatTree, MatTreeModule } from '@angular/material/tree';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { CommonModule } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ResourceModel } from '../../api/models';
 import { SessionService } from '@app/services/session.service';
@@ -20,7 +19,7 @@ import { getHierarchieLineFor } from '@app/models/TypeTree';
   styleUrls: ['./resource-tree.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
   host: { '(window:beforeunload)': 'saveState()' },
-  imports: [CommonModule, MatTreeModule, MatIconModule, MatButtonModule, TranslatePipe]
+  imports: [MatTreeModule, MatIconModule, MatButtonModule, TranslatePipe]
 })
 export class ResourceTree {
   private sessionService = inject(SessionService);
