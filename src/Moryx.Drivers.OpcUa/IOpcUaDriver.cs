@@ -16,10 +16,12 @@ public interface IOpcUaDriver : IMessageDriver, IInOutDriver
     // TODO 6.2: Subscriptions to ObjectNodes are possible
     /// <summary>
     /// Subscribes to a variable node. Nothing happens, if the node is not a variable
+    /// Will be replaced by <see cref="IOpcUaDriverAddSubscription.AddSubscriptionAsync(string, CancellationToken)"/>
     /// </summary>
-    /// <param name="nodeId">NodeId to subscribe to</param>
+    /// <param name="node">OpcUaNode to be subscribed</param>
     /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
-    Task AddSubscriptionAsync(string nodeId, CancellationToken cancellationToken = default);
+    [Obsolete("This will be removed in a future version.")]
+    Task AddSubscriptionAsync(OpcUaNode node, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Read the value of a Node
@@ -35,7 +37,7 @@ public interface IOpcUaDriver : IMessageDriver, IInOutDriver
     /// This feature will be removed in a future version without any replacement.
     /// </summary>
     /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
-    [Obsolete("Browsing nodes won't be a feature anymore")]
+    [Obsolete("Browsing nodes won't be a feature anymore and removed in a future version")]
     Task RebrowseNodesAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -53,4 +55,17 @@ public interface IOpcUaDriver : IMessageDriver, IInOutDriver
     /// <param name="payload">Value to be written to the node</param>
     /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
     Task WriteNodeAsync(string nodeId, object payload, CancellationToken cancellationToken = default);
+}
+
+/// <summary>
+/// Opc Ua Client
+/// </summary>
+public interface IOpcUaDriverAddSubscription : IOpcUaDriver
+{
+    /// <summary>
+    /// Subscribes to a variable node. Nothing happens, if the node is not a variable
+    /// </summary>
+    /// <param name="node">Node ID to be subscribed</param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+    Task AddSubscriptionAsync(string node, CancellationToken cancellationToken = default);
 }

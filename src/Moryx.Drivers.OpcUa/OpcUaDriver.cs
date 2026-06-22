@@ -30,7 +30,7 @@ namespace Moryx.Drivers.OpcUa;
 /// </summary>
 [ResourceRegistration]
 [Display(Name = nameof(Strings.OpcUaDriver_DisplayName), Description = nameof(Strings.OpcUaDriver_Description), ResourceType = typeof(Strings))]
-public class OpcUaDriver : Driver, IOpcUaDriver
+public class OpcUaDriver : Driver, IOpcUaDriver, IOpcUaDriverAddSubscription
 {
     /// <summary>
     /// Current tate of the driver
@@ -443,6 +443,13 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     public Task AddSubscriptionAsync(string nodeId, CancellationToken cancellationToken = default)
     {
         State.AddSubscription(nodeId);
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc/>
+    public Task AddSubscriptionAsync(OpcUaNode node, CancellationToken cancellationToken = default)
+    {
+        State.AddSubscription(node.NodeId.ToString());
         return Task.CompletedTask;
     }
 

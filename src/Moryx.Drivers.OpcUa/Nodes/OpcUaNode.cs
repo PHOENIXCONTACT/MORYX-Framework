@@ -18,7 +18,7 @@ namespace Moryx.Drivers.OpcUa.Nodes;
 /// </summary>
 public class OpcUaNode : IMessageChannel
 {
-    private IOpcUaDriver _driver => (IOpcUaDriver)Driver;
+    private IOpcUaDriverAddSubscription _driver => (IOpcUaDriverAddSubscription)Driver;
 
     private const int DefaultNamespaceLength = 5;
     private readonly IModuleLogger _logger;
