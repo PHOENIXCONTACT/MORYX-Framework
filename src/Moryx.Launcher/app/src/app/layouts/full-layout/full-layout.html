@@ -4,7 +4,9 @@
       <mat-icon>menu</mat-icon>
     </button>
     <div class="logo-host">
-      <img [src]="environment.assets + 'assets/moryx-banner-small.svg'" class="logo" alt="MORYX Logo">
+      <a [href]="environment.rootUrl">
+        <img [src]="environment.assets + 'assets/moryx-banner-small.svg'" class="logo" alt="MORYX Logo">
+      </a>
     </div>
     @if (showTopRegion()) {
       <slot name="topRegion" (slotchange)="onTopRegionSlotChange($event)"></slot>
