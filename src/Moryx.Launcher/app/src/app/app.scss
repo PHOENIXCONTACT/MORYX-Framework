@@ -23,6 +23,7 @@ slot[name="app"] {
 
 ::slotted([slot="app"]) {
   height: 100%;
+  overflow: hidden;
 }
 
 ::slotted([slot="topRegion"]) {
