@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnInit, signal, viewChild, ChangeDetectionStrategy } from "@angular/core";
+import { Component, inject, OnInit, signal, viewChild, ChangeDetectionStrategy, DestroyRef } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { MatTree, MatTreeModule } from "@angular/material/tree";
 import { MatIconModule } from "@angular/material/icon";
@@ -46,8 +46,12 @@ import { ProcessHolderGroupModelArrayApiResponse } from "@api/models/process-hol
   templateUrl: "./process-holders.html",
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: "./process-holders.scss",
+  host: {
+    '(window:beforeunload)': 'disconnectEvents()'
+  }
 })
 export class ProcessHolders implements OnInit {
+  private destroyRef = inject(DestroyRef);
   processHolderGroups = signal<Array<ProcessHolderGroup>>([]);
   dataSource = signal<Array<ProcessHolderNode>>([]);
   loading = signal(false);
@@ -67,8 +71,13 @@ export class ProcessHolders implements OnInit {
 
   private _tree = viewChild<MatTree<ProcessHolderNode, ProcessHolderNode>>("tree");
 
+  constructor() {
+    this.destroyRef.onDestroy(() => this.disconnectEvents());
+  }
+
   ngOnInit(): void {
     this.loading.set(true);
+    this._processHolderStreamService.connect();
     this._processService.getGroups().subscribe({
       next: (response: ProcessHolderGroupModelArrayApiResponse) => {
         console.log(response);
@@ -165,6 +174,10 @@ export class ProcessHolders implements OnInit {
         )
     );
     this.buildTree(filteredResults);
+  }
+
+  disconnectEvents() {
+    this._processHolderStreamService.disconnect();
   }
 }
 

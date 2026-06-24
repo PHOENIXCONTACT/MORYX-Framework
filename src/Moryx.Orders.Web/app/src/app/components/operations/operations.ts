@@ -4,7 +4,7 @@
 */
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit, signal, viewChild, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
@@ -66,9 +66,12 @@ import { MultiProgressBar } from '@app/multi-progress-bar/multi-progress-bar';
     MatSidenavModule,
     MatToolbarModule,
     MultiProgressBar
-]
+  ],
+  host: {
+    '(window:beforeunload)': 'disconnectEvents()'
+  }
 })
-export class Operations implements OnInit, OnDestroy {
+export class Operations implements OnInit {
   private orderManagementService = inject(OrderManagementService);
   private dialog = inject(MatDialog);
   private router = inject(Router);
@@ -79,6 +82,7 @@ export class Operations implements OnInit, OnDestroy {
   private changeDetectorRef = inject(ChangeDetectorRef);
   private mediaMatcher = inject(MediaMatcher);
   private filterService = inject(FilterService);
+  private destroyRef = inject(DestroyRef);
 
   operations = signal<OperationViewModel[]>([]);
   DrawerContent = DrawerContent;
@@ -96,14 +100,10 @@ export class Operations implements OnInit, OnDestroy {
     this.mobileQuery = this.mediaMatcher.matchMedia('(max-width: 1279px)');
     this._mobileQueryListener = () => this.changeDetectorRef.detectChanges();
     this.mobileQuery.addEventListener('change', this._mobileQueryListener);
+    this.destroyRef.onDestroy(() => this.disconnectEvents());
   }
 
   private readonly _mobileQueryListener: () => void;
-
-  ngOnDestroy(): void {
-    this.mobileQuery.removeEventListener('change', this._mobileQueryListener);
-    this.searchBarService.unsubscribe();
-  }
 
   ngOnInit() {
     // Get all the operations
@@ -124,7 +124,7 @@ export class Operations implements OnInit, OnDestroy {
     });
 
     // Register events
-    this.operationService.operationChanged((updatedOperation: OperationModel) => {
+    this.operationService.connect((updatedOperation: OperationModel) => {
       if (!updatedOperation) {
         return;
       }
@@ -338,6 +338,12 @@ export class Operations implements OnInit, OnDestroy {
   closeDrawer() {
     this.drawerContent.set(DrawerContent.None);
     this.drawer().close();
+  }
+
+  disconnectEvents(): void {
+    this.mobileQuery.removeEventListener('change', this._mobileQueryListener);
+    this.searchBarService.unsubscribe();
+    this.operationService.disconnect();
   }
 }
 

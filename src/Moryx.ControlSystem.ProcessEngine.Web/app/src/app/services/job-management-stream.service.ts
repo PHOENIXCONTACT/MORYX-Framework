@@ -14,11 +14,12 @@ import { JobModel } from '@api/models/job-model';
 export class JobManagementStreamService {
   private jobManagementService = inject(JobManagementService);
 
+  private eventSource?: EventSource;
   updatedJob: BehaviorSubject<JobModel | undefined> = new BehaviorSubject<JobModel | undefined>(undefined);
 
-  constructor() {
-    const eventSource = new EventSource(this.jobManagementService.rootUrl + JobManagementService.ProgressStreamPath);
-    eventSource.onmessage = event => {
+  connect() {
+    this.eventSource = new EventSource(this.jobManagementService.rootUrl + JobManagementService.ProgressStreamPath);
+    this.eventSource.onmessage = event => {
       const job = <JobModel>JSON.parse(event.data);
       this.publishUpdate(job);
     };
@@ -30,6 +31,13 @@ export class JobManagementStreamService {
     }
     else {
       this.updatedJob.next(undefined);
+    }
+  }
+
+  disconnect() {
+    if (this.eventSource) {
+      this.eventSource.close();
+      this.eventSource = undefined;
     }
   }
 }
