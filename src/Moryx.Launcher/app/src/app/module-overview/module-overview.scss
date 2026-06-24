@@ -1,3 +1,5 @@
+@use "@moryx/ngx-web-framework/styles/variables" as *;
+
 :host {
   display: block;
   overflow: hidden;
@@ -6,7 +8,7 @@
 
 .module-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1rem;
   padding: 1rem;
   overflow-y: auto;
@@ -29,7 +31,7 @@
 
   &:hover {
     border-color: var(--mat-sys-primary);
-    background: var(--mat-sys-surface-variant);
+    background: rgba($primary, 0.3);
   }
 }
 
