@@ -55,12 +55,13 @@
             @await Html.PartialAsync(topRegion.PartialView)
         </div>
     }
-    <div slot="rightRegion">
-        @if (launcher != null && launcher.GetRegion(LauncherRegion.Right) is RegionItem rightRegion)
-        {
+    @if (launcher != null && launcher.GetRegion(LauncherRegion.Right) is RegionItem rightRegion)
+    {
+        <div slot="rightRegion">
+
             @await Html.PartialAsync(rightRegion.PartialView)
-        }
-    </div>
+        </div>
+    }
 </moryx-launcher>
 
 <script src="~/_content/Moryx.Launcher/main.js" type="module"></script>
@@ -75,7 +76,7 @@
     launcher.supportedCultures = @Html.Raw(JsonSerializer.Serialize(supportedCultures, jsonOptions));
     launcher.webModuleItems = @Html.Raw(JsonSerializer.Serialize(webModuleItems, jsonOptions));
     launcher.externalModuleItems = @Html.Raw(JsonSerializer.Serialize(externalModuleItems, jsonOptions));
-    @if (!string.IsNullOrEmpty(_identityOptions.CurrentValue.BaseAddress))
+        @if (!string.IsNullOrEmpty(_identityOptions.CurrentValue.BaseAddress))
     {
         <text>launcher.authBaseAddress = '@_identityOptions.CurrentValue.BaseAddress';</text>
     }
