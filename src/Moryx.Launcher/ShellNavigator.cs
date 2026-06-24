@@ -3,7 +3,6 @@
 
 using System.Collections.Concurrent;
 using System.Globalization;
-using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -78,8 +77,9 @@ public class ShellNavigator : IShellNavigator, ILauncher
         var permissions = await _client.GetPermissionsAsync(token, refreshToken);
         return [.. descriptorsAndModules.Where(t =>
         {
-            var requiredPolicy =
-                (t.CompiledPageActionDescriptor.EndpointMetadata.SingleOrDefault(a => a is AuthorizeAttribute) as AuthorizeAttribute)?.Policy;
+            var requiredPolicy = t.CompiledPageActionDescriptor.EndpointMetadata
+                .OfType<AuthorizeAttribute>()
+                .SingleOrDefault()?.Policy;
             return requiredPolicy is null || permissions?.Contains(requiredPolicy) == true;
         }).Select(t => t.ModuleItem)];
     }
@@ -100,7 +100,7 @@ public class ShellNavigator : IShellNavigator, ILauncher
         {
             try
             {
-                var types = assembly.GetTypes().Where(t => t.IsClass && t.GetCustomAttribute<LauncherRegionAttribute>() != null);
+                var types = assembly.GetTypes().Where(t => t.IsClass && t.IsDefined(typeof(LauncherRegionAttribute), false));
                 partialViews.AddRange(types);
             }
             catch (Exception ex)
@@ -176,14 +176,11 @@ public class ShellNavigator : IShellNavigator, ILauncher
 
     private static WebModuleItem CreateWebModuleItem(CompiledPageActionDescriptor pageActionDescriptor)
     {
-        var webModuleAttribute =
-            pageActionDescriptor.EndpointMetadata.SingleOrDefault(a => a is WebModuleAttribute) as WebModuleAttribute;
+        var webModuleAttribute = pageActionDescriptor.EndpointMetadata.OfType<WebModuleAttribute>().SingleOrDefault();
         if (webModuleAttribute is null)
             return null;
 
-        var streamAttribute =
-            pageActionDescriptor.EndpointMetadata.SingleOrDefault(a => a is ModuleEventStreamAttribute) as
-                ModuleEventStreamAttribute;
+        var streamAttribute = pageActionDescriptor.EndpointMetadata.OfType<ModuleEventStreamAttribute>().SingleOrDefault();
         return new WebModuleItem
         {
             Title = pageActionDescriptor.PageTypeInfo.GetDisplayName() ?? webModuleAttribute.Route,
@@ -218,17 +215,13 @@ public class ShellNavigator : IShellNavigator, ILauncher
 
         if (topRegion == null)
         {
-            topRegion = new LauncherRegionConfig()
+            topRegion = new LauncherRegionConfig
             {
                 Region = LauncherRegion.Top,
                 Name = NotificationsBarName
             };
 
-            var regions = new List<LauncherRegionConfig>();
-            regions.AddRange(launcherConfig.Regions);
-            regions.Add(topRegion);
-
-            launcherConfig.Regions = regions.ToArray();
+            launcherConfig.Regions = [.. launcherConfig.Regions, topRegion];
 
             configManager.SaveConfiguration(launcherConfig);
         }
