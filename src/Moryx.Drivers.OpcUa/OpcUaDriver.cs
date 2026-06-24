@@ -617,8 +617,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver, IOpcUaDriverAddSubscription
             ServerStatus = ((ServerStatusDataType)((ExtensionObject)value).Body).State;
         }
 
-        var index = (ushort)_session.NamespaceUris.GetIndex(nodeId.NamespaceUri);
-        var innerNodeId = new NodeId(nodeId.Identifier, index);
+        var innerNodeId = new NodeId(nodeId.Identifier, nodeId.NamespaceIndex);
         var node = State.GetNode(innerNodeId.ExpandedNodeIdString());
         if (node != null && node.Subscribed)
         {

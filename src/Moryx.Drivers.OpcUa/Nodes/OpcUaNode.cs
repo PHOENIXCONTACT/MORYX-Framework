@@ -124,7 +124,7 @@ public class OpcUaNode : IMessageChannel
     public OpcUaNode(IOpcUaDriver driver, IModuleLogger logger, ExpandedNodeId nodeId, NamespaceTable namespaceTable)
         : this(driver, logger)
     {
-        NodeId = new ExpandedNodeId(nodeId.Identifier, nodeId.NamespaceIndex, namespaceTable.GetString(nodeId.NamespaceIndex), nodeId.ServerIndex);
+        NodeId = new ExpandedNodeId(nodeId);
     }
 
     /// <inheritdoc />

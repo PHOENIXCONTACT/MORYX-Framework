@@ -154,6 +154,6 @@ public class NodeHandlingTests : OpcUaTestBase
         var channel = _driver.Channel(alias);
 
         //Assert
-        Assert.That(OpcUaNode.CreateExpandedNodeId(nodeId.ToString()), Is.EqualTo(channel.Identifier));
+        Assert.That(OpcUaNode.CreateExpandedNodeId("ns=1;s=identifier1"), Is.EqualTo(channel.Identifier));
     }
 }
