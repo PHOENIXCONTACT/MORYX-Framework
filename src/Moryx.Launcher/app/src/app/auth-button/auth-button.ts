@@ -6,11 +6,13 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { TranslatePipe } from '@ngx-translate/core';
 import { AuthService } from '../services/auth.service';
+import { TranslationConstants } from '../translation-constants';
 
 @Component({
   selector: 'app-auth-button',
-  imports: [MatButton, MatIconModule],
+  imports: [MatButton, MatIconModule, TranslatePipe],
   templateUrl: './auth-button.html',
   styleUrl: './auth-button.scss',
 })
@@ -19,6 +21,8 @@ export class AuthButton implements OnInit {
 
   isLoggedIn = this.authService.isLoggedIn;
   userName = this.authService.userName;
+
+  protected TranslationConstants = TranslationConstants;
 
   ngOnInit(): void {
     this.authService.checkSignedIn();

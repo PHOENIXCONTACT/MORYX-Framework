@@ -41,6 +41,16 @@ export class TranslationConstants {
     MORE: 'FULLSCREEN_LAYOUT.MORE',
   }
 
+  public static readonly NAVIGATION = {
+    ALL: 'NAVIGATION.ALL',
+    MORE: 'NAVIGATION.MORE',
+    NO_ITEMS: 'NAVIGATION.NO_ITEMS',
+  }
+
+  public static readonly AUTH = {
+    LOG_IN: 'AUTH.LOG_IN',
+  }
+
   public static readonly ABOUT = {
     TITLE: 'ABOUT.TITLE',
     APPLICATION: 'ABOUT.APPLICATION',

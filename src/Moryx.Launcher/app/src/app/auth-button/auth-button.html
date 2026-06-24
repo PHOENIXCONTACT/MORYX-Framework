@@ -1,7 +1,7 @@
 @if (!isLoggedIn()) {
   <button mat-button type="button" (click)="signIn()">
     <mat-icon>account_circle</mat-icon>
-    Log In
+    {{ TranslationConstants.AUTH.LOG_IN | translate }}
   </button>
 }
 @if (isLoggedIn()) {

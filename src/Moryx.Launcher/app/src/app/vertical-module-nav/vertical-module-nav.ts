@@ -10,12 +10,14 @@ import { WebModuleItem } from '../models/web-module-item';
 import { NotificationBadge } from '../notification-badge/notification-badge';
 import { ExternalModuleItem } from '../models/external-module-item';
 import { ModuleItem } from '../models/module-item';
+import { TranslatePipe } from '@ngx-translate/core';
 import { ModuleService } from '../services/module.service';
 import { LocationPersistenceService } from '../services/location-persistence.service';
+import { TranslationConstants } from '../translation-constants';
 
 @Component({
   selector: 'app-vertical-module-nav',
-  imports: [MatListModule, MatIconModule, NotificationBadge],
+  imports: [MatListModule, MatIconModule, TranslatePipe, NotificationBadge],
   templateUrl: './vertical-module-nav.html',
   styleUrl: './vertical-module-nav.scss',
   host: {
@@ -29,6 +31,8 @@ export class VerticalModuleNav {
   modules = this.moduleService.userModules;
   activeRoute = this.moduleService.activeRoute;
   collapsed = input(false);
+
+  protected TranslationConstants = TranslationConstants;
 
   resolveHref(module: ModuleItem): string {
     return this.locationPersistenceService.resolveHref(module);

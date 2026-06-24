@@ -13,14 +13,16 @@ import { ModuleItem } from '../models/module-item';
 import { NotificationBadge } from '../notification-badge/notification-badge';
 import { MoreMenu } from '../more-menu/more-menu';
 import { ModuleGridMenu } from '../module-grid-menu/module-grid-menu';
+import { TranslatePipe } from '@ngx-translate/core';
 import { ModuleService } from '../services/module.service';
 import { LocationPersistenceService } from '../services/location-persistence.service';
+import { TranslationConstants } from '../translation-constants';
 
 const MIN_ITEM_WIDTH = 112; // items shrink below this -> remove from the end
 
 @Component({
   selector: 'app-horizontal-module-nav',
-  imports: [MatIconModule, MatButtonModule, MatMenuModule, NotificationBadge, MoreMenu, ModuleGridMenu],
+  imports: [MatIconModule, MatButtonModule, MatMenuModule, TranslatePipe, NotificationBadge, MoreMenu, ModuleGridMenu],
   templateUrl: './horizontal-module-nav.html',
   styleUrl: './horizontal-module-nav.scss'
 })
@@ -32,6 +34,7 @@ export class HorizontalModuleNav {
   modules = this.moduleService.userModules;
   activeRoute = this.moduleService.activeRoute;
 
+  protected TranslationConstants = TranslationConstants;
   private navEl = viewChild.required<ElementRef<HTMLElement>>('navEl');
 
   private visibleCount = signal(Number.MAX_SAFE_INTEGER);

@@ -28,6 +28,14 @@
     "MODULES": "Module",
     "MORE": "Mehr"
   },
+  "NAVIGATION": {
+    "ALL": "Alle",
+    "MORE": "Mehr",
+    "NO_ITEMS": "Keine Einträge."
+  },
+  "AUTH": {
+    "LOG_IN": "Anmelden"
+  },
   "ABOUT": {
     "TITLE": "Über",
     "APPLICATION": "Anwendung",

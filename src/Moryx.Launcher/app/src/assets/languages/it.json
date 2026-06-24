@@ -28,6 +28,14 @@
     "MODULES": "Moduli",
     "MORE": "Altro"
   },
+  "NAVIGATION": {
+    "ALL": "Tutti",
+    "MORE": "Altro",
+    "NO_ITEMS": "Nessun elemento."
+  },
+  "AUTH": {
+    "LOG_IN": "Accedi"
+  },
   "ABOUT": {
     "TITLE": "Informazioni",
     "APPLICATION": "Applicazione",
