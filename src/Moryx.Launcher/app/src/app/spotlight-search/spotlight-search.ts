@@ -42,7 +42,7 @@ export class SpotlightSearch {
     const shortcutService = inject(ShortcutService);
     const destroyRef = inject(DestroyRef);
 
-    shortcutService.register({ key: 'k', ctrl: true, action: () => this.open() }, destroyRef);
+    shortcutService.register({ key: 'k', ctrl: true, alt: true, action: () => this.open() }, destroyRef);
 
     effect(() => {
       if (this.isOpen()) {

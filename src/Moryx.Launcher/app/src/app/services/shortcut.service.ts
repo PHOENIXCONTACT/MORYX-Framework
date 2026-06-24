@@ -38,8 +38,10 @@ export class ShortcutService {
     const ctrl = event.metaKey || event.ctrlKey;
 
     for (const binding of this.bindings) {
-      const keyMatch = event.key.toLowerCase() === binding.key.toLowerCase()
-        || event.code.toLowerCase() === binding.key.toLowerCase();
+      const key = binding.key.toLowerCase();
+      const keyMatch = event.key.toLowerCase() === key
+        || event.code.toLowerCase() === key
+        || event.code.toLowerCase() === `key${key}`;
       if (keyMatch && ctrl === !!binding.ctrl && event.shiftKey === !!binding.shift
         && event.altKey === !!binding.alt) {
         event.preventDefault();
