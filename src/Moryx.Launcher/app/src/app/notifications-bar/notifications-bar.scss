@@ -1,4 +1,4 @@
-@use "../../../node_modules/@moryx/ngx-web-framework/styles/variables" as *;
+@use "@moryx/ngx-web-framework/styles/variables" as *;
 
 :host {
   --color-Info: #{$info};
