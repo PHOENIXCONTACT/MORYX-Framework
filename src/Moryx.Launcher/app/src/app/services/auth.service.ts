@@ -3,6 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
+import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 
@@ -12,6 +13,7 @@ import { CookieService } from 'ngx-cookie-service';
 /** Tracks authentication state and provides sign-out functionality. */
 export class AuthService {
   private cookieService = inject(CookieService);
+  private http = inject(HttpClient);
 
   authBaseAddress: string | undefined = undefined;
 
@@ -33,19 +35,16 @@ export class AuthService {
     this.userName.set(user);
   }
 
-  async signOut(): Promise<void> {
-    await fetch(this.authBaseAddress + '/api/auth/signOut', {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then(() => {
+  signOut(): void {
+    this.http.post(this.authBaseAddress + '/api/auth/signOut', {}, {
+      withCredentials: true,
+    }).subscribe({
+      next: () => {
         this.isLoggedIn.set(false);
         this.userName.set('');
         window.location.assign('/');
-      })
-      .catch((err) => console.log(err));
+      },
+      error: (err) => console.log(err),
+    });
   }
 }
