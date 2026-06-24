@@ -29,7 +29,6 @@ export class NotificationBadge {
       }
 
       this.eventSource = new EventSource(url);
-      console.log(`Connecting to event stream at ${url}`);
       this.eventSource.onmessage = (e) => this.onReceived(e);
 
       onCleanup(() => {
