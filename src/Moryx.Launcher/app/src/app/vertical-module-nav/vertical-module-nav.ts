@@ -9,7 +9,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { WebModuleItem } from '../models/web-module-item';
 import { NotificationBadge } from '../notification-badge/notification-badge';
 import { ExternalModuleItem } from '../models/external-module-item';
+import { ModuleItem } from '../models/module-item';
 import { ModuleService } from '../services/module.service';
+import { LocationPersistenceService } from '../services/location-persistence.service';
 
 @Component({
   selector: 'app-vertical-module-nav',
@@ -22,10 +24,15 @@ import { ModuleService } from '../services/module.service';
 })
 export class VerticalModuleNav {
   private moduleService = inject(ModuleService);
+  private locationPersistence = inject(LocationPersistenceService);
 
   modules = this.moduleService.userModules;
   activeRoute = this.moduleService.activeRoute;
   collapsed = input(false);
+
+  resolveHref(module: ModuleItem): string {
+    return this.locationPersistence.resolveHref(module);
+  }
 
   asWeb(item: WebModuleItem | ExternalModuleItem): WebModuleItem | null {
     return 'eventStream' in item ? item as WebModuleItem : null;

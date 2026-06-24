@@ -3,26 +3,25 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private cookieService = inject(CookieService);
+
   authBaseAddress: string | undefined = undefined;
   authConfigured = signal<boolean>(false);
   isLoggedIn = signal<boolean>(false);
   userName = signal<string>('');
 
   checkSignedIn(): void {
-    const cookies = document.cookie.split(';').map((c) => c.trim());
-    const userCookie = cookies.filter((c) => c.includes('moryx_user'));
-    if (!userCookie.length) {
+    const user = this.cookieService.get('moryx_user');
+    if (!user) {
       return;
     }
-
-    const equalSignIndex = userCookie[0].indexOf('=');
-    const user = userCookie[0].substring(equalSignIndex + 1);
     this.isLoggedIn.set(true);
     this.userName.set(user);
   }

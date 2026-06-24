@@ -9,10 +9,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { WebModuleItem } from '../models/web-module-item';
 import { ExternalModuleItem } from '../models/external-module-item';
+import { ModuleItem } from '../models/module-item';
 import { NotificationBadge } from '../notification-badge/notification-badge';
 import { MoreMenu } from '../more-menu/more-menu';
 import { ModuleGridMenu } from '../module-grid-menu/module-grid-menu';
 import { ModuleService } from '../services/module.service';
+import { LocationPersistenceService } from '../services/location-persistence.service';
 
 const MIN_ITEM_WIDTH = 112; // items shrink below this -> remove from the end
 
@@ -24,6 +26,7 @@ const MIN_ITEM_WIDTH = 112; // items shrink below this -> remove from the end
 })
 export class HorizontalModuleNav {
   private moduleService = inject(ModuleService);
+  private locationPersistence = inject(LocationPersistenceService);
 
   modules = this.moduleService.userModules;
   activeRoute = this.moduleService.activeRoute;
@@ -46,6 +49,10 @@ export class HorizontalModuleNav {
       this.resizeObserver.observe(this.navEl().nativeElement);
       this.destroyRef.onDestroy(() => this.resizeObserver.disconnect());
     });
+  }
+
+  resolveHref(module: ModuleItem): string {
+    return this.locationPersistence.resolveHref(module);
   }
 
   asWeb(item: WebModuleItem | ExternalModuleItem): WebModuleItem | null {

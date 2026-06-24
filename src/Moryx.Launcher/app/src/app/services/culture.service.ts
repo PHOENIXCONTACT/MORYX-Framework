@@ -3,18 +3,20 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { computed, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { CookieService } from 'ngx-cookie-service';
 import { CultureModel } from '../models/culture-model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CultureService {
+  private cookieService = inject(CookieService);
+
   supportedCultures = signal<CultureModel[]>([]);
 
   currentCulture = computed(() => {
-    const cookies = document.cookie.split(';').map(c => c.trim());
-    const rawCookie = cookies.find(c => c.startsWith('.AspNetCore.Culture'));
+    const rawCookie = this.cookieService.get('.AspNetCore.Culture');
     if (!rawCookie) {
       return '';
     }
@@ -26,7 +28,7 @@ export class CultureService {
     const cookieDate = new Date;
     cookieDate.setFullYear(cookieDate.getFullYear() + 1);
     const value = encodeURIComponent(`c=${culture.name}|uic=${culture.name}`);
-    document.cookie = `.AspNetCore.Culture=${value};path=/;expires=${cookieDate.toUTCString()}`;
+    this.cookieService.set('.AspNetCore.Culture', value, { expires: cookieDate, path: '/' });
     window.location.reload();
   }
 }

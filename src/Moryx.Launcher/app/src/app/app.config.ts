@@ -12,6 +12,7 @@ import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { environment } from '../environments/environment';
 
 import { routes } from './app.routes';
+import { LocationPersistenceService } from './services/location-persistence.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -26,6 +27,10 @@ export const appConfig: ApplicationConfig = {
     }),
     provideAppInitializer(() => {
       inject(MatIconRegistry).setDefaultFontSetClass('material-symbols-outlined');
+    }),
+    provideAppInitializer(() => {
+      // Ensure instantiation
+      inject(LocationPersistenceService);
     }),
   ]
 };

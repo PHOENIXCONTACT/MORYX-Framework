@@ -11,7 +11,9 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatDialog } from '@angular/material/dialog';
 import { LauncherLayout, LauncherStateService } from '../services/launcher-state.service';
 import { AboutDialog } from '../about-dialog/about-dialog';
+import { ModuleItem } from '../models/module-item';
 import { ModuleService } from '../services/module.service';
+import { LocationPersistenceService } from '../services/location-persistence.service';
 import { CultureService } from '../services/culture.service';
 import { SearchService } from '../services/search.service';
 import { ThemeMode, ThemeService } from '../services/theme.service';
@@ -26,6 +28,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 })
 export class MoreMenu {
   private moduleService = inject(ModuleService);
+  private locationPersistence = inject(LocationPersistenceService);
   private cultureService = inject(CultureService);
   private launcherStateService = inject(LauncherStateService);
   private searchService = inject(SearchService);
@@ -71,6 +74,10 @@ export class MoreMenu {
 
   setTheme(mode: ThemeMode): void {
     this.themeService.setMode(mode);
+  }
+
+  resolveHref(module: ModuleItem): string {
+    return this.locationPersistence.resolveHref(module);
   }
 
   selectCulture = this.cultureService.selectCulture.bind(this.cultureService);

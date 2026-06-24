@@ -14,7 +14,7 @@
   <mat-divider></mat-divider>
 
   @for (module of modules(); track module.route) {
-    <a mat-menu-item [href]="module.route" title="{{ module.description }}">
+    <a mat-menu-item [href]="resolveHref(module)" title="{{ module.description }}">
       <mat-icon>{{ module.icon }}</mat-icon>
       <span>{{ module.title }}</span>
     </a>

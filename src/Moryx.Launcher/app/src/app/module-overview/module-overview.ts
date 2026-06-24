@@ -3,9 +3,11 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { ModuleCategory } from '../models/module-category';
+import { ModuleItem } from '../models/module-item';
 import { WebModuleItem } from '../models/web-module-item';
+import { LocationPersistenceService } from '../services/location-persistence.service';
 
 @Component({
   selector: 'app-module-overview',
@@ -14,6 +16,12 @@ import { WebModuleItem } from '../models/web-module-item';
   styleUrl: './module-overview.scss',
 })
 export class ModuleOverview {
+  private locationPersistence = inject(LocationPersistenceService);
+
   webModuleItems = input.required<WebModuleItem[]>();
   userModules = computed(() => this.webModuleItems().filter(m => m.category === ModuleCategory.User));
+
+  resolveHref(module: ModuleItem): string {
+    return this.locationPersistence.resolveHref(module);
+  }
 }
