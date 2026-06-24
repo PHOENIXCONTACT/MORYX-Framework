@@ -1,6 +1,8 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Collections.Concurrent;
+using System.Globalization;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -62,8 +64,7 @@ public class ShellNavigator : IShellNavigator, ILauncher
 
     private static EndpointDataSource _endpointsDataSource;
     private static PageLoader _pageLoader;
-    private static readonly Lazy<PageActionDescriptorAndModuleItem[]> _descriptorsAndModules =
-        new(LoadCompiledActionDescriptors, LazyThreadSafetyMode.ExecutionAndPublication);
+    private static readonly ConcurrentDictionary<string, PageActionDescriptorAndModuleItem[]> _descriptorsAndModules = new();
 
     /// <summary>
     /// Load the full set of <see cref="CompiledPageActionDescriptor"/>s to be filtered by permissions later on
@@ -140,7 +141,8 @@ public class ShellNavigator : IShellNavigator, ILauncher
     /// <returns>A filtered array of <see cref="ModuleItem"/>s the user has permission to see</returns>
     private async Task<ModuleItem[]> FilterModuleItems(HttpContext context)
     {
-        var descriptorsAndModules = _descriptorsAndModules.Value;
+        var cultureName = CultureInfo.CurrentUICulture.Name;
+        var descriptorsAndModules = _descriptorsAndModules.GetOrAdd(cultureName, _ => LoadCompiledActionDescriptors());
 
         // No authorization is configured
         if (context is null || _client is null)
