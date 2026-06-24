@@ -1,7 +1,8 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Linq;
+using System.Collections.Concurrent;
+using System.Globalization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -22,11 +23,69 @@ public class ShellNavigator : IShellNavigator, ILauncher
 {
     private const string NotificationsBarName = "NotificationsBar";
 
+    private static ILogger _logger;
+    private static PageLoader _pageLoader;
+    private static EndpointDataSource _endpointsDataSource;
+
     private readonly MoryxAccessManagementClient _client;
     private static LauncherConfig _launcherConfig;
 
-    private static ILogger _logger;
+    private static readonly ConcurrentDictionary<string, PageActionDescriptorAndModuleItem[]> _descriptorsAndModules = new();
     private static readonly Lazy<RegionItem[]> _configuredRegions = new(LoadRegions, LazyThreadSafetyMode.ExecutionAndPublication);
+
+    public ShellNavigator(EndpointDataSource endpointsDataSource, PageLoader pageLoader, IConfigManager configManager,
+        IOptionsMonitor<MoryxIdentityOptions> options, IMemoryCache memoryCache, ILoggerFactory logger)
+    {
+        _endpointsDataSource = endpointsDataSource;
+        _pageLoader = pageLoader;
+        _logger = logger.CreateLogger(nameof(ShellNavigator));
+        if (options?.CurrentValue?.BaseAddress is not null)
+        {
+            _client = new MoryxAccessManagementClient(
+                options,
+                memoryCache,
+                logger.CreateLogger($"{nameof(ShellNavigator)}:{nameof(MoryxAccessManagementClient)}")
+            );
+        }
+
+        _launcherConfig = GetConfiguration(configManager);
+    }
+
+    /// <inheritdoc />
+    public Task<IReadOnlyList<ModuleItem>> GetModuleItemsAsync(HttpContext context) =>
+        FilterModuleItems(context);
+
+    /// <summary>
+    /// Filter <see cref="_descriptorsAndModules"/> by user permissions
+    /// </summary>
+    /// <param name="context">HttpContext used to extract the users identity tokens</param>
+    /// <returns>A filtered array of <see cref="ModuleItem"/>s the user has permission to see</returns>
+    private async Task<IReadOnlyList<ModuleItem>> FilterModuleItems(HttpContext context)
+    {
+        var cultureName = CultureInfo.CurrentUICulture.Name;
+        var descriptorsAndModules = _descriptorsAndModules.GetOrAdd(cultureName, _ => LoadCompiledActionDescriptors());
+
+        // No authorization is configured
+        if (context is null || _client is null)
+        {
+            return [.. descriptorsAndModules.Select(t => t.ModuleItem)];
+        }
+
+        var token = context.Request.Cookies[MoryxIdentityDefaults.JWT_COOKIE_NAME];
+        var refreshToken = context.Request.Cookies[MoryxIdentityDefaults.REFRESH_TOKEN_COOKIE_NAME];
+
+        var permissions = await _client.GetPermissionsAsync(token, refreshToken);
+        return [.. descriptorsAndModules.Where(t =>
+        {
+            var requiredPolicy = t.CompiledPageActionDescriptor.EndpointMetadata
+                .OfType<AuthorizeAttribute>()
+                .SingleOrDefault()?.Policy;
+            return requiredPolicy is null || permissions?.Contains(requiredPolicy) == true;
+        }).Select(t => t.ModuleItem)];
+    }
+
+    RegionItem ILauncher.GetRegion(LauncherRegion region) =>
+        _configuredRegions.Value.FirstOrDefault(r => r.Region == region);
 
     /// <summary>
     /// Load configured launcher regions
@@ -41,7 +100,7 @@ public class ShellNavigator : IShellNavigator, ILauncher
         {
             try
             {
-                var types = assembly.GetTypes().Where(t => t.IsClass && t.GetCustomAttribute<LauncherRegionAttribute>() != null);
+                var types = assembly.GetTypes().Where(t => t.IsClass && t.IsDefined(typeof(LauncherRegionAttribute), false));
                 partialViews.AddRange(types);
             }
             catch (Exception ex)
@@ -52,18 +111,13 @@ public class ShellNavigator : IShellNavigator, ILauncher
 
         // Transform to models
         var regions = (from pV in partialViews
-                       let regionAttr = pV.GetCustomAttribute<LauncherRegionAttribute>()
-                       let config = _launcherConfig.Regions.FirstOrDefault(x => x.Name == regionAttr.Name)
-                       where config != null
-                       select new RegionItem { PartialView = regionAttr.Name, Region = config.Region }).ToArray();
+            let regionAttr = pV.GetCustomAttribute<LauncherRegionAttribute>()
+            let config = _launcherConfig.Regions.FirstOrDefault(x => x.Name == regionAttr.Name)
+            where config != null
+            select new RegionItem { PartialView = regionAttr.Name, Region = config.Region }).ToArray();
 
         return regions;
     }
-
-    private static EndpointDataSource _endpointsDataSource;
-    private static PageLoader _pageLoader;
-    private static readonly Lazy<PageActionDescriptorAndModuleItem[]> _descriptorsAndModules =
-        new(LoadCompiledActionDescriptors, LazyThreadSafetyMode.ExecutionAndPublication);
 
     /// <summary>
     /// Load the full set of <see cref="CompiledPageActionDescriptor"/>s to be filtered by permissions later on
@@ -107,61 +161,6 @@ public class ShellNavigator : IShellNavigator, ILauncher
         return [.. descriptorModuleTuples.OrderBy(t => t.ModuleItem.SortIndex)];
     }
 
-    public ShellNavigator(
-        EndpointDataSource endpointsDataSource,
-        PageLoader pageLoader,
-        IConfigManager configManager,
-        IOptionsMonitor<MoryxIdentityOptions> options,
-        IMemoryCache memoryCache,
-        ILoggerFactory logger)
-    {
-        _endpointsDataSource = endpointsDataSource;
-        _pageLoader = pageLoader;
-        _logger = logger.CreateLogger(nameof(ShellNavigator));
-        if (options?.CurrentValue?.BaseAddress is not null)
-        {
-            _client = new MoryxAccessManagementClient(
-                options,
-                memoryCache,
-                logger.CreateLogger($"{nameof(ShellNavigator)}:{nameof(MoryxAccessManagementClient)}")
-            );
-        }
-
-        _launcherConfig = GetConfiguration(configManager);
-    }
-
-    /// <inheritdoc />
-    public async Task<IReadOnlyList<ModuleItem>> GetModuleItemsAsync(HttpContext context) => await FilterModuleItems(context);
-
-    /// <summary>
-    /// Filter <see cref="_descriptorsAndModules"/> by user permissions
-    /// </summary>
-    /// <param name="context">HttpContext used to extract the users identity tokens</param>
-    /// <returns>A filtered array of <see cref="ModuleItem"/>s the user has permission to see</returns>
-    private async Task<ModuleItem[]> FilterModuleItems(HttpContext context)
-    {
-        var descriptorsAndModules = _descriptorsAndModules.Value;
-
-        // No authorization is configured
-        if (context is null || _client is null)
-        {
-            return [.. descriptorsAndModules.Select(t => t.ModuleItem)];
-        }
-
-        var token = context.Request.Cookies[MoryxIdentityDefaults.JWT_COOKIE_NAME];
-        var refreshToken = context.Request.Cookies[MoryxIdentityDefaults.REFRESH_TOKEN_COOKIE_NAME];
-
-        var permissions = await _client.GetPermissionsAsync(token, refreshToken);
-        return [.. descriptorsAndModules.Where(t =>
-        {
-            var requiredPolicy =
-                (t.Cpad.EndpointMetadata.SingleOrDefault(a => a is AuthorizeAttribute) as AuthorizeAttribute)?.Policy;
-            return requiredPolicy is null || permissions?.Contains(requiredPolicy) == true;
-        }).Select(t => t.ModuleItem)];
-    }
-
-    RegionItem ILauncher.GetRegion(LauncherRegion region) => _configuredRegions.Value.FirstOrDefault(r => r.Region == region);
-
     private static ExternalModuleItem CreateExternalModuleItem(ExternalModuleConfig externalModuleConfig)
     {
         return new ExternalModuleItem
@@ -177,14 +176,11 @@ public class ShellNavigator : IShellNavigator, ILauncher
 
     private static WebModuleItem CreateWebModuleItem(CompiledPageActionDescriptor pageActionDescriptor)
     {
-        var webModuleAttribute =
-            pageActionDescriptor.EndpointMetadata.SingleOrDefault(a => a is WebModuleAttribute) as WebModuleAttribute;
+        var webModuleAttribute = pageActionDescriptor.EndpointMetadata.OfType<WebModuleAttribute>().SingleOrDefault();
         if (webModuleAttribute is null)
             return null;
 
-        var streamAttribute =
-            pageActionDescriptor.EndpointMetadata.SingleOrDefault(a => a is ModuleEventStreamAttribute) as
-                ModuleEventStreamAttribute;
+        var streamAttribute = pageActionDescriptor.EndpointMetadata.OfType<ModuleEventStreamAttribute>().SingleOrDefault();
         return new WebModuleItem
         {
             Title = pageActionDescriptor.PageTypeInfo.GetDisplayName() ?? webModuleAttribute.Route,
@@ -219,21 +215,17 @@ public class ShellNavigator : IShellNavigator, ILauncher
 
         if (topRegion == null)
         {
-            topRegion = new LauncherRegionConfig()
+            topRegion = new LauncherRegionConfig
             {
                 Region = LauncherRegion.Top,
                 Name = NotificationsBarName
             };
 
-            var regions = new List<LauncherRegionConfig>();
-            regions.AddRange(launcherConfig.Regions);
-            regions.Add(topRegion);
-
-            launcherConfig.Regions = regions.ToArray();
+            launcherConfig.Regions = [.. launcherConfig.Regions, topRegion];
 
             configManager.SaveConfiguration(launcherConfig);
         }
     }
 
-    private record struct PageActionDescriptorAndModuleItem(CompiledPageActionDescriptor Cpad, ModuleItem ModuleItem) { }
+    private record struct PageActionDescriptorAndModuleItem(CompiledPageActionDescriptor CompiledPageActionDescriptor, ModuleItem ModuleItem) { }
 }
