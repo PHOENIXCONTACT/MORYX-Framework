@@ -23,6 +23,11 @@
     "NO_RESULTS": "Nessun risultato per \"{{query}}\"",
     "DIALOG_LABEL": "Ricerca"
   },
+  "FULLSCREEN_LAYOUT": {
+    "EXIT_FULLSCREEN": "Esci da schermo intero",
+    "MODULES": "Moduli",
+    "MORE": "Altro"
+  },
   "ABOUT": {
     "TITLE": "Informazioni",
     "APPLICATION": "Applicazione",

@@ -11,13 +11,14 @@ import { WebModuleItem } from '../models/web-module-item';
 import { ExternalModuleItem } from '../models/external-module-item';
 import { NotificationBadge } from '../notification-badge/notification-badge';
 import { MoreMenu } from '../more-menu/more-menu';
+import { ModuleGridMenu } from '../module-grid-menu/module-grid-menu';
 import { ModuleService } from '../services/module.service';
 
 const MIN_ITEM_WIDTH = 112; // items shrink below this -> remove from the end
 
 @Component({
   selector: 'app-horizontal-module-nav',
-  imports: [MatIconModule, MatButtonModule, MatMenuModule, NotificationBadge, MoreMenu],
+  imports: [MatIconModule, MatButtonModule, MatMenuModule, NotificationBadge, MoreMenu, ModuleGridMenu],
   templateUrl: './horizontal-module-nav.html',
   styleUrl: './horizontal-module-nav.scss'
 })

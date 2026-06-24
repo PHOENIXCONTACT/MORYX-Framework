@@ -23,6 +23,11 @@
     "NO_RESULTS": "没有找到 \"{{query}}\" 的结果",
     "DIALOG_LABEL": "搜索"
   },
+  "FULLSCREEN_LAYOUT": {
+    "EXIT_FULLSCREEN": "退出全屏",
+    "MODULES": "模块",
+    "MORE": "更多"
+  },
   "ABOUT": {
     "TITLE": "关于",
     "APPLICATION": "应用程序",

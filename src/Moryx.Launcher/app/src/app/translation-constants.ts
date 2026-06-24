@@ -35,6 +35,12 @@ export class TranslationConstants {
     DIALOG_LABEL: 'SEARCH.DIALOG_LABEL',
   }
 
+  public static readonly FULLSCREEN_LAYOUT = {
+    EXIT_FULLSCREEN: 'FULLSCREEN_LAYOUT.EXIT_FULLSCREEN',
+    MODULES: 'FULLSCREEN_LAYOUT.MODULES',
+    MORE: 'FULLSCREEN_LAYOUT.MORE',
+  }
+
   public static readonly ABOUT = {
     TITLE: 'ABOUT.TITLE',
     APPLICATION: 'ABOUT.APPLICATION',

@@ -1,5 +1,5 @@
 <nav #navEl>
-  <button class="nav-item" [matMenuTriggerFor]="moduleGrid">
+  <button class="nav-item" [matMenuTriggerFor]="moduleGridMenu.moduleGridMenu">
     <div class="icon-wrapper">
       <mat-icon>view_module</mat-icon>
     </div>
@@ -29,14 +29,4 @@
 </nav>
 
 <app-more-menu #moreMenu></app-more-menu>
-
-<mat-menu #moduleGrid="matMenu" panelClass="module-grid-panel">
-  <div class="module-grid" (click)="$event.stopPropagation()">
-    @for (module of modules(); track module.route) {
-      <a class="module-grid-item" [href]="module.route" [title]="module.description" [class.active]="module.route === activeRoute()">
-        <mat-icon>{{ module.icon }}</mat-icon>
-        <span>{{ module.title }}</span>
-      </a>
-    }
-  </div>
-</mat-menu>
+<app-module-grid-menu #moduleGridMenu></app-module-grid-menu>
