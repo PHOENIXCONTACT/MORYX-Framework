@@ -11,20 +11,24 @@ import { ModuleCategory } from '../models/module-category';
   providedIn: 'root'
 })
 export class ModuleService {
+  /** All registered modules loaded from the server. */
   modules = signal<ModuleItem[]>([]);
 
+  /** User-category modules, sorted by sortIndex. */
   userModules = computed(() =>
     this.modules()
       .filter(m => m.category === ModuleCategory.User)
       .sort((a, b) => a.sortIndex - b.sortIndex)
   );
 
+  /** Non-user-category modules, sorted by sortIndex. */
   otherModules = computed(() =>
     this.modules()
       .filter(m => m.category !== ModuleCategory.User)
       .sort((a, b) => a.sortIndex - b.sortIndex)
   );
 
+  /** The route of the best-matching active module based on the current URL. */
   activeRoute = computed(() => {
     const pathname = window.location.pathname;
     let best: string | null = null;

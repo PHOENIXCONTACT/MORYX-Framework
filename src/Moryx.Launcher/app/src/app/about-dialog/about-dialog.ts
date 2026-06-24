@@ -22,6 +22,8 @@ import { TranslationConstants } from '../translation-constants';
   styleUrl: './about-dialog.scss',
 })
 export class AboutDialog {
+  private commonService = inject(CommonService);
+  private cultureService = inject(CultureService);
 
   protected TranslationConstants = TranslationConstants;
   isMac = navigator.platform.toUpperCase().includes('MAC');
@@ -32,9 +34,6 @@ export class AboutDialog {
     { label: TranslationConstants.ABOUT.SHORTCUT_OPERATOR_MODE, keys: { mac: '⌘ ⌥ 2', other: 'Ctrl+Alt+2' } },
     { label: TranslationConstants.ABOUT.SHORTCUT_FULLSCREEN_MODE, keys: { mac: '⌘ ⌥ 3', other: 'Ctrl+Alt+3' } },
   ];
-
-  private commonService = inject(CommonService);
-  private cultureService = inject(CultureService);
 
   private applicationInfo = toSignal(this.commonService.getApplicationInfo()
     .pipe(catchError(() => of(null))));

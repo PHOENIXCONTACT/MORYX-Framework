@@ -18,7 +18,7 @@ import { LocationPersistenceService } from '../services/location-persistence.ser
 })
 export class ModuleGridMenu {
   private moduleService = inject(ModuleService);
-  private locationPersistence = inject(LocationPersistenceService);
+  private locationPersistenceService = inject(LocationPersistenceService);
 
   modules = this.moduleService.userModules;
   activeRoute = this.moduleService.activeRoute;
@@ -26,6 +26,6 @@ export class ModuleGridMenu {
   @ViewChild('moduleGridMenu') moduleGridMenu!: MatMenu;
 
   resolveHref(module: ModuleItem): string {
-    return this.locationPersistence.resolveHref(module);
+    return this.locationPersistenceService.resolveHref(module);
   }
 }

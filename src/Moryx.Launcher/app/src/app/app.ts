@@ -32,12 +32,6 @@ import { SearchService } from './services/search.service';
 })
 export class App {
 
-  // Web component inputs
-  webModuleItems = input.required<WebModuleItem[]>();
-  externalModuleItems = input.required<ExternalModuleItem[]>();
-  supportedCultures = input.required<CultureModel[]>();
-  authBaseAddress = input<string>();
-
   private launcherStateService = inject(LauncherStateService);
   private moduleService = inject(ModuleService);
   private cultureService = inject(CultureService);
@@ -47,6 +41,12 @@ export class App {
   private translateService = inject(TranslateService);
   private searchService = inject(SearchService);
   private destroyRef = inject(DestroyRef);
+
+  // Web component inputs
+  webModuleItems = input.required<WebModuleItem[]>();
+  externalModuleItems = input.required<ExternalModuleItem[]>();
+  supportedCultures = input.required<CultureModel[]>();
+  authBaseAddress = input<string>();
 
   layout = this.launcherStateService.layout;
 

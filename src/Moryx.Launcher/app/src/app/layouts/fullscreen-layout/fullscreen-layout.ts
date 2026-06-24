@@ -26,9 +26,10 @@ import { LayoutBase } from '../layout-base';
   }
 })
 export class FullscreenLayout extends LayoutBase {
-  TranslationConstants = TranslationConstants;
-  private hideTimeout: ReturnType<typeof setTimeout> | null = null;
   private destroyRef = inject(DestroyRef);
+
+  protected TranslationConstants = TranslationConstants;
+  private hideTimeout: ReturnType<typeof setTimeout> | null = null;
 
   showExitButton = signal(false);
 

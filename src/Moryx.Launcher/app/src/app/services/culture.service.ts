@@ -13,8 +13,10 @@ import { CultureModel } from '../models/culture-model';
 export class CultureService {
   private cookieService = inject(CookieService);
 
+  /** Available cultures provided by the server. */
   supportedCultures = signal<CultureModel[]>([]);
 
+  /** The currently active culture, derived from the ASP.NET culture cookie. */
   currentCulture = computed(() => {
     const rawCookie = this.cookieService.get('.AspNetCore.Culture');
     if (!rawCookie) {

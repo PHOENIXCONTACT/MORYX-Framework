@@ -26,13 +26,13 @@ const MIN_ITEM_WIDTH = 112; // items shrink below this -> remove from the end
 })
 export class HorizontalModuleNav {
   private moduleService = inject(ModuleService);
-  private locationPersistence = inject(LocationPersistenceService);
+  private locationPersistenceService = inject(LocationPersistenceService);
+  private destroyRef = inject(DestroyRef);
 
   modules = this.moduleService.userModules;
   activeRoute = this.moduleService.activeRoute;
 
   private navEl = viewChild.required<ElementRef<HTMLElement>>('navEl');
-  private destroyRef = inject(DestroyRef);
 
   private visibleCount = signal(Number.MAX_SAFE_INTEGER);
 
@@ -52,7 +52,7 @@ export class HorizontalModuleNav {
   }
 
   resolveHref(module: ModuleItem): string {
-    return this.locationPersistence.resolveHref(module);
+    return this.locationPersistenceService.resolveHref(module);
   }
 
   asWeb(item: WebModuleItem | ExternalModuleItem): WebModuleItem | null {

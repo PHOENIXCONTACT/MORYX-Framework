@@ -24,6 +24,8 @@ import { TranslationConstants } from '../translation-constants';
 })
 export class SpotlightSearch {
   private searchService = inject(SearchService);
+  private shortcutService = inject(ShortcutService);
+  private destroyRef = inject(DestroyRef);
 
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
   @ViewChild('resultsList') resultsList!: ElementRef<HTMLUListElement>;
@@ -39,10 +41,7 @@ export class SpotlightSearch {
   disableSearchBox = this.searchService.disableSearchBox;
 
   constructor() {
-    const shortcutService = inject(ShortcutService);
-    const destroyRef = inject(DestroyRef);
-
-    shortcutService.register({ key: 'k', ctrl: true, alt: true, action: () => this.open() }, destroyRef);
+    this.shortcutService.register({ key: 'k', ctrl: true, alt: true, action: () => this.open() }, this.destroyRef);
 
     effect(() => {
       if (this.isOpen()) {

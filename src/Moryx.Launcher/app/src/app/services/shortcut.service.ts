@@ -6,7 +6,6 @@
 import { DestroyRef, inject, Injectable } from '@angular/core';
 
 export interface ShortcutBinding {
-  /** The key to match — checked against both event.key and event.code (e.g. 'k', 'Digit1'). */
   key: string;
   ctrl?: boolean;
   shift?: boolean;
@@ -39,9 +38,12 @@ export class ShortcutService {
 
     for (const binding of this.bindings) {
       const key = binding.key.toLowerCase();
+
+      // The key to match — checked against both event.key and event.code (e.g. 'k', 'Digit1').
       const keyMatch = event.key.toLowerCase() === key
         || event.code.toLowerCase() === key
         || event.code.toLowerCase() === `key${key}`;
+
       if (keyMatch && ctrl === !!binding.ctrl && event.shiftKey === !!binding.shift
         && event.altKey === !!binding.alt) {
         event.preventDefault();

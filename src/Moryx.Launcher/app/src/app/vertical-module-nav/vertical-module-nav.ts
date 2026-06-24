@@ -24,14 +24,14 @@ import { LocationPersistenceService } from '../services/location-persistence.ser
 })
 export class VerticalModuleNav {
   private moduleService = inject(ModuleService);
-  private locationPersistence = inject(LocationPersistenceService);
+  private locationPersistenceService = inject(LocationPersistenceService);
 
   modules = this.moduleService.userModules;
   activeRoute = this.moduleService.activeRoute;
   collapsed = input(false);
 
   resolveHref(module: ModuleItem): string {
-    return this.locationPersistence.resolveHref(module);
+    return this.locationPersistenceService.resolveHref(module);
   }
 
   asWeb(item: WebModuleItem | ExternalModuleItem): WebModuleItem | null {

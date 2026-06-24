@@ -28,13 +28,14 @@ import { TranslatePipe } from '@ngx-translate/core';
 })
 export class MoreMenu {
   private moduleService = inject(ModuleService);
-  private locationPersistence = inject(LocationPersistenceService);
+  private locationPersistenceService = inject(LocationPersistenceService);
   private cultureService = inject(CultureService);
   private launcherStateService = inject(LauncherStateService);
   private searchService = inject(SearchService);
   private themeService = inject(ThemeService);
+  private dialog = inject(MatDialog);
 
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
   currentTheme = this.themeService.mode;
 
   currentLayout = this.launcherStateService.layout;
@@ -53,8 +54,6 @@ export class MoreMenu {
   setLayout(layout: LauncherLayout) {
     this.launcherStateService.updateLayout(layout);
   }
-
-  private dialog = inject(MatDialog);
 
   openAbout() {
     this.dialog.open(AboutDialog);
@@ -77,7 +76,7 @@ export class MoreMenu {
   }
 
   resolveHref(module: ModuleItem): string {
-    return this.locationPersistence.resolveHref(module);
+    return this.locationPersistenceService.resolveHref(module);
   }
 
   selectCulture = this.cultureService.selectCulture.bind(this.cultureService);

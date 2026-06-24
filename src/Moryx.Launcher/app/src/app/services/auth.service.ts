@@ -13,8 +13,14 @@ export class AuthService {
   private cookieService = inject(CookieService);
 
   authBaseAddress: string | undefined = undefined;
+
+  /** Whether the server has authentication enabled. */
   authConfigured = signal<boolean>(false);
+
+  /** Whether the current user is signed in. */
   isLoggedIn = signal<boolean>(false);
+
+  /** Display name of the signed-in user. */
   userName = signal<string>('');
 
   checkSignedIn(): void {

@@ -16,12 +16,12 @@ import { LocationPersistenceService } from '../services/location-persistence.ser
   styleUrl: './module-overview.scss',
 })
 export class ModuleOverview {
-  private locationPersistence = inject(LocationPersistenceService);
+  private locationPersistenceService = inject(LocationPersistenceService);
 
   webModuleItems = input.required<WebModuleItem[]>();
   userModules = computed(() => this.webModuleItems().filter(m => m.category === ModuleCategory.User));
 
   resolveHref(module: ModuleItem): string {
-    return this.locationPersistence.resolveHref(module);
+    return this.locationPersistenceService.resolveHref(module);
   }
 }

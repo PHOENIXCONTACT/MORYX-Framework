@@ -12,7 +12,10 @@ export class LauncherStateService {
 
   private readonly stateName = 'LauncherState';
 
+  /** The active layout mode (full, operator, fullscreen). Persisted. */
   layout = signal<LauncherLayout>(this.getLayout());
+
+  /** Whether the side navigation is collapsed. Persisted. */
   navCollapsed = signal<boolean>(this.getStoredState()?.navCollapsed ?? false);
 
   /** Whether a top region slot has content projected. Set by layout components. */

@@ -14,6 +14,7 @@ export class ThemeService {
   private readonly storageKey = 'LauncherTheme';
   private systemDarkQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
+  /** The active theme mode (light, dark, system). Persisted. */
   mode = signal<ThemeMode>(this.getStoredMode());
 
   constructor() {
