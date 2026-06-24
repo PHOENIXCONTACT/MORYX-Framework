@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { LanguageService } from '@moryx/ngx-web-framework/services';
@@ -31,7 +31,10 @@ const COOKIE_NAME = 'moryx-client-identifier';
   imports: [
     WorkerInstructions,
     MatButtonModule
-  ]
+  ],
+  host: {
+    '(window:beforeunload)': 'disconnectEvents()'
+  }
 })
 export class App implements OnInit {
   private dialog = inject(MatDialog);
@@ -40,6 +43,7 @@ export class App implements OnInit {
   private cookieService = inject(CookieService);
   private instructionService = inject(InstructionService);
   private languageService = inject(LanguageService);
+  private destroyRef = inject(DestroyRef);
 
   environment = environment;
   clientIdentifier: string = '';
@@ -59,9 +63,11 @@ export class App implements OnInit {
     ]);
     this.translateService.setFallbackLang('en');
     this.translateService.use(this.languageService.getFallbackLang());
+    this.destroyRef.onDestroy(() => this.disconnectEvents());
   }
 
   ngOnInit(): void {
+     this.instructionService.connect();
   }
 
   openConfigDialog(): void {
@@ -85,7 +91,9 @@ export class App implements OnInit {
   private updateInstructor(result: any): void {
     this.clientIdentifier = result.instructorName;
     this.cookieService.setCookie(COOKIE_NAME, result.instructorName, 365);
-    this.instructionService.subscribeToStream();
+
+    this.instructionService.disconnect();
+    this.instructionService.connect();
   }
 
   private async showNoInstructorWarning(): Promise<void> {
@@ -104,6 +112,10 @@ export class App implements OnInit {
         duration: 5000,
       }
     );
+  }
+
+  disconnectEvents(): void {
+    this.instructionService.disconnect();
   }
 }
 

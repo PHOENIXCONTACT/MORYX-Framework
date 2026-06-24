@@ -22,21 +22,20 @@ For example if you want to indicate a manual material change with modified capab
 ```cs
 public override SetupEvaluation Evaluate(ProductionRecipe recipe)
 {
-    return SetupEvaluation.Provide(new InsertHousingCapabilities{ Identifier = recipe.Product.Housing.Identitiy}, SetupClassification.Manual | SetupClassification.MaterialChange);
+    return SetupEvaluation.Provide(new InsertHousingCapabilities { Identifier = recipe.Product.Housing.Identitiy }, SetupClassification.Manual | SetupClassification.MaterialChange);
 }
 ```
 
 Because of defined implicit casts it is also possible to directly return `bool` or `SetupClassification` instead of the evaluation object.
 
 ```cs
-IWorkplanStep CreateStep(ProductionRecipe recipe);
+IReadOnlyList<IWorkplanStep> CreateSteps(IProductRecipe recipe);
 ```
 
-Provided that `Evaluate` indicates the need for a machine change, this method creates a `WorkplanStep` to alter a target resource in a way that it provides the necessary capabilities afterwards.
+Provided that `Evaluate` indicates the need for a machine change, this method creates `WorkplanStep`'s to alter a target resource in a way that it provides the necessary capabilities afterwards.
 
-**Return multiple setup steps**
-
-With the extended interface `IMultiSetupTrigger.CreateSteps` it is possible to return an array of steps.
+> [!IMPORTANT]
+> Each setup task / setup activity returned by `CreateSteps` must have exactly **3 outputs** to wire success, failure and technical error. The setup workplan wiring will fail if a step does not meet this requirement.
 
 ### Example of Setup Trigger using the WatchProduct example
 
@@ -68,22 +67,10 @@ internal class WatchFaceMountSetupTrigger : SetupTriggerBase<WatchFaceMountSetup
         return true; // return SetupClassification.Manual -- return SetupEvaluation.Provide(new MountWatchfaceCapabilities())  -- ...
     }
 
-    public override IWorkplanStep CreateStep(IProductRecipe recipe)
-    {
-        return new WatchFaceMountSetupTask
-        {
-            Parameters = new WatchFaceMountSetupParameters()
-            {
-                FinishedOrderNumber = ((WatchRecipe)recipe).OrderNumber
-            }
-        };
-    }
-
-    // Optional method for more than one setup task
     public IReadOnlyList<IWorkplanStep> CreateSteps(IProductRecipe recipe)
     {
-        return new IWorkplanStep[] 
-        { 
+        return new IWorkplanStep[]
+        {
             new WatchFaceMountSetupTask
             {
                 Parameters = new WatchFaceMountSetupParameters()

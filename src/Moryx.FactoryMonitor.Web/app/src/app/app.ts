@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, computed, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, computed, inject, OnInit, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
 import { EditMenuService } from './services/edit-menu.service';
 import { EditMenuState } from './services/EditMenutState';
 import { ChangeBackgroundService } from './services/change-background.service';
@@ -17,6 +17,7 @@ import { OrdersContainer } from './components/orders-container/orders-container'
 import { CellDetails } from './components/cell-details/cell-details';
 import { RouterOutlet } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { FactoryStateStreamService } from './services/factory-state-stream.service';
 
 @Component({
   selector: 'app-root',
@@ -28,12 +29,17 @@ import { toSignal } from '@angular/core/rxjs-interop';
     OrdersContainer,
     CellDetails,
     RouterOutlet
-  ]
+  ],
+  host: {
+    '(window:beforeunload)': 'disconnectEvents()'
+  }
 })
-export class App {
+export class App implements OnInit {
+  private factoryStateStreamService = inject(FactoryStateStreamService);
   private languageService = inject(LanguageService);
   private translateService = inject(TranslateService);
   private cellStoreService = inject(CellStoreService);
+  private destroyRef = inject(DestroyRef);
 
   private editMenuState = toSignal(inject(EditMenuService).activeState$, { initialValue: EditMenuState.Closed });
   private background = toSignal(inject(ChangeBackgroundService).backgroundChanged$);
@@ -51,10 +57,19 @@ export class App {
     ]);
     this.translateService.setFallbackLang('en');
     this.translateService.use(this.languageService.getFallbackLang());
+    this.destroyRef.onDestroy(() => this.disconnectEvents());
+  }
+
+  ngOnInit(): void {
+    this.factoryStateStreamService.connect();
   }
 
   getCell(cellId: number): CellModel {
     const output = this.cellStoreService.getCell(cellId) ?? <CellModel>{};
     return output;
+  }
+
+  disconnectEvents(): void {
+    this.factoryStateStreamService.disconnect();
   }
 }

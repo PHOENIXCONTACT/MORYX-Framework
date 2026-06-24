@@ -7,10 +7,11 @@ import { CommonModule } from '@angular/common';
 import {
   Component,
   computed,
+  DestroyRef,
+  effect,
   ElementRef,
+  inject,
   input,
-  OnDestroy,
-  OnInit,
   signal,
   ChangeDetectionStrategy
 } from '@angular/core';
@@ -31,13 +32,15 @@ export interface Notification {
   styleUrl: './notifications-bar.scss',
   changeDetection: ChangeDetectionStrategy.Eager,
   host: {
-    '[style.--severity-background-color]': 'getSeverityBackgroundColor(currentNotification()?.severity, errorAvailable())'
+    '[style.--severity-background-color]': 'getSeverityBackgroundColor(currentNotification()?.severity, errorAvailable())',
+    '(window:beforeunload)': 'clearAll()'
   }
 })
-export class NotificationsBar implements OnInit, OnDestroy {
+export class NotificationsBar {
+  private destroyRef = inject(DestroyRef);
   url = input('Notifications');
   api = input('/api/moryx/notifications/stream');
-  eventSource: EventSource | undefined;
+  private eventSource: EventSource | undefined;
 
   notifications = signal<Array<Notification> | undefined>(undefined);
   notificationIndex = signal<number>(0);
@@ -65,21 +68,29 @@ export class NotificationsBar implements OnInit, OnDestroy {
   };
 
   constructor(private elementRef: ElementRef) {
+    effect((onCleanup) => {
+      const url = this.api();
+      if (!url) {
+        return;
+      }
+
+      this.eventSource = new EventSource(url);
+      this.eventSource.onmessage = (e) => this.onMessageReceived(e);
+      this.eventSource.onerror = (e) => this.onErrorReceived(e);
+
+      onCleanup(() => {
+        this.clearAll();
+      });
+    });
+
+    this.destroyRef.onDestroy(() => {
+      this.clearAll()
+    });
   }
 
-  ngOnInit(): void {
-    if (!this.api()) {
-      return;
-    }
-
-    // listen to notification stream
-    this.connect();
-  }
-
-  private connect() {
-    this.eventSource = new EventSource(this.api());
-    this.eventSource.onmessage = this.onMessageReceived.bind(this);
-    this.eventSource.onerror = this.onErrorReceived.bind(this);
+  clearAll() {
+    this.clearEventSource();
+    this.clearInterval();
   }
 
   private onMessageReceived(event: any) {
@@ -119,20 +130,10 @@ export class NotificationsBar implements OnInit, OnDestroy {
       this.notifications.set([]);
       this.clearInterval();
     }
-
-    if (this.eventSource?.readyState == EventSource.CLOSED) {
-      this.clearEventSource();
-
-      setTimeout(() => {
-        this.connect();
-      }, 3000);
-    }
   }
 
   private clearEventSource() {
     if (this.eventSource !== undefined) {
-      this.eventSource.removeEventListener('message', this.onMessageReceived);
-      this.eventSource.removeEventListener('error', this.onErrorReceived);
       this.eventSource.close();
       this.eventSource = undefined;
     }
@@ -185,10 +186,5 @@ export class NotificationsBar implements OnInit, OnDestroy {
       default:
         return '';
     }
-  }
-
-  ngOnDestroy(): void {
-    this.clearEventSource();
-    this.clearInterval();
   }
 }

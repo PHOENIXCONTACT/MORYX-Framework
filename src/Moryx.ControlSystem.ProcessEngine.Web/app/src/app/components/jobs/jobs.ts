@@ -4,7 +4,7 @@
 */
 
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, inject, OnInit, signal, ChangeDetectorRef, ChangeDetectionStrategy } from "@angular/core";
+import { Component, inject, OnInit, signal, ChangeDetectorRef, ChangeDetectionStrategy, DestroyRef } from "@angular/core";
 import { JobManagementService, OrderManagementService } from "@api/services";
 import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
 import { JobViewModel } from "@app/models/job-view-model";
@@ -25,6 +25,7 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatButtonModule } from "@angular/material/button";
 import { JobModel } from "@api/models/job-model";
 import { OperationModel } from "@api/models/operation-model";
+import { ProcessEngineStreamService } from "@app/services/process-engine-stream.service";
 
 @Component({
   selector: "app-jobs",
@@ -42,13 +43,18 @@ import { OperationModel } from "@api/models/operation-model";
     MatButtonModule
   ],
   changeDetection: ChangeDetectionStrategy.Eager,
-  providers: []
+  providers: [],
+  host: {
+    '(window:beforeunload)': 'disconnectEvents()'
+  }
 })
 export class Jobs implements OnInit {
+  private destroyRef = inject(DestroyRef);
   private jobManagementService = inject(JobManagementService);
   private jobManagementEvents = inject(JobManagementStreamService);
   private orderManagementService = inject(OrderManagementService);
   private orderManagementEvents = inject(OrderManagementStreamService);
+  private processEngineEvents = inject(ProcessEngineStreamService);
   private snackbarService = inject(SnackbarService);
   private changeDetectorRef = inject(ChangeDetectorRef);
 
@@ -59,8 +65,15 @@ export class Jobs implements OnInit {
   environment = environment;
   TranslationConstants = TranslationConstants;
 
+  constructor() {
+      this.destroyRef.onDestroy(() => this.disconnectEvents());
+  }
+
   ngOnInit(): void {
     this.fetchJobs();
+
+    this.jobManagementEvents.connect();
+    this.processEngineEvents.connect();
 
     this.jobManagementEvents.updatedJob.subscribe((updatedJob) =>
       this.updateJobs(updatedJob)
@@ -72,7 +85,7 @@ export class Jobs implements OnInit {
         await this.snackbarService.handleError(e)
     });
 
-    this.orderManagementEvents.stream(OperationType.Update, (updatedOperation: OperationModel) =>
+    this.orderManagementEvents.connect(OperationType.Update, (updatedOperation: OperationModel) =>
         this.updateOperations(updatedOperation)
     );
   }
@@ -151,6 +164,12 @@ export class Jobs implements OnInit {
     if (job.productionJob)
       return this.operations().find(operation => operation.jobIds?.find(j => j === job.id))?.number!;
     return "";
+  }
+
+  disconnectEvents() {
+    this.jobManagementEvents.disconnect();
+    this.processEngineEvents.disconnect();
+    this.orderManagementEvents.disconnect();
   }
 }
 

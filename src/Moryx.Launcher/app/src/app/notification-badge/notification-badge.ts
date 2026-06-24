@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, input, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, DestroyRef, effect, inject, input, signal, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'app-notification-badge',
@@ -12,31 +12,36 @@ import { Component, input, OnDestroy, OnInit, signal, ChangeDetectionStrategy } 
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './notification-badge.scss',
   host: {
-    '(window:unload)': 'onUnload()',
+    '(window:beforeunload)': 'closeEventSource()'
   }
 })
-export class NotificationBadge implements OnInit, OnDestroy {
+export class NotificationBadge {
+  private destroyRef = inject(DestroyRef);
   eventStream = input('');
   count = signal(0);
-  eventSource: EventSource | undefined;
+  private eventSource: EventSource | undefined;
 
-  ngOnInit(): void {
-    console.log(this.eventStream());
-    if (!this.eventStream()) {
-      return;
-    }
+  constructor() {
+    effect((onCleanup) => {
+      const url = this.eventStream();
+      if (!url) {
+        return;
+      }
 
-    this.eventSource = new EventSource(this.eventStream());
-    this.eventSource.onmessage = this.onReceived.bind(this);
+      this.eventSource = new EventSource(url);
+      this.eventSource.onmessage = (e) => this.onReceived(e);
+
+      onCleanup(() => {
+        this.closeEventSource();
+      })
+    });
+
+    this.destroyRef.onDestroy(() => this.closeEventSource());
   }
 
-  onUnload(): void {
+  closeEventSource(): void {
     this.eventSource?.close();
-  }
-
-  ngOnDestroy(): void {
-    this.eventSource?.removeEventListener('message', this.onReceived);
-    this.eventSource?.close();
+    this.eventSource = undefined;
   }
 
   onReceived(event: any) {
