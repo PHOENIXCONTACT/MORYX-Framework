@@ -1,11 +1,11 @@
 <div class="main-area">
-  <div class="top-bar">
-    @if (showTopRegion()) {
+  @if (showTopRegion()) {
+    <div class="top-bar">
       <slot name="topRegion" (slotchange)="onTopRegionSlotChange($event)"></slot>
-    } @else {
-      <slot name="topRegion" (slotchange)="onTopRegionSlotChange($event)" hidden></slot>
-    }
-  </div>
+    </div>
+  } @else {
+    <slot name="topRegion" (slotchange)="onTopRegionSlotChange($event)" hidden></slot>
+  }
 
   <div class="content">
     <slot name="app"></slot>
