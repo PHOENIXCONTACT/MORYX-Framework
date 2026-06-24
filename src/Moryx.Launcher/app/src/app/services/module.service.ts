@@ -10,6 +10,7 @@ import { ModuleCategory } from '../models/module-category';
 @Injectable({
   providedIn: 'root'
 })
+/** Holds the registered modules and provides filtered/sorted views and active-route detection. */
 export class ModuleService {
   /** All registered modules loaded from the server. */
   modules = signal<ModuleItem[]>([]);

@@ -9,6 +9,7 @@ import { SearchRequestCallback, SearchSuggestion } from '@moryx/ngx-web-framewor
 @Injectable({
   providedIn: 'root'
 })
+/** Bridges the spotlight search UI with the active module's search provider. */
 export class SearchService {
   private callback: SearchRequestCallback | null = null;
 

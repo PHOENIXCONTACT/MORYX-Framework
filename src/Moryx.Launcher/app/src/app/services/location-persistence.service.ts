@@ -11,6 +11,7 @@ import { ModuleService } from './module.service';
 @Injectable({
   providedIn: 'root'
 })
+/** Saves and restores the last visited sub-route per module using cookies. */
 export class LocationPersistenceService {
   private moduleService = inject(ModuleService);
   private cookieService = inject(CookieService);

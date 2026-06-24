@@ -10,6 +10,7 @@ import { CultureModel } from '../models/culture-model';
 @Injectable({
   providedIn: 'root'
 })
+/** Provides the list of supported cultures and handles culture selection via the ASP.NET culture cookie. */
 export class CultureService {
   private cookieService = inject(CookieService);
 

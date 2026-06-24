@@ -9,6 +9,7 @@ import { CookieService } from 'ngx-cookie-service';
 @Injectable({
   providedIn: 'root'
 })
+/** Tracks authentication state and provides sign-out functionality. */
 export class AuthService {
   private cookieService = inject(CookieService);
 

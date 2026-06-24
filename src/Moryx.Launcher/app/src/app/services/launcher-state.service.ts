@@ -8,6 +8,7 @@ import { Injectable, signal } from '@angular/core';
 @Injectable({
   providedIn: 'root'
 })
+/** Manages the launcher's UI state (layout, nav, regions) and persists it to localStorage. */
 export class LauncherStateService {
 
   private readonly stateName = 'LauncherState';

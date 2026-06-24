@@ -16,6 +16,7 @@ export interface ShortcutBinding {
 @Injectable({
   providedIn: 'root'
 })
+/** Global keyboard shortcut registry. Bindings are auto-removed when the registering component is destroyed. */
 export class ShortcutService {
   private bindings: ShortcutBinding[] = [];
 

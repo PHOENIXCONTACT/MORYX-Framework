@@ -10,6 +10,7 @@ export type ThemeMode = 'light' | 'dark' | 'system';
 @Injectable({
   providedIn: 'root'
 })
+/** Manages the light/dark/system theme and applies it to the document root. */
 export class ThemeService {
   private readonly storageKey = 'LauncherTheme';
   private systemDarkQuery = window.matchMedia('(prefers-color-scheme: dark)');
