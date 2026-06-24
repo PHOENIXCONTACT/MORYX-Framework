@@ -14,24 +14,27 @@ import { CultureModel } from '../models/culture-model';
 export class CultureService {
   private cookieService = inject(CookieService);
 
+  private readonly cookieName = '.AspNetCore.Culture';
+
   /** Available cultures provided by the server. */
   supportedCultures = signal<CultureModel[]>([]);
 
   /** The currently active culture, derived from the ASP.NET culture cookie. */
   currentCulture = computed(() => {
-    const rawCookie = this.cookieService.get('.AspNetCore.Culture');
-    if (!rawCookie) {
+    const cultureCookie = this.cookieService.get(this.cookieName);
+    if (!cultureCookie) {
       return '';
     }
-    const decoded = decodeURIComponent(rawCookie);
-    return decoded.split(/=|\|/)[2];
+    // Cookie format: c=de-DE|uic=de-DE
+    const culture = cultureCookie.match(/c=([^|]+)/)?.[1] ?? '';
+    return culture;
   });
 
   selectCulture(culture: CultureModel) {
-    const cookieDate = new Date;
-    cookieDate.setFullYear(cookieDate.getFullYear() + 1);
-    const value = encodeURIComponent(`c=${culture.name}|uic=${culture.name}`);
-    this.cookieService.set('.AspNetCore.Culture', value, { expires: cookieDate, path: '/' });
+    // Expire after 1 year
+    const expires = new Date(Date.now() + 365 * 24 * 3600 * 1000);
+    const value = `c=${culture.name}|uic=${culture.name}`;
+    this.cookieService.set(this.cookieName, value, { expires, path: '/' });
     window.location.reload();
   }
 }
