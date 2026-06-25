@@ -7,12 +7,12 @@ import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { ShiftTypeModel } from '../models/shift-type-model';
 import { ShiftInstanceModel } from '../models/shift-instance-model';
-import { ShiftManagementService } from '../api/services';
-import { ShiftModel } from '../api/models/shift-model';
+import { ShiftManagementService } from '@api/services';
+import { ShiftModel } from '@api/models/shift-model';
 import { formatDateDigits } from '../utils';
 import moment from 'moment';
-import { ShiftCreationContextModel } from '../api/models/shift-creation-context-model';
-import { ShiftTypeCreationContextModel } from '../api/models/shift-type-creation-context-model';
+import { ShiftCreationContextModel } from '@api/models/shift-creation-context-model';
+import { ShiftTypeCreationContextModel } from '@api/models/shift-type-creation-context-model';
 import { shiftToShitInstanceModel, shiftTypeToShiftTypeModel } from '../models/model-converter';
 
 @Injectable({

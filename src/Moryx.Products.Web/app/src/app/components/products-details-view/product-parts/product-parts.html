@@ -3,10 +3,9 @@
 @let currentPart = selectedPart();
 
 @if (connectors?.length) {
-  <mat-accordion class="parts">
+  <mat-accordion class="accordion">
     @for (connector of connectors; track connector.name) {
       <mat-expansion-panel
-        class="parts-part"
         [expanded]="currentConnector?.name === connector.name"
         (afterCollapse)="onDeselectPartConnector(connector)"
         (opened)="onSelectPartConnector(connector)">
@@ -14,34 +13,34 @@
           <mat-panel-title>{{ connector.displayName ? connector.displayName : connector.name }}</mat-panel-title>
           <mat-panel-description>{{ getConnectorPreview(connector) }}</mat-panel-description>
         </mat-expansion-panel-header>
-        <!-- part is collection -->
         @if (currentConnector?.name === connector.name) {
           @if (connector.isCollection) {
-            <div class="parts-part-list">
-              <mat-nav-list class="parts-part-list-list">
+            <div class="collection">
+              <mat-list class="list">
                 @for (partElement of connector.parts; track partElement.id) {
-                  <a mat-list-item
-                    [routerLink]="['/details', this.currentProduct()!.id, 'parts', this.expandedPart()!.name, partElement.id]"
-                    [queryParamsHandling]="'preserve'"
-                    class="parts-part-list-list-item"
+                  <mat-list-item
+                    (click)="selectPart(partElement)"
+                    class="item"
                     [class.moryx-selected]="currentPart?.id == partElement.id">
-                    <a matListItemMeta 
-                      class="product-link"
-                      [matTooltip]="TranslationConstants.PARTS.OPEN | translate"
-                      aria-label="Go to referenced product"
-                      [class.hidden]="isEditMode()"
-                      (click)="$event.stopPropagation(); $event.preventDefault(); openProduct(partElement)">
-                      <mat-icon>arrow_outward</mat-icon>
-                    </a>
-                    <span matListItemTitle>{{ partElement.product?.name }}</span>
-                    <span matListItemLine>{{ partElement.product?.identifier }}-{{ partElement.product?.revision }}</span>
-                </a>
+                    <div class="item-content">
+                      <span class="item-name truncate-name">
+                        {{ createProductNameWithIdentity(partElement.product) }}
+                      </span>
+                      <button
+                        mat-icon-button
+                        [matTooltip]="TranslationConstants.PARTS.OPEN | translate"
+                        [class.hidden]="isEditMode()"
+                        (click)="$event.stopPropagation(); openProduct(partElement)">
+                        <mat-icon>arrow_outward</mat-icon>
+                      </button>
+                    </div>
+                  </mat-list-item>
                 }
-              </mat-nav-list>
-              <app-product-parts-details class="parts-part-list-details" />
+              </mat-list>
+              <app-product-parts-details class="details" />
             </div>
-          } @else{
-            <app-product-parts-details class="parts-part-list-details" />     
+          } @else {
+            <app-product-parts-details class="details" />
           }
         }
         <mat-action-row>
@@ -49,15 +48,13 @@
             <button
               mat-button
               [disabled]="!isEditMode() || !currentPart"
-              (click)="removePart()"
-              >
+              (click)="removePart()">
               {{ TranslationConstants.PARTS.REMOVE | translate }}
             </button>
             <button
               mat-flat-button
               [disabled]="!isEditMode()"
-              (click)="addPart()"
-              >
+              (click)="addPart()">
               {{ TranslationConstants.PARTS.ADD | translate }}
             </button>
           } @else {
@@ -65,23 +62,20 @@
               <button
                 mat-button
                 [disabled]="isEditMode()"
-                (click)="openProduct(currentPart)"
-                >
+                (click)="openProduct(currentPart)">
                 {{ TranslationConstants.PARTS.OPEN | translate }}
               </button>
             }
             <button
               mat-button
               [disabled]="!isEditMode() || !currentPart"
-              (click)="removePart()"
-              >
+              (click)="removePart()">
               {{ TranslationConstants.PARTS.REMOVE | translate }}
             </button>
             <button
               mat-flat-button
               [disabled]="!isEditMode()"
-              (click)="addPart()"
-              >
+              (click)="addPart()">
               {{ TranslationConstants.PARTS.REPLACE | translate }}
             </button>
           }

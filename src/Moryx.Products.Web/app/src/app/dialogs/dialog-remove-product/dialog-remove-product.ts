@@ -4,11 +4,11 @@
 */
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
-import { TranslateModule } from '@ngx-translate/core';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
+import { TranslatePipe } from '@ngx-translate/core';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { ProductModel, ProductQuery, RevisionFilter, Selector } from '../../api/models';
 import { ProductManagementService } from '../../api/services';
 import { CommonModule } from '@angular/common';
@@ -19,9 +19,10 @@ import { MatButtonModule } from '@angular/material/button';
   selector: 'app-dialog-remove-product',
   templateUrl: './dialog-remove-product.html',
   styleUrls: ['./dialog-remove-product.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CommonModule,
-    TranslateModule,
+    TranslatePipe,
     MatListModule,
     MatDialogModule,
     MatButtonModule

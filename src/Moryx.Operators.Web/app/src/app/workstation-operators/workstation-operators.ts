@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { WorkstationViewModel } from '../models/workstation-view-model';
 import { WorkstationTogglingState } from './WorkstationTogglingState';
 import { MatDialog } from '@angular/material/dialog';
@@ -11,28 +11,29 @@ import { ActivatedRoute, Params, Router, RouterLink } from '@angular/router';
 import { AddOperatorDialog } from '../dialogs/add-operator/add-operator';
 import { TranslationConstants } from '../extensions/translation-constants.extensions';
 import { OperatorSkill } from '../models/operator-skill-model';
-import { SkillTypeModel } from '../api/models/skill-type-model';
+import { SkillTypeModel } from '@api/models/skill-type-model';
 import { skillTypeToModel } from '../models/model-converter';
 import { OperatorViewModel } from '../models/operator-view-model';
 import { AppStoreService } from '../services/app-store.service';
+import { Operators } from '../operators/operators';
 
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
-import { TranslateModule } from '@ngx-translate/core';
-import { Operators } from '../operators/operators';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-workstation-operators',
   templateUrl: './workstation-operators.html',
   styleUrl: './workstation-operators.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
+    Operators,
     MatTooltipModule,
     MatIconModule,
     EmptyState,
-    TranslateModule,
-    Operators,
+    TranslatePipe,
     MatButtonModule,
     RouterLink
   ]

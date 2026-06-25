@@ -3,17 +3,16 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   MatDialogRef,
   MAT_DIALOG_DATA,
   MatDialogModule,
 } from '@angular/material/dialog';
-import { TranslateModule } from '@ngx-translate/core';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
+import { TranslatePipe } from '@ngx-translate/core';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { MyErrorStateMatcher } from '../MyErrorStateMatcher';
-import { CdkScrollable } from '@angular/cdk/scrolling';
 import { MatInputModule } from '@angular/material/input';
 
 import { MatIconModule } from '@angular/material/icon';
@@ -24,16 +23,16 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   selector: 'app-cell-icon-selector-dialog',
   templateUrl: './cell-icon-selector-dialog.html',
   styleUrls: ['./cell-icon-selector-dialog.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatDialogModule,
-    CdkScrollable,
     MatFormFieldModule,
     MatInputModule,
     FormsModule,
     ReactiveFormsModule,
     MatIconModule,
     MatButtonModule,
-    TranslateModule
+    TranslatePipe
 ]
 })
 export class CellIconUploaderDialog {

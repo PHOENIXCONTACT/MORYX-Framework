@@ -6,13 +6,13 @@
 import { formatNumber } from "@angular/common";
 import { HttpErrorResponse } from "@angular/common/http";
 import { inject, Injectable, linkedSignal } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+import { Router } from "@angular/router";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
 import { PrototypeToEntryConverter } from "@moryx/ngx-web-framework/entry-editor";
 import { BehaviorSubject, lastValueFrom } from "rxjs";
 import { map } from "rxjs/operators";
 import { PartConnector, PartModel, ProductModel, RecipeModel } from "../api/models";
-import { ProductManagementService } from "../api/services/product-management.service";
+import { ProductManagementService } from "@api/services/product-management.service";
 import { TranslationConstants } from "../extensions/translation-constants.extensions";
 import { DuplicateProductInfos } from "../models/DuplicateProductInfos";
 import { CacheProductsService } from "./cache-products.service";
@@ -167,12 +167,12 @@ export class EditProductsService {
     try {
       await lastValueFrom(this.productManagementService.updateType({id: productModel.id, body: productModel}));
       this.cacheProductsService.loadProductsForTree();
-      updated = await lastValueFrom(this.productManagementService.getTypeById({id: productModel.id}));  
+      updated = await lastValueFrom(this.productManagementService.getTypeById({id: productModel.id}));
     } catch (error) {
       await this.snackbarService.handleError(error as HttpErrorResponse);
       return;
     }
-    
+
     this.currentProduct.next(updated);
     this.edit$.next(false);
   }
@@ -180,7 +180,7 @@ export class EditProductsService {
   async onCancel() {
     this.edit$.next(false);
     const to = this.router.url;
-    await this.router.navigate(['/cancel'], { queryParams: { to: encodeURIComponent(to) }, replaceUrl: true, });   
+    await this.router.navigate(['/cancel'], { queryParams: { to: encodeURIComponent(to) }, replaceUrl: true, });
   }
 
   async onDuplicate(infos: DuplicateProductInfos) {
@@ -194,8 +194,8 @@ export class EditProductsService {
 
     try {
       const product = await lastValueFrom(this.productManagementService.duplicate({id: id, body: `"${identifier}"`}));
-      this.cacheProductsService.loadProductsForTree();  
-      this.router.navigate(['details', product.id]);  
+      this.cacheProductsService.loadProductsForTree();
+      this.router.navigate(['details', product.id]);
     } catch (error) {
       await this.snackbarService.handleError(error as HttpErrorResponse);
     }
@@ -241,7 +241,7 @@ export class EditProductsService {
   setRecipe(recipe: RecipeModel | undefined) {
     this.recipe.set(recipe);
   }
-  
+
   updateCurrentRecipe(recipe: RecipeModel) {
     const currentRecipe = this.recipe();
     if (Object.is(recipe, currentRecipe)) {
@@ -262,7 +262,7 @@ export class EditProductsService {
     currentProduct.recipes![recipeIndex] = recipe;
     this.currentProduct.next({...currentProduct, recipes: [...currentProduct.recipes!]});
   }
-  
+
   removeRecipe(recipe: RecipeModel) {
     const currentProduct = this.currentProduct.value;
     if (!currentProduct?.recipes) return;
@@ -299,7 +299,7 @@ export class EditProductsService {
     else {
       connector.parts = [newPart];
     }
-    
+
     const updatedConnectors = product.parts?.map(c => c.name === connector.name ? {...connector} : c) ?? [];
     this.currentProduct.next({...product, parts: updatedConnectors});
     return newPart;
@@ -315,8 +315,8 @@ export class EditProductsService {
     if (!connector) {
       throw new Error("Invalid State: No part connector selected");
     }
-    const part = this.part();    
-    
+    const part = this.part();
+
     if (connector?.isCollection) {
       if (!part) {
         throw new Error("Invalid State: No part selected");

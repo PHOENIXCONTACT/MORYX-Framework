@@ -65,6 +65,10 @@ internal class ProcessHolderGroupStream(IResourceManagement resourceManagement)
 
             await result.ExecuteAsync(context);
         }
+        catch (OperationCanceledException)
+        {
+            // client disconnected — this is expected, not an error
+        }
         finally
         {
             // Unregister handlers

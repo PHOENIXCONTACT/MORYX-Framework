@@ -3,12 +3,12 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, input, OnDestroy, OnInit, output, signal } from '@angular/core';
+import { Component, inject, input, OnDestroy, OnInit, output, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
-import { WorkplanStepRecipe } from '../../../../api/models';
-import { TranslationConstants } from '../../../../extensions/translation-constants.extensions';
+import { WorkplanStepRecipe } from '@api/models';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 
 import { NavigableEntryEditor } from '@moryx/ngx-web-framework/entry-editor';
 import { MatSelectModule } from '@angular/material/select';
@@ -18,9 +18,10 @@ import { MatButtonModule } from '@angular/material/button';
   selector: 'app-step-creator',
   templateUrl: './step-creator.html',
   styleUrls: ['./step-creator.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     NavigableEntryEditor,
-    TranslateModule,
+    TranslatePipe,
     MatSelectModule,
     MatButtonModule
   ]

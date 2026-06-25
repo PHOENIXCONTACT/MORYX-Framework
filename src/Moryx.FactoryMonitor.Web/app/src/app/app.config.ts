@@ -20,8 +20,8 @@ import { provideRouter } from '@angular/router';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { firstValueFrom } from 'rxjs';
-import { environment } from 'src/environments/environment';
-import { ApiModule } from './api/api.module';
+import { environment } from '../environments/environment';
+import { ApiModule } from '@api/api.module';
 import { FactoryMonitorService } from './api/services';
 import { routes } from './app.routes';
 import { CellSettingsService } from './services/cell-settings.service';
@@ -67,14 +67,14 @@ export const appConfig: ApplicationConfig = {
       const orderStore = inject(OrderStoreService);
       const cellStore = inject(CellStoreService);
       const factorySelectionService = inject(FactorySelectionService);
-      
+
       // ToDo: Error Handling
       const initialState = await firstValueFrom(api.initialFactoryState());
 
       orderStore.initialize(initialState);
 
       cellStore.initialize(initialState);
-      
+
       factorySelectionService.initialize(initialState);
     }),
   ]

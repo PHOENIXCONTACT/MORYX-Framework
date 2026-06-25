@@ -4,7 +4,7 @@
 .operation-recipe-container {
     height: 100%;
     @include mat.sidenav-overrides((
-        container-background-color: $mat-background-light,
+        container-background-color: var(--mat-sys-surface-container-lowest),
         container-width : 300px
      ));
 }
@@ -18,9 +18,9 @@
 
 .operation-recipe-toolbar {
     background-size: cover;
-    color: $mat-background-light !important;
+    color: var(--mat-sys-surface-container-lowest) !important;
     a {
-        color: $mat-background-light !important;
+        color: var(--mat-sys-surface-container-lowest) !important;
     }
 }
 
@@ -29,7 +29,7 @@ mat-list {
 }
 
 .operation-recipes-list-item:hover {
-    background-color: $light-background-hover;
+    background-color: var(--mat-sys-surface-container-highest);
     cursor: pointer;
 }
 
@@ -55,7 +55,7 @@ mat-list {
 }
 .toolbar-nav{
     @include mat.sidenav-overrides((
-        container-background-color: $mat-background-light,
+        container-background-color: var(--mat-sys-surface-container-lowest),
         container-width: 50px
       ));
 }

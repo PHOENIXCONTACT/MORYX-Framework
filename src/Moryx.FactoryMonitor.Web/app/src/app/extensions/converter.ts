@@ -3,11 +3,11 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { OrderModel } from '../api/models/order-model';
-import { ActivityChangedModel } from '../api/models/activity-changed-model';
-import { CellStateChangedModel } from '../api/models/cell-state-changed-model';
-import { OrderChangedModel } from '../api/models/order-changed-model';
-import { ResourceChangedModel } from '../api/models/resource-changed-model';
+import { OrderModel } from '@api/models/order-model';
+import { ActivityChangedModel } from '@api/models/activity-changed-model';
+import { CellStateChangedModel } from '@api/models/cell-state-changed-model';
+import { OrderChangedModel } from '@api/models/order-changed-model';
+import { ResourceChangedModel } from '@api/models/resource-changed-model';
 import CellModel from '../models/cellModel';
 import Order from '../models/order';
 

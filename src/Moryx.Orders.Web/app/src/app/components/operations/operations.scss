@@ -21,7 +21,7 @@ mat-grid-list {
 .operations-drawer-container {
   height: 100%;
   @include mat.expansion-overrides((
-    container-background-color: $mat-background-light
+    container-background-color: var(--mat-sys-surface-container-lowest)
   ));
 }
 
@@ -31,7 +31,7 @@ mat-grid-list {
   overflow: hidden;
   box-sizing: border-box;
   @include mat.sidenav-overrides((
-    container-background-color: $mat-background-light,
+    container-background-color: var(--mat-sys-surface-container-lowest),
   ));
 }
 

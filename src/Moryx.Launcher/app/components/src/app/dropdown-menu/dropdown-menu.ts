@@ -10,6 +10,7 @@ import {
   ElementRef,
   inject,
   input,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { Constants } from '../constants';
 
@@ -18,6 +19,7 @@ import { Constants } from '../constants';
   imports: [],
   templateUrl: './dropdown-menu.html',
   styleUrl: './dropdown-menu.css',
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: {
     '(window:click)': 'click($event)'
   }

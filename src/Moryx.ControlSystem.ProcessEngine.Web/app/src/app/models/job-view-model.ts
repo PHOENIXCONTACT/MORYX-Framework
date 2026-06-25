@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { JobModel } from "../api/models/job-model";
+import { JobModel } from "@api/models/job-model";
 
 export class JobViewModel {
   model: JobModel;

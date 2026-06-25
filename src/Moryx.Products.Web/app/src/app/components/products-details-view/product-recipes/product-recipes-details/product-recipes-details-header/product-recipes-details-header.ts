@@ -3,17 +3,17 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, computed, effect, inject, linkedSignal, signal, untracked } from "@angular/core";
+import { Component, computed, effect, inject, linkedSignal, signal, untracked, ChangeDetectionStrategy } from "@angular/core";
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from "@angular/forms";
-import { TranslateModule } from "@ngx-translate/core";
-import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
-import { RecipeClassificationModel, WorkplanModel } from "../../../../../api/models";
-import { CacheProductsService } from "../../../../../services/cache-products.service";
+import { TranslatePipe } from "@ngx-translate/core";
+import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
+import { RecipeClassificationModel, WorkplanModel } from "@api/models";
+import { CacheProductsService } from "@app/services/cache-products.service";
 
 import { MatInput, MatInputModule } from "@angular/material/input";
 import { MatOptionModule } from "@angular/material/core";
 import { MatSelectModule } from "@angular/material/select";
-import { EditProductsService } from "src/app/services/edit-products.service";
+import { EditProductsService } from "@app/services/edit-products.service";
 import { toSignal } from "@angular/core/rxjs-interop";
 import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
 
@@ -21,9 +21,10 @@ import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
   selector: "app-product-recipes-details-header",
   templateUrl: "./product-recipes-details-header.html",
   styleUrls: ["./product-recipes-details-header.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatInputModule,
-    TranslateModule,
+    TranslatePipe,
     FormsModule,
     MatOptionModule,
     ReactiveFormsModule,
@@ -38,7 +39,7 @@ export class ProductRecipesDetailsHeader {
 
   isEditMode = toSignal(this.editProductsService.edit$, { initialValue: false });
   currentRecipe = linkedSignal(this.editProductsService.currentRecipe);
-  
+
   hasWorkplans = computed(() => {
     if (this.currentRecipe()?.workplanModel === undefined) return false;
     return true;

@@ -3,15 +3,15 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnInit, signal } from "@angular/core";
+import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from "@angular/core";
 import { OperatorViewModel } from "../models/operator-view-model";
 import { MatDialog } from "@angular/material/dialog";
 import { ConfirmationDialog } from "../dialogs/confirmation-dialog/confirmation-dialog";
 import { AddOperatorDialog } from "../dialogs/add-operator/add-operator";
 import { TranslationConstants } from "../extensions/translation-constants.extensions";
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { OperatorSkill } from "../models/operator-skill-model";
-import { SkillTypeModel } from "../api/models/skill-type-model";
+import { SkillTypeModel } from "@api/models/skill-type-model";
 import { skillTypeToModel } from "../models/model-converter";
 import { Router, RouterLink } from "@angular/router";
 import { AppStoreService } from "../services/app-store.service";
@@ -27,6 +27,7 @@ import { MatButtonModule } from "@angular/material/button";
   selector: "app-operators-management",
   templateUrl: "./operators-management.html",
   styleUrl: "./operators-management.scss",
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatTooltipModule,
     MatIconModule,
@@ -34,7 +35,7 @@ import { MatButtonModule } from "@angular/material/button";
     MatExpansionModule,
     OperatorSkillChips,
     RouterLink,
-    TranslateModule,
+    TranslatePipe,
     MatButtonModule
   ]
 })

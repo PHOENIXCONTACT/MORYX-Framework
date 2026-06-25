@@ -3,35 +3,30 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { FlatTreeControl } from "@angular/cdk/tree";
 import {
   Component,
-  computed,
   inject,
   OnDestroy,
   OnInit,
   signal,
-  viewChild
+  viewChild,
+  ChangeDetectionStrategy
 } from "@angular/core";
 import { toSignal } from "@angular/core/rxjs-interop";
 import { MatDialog } from "@angular/material/dialog";
 import { MatMenuModule, MatMenuTrigger } from "@angular/material/menu";
 import { MatDrawer, MatSidenavModule } from "@angular/material/sidenav";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import {
-  MatTreeFlatDataSource,
-  MatTreeFlattener,
-  MatTreeModule,
-} from "@angular/material/tree";
-import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from "@angular/router";
+import { ProductTree } from "./components/product-tree/product-tree";
+import { Router, RouterOutlet } from "@angular/router";
 import {
   LanguageService,
   SearchBarService,
   SearchRequest,
   SearchSuggestion,
 } from "@moryx/ngx-web-framework/services";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import { environment } from "src/environments/environment";
+import { TranslatePipe, TranslateService } from "@ngx-translate/core";
+import { environment } from "../environments/environment";
 import {
   ProductDefinitionModel,
   ProductModel,
@@ -70,23 +65,23 @@ import { MatInputModule } from "@angular/material/input";
     MatToolbarModule,
     MatButtonModule,
     MatTooltipModule,
-    TranslateModule,
+    TranslatePipe,
     MatIconModule,
     FormsModule,
     MatFormFieldModule,
     MatSelectModule,
     MatMenuModule,
-    MatTreeModule,
+    ProductTree,
     RouterOutlet,
     MatInputModule
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: {
     '(window:beforeunload)': 'beforeUnloadHander()'
   }
 })
 export class App implements OnInit, OnDestroy {
   private router = inject(Router);
-  private route = inject(ActivatedRoute);
   private dialog = inject(MatDialog);
   private searchbar = inject(SearchBarService);
   private cacheService = inject(CacheProductsService);
@@ -121,7 +116,7 @@ export class App implements OnInit, OnDestroy {
       TranslationConstants.LANGUAGES.ZH,
     ]);
     this.translateService.setFallbackLang("en");
-    this.translateService.use(this.languageService.getDefaultLanguage());
+    this.translateService.use(this.languageService.getFallbackLang());
   }
 
   private async getTranslations(): Promise<{ [key: string]: string }> {
@@ -161,15 +156,15 @@ export class App implements OnInit, OnDestroy {
   onSearch(result: SearchRequest) {
     if (!this.products().length) return;
 
-    const searchterm = result.term;
+    const searchTerm = result.term;
     let products = this.products().filter((p) =>
-      this.editService.createProductNameWithIdentity(p).includes(searchterm)
+      this.editService.createProductNameWithIdentity(p).includes(searchTerm)
     );
     if (!products.length) products = [];
     if (result.submitted) {
       this.searchbar.clearSuggestions();
       if (products.length > 1)
-        this.router.navigate(["search"], {queryParams: {q: searchterm}});
+        this.router.navigate(["search"], {queryParams: {q: searchTerm}});
       else if (products.length === 1)
         this.router.navigate(['/details', products[0].id ?? 0]);
       this.searchbar.subscribe({
@@ -194,32 +189,7 @@ export class App implements OnInit, OnDestroy {
     }
   }
 
-  private _transformer = (node: ProductNode, level: number) => {
-    return {
-      expandable: !!node.children && node.children.length > 0,
-      name: node.name,
-      level: level,
-      id: node.id,
-      identifier: node.identifier,
-      revision: node.revision,
-    } as FlatNode;
-  };
-
-  treeControl = new FlatTreeControl<FlatNode>(
-    (node) => node.level,
-    (node) => node.expandable
-  );
-
-  treeFlattener = new MatTreeFlattener(
-    this._transformer,
-    (node) => node.level,
-    (node) => node.expandable,
-    (node) => node.children
-  );
-
-  dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
-
-  hasChild = (_: number, node: FlatNode) => node.expandable;
+  treeData = signal<ProductNode[]>([]);
 
   createDatasource(hierarchic: boolean) {
     if (this.productDefinitions().length === 0) return;
@@ -254,8 +224,7 @@ export class App implements OnInit, OnDestroy {
         }
       }
     }
-    this.dataSource.data = dataSource;
-    this.sessionService.expandNodesAccordingToStorage(this.treeControl);
+    this.treeData.set(dataSource);
   }
 
   beforeUnloadHander() {
@@ -282,13 +251,6 @@ export class App implements OnInit, OnDestroy {
   setHierarchy(hierarchy: boolean) {
     this.sessionService.setProductTreeHierarchy(hierarchy);
     this.createDatasource(hierarchy);
-  }
-
-  onExpandOrCollapseNode(node: FlatNode) {
-    this.sessionService.saveProductTreeExpansion(
-      node,
-      this.treeControl.isExpanded(node)
-    );
   }
 
   private SortTypesToDefinitions(): ProductNode[] {
@@ -348,7 +310,7 @@ export class App implements OnInit, OnDestroy {
     this.trigger().openMenu();
   }
 
-  async onDeselect() {    
+  async onDeselect() {
     if (this.isEditMode()) {
       await this.editService.onCancel();
     }
@@ -490,10 +452,6 @@ export class App implements OnInit, OnDestroy {
     drawer.toggle();
   }
 
-  createProductIdentity(identifier: string | undefined | null, revision: number | undefined): string {
-    return this.editService.createProductIdentity(identifier, revision);
-  }
-
   get filterOptions() {
     return this.cacheService.filterOptions;
   }
@@ -503,16 +461,7 @@ export class App implements OnInit, OnDestroy {
   }
 }
 
-export interface FlatNode {
-  expandable: boolean;
-  name: string;
-  level: number;
-  id: number;
-  identifier: string;
-  revision: number;
-}
-
-interface ProductNode {
+export interface ProductNode {
   name: string;
   typeName: string | undefined;
   baseType: string | undefined;

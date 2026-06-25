@@ -62,6 +62,10 @@ public class VisualInstructionsController : ControllerBase
 
             await result.ExecuteAsync(HttpContext);
         }
+        catch (OperationCanceledException)
+        {
+            // client disconnected — this is expected, not an error
+        }
         finally
         {
             _visualInstructions.InstructionAdded -= eventHandler;

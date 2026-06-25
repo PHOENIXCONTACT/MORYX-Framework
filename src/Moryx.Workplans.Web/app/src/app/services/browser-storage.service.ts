@@ -4,7 +4,7 @@
 */
 
 import { Injectable } from '@angular/core';
-import { WorkplanSessionModel } from '../api/models';
+import { WorkplanSessionModel } from '@api/models';
 
 @Injectable({
   providedIn: 'root',

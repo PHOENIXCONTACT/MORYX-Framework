@@ -14,7 +14,7 @@
         }}"
       />
     </mat-form-field>
-  
+
     <input
       title="Variant Upload"
       type="file"
@@ -33,18 +33,13 @@
       </button>
     </mat-form-field>
   </mat-dialog-content>
-  
+
   <mat-dialog-actions align="end">
-    <button mat-button type="button" mat-dialog-close>
+    <button mat-button type="submit" color="primary" mat-dialog-close>
       {{ TranslationConstants.ADD_VARIANT_DIALOG.CANCEL | translate }}
     </button>
-  
-    <button
-      mat-button
-      type="submit"
-      [disabled]="!selectedFileLoaded() || !resultData().variantName.length"
-      [mat-dialog-close]="resultData()"
-    >
+    <button mat-flat-button type="submit" [mat-dialog-close]="resultData()"
+            [disabled]="!selectedFileLoaded() || !resultData().variantName.length">
       {{ TranslationConstants.ADD_VARIANT_DIALOG.UPLOAD | translate }}
     </button>
   </mat-dialog-actions>

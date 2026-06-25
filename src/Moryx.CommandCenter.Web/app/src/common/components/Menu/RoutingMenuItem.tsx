@@ -47,7 +47,7 @@ function RoutingMenuItem(props: MenuItemProps) {
         <ListItemText
           primary={props.MenuItem.Name}
           secondary={props.MenuItem.SecondaryName}
-          secondaryTypographyProps={{fontSize: "x-small"}}>
+          slotProps={{ secondary: { style: { fontSize: "x-small" } } }}>
           {props.MenuItem.Content}
         </ListItemText>
       </ListItemButton>
