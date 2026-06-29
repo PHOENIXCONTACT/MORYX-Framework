@@ -10,7 +10,7 @@ import { BehaviorSubject } from 'rxjs';
 import { DisplayedMediaContent } from '../components/media-contents/displayed-media-content';
 import { HttpErrorResponse, HttpClient, HttpRequest, HttpEvent, HttpEventType } from '@angular/common/http';
 import { DomSanitizer } from '@angular/platform-browser';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../environments/environment';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 
 @Injectable({
@@ -27,16 +27,7 @@ export class InstructionService {
   private _instructions = new BehaviorSubject<InstructionModel[]>([]);
   public instructions$ = this._instructions.asObservable();
 
-  constructor() {
-    this.subscribeToStream();
-  }
-
-  public subscribeToStream() {
-    if (this.eventSource) {
-      this.eventSource.close();
-      this._instructions.next([]);
-    }
-
+  public connect() {
     this.eventSource = new EventSource(this.visualInstructionsService.rootUrl + '/api/moryx/instructions/stream', {withCredentials: !environment.production});
     this.eventSource.onmessage = event => {
       const instructions = JSON.parse(event.data);
@@ -78,5 +69,14 @@ export class InstructionService {
       type: data.body?.type,
       url: data.body?.type == 'application/pdf' || 'text/html' ? url : this.domSanitizer.bypassSecurityTrustUrl(url),
     } as DisplayedMediaContent;
+  }
+
+  disconnect() {
+    this._instructions.next([]);
+
+    if (this.eventSource) {
+      this.eventSource.close();
+      this.eventSource = undefined;
+    }
   }
 }

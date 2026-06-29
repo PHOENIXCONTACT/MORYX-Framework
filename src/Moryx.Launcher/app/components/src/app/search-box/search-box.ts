@@ -4,7 +4,7 @@
 */
 
 
-import { Component, ElementRef, inject, input, OnInit, signal } from '@angular/core';
+import { Component, ElementRef, inject, input, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MoryxShell, SearchRequestCallback, SearchSuggestion } from './shell';
 import { localLanguage } from '../utils';
@@ -14,6 +14,7 @@ import { localLanguage } from '../utils';
   imports: [FormsModule],
   templateUrl: './search-box.html',
   styleUrl: './search-box.css',
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: {
     '(window:click)': 'handleClickOutSideTheSearchBar($event)'
   }

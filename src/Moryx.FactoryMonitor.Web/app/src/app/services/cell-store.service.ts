@@ -3,145 +3,103 @@
  * Licensed under the Apache License, Version 2.0
 */
 
+import { HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { SnackbarService } from '@moryx/ngx-web-framework/services';
+import { BehaviorSubject, lastValueFrom, ReplaySubject } from 'rxjs';
+import { VisualizableItemModel } from '@api/models';
+import { CellLocationModel } from '@api/models/cell-location-model';
+import { FactoryStateModel } from '@api/models/factory-state-model';
+import { FactoryMonitorService } from '@api/services';
+import { Converter } from '../extensions/converter';
+import CellModel from '../models/cellModel';
 import { FactoryStateStreamService } from './factory-state-stream.service';
 import { OrderStoreService } from './order-store.service';
-import { FactoryMonitorService } from '../api/services';
-import { CellLocationModel } from '../api/models/cell-location-model';
-import { SnackbarService } from '@moryx/ngx-web-framework/services';
-import CellModel from '../models/cellModel';
-import Order from '../models/order';
-import { Converter } from '../extensions/converter';
-import { FactoryStateModel } from '../api/models/factory-state-model';
-import { ResourceChangedModel } from '../api/models/resource-changed-model';
-import { ActivityChangedModel } from '../api/models/activity-changed-model';
-import { CellStateChangedModel } from '../api/models/cell-state-changed-model';
-import { FactorySelectionService } from './factory-selection.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CellStoreService {
-  private orderService = inject(OrderStoreService);
-  private factoryStateStreamService = inject(FactoryStateStreamService);
-  private factoryMonitorService = inject(FactoryMonitorService);
-  private factorySelectionService = inject(FactorySelectionService);
-  private snackbarService = inject(SnackbarService);
+  private readonly orderService = inject(OrderStoreService);
+  private readonly factoryStateStreamService = inject(FactoryStateStreamService);
+  private readonly factoryMonitorService = inject(FactoryMonitorService);
+  private readonly snackbarService = inject(SnackbarService);
 
-  private _cellSelected = new BehaviorSubject<CellModel | undefined>(undefined);
-  private _cellUpdated = new BehaviorSubject<CellModel | undefined>(undefined);
-  private _cells = new BehaviorSubject<CellModel[]>([]);
+  private readonly _cellSelected = new BehaviorSubject<CellModel | undefined>(undefined);
+  private readonly _cellUpdated = new ReplaySubject<CellModel>();
+  private _cells : CellModel[] = [];
 
-  public cellSelected$ = this._cellSelected.asObservable();
-  public cellUpdated$ = this._cellUpdated.asObservable();
-  public cells$ = this._cells.asObservable();
+  public readonly cellSelected$ = this._cellSelected.asObservable();
+  public readonly cellUpdated$ = this._cellUpdated.asObservable();
 
-  updatedCell: BehaviorSubject<CellModel | undefined> = new BehaviorSubject<CellModel | undefined>(undefined);
+  public initialize(factoryState: FactoryStateModel) {
+    let cells: { [id: string]: CellModel; } = {};
+    const initialRecourceChanges = factoryState.resourceChangedModels ?? [];
+    for (let raw of initialRecourceChanges) {
+      const cell = Converter.resourceChangedModelToCell(raw);
+      if (cell.id)
+        cells[cell.id] = cell;
+    }
 
-  constructor() {
-    this.factoryMonitorService.initialFactoryState().subscribe({
-      next: factoryState => {
-        //only set default
-        this.factorySelectionService.setDefaultFactory(factoryState);
-        this.initializeOrders(factoryState);
+    const initialStateChanges = factoryState.cellStateChangedModels ?? [];
+    for (let raw of initialStateChanges) {
+      if (!raw.id) continue;
+      const cell = cells[raw.id];
+      Converter.addStateDataToCell(cell, raw);
+    }
 
-        // get all the cells in the database that need to be displayed (only once), we will rely on the eventStream to update the list
-        this.factoryMonitorService.allCells().subscribe(rawCells => {
-          const rawRecourceChanges: Array<ResourceChangedModel> = [];
+    const initialActivityChanges = factoryState.activityChangedModels ?? [];
+    for (let raw of initialActivityChanges) {
+      if (!raw.resourceId) continue;
+      const cell = cells[raw.resourceId];
+      Converter.addActivityChangedModelToCell(cell, raw);
+      this.orderService.applyOrderColor(cell);
+    }
 
-          rawCells.forEach(r =>
-            rawRecourceChanges.push(<ResourceChangedModel>{
-              id: r.id,
-              cellIconName: r.iconName,
-              cellLocation: r.location,
-              factoryId: 0
-            })
-          );
+    // Set initial cells
+    this._cells = Object.values(cells);
 
-          const rawActivityChanges: Array<ActivityChangedModel> = [];
-          factoryState.activityChangedModels?.forEach(a => rawActivityChanges.push(a));
-          let activityLength = rawActivityChanges.length;
-
-          const rawCellStateChanges: Array<CellStateChangedModel> = [];
-          factoryState.cellStateChangedModels?.forEach(c => rawCellStateChanges.push(c));
-
-          let cells: { [id: string]: CellModel } = {};
-
-          for (let raw of rawRecourceChanges) {
-            let cell = Converter.resourceChangedModelToCell(raw);
-            cell = Converter.addStateDataToCell(cell, raw);
-            if (cell.id) cells[cell.id] = cell;
-          }
-
-          for (let i = 0; i < activityLength; i++) {
-            let activity = rawActivityChanges[i];
-            if (!activity.resourceId) continue;
-            Converter.addActivityChangedModelToCell(cells[activity.resourceId], activity);
-          }
-
-          this._cells.next(Object.values(cells));
-          this.subscribe();
-
-          for (const key in cells) {
-            this.updateCell(cells[key]);
-          }
-        });
-      },
-      error: err => this.snackbarService.handleError(err)
-    });
-  }
-
-  private initializeOrders(factoryState: FactoryStateModel) {
-    let orders: Order[] = [];
-    let orderModels = factoryState.orderModels ?? [];
-
-    orders = orderModels.map(order => Converter.orderModelToOrder(order));
-
-    this.orderService._orders.next(orders);
-    this.orderService.updateRunningOrders();
-  }
-
-  private subscribe() {
-    this.factoryStateStreamService.updatedCell.subscribe({
-      next: cell => {
-        if (!cell?.id) {
-          return;
-        }
-        if (!this._cells.getValue().length) {
-          return;
-        }
-
-        this.updateCell(cell);
-      }
-    });
+    // Subscribe to changes after initialization
+    this.factoryStateStreamService.updatedCell.subscribe(cell => this.updateCell(cell));
   }
 
   public selectCell(id: number | undefined) {
-    if (this._cellSelected.getValue() && this._cellSelected.getValue()?.id === id || !id) {
+    const current = this._cellSelected.getValue();
+    if (current && current.id === id || !id) {
       this._cellSelected.next(undefined);
       return;
     }
 
-    const selectedCell = this._cells.getValue().find(c => c.id === id);
+    const selectedCell = this._cells.find(c => c.id === id);
     this._cellSelected.next(selectedCell);
   }
 
-  public moveCell(e: CellLocationModel) {
-    //send cell update to server
-    this.factoryMonitorService.moveCell({ body: e }).subscribe({
-      error: err => this.snackbarService.handleError(err)
-    });
+  public async moveItem(item: VisualizableItemModel, update: CellLocationModel) {
+    try {
+      const location = await lastValueFrom(this.factoryMonitorService.moveCell({ body: update }));
+      this.updateCell(<CellModel>{ id: item.id, location: location });
+    } catch (error) {
+      this.snackbarService.handleError(error as HttpErrorResponse);
+      return;
+    }
   }
 
-  public getCell(cellId: number) {
-    return this._cells.getValue().find(c => c.id === cellId);
+  public getCell(cellId: number) : CellModel {
+    const cell = this._cells.find(c => c.id === cellId)
+    if (!cell)
+      throw Error(`Tried to process unknown cell with id ${cellId}`);
+    return cell;
   }
 
+  public getCells(factory: FactoryStateModel): CellModel[] {
+    return this._cells.filter(c => c.factoryId === factory.id);
+  }
+
+  // Cell updates are retrieved as partial updates to the existing cell models,
+  // so we need to merge the incoming data with the existing cell data
   public updateCell(cell: CellModel) {
-    const cells = this._cells.getValue();
-    const indexToUpdate = cells.findIndex(x => x.id === cell.id);
-    let cellToUpdate = cells[indexToUpdate];
+    const indexToUpdate = this._cells.findIndex(x => x.id === cell.id);
+    let cellToUpdate = {... this._cells[indexToUpdate]};
 
     if (cell.iconName != '' && cell.iconName) {
       cellToUpdate.iconName = cell.iconName;
@@ -170,21 +128,15 @@ export class CellStoreService {
     if (cell.operationNumber) {
       cellToUpdate.operationNumber = cell.operationNumber;
     }
-    if (
-      cellToUpdate.orderNumber &&
-      cell.orderNumber != '' &&
-      cellToUpdate.operationNumber &&
-      cell.operationNumber != ''
-    ) {
-      cellToUpdate.orderColor =
-        this.orderService._orders
-          .getValue()
-          .find(o => o.operationNumber === cellToUpdate.operationNumber && o.orderNumber === cellToUpdate.orderNumber)
-          ?.orderColor ?? '';
+    if (cellToUpdate.orderNumber && cell.orderNumber && cellToUpdate.operationNumber &&
+      cell.operationNumber) {
+      this.orderService.applyOrderColor(cellToUpdate);
+    }
+    if (cell.location) {
+      cellToUpdate.location = cell.location;
     }
 
-    cells[indexToUpdate] = cellToUpdate;
-    this._cells.next(cells);
+    this._cells[indexToUpdate] = cellToUpdate;
     this._cellUpdated.next(cellToUpdate);
   }
 }

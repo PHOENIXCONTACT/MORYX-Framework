@@ -3,8 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { AssignableOperator } from "../api/models/assignable-operator";
-import { IOperatorAssignable } from "../api/models/i-operator-assignable";
+import { AssignableOperator } from "@api/models/assignable-operator";
+import { IOperatorAssignable } from "@api/models/i-operator-assignable";
 import { WorkstationViewModel } from "./workstation-view-model";
 
 

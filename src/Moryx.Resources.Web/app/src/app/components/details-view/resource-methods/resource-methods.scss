@@ -1,5 +1,4 @@
 @use '@angular/material' as mat;
-@use "../../../../styles.scss" as *;
 :host {
   display: flex;
   width: 100%;
@@ -15,7 +14,7 @@
   padding: 8px;
   overflow: auto;
   @include mat.expansion-overrides((
-    container-background-color: $mat-background-light,
+    container-background-color: var(--mat-sys-surface-container-lowest),
   ));
 }
 

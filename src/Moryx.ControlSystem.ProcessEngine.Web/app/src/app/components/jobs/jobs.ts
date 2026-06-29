@@ -4,28 +4,28 @@
 */
 
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, inject, OnInit, signal, ChangeDetectorRef } from "@angular/core";
-import { JobManagementService, OrderManagementService } from "src/app/api/services";
-import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
-import { JobViewModel } from "src/app/models/job-view-model";
-import { OperationType } from "src/app/models/operation-models";
-import { JobManagementStreamService } from "src/app/services/job-management-stream.service";
-import { OrderManagementStreamService } from "src/app/services/order-management-stream.service";
-import { environment } from "src/environments/environment";
+import { Component, inject, OnInit, signal, ChangeDetectorRef, ChangeDetectionStrategy, DestroyRef } from "@angular/core";
+import { JobManagementService, OrderManagementService } from "@api/services";
+import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
+import { JobViewModel } from "@app/models/job-view-model";
+import { OperationType } from "@app/models/operation-models";
+import { JobManagementStreamService } from "@app/services/job-management-stream.service";
+import { OrderManagementStreamService } from "@app/services/order-management-stream.service";
+import { environment } from "../../../environments/environment";
 import "../../extensions/observable.extensions";
-import "./../../extensions/observable.extensions";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
 import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
 import { CommonModule } from "@angular/common";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { MatIconModule } from "@angular/material/icon";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslatePipe } from "@ngx-translate/core";
 import { Processes } from "../processes/processes";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatButtonModule } from "@angular/material/button";
-import { JobModel } from "src/app/api/models/job-model";
-import { OperationModel } from "src/app/api/models/operation-model";
+import { JobModel } from "@api/models/job-model";
+import { OperationModel } from "@api/models/operation-model";
+import { ProcessEngineStreamService } from "@app/services/process-engine-stream.service";
 
 @Component({
   selector: "app-jobs",
@@ -35,20 +35,26 @@ import { OperationModel } from "src/app/api/models/operation-model";
     CommonModule,
     MatExpansionModule,
     MatIconModule,
-    TranslateModule,
+    TranslatePipe,
     Processes,
     MatProgressSpinnerModule,
     EmptyState,
     MatProgressBarModule,
     MatButtonModule
   ],
-  providers: []
+  changeDetection: ChangeDetectionStrategy.Eager,
+  providers: [],
+  host: {
+    '(window:beforeunload)': 'disconnectEvents()'
+  }
 })
 export class Jobs implements OnInit {
+  private destroyRef = inject(DestroyRef);
   private jobManagementService = inject(JobManagementService);
   private jobManagementEvents = inject(JobManagementStreamService);
   private orderManagementService = inject(OrderManagementService);
   private orderManagementEvents = inject(OrderManagementStreamService);
+  private processEngineEvents = inject(ProcessEngineStreamService);
   private snackbarService = inject(SnackbarService);
   private changeDetectorRef = inject(ChangeDetectorRef);
 
@@ -59,8 +65,15 @@ export class Jobs implements OnInit {
   environment = environment;
   TranslationConstants = TranslationConstants;
 
+  constructor() {
+      this.destroyRef.onDestroy(() => this.disconnectEvents());
+  }
+
   ngOnInit(): void {
     this.fetchJobs();
+
+    this.jobManagementEvents.connect();
+    this.processEngineEvents.connect();
 
     this.jobManagementEvents.updatedJob.subscribe((updatedJob) =>
       this.updateJobs(updatedJob)
@@ -72,7 +85,7 @@ export class Jobs implements OnInit {
         await this.snackbarService.handleError(e)
     });
 
-    this.orderManagementEvents.stream(OperationType.Update, (updatedOperation: OperationModel) =>
+    this.orderManagementEvents.connect(OperationType.Update, (updatedOperation: OperationModel) =>
         this.updateOperations(updatedOperation)
     );
   }
@@ -151,6 +164,12 @@ export class Jobs implements OnInit {
     if (job.productionJob)
       return this.operations().find(operation => operation.jobIds?.find(j => j === job.id))?.number!;
     return "";
+  }
+
+  disconnectEvents() {
+    this.jobManagementEvents.disconnect();
+    this.processEngineEvents.disconnect();
+    this.orderManagementEvents.disconnect();
   }
 }
 

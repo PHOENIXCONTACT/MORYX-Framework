@@ -3,13 +3,14 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, input, output } from '@angular/core';
+import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
 import { DropdownMenu } from "../dropdown-menu/dropdown-menu";
 
 @Component({
   selector: 'app-dropdown-sub-item',
   imports: [DropdownMenu],
   templateUrl: './dropdown-sub-item.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './dropdown-sub-item.css'
 })
 export class DropdownSubItem {

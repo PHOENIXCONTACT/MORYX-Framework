@@ -1,9 +1,8 @@
-@use "@moryx/ngx-web-framework/styles/variables" as *; 
 
 
 :host {
   padding: 24px 24px 4px 24px;
-  background-color: $mat-background-light;
+  background-color: var(--mat-sys-surface-container-lowest);
 }
 
 .form-field {
@@ -19,7 +18,7 @@
 }
 
 .header-subtitle {
-  color: $mat-color-caption-light; 
+  color: var(--mat-sys-outline);
 }
 
 @media (max-width: 400px) {

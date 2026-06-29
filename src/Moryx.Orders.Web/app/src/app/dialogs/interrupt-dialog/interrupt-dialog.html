@@ -12,7 +12,7 @@
     <p class="dialog-context-item">
       <span class="info-label">{{ TranslationConstants.REPORT_DIALOG.PRODUCT | translate }}</span>
       <span class="info-value">
-        {{ this.data.operation.model.productIdentifier }}-{{ 
+        {{ this.data.operation.model.productIdentifier }}-{{
           this.data.operation.model.productRevision | number : '2.0' }}
         {{ this.data.operation.model.productName }}
       </span>
@@ -34,6 +34,6 @@
     {{ TranslationConstants.CANCEL | translate }}
   </button>
   <button mat-flat-button [disabled]="isLoading()" (click)="submit()">
-    {{ TranslationConstants.CONFIRM | translate }}
+    {{ TranslationConstants.INTERRUPT_DIALOG.INTERRUPT | translate }}
   </button>
 </div>

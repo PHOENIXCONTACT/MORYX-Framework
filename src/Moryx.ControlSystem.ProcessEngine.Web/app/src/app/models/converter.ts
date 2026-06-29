@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { ProcessHolderGroupModel } from "../api/models/process-holder-group-model";
+import { ProcessHolderGroupModel } from "@api/models/process-holder-group-model";
 import { ProcessHolderGroup } from "./process-holder-group-model";
 import ProcessHolderNode from "./process-holder-node";
 

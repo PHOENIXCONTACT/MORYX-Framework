@@ -129,10 +129,18 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
             Version = 1,
             State = WorkplanState.Released
         };
-        workplan.Add(stepGroups.SelectMany(sg => sg.Value).ToArray());
+        workplan.Add(stepGroups.SelectMany(sg => sg.Value).ToArray<IWorkplanNode>());
 
         // Wire steps within the workplan
-        WireWorkplan(workplan, stepGroups);
+        try
+        {
+            WireWorkplan(workplan, stepGroups);
+        }
+        catch (Exception e)
+        {
+            Logger.LogError(e, "Error creating setup workplan");
+            throw;
+        }
 
         // Create a setup recipe
         var setupRecipe = new SetupRecipe
@@ -207,6 +215,8 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
             {
                 // Default case: Single step for the sort order
                 var step = steps[0];
+                ValidateStep(step);
+
                 step.Inputs[0] = input;
                 step.Outputs[0] = output;
                 step.Outputs[1] = step.Outputs[2] = failed;
@@ -221,7 +231,7 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
                 workplan.Add(split, join);
 
                 // All parallel steps are inserted between split and join
-                for (int stepIndex = 0; stepIndex < steps.Count; stepIndex++)
+                for (var stepIndex = 0; stepIndex < steps.Count; stepIndex++)
                 {
                     var stepIn = WorkplanInstance.CreateConnector($"Split-{stepGroup.Key}-{stepIndex + 1}");
                     var stepOut = WorkplanInstance.CreateConnector($"Join-{stepGroup.Key}-{stepIndex + 1}");
@@ -231,6 +241,8 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
                     join.Inputs[stepIndex] = stepOut;
 
                     var step = steps[stepIndex];
+                    ValidateStep(step);
+
                     step.Inputs[0] = stepIn;
                     step.Outputs[0] = stepOut;
                     step.Outputs[1] = step.Outputs[2] = failed;
@@ -238,6 +250,17 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
             }
 
             input = output;
+        }
+
+        return;
+
+        void ValidateStep(IWorkplanStep step)
+        {
+            if (step.Outputs.Length != 3)
+            {
+                throw new InvalidOperationException($"Step {step.Name} does not have exactly 3 outputs to wire success, failure and technical error. " +
+                                                    "Exactly 3 outputs are required.");
+            }
         }
     }
 

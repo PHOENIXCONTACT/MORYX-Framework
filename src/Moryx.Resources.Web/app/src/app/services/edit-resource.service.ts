@@ -7,7 +7,7 @@ import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, lastValueFrom } from 'rxjs';
 import { ResourceModel } from '../api/models';
 import { ResourceModificationService } from '../api/services';
-import { StrictHttpResponse } from '../api/strict-http-response';
+import { StrictHttpResponse } from '@api/strict-http-response';
 import { CacheResourceService } from './cache-resource.service';
 import { ResourceStorageDetails, ResourceStorageObject, SessionService } from './session.service';
 import { TranslationConstants } from '../extensions/translation-constants.extensions';
@@ -36,13 +36,13 @@ export class EditResourceService {
   public activeResource = toSignal(this.resource);
   public editingUnsavedResource: boolean = false;
   TranslationConstants = TranslationConstants;
-  
+
   public setResource(resource: ResourceModel | undefined) {
     this.resource.next(resource);
   }
 
   /**
-   * Updates the active resource, e.g. with new property values, pushing the @param resource on the subject. 
+   * Updates the active resource, e.g. with new property values, pushing the @param resource on the subject.
    */
   public updateActiveResource(resource: ResourceModel) {
     if (this.resource.value && this.resource.value?.id !== resource.id)
@@ -89,12 +89,12 @@ export class EditResourceService {
     const resourceModel = this.resource.getValue();
     if (!resourceModel) return;
 
-    if (resourceModel.properties) 
+    if (resourceModel.properties)
     {
       PrototypeToEntryConverter.convertToEntry(resourceModel.properties);
     }
 
-    if (this.editingUnsavedResource) 
+    if (this.editingUnsavedResource)
     {
       await lastValueFrom(this.resourceModificationService.save$Response({body: resourceModel}))
         .then(async response => await this.handleSaveResponse(response))
@@ -137,7 +137,7 @@ export class EditResourceService {
     }
     catch (e) {
       await this.snackbarService.handleError(e as HttpErrorResponse);
-    } 
+    }
   }
 }
 

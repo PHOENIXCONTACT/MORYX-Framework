@@ -31,11 +31,11 @@ function ConsoleMethodConfigurator(props: ConsoleMethodConfiguratorPropModel) {
       ) : [
 
         <Grid container={true} size={12} key="name">
-          <Grid size={3}><Typography variant="body2" fontWeight="bold">Name:</Typography></Grid>
+          <Grid size={3}><Typography variant="body2" sx={{ fontWeight: "bold" }}>Name:</Typography></Grid>
           <Grid size={9}><Typography variant="body2">{props.Method.displayName}</Typography></Grid>
         </Grid>,
         <Grid container={true} size={12} key="description">
-          <Grid size={3}><Typography variant="body2" fontWeight="bold">Description:</Typography></Grid>
+          <Grid size={3}><Typography variant="body2" sx={{ fontWeight: "bold" }}>Description:</Typography></Grid>
           <Grid size={9}><Typography variant="body2">{props.Method.description}</Typography></Grid>
         </Grid>,
         <Grid size={12} key="params">

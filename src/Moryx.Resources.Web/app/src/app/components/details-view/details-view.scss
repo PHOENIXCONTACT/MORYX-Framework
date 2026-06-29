@@ -1,4 +1,3 @@
-@use "../../../styles.scss" as *;
 
 
 .resource-details {
@@ -18,7 +17,7 @@
   display: flex;
   justify-content: flex-start;
   height: fit-content;
-  background-color: $mat-background-light;
+  background-color: var(--mat-sys-surface-container-lowest);
   padding-top: 8px;
   margin: 0px -10px;
 }

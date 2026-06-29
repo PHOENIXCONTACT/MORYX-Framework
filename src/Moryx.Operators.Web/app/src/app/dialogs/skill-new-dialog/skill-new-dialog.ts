@@ -4,17 +4,17 @@
 */
 
 
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import { OperatorSkill } from 'src/app/models/operator-skill-model';
-import { SkillType } from 'src/app/models/skill-type-model';
-import { AppStoreService } from 'src/app/services/app-store.service';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { OperatorSkill } from '@app/models/operator-skill-model';
+import { SkillType } from '@app/models/skill-type-model';
+import { AppStoreService } from '@app/services/app-store.service';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 
@@ -22,6 +22,7 @@ import { MatInputModule } from '@angular/material/input';
   selector: 'app-skill-new-dialog',
   templateUrl: './skill-new-dialog.html',
   styleUrl: './skill-new-dialog.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatDialogModule,
     MatFormFieldModule,
@@ -29,7 +30,7 @@ import { MatInputModule } from '@angular/material/input';
     FormsModule,
     ReactiveFormsModule,
     MatDatepickerModule,
-    TranslateModule,
+    TranslatePipe,
     MatButtonModule,
     MatInputModule
   ]

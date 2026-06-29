@@ -1,4 +1,3 @@
-@use "@moryx/ngx-web-framework/styles/variables" as *;
 
 .light-text {
     color: rgba(0, 0, 0, 0.54);
@@ -19,7 +18,7 @@
 
     tr {
         height: 56px;
-        border-bottom: 0.5pt solid $light-background-hover;
+        border-bottom: 0.5pt solid var(--mat-sys-surface-container-highest);
     }
 
     td {

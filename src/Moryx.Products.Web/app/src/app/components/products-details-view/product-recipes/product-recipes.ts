@@ -4,17 +4,17 @@
 */
 
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, inject, linkedSignal } from "@angular/core";
+import { Component, inject, linkedSignal, ChangeDetectionStrategy } from "@angular/core";
 import { toSignal } from "@angular/core/rxjs-interop";
 import { MatDialog } from "@angular/material/dialog";
 import { Router, RouterOutlet } from "@angular/router";
 import { SnackbarService, } from "@moryx/ngx-web-framework/services";
-import { TranslateModule } from "@ngx-translate/core";
-import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
+import { TranslatePipe } from "@ngx-translate/core";
+import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
 import { RecipeModel, WorkplanModel } from "../../../api/models";
 import { ProductManagementService } from "../../../api/services";
-import { DialogCreateRecipe } from "../../../dialogs/dialog-create-recipe/dialog-create-recipe";
-import { EditProductsService } from "../../../services/edit-products.service";
+import { DialogCreateRecipe } from "@app/dialogs/dialog-create-recipe/dialog-create-recipe";
+import { EditProductsService } from "@app/services/edit-products.service";
 import { MatListModule } from "@angular/material/list";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
@@ -25,11 +25,12 @@ import { lastValueFrom, map } from "rxjs";
   selector: "app-product-recipes",
   templateUrl: "./product-recipes.html",
   styleUrls: ["./product-recipes.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatListModule,
     MatIconModule,
     MatButtonModule,
-    TranslateModule,
+    TranslatePipe,
     MatExpansionModule,
     RouterOutlet
   ]
@@ -72,7 +73,7 @@ export class ProductRecipes {
     this.editProductsService.currentRecipeNumber++;
     recipe.id = this.editProductsService.currentRecipeNumber;
     this.editProductsService.addRecipe(recipe);
-    
+
     this.router.navigate(['details', this.editProductsService.currentProductId(), 'recipes', recipe.id]);
   }
 

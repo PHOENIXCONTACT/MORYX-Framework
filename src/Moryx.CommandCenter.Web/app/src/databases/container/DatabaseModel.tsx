@@ -393,7 +393,7 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
     return (
       <Card>
         <CardContent>
-          <Grid container={true} direction="column" spacing={1}>
+          <Grid container={true} sx={{ flexDirection: "column" }} spacing={1}>
             <DatabaseSection title={(
               <Typography variant="h5" gutterBottom={true}>
                 {contextNameWithoutNamespace(this.state.targetModel)} {this.state.testConnectionPending
@@ -450,7 +450,6 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
               </Grid>
               <Grid container={true}
                     size={12} spacing={1}
-                    direction="row"
               >
                 <Grid size={12}>
                   <Tabs value={this.state.activeTab} onChange={this.activeTab}>
@@ -460,9 +459,7 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
                 </Grid>
 
                 <Grid container={true} size={12}
-                      direction="column"
-                      justifyContent="flex-start"
-                      alignItems="stretch"
+                      sx={{ flexDirection: "column", justifyContent: "flex-start", alignItems: "stretch" }}
                 >
                   <Grid>
                     <div hidden={this.state.activeTab !== 1}>

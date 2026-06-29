@@ -102,6 +102,10 @@ public class JobManagementController : ControllerBase
 
             await result.ExecuteAsync(HttpContext);
         }
+        catch (OperationCanceledException)
+        {
+            // client disconnected — this is expected, not an error
+        }
         finally
         {
             _jobManagement.ProgressChanged -= progressEventHandler;

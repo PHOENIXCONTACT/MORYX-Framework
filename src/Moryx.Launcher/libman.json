@@ -19,7 +19,7 @@
       ]
     },
     {
-      "library": "material-symbols@0.40.2",
+      "library": "material-symbols@0.44.12",
       "destination": "wwwroot/lib/material-symbols",
       "files": [
         "outlined.css",

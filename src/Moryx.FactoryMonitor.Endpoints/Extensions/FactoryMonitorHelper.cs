@@ -1,39 +1,47 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Resources;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.ControlSystem.Cells;
 using Moryx.ControlSystem.Processes;
 using Moryx.Factory;
 using Moryx.FactoryMonitor.Endpoints.Models;
 using Moryx.Orders;
-using Newtonsoft.Json;
 
 namespace Moryx.FactoryMonitor.Endpoints.Extensions;
 
 internal static class FactoryMonitorHelper
 {
-    public static void OrderStarted(OperationStartedEventArgs orderEventArg, Action<string, object> broadcast)
-    {
-        var orderModel = Converter.Converter.ToOrderModel(orderEventArg.Operation);
-        broadcast("processes", orderModel);
+    private const string Order_Event_Type_Key = "order";
+    private const string Order_Changed_Event_Type_Key = "orderChanged";
+    private const string Cell_State_Event_Type_Key = "cellStateChangedModel";
+    private const string Activity_Event_Type_Key = "activityChangedModel";
+    private const string Recource_Event_Type_Key = "resourceChangedModel";
 
+    public static void OrderStarted(OperationStartedEventArgs orderEventArg, List<OrderModel> models, Action<string, object> broadcast)
+    {
+        var orderModel = models.Single(o => o.Order == orderEventArg.Operation.Order.Number && o.Operation == orderEventArg.Operation.Number);
+        broadcast(Order_Event_Type_Key, orderModel);
     }
 
     public static void OrderUpdated(OperationChangedEventArgs orderEventArg, Action<string, object> broadcast)
     {
-        if (orderEventArg.Operation.State is not OperationStateClassification.Running) return;
+        if (orderEventArg.Operation.State is not OperationStateClassification.Running)
+        {
+            return;
+        }
 
         var orderReferenceModel = Converter.Converter.ToOrderChangedModel(orderEventArg.Operation);
-        broadcast("processes", orderReferenceModel);
+        broadcast(Order_Changed_Event_Type_Key, orderReferenceModel);
     }
 
     public static void PublishCellUpdate(CellStateChangedModel cellModel, Action<string, object> broadcast)
     {
-        broadcast("cellStateChangedModel", cellModel);
+        broadcast(Cell_State_Event_Type_Key, cellModel);
     }
 
-    public static void ActivityUpdated(ActivityUpdatedEventArgs activityEventArg, List<ICell> cells, Resource resource,
+    public static void ActivityUpdated(ActivityUpdatedEventArgs activityEventArg, List<ICell> cells,
         List<OrderModel> orderModels, Action<string, object> broadcast)
     {
         if (activityEventArg.Progress == ActivityProgress.Ready)
@@ -41,35 +49,34 @@ internal static class FactoryMonitorHelper
             return;
         }
 
-        if (cells.All(x => x.Id != activityEventArg.Activity.Tracing.ResourceId))
-        {
-            return;
-        }
-
-        var cell = resource as ICell;
-        if (cell == null)
+        var cell = cells.FirstOrDefault(x => x.Id == activityEventArg.Activity.Tracing.ResourceId);
+        if (cell is null)
         {
             return;
         }
 
         var activityChangedModel = cell.GetActivityChangedModel(activityEventArg.Activity, orderModels);
-        broadcast("activityChangedModel", activityChangedModel);
+        broadcast(Activity_Event_Type_Key, activityChangedModel);
 
-        var cellStateChangedModel = cell.GetCellStateChangedModel(activityEventArg.Progress, resource);
-        broadcast("cellStateChangedModel", cellStateChangedModel);
+        var cellStateChangedModel = cell.GetCellStateChangedModel(activityEventArg.Progress);
+        broadcast(Cell_State_Event_Type_Key, cellStateChangedModel);
     }
 
     public static void ResourceUpdated(IResourceManagement resourceManager,
-        Func<IMachineLocation, bool> cellFilter, Converter.Converter converter, Action<string, object> broadcast)
+        Func<IEnumerable<IMachineLocation>, Dictionary<IMachineLocation, ICell>> mapCellsTo,
+        Converter.Converter converter,
+        Action<string, object> broadcast)
     {
-        var cells = resourceManager.GetResources(cellFilter)
-            .Select(location => location.Machine)
-            .Cast<ICell>();
+        var locations = resourceManager.GetResources<IMachineLocation>();
+        // ToDo: Added and removed resources not reflected
+        var locationToCellMappings = mapCellsTo(locations);
 
-        foreach (var cell in cells)
+        foreach (var l2cMapping in locationToCellMappings)
         {
-            var resourceChangedModel = cell.GetResourceChangedModel(converter, resourceManager, cellFilter);
-            broadcast("resourceChangedModel", resourceChangedModel);
+            var cell = l2cMapping.Value;
+            var location = l2cMapping.Key;
+            var resourceChangedModel = cell.GetResourceChangedModel(converter, resourceManager, location);
+            broadcast(Recource_Event_Type_Key, resourceChangedModel);
         }
     }
 

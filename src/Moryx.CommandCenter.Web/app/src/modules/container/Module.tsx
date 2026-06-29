@@ -134,7 +134,7 @@ class Module extends React.Component<ModulePropModel & ModuleDispatchPropModel, 
       <Card>
         <ModuleHeader ModuleName={this.props.Module.name} selectedTab="module"/>
         <CardContent>
-          <Grid container={true} spacing={2} direction="row" alignItems="stretch">
+          <Grid container={true} spacing={2} sx={{ flexDirection: "row", alignItems: "stretch" }}>
             <ModuleInfoTile
               title={this.props.Module.name}
             >
@@ -149,7 +149,7 @@ class Module extends React.Component<ModulePropModel & ModuleDispatchPropModel, 
             <ModuleInfoTile
               title="Error Handling"
             >
-              <Grid justifyContent="center">
+              <Grid sx={{ justifyContent: "center" }}>
                 {this.state.HasWarningsOrErrors ? (
                   <Button
                     variant="outlined"

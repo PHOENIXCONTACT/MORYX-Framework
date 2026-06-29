@@ -3,23 +3,23 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
-import { VariantDescriptor } from '../../api/models';
-import { ContentDescriptorModel } from '../../api/models/content-descriptor-model';
+import { Component, inject, OnDestroy, OnInit, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
+import { VariantDescriptor } from '@api/models';
+import { ContentDescriptorModel } from '@api/models/content-descriptor-model';
 import { HttpErrorResponse } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuTrigger, MatMenuModule } from '@angular/material/menu';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
-import { MediaServerService } from 'src/app/api/services';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import { environment } from 'src/environments/environment';
-import { AddVariantResultData, DialogAddVariant } from '../../dialogs/dialog-add-variant/dialog-add-variant';
-import { DialogDelete } from '../../dialogs/dialog-delete/dialog-delete';
-import { DialogVariantInfo } from '../../dialogs/dialog-variant-info/dialog-variant-info';
-import { MediaService } from '../../services/media-service/media.service';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
+import { MediaServerService } from '@app/api/services';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { environment } from '../../../environments/environment';
+import { AddVariantResultData, DialogAddVariant } from '@app/dialogs/dialog-add-variant/dialog-add-variant';
+import { DialogDelete } from '@app/dialogs/dialog-delete/dialog-delete';
+import { DialogVariantInfo } from '@app/dialogs/dialog-variant-info/dialog-variant-info';
+import { MediaService } from '@app/services/media-service/media.service';
 import { CommonModule } from '@angular/common';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -34,6 +34,7 @@ import { NgxDocViewerModule } from 'ngx-doc-viewer';
   selector: 'app-variant-overview',
   templateUrl: './variant-overview.html',
   styleUrls: ['./variant-overview.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatSidenavModule,
     MatToolbarModule,
@@ -44,7 +45,7 @@ import { NgxDocViewerModule } from 'ngx-doc-viewer';
     MatTooltip, MatButtonModule,
     NgxDocViewerModule,
     CommonModule,
-    TranslateModule,
+    TranslatePipe,
     MatProgressSpinnerModule
   ]
 })

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 /**
@@ -22,6 +22,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   selector: 'app-cancellation',
   imports: [],
   templateUrl: './cancellation.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './cancellation.component.scss',
 })
 export class CancellationComponent implements OnInit {

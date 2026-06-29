@@ -62,9 +62,10 @@ internal class ProcessHolderEventHandlers
         else
         {
             var group = ProcessHolderMappers.ModelFromParent(resource);
-            var positions = resource.Parent.Children
+            var positions = resource.Parent?.Children
                 .OfType<IProcessHolderPosition>()
-                .Select((p, index) => p.ToDto(index, group.Id));
+                .Select((p, index) => p.ToDto(index, group.Id))
+                ?? [];
             group.Positions.AddRange(positions);
             broadcast(group);
         }

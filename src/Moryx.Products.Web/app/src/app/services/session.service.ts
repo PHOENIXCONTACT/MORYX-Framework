@@ -3,10 +3,9 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { FlatTreeControl } from '@angular/cdk/tree';
 import { Injectable } from '@angular/core';
 import { ProductModel } from '../api/models';
-import { FlatNode } from '../app';
+import { ProductNode } from '../app';
 
 @Injectable({
   providedIn: 'root'
@@ -43,7 +42,7 @@ export class SessionService {
     sessionStorage.setItem(this.PRODUCT_TREE_HIERARCHY, hierarchic ? true.toString() : false.toString());
   }
 
-  saveProductTreeExpansion(node: FlatNode, expanded: boolean) {
+  saveProductTreeExpansion(node: ProductNode, expanded: boolean) {
     let expandedNodesString = "";
     const expandedNodes = sessionStorage.getItem(this.PRODUCT_TREE);
     let expandedNodesArray = expandedNodes ? expandedNodes.split(',') : [];
@@ -65,16 +64,9 @@ export class SessionService {
     sessionStorage.setItem(this.PRODUCT_TREE, expandedNodesString);
   }
 
-  expandNodesAccordingToStorage(treeControl: FlatTreeControl<FlatNode, FlatNode>) {
-    const expandedNodes = sessionStorage.getItem(this.PRODUCT_TREE);
-    if (!expandedNodes) return;
-
-    const expandedNodesArray = expandedNodes.split(',');
-    for (let node of treeControl.dataNodes) {
-      if (expandedNodesArray.includes(node.name)) {
-        treeControl.expand(node);
-      }
-    }
+  getExpandedNodeNames(): string[] {
+    const stored = sessionStorage.getItem(this.PRODUCT_TREE);
+    return stored ? stored.split(',').filter(Boolean) : [];
   }
 }
 

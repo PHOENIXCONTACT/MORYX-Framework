@@ -3,9 +3,9 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { inject, Injectable, OnDestroy } from '@angular/core';
-import { NotificationModel } from '../api/models';
-import { NotificationPublisherService } from '../api/services';
+import { inject, Injectable } from '@angular/core';
+import { NotificationModel } from '@api/models';
+import { NotificationPublisherService } from '@api/services';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ConnectionState } from '../models/ConnectionState';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -14,11 +14,11 @@ import { SnackbarService } from '@moryx/ngx-web-framework/services';
 @Injectable({
   providedIn: 'root',
 })
-export class NotificationService implements OnDestroy {
+export class NotificationService {
   private notificationPublisherService = inject(NotificationPublisherService);
   private snackbarService = inject(SnackbarService);
 
-  private eventSource: EventSource;
+  private eventSource?: EventSource;
   private notificationSubject: BehaviorSubject<NotificationModel[]> = new BehaviorSubject<NotificationModel[]>([]);
   private selectionSubject: BehaviorSubject<string | undefined> = new BehaviorSubject<string | undefined>(undefined)
   private stateSubject: BehaviorSubject<ConnectionState> = new BehaviorSubject<ConnectionState>(ConnectionState.Initializing);
@@ -27,7 +27,7 @@ export class NotificationService implements OnDestroy {
   public selection$: Observable<string | undefined> = this.selectionSubject.asObservable();
   public state$: Observable<ConnectionState> = this.stateSubject.asObservable();
 
-  constructor() {
+  connect() {
     this.eventSource = new EventSource(this.notificationPublisherService.rootUrl + '/api/moryx/notifications/stream');
     this.eventSource.onmessage = (event) => this.processNotifications(event);
     this.eventSource.onerror = (error) => this.processError(error);
@@ -46,10 +46,6 @@ export class NotificationService implements OnDestroy {
   private processError(event: Event): void {
     this.stateSubject.next(ConnectionState.Reconnecting)
     this.notificationSubject.error(event);
-  }
-
-  ngOnDestroy(): void {
-    this.eventSource.close();
   }
 
   public select(identifier: string | undefined): void {
@@ -87,6 +83,13 @@ export class NotificationService implements OnDestroy {
 
   private resetSelection() {
     this.select(undefined);
+  }
+
+  disconnect() {
+    if (this.eventSource) {
+      this.eventSource.close();
+      this.eventSource = undefined;
+    }
   }
 }
 

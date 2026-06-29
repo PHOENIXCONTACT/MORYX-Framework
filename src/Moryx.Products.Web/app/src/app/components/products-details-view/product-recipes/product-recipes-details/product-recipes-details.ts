@@ -3,24 +3,24 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, linkedSignal } from '@angular/core';
+import { Component, inject, linkedSignal, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { TranslateModule } from '@ngx-translate/core';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import { CacheProductsService } from '../../../../services/cache-products.service';
-import { EditProductsService } from '../../../../services/edit-products.service';
+import { TranslatePipe } from '@ngx-translate/core';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { CacheProductsService } from '@app/services/cache-products.service';
+import { EditProductsService } from '@app/services/edit-products.service';
 import { Entry, NavigableEntryEditor } from '@moryx/ngx-web-framework/entry-editor';
 import { ProductRecipesDetailsHeader } from './product-recipes-details-header/product-recipes-details-header';
-import { RecipeModel } from 'src/app/api/models';
 
 @Component({
   selector: 'app-product-recipes-details',
   templateUrl: './product-recipes-details.html',
   styleUrls: ['./product-recipes-details.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ProductRecipesDetailsHeader,
     NavigableEntryEditor,
-    TranslateModule
+    TranslatePipe
   ]
 })
 export class ProductRecipesDetails {

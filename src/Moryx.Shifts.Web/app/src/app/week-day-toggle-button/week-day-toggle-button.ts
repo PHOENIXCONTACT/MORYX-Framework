@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, input, output } from '@angular/core';
+import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
 import { CalendarDate, CalendarState } from '../models/calendar-state';
 import { TranslationConstants } from '../extensions/translation-constants.extensions';
 import { formatDateDigits, getDayName, getShortDayName, isDayInInterval, localizedDayName, shortDayName } from '../utils';
@@ -12,18 +12,19 @@ import { MatButtonToggleChange, MatButtonToggleModule } from '@angular/material/
 import { CommonModule } from '@angular/common';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-week-day-toggle-button',
   templateUrl: './week-day-toggle-button.html',
   styleUrl: './week-day-toggle-button.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CommonModule,
     MatDialogModule,
     MatButtonModule,
     MatButtonToggleModule,
-    TranslateModule
+    TranslatePipe
   ]
 })
 export class WeekDayToggleButton {

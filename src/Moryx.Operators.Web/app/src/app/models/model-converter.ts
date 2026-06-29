@@ -4,8 +4,8 @@
 */
 
 import { Entry } from "@moryx/ngx-web-framework/entry-editor";
-import { SkillModel } from "../api/models/skill-model";
-import { SkillTypeModel } from "../api/models/skill-type-model";
+import { SkillModel } from "@api/models/skill-model";
+import { SkillTypeModel } from "@api/models/skill-type-model";
 import { OperatorSkill } from "./operator-skill-model";
 import { SkillType } from "./skill-type-model";
 

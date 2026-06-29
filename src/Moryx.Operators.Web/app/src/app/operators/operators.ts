@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, input, OnInit, signal } from "@angular/core";
+import { Component, inject, input, OnInit, signal, ChangeDetectionStrategy } from "@angular/core";
 import { OperatorViewModel } from "../models/operator-view-model";
 import { TranslationConstants } from "../extensions/translation-constants.extensions";
 import { WorkstationViewModel } from "../models/workstation-view-model";
@@ -14,16 +14,17 @@ import { AppStoreService } from "../services/app-store.service";
 import { OperatorCard } from "../operator-card/operator-card";
 
 import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: "app-operators",
   templateUrl: "./operators.html",
   styleUrl: "./operators.scss",
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     OperatorCard,
     EmptyState,
-    TranslateModule
+    TranslatePipe
   ]
 })
 export class Operators implements OnInit {

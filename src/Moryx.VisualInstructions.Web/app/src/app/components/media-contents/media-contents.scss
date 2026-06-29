@@ -1,4 +1,3 @@
-@use "@moryx/ngx-web-framework/styles/variables" as *;
 
 .media-instruction {
   width: 100%;
@@ -34,7 +33,7 @@ mat-icon {
 }
 
 .next-image {
-  background-color: $light-background-hover;
+  background-color: var(--mat-sys-surface-container-highest);
   opacity: 0.5;
   box-shadow: none;
   width: 60px;
@@ -46,7 +45,7 @@ mat-icon {
 }
 
 .media-navigation > .image-quick-link {
-  border: 1px solid $light-background-hover;
+  border: 1px solid var(--mat-sys-surface-container-highest);
   box-shadow: none;
   opacity: 0.5;
   width: 30px;
@@ -55,5 +54,5 @@ mat-icon {
 }
 
 .selected {
-  background-color: $light-background-hover;
+  background-color: var(--mat-sys-surface-container-highest);
 }

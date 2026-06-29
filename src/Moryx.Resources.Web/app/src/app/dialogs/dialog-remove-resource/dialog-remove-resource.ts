@@ -3,20 +3,21 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 
 import { MatButtonModule } from '@angular/material/button';
-import { TranslateModule } from '@ngx-translate/core';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import { ResourceModel } from 'src/app/api/models/resource-model';
+import { TranslatePipe } from '@ngx-translate/core';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { ResourceModel } from '@api/models/resource-model';
 
 @Component({
   selector: 'app-dialog-remove-resource',
   templateUrl: './dialog-remove-resource.html',
   styleUrls: ['./dialog-remove-resource.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
-    TranslateModule,
+    TranslatePipe,
     MatDialogModule,
     MatButtonModule
   ]

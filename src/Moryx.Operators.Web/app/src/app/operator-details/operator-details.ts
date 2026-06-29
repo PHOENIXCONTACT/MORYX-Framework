@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, effect, inject, input, OnInit, signal, untracked } from "@angular/core";
+import { Component, effect, inject, input, OnInit, signal, untracked, ChangeDetectionStrategy } from "@angular/core";
 import { RouterLink } from "@angular/router";
 import { TranslationConstants } from "../extensions/translation-constants.extensions";
 import { OperatorSkillView } from "../models/type";
@@ -14,12 +14,12 @@ import { MatDialog } from "@angular/material/dialog";
 import { SkillNewDialog } from "../dialogs/skill-new-dialog/skill-new-dialog";
 import { ConfirmationDialog } from "../dialogs/confirmation-dialog/confirmation-dialog";
 import { OperatorViewModel } from "../models/operator-view-model";
-import { AssignableOperator } from "../api/models/assignable-operator";
+import { AssignableOperator } from "@api/models/assignable-operator";
 import { skillToOperatorSkill, skillTypeToModel } from "../models/model-converter";
-import { SkillTypeModel } from "../api/models/skill-type-model";
+import { SkillTypeModel } from "@api/models/skill-type-model";
 import { lastValueFrom } from "rxjs";
 import { AppStoreService } from "../services/app-store.service";
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { MatIconModule } from "@angular/material/icon";
 import { MatSidenavModule } from "@angular/material/sidenav";
@@ -33,11 +33,12 @@ import { MatButtonModule } from "@angular/material/button";
   selector: "app-operator-details",
   templateUrl: "./operator-details.html",
   styleUrl: "./operator-details.scss",
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatIconModule,
     MatSidenavModule,
     MatTooltipModule,
-    TranslateModule,
+    TranslatePipe,
     MatFormFieldModule,
     MatInputModule,
     FormsModule,

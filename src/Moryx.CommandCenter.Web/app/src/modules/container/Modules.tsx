@@ -56,7 +56,7 @@ interface ModulesStateModel {
 }
 
 class Modules extends React.Component<ModulesPropModel & ModulesDispatchPropModel, ModulesStateModel> {
-  private updateModulesTimer: NodeJS.Timeout;
+  private updateModulesTimer: ReturnType<typeof setInterval>;
 
   constructor(props: ModulesPropModel & ModulesDispatchPropModel) {
     super(props);
@@ -74,7 +74,7 @@ class Modules extends React.Component<ModulesPropModel & ModulesDispatchPropMode
   }
 
   public modulesUpdater(): void {
-    this.props.RestClient.modules().then((data) => this.props.onUpdateModules(data));
+    this.props.RestClient.modules().then((data) => this.props.onUpdateModules?.(data));
   }
 
   private static createMenuItem(moduleModel: ServerModuleModel): MenuItemModel {
@@ -164,4 +164,4 @@ class Modules extends React.Component<ModulesPropModel & ModulesDispatchPropMode
   }
 }
 
-export default connect<ModulesPropModel, ModulesDispatchPropModel>(mapStateToProps, mapDispatchToProps)(Modules);
+export default connect<ModulesPropModel, ModulesDispatchPropModel, {}, AppState>(mapStateToProps, mapDispatchToProps)(Modules) as unknown as React.ComponentType;

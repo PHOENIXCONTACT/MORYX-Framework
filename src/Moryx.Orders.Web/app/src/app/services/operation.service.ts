@@ -4,22 +4,20 @@
 */
 
 import { inject, Injectable } from '@angular/core';
-import { ApiConfiguration } from 'src/app/api/api-configuration';
-import { OperationModel } from '../api/models';
-import { OperationAdvicedModel, OperationReportedModel, OperationStartedModel, OperationType } from 'src/app/models/operation-models';
+import { ApiConfiguration } from '@api/api-configuration';
+import { OperationModel } from '@api/models';
+import { OperationAdvicedModel, OperationReportedModel, OperationStartedModel, OperationType } from '@app/models/operation-models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class OperationService {
   private apiConfiguration = inject(ApiConfiguration);
-  private eventSource: EventSource;
+  private eventSource?: EventSource;
 
-  constructor() {
+  public connect(callback: (operationModel: OperationModel) => void) {
     this.eventSource = new EventSource(this.apiConfiguration.rootUrl + '/api/moryx/orders/stream');
-  }
 
-  public operationChanged(callback: (operationModel: OperationModel) => void) {
     // Register to progress
     this.eventSource.addEventListener(OperationType[OperationType.Progress], event => {
       const operationModel = JSON.parse(event.data) as OperationModel;
@@ -38,6 +36,8 @@ export class OperationService {
 
   // Deprecated: Only use as reference for operation types and payload
   public stream(operationType: OperationType, callbackFunction: Function) {
+    if (this.eventSource == null)
+      return;
 
     this.eventSource.addEventListener(OperationType[OperationType.Start], event => {
       const operationStartedModel = JSON.parse(event.data) as OperationStartedModel;
@@ -121,6 +121,13 @@ export class OperationService {
 
       callbackFunction(operationModel!);
     });
+  }
+
+  disconnect() {
+    if (this.eventSource) {
+      this.eventSource.close();
+      this.eventSource = undefined;
+    }
   }
 }
 

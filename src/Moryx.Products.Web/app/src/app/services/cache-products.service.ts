@@ -18,9 +18,9 @@ import {
   Selector,
   ProductQuery,
 } from '../api/models';
-import { ProductManagementService } from '../api/services/product-management.service';
+import { ProductManagementService } from '@api/services/product-management.service';
 import { FilterOptions } from '../models/FilterOptions';
-import { WorkplanService } from '../api/services/workplan.service';
+import { WorkplanService } from '@api/services/workplan.service';
 import '../extensions/observable.extensions';
 import { TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from '../extensions/translation-constants.extensions';
@@ -208,10 +208,10 @@ export class CacheProductsService {
     } as Import$Params;
 
     try {
-      await lastValueFrom(this.service.import(body));  
+      await lastValueFrom(this.service.import(body));
       await this.loadProductsForTree();
     } catch (error) {
-      await this.snackbarService.handleError(error as HttpErrorResponse);    
+      await this.snackbarService.handleError(error as HttpErrorResponse);
     }
   }
 }

@@ -4,13 +4,14 @@
 */
 
 
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { Entry, NavigableEntryEditor } from '@moryx/ngx-web-framework/entry-editor';
 
 @Component({
   selector: 'app-operation-source',
   templateUrl: './operation-source.html',
   styleUrls: ['./operation-source.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     NavigableEntryEditor
 ]

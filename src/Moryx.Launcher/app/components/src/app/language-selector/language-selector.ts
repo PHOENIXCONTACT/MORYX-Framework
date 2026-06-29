@@ -4,13 +4,14 @@
 */
 
 
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { localLanguage } from '../utils';
 
 @Component({
   selector: 'app-language-selector',
   imports: [],
   templateUrl: './language-selector.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './language-selector.css'
 })
 export class LanguageSelector {

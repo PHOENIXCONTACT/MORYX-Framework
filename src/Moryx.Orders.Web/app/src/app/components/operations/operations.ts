@@ -4,30 +4,26 @@
 */
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit, signal, viewChild, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
 import { SearchBarService, SearchRequest } from '@moryx/ngx-web-framework/services';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import { OperationService } from 'src/app/services/operation.service';
-import { OrderManagementService } from '../../api/services/order-management.service';
-import { BeginDialog, BeginDialogData } from '../../dialogs/begin-dialog/begin-dialog';
-import { CreateDialog } from '../../dialogs/create-dialog/create-dialog';
-import { ReportDialog, ReportDialogData } from '../../dialogs/report-dialog/report-dialog';
-import { InterruptDialog } from '../../dialogs/interrupt-dialog/interrupt-dialog';
-import { InterruptDialogData } from '../../dialogs/interrupt-dialog/interrupt-dialog-data';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { OperationService } from '@app/services/operation.service';
+import { OrderManagementService } from '@api/services/order-management.service';
+import { BeginDialog, BeginDialogData } from '@app/dialogs/begin-dialog/begin-dialog';
+import { CreateDialog } from '@app/dialogs/create-dialog/create-dialog';
+import { ReportDialog, ReportDialogData } from '@app/dialogs/report-dialog/report-dialog';
+import { InterruptDialog } from '@app/dialogs/interrupt-dialog/interrupt-dialog';
+import { InterruptDialogData } from '@app/dialogs/interrupt-dialog/interrupt-dialog-data';
 import '../../extensions/observable.extensions';
-import { OperationViewModel } from '../../models/operation-view-model';
-import { OperationModel } from '../../api/models';
-import { ReportModel } from '../../api/models';
-import { OperationStateClassification } from '../../api/models';
-import { ReportContext } from '../../api/models';
-import { LogLevel } from '../../api/models';
+import { OperationViewModel } from '@app/models/operation-view-model';
+import { OperationModel, ReportModel, OperationStateClassification, ReportContext, LogLevel } from '@api/models';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { DrawerContent } from './drawer-content';
 import { CommonModule } from '@angular/common';
@@ -41,18 +37,19 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { FilterService } from '../../services/filter.service';
+import { FilterService } from '@app/services/filter.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { OperationsFilter } from './operations-filter/operations-filter';
-import { MultiProgressBar } from '../../multi-progress-bar/multi-progress-bar';
+import { MultiProgressBar } from '@app/multi-progress-bar/multi-progress-bar';
 
 @Component({
   selector: 'app-operations',
   templateUrl: './operations.html',
   styleUrls: ['./operations.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CommonModule,
-    TranslateModule,
+    TranslatePipe,
     MatIconModule,
     MatDrawer,
     MatSidenavModule,
@@ -69,9 +66,12 @@ import { MultiProgressBar } from '../../multi-progress-bar/multi-progress-bar';
     MatSidenavModule,
     MatToolbarModule,
     MultiProgressBar
-]
+  ],
+  host: {
+    '(window:beforeunload)': 'disconnectEvents()'
+  }
 })
-export class Operations implements OnInit, OnDestroy {
+export class Operations implements OnInit {
   private orderManagementService = inject(OrderManagementService);
   private dialog = inject(MatDialog);
   private router = inject(Router);
@@ -82,6 +82,7 @@ export class Operations implements OnInit, OnDestroy {
   private changeDetectorRef = inject(ChangeDetectorRef);
   private mediaMatcher = inject(MediaMatcher);
   private filterService = inject(FilterService);
+  private destroyRef = inject(DestroyRef);
 
   operations = signal<OperationViewModel[]>([]);
   DrawerContent = DrawerContent;
@@ -99,14 +100,10 @@ export class Operations implements OnInit, OnDestroy {
     this.mobileQuery = this.mediaMatcher.matchMedia('(max-width: 1279px)');
     this._mobileQueryListener = () => this.changeDetectorRef.detectChanges();
     this.mobileQuery.addEventListener('change', this._mobileQueryListener);
+    this.destroyRef.onDestroy(() => this.disconnectEvents());
   }
 
   private readonly _mobileQueryListener: () => void;
-
-  ngOnDestroy(): void {
-    this.mobileQuery.removeEventListener('change', this._mobileQueryListener);
-    this.searchBarService.unsubscribe();
-  }
 
   ngOnInit() {
     // Get all the operations
@@ -127,7 +124,7 @@ export class Operations implements OnInit, OnDestroy {
     });
 
     // Register events
-    this.operationService.operationChanged((updatedOperation: OperationModel) => {
+    this.operationService.connect((updatedOperation: OperationModel) => {
       if (!updatedOperation) {
         return;
       }
@@ -341,6 +338,12 @@ export class Operations implements OnInit, OnDestroy {
   closeDrawer() {
     this.drawerContent.set(DrawerContent.None);
     this.drawer().close();
+  }
+
+  disconnectEvents(): void {
+    this.mobileQuery.removeEventListener('change', this._mobileQueryListener);
+    this.searchBarService.unsubscribe();
+    this.operationService.disconnect();
   }
 }
 

@@ -4,14 +4,14 @@
 */
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
-import { WorkplanNodeClassification, WorkplanStepRecipe } from '../../api/models';
-import { WorkplanEditingService } from '../../api/services';
-import { TranslationConstants } from '../../extensions/translation-constants.extensions';
-import { SessionsService } from '../../services/sessions.service';
+import { WorkplanNodeClassification, WorkplanStepRecipe } from '@api/models';
+import { WorkplanEditingService } from '@api/services';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { SessionsService } from '@app/services/sessions.service';
 import { CommonModule } from '@angular/common';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
@@ -21,12 +21,13 @@ import { MatCardModule } from '@angular/material/card';
   selector: 'app-toolbox',
   templateUrl: './toolbox.html',
   styleUrls: ['./toolbox.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CommonModule,
     MatExpansionModule,
     MatIconModule,
     MatCardModule,
-    TranslateModule
+    TranslatePipe
   ]
 })
 export class Toolbox implements OnInit, OnDestroy {

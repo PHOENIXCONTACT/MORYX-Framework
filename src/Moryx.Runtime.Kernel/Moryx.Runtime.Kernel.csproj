@@ -6,6 +6,7 @@
     <Description>Kernel components that comprise the MORYX server side runtime environment</Description>
     <PackageTags>MORYX;Kernel;Runtime;Server</PackageTags>
     <IsPackable>true</IsPackable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>

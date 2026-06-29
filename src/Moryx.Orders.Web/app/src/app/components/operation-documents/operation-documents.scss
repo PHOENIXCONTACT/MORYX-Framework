@@ -10,7 +10,7 @@
 .operation-document-container {
     height: 100%;
     @include mat.sidenav-overrides((
-        container-background-color: $mat-background-light,
+        container-background-color: var(--mat-sys-surface-container-lowest),
         container-width : 300px
      ));
 }
@@ -18,10 +18,10 @@
 .operation-document-toolbar {
     width: 100%;
     height: fit-content;
-    color: $mat-background-light !important;
+    color: var(--mat-sys-surface-container-lowest) !important;
 }
 .mat-toolbar .mat-mdc-button-base.mat-mdc-button-base.mat-unthemed{
-    color: $mat-background-light !important;
+    color: var(--mat-sys-surface-container-lowest) !important;
 }
 .operation-document-title {
     display: flex;
@@ -46,7 +46,7 @@ mat-list {
 }
 
 .operation-documents-list-item:hover {
-    background-color: $light-background-hover;
+    background-color: var(--mat-sys-surface-container-highest);
     cursor: pointer;
 }
 

@@ -7,9 +7,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { BehaviorSubject, catchError, Observable, of } from 'rxjs';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import { ContentDescriptorModel, VariantDescriptor } from '../../api/models';
-import { MediaServerService } from '../../api/services';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { ContentDescriptorModel, VariantDescriptor } from '@api/models';
+import { MediaServerService } from '@api/services';
 
 @Injectable({
   providedIn: 'root',
