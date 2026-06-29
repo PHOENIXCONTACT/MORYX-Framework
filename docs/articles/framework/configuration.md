@@ -142,6 +142,17 @@ or alternatively
 }
 ```
 
+> [!CAUTION]
+> The collection integration works **if and only if** the list is null or if all the needed entries in the list already exist and can be modified.
+> Due to the way configuration management in MORYX works, it is impossible to add an additional entry that is only defined through ConfigurationProviders to a List.
+
+> [!CAUTION]
+> The alternative syntax can be much shorter for long existing lists, where you want to make sparse changes.  
+> It is only equivalent to the first assuming the type strategies already exist in the MORYX Config.  
+> If no list exists yet, the entries that have no values are pruned away by Microsofts binding mechanism.  
+> You might expect TypeStrategies to be [null, null, { "PluginName": "ExamplePlugin" }], but it's actually [{ "PluginName": "ExamplePlugin" }].  
+> This could lead to subsequent problems, because the indices in the conifg keys do not match the indices in the instantiated objects.
+
 ### Customizing Key Mapping with ProvidedConfigAttribute
 The default key mapping can be customized using the ProvidedConfigAttribute.
 
