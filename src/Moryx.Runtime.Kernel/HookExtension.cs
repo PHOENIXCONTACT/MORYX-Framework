@@ -5,7 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Moryx.Tools;
 
 namespace Moryx.Runtime.Kernel;
-
+/// <summary>
+/// Extensions to make registering and running startup hooks more convenient
+/// </summary>
 public static class HookExtension
 {
     extension(IServiceCollection services)
@@ -23,12 +25,13 @@ public static class HookExtension
             return services;
         }
     }
+
     extension(IServiceProvider provider)
     {
         /// <summary>
         /// Runs all registered startup hooks
         /// </summary>
-        public async Task RunHooksAsync()
+        public async Task RunHooksAsync(CancellationToken cancellationToken)
         {
             var hooks = provider.GetServices<IStartupHook>().ToArray();
 
@@ -36,7 +39,8 @@ public static class HookExtension
                 .OrderBy(h => h.Priority)
                 .ThenBy(h => h.GetType().Name))
             {
-                await hook.RunAsync();
+                cancellationToken.ThrowIfCancellationRequested();
+                await hook.RunAsync(cancellationToken);
             }
 
         }

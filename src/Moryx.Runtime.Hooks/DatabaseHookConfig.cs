@@ -33,7 +33,7 @@ public sealed class DatabaseHookConfig : ConfigBase
     /// </summary>
     [DataMember, EntrySerialize]
     public bool CreateDbs { get; set; }
-    
+
     /// <summary>
     /// Configures when to run this hook
     /// </summary>

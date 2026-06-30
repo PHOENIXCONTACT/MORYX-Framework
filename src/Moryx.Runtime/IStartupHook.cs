@@ -3,10 +3,14 @@
 
 namespace Moryx.Runtime;
 
+/// <summary>
+/// Base class for reusable hooks that should run during application startup.
+/// See docs/articles/framework/startup-hooks.md
+/// </summary>
 public interface IStartupHook
 {
     /// <summary>
-    /// Lower runs earlier
+    /// Lowest value gets executed first
     /// </summary>
     int Priority { get; }
 
@@ -14,5 +18,5 @@ public interface IStartupHook
     /// Execute the main functionality of the hook
     /// </summary>
     /// <returns></returns>
-    Task RunAsync();
+    Task RunAsync(CancellationToken cancellationToken);
 }

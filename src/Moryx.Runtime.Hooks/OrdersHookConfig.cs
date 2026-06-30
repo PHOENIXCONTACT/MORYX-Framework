@@ -8,7 +8,6 @@ using Moryx.Serialization;
 
 namespace Moryx.Runtime.Hooks;
 
-
 [ProvidedConfig("Hooks:Orders")]
 public sealed class OrdersHookConfig : ConfigBase
 {

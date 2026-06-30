@@ -7,12 +7,16 @@ using Moryx.Model;
 
 namespace Moryx.Runtime.Hooks;
 
-/// <inheritdoc />
+/// <summary>
+/// Hook that allows deleting or creating databases on startup
+/// </summary>
 public sealed class DatabaseHook(IConfigManager configuration, IDbContextManager dbContextManager, ILogger<DatabaseHook> logger) : IStartupHook
 {
+    /// <inheritdoc />
     public int Priority { get; set; } = configuration.GetConfiguration<DatabaseHookConfig>().Priority;
 
-    public async Task RunAsync()
+    /// <inheritdoc />
+    public async Task RunAsync(CancellationToken cancellationToken)
     {
         var config = configuration.GetConfiguration<DatabaseHookConfig>();
         if (config is null || config.Disabled)
