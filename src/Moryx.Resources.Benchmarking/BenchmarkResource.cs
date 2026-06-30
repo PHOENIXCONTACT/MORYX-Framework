@@ -176,32 +176,32 @@ public class BenchmarkResource : Cell, IBenchmarkResource, INotificationSender
         NotificationAdapter.Publish(this, notification);
     }
 
+    private const string MarkdownMessage = "# 1 Heading\n" +
+                                           "This is a **markdown** notification with a [link](https://www.moryx-industry.net/) and an image:\n" +
+                                           "![MORYX Logo](https://www.moryx-industry.net/assets/images/MORYX_logo.svg)\n" +
+                                           "## 2 Heading\n" +
+                                           "Table:\n\n" +
+                                           "| Name | Value | Unit |\n" +
+                                           "| --- | --- | --- |\n" +
+                                           "| Temperature | 23.5 | °C |\n" +
+                                           "| Pressure | 1013 | hPa |\n" +
+                                           "| Humidity | 60 | % |\n";
     [EntrySerialize]
     public void PublishMarkdownNotification()
     {
-        var message = "# 1 Heading\n" +
-                      "This is a **markdown** notification with a [link](https://www.moryx-industry.net/) and an image:\n" +
-                      "![MORYX Logo](https://www.moryx-industry.net/assets/images/MORYX_logo.svg)\n" +
-                      "## 2 Heading\n" +
-                      "Table:\n\n" +
-                      "| Name | Value | Unit |\n" +
-                      "| --- | --- | --- |\n" +
-                      "| Temperature | 23.5 | °C |\n" +
-                      "| Pressure | 1013 | hPa |\n" +
-                      "| Humidity | 60 | % |\n";
-        var notification = new Notification("Markdown Notification", message, Severity.Info, false);
-        //NotificationAdapter.Publish(this, notification);
+        var notification = new Notification("Markdown Notification", MarkdownMessage, Severity.Info, false);
+        NotificationAdapter.Publish(this, notification);
+    }
 
+    [EntrySerialize]
+    public void PublishMarkdownInstruction()
+    {
         VisualInstructor.Display(new ActiveInstruction
         {
             Title = "Markdown Instruction",
             Instructions =
             [
-                new VisualInstruction
-                {
-                    Content = message,
-                    Type = InstructionContentType.Text
-                }
+                new VisualInstruction { Content = MarkdownMessage, Type = InstructionContentType.Text }
             ]
         });
     }
@@ -209,12 +209,8 @@ public class BenchmarkResource : Cell, IBenchmarkResource, INotificationSender
     [EntrySerialize]
     public void CreateAssemblyInstruction()
     {
-        _instructionId = VisualInstructor.Execute(new ActiveInstruction
-        {
-            Title = Name,
-            Instructions = Instructions,
-            Results = PossibleResults,
-        }, response => { });
+        _instructionId = VisualInstructor.Execute(new ActiveInstruction { Title = Name, Instructions = Instructions, Results = PossibleResults, },
+            response => { });
     }
 
     [EntrySerialize]
