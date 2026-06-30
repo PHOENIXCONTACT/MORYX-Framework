@@ -4,26 +4,26 @@
 */
 
 import { computed, inject } from '@angular/core';
-import { LauncherStateService } from '../services/launcher-state.service';
+import { LauncherLayoutService } from '../services/launcher-layout.service';
 
 export abstract class LayoutBase {
-  protected launcherStateService = inject(LauncherStateService);
+  protected launcherLayoutService = inject(LauncherLayoutService);
 
   showTopRegion = computed(() =>
-    this.launcherStateService.topRegionAvailable() && this.launcherStateService.topRegionEnabled()
+    this.launcherLayoutService.topRegionAvailable() && this.launcherLayoutService.topRegionEnabled()
   );
 
   showRightRegion = computed(() =>
-    this.launcherStateService.rightRegionAvailable() && this.launcherStateService.rightRegionEnabled()
+    this.launcherLayoutService.rightRegionAvailable() && this.launcherLayoutService.rightRegionEnabled()
   );
 
   onTopRegionSlotChange(event: Event): void {
     const slot = event.target as HTMLSlotElement;
-    this.launcherStateService.topRegionAvailable.set(slot.assignedNodes().length > 0);
+    this.launcherLayoutService.topRegionAvailable.set(slot.assignedNodes().length > 0);
   }
 
   onRightRegionSlotChange(event: Event): void {
     const slot = event.target as HTMLSlotElement;
-    this.launcherStateService.rightRegionAvailable.set(slot.assignedNodes().length > 0);
+    this.launcherLayoutService.rightRegionAvailable.set(slot.assignedNodes().length > 0);
   }
 }

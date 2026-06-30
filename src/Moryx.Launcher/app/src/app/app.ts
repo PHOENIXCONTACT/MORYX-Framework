@@ -6,7 +6,7 @@
 import { Component, DestroyRef, effect, inject, input, untracked, ViewEncapsulation } from '@angular/core';
 import { WebModuleItem } from './models/web-module-item';
 import { FullLayout } from './layouts/full-layout/full-layout';
-import { LauncherLayout, LauncherStateService } from './services/launcher-state.service';
+import { LauncherLayout, LauncherLayoutService } from './services/launcher-layout.service';
 import { ExternalModuleItem } from './models/external-module-item';
 import { CultureModel } from './models/culture-model';
 import { OperatorLayout } from './layouts/operator-layout/operator-layout';
@@ -15,7 +15,6 @@ import { ModuleService } from './services/module.service';
 import { CultureService } from './services/culture.service';
 import { AuthService } from './services/auth.service';
 import { ShortcutService } from './services/shortcut.service';
-import { ThemeService } from './services/theme.service';
 import { LanguageService } from '@moryx/ngx-web-framework/services';
 import { TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from './translation-constants';
@@ -32,7 +31,7 @@ import { SearchService } from './services/search.service';
 })
 export class App {
 
-  private launcherStateService = inject(LauncherStateService);
+  private launcherLayoutService = inject(LauncherLayoutService);
   private moduleService = inject(ModuleService);
   private cultureService = inject(CultureService);
   private authService = inject(AuthService);
@@ -48,21 +47,21 @@ export class App {
   supportedCultures = input.required<CultureModel[]>();
   authBaseAddress = input<string>();
 
-  layout = this.launcherStateService.layout;
+  layout = this.launcherLayoutService.layout;
 
   constructor() {
     window.shell = new MoryxLauncherShell(this.cultureService, this.searchService);
 
     this.shortcutService.register(
-      { key: 'Digit1', ctrl: true, alt: true, action: () => this.launcherStateService.updateLayout(LauncherLayout.Full) },
+      { key: 'Digit1', ctrl: true, alt: true, action: () => this.launcherLayoutService.updateLayout(LauncherLayout.Full) },
       this.destroyRef
     );
     this.shortcutService.register(
-      { key: 'Digit2', ctrl: true, alt: true, action: () => this.launcherStateService.updateLayout(LauncherLayout.Operator) },
+      { key: 'Digit2', ctrl: true, alt: true, action: () => this.launcherLayoutService.updateLayout(LauncherLayout.Operator) },
       this.destroyRef
     );
     this.shortcutService.register(
-      { key: 'Digit3', ctrl: true, alt: true, action: () => this.launcherStateService.updateLayout(LauncherLayout.Fullscreen) },
+      { key: 'Digit3', ctrl: true, alt: true, action: () => this.launcherLayoutService.updateLayout(LauncherLayout.Fullscreen) },
       this.destroyRef
     );
 

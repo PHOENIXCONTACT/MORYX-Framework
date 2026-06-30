@@ -10,7 +10,7 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ModuleGridMenu } from '../../module-grid-menu/module-grid-menu';
 import { MoreMenu } from '../../more-menu/more-menu';
-import { LauncherLayout } from '../../services/launcher-state.service';
+import { LauncherLayout } from '../../services/launcher-layout.service';
 import { TranslationConstants } from '../../translation-constants';
 import { LayoutBase } from '../layout-base';
 
@@ -54,7 +54,7 @@ export class FullscreenLayout extends LayoutBase {
   }
 
   exitFullscreen() {
-    this.launcherStateService.updateLayout(LauncherLayout.Full);
+    this.launcherLayoutService.updateLayout(LauncherLayout.Full);
   }
 
   private clearTimeout() {

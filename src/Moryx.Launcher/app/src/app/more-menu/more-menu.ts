@@ -9,7 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenu, MatMenuModule } from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatDialog } from '@angular/material/dialog';
-import { LauncherLayout, LauncherStateService } from '../services/launcher-state.service';
+import { LauncherLayout, LauncherLayoutService } from '../services/launcher-layout.service';
 import { AboutDialog } from '../about-dialog/about-dialog';
 import { ModuleItem } from '../models/module-item';
 import { ModuleService } from '../services/module.service';
@@ -30,7 +30,7 @@ export class MoreMenu {
   private moduleService = inject(ModuleService);
   private locationPersistenceService = inject(LocationPersistenceService);
   private cultureService = inject(CultureService);
-  private launcherStateService = inject(LauncherStateService);
+  private launcherLayoutService = inject(LauncherLayoutService);
   private searchService = inject(SearchService);
   private themeService = inject(ThemeService);
   private dialog = inject(MatDialog);
@@ -38,11 +38,11 @@ export class MoreMenu {
   protected TranslationConstants = TranslationConstants;
   currentTheme = this.themeService.mode;
 
-  currentLayout = this.launcherStateService.layout;
-  topRegionAvailable = this.launcherStateService.topRegionAvailable;
-  topRegionEnabled = this.launcherStateService.topRegionEnabled;
-  rightRegionAvailable = this.launcherStateService.rightRegionAvailable;
-  rightRegionEnabled = this.launcherStateService.rightRegionEnabled;
+  currentLayout = this.launcherLayoutService.layout;
+  topRegionAvailable = this.launcherLayoutService.topRegionAvailable;
+  topRegionEnabled = this.launcherLayoutService.topRegionEnabled;
+  rightRegionAvailable = this.launcherLayoutService.rightRegionAvailable;
+  rightRegionEnabled = this.launcherLayoutService.rightRegionEnabled;
 
   modules = this.moduleService.otherModules;
   supportedCultures = this.cultureService.supportedCultures;
@@ -52,7 +52,7 @@ export class MoreMenu {
   protected readonly LauncherLayout = LauncherLayout;
 
   setLayout(layout: LauncherLayout) {
-    this.launcherStateService.updateLayout(layout);
+    this.launcherLayoutService.updateLayout(layout);
   }
 
   openAbout() {
@@ -60,11 +60,11 @@ export class MoreMenu {
   }
 
   toggleTopRegion(): void {
-    this.launcherStateService.updateTopRegionEnabled(!this.topRegionEnabled());
+    this.launcherLayoutService.updateTopRegionEnabled(!this.topRegionEnabled());
   }
 
   toggleRightRegion(): void {
-    this.launcherStateService.updateRightRegionEnabled(!this.rightRegionEnabled());
+    this.launcherLayoutService.updateRightRegionEnabled(!this.rightRegionEnabled());
   }
 
   openSpotlight(): void {

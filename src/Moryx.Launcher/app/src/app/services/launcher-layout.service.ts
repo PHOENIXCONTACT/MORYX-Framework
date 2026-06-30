@@ -8,10 +8,10 @@ import { Injectable, signal } from '@angular/core';
 @Injectable({
   providedIn: 'root'
 })
-/** Manages the launcher's UI state (layout, nav, regions) and persists it to localStorage. */
-export class LauncherStateService {
+/** Manages the launcher's layout state (layout, nav, regions) and persists it to localStorage. */
+export class LauncherLayoutService {
 
-  private readonly stateName = 'LauncherState';
+  private readonly stateName = 'LauncherState'; // TODO: Rename to LauncherLayout in the next major
 
   /** The active layout mode (full, operator, fullscreen). Persisted. */
   layout = signal<LauncherLayout>(this.getLayout());
@@ -88,10 +88,13 @@ export enum LauncherLayout {
   Fullscreen = 'fullscreen',
 }
 
-// Kept for localStorage compatibility — not part of the public API
+
 interface LauncherState {
+  // Kept for localStorage compatibility
+  // TODO use enum in the next major
   fullscreen: boolean;
   operatorMode: boolean;
+
   navCollapsed?: boolean;
   topRegionEnabled?: boolean;
   rightRegionEnabled?: boolean;

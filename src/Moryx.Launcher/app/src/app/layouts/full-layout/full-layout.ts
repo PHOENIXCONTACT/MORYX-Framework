@@ -37,10 +37,10 @@ export class FullLayout extends LayoutBase {
   private authService = inject(AuthService);
   environment = environment;
 
-  navCollapsed = this.launcherStateService.navCollapsed;
+  navCollapsed = this.launcherLayoutService.navCollapsed;
   authConfigured = this.authService.authConfigured;
 
   toggleNav() {
-    this.launcherStateService.updateNavCollapsed(!this.navCollapsed());
+    this.launcherLayoutService.updateNavCollapsed(!this.navCollapsed());
   }
 }
