@@ -6,19 +6,14 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-  <!-- 
-    <PackageReference Include="Moryx" />
-    <PackageReference Include="Moryx.Runtime" />
-    <PackageReference Include="Moryx.Orders" />
-    <PackageReference Include="Moryx.Products.Management" /> -->
     <PackageReference Include="Microsoft.Extensions.Configuration" />
     <PackageReference Include="Microsoft.Extensions.Logging" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Moryx.Model\Moryx.Model.csproj" />
     <ProjectReference Include="..\Moryx\Moryx.csproj" />
     <ProjectReference Include="..\Moryx.Runtime\Moryx.Runtime.csproj" />
     <ProjectReference Include="..\Moryx.Orders\Moryx.Orders.csproj" />
-    <ProjectReference Include="..\Moryx.Products.Management\Moryx.Products.Management.csproj" />
   </ItemGroup>
 
 </Project>

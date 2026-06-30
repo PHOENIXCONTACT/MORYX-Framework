@@ -3,7 +3,6 @@
 
 using Microsoft.Extensions.DependencyInjection;
 using Moryx.Tools;
-using Moryx.Runtime;
 
 namespace Moryx.Runtime.Kernel;
 
@@ -11,9 +10,12 @@ public static class HookExtension
 {
     extension(IServiceCollection services)
     {
+        /// <summary>
+        /// Finds startup hooks using Reflection and registers them to the service collection
+        /// </summary>
         public IServiceCollection AddStartupHooks()
         {
-            var hooks = ReflectionTool.GetPublicClasses<IStartupHook>(h => h.IsClass && !h.IsAbstract);
+            var hooks = ReflectionTool.GetPublicClasses<IStartupHook>();
             foreach (var hook in hooks)
             {
                 services.AddSingleton(typeof(IStartupHook), hook);
@@ -23,11 +25,16 @@ public static class HookExtension
     }
     extension(IServiceProvider provider)
     {
+        /// <summary>
+        /// Runs all registered startup hooks
+        /// </summary>
         public async Task RunHooksAsync()
         {
             var hooks = provider.GetServices<IStartupHook>().ToArray();
 
-            foreach (var hook in hooks.OrderBy(h => h.Priority))
+            foreach (var hook in hooks
+                .OrderBy(h => h.Priority)
+                .ThenBy(h => h.GetType().Name))
             {
                 await hook.RunAsync();
             }

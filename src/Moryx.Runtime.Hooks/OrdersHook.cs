@@ -8,28 +8,33 @@ using Moryx.Runtime.Modules;
 using Moryx.Runtime.Modules.Hooks;
 using Moryx.Tools;
 
-namespace Moryx.Startup.Hooks;
+namespace Moryx.Runtime.Hooks;
 
-public class OrdersHook(IModuleManager moduleManager, ILogger<OrdersHook> logger, IConfigManager configuration)
-    : ModuleStartHook<IOrderManagement, OrdersHookConfig>(moduleManager, configuration, logger)
+/// <summary>
+/// Hook that can be used to automatically create orders on startup
+/// </summary>
+public sealed class OrdersHook : ModuleStartHook<IOrderManagement, OrdersHookConfig>
 {
-
-    protected override FunctionResult Initialize(OrdersHookConfig config)
+    /// <summary>
+    /// Construct the OrdersHook
+    /// </summary>
+    public OrdersHook(IModuleManager moduleManager, ILogger<OrdersHook> logger, IConfigManager configuration)
+        : base(moduleManager, configuration, logger)
     {
-        if (config.Operations is not { Length: > 0 })
+        if (_config.Operations is not { Length: > 0 })
         {
-            return FunctionResult.WithError("No operations defined");
+            InitializationResult = FunctionResult.WithError("No operations defined");
         }
-
-        return base.Initialize(config);
     }
+
+    /// <inheritdoc />
     protected override async Task OnModuleStarted(IServerModule module, IOrderManagement facade)
     {
         var hasEntries = facade.GetOperations(o => true).Any();
 
-        foreach (var operationDescription in _config.Operations)
+        foreach (var operationDescription in _config.Operations!)
         {
-            if (operationDescription.Disabled || (operationDescription.OnlyOnFreshDb && hasEntries))
+            if (operationDescription.Disabled || (operationDescription.OnlyOnEmptyDb && hasEntries))
             {
                 continue;
             }
@@ -46,7 +51,7 @@ public class OrdersHook(IModuleManager moduleManager, ILogger<OrdersHook> logger
             Number = operation.Number,
             Order = new OrderCreationContext()
             {
-                Number = operation.OrderNumber ?? $"30{operation.ProductIdentifier}",
+                Number = operation.OrderNumber ?? $"Order for {operation.ProductIdentifier}",
                 Type = operation.OrderType,
             },
             ProductIdentifier = operation.ProductIdentifier,

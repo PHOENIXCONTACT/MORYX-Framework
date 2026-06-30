@@ -35,9 +35,6 @@ public static class DbContextContainerExtension
         /// Tries to create the database for each context.
         /// Applies missing migrations as well.
         /// </summary>
-        /// <param name="logger"></param>
-        /// <param name="token"></param>
-        /// <returns></returns>
         public async Task CreateAllConfiguredDatabasesAsync(ILogger logger = null, CancellationToken token = default)
         {
             var dbContextManager = serviceProvider.GetRequiredService<IDbContextManager>();
@@ -48,9 +45,6 @@ public static class DbContextContainerExtension
         /// <summary>
         /// Removes all databases
         /// </summary>
-        /// <param name="logger"></param>
-        /// <param name="token"></param>
-        /// <returns></returns>
         public async Task DeleteAllConfiguredDatabasesAsync(ILogger logger = null, CancellationToken token = default)
         {
             var dbContextManager = serviceProvider.GetRequiredService<IDbContextManager>();
@@ -65,10 +59,6 @@ public static class DbContextContainerExtension
         /// <summary>
         /// Deletes the database for the given context type
         /// </summary>
-        /// <param name="context"></param>
-        /// <param name="logger"></param>
-        /// <param name="token"></param>
-        /// <returns></returns>
         public async Task DeleteDatabaseAsync(Type context, ILogger logger = null, CancellationToken token = default)
         {
 
@@ -80,29 +70,21 @@ public static class DbContextContainerExtension
         /// <summary>
         /// Deletes the database for the context with the given name
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="logger"></param>
-        /// <param name="token"></param>
-        /// <returns></returns>
-        public async Task DeleteDatabaseByNameAsync(string name, ILogger? logger = null, CancellationToken token = default)
+        public async Task DeleteDatabaseByNameAsync(string name, ILogger logger = null, CancellationToken token = default)
         {
 
             var dbContextManager = serviceProvider.GetRequiredService<IDbContextManager>();
             logger ??= serviceProvider.GetService<ILogger>();
             await dbContextManager.DeleteDatabaseByNameAsync(name, logger, token);
         }
-
-        
     }
-    extension (IDbContextManager dbContextManager)
+
+    extension(IDbContextManager dbContextManager)
     {
         /// <summary>
         /// Tries to create the database for each context.
         /// Applies missing migrations as well.
         /// </summary>
-        /// <param name="logger"></param>
-        /// <param name="token"></param>
-        /// <returns></returns>
         public async Task CreateAllConfiguredDatabasesAsync(ILogger logger, CancellationToken token = default)
         {
             foreach (var context in dbContextManager.Contexts)
@@ -117,11 +99,11 @@ public static class DbContextContainerExtension
                     var createResult = await configurator.CreateDatabaseAsync(configurator.Config, token);
                     if (createResult)
                     {
-                        logger.LogInformation("Successfully created database for context {context}", context.Name);
+                        logger?.LogInformation("Successfully created database for context {context}", context.Name);
                     }
                     else
                     {
-                        logger?.LogWarning("Failed to create db for context {context}", context.Name);
+                        logger?.LogError("Failed to create db for context {context}", context.Name);
                     }
                 }
                 else if (testResult is TestConnectionResult.Success)
@@ -133,12 +115,12 @@ public static class DbContextContainerExtension
                     var summary = await configurator.MigrateDatabaseAsync(configurator.Config, token);
                     if (summary.Result is Configuration.MigrationResult.Error)
                     {
-                        logger?.LogWarning("Failed to apply missing migration to context {context}", context.Name);
+                        logger?.LogError("Failed to apply missing migration to context {context}", context.Name);
                     }
                 }
                 else if (testResult is TestConnectionResult.ConfigurationError or TestConnectionResult.ConnectionError)
                 {
-                    logger?.LogWarning("Skipping context {context}, because the configuration is in state {result}", context.Name, testResult);
+                    logger?.LogError("Skipping context {context}, because the configuration is in state {result}", context.Name, testResult);
                 }
             }
         }
@@ -146,9 +128,6 @@ public static class DbContextContainerExtension
         /// <summary>
         /// Removes all databases
         /// </summary>
-        /// <param name="logger"></param>
-        /// <param name="token"></param>
-        /// <returns></returns>
         public async Task DeleteAllConfiguredDatabasesAsync(ILogger logger, CancellationToken token = default)
         {
             foreach (var context in dbContextManager.Contexts)
@@ -161,9 +140,9 @@ public static class DbContextContainerExtension
         /// <summary>
         /// Deletes the database for the given context type
         /// </summary>
-        /// <param name="context"></param>
-        /// <param name="logger"></param>
-        /// <param name="token"></param>
+        /// <param name="context">Type of the context. Used to find the db to delete</param>
+        /// <param name="logger">optional logger</param>
+        /// <param name="token">Token to cancel the operation</param>
         /// <returns></returns>
         public async Task DeleteDatabaseAsync(Type context, ILogger logger, CancellationToken token = default)
         {
@@ -174,23 +153,23 @@ public static class DbContextContainerExtension
         /// <summary>
         /// Deletes the database for the context with the given name
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="logger"></param>
-        /// <param name="token"></param>
+        /// <param name="name">Name of the context. Used to find the db to delete</param>
+        /// <param name="logger">optional logger</param>
+        /// <param name="token">Token to cancel the operation</param>
         /// <returns></returns>
         public async Task DeleteDatabaseByNameAsync(string name, ILogger? logger, CancellationToken token = default)
         {
-            foreach (var context in dbContextManager.Contexts)
+            var context = dbContextManager.Contexts.FirstOrDefault(context =>
+                context.Name == name || context.FullName == name);
+            if (context is not null)
             {
-                if (context.Name == name || context.FullName == name)
-                {
-                    await DeleteDatabaseInternalAsync(dbContextManager, context, logger, token);
-                    return;
-                }
+                await DeleteDatabaseInternalAsync(dbContextManager, context, logger, token);
             }
-            logger?.LogWarning("No context with the name {name} found", name);
+            else
+            {
+                logger?.LogWarning("No context with the name {name} found", name);
+            }
         }
-
 
         private async Task DeleteDatabaseInternalAsync(Type context, ILogger logger, CancellationToken token = default)
         {
@@ -202,16 +181,16 @@ public static class DbContextContainerExtension
                 var result = await configurator.TestConnectionAsync(configurator.Config, token);
                 if (result is TestConnectionResult.ConnectionOkDbDoesNotExist)
                 {
-                    logger.LogInformation("Successfully deleted database for context {context}", context.Name);
+                    logger?.LogInformation("Successfully deleted database for context {context}", context.Name);
                 }
                 else
                 {
-                    logger.LogWarning("Failed to delete db for context {context}", context.Name);
+                    logger?.LogError("Failed to delete db for context {context}", context.Name);
                 }
             }
             else
             {
-                logger.LogWarning("Database connection for context {context} has problem {result}. Skipping deletion", context.Name, testResult);
+                logger?.LogError("Database connection for context {context} has problem {result}. Skipping deletion", context.Name, testResult);
             }
         }
     }

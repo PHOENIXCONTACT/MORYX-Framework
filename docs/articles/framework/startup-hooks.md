@@ -49,7 +49,7 @@ app.Run();
 
 ## Predefined Hooks
 
-The MORYX framework already provides ready-to-use hooks in the `Moryx.Startup.Hooks` project.
+The MORYX framework already provides ready-to-use hooks in the `Moryx.Runtime.Hooks` project.
 
 ### DatabaseHook
 
@@ -162,15 +162,3 @@ This mapping is opt-in and allows you to seamlessly integrate modern configurati
 For more details, refer to the configuration documentation:
 
 [/docs/articles/framework/configuration.md](/docs/articles/framework/configuration.md#mapping-iconfiguration-keys-to-moryx-configurations)
-
-
-## Summary
-
-Startup hooks provide a clean and extensible way to prepare your application before it starts:
-
-- Execute pre-start logic in a structured way
-- Keep setup code modular and reusable
-- Integrate with DI and configuration systems
-- Control execution order via priorities
-
-By leveraging startup hooks, you can improve reliability, simplify testing, and ensure your application always starts in the expected state.

@@ -5,10 +5,10 @@ using System.Runtime.Serialization;
 using Moryx.Configuration;
 using Moryx.Serialization;
 
-namespace Moryx.Startup.Hooks;
+namespace Moryx.Runtime.Hooks;
 
 [ProvidedConfig("Hooks:Databases")]
-public class DatabaseHookConfig : ConfigBase
+public sealed class DatabaseHookConfig : ConfigBase
 {
     /// <summary>
     /// Allows disabling this config entry
@@ -33,4 +33,10 @@ public class DatabaseHookConfig : ConfigBase
     /// </summary>
     [DataMember, EntrySerialize]
     public bool CreateDbs { get; set; }
+    
+    /// <summary>
+    /// Configures when to run this hook
+    /// </summary>
+    [DataMember, EntrySerialize]
+    public int Priority { get; internal set; }
 }

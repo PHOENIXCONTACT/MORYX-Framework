@@ -28,6 +28,7 @@ public abstract class ModuleStartHook<TFacade, TConfig>(IModuleManager moduleMan
 
     private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 
+    /// <inheritdoc/>
     protected override async Task OnStateChanged(IServerModule module, TFacade facade, ModuleStateChangedEventArgs eventArgs)
     {
         if (eventArgs.NewState != ServerModuleState.Running)
@@ -40,10 +41,6 @@ public abstract class ModuleStartHook<TFacade, TConfig>(IModuleManager moduleMan
             await _semaphore.WaitAsync();
             await OnModuleStarted(module, facade);
             _succeededAtLeastOnce = true;
-        }
-        catch (Exception ex)
-        {
-            base._logger.LogError(ex, "OnModuleStarted handler failed");
         }
         finally
         {

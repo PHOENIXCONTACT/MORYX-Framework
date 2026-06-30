@@ -6,11 +6,11 @@ using System.Runtime.Serialization;
 using Moryx.Configuration;
 using Moryx.Serialization;
 
-namespace Moryx.Startup.Hooks;
+namespace Moryx.Runtime.Hooks;
 
 
 [ProvidedConfig("Hooks:Orders")]
-public class OrdersHookConfig : ConfigBase
+public sealed class OrdersHookConfig : ConfigBase
 {
     public class ImporterConfig
     {
@@ -22,7 +22,7 @@ public class OrdersHookConfig : ConfigBase
         /// <summary>
         /// Only run this hook, when the database contains no operations 
         /// </summary>
-        public bool OnlyOnFreshDb { get; set; }
+        public bool OnlyOnEmptyDb { get; set; }
 
         /// <summary>
         /// Name of the operation
@@ -49,22 +49,27 @@ public class OrdersHookConfig : ConfigBase
         /// Identifier of the product to produce
         /// </summary>
         public string? ProductIdentifier { get; set; }
+
         /// <summary>
         /// Revision of the product to produce
         /// </summary>
         public short ProductRevision { get; set; }
+
         /// <summary>
         /// Amount to produce
         /// </summary>
         public int TotalAmount { get; set; }
+
         /// <summary>
         /// Underdelivery target
         /// </summary>
         public int UnderDelivery { get; set; }
+
         /// <summary>
         /// OverdeliveryTarget
         /// </summary>
         public int OverDelivery { get; set; }
+
         /// <summary>
         /// Id of the recipe
         /// </summary>

@@ -7,7 +7,6 @@ using Moryx.Tools;
 
 namespace Moryx.Runtime.Modules.Hooks;
 
-
 /// <summary>
 /// Base class for StarupHooks that react to state changes of modules.
 /// </summary>
@@ -15,21 +14,6 @@ namespace Moryx.Runtime.Modules.Hooks;
 /// <typeparam name="TConfig">The type of config this hook requires</typeparam>
 public abstract class ModuleHook<TFacade, TConfig> : IStartupHook where TConfig : ConfigBase, new()
 {
-    public ModuleHook(IModuleManager moduleManager, IConfigManager configManager, ILogger logger)
-    {
-        _logger = logger;
-        _moduleManager = moduleManager;
-
-        _config = configManager.GetConfiguration<TConfig>();
-        if (_config is null)
-        {
-            InitResult = FunctionResult.WithError("Not configured");
-            return;
-        }
-
-        InitResult = Initialize(_config);
-    }
-
     /// <summary>
     /// Config for this hook. Retrieved from the ConfigManager by default
     /// </summary>
@@ -45,21 +29,56 @@ public abstract class ModuleHook<TFacade, TConfig> : IStartupHook where TConfig 
     /// </summary>
     protected readonly IModuleManager _moduleManager;
 
-    protected FunctionResult InitResult { get; }
-
+    /// <summary>
+    /// Defines when the hook runs. Lower priorities run earlier
+    /// </summary>
     public int Priority { get; set; }
 
-    protected virtual FunctionResult Initialize(TConfig config)
+    /// <summary>
+    /// Can be used to mark that the hooks should not be run.
+    /// When the InitializationResult contains an error, the RunAsync Method will not register the event handler.
+    /// </summary>
+    protected FunctionResult InitializationResult { get; set; } = FunctionResult.Ok();
+
+    /// <summary>
+    /// Creates a ModuleHook
+    /// </summary>
+    /// <param name="moduleManager">Used to access MORYX modules</param>
+    /// <param name="configManager">Used to access the configuration</param>
+    /// <param name="logger">logger</param>
+    public ModuleHook(IModuleManager moduleManager, IConfigManager configManager, ILogger logger)
     {
-        return FunctionResult.Ok();
+        _logger = logger;
+        _moduleManager = moduleManager;
+
+        _config = configManager.GetConfiguration<TConfig>();
+        if (_config is null)
+        {
+            InitializationResult = FunctionResult.WithError("Not configured");
+        }
     }
 
+    /// <summary>
+    /// Method to handle the state change
+    /// </summary>
+    /// <param name="module">The module that changed it's state</param>
+    /// <param name="facade">The facade of the module</param>
+    /// <param name="eventArgs">EventArgs with detials about the change</param>
     protected abstract Task OnStateChanged(IServerModule module, TFacade facade, ModuleStateChangedEventArgs eventArgs);
 
+    /// <inheritdoc/>
     public virtual async Task RunAsync()
     {
-        if (!InitResult.Success)
+        if (!InitializationResult.Success)
         {
+            if (InitializationResult.Error.Exception is Exception ex)
+            {
+                _logger.LogInformation(ex, "Initialization failed: {message}. Not running this hook", InitializationResult.Error.Message);
+            }
+            else
+            {
+                _logger.LogInformation("Initialization failed: {message}. Not running this hook", InitializationResult.Error.Message);
+            }
             return;
         }
 
@@ -71,7 +90,15 @@ public abstract class ModuleHook<TFacade, TConfig> : IStartupHook where TConfig 
                 {
                     return;
                 }
-                await OnStateChanged(module, facadeContainer.Facade, eventArgs);
+                try
+                {
+                    await OnStateChanged(module, facadeContainer.Facade, eventArgs);
+                }
+                // catch everything, because we don't want to interrupt the module state change
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "OnStateChanged handler failed");
+                }
             }).GetAwaiter().GetResult();
         };
     }

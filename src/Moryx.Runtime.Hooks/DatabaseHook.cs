@@ -1,17 +1,16 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Model;
-using Moryx.Runtime;
 
-namespace Moryx.Startup.Hooks;
+namespace Moryx.Runtime.Hooks;
 
-public class DatabaseHook(IConfigManager configuration, IDbContextManager dbContextManager, ILogger<DatabaseHook> logger) : IStartupHook
+/// <inheritdoc />
+public sealed class DatabaseHook(IConfigManager configuration, IDbContextManager dbContextManager, ILogger<DatabaseHook> logger) : IStartupHook
 {
-    public int Priority => 0;
+    public int Priority { get; set; } = configuration.GetConfiguration<DatabaseHookConfig>().Priority;
 
     public async Task RunAsync()
     {
