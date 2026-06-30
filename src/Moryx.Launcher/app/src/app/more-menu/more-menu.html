@@ -1,15 +1,15 @@
 <mat-menu #appMenu="matMenu">
   <button mat-menu-item [matMenuTriggerFor]="languageMenu">
     <mat-icon>language</mat-icon>
-    <span>{{ TranslationConstants.MORE.LANGUAGE  | translate }}</span>
+    <span>{{ TranslationConstants.MORE.LANGUAGE | translate }}</span>
   </button>
   <button mat-menu-item [matMenuTriggerFor]="viewsMenu">
     <mat-icon>visibility</mat-icon>
-    <span>{{ TranslationConstants.MORE.VIEWS  | translate }}</span>
+    <span>{{ TranslationConstants.MORE.VIEWS | translate }}</span>
   </button>
   <button mat-menu-item [matMenuTriggerFor]="themeMenu">
     <mat-icon>palette</mat-icon>
-    <span>{{ TranslationConstants.MORE.THEME  | translate }}</span>
+    <span>{{ TranslationConstants.MORE.THEME | translate }}</span>
   </button>
   <mat-divider></mat-divider>
 
@@ -27,7 +27,7 @@
   </button>
   <button mat-menu-item (click)="openAbout()">
     <mat-icon>info_outline</mat-icon>
-    <span>{{ TranslationConstants.MORE.ABOUT  | translate }}</span>
+    <span>{{ TranslationConstants.MORE.ABOUT | translate }}</span>
   </button>
 </mat-menu>
 

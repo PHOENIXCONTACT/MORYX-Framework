@@ -28,7 +28,7 @@
         @for (suggestion of suggestions(); track suggestion.text; let i = $index) {
           <li
             class="result-item"
-            [class.active]="i === activeIndex()"
+            [class.selected]="i === activeIndex()"
             role="option"
             [attr.aria-selected]="i === activeIndex()"
             (click)="navigate(suggestion)"

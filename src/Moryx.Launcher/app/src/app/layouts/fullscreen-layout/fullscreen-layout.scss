@@ -1,20 +1,5 @@
 @use "../layout";
 
-:host {
-  display: flex;
-  flex-direction: row;
-  flex: 1;
-  overflow: hidden;
-}
-
-.main-area {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-}
-
 .top-bar {
   display: flex;
   align-items: center;

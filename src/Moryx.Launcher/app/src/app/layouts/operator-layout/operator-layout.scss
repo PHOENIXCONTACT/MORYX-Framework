@@ -1,21 +1,5 @@
 @use "../layout";
 
-:host {
-  display: flex;
-  flex-direction: row;
-  flex: 1;
-  overflow: hidden;
-}
-
-.main-area {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  background: var(--mat-sys-surface);
-}
-
 .top-region {
   flex: 0 0 auto;
   margin-top: 4px;

@@ -9,6 +9,6 @@
 
 export const environment = {
   production: false,
-  assets: "/_content/Moryx.Launcher/",
+  assets: "/",
   rootUrl: 'https://localhost:5000',
 };

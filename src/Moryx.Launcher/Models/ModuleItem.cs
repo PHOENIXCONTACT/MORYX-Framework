@@ -3,7 +3,7 @@
 
 using Moryx.Modules;
 
-namespace Moryx.Launcher;
+namespace Moryx.Launcher; // TODO: move to ns *.Models in the next major
 
 public class ModuleItem
 {

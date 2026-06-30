@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, DestroyRef, effect, inject, input, ViewEncapsulation } from '@angular/core';
+import { Component, DestroyRef, effect, inject, input, untracked, ViewEncapsulation } from '@angular/core';
 import { WebModuleItem } from './models/web-module-item';
 import { FullLayout } from './layouts/full-layout/full-layout';
 import { LauncherLayout, LauncherStateService } from './services/launcher-state.service';
@@ -67,12 +67,21 @@ export class App {
     );
 
     effect(() => {
-      this.moduleService.modules.set([...this.webModuleItems(), ...this.externalModuleItems()]);
-      this.cultureService.supportedCultures.set(this.supportedCultures());
+      const modules = [...this.webModuleItems(), ...this.externalModuleItems()];
+      untracked(() => this.moduleService.modules.set(modules));
+    });
 
+    effect(() => {
+      const cultures = this.supportedCultures();
+      untracked(() => this.cultureService.supportedCultures.set(cultures));
+    });
+
+    effect(() => {
       const authBaseAddress = this.authBaseAddress();
-      this.authService.authBaseAddress = authBaseAddress;
-      this.authService.authConfigured.set(!!authBaseAddress && authBaseAddress.length > 0);
+      untracked(() => {
+        this.authService.authBaseAddress = authBaseAddress;
+        this.authService.authConfigured.set(!!authBaseAddress && authBaseAddress.length > 0);
+      });
     });
 
     this.translateService.addLangs([
@@ -83,7 +92,6 @@ export class App {
     ]);
     this.translateService.setFallbackLang("en");
 
-    console.log("Language: " + this.languageService.getFallbackLang());
     this.translateService.use(this.languageService.getFallbackLang());
   }
 }

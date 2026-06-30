@@ -5,11 +5,10 @@
 
 import { getPathBase } from '@moryx/ngx-web-framework/environments';
 
-let path_base = getPathBase('/Notifications');
+let path_base = getPathBase('');
 
 export const environment = {
   production: true,
-  assets: "/_content/Moryx.Launcher/",
-  rootUrl: path_base,
+  assets: path_base + "/_content/Moryx.Launcher/",
+  rootUrl: path_base
 };
-
