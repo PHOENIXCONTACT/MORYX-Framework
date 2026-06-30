@@ -1,10 +1,12 @@
 <nav #navEl>
-  <button class="nav-item" [matMenuTriggerFor]="moduleGridMenu.moduleGridMenu">
-    <div class="icon-wrapper">
-      <mat-icon>view_module</mat-icon>
-    </div>
-    <span class="nav-title">{{ TranslationConstants.NAVIGATION.ALL | translate }}</span>
-  </button>
+  @if (modules().length) {
+    <button class="nav-item" [matMenuTriggerFor]="moduleGridMenu.moduleGridMenu">
+      <div class="icon-wrapper">
+        <mat-icon>view_module</mat-icon>
+      </div>
+      <span class="nav-title">{{ TranslationConstants.NAVIGATION.ALL | translate }}</span>
+    </button>
+  }
 
   @for (module of visibleModules(); track module.route) {
     <a class="nav-item" [href]="resolveHref(module)" [title]="module.description" [class.active]="module.route === activeRoute()">
