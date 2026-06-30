@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Injectable, signal } from '@angular/core';
+import { effect, Injectable, signal } from '@angular/core';
 
 export type ThemeMode = 'light' | 'dark' | 'system';
 
@@ -14,19 +14,24 @@ export type ThemeMode = 'light' | 'dark' | 'system';
 export class ThemeService {
   private readonly storageKey = 'LauncherTheme';
   private systemDarkQuery = window.matchMedia('(prefers-color-scheme: dark)');
+  private systemDark = signal(this.systemDarkQuery.matches);
 
   /** The active theme mode (light, dark, system). Persisted. */
   mode = signal<ThemeMode>(this.getStoredMode());
 
   constructor() {
-    this.systemDarkQuery.addEventListener('change', () => this.applyTheme());
-    this.applyTheme();
+    this.systemDarkQuery.addEventListener('change', (e) => this.systemDark.set(e.matches));
+
+    effect(() => {
+      const mode = this.mode();
+      const isDark = mode === 'dark' || (mode === 'system' && this.systemDark());
+      document.documentElement.classList.toggle('dark-theme', isDark);
+      window.localStorage.setItem(this.storageKey, mode);
+    });
   }
 
   setMode(mode: ThemeMode): void {
     this.mode.set(mode);
-    window.localStorage.setItem(this.storageKey, mode);
-    this.applyTheme();
   }
 
   private getStoredMode(): ThemeMode {
@@ -35,11 +40,5 @@ export class ThemeService {
       return stored;
     }
     return 'light'; //TODO change to system in the next major
-  }
-
-  private applyTheme(): void {
-    const mode = this.mode();
-    const isDark = mode === 'dark' || (mode === 'system' && this.systemDarkQuery.matches);
-    document.documentElement.classList.toggle('dark-theme', isDark);
   }
 }
