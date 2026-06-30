@@ -10,8 +10,8 @@
     <a class="nav-item" [href]="resolveHref(module)" [title]="module.description" [class.active]="module.route === activeRoute()">
       <div class="icon-wrapper">
         <mat-icon>{{ module.icon }}</mat-icon>
-        @if (asWeb(module); as webItem) {
-          <app-notification-badge [eventStream]="webItem.eventStream ?? ''"></app-notification-badge>
+        @if (asWeb(module)?.eventStream; as eventStream) {
+          <app-notification-badge [eventStream]="eventStream"></app-notification-badge>
         }
       </div>
       <span class="nav-title">{{ module.title }}</span>

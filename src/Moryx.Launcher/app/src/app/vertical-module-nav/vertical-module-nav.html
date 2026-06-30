@@ -7,8 +7,8 @@
           <span matListItemTitle>{{ moduleItem.title }}</span>
         }
       </a>
-      @if (asWeb(moduleItem); as webItem) {
-        <app-notification-badge [eventStream]="webItem.eventStream ?? ''"></app-notification-badge>
+      @if (asWeb(moduleItem)?.eventStream; as eventStream) {
+        <app-notification-badge [eventStream]="eventStream"></app-notification-badge>
       }
     </div>
   } @empty {
