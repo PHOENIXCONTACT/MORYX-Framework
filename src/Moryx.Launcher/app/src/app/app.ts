@@ -53,15 +53,31 @@ export class App {
     window.shell = new MoryxLauncherShell(this.cultureService, this.searchService);
 
     this.shortcutService.register(
-      { key: 'Digit1', ctrl: true, alt: true, action: () => this.launcherLayoutService.updateLayout(LauncherLayout.Full) },
+      {
+        key: 'Digit1',
+        ctrl: true,
+        alt: true,
+        label: TranslationConstants.SHORTCUTS.FULL_MODE,
+        action: () => this.launcherLayoutService.updateLayout(LauncherLayout.Full) },
       this.destroyRef
     );
     this.shortcutService.register(
-      { key: 'Digit2', ctrl: true, alt: true, action: () => this.launcherLayoutService.updateLayout(LauncherLayout.Operator) },
+      {
+        key: 'Digit2',
+        ctrl: true,
+        alt: true,
+        label: TranslationConstants.SHORTCUTS.OPERATOR_MODE,
+        action: () => this.launcherLayoutService.updateLayout(LauncherLayout.Operator)
+      },
       this.destroyRef
     );
     this.shortcutService.register(
-      { key: 'Digit3', ctrl: true, alt: true, action: () => this.launcherLayoutService.updateLayout(LauncherLayout.Fullscreen) },
+      {
+        key: 'Digit3',
+        ctrl: true, alt: true,
+        label: TranslationConstants.SHORTCUTS.FULLSCREEN_MODE,
+        action: () => this.launcherLayoutService.updateLayout(LauncherLayout.Fullscreen)
+      },
       this.destroyRef
     );
 

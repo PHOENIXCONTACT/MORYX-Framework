@@ -54,10 +54,12 @@
     "LABEL_MACHINE_NAME": "Machine Name",
     "LABEL_OS": "OS",
     "LABEL_UPTIME": "Uptime",
-    "SHORTCUTS": "Shortcuts",
-    "SHORTCUT_SPOTLIGHT": "Spotlight",
-    "SHORTCUT_FULL_MODE": "Full Layout",
-    "SHORTCUT_OPERATOR_MODE": "Operator Layout",
-    "SHORTCUT_FULLSCREEN_MODE": "Fullscreen Layout"
+    "SHORTCUTS": "Shortcuts"
+  },
+  "SHORTCUTS": {
+    "SPOTLIGHT": "Spotlight",
+    "FULL_MODE": "Full Layout",
+    "OPERATOR_MODE": "Operator Layout",
+    "FULLSCREEN_MODE": "Fullscreen Layout"
   }
 }

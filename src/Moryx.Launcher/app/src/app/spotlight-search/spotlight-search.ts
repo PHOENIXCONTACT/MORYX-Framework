@@ -41,7 +41,16 @@ export class SpotlightSearch {
   disableSearchBox = this.searchService.disableSearchBox;
 
   constructor() {
-    this.shortcutService.register({ key: 'k', ctrl: true, alt: true, action: () => this.open() }, this.destroyRef);
+    this.shortcutService.register(
+      {
+        key: 'k',
+        ctrl: true,
+        alt: true,
+        label: TranslationConstants.SHORTCUTS.SPOTLIGHT,
+        action: () => this.open()
+      },
+      this.destroyRef
+    );
 
     effect(() => {
       if (this.isOpen()) {

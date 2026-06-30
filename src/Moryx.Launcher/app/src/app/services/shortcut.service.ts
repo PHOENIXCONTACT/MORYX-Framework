@@ -3,14 +3,20 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { DestroyRef, inject, Injectable } from '@angular/core';
+import { DestroyRef, Injectable } from '@angular/core';
 
 export interface ShortcutBinding {
   key: string;
   ctrl?: boolean;
   shift?: boolean;
   alt?: boolean;
+  label?: string;
   action: () => void;
+}
+
+export interface ShortcutDisplayInfo {
+  label: string;
+  keys: { mac: string; other: string };
 }
 
 @Injectable({
@@ -32,6 +38,56 @@ export class ShortcutService {
         this.bindings.splice(index, 1);
       }
     });
+  }
+
+  getShortcutInfos(): ShortcutDisplayInfo[] {
+    return this.bindings
+      .filter(binding => binding.label)
+      .map(binding => (
+        {
+          label: binding.label!,
+          keys: this.formatShortcut(binding)
+        }));
+  }
+
+  private formatShortcut(binding: ShortcutBinding): { mac: string; other: string } {
+    const keyName = this.normalizeKeyName(binding.key);
+
+    const macParts: string[] = [];
+    if (binding.ctrl) {
+      macParts.push('⌘');
+    }
+    if (binding.alt) {
+      macParts.push('⌥');
+    }
+    if (binding.shift) {
+      macParts.push('⇧');
+    }
+    macParts.push(keyName);
+
+    const otherParts: string[] = [];
+    if (binding.ctrl) {
+      otherParts.push('Ctrl');
+    }
+    if (binding.alt) {
+      otherParts.push('Alt');
+    }
+    if (binding.shift) {
+      otherParts.push('Shift');
+    }
+    otherParts.push(keyName);
+
+    return {
+      mac: macParts.join(' '),
+      other: otherParts.join('+') };
+  }
+
+  private normalizeKeyName(key: string): string {
+    const digitMatch = key.match(/^Digit(\d)$/i);
+    if (digitMatch) {
+      return digitMatch[1];
+    }
+    return key.length === 1 ? key.toUpperCase() : key;
   }
 
   private onKeyDown(event: KeyboardEvent): void {

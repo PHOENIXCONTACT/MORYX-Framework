@@ -13,6 +13,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { TranslatePipe } from '@ngx-translate/core';
 import { CommonService } from '@api/services/common.service';
 import { CultureService } from '../services/culture.service';
+import { ShortcutService } from '../services/shortcut.service';
 import { TranslationConstants } from '../translation-constants';
 
 @Component({
@@ -24,16 +25,12 @@ import { TranslationConstants } from '../translation-constants';
 export class AboutDialog {
   private commonService = inject(CommonService);
   private cultureService = inject(CultureService);
+  private shortcutService = inject(ShortcutService);
 
   protected TranslationConstants = TranslationConstants;
   isMac = navigator.platform.toUpperCase().includes('MAC');
 
-  shortcuts = [
-    { label: TranslationConstants.ABOUT.SHORTCUT_SPOTLIGHT, keys: { mac: '⌘ ⌥ K', other: 'Ctrl+Alt+K' } },
-    { label: TranslationConstants.ABOUT.SHORTCUT_FULL_MODE, keys: { mac: '⌘ ⌥ 1', other: 'Ctrl+Alt+1' } },
-    { label: TranslationConstants.ABOUT.SHORTCUT_OPERATOR_MODE, keys: { mac: '⌘ ⌥ 2', other: 'Ctrl+Alt+2' } },
-    { label: TranslationConstants.ABOUT.SHORTCUT_FULLSCREEN_MODE, keys: { mac: '⌘ ⌥ 3', other: 'Ctrl+Alt+3' } },
-  ];
+  shortcuts = this.shortcutService.getShortcutInfos();
 
   private applicationInfo = toSignal(this.commonService.getApplicationInfo()
     .pipe(catchError(() => of(null))));
