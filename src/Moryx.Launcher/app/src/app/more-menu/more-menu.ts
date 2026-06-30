@@ -44,7 +44,7 @@ export class MoreMenu {
   rightRegionAvailable = this.launcherLayoutService.rightRegionAvailable;
   rightRegionEnabled = this.launcherLayoutService.rightRegionEnabled;
 
-  modules = this.moduleService.otherModules;
+  otherModules = this.moduleService.otherModules;
   supportedCultures = this.cultureService.supportedCultures;
   currentCulture = this.cultureService.currentCulture;
 

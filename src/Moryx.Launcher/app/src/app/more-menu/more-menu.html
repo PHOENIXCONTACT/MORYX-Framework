@@ -11,13 +11,15 @@
     <mat-icon>palette</mat-icon>
     <span>{{ TranslationConstants.MORE.THEME | translate }}</span>
   </button>
-  <mat-divider></mat-divider>
 
-  @for (module of modules(); track module.route) {
-    <a mat-menu-item [href]="resolveHref(module)" title="{{ module.description }}">
-      <mat-icon>{{ module.icon }}</mat-icon>
-      <span>{{ module.title }}</span>
-    </a>
+  @if (otherModules().length) {
+    <mat-divider></mat-divider>
+    @for (module of otherModules(); track module.route) {
+      <a mat-menu-item [href]="resolveHref(module)" title="{{ module.description }}">
+        <mat-icon>{{ module.icon }}</mat-icon>
+        <span>{{ module.title }}</span>
+      </a>
+    }
   }
 
   <mat-divider></mat-divider>
