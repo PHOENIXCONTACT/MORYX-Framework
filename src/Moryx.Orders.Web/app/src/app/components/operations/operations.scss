@@ -156,6 +156,7 @@ mat-grid-list {
   width: 32px;
   height: 32px;
   line-height: 32px;
+  font-variation-settings: 'FILL' 1;
 
   &.error {
     color: map.get($state-colors, failed);

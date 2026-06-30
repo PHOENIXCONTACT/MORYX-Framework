@@ -26,6 +26,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatIconModule } from '@angular/material/icon';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MultiProgressBar } from "@app/multi-progress-bar/multi-progress-bar";
 
@@ -46,6 +47,7 @@ import { MultiProgressBar } from "@app/multi-progress-bar/multi-progress-bar";
     MatListModule,
     MatInputModule,
     MatButtonToggleModule,
+    MatIconModule,
     MatCardModule,
     MatAutocompleteModule,
     MultiProgressBar

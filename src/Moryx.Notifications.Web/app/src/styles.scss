@@ -1,6 +1,10 @@
 @use "@moryx/ngx-web-framework/styles/theme" as *;
 @use "@moryx/ngx-web-framework/styles/variables" as *;
 
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 1;
+}
+
 html,
 body {
   height: 100%;

@@ -1,5 +1,9 @@
-@use "@moryx/ngx-web-framework/styles/theme.scss"; 
+@use "@moryx/ngx-web-framework/styles/theme.scss";
 /* You can add global styles to this file, and also import other style files */
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 1;
+}
 html, body { 
     height: 100%; 
     overflow: hidden;

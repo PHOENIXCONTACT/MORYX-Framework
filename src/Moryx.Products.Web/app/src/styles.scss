@@ -2,6 +2,10 @@
 @use "@moryx/ngx-web-framework/styles/variables";
 @use "@angular/material" as mat;
 
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 1;
+}
+
 html, body {
   height: 100%;
   font-family: Roboto;

@@ -30,7 +30,7 @@ bootstrapApplication(App, appConfig)
           align-items: center;
           gap: 12px;
         ">
-          <span class="material-icons" style="font-size: 48px; color: #666;">
+          <span class="material-symbols-outlined" style="font-size: 48px; color: #666;">
             refresh
           </span>
 

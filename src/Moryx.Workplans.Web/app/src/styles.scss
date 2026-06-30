@@ -1,4 +1,8 @@
-@use "@moryx/ngx-web-framework/styles/theme"; 
+@use "@moryx/ngx-web-framework/styles/theme";
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 1;
+}
 
 html,
 body {

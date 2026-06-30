@@ -118,7 +118,7 @@
     <input matInput type="number" [formControl]="targetAmountControl" (blur)="limitTargetAmount()"/>
     <button mat-icon-button type="button" matPrefix [disabled]="hasMinimalValue()" (click)="setMinTargetAmount()"
             class="min-amount-button">
-      <span class="material-symbols-outlined">align_justify_flex_start</span>
+      <mat-icon>align_justify_flex_start</mat-icon>
     </button>
     <button mat-button type="button" matSuffix mat-stroked-button [disabled]="hasMinimalValue()" color="primary"
             (click)="changeTargetAmount(-10)" class="content-calculation-button">
