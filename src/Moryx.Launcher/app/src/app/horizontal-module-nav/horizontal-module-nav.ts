@@ -43,7 +43,7 @@ export class HorizontalModuleNav {
 
   private resizeObserver = new ResizeObserver(entries => {
     const navWidth = entries[0].contentRect.width;
-    const count = Math.max(0, Math.floor(navWidth / MIN_ITEM_WIDTH) - 1);
+    const count = Math.max(0, Math.ceil(navWidth / MIN_ITEM_WIDTH) - 2);
     this.visibleCount.set(count);
   });
 
