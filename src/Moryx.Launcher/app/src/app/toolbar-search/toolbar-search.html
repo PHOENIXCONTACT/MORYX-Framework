@@ -1,5 +1,7 @@
-<div class="search-container" [class.expanded]="expanded()">
-  @if (!expanded()) {
+@let isExpanded = expanded();
+@let currentQuery = query();
+<div class="search-container" [class.expanded]="isExpanded">
+  @if (!isExpanded) {
     <button mat-icon-button aria-label="Search" (click)="expand()" class="search-button">
       <mat-icon>search</mat-icon>
     </button>
@@ -10,12 +12,12 @@
     type="text"
     [placeholder]="(hasProvider() ? TranslationConstants.SEARCH.PLACEHOLDER : TranslationConstants.SEARCH.NO_PROVIDER) | translate"
     [disabled]="!hasProvider() || disableSearchBox()"
-    [value]="query()"
+    [value]="currentQuery"
     (input)="onQueryChange($any($event.target).value)"
     (keydown.enter)="onEnter()"
     (keydown.escape)="collapse()"
     [matAutocomplete]="auto"
-    [tabIndex]="expanded() ? 0 : -1"
+    [tabIndex]="isExpanded ? 0 : -1"
     autocomplete="off"
     spellcheck="false"
   />
@@ -30,5 +32,11 @@
       <mat-icon>{{ suggestion.url ? 'open_in_new' : 'search' }}</mat-icon>
       {{ suggestion.text }}
     </mat-option>
+  } @empty {
+    @if (currentQuery) {
+      <mat-option [disabled]="true">
+        {{ TranslationConstants.SEARCH.NO_RESULTS | translate: { query: currentQuery } }}
+      </mat-option>
+    }
   }
 </mat-autocomplete>

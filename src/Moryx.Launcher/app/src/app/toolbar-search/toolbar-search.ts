@@ -64,7 +64,7 @@ export class ToolbarSearch {
   onOptionSelected(event: MatAutocompleteSelectedEvent): void {
     const suggestion = event.option.value as SearchSuggestion;
     if (suggestion.url) {
-      window.location.href = suggestion.url;
+      window.location.assign(suggestion.url);
     }
     this.collapse();
   }
