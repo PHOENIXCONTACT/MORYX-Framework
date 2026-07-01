@@ -27,10 +27,16 @@
   flex: 1 1 auto;
 }
 
+.toolbar-wrapper {
+  position: relative;
+  overflow: visible;
+}
+
 .upload-button {
   position: absolute;
-  top: 75px;
+  bottom: 0;
   right: 16px;
+  transform: translateY(50%);
   z-index: 10;
 }
 

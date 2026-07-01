@@ -3,6 +3,7 @@
 <mat-sidenav-container class="resources">
   <mat-sidenav opened role="navigation" mode="side" class="resources-tree" [disableClose]="true">
     <div class="resources-side-bar" (click)="clickContainer($event)">
+      <div class="toolbar-wrapper">
       @if (!active) {
         <mat-toolbar
           color="primary"
@@ -113,6 +114,22 @@
         </mat-toolbar>
       }
 
+      @if (!active) {
+        <button
+          mat-fab
+          color="primary"
+          class="resources-add-button"
+          type="button"
+          aria-label="Add resource"
+          (click)="onAdd()"
+          [matTooltip]="TranslationConstants.SHARED.ADD | translate"
+          matTooltipShowDelay="500"
+          >
+          <mat-icon>add</mat-icon>
+        </button>
+      }
+      </div>
+
       <mat-menu #contextMenu="matMenu">
         <ng-template matMenuContent let-id="id">
           <button
@@ -148,21 +165,6 @@
         (nodeContextMenu)="openContextMenuByClicking($event.event, $event.id)"
       />
     </div>
-
-    @if (!active) {
-      <button
-        mat-fab
-        color="primary"
-        class="resources-add-button"
-        type="button"
-        aria-label="Add resource"
-        (click)="onAdd()"
-        [matTooltip]="TranslationConstants.SHARED.ADD | translate"
-        matTooltipShowDelay="500"
-        >
-        <mat-icon>add</mat-icon>
-      </button>
-    }
   </mat-sidenav>
 
   <mat-sidenav-content role="main">

@@ -2,6 +2,7 @@
   <mat-sidenav-container class="content-details">
     <mat-sidenav opened role="navigation" mode="side" position="start" class="media-sidenav">
       <div class="media-side-bar">
+        <div class="toolbar-wrapper">
         <mat-toolbar
           color="primary"
           [ngStyle]="{ 'background-image': 'url(' + mediaImage() + ')' }"
@@ -20,6 +21,16 @@
             <span>{{ TranslationConstants.MEDIA_FILE_VARIANTS | translate }}</span>
           </mat-toolbar-row>
         </mat-toolbar>
+        <button
+          mat-fab
+          class="upload-button"
+          type="button"
+          aria-label="Upload Media"
+          (click)="onUpload()"
+          >
+          <mat-icon>upload</mat-icon>
+        </button>
+        </div>
         <mat-menu #contextMenu="matMenu">
           <ng-template matMenuContent let-variant="variant">
             <button mat-menu-item type="button" (click)="onInfo(variant)">
@@ -74,15 +85,6 @@
           }
         </mat-nav-list>
       </div>
-      <button
-        mat-fab
-        class="upload-button"
-        type="button"
-        aria-label="Upload Media"
-        (click)="onUpload()"
-        >
-        <mat-icon>upload</mat-icon>
-      </button>
     </mat-sidenav>
     <mat-sidenav-content class="variant-container">
       @switch (bigPictureLoadingState()) {
