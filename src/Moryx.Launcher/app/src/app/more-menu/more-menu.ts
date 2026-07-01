@@ -56,7 +56,7 @@ export class MoreMenu {
   }
 
   openAbout() {
-    this.dialog.open(AboutDialog);
+    this.dialog.open(AboutDialog, { width: 'min(560px, 92vw)', minWidth: '280px' });
   }
 
   toggleTopRegion(): void {
