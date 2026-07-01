@@ -7,6 +7,7 @@ import { Component, DestroyRef, effect, ElementRef, inject, signal, ViewChild } 
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDividerModule } from '@angular/material/divider';
 import { SearchService } from '../services/search.service';
 import { ShortcutService } from '../services/shortcut.service';
 import { SearchSuggestion } from '@moryx/ngx-web-framework/services';
@@ -15,7 +16,7 @@ import { TranslationConstants } from '../translation-constants';
 
 @Component({
   selector: 'app-spotlight-search',
-  imports: [FormsModule, MatIconModule, MatButtonModule, TranslatePipe],
+  imports: [FormsModule, MatIconModule, MatButtonModule, MatDividerModule, TranslatePipe],
   templateUrl: './spotlight-search.html',
   styleUrl: './spotlight-search.scss',
   host: {
@@ -105,7 +106,7 @@ export class SpotlightSearch {
 
   navigate(suggestion: SearchSuggestion): void {
     if (suggestion.url) {
-      window.location.href = suggestion.url;
+      window.location.assign(suggestion.url);
     }
     this.close();
   }
