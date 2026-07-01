@@ -1,3 +1,4 @@
+// Re-declare the icon font inside the Shadow DOM, since global styles don't penetrate the shadow root.
 .material-symbols-outlined {
   font-family: 'Material Symbols Outlined';
 }
