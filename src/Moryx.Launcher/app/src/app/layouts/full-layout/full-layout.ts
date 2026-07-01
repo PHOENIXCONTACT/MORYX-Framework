@@ -8,7 +8,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { VerticalModuleNav } from '../../vertical-module-nav/vertical-module-nav';
+import { VerticalModuleNav } from '../../navigation/vertical-module-nav/vertical-module-nav';
 import { MoreMenu } from '../../more-menu/more-menu';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { AuthButton } from '../../auth-button/auth-button';

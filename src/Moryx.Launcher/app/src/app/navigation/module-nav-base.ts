@@ -3,34 +3,20 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, input } from '@angular/core';
-import { MatListModule } from '@angular/material/list';
-import { MatIconModule } from '@angular/material/icon';
+import { inject } from '@angular/core';
 import { WebModuleItem } from '../models/web-module-item';
-import { NotificationBadge } from '../notification-badge/notification-badge';
 import { ExternalModuleItem } from '../models/external-module-item';
 import { ModuleItem } from '../models/module-item';
-import { TranslatePipe } from '@ngx-translate/core';
 import { ModuleService } from '../services/module.service';
 import { LocationPersistenceService } from '../services/location-persistence.service';
 import { TranslationConstants } from '../translation-constants';
 
-@Component({
-  selector: 'app-vertical-module-nav',
-  imports: [MatListModule, MatIconModule, TranslatePipe, NotificationBadge],
-  templateUrl: './vertical-module-nav.html',
-  styleUrl: './vertical-module-nav.scss',
-  host: {
-    '[class.collapsed]': 'collapsed()',
-  }
-})
-export class VerticalModuleNav {
+export abstract class ModuleNavBase {
   private moduleService = inject(ModuleService);
   private locationPersistenceService = inject(LocationPersistenceService);
 
   modules = this.moduleService.userModules;
   activeRoute = this.moduleService.activeRoute;
-  collapsed = input(false);
 
   protected TranslationConstants = TranslationConstants;
 

@@ -6,9 +6,9 @@
 import { Component, inject, ViewChild } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenu, MatMenuModule } from '@angular/material/menu';
-import { ModuleItem } from '../models/module-item';
-import { ModuleService } from '../services/module.service';
-import { LocationPersistenceService } from '../services/location-persistence.service';
+import { ModuleItem } from '../../models/module-item';
+import { ModuleService } from '../../services/module.service';
+import { LocationPersistenceService } from '../../services/location-persistence.service';
 
 @Component({
   selector: 'app-module-grid-menu',

@@ -4,7 +4,7 @@
 */
 
 import { Component } from '@angular/core';
-import { HorizontalModuleNav } from '../../horizontal-module-nav/horizontal-module-nav';
+import { HorizontalModuleNav } from '../../navigation/horizontal-module-nav/horizontal-module-nav';
 import { LayoutBase } from '../layout-base';
 
 @Component({

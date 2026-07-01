@@ -8,7 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { TranslatePipe } from '@ngx-translate/core';
-import { ModuleGridMenu } from '../../module-grid-menu/module-grid-menu';
+import { ModuleGridMenu } from '../../navigation/module-grid-menu/module-grid-menu';
 import { MoreMenu } from '../../more-menu/more-menu';
 import { LauncherLayout } from '../../services/launcher-layout.service';
 import { TranslationConstants } from '../../translation-constants';
