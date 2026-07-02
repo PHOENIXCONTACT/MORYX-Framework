@@ -9,6 +9,7 @@ using System.Threading.Channels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Moryx.Runtime.Modules;
 using Moryx.Serialization;
 
 namespace Moryx.VisualInstructions.Endpoints;
@@ -31,8 +32,11 @@ public class VisualInstructionsController : ControllerBase
         Converters = { new JsonStringEnumConverter() }
     };
 
-    public VisualInstructionsController(IVisualInstructions visualInstructions)
-        => _visualInstructions = visualInstructions;
+    public VisualInstructionsController(IVisualInstructions visualInstructions, IModuleManager moduleManager, IServiceProvider serviceProvider)
+    {
+        _visualInstructions = visualInstructions;
+        Converter._serialization = new VisualInstructionsSerialization(moduleManager.AllModules.FirstOrDefault(module => module is IFacadeContainer<IVisualInstructions>)?.Container, serviceProvider); 
+    }
 
     [HttpGet("stream")]
     [ProducesResponseType(typeof(InstructionModel[]), StatusCodes.Status200OK)]
