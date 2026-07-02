@@ -23,10 +23,10 @@ import { toSignal } from '@angular/core/rxjs-interop';
   styleUrl: './factory-board.scss'
 })
 export class FactoryBoard implements OnInit {
-  elemRef = inject(ElementRef);
+  protected elemRef = inject(ElementRef);
   private factorySelectionService = inject(FactorySelectionService);
   private activatedRoute = inject(ActivatedRoute);
-  factoryContent = toSignal(this.factorySelectionService.factoryContent$);
+  protected factoryContent = toSignal(this.factorySelectionService.factoryContent$);
   factoryId !: number | undefined;
 
   ngOnInit(): void {

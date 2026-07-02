@@ -37,9 +37,9 @@ import { DecimalPipe } from '@angular/common';
 })
 export class DialogVariantInfo {
   private dialogRef = inject(MatDialogRef<DialogVariantInfo>);
-  data = inject<VariantInfoDialogData>(MAT_DIALOG_DATA);
+  protected data = inject<VariantInfoDialogData>(MAT_DIALOG_DATA);
 
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
   constructor() {
   }

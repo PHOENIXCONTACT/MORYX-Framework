@@ -43,15 +43,15 @@ export class MediaOverview implements OnInit, OnDestroy {
   private searchBarService = inject(SearchBarService);
   private snackbarService = inject(SnackbarService);
 
-  filteredContents = signal<ContentDescriptorModel[]>([]);
-  backgroundImgPath = signal(environment.assets + 'assets/moryx_transparent_colored.png');
-  isLoading = signal(true);
-  contents = signal<ContentDescriptorModel[]>([]);
-  selectedContent = signal<string | undefined>(undefined);
+  protected filteredContents = signal<ContentDescriptorModel[]>([]);
+  protected backgroundImgPath = signal(environment.assets + 'assets/moryx_transparent_colored.png');
+  protected isLoading = signal(true);
+  protected contents = signal<ContentDescriptorModel[]>([]);
+  protected selectedContent = signal<string | undefined>(undefined);
 
   trigger = viewChild.required(MatMenuTrigger);
-  TranslationConstants = TranslationConstants;
-  menuTopLeftPosition = {x: '0', y: '0'};
+  protected TranslationConstants = TranslationConstants;
+  protected menuTopLeftPosition = {x: '0', y: '0'};
 
   constructor() {
   }
@@ -121,14 +121,14 @@ export class MediaOverview implements OnInit, OnDestroy {
     this.trigger().openMenu();
   }
 
-  onSelectMedia(content: ContentDescriptorModel) {
+  protected onSelectMedia(content: ContentDescriptorModel) {
     this.selectedContent.update(_ => content.id);
     this.router.navigate(['/details/', content.id]);
   }
 
 
   //upload new content
-  onUpload(event: any) {
+  protected onUpload(event: any) {
     for (const fileElement of event.target.files) {
       const file: File = fileElement;
       if (file) {
@@ -138,7 +138,7 @@ export class MediaOverview implements OnInit, OnDestroy {
   }
 
   //open dialog in order to check if content should really be deleted
-  async onDelete(content: ContentDescriptorModel): Promise<void> {
+  protected async onDelete(content: ContentDescriptorModel): Promise<void> {
     if (content !== undefined) {
       const deleteMessage = await lastValueFrom(this.translateService
         .get(TranslationConstants.MEDIA_OVERVIEW.DELETE_MESSAGE));
@@ -166,7 +166,7 @@ export class MediaOverview implements OnInit, OnDestroy {
     }
   }
 
-  fileDropped(arg: any) {
+  protected fileDropped(arg: any) {
     this.onUpload(arg);
   }
 }

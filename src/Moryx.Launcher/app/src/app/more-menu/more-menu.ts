@@ -36,48 +36,48 @@ export class MoreMenu {
   private dialog = inject(MatDialog);
 
   protected TranslationConstants = TranslationConstants;
-  currentTheme = this.themeService.mode;
+  protected currentTheme = this.themeService.mode;
 
-  currentLayout = this.launcherLayoutService.layout;
-  topRegionAvailable = this.launcherLayoutService.topRegionAvailable;
-  topRegionEnabled = this.launcherLayoutService.topRegionEnabled;
-  rightRegionAvailable = this.launcherLayoutService.rightRegionAvailable;
-  rightRegionEnabled = this.launcherLayoutService.rightRegionEnabled;
+  protected currentLayout = this.launcherLayoutService.layout;
+  protected topRegionAvailable = this.launcherLayoutService.topRegionAvailable;
+  protected topRegionEnabled = this.launcherLayoutService.topRegionEnabled;
+  protected rightRegionAvailable = this.launcherLayoutService.rightRegionAvailable;
+  protected rightRegionEnabled = this.launcherLayoutService.rightRegionEnabled;
 
-  otherModules = this.moduleService.otherModules;
-  supportedCultures = this.cultureService.supportedCultures;
-  currentCulture = this.cultureService.currentCulture;
+  protected otherModules = this.moduleService.otherModules;
+  protected supportedCultures = this.cultureService.supportedCultures;
+  protected currentCulture = this.cultureService.currentCulture;
 
   @ViewChild('appMenu') appMenu!: MatMenu;
   protected readonly LauncherLayout = LauncherLayout;
 
-  setLayout(layout: LauncherLayout) {
+  protected setLayout(layout: LauncherLayout) {
     this.launcherLayoutService.updateLayout(layout);
   }
 
-  openAbout() {
+  protected openAbout() {
     this.dialog.open(AboutDialog, { width: 'min(560px, 92vw)', minWidth: '280px' });
   }
 
-  toggleTopRegion(): void {
+  protected toggleTopRegion(): void {
     this.launcherLayoutService.updateTopRegionEnabled(!this.topRegionEnabled());
   }
 
-  toggleRightRegion(): void {
+  protected toggleRightRegion(): void {
     this.launcherLayoutService.updateRightRegionEnabled(!this.rightRegionEnabled());
   }
 
-  openSpotlight(): void {
+  protected openSpotlight(): void {
     this.searchService.open();
   }
 
-  setTheme(mode: ThemeMode): void {
+  protected setTheme(mode: ThemeMode): void {
     this.themeService.setMode(mode);
   }
 
-  resolveHref(module: ModuleItem): string {
+  protected resolveHref(module: ModuleItem): string {
     return this.locationPersistenceService.resolveHref(module);
   }
 
-  selectCulture = this.cultureService.selectCulture.bind(this.cultureService);
+  protected selectCulture = this.cultureService.selectCulture.bind(this.cultureService);
 }

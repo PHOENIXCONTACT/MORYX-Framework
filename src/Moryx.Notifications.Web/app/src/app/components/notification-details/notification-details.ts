@@ -37,12 +37,12 @@ import { MatButtonModule } from '@angular/material/button';
 export class NotificationDetails implements OnInit, OnDestroy {
   private notificationService = inject(NotificationService);
 
-  notification = signal<NotificationModel | undefined>(undefined);
+  protected notification = signal<NotificationModel | undefined>(undefined);
 
   subscription: Subscription | undefined;
-  TranslationConstants = TranslationConstants;
-  getIcon = getIcon;
-  environment = environment;
+  protected TranslationConstants = TranslationConstants;
+  protected getIcon = getIcon;
+  protected environment = environment;
 
   ngOnInit(): void {
     this.subscription = this.notificationService.selection$.subscribe(
@@ -54,11 +54,11 @@ export class NotificationDetails implements OnInit, OnDestroy {
     this.subscription?.unsubscribe();
   }
 
-  onAcknowledge(notification: NotificationModel): void {
+  protected onAcknowledge(notification: NotificationModel): void {
     this.notificationService.acknowledge(notification.identifier);
   }
 
-  isArrayNotEmpty(array: any[] | undefined | null): boolean {
+  protected isArrayNotEmpty(array: any[] | undefined | null): boolean {
     return array !== undefined && array !== null && array.length > 0;
   }
 }

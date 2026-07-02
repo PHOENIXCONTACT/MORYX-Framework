@@ -19,8 +19,8 @@ import { MatIconModule } from '@angular/material/icon';
 ]
 })
 export class OrderItem {
-  prettyMilliseconds = prettyMilliseconds;
-  hourToMillisecond = 3600000;
+  protected prettyMilliseconds = prettyMilliseconds;
+  protected hourToMillisecond = 3600000;
   order = input.required<OrderModel>();
 }
 

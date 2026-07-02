@@ -33,11 +33,11 @@ import { MatButtonModule } from '@angular/material/button';
 ]
 })
 export class ShiftInstanceDialog {
-  form = new FormGroup({
+  protected form = new FormGroup({
     startDate: new FormControl<Date>(new Date()),
     endDate: new FormControl<Date>(new Date())
   });
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: ShiftInstanceModel,
     public dialogRef: MatDialogRef<ShiftInstanceDialog>
@@ -48,7 +48,7 @@ export class ShiftInstanceDialog {
     });
   }
 
-  submit() {
+  protected submit() {
     if (!this.form.valid) return;
     if (this.form.value.startDate)
       this.data.startDate = this.form.value.startDate;
@@ -56,7 +56,7 @@ export class ShiftInstanceDialog {
     this.dialogRef.close(this.data);
   }
 
-  onStartDateChanged(event: any) {
+  protected onStartDateChanged(event: any) {
     const now = moment(this.form.value.startDate);
     const endDate = now.add(this.data.shiftType.duration-1, 'days').toDate();
     this.form.controls.endDate.setValue(endDate);

@@ -32,10 +32,10 @@ import { toSignal } from "@angular/core/rxjs-interop";
 export class DetailsHeader {
   private readonly formControlService = inject(FormControlService);
   private readonly editService = inject(EditResourceService);
-  readonly activeResource = linkedSignal(() => this.editService.activeResource() as ResourceModel);
-  readonly editMode = toSignal(this.editService.edit$, { initialValue: false });
+  protected readonly activeResource = linkedSignal(() => this.editService.activeResource() as ResourceModel);
+  protected readonly editMode = toSignal(this.editService.edit$, { initialValue: false });
 
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
   constructor() {
     effect(() => {
@@ -47,11 +47,11 @@ export class DetailsHeader {
     });
   }
 
-  onNameChanged() {
+  protected onNameChanged() {
     this.formControlService.onCanSave(!!this.activeResource().name?.length);
   }
 
-  updateResource() {
+  protected updateResource() {
     this.editService.updateActiveResource(this.activeResource());
   }
 }

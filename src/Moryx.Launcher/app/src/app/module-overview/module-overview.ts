@@ -19,9 +19,9 @@ export class ModuleOverview {
   private locationPersistenceService = inject(LocationPersistenceService);
 
   webModuleItems = input.required<WebModuleItem[]>();
-  userModules = computed(() => this.webModuleItems().filter(m => m.category === ModuleCategory.User));
+  protected userModules = computed(() => this.webModuleItems().filter(m => m.category === ModuleCategory.User));
 
-  resolveHref(module: ModuleItem): string {
+  protected resolveHref(module: ModuleItem): string {
     return this.locationPersistenceService.resolveHref(module);
   }
 }

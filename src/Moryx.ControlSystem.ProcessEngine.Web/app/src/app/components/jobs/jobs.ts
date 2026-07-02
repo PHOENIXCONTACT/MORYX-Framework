@@ -58,12 +58,12 @@ export class Jobs implements OnInit {
   private snackbarService = inject(SnackbarService);
   private changeDetectorRef = inject(ChangeDetectorRef);
 
-  jobCollection = signal<JobViewModel[]>([]);
-  operations = signal<OperationModel[]>([]);
-  isLoading = signal<boolean>(true);
+  protected jobCollection = signal<JobViewModel[]>([]);
+  protected operations = signal<OperationModel[]>([]);
+  protected isLoading = signal<boolean>(true);
 
-  environment = environment;
-  TranslationConstants = TranslationConstants;
+  protected environment = environment;
+  protected TranslationConstants = TranslationConstants;
 
   constructor() {
       this.destroyRef.onDestroy(() => this.disconnectEvents());
@@ -140,33 +140,33 @@ export class Jobs implements OnInit {
     });
   }
 
-  async onComplete(job: JobModel) {
+  protected async onComplete(job: JobModel) {
     await this.jobManagementService
       .complete({jobId: job.id!})
       .toAsync()
       .catch(async (error) => await this.snackbarService.handleError(error));
   }
 
-  async onAbort(job: JobModel) {
+  protected async onAbort(job: JobModel) {
     await this.jobManagementService
       .abort({jobId: job.id!})
       .toAsync()
       .catch(async (error) => await this.snackbarService.handleError(error));
   }
 
-  getOrderNumber(job: JobModel): string {
+  protected getOrderNumber(job: JobModel): string {
     if (job.productionJob)
       return this.operations().find(operation => operation.jobIds?.find(j => j === job.id))?.order!;
     return "";
   }
 
-  getOperationNumber(job: JobModel): string {
+  protected getOperationNumber(job: JobModel): string {
     if (job.productionJob)
       return this.operations().find(operation => operation.jobIds?.find(j => j === job.id))?.number!;
     return "";
   }
 
-  disconnectEvents() {
+  protected disconnectEvents() {
     this.jobManagementEvents.disconnect();
     this.processEngineEvents.disconnect();
     this.orderManagementEvents.disconnect();

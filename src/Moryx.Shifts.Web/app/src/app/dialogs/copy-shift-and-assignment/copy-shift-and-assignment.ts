@@ -38,10 +38,10 @@ import { MatInputModule } from '@angular/material/input';
 ]
 })
 export class CopyShiftAndAssignment {
-  calendarState = signal<CalendarState | undefined>(undefined);
-  formData = signal<CopyShiftAndAssignmentData | undefined>(undefined);
+  protected calendarState = signal<CalendarState | undefined>(undefined);
+  protected formData = signal<CopyShiftAndAssignmentData | undefined>(undefined);
 
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: CopyShiftAndAssignmentData,
   public dialogRef: MatDialogRef<CopyShiftAndAssignment>,
@@ -50,24 +50,24 @@ export class CopyShiftAndAssignment {
     this.formData.set({... this.data});
   }
 
-  onStartDateChanged(shiftInstance: ShiftInstanceModel) {
+  protected onStartDateChanged(shiftInstance: ShiftInstanceModel) {
     const now = moment(shiftInstance.startDate);
     const endDate = now.add(shiftInstance.shiftType.duration-1, 'days').toDate();
     shiftInstance.endDate = endDate;
   }
 
-  deleteItem(shiftInstance: ShiftInstanceModel){
+  protected deleteItem(shiftInstance: ShiftInstanceModel){
     this.formData.update(form => {
       form!.shiftInstances = form!.shiftInstances.filter(x => x !== shiftInstance);
       return form;
     })
   }
 
-  save(){
+  protected save(){
     this.dialogRef.close(this.formData());
   }
 
-  cancel(){
+  protected cancel(){
     this.dialogRef.close(undefined);
   }
 

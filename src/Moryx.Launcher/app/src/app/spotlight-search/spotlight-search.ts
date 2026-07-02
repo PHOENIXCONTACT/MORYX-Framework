@@ -28,18 +28,18 @@ export class SpotlightSearch {
   private shortcutService = inject(ShortcutService);
   private destroyRef = inject(DestroyRef);
 
-  @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
-  @ViewChild('resultsList') resultsList!: ElementRef<HTMLUListElement>;
+  @ViewChild('searchInput') protected searchInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('resultsList') protected resultsList!: ElementRef<HTMLUListElement>;
 
   protected TranslationConstants = TranslationConstants;
 
-  isOpen = this.searchService.isOpen;
-  query = signal('');
-  activeIndex = signal(0);
+  protected isOpen = this.searchService.isOpen;
+  protected query = signal('');
+  protected activeIndex = signal(0);
 
-  suggestions = this.searchService.suggestions;
-  hasProvider = this.searchService.hasProvider;
-  disableSearchBox = this.searchService.disableSearchBox;
+  protected suggestions = this.searchService.suggestions;
+  protected hasProvider = this.searchService.hasProvider;
+  protected disableSearchBox = this.searchService.disableSearchBox;
 
   constructor() {
     this.shortcutService.register(
@@ -62,7 +62,7 @@ export class SpotlightSearch {
     });
   }
 
-  onKeyDown(event: KeyboardEvent): void {
+  protected onKeyDown(event: KeyboardEvent): void {
     if (!this.isOpen()) {
       return;
     }
@@ -96,15 +96,15 @@ export class SpotlightSearch {
     }
   }
 
-  open(): void {
+  protected open(): void {
     this.searchService.open();
   }
 
-  close(): void {
+  protected close(): void {
     this.searchService.close();
   }
 
-  navigate(suggestion: SearchSuggestion): void {
+  protected navigate(suggestion: SearchSuggestion): void {
     if (suggestion.url) {
       window.location.assign(suggestion.url);
     }
@@ -118,7 +118,7 @@ export class SpotlightSearch {
     item?.scrollIntoView({block: 'nearest'});
   }
 
-  onQueryChange(value: string): void {
+  protected onQueryChange(value: string): void {
     this.query.set(value);
     this.activeIndex.set(0);
     if (value.trim()) {

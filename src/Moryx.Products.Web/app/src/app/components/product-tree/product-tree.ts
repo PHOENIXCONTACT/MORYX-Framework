@@ -32,10 +32,10 @@ export class ProductTree {
   nodeContextMenu = output<{ event: MouseEvent; id: number }>();
 
   // Tree internals
-  tree = viewChild<MatTree<ProductNode>>(MatTree);
+  protected tree = viewChild<MatTree<ProductNode>>(MatTree);
 
-  childrenAccessor = (node: ProductNode) => node.children ?? [];
-  hasChild = (_: number, node: ProductNode) => !!node.children?.length;
+  protected childrenAccessor = (node: ProductNode) => node.children ?? [];
+  protected hasChild = (_: number, node: ProductNode) => !!node.children?.length;
 
   constructor() {
     // Re-expand saved nodes whenever treeData or tree instance changes
@@ -50,19 +50,19 @@ export class ProductTree {
     });
   }
 
-  onNodeClick(id: number) {
+  protected onNodeClick(id: number) {
     this.nodeSelected.emit(id);
   }
 
-  onContextMenu(event: MouseEvent, id: number) {
+  protected onContextMenu(event: MouseEvent, id: number) {
     this.nodeContextMenu.emit({ event, id });
   }
 
-  onExpandOrCollapseNode(node: ProductNode) {
+  protected onExpandOrCollapseNode(node: ProductNode) {
     this.sessionService.saveProductTreeExpansion(node, this.tree()!.isExpanded(node));
   }
 
-  createProductIdentity(identifier: string | undefined | null, revision: number | undefined): string {
+  protected createProductIdentity(identifier: string | undefined | null, revision: number | undefined): string {
     return this.editProductsService.createProductIdentity(identifier, revision);
   }
 

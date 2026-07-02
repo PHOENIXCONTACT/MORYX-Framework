@@ -36,12 +36,12 @@ import { MatInputModule } from '@angular/material/input';
   ]
 })
 export class SkillNewDialog implements OnInit {
-  data = inject<OperatorSkill>(MAT_DIALOG_DATA);
+  protected data = inject<OperatorSkill>(MAT_DIALOG_DATA);
   private dialogRef = inject(MatDialogRef<SkillNewDialog>);
   private appStoreService = inject(AppStoreService);
 
-  TranslationConstants = TranslationConstants;
-  skillTypes = signal<SkillType[]>([]);
+  protected TranslationConstants = TranslationConstants;
+  protected skillTypes = signal<SkillType[]>([]);
 
   ngOnInit(): void {
     this.appStoreService.skillTypes$.subscribe(types => {
@@ -49,11 +49,11 @@ export class SkillNewDialog implements OnInit {
     })
   }
 
-  save() {
+  protected save() {
     this.dialogRef.close(this.data);
   }
 
-  cancel() {
+  protected cancel() {
     this.dialogRef.close();
   }
 

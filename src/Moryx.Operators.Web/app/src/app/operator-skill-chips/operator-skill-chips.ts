@@ -24,13 +24,13 @@ export class OperatorSkillChips {
   skills = input.required<OperatorSkill[]>();
   skillTypes = input.required<SkillTypeModel[]>();
   useTagStyle = input<boolean>();
-  operatorSkills = computed(()=> this.skills().filter(x => x.operatorId === this.operatorId()));
+  protected operatorSkills = computed(()=> this.skills().filter(x => x.operatorId === this.operatorId()));
 
-  findSkillTypeById(id: number){
+  protected findSkillTypeById(id: number){
     return this.skillTypes().find(x => x.id === id);
   }
 
-  skillTooltipText(){
+  protected skillTooltipText(){
     let skillNameArray: string[] = [];
     skillNameArray = this.operatorSkills().map((x,index) => this.findSkillTypeById(x.typeId)?.name ?? 'UNKNOWN');
     return skillNameArray.join(', ');

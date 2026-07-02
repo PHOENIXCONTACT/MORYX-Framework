@@ -91,21 +91,21 @@ export class App implements OnInit, OnDestroy {
   private languageService = inject(LanguageService);
   private translateService = inject(TranslateService);
 
-  isEditMode = toSignal(this.editService.edit$, { initialValue: false });
-  selected = toSignal(this.editService.currentProduct$);
+  protected isEditMode = toSignal(this.editService.edit$, { initialValue: false });
+  protected selected = toSignal(this.editService.currentProduct$);
   products = signal<ProductModel[]>([]);
   productDefinitions = signal<ProductDefinitionModel[]>([]);
-  hierarchic = signal(false);
-  revisionOptions = signal<string[]>(Object.keys(RevisionFilter));
-  selectorOptions = signal<string[]>(Object.keys(Selector));
+  protected hierarchic = signal(false);
+  protected revisionOptions = signal<string[]>(Object.keys(RevisionFilter));
+  protected selectorOptions = signal<string[]>(Object.keys(Selector));
   importers = toSignal(this.cacheService.importers$, { initialValue: [] });
-  menuTopLeftPosition = signal<{ x: String, y: String }>({x: '0', y: '0'});
-  trigger = viewChild.required(MatMenuTrigger);
+  protected menuTopLeftPosition = signal<{ x: String, y: String }>({x: '0', y: '0'});
+  protected trigger = viewChild.required(MatMenuTrigger);
 
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
   title = "Moryx.Products.Web";
-  productsToolbarImage: string =
+  protected productsToolbarImage: string =
     environment.assets + "assets/products_toolbar.jpg";
 
   constructor() {
@@ -189,7 +189,7 @@ export class App implements OnInit, OnDestroy {
     }
   }
 
-  treeData = signal<ProductNode[]>([]);
+  protected treeData = signal<ProductNode[]>([]);
 
   createDatasource(hierarchic: boolean) {
     if (this.productDefinitions().length === 0) return;
@@ -227,7 +227,7 @@ export class App implements OnInit, OnDestroy {
     this.treeData.set(dataSource);
   }
 
-  beforeUnloadHander() {
+  protected beforeUnloadHander() {
     const product = this.selected();
     if (this.isEditMode() && product) {
       this.sessionService.pushWipProduct(product, <ProductStorageDetails>{
@@ -239,7 +239,7 @@ export class App implements OnInit, OnDestroy {
     }
   }
 
-  saveDisabled(): boolean {
+  protected saveDisabled(): boolean {
     const anyUnsetRecipes = this.selected()?.recipes?.some((r) => r.classification === RecipeClassificationModel.Unset);
 
     if (this.isEditMode() && this.selected() && anyUnsetRecipes) {
@@ -248,7 +248,7 @@ export class App implements OnInit, OnDestroy {
     return false;
   }
 
-  setHierarchy(hierarchy: boolean) {
+  protected setHierarchy(hierarchy: boolean) {
     this.sessionService.setProductTreeHierarchy(hierarchy);
     this.createDatasource(hierarchy);
   }
@@ -291,7 +291,7 @@ export class App implements OnInit, OnDestroy {
     } as ProductNode;
   }
 
-  onProductContext(event: MouseEvent, productId: number) {
+  protected onProductContext(event: MouseEvent, productId: number) {
     // Only handle right-click, not touch long-press
     if ((event as any).pointerType === 'touch') {
       return;
@@ -310,7 +310,7 @@ export class App implements OnInit, OnDestroy {
     this.trigger().openMenu();
   }
 
-  async onDeselect() {
+  protected async onDeselect() {
     if (this.isEditMode()) {
       await this.editService.onCancel();
     }
@@ -318,7 +318,7 @@ export class App implements OnInit, OnDestroy {
     await this.router.navigate([``]);
   }
 
-  onSelect(id: number) {
+  protected onSelect(id: number) {
     if (this.isEditMode()) return;
 
     if (id == 0) return;
@@ -328,14 +328,14 @@ export class App implements OnInit, OnDestroy {
     this.router.navigate(['/details', id]);
   }
 
-  async clickContainer(event: MouseEvent) {
+  protected async clickContainer(event: MouseEvent) {
     if ((event.target as HTMLElement).tagName !== "MAT-TREE") {
       return;
     }
     this.onDeselect();
   }
 
-  onDelete(id: number | undefined) {
+  protected onDelete(id: number | undefined) {
     if (!id) return;
     const product = this.products().find((p) => p.id == id);
     if (!product) return;
@@ -353,7 +353,7 @@ export class App implements OnInit, OnDestroy {
     });
   }
 
-  async onImport() {
+  protected async onImport() {
     const importers = this.importers();
     const target = importers?.length ? importers[0].name : undefined;
     if (target) {
@@ -371,13 +371,13 @@ export class App implements OnInit, OnDestroy {
     }
   }
 
-  onEdit() {
+  protected onEdit() {
     this.searchbar.clearSuggestions();
     this.searchbar.unsubscribe();
     this.editService.onEdit();
   }
 
-  async onCancel() {
+  protected async onCancel() {
     await this.editService.onCancel();
     this.searchbar.subscribe({
       next: (result: SearchRequest) => {
@@ -386,7 +386,7 @@ export class App implements OnInit, OnDestroy {
     });
   }
 
-  onSave() {
+  protected onSave() {
     this.editService.onSave();
     this.searchbar.subscribe({
       next: (result: SearchRequest) => {
@@ -395,7 +395,7 @@ export class App implements OnInit, OnDestroy {
     });
   }
 
-  onSelectAndEdit(id: number) {
+  protected onSelectAndEdit(id: number) {
     this.searchbar.clearSuggestions();
     this.searchbar.unsubscribe();
 
@@ -408,7 +408,7 @@ export class App implements OnInit, OnDestroy {
       .then(() => this.editService.onEdit());
   }
 
-  onDuplicate(id: number | undefined) {
+  protected onDuplicate(id: number | undefined) {
     if (!id) return;
 
     const product = this.products().find((p) => p.id == id);
@@ -423,7 +423,7 @@ export class App implements OnInit, OnDestroy {
     });
   }
 
-  onRevisions(id: number | undefined) {
+  protected onRevisions(id: number | undefined) {
     if (!id) return;
 
     const product = this.products().find((p) => p.id == id);
@@ -442,21 +442,21 @@ export class App implements OnInit, OnDestroy {
     });
   }
 
-  resetFilter(drawer: MatDrawer) {
+  protected resetFilter(drawer: MatDrawer) {
     this.cacheService.resetFilter();
     drawer.toggle();
   }
 
-  filter(drawer: MatDrawer) {
+  protected filter(drawer: MatDrawer) {
     this.cacheService.loadProductsForTree();
     drawer.toggle();
   }
 
-  get filterOptions() {
+  protected get filterOptions() {
     return this.cacheService.filterOptions;
   }
 
-  refreshProducts(): void {
+  protected refreshProducts(): void {
     this.cacheService.loadProductsForTree();
   }
 }

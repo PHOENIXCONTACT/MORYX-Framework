@@ -29,12 +29,12 @@ import { MatSelectModule } from '@angular/material/select';
   ]
 })
 export class WorkplanProperties implements OnDestroy {
-  translate = inject(TranslateService);
-  editorState = inject(EditorStateService);
+  protected translate = inject(TranslateService);
+  protected editorState = inject(EditorStateService);
   private sessionService = inject(SessionsService);
 
-  TranslationConstants = TranslationConstants;
-  readonly WorkplanStates = Object.values(WorkplanState);
+  protected TranslationConstants = TranslationConstants;
+  protected readonly WorkplanStates = Object.values(WorkplanState);
 
   ngOnDestroy(): void {
     if (this.editorState.workplan)

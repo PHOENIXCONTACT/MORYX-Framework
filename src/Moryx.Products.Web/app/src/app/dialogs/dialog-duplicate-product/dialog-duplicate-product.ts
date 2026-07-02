@@ -33,9 +33,9 @@ export class DialogDuplicateProduct {
   private dialogRef = inject(MatDialogRef<DialogDuplicateProduct>);
   private data = inject<ProductModel>(MAT_DIALOG_DATA);
 
-  productToDuplicate = signal<ProductModel | undefined>(undefined);
-  duplicateInfos = signal<DuplicateProductInfos | undefined>(undefined);
-  TranslationConstants = TranslationConstants;
+  protected productToDuplicate = signal<ProductModel | undefined>(undefined);
+  protected duplicateInfos = signal<DuplicateProductInfos | undefined>(undefined);
+  protected TranslationConstants = TranslationConstants;
 
   constructor() {
     this.productToDuplicate.update(_ => this.data);
@@ -44,7 +44,7 @@ export class DialogDuplicateProduct {
     });
   }
 
-  onClose() {
+  protected onClose() {
     this.dialogRef.close();
   }
 }

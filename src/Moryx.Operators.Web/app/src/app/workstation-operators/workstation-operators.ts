@@ -44,18 +44,18 @@ export class WorkstationOperators {
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
 
-  workstations = signal<WorkstationViewModel[]>([]);
-  workstationTogglingState = signal<WorkstationTogglingState | undefined>(undefined);
-  operatorsSkills = signal<OperatorSkill[]>([]);
-  skillTypes = signal<SkillTypeModel[]>([]);
-  isCardExpanded = computed(() => {
+  protected workstations = signal<WorkstationViewModel[]>([]);
+  protected workstationTogglingState = signal<WorkstationTogglingState | undefined>(undefined);
+  protected operatorsSkills = signal<OperatorSkill[]>([]);
+  protected skillTypes = signal<SkillTypeModel[]>([]);
+  protected isCardExpanded = computed(() => {
     if (!this.workstationTogglingState())
       return false;
 
     return this.workstationTogglingState()?.isExpanded;
   })
 
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
   ngOnInit(): void {
     this.appStoreService.workstations$.subscribe((stations) => {
@@ -86,7 +86,7 @@ export class WorkstationOperators {
     });
   }
 
-  toggleWorkstationCard(station: WorkstationViewModel | undefined) {
+  protected toggleWorkstationCard(station: WorkstationViewModel | undefined) {
     this.workstationTogglingState.update(_ => <WorkstationTogglingState>{
       station,
       isExpanded: !this.workstationTogglingState()?.isExpanded
@@ -96,7 +96,7 @@ export class WorkstationOperators {
     else this.updateUrlParam(null);
   }
 
-  addOperator() {
+  protected addOperator() {
     const dialogResult = this.dialog.open(AddOperatorDialog);
     //navigate to operator details
     dialogResult.afterClosed()

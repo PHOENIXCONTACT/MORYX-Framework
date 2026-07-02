@@ -59,28 +59,28 @@ import { WeekDayToggleButton } from '@app/week-day-toggle-button/week-day-toggle
 ]
 })
 export class WeekAssignmentDialog implements OnInit {
-  operators = signal<OperatorModel[]>([]);
-  resources = signal<AttendableResourceModel[]>([]);
-  shiftInstances = signal<ShiftInstanceModel[]>([]);
-  shiftNumberOfdays = signal(0);
+  protected operators = signal<OperatorModel[]>([]);
+  protected resources = signal<AttendableResourceModel[]>([]);
+  protected shiftInstances = signal<ShiftInstanceModel[]>([]);
+  protected shiftNumberOfdays = signal(0);
 
-  available = OperatorStatus.Available;
-  onVacation = OperatorStatus.OnVacation;
-  notAllowed = OperatorStatus.NotAllowed;
-  notQualified = OperatorStatus.NotQualified;
-  TranslationConstants = TranslationConstants;
-  form = new FormGroup({
+  protected available = OperatorStatus.Available;
+  protected onVacation = OperatorStatus.OnVacation;
+  protected notAllowed = OperatorStatus.NotAllowed;
+  protected notQualified = OperatorStatus.NotQualified;
+  protected TranslationConstants = TranslationConstants;
+  protected form = new FormGroup({
     operatorId: new FormControl<string>('', [Validators.required]),
     resourceId: new FormControl<number>(0, [Validators.min(0)]),
     priority: new FormControl<number>(0, [Validators.min(0)]),
     notes: new FormControl('')
   });
-  formatDateDigits = formatDateDigits;
-  getDayName = getDayName;
-  getShortDayName = getShortDayName;
-  isDayInInterval = isDayInInterval;
-  localizedDayName = localizedDayName;
-  shortDayName = shortDayName;
+  protected formatDateDigits = formatDateDigits;
+  protected getDayName = getDayName;
+  protected getShortDayName = getShortDayName;
+  protected isDayInInterval = isDayInInterval;
+  protected localizedDayName = localizedDayName;
+  protected shortDayName = shortDayName;
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: AssignmentData,
     public dialogRef: MatDialogRef<WeekAssignmentDialog>,
@@ -147,7 +147,7 @@ export class WeekAssignmentDialog implements OnInit {
       .then((resources) => (this.resources.set(resources)));
   }
 
-  getShiftCalendarDays() {
+  protected getShiftCalendarDays() {
     return this.data.calendarState.viewDatesStartingFrom(
       this.data.shift.startDate,
       this.shiftNumberOfdays()
@@ -160,7 +160,7 @@ export class WeekAssignmentDialog implements OnInit {
     });
   }
 
-  submit() {
+  protected submit() {
     if (this.form.invalid || this.data.days.length === 0) return;
     if(!this.isOperatorSet())
       this.data.operator = this.operators().find(
@@ -176,11 +176,11 @@ export class WeekAssignmentDialog implements OnInit {
     this.dialogRef.close(this.data);
   }
 
-  areOperatorStatusEquals(status1: OperatorStatus, status2: OperatorStatus) {
+  protected areOperatorStatusEquals(status1: OperatorStatus, status2: OperatorStatus) {
     return status1 === status2;
   }
 
-  dayButtonClicked(calendarDate: CalendarDate) {
+  protected dayButtonClicked(calendarDate: CalendarDate) {
       const foundClickedDay = this.data.days.some(
           (x) => moment(x.date).diff(moment(calendarDate.date), 'days') === 0
       );
@@ -191,11 +191,11 @@ export class WeekAssignmentDialog implements OnInit {
     else this.data.days.push(calendarDate);
   }
 
-  isOperatorSet() {
+  protected isOperatorSet() {
     return this.data.operator != undefined;
   }
 
-  isResourceSet() {
+  protected isResourceSet() {
     return this.data.resource != undefined;
   }
 

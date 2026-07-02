@@ -38,23 +38,23 @@ import { MatButtonModule } from '@angular/material/button';
   ]
 })
 export class App implements OnInit, OnDestroy {
-  router = inject(Router);
+  protected router = inject(Router);
   private sessionService = inject(SessionsService);
   private languageService = inject(LanguageService);
   private snackbarService = inject(SnackbarService);
   private translateService = inject(TranslateService);
 
-  title = 'Workplan Editor';
-  readonly workplansToolbarImage = environment.assets + 'assets/workplans-toolbar.jpg';
+  protected title = 'Workplan Editor';
+  protected readonly workplansToolbarImage = environment.assets + 'assets/workplans-toolbar.jpg';
 
-  changeViewDisabled = signal(true);
-  navigatedUrl = signal('');
-  changeViewTooltip = signal('');
+  protected changeViewDisabled = signal(true);
+  protected navigatedUrl = signal('');
+  protected changeViewTooltip = signal('');
 
   private activeSession: string | undefined;
   private subscriptions: Subscription[] = [];
 
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
   constructor() {
     this.translateService.addLangs([
@@ -103,7 +103,7 @@ export class App implements OnInit, OnDestroy {
     this.subscriptions.push(routerSubscription);
   }
 
-  changeView() {
+  protected changeView() {
     if (this.navigatedUrl() !== '/management') this.router.navigate(['/management']);
     else if (this.activeSession) this.router.navigate(['session', this.activeSession]);
   }
@@ -112,7 +112,7 @@ export class App implements OnInit, OnDestroy {
     this.subscriptions.forEach(s => s.unsubscribe());
   }
 
-  onAdd() {
+  protected onAdd() {
     this.sessionService
       .getSessionForWorkplan(0)
       .toAsync()

@@ -20,10 +20,10 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/materia
 })
 export class ConfirmDialog implements AfterViewInit {
   private dialogRef = inject(MatDialogRef<ConfirmDialog>);
-  data = inject<ConfirmDialogData>(MAT_DIALOG_DATA);
+  protected data = inject<ConfirmDialogData>(MAT_DIALOG_DATA);
 
   actionButtons = viewChildren<MatButton>('actionButton');
-  buttons: ConfirmDialogButton[] | undefined;
+  protected buttons: ConfirmDialogButton[] | undefined;
 
   constructor() {
     this.buttons = this.data.buttons;

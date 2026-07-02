@@ -32,13 +32,13 @@ export class MediaFile implements OnInit {
   private mediaService = inject(MediaService);
   private snackbarService = inject(SnackbarService);
 
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
   name = model.required<string>()
   amount = model.required<string>();
   content = model.required<ContentDescriptorModel>();
   selected = model.required<boolean>();
-  loaded = signal(false);
-  path = signal<string | null | ArrayBuffer>('');
+  protected loaded = signal(false);
+  protected path = signal<string | null | ArrayBuffer>('');
 
   show = output<ContentDescriptorModel>();
   delete = output<ContentDescriptorModel>();
@@ -90,7 +90,7 @@ export class MediaFile implements OnInit {
     }
   }
 
-  onClick(event: MouseEvent) {
+  protected onClick(event: MouseEvent) {
     if ((<HTMLElement>event.target).nodeName === 'MAT-ICON')
       this.delete.emit(this.content());
     else

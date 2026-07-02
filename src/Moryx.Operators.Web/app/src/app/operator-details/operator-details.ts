@@ -53,8 +53,8 @@ export class OperatorDetails implements OnInit {
   private translateService = inject(TranslateService);
 
   id = input.required<string>();
-  editMode = signal(false);
-  operator = signal<AssignableOperator>({
+  protected editMode = signal(false);
+  protected operator = signal<AssignableOperator>({
     assignedResources: [],
     firstName: '',
     identifier: '',
@@ -66,12 +66,12 @@ export class OperatorDetails implements OnInit {
   skillTypes = signal<SkillTypeModel[]>([]);
   operatorViewModel = signal<OperatorViewModel | undefined>(undefined);
 
-  TranslationConstants = TranslationConstants;
-  dateToString = dateToString;
-  dataSource!: MatTableDataSource<OperatorSkill>;
+  protected TranslationConstants = TranslationConstants;
+  protected dateToString = dateToString;
+  protected dataSource!: MatTableDataSource<OperatorSkill>;
   skillToOperatorSkill = skillToOperatorSkill;
   skillTypeToModel = skillTypeToModel;
-  displayedColumns: string[] = ['type', 'obtainedOn', 'expiresOn', 'actions'];
+  protected displayedColumns: string[] = ['type', 'obtainedOn', 'expiresOn', 'actions'];
 
   constructor() {
     effect(() => {
@@ -111,28 +111,28 @@ export class OperatorDetails implements OnInit {
       });
   }
 
-  onStopEditing() {
+  protected onStopEditing() {
     this.operator.update(_ => this.appStoreService.cancelEditing(this.operator()));
     this.editMode.update(_ => false);
   }
 
-  onStartEditing() {
+  protected onStartEditing() {
     this.editMode.update(_ => true);
   }
 
-  async onSave() {
+  protected async onSave() {
     await this.appStoreService.updateOperator(this.operator())
       .then(() => {
         this.editMode.update(_ => false);
       });
   }
 
-  applyFilter(event: Event) {
+  protected applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  onAddSkillClick() {
+  protected onAddSkillClick() {
     const dialogResult = this.dialog.open(SkillNewDialog, {
       width: '400px',
       data: <OperatorSkill>{
@@ -149,7 +149,7 @@ export class OperatorDetails implements OnInit {
   }
 
 
-  async onDeleteSkillClick(skill: OperatorSkill) {
+  protected async onDeleteSkillClick(skill: OperatorSkill) {
     const translations = await lastValueFrom(this.translateService
       .get([
         TranslationConstants.CONFIRMATION_DIALOG.DELETE_SKILL_TITLE,
@@ -171,7 +171,7 @@ export class OperatorDetails implements OnInit {
     });
   }
 
-  findSkillTypeById(id: number) {
+  protected findSkillTypeById(id: number) {
     return this.skillTypes().find(x => x.id === id);
   }
 }

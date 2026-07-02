@@ -26,9 +26,9 @@ import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
 export class ProductPartsDetailsComponent {
   private editProductsService = inject(EditProductsService);
 
-  partConnector = linkedSignal(this.editProductsService.currentPartConnector);
-  productPart = linkedSignal(this.editProductsService.currentPart);
-  isEditMode = toSignal(this.editProductsService.edit$, { initialValue: false });
+  protected partConnector = linkedSignal(this.editProductsService.currentPartConnector);
+  protected productPart = linkedSignal(this.editProductsService.currentPart);
+  protected isEditMode = toSignal(this.editProductsService.edit$, { initialValue: false });
 
   TranslationConstants = TranslationConstants;
 

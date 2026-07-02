@@ -34,23 +34,23 @@ export class AddOperatorDialog {
   private appStoreService = inject(AppStoreService);
   private dialogRef = inject(MatDialogRef<AddOperatorDialog>);
 
-  operatorForm = new FormGroup({
+  protected operatorForm = new FormGroup({
     identifier: new FormControl<string>('', [Validators.required]),
     firstName: new FormControl<string>('', [Validators.required]),
     lastName: new FormControl<string>('', [Validators.required]),
     pseudonym: new FormControl<string>('', [Validators.required])
   });
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
-  getError(control: FormControl<string | null>) {
+  protected getError(control: FormControl<string | null>) {
     return control.hasError('required') ? 'This field is required!' : '';
   }
 
-  isValid(control: FormControl<string | null>) {
+  protected isValid(control: FormControl<string | null>) {
     return control.valid;
   }
 
-  save() {
+  protected save() {
 
     if (!this.operatorForm.valid) return;
 

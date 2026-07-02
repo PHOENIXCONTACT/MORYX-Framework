@@ -18,7 +18,7 @@ import { Component, DestroyRef, effect, inject, input, signal, ChangeDetectionSt
 export class NotificationBadge {
   private destroyRef = inject(DestroyRef);
   eventStream = input('');
-  count = signal(0);
+  protected count = signal(0);
   private eventSource: EventSource | undefined;
 
   constructor() {
@@ -39,7 +39,7 @@ export class NotificationBadge {
     this.destroyRef.onDestroy(() => this.closeEventSource());
   }
 
-  closeEventSource(): void {
+  protected closeEventSource(): void {
     this.eventSource?.close();
     this.eventSource = undefined;
   }
@@ -56,7 +56,7 @@ export class NotificationBadge {
     this.count.set(integer);
   }
 
-  countString() {
+  protected countString() {
     if (this.count() > 9) return '9+';
     return this.count();
   }

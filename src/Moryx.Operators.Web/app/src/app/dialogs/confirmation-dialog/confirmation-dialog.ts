@@ -20,17 +20,17 @@ import { TranslatePipe } from '@ngx-translate/core';
   ]
 })
 export class ConfirmationDialog {
-  data = inject<DialogData>(MAT_DIALOG_DATA);
+  protected data = inject<DialogData>(MAT_DIALOG_DATA);
   private dialogRef = inject(MatDialogRef<ConfirmationDialog>);
 
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
-  onYesclick() {
+  protected onYesclick() {
     this.data.dialogResult = 'YES';
     this.dialogRef.close(this.data);
   }
 
-  onNoClick() {
+  protected onNoClick() {
     this.data.dialogResult = 'NO';
     this.dialogRef.close(this.data);
   }

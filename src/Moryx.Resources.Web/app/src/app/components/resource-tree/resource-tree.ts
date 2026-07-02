@@ -30,15 +30,15 @@ export class ResourceTree {
   nodeSelected = output<number>();
   nodeContextMenu = output<{ event: MouseEvent; id: number }>();
 
-  tree = viewChild<MatTree<ResourceModel>>(MatTree);
+  protected tree = viewChild<MatTree<ResourceModel>>(MatTree);
 
-  childrenAccessor = (node: ResourceModel) =>
+  protected childrenAccessor = (node: ResourceModel) =>
     (node.references?.find(ref => ref.name === 'Children')?.targets ?? []) as ResourceModel[];
 
-  hasChild = (_: number, node: ResourceModel) =>
+  protected hasChild = (_: number, node: ResourceModel) =>
     !!(node.references?.find(ref => ref.name === 'Children')?.targets?.length);
 
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
   constructor() {
     effect(() => {
@@ -64,19 +64,19 @@ export class ResourceTree {
     });
   }
 
-  saveState() {
+  protected saveState() {
     this.sessionService.storeTreeState(this.getExpandedIds());
   }
 
-  onNodeClick(id: number) {
+  protected onNodeClick(id: number) {
     this.nodeSelected.emit(id);
   }
 
-  onContextMenu(event: MouseEvent, id: number) {
+  protected onContextMenu(event: MouseEvent, id: number) {
     this.nodeContextMenu.emit({ event, id });
   }
 
-  onExpandOrCollapseNode() {
+  protected onExpandOrCollapseNode() {
     this.sessionService.storeTreeState(this.getExpandedIds());
   }
 

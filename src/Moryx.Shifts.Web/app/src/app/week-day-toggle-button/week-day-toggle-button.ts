@@ -37,15 +37,15 @@ export class WeekDayToggleButton {
   days = input.required<CalendarDate[]>();
   onButtonToggled = output<CalendarDate>();
 
-  TranslationConstants = TranslationConstants;
-  formatDateDigits = formatDateDigits;
-  getDayName = getDayName;
-  getShortDayName = getShortDayName;
-  isDayInInterval = isDayInInterval;
-  localizedDayName = localizedDayName;
-  shortDayName = shortDayName;
+  protected TranslationConstants = TranslationConstants;
+  protected formatDateDigits = formatDateDigits;
+  protected getDayName = getDayName;
+  protected getShortDayName = getShortDayName;
+  protected isDayInInterval = isDayInInterval;
+  protected localizedDayName = localizedDayName;
+  protected shortDayName = shortDayName;
 
-  getCalendarDaysPerWeek() {
+  protected getCalendarDaysPerWeek() {
     let weeksAndDays: Array<CalendarDate[]> = [];
     const numberOfWeeks = Math.ceil(this.shiftNumberOfDay() / 7);
     let lastDate = this.startDate();
@@ -59,11 +59,11 @@ export class WeekDayToggleButton {
   }
 
 
-  buttonToggled(event: MatButtonToggleChange) {
+  protected buttonToggled(event: MatButtonToggleChange) {
     this.onButtonToggled.emit(event.value);
   }
 
-  isDaySelected(calendarDate: CalendarDate) {
+  protected isDaySelected(calendarDate: CalendarDate) {
     return this.days().some(
       (x) => moment(x.date).diff(moment(calendarDate.date), 'days') === 0
     );

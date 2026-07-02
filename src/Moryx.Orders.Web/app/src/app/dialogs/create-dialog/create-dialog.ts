@@ -65,7 +65,7 @@ enum Action {
   providers: []
 })
 export class CreateDialog {
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
   private orderManagementService = inject(OrderManagementService);
   private productManagementService = inject(ProductManagementService);
@@ -73,11 +73,11 @@ export class CreateDialog {
   private translateService = inject(TranslateService);
   private snackbarService = inject(SnackbarService);
 
-  orderNumber = signal("");
-  amount = signal(0);
-  operations = signal<OperationCreationContextModel[]>([]);
-  isLoading = signal(false);
-  canAddOperation = computed(() => {
+  protected orderNumber = signal("");
+  protected amount = signal(0);
+  protected operations = signal<OperationCreationContextModel[]>([]);
+  protected isLoading = signal(false);
+  protected canAddOperation = computed(() => {
     const hasOrderNumber = this.orderNumber() !== "";
     const hasProduct = !!this.selectedProduct();
     const hasRecipe = !!this.selectedRecipe();
@@ -89,23 +89,23 @@ export class CreateDialog {
     return hasOrderNumber && hasValidOperationNumber && hasProduct && hasRecipe && hasAmount;
   });
 
-  primaryAction = signal<Action>(Action.AddCreate);
-  Action = Action;
-  primaryActionLabel = computed(() => {
+  protected primaryAction = signal<Action>(Action.AddCreate);
+  protected Action = Action;
+  protected primaryActionLabel = computed(() => {
     return this.primaryAction() === Action.AddCreate
       ? this.translateService.instant(TranslationConstants.CREATE_DIALOG.CREATE)
       : this.translateService.instant(TranslationConstants.CREATE_DIALOG.ADD);
   });
 
-  canAdd = computed(() => !this.isLoading() && this.canAddOperation());
-  canCreate = computed(() => !(this.isLoading() || !(this.operations().length || this.canAddOperation())));
-  canRun = computed<Record<Action, boolean>>(() => { return {
+  protected canAdd = computed(() => !this.isLoading() && this.canAddOperation());
+  protected canCreate = computed(() => !(this.isLoading() || !(this.operations().length || this.canAddOperation())));
+  protected canRun = computed<Record<Action, boolean>>(() => { return {
     [Action.AddCreate]: this.canCreate(),
     [Action.AddOnly]: this.canAdd()
   }});
-  dropdownDisabled = computed(() => !this.canAdd() && !this.canCreate());
+  protected dropdownDisabled = computed(() => !this.canAdd() && !this.canCreate());
 
-  productInput = viewChild.required<ElementRef<HTMLInputElement>>('productInput');
+  protected productInput = viewChild.required<ElementRef<HTMLInputElement>>('productInput');
   private productsLoader = resource<ProductModel[], { query: ProductQuery }>({
     params: () => ({ query:
       <ProductQuery>{
@@ -125,11 +125,11 @@ export class CreateDialog {
     }
     return this.productsLoader.value().sort((a, b) => this.byProductNameAndRevision(a, b));
   });
-  filteredProducts = linkedSignal(this.possibleProducts)
-  selectedProduct = signal<ProductModel | undefined>(undefined);
-  productFormControl = new FormControl<ProductModel | undefined>(undefined);
+  protected filteredProducts = linkedSignal(this.possibleProducts)
+  protected selectedProduct = signal<ProductModel | undefined>(undefined);
+  protected productFormControl = new FormControl<ProductModel | undefined>(undefined);
 
-  recipeInput = viewChild.required<ElementRef<HTMLInputElement>>('recipeInput');
+  protected recipeInput = viewChild.required<ElementRef<HTMLInputElement>>('recipeInput');
   private recipesLoader = resource<RecipeModel[], { product: ProductModel | undefined }>({
     params: () => ({ product: this.selectedProduct() }),
     loader: ({ params }) => {
@@ -150,14 +150,14 @@ export class CreateDialog {
     }
     return this.recipesLoader.value();
   });
-  filteredRecipes = linkedSignal(this.possibleRecipes)
-  selectedRecipe = linkedSignal<RecipeModel[], RecipeModel | undefined>({
+  protected filteredRecipes = linkedSignal(this.possibleRecipes)
+  protected selectedRecipe = linkedSignal<RecipeModel[], RecipeModel | undefined>({
     source: this.possibleRecipes,
     computation: (recipes, previous) => recipes.find(r => r.id === previous?.value?.id)
   });
-  recipeFormControl = new FormControl<RecipeModel | undefined>(undefined);
+  protected recipeFormControl = new FormControl<RecipeModel | undefined>(undefined);
 
-  operationNumberFormControl = new UntypedFormControl("", [
+  protected operationNumberFormControl = new UntypedFormControl("", [
     OperationNumberValidations.isOperationNumberNotValid,
   ]);
 
@@ -185,13 +185,13 @@ export class CreateDialog {
     });
   }
 
-  detailsInputchanged(event: Event | KeyboardEvent) {
+  protected detailsInputchanged(event: Event | KeyboardEvent) {
     if (this.operations().length > 0) {
       this.addValidationToOperationNumber();
     }
   }
 
-  addOperation(): void {
+  protected addOperation(): void {
     const operation = <OperationCreationContextModel>{};
     operation.operationNumber = this.operationNumberFormControl.value;
     operation.name = this.selectedProduct()?.name;

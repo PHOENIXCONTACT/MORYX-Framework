@@ -21,23 +21,23 @@ import { TranslationConstants } from '../translation-constants';
 export class ToolbarSearch {
   private searchService = inject(SearchService);
 
-  @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('searchInput') protected searchInput!: ElementRef<HTMLInputElement>;
 
   protected TranslationConstants = TranslationConstants;
 
-  query = signal('');
-  expanded = signal(false);
+  protected query = signal('');
+  protected expanded = signal(false);
 
-  suggestions = this.searchService.suggestions;
-  hasProvider = this.searchService.hasProvider;
-  disableSearchBox = this.searchService.disableSearchBox;
+  protected suggestions = this.searchService.suggestions;
+  protected hasProvider = this.searchService.hasProvider;
+  protected disableSearchBox = this.searchService.disableSearchBox;
 
-  expand(): void {
+  protected expand(): void {
     this.expanded.set(true);
     setTimeout(() => this.searchInput?.nativeElement.focus(), 0);
   }
 
-  collapse(): void {
+  protected collapse(): void {
     this.expanded.set(false);
     this.query.set('');
     this.searchInput.nativeElement.value = '';
@@ -45,7 +45,7 @@ export class ToolbarSearch {
     this.searchService.clearSuggestions();
   }
 
-  onQueryChange(value: string): void {
+  protected onQueryChange(value: string): void {
     this.query.set(value);
     if (value.trim()) {
       this.searchService.search(value, false);
@@ -54,14 +54,14 @@ export class ToolbarSearch {
     }
   }
 
-  onEnter(): void {
+  protected onEnter(): void {
     const q = this.query().trim();
     if (q) {
       this.searchService.search(q, true);
     }
   }
 
-  onOptionSelected(event: MatAutocompleteSelectedEvent): void {
+  protected onOptionSelected(event: MatAutocompleteSelectedEvent): void {
     const suggestion = event.option.value as SearchSuggestion;
     if (suggestion.url) {
       window.location.assign(suggestion.url);
@@ -69,7 +69,7 @@ export class ToolbarSearch {
     this.collapse();
   }
 
-  displayFn(suggestion: SearchSuggestion | string): string {
+  protected displayFn(suggestion: SearchSuggestion | string): string {
     return typeof suggestion === 'string' ? suggestion : suggestion?.text ?? '';
   }
 }

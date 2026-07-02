@@ -54,11 +54,11 @@ export class Sessions implements OnInit, OnDestroy {
   private translateService = inject(TranslateService);
   private editorStateService = inject(EditorStateService);
 
-  sessions = signal<WorkplanSessionModel[]>([]);
-  activeSession = signal<WorkplanSessionModel | undefined>(undefined);
+  protected sessions = signal<WorkplanSessionModel[]>([]);
+  protected activeSession = signal<WorkplanSessionModel | undefined>(undefined);
 
   private subscriptions: SubscriptionLike[] = [];
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
   async ngOnInit(): Promise<void> {
     const availableSessionsSubscription = this.sessionService.availableSessions$.subscribe(
@@ -181,11 +181,11 @@ export class Sessions implements OnInit, OnDestroy {
     });
   }
 
-  activateSession(token: string): void {
+  protected activateSession(token: string): void {
     this.sessionService.activateSession(token);
   }
 
-  async onCloseSession(sessionToken: string | undefined) {
+  protected async onCloseSession(sessionToken: string | undefined) {
     if (!sessionToken) return;
 
     const sessionIndex = this.sessions().findIndex(s => s.sessionToken === sessionToken);
@@ -216,11 +216,11 @@ export class Sessions implements OnInit, OnDestroy {
     });
   }
 
-  isSessionActive(token: string): boolean {
+  protected isSessionActive(token: string): boolean {
     return this.activeSession()?.sessionToken === token;
   }
 
-  saveWorkplan() {
+  protected saveWorkplan() {
     if (!this.activeSession()) return;
 
     const session = this.activeSession()!;
@@ -240,7 +240,7 @@ export class Sessions implements OnInit, OnDestroy {
       });
   }
 
-  autoLayout() {
+  protected autoLayout() {
     this.workplanEditingService.autoLayout({sessionId: this.activeSession()?.sessionToken!}).subscribe({
       next: layoutedSession => {
         this.sessionService.registerUpdatedSession(layoutedSession);

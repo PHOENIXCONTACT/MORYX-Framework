@@ -28,9 +28,9 @@ export class AboutDialog {
   private shortcutService = inject(ShortcutService);
 
   protected TranslationConstants = TranslationConstants;
-  isMac = navigator.platform.toUpperCase().includes('MAC');
+  protected isMac = navigator.platform.toUpperCase().includes('MAC');
 
-  shortcuts = this.shortcutService.getShortcutInfos();
+  protected shortcuts = this.shortcutService.getShortcutInfos();
 
   private applicationInfo = toSignal(this.commonService.getApplicationInfo()
     .pipe(catchError(() => of(null))));
@@ -43,7 +43,7 @@ export class AboutDialog {
       this.commonService.getServerTime().pipe(catchError(() => of(null))))
     ));
 
-  serverTime = computed(() => {
+  protected serverTime = computed(() => {
     const rawServerTime = this.rawServerTime()?.serverTime;
     if (!rawServerTime) {
       return null;
@@ -54,7 +54,7 @@ export class AboutDialog {
     }).format(new Date(rawServerTime));
   });
 
-  appEntries = computed(() => {
+  protected appEntries = computed(() => {
     const applicationInfo = this.applicationInfo();
     if (!applicationInfo) {
       return [];
@@ -75,7 +75,7 @@ export class AboutDialog {
     ].filter(e => e.value);
   });
 
-  hostEntries = computed(() => {
+  protected hostEntries = computed(() => {
     const hostInfo = this.hostInfo();
     if (!hostInfo) {
       return [];

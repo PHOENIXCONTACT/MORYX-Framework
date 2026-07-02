@@ -46,12 +46,12 @@ export class DialogAddPart {
   private editProductsService = inject(EditProductsService);
   private snackbarService = inject(SnackbarService);
 
-  possibleParts = signal<ProductModel[]>([]);
-  filteredPossibleParts = signal<ProductModel[]>([]);
-  selectedPart = signal<ProductModel | undefined>(undefined);
-  searchText = signal('');
+  protected possibleParts = signal<ProductModel[]>([]);
+  protected filteredPossibleParts = signal<ProductModel[]>([]);
+  protected selectedPart = signal<ProductModel | undefined>(undefined);
+  protected searchText = signal('');
 
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
   constructor() {
     const body = {
@@ -76,15 +76,15 @@ export class DialogAddPart {
     });
   }
 
-  onClose() {
+  protected onClose() {
     this.dialogRef.close();
   }
 
-  onSelectPart(part: ProductModel) {
+  protected onSelectPart(part: ProductModel) {
     this.selectedPart.update(_ => part);
   }
 
-  onSearchTextChanged() {
+  protected onSearchTextChanged() {
     this.filteredPossibleParts.update(_ => this.possibleParts().filter((part) =>
       this.partContainsSearchText(part)
     ));
@@ -99,7 +99,7 @@ export class DialogAddPart {
     return false;
   }
 
-  createProductNameWithIdentity(product: ProductModel | undefined, shortened: boolean = false, maxLength: number = 40): string {
+  protected createProductNameWithIdentity(product: ProductModel | undefined, shortened: boolean = false, maxLength: number = 40): string {
     return this.editProductsService.createProductNameWithIdentity(product, shortened, maxLength);
   }
 }

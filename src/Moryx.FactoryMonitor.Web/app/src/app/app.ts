@@ -43,11 +43,11 @@ export class App implements OnInit {
 
   private editMenuState = toSignal(inject(EditMenuService).activeState$, { initialValue: EditMenuState.Closed });
   private background = toSignal(inject(ChangeBackgroundService).backgroundChanged$);
-  backgroundImage = computed(() => {
+  protected backgroundImage = computed(() => {
     const bg = this.background();
     return bg ? `url(${bg})` : 'none';
   });
-  isEditMode = computed(() => this.editMenuState() === EditMenuState.EditingCells);
+  protected isEditMode = computed(() => this.editMenuState() === EditMenuState.EditingCells);
 
   constructor() {
     this.translateService.addLangs([

@@ -45,14 +45,14 @@ export class App implements OnInit {
   private notificationService = inject(NotificationService);
   private destroyRef = inject(DestroyRef);
 
-  isLoading = signal(true);
-  isEmpty = signal(true);
-  notificationsToolbarImage = signal(
+  protected isLoading = signal(true);
+  protected isEmpty = signal(true);
+  protected notificationsToolbarImage = signal(
     environment.assets + "assets/notifications_toolbar.jpg");
 
 
   title = "Moryx.Notifications.Web";
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
   private stateSubscription: Subscription | undefined;
   private notificationSubscription: Subscription | undefined;
 
@@ -81,7 +81,7 @@ export class App implements OnInit {
       });
   }
 
-  disconnectEvents(): void {
+  protected disconnectEvents(): void {
     this.stateSubscription?.unsubscribe();
     this.notificationSubscription?.unsubscribe();
     this.notificationService.disconnect();

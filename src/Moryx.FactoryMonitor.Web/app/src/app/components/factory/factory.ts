@@ -42,24 +42,24 @@ export class Factory implements OnInit {
   private factoryElement = viewChild.required<ElementRef<HTMLElement>>('FactoryElement');
   container = input.required<ElementRef<HTMLElement>>();
   parameters = input.required<VisualizableItemModel>();
-  cells = linkedSignal(() => this.cellStoreService.getCells(this.parameters()));
+  protected cells = linkedSignal(() => this.cellStoreService.getCells(this.parameters()));
   private editMenuState = toSignal(inject(EditMenuService).activeState$);
 
-  backgroundColor = 'white';
+  protected backgroundColor = 'white';
 
-  isHighlighted = computed(() => this.cells().some(x => x.state === CellState.Running));
+  protected isHighlighted = computed(() => this.cells().some(x => x.state === CellState.Running));
 
-  isEditMode = computed(() => this.editMenuState() === EditMenuState.EditingCells);
+  protected isEditMode = computed(() => this.editMenuState() === EditMenuState.EditingCells);
 
-  firstWorkingCell = computed(() => this.cells().find(c => c.state === CellState.Running));
+  protected firstWorkingCell = computed(() => this.cells().find(c => c.state === CellState.Running));
 
-  borderColor = computed(() => {
+  protected borderColor = computed(() => {
     const workingCell = this.firstWorkingCell();
     if (this.isHighlighted() && workingCell?.orderColor) return workingCell.orderColor;
     return this.backgroundColor;
   });
 
-  iconColor = computed(() => {
+  protected iconColor = computed(() => {
     const workingCell = this.firstWorkingCell();
     if (this.isHighlighted() && workingCell?.orderColor) return workingCell.orderColor;
     return '#585858';
@@ -80,7 +80,7 @@ export class Factory implements OnInit {
     });
   }
 
-  onCellClicked() {
+  protected onCellClicked() {
     if (this.editMenuState() !== EditMenuState.Closed) return;
 
     // ToDo: Move to a RouteResolver to cleanly load and unload data
@@ -91,7 +91,7 @@ export class Factory implements OnInit {
     });
   }
 
-  async onCellMove(event: CdkDragEnd<any>) {
+  protected async onCellMove(event: CdkDragEnd<any>) {
     const params = this.parameters();
 
     // Calculate new position as percetage value relative to the cell-container

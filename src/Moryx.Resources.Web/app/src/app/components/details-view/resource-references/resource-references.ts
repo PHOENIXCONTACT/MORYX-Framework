@@ -42,18 +42,18 @@ export class ResourceReferences {
 
   resource: ResourceModel | undefined;
   references: ResourceReferenceModel[] | null | undefined;
-  selectedTarget: ResourceModel | undefined;
+  protected selectedTarget: ResourceModel | undefined;
 
-  isEditMode = toSignal(this.editResourceService.edit$, { initialValue: false });
-  referenceTypes = signal<ReferenceTypeModel[] | null | undefined>(undefined);
-  selectedReferenceType = signal<ReferenceTypeModel | undefined>(undefined);
-  selectedReference = signal<ResourceReferenceModel | undefined>(undefined);
+  protected isEditMode = toSignal(this.editResourceService.edit$, { initialValue: false });
+  protected referenceTypes = signal<ReferenceTypeModel[] | null | undefined>(undefined);
+  protected selectedReferenceType = signal<ReferenceTypeModel | undefined>(undefined);
+  protected selectedReference = signal<ResourceReferenceModel | undefined>(undefined);
 
-  possibleResources = signal<ResourceModel[]>([]);
+  protected possibleResources = signal<ResourceModel[]>([]);
 
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
-  compareWith = (o1: any, o2: any) => {
+  protected compareWith = (o1: any, o2: any) => {
     return o1?.id === o2?.id;
   };
   private router = inject(Router);
@@ -84,7 +84,7 @@ export class ResourceReferences {
     }
   }
 
-  onReferenceChanged(type: ReferenceTypeModel | undefined) {
+  protected onReferenceChanged(type: ReferenceTypeModel | undefined) {
     this.selectedReferenceType.update(() => type);
     this.selectedReference.update(() => this.references?.find(r => r.name == this.selectedReferenceType()?.name));
 
@@ -96,7 +96,7 @@ export class ResourceReferences {
     }
   }
 
-  addTarget(table: MatTable<ResourceModel>) {
+  protected addTarget(table: MatTable<ResourceModel>) {
     if (!this.selectedTarget || !this.selectedReference()) return;
 
     this.selectedReference()?.targets?.push(this.selectedTarget as ResourceModel);
@@ -105,7 +105,7 @@ export class ResourceReferences {
     table.renderRows();
   }
 
-  setTarget() {
+  protected setTarget() {
     if (!this.selectedTarget || !this.selectedReference()) {
       this.resetTarget();
       return;
@@ -126,7 +126,7 @@ export class ResourceReferences {
     });
   }
 
-  deleteTarget(target: ResourceModel) {
+  protected deleteTarget(target: ResourceModel) {
     if (!this.selectedReference) return;
 
     this.selectedReference.update(ref => {

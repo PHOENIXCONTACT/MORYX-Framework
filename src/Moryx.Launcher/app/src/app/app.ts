@@ -47,7 +47,7 @@ export class App {
   supportedCultures = input.required<CultureModel[]>();
   authBaseAddress = input<string>();
 
-  layout = this.launcherLayoutService.layout;
+  protected layout = this.launcherLayoutService.layout;
 
   constructor() {
     window.shell = new MoryxLauncherShell(this.cultureService, this.searchService);

@@ -26,11 +26,11 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 })
 export class MediaContents implements OnInit {
 
-  medias = signal<DisplayedMediaContent[]>([]);
+  protected medias = signal<DisplayedMediaContent[]>([]);
   displayedContents = input.required<DisplayedMediaContent[]>();
-  selectedContent = signal<DisplayedMediaContent | undefined>(undefined) ;
+  protected selectedContent = signal<DisplayedMediaContent | undefined>(undefined) ;
   private sanitizer = inject(DomSanitizer);
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
   constructor(){
     effect(() => {
@@ -44,23 +44,23 @@ export class MediaContents implements OnInit {
 
   ngOnInit(): void {}
 
-  onSelect(selected: DisplayedMediaContent): void {
+  protected onSelect(selected: DisplayedMediaContent): void {
     this.selectedContent.update(_ => selected);
   }
 
-  onNext() {
+  protected onNext() {
     const currentIndex = this.medias().findIndex(c => c.url === this.selectedContent()?.url);
     const nextIndex = (1 + currentIndex) % this.medias().length;
     this.selectedContent.update(_ => this.medias()[nextIndex]);
   }
 
-  onPrevious() {
+  protected onPrevious() {
     const currentIndex = this.medias().findIndex(c => c.url === this.selectedContent()?.url);
     const previousIndex = (this.medias().length - 1 + currentIndex) % this.medias().length;
     this.selectedContent.update(_ => this.medias()[previousIndex]);
   }
 
-  getSafeUrl(url: string): SafeResourceUrl {
+  protected getSafeUrl(url: string): SafeResourceUrl {
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 }

@@ -29,19 +29,19 @@ export class MultiProgressBar {
   // Customization
   activeLabel = input.required<string>();
 
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
-  successPercent = computed(() => this.calculatePercent(this.successCount()));
-  scrapPercent = computed(() => this.calculatePercent(this.scrapCount()));
-  activePercent = computed(() => this.calculatePercent(this.activeCount()));
-  pendingPercent = computed(() => this.calculatePercent(this.pendingCount()));
+  protected successPercent = computed(() => this.calculatePercent(this.successCount()));
+  protected scrapPercent = computed(() => this.calculatePercent(this.scrapCount()));
+  protected activePercent = computed(() => this.calculatePercent(this.activeCount()));
+  protected pendingPercent = computed(() => this.calculatePercent(this.pendingCount()));
 
-  residualCount = computed(() => {
+  protected residualCount = computed(() => {
     const residual = this.totalAmount() - this.successCount() - this.scrapCount() - this.activeCount() - this.pendingCount();
     return residual < 0 ? 0 : residual;
   });
 
-  residualPercent = computed(() => {
+  protected residualPercent = computed(() => {
     // Hide residual segment when count is 0 (CSS flex-grow handles the gap)
     if (this.residualCount() === 0) {
       return 0;

@@ -24,11 +24,11 @@ import { getIcon } from '@app/utils';
     ]
 })
 export class Notifications implements OnInit, OnDestroy {
-  notificationList = signal<NotificationModel[]>([]);
-  hoveredNotificationIdentifier = signal<string | undefined>(undefined);
-  selectedNotificationIdentifier = signal<string | undefined>(undefined);
+  protected notificationList = signal<NotificationModel[]>([]);
+  protected hoveredNotificationIdentifier = signal<string | undefined>(undefined);
+  protected selectedNotificationIdentifier = signal<string | undefined>(undefined);
 
-  getIcon = getIcon;
+  protected getIcon = getIcon;
 
   private notificationService = inject(NotificationService);
   private notificationSubscription: Subscription|undefined;
@@ -43,7 +43,7 @@ export class Notifications implements OnInit, OnDestroy {
     });
   }
 
-  onUpdateHoveredIdentifier(identifier: string | undefined){
+  protected onUpdateHoveredIdentifier(identifier: string | undefined){
     this.hoveredNotificationIdentifier.update(_ => identifier)
   }
 
@@ -52,7 +52,7 @@ export class Notifications implements OnInit, OnDestroy {
     this.selectionSubscription?.unsubscribe();
   }
 
-  select(notification: NotificationModel): void {
+  protected select(notification: NotificationModel): void {
     this.notificationService.select(notification.identifier);
   }
 }

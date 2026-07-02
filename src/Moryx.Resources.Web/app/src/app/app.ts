@@ -74,19 +74,19 @@ export class App implements OnInit, OnDestroy {
   private formControlService = inject(FormControlService);
 
   private readonly trigger = viewChild.required(MatMenuTrigger);
-  isEditMode = toSignal(this.editResourceService.edit$, { initialValue: false });
-  menuTopLeftPosition = signal<Position>({x: '0px', y: '0px'});
+  protected isEditMode = toSignal(this.editResourceService.edit$, { initialValue: false });
+  protected menuTopLeftPosition = signal<Position>({x: '0px', y: '0px'});
 
-  readonly resourceToolbarImage = environment.assets + 'assets/resource-toolbar.jpg';
+  protected readonly resourceToolbarImage = environment.assets + 'assets/resource-toolbar.jpg';
 
-  resources: ResourceModel[] = [];
+  protected resources: ResourceModel[] = [];
   resourcesFlat?: ResourceModel[];
-  selected = signal<ResourceModel | undefined>(undefined);
+  protected selected = signal<ResourceModel | undefined>(undefined);
   canSave!: boolean;
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
   private subscriptions: Subscription[] = [];
 
-  beforeUnloadHander() {
+  protected beforeUnloadHander() {
     if (this.isEditMode()) this.editResourceService.stashResource();
   }
 
@@ -141,16 +141,16 @@ export class App implements OnInit, OnDestroy {
     this.trigger().openMenu();
   }
 
-  selectResource(id: number) {
+  protected selectResource(id: number) {
     if (this.isEditMode() || this.selected()?.id === id) return;
     this.router.navigate(['details', id]);
   }
 
-  clickContainer(event: MouseEvent) {
+  protected clickContainer(event: MouseEvent) {
     if ((event.target as HTMLElement).tagName === 'MAT-TREE') this.onDeselect();
   }
 
-  openContextMenuByClicking(event: MouseEvent, resourceId: number) {
+  protected openContextMenuByClicking(event: MouseEvent, resourceId: number) {
     // Only handle right-click, not touch long-press
     if ((event as any).pointerType === 'touch') {
       return;
@@ -159,7 +159,7 @@ export class App implements OnInit, OnDestroy {
     this.openContextMenu(resourceId, event.clientX, event.clientY);
   }
 
-  onAdd() {
+  protected onAdd() {
     const parent = this.selected();
     const dialogRef = this.dialog.open(DialogAddResource, {
       height: '560px',
@@ -192,7 +192,7 @@ export class App implements OnInit, OnDestroy {
     });
   }
 
-  onDelete(resourceId: number | undefined) {
+  protected onDelete(resourceId: number | undefined) {
     if (!resourceId) return;
 
     const resource = this.resourcesFlat?.find(r => r.id === resourceId);
@@ -220,31 +220,31 @@ export class App implements OnInit, OnDestroy {
       this.router.navigate(['']);
   }
 
-  onEdit() {
+  protected onEdit() {
     this.editResourceService.onEdit();
   }
 
-  onSelectAndEdit(resourceId: number) {
+  protected onSelectAndEdit(resourceId: number) {
     this.selectResource(resourceId);
     this.onEdit();
   }
 
-  onCancelEditing() {
+  protected onCancelEditing() {
     if(this.editResourceService.editingUnsavedResource)
       this.router.navigate(['']);
     else
       this.editResourceService.onCancel();
   }
 
-  onDeselect() {
+  protected onDeselect() {
     this.router.navigate(['']);
   }
 
-  async onReload() {
+  protected async onReload() {
     await this.cacheResourceService.loadResources();
   }
 
-  async onSave() {
+  protected async onSave() {
     await this.editResourceService.onSave();
   }
 }

@@ -39,20 +39,20 @@ export class Cell implements OnInit, OnDestroy {
   cellElement = viewChild.required<ElementRef<HTMLElement>>('cell');
   container = input.required<ElementRef<HTMLElement>>();
   parameters = input.required<VisualizableItemModel>();
-  isEditMode = computed(() => this.editMenuState() === EditMenuState.EditingCells);
+  protected isEditMode = computed(() => this.editMenuState() === EditMenuState.EditingCells);
   private editMenuState = toSignal(this.editMenuService.activeState$);
-  currentCell = linkedSignal<CellModel>(() => this.cellStoreService.getCell(this.parameters().id!));
+  protected currentCell = linkedSignal<CellModel>(() => this.cellStoreService.getCell(this.parameters().id!));
   private currentOrder = computed(() => this.orderStoreService.getOrder(this.currentCell()));
   private currentOrderIsToggled = linkedSignal(() => !!this.currentOrder()?.isToggled);
-  isHighlighted = computed(() => {
+  protected isHighlighted = computed(() => {
     const cell = this.currentCell();
     return !!cell && cell.state == CellState.Running && !!cell.orderNumber && !!cell.operationNumber &&
         this.currentOrderIsToggled();
   });
-  backgroundColor = computed(() =>
+  protected backgroundColor = computed(() =>
     this.currentCell()?.state === CellState.NotReadyToWork ? '#e46d6d' : 'white'
   );
-  borderColor = computed(() => {
+  protected borderColor = computed(() => {
     const cell = this.currentCell();
     if (this.isHighlighted() && cell.orderColor)
       return cell.orderColor!;
@@ -60,7 +60,7 @@ export class Cell implements OnInit, OnDestroy {
       return '#e46d6d';
     return 'white';
   });
-  iconColor = computed(() => {
+  protected iconColor = computed(() => {
     const cell = this.currentCell();
     if (this.isHighlighted() && cell.orderColor)
       return cell.orderColor!;
@@ -91,13 +91,13 @@ export class Cell implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  onCellClicked() {
+  protected onCellClicked() {
     //Do not show details menu if the edit button is not closed
     if (this.editMenuState() != EditMenuState.Closed) return;
     this.cellStoreService.selectCell(this.currentCell().id!);
   }
 
-  async onCellMove(event: CdkDragEnd<any>) {
+  protected async onCellMove(event: CdkDragEnd<any>) {
     const params = this.parameters();
 
     // Calculate new position as percetage value relative to the cell-container

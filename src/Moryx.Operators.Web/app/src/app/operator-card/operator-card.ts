@@ -23,10 +23,10 @@ export class OperatorCard {
   workstationId = input.required<number>();
   operator = input.required<OperatorViewModel>();
   toggleAssignment = output<OperatorViewModel>();
-  TranslationConstants = TranslationConstants;
-  isAssigned = computed(() => this.operator().data.assignedResources?.some(x => x.id === this.workstationId()) );
+  protected TranslationConstants = TranslationConstants;
+  protected isAssigned = computed(() => this.operator().data.assignedResources?.some(x => x.id === this.workstationId()) );
 
-  toggle(){
+  protected toggle(){
     this.toggleAssignment.emit(this.operator());
   }
 

@@ -52,17 +52,17 @@ import { ProcessHolderGroupModelArrayApiResponse } from "@api/models/process-hol
 })
 export class ProcessHolders implements OnInit {
   private destroyRef = inject(DestroyRef);
-  processHolderGroups = signal<Array<ProcessHolderGroup>>([]);
-  dataSource = signal<Array<ProcessHolderNode>>([]);
-  loading = signal(false);
-  filterText = signal("");
-  visualizationCategory = Category;
+  protected processHolderGroups = signal<Array<ProcessHolderGroup>>([]);
+  protected dataSource = signal<Array<ProcessHolderNode>>([]);
+  protected loading = signal(false);
+  protected filterText = signal("");
+  protected visualizationCategory = Category;
 
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
-  hasChild = (_: number, node: ProcessHolderNode) =>
+  protected hasChild = (_: number, node: ProcessHolderNode) =>
     !!node.children && node.children.length > 0;
-  childrenAccessor = (node: ProcessHolderNode) => node.children ?? [];
+  protected childrenAccessor = (node: ProcessHolderNode) => node.children ?? [];
 
   private _processHolderStreamService = inject(ProcessHolderStreamService);
   private _processService = inject(ProcessEngineService);
@@ -132,7 +132,7 @@ export class ProcessHolders implements OnInit {
     this.dataSource.set(nodes);
   }
 
-  resetGroup(id: number) {
+  protected resetGroup(id: number) {
     this._processService
       .resetGroup({
         id,
@@ -143,7 +143,7 @@ export class ProcessHolders implements OnInit {
       });
   }
 
-  resetPosition(id: number) {
+  protected resetPosition(id: number) {
     this._processService
       .resetPosition({
         id,
@@ -154,12 +154,12 @@ export class ProcessHolders implements OnInit {
       });
   }
 
-  clear() {
+  protected clear() {
     this.filterText.set("");
     this.buildTree(this.processHolderGroups());
   }
 
-  filter(event: Event) {
+  protected filter(event: Event) {
     if (!this.filterText().length) {
       this.buildTree(this.processHolderGroups());
     }
@@ -176,7 +176,7 @@ export class ProcessHolders implements OnInit {
     this.buildTree(filteredResults);
   }
 
-  disconnectEvents() {
+  protected disconnectEvents() {
     this._processHolderStreamService.disconnect();
   }
 }

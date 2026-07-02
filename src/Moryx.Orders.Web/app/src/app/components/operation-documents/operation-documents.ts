@@ -42,22 +42,22 @@ import { environment } from '../../../environments/environment';
   ]
 })
 export class OperationDocuments implements OnInit {
-  isLoading = signal<boolean>(false);
-  operation = signal<OperationModel>(<OperationModel>{});
-  documents = signal<DocumentModel[]>([]);
-  selectedDocument = signal<DocumentModel | undefined>(undefined);
-  isImage = computed(() => {
+  protected isLoading = signal<boolean>(false);
+  protected operation = signal<OperationModel>(<OperationModel>{});
+  protected documents = signal<DocumentModel[]>([]);
+  protected selectedDocument = signal<DocumentModel | undefined>(undefined);
+  protected isImage = computed(() => {
     const document = this.selectedDocument()
     return document
       ? document?.contentType?.includes('image') ?? false
       : false;
   });
-  url = signal<string | undefined>(undefined);
-  path = signal<string | null | ArrayBuffer>('');
+  protected url = signal<string | undefined>(undefined);
+  protected path = signal<string | null | ArrayBuffer>('');
 
-  operationDocumentViewerToolbarImage: string =
+  protected operationDocumentViewerToolbarImage: string =
     environment.assets + 'assets/operation-document-viewer.jpg';
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
   private activatedRoute = inject(ActivatedRoute);
   private orderManagementService = inject(OrderManagementService);
@@ -86,7 +86,7 @@ export class OperationDocuments implements OnInit {
     });
   }
 
-  async onSelect(document: DocumentModel) {
+  protected async onSelect(document: DocumentModel) {
     this.isLoading.update(_ => true);
     this.selectedDocument.update(_ => document);
     this.orderManagementService

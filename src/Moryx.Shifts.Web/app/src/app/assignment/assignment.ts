@@ -42,11 +42,11 @@ export class Assignment {
   calendarState = input.required<CalendarState>();
   calendarDate = input.required<CalendarDate>();
   shift = input.required<ShiftCardModel>();
-  assignments = signal<AssignmentCardModel[]>([]);
+  protected assignments = signal<AssignmentCardModel[]>([]);
 
-  TranslationConstants = TranslationConstants;
-  notQualified = OperatorStatus.NotQualified;
-  qualified = OperatorStatus.Available;
+  protected TranslationConstants = TranslationConstants;
+  protected notQualified = OperatorStatus.NotQualified;
+  protected qualified = OperatorStatus.Available;
 
   constructor() {
     this.appStore.assignments$.subscribe(
@@ -87,13 +87,13 @@ export class Assignment {
       });
   }
 
-  public assignmentIsForGivenDay(
+  protected assignmentIsForGivenDay(
     calendarDate: CalendarDate
   ): boolean {
     return this.assignment().days.some((x) => moment(x.date).diff(moment(calendarDate.date), 'days') === 0);
   }
 
-  showAssigmentDetails() {
+  protected showAssigmentDetails() {
     this.translateService
       .get([
         TranslationConstants.DATE_FORMAT.SHORT_DATE,
@@ -125,7 +125,7 @@ export class Assignment {
     });
   }
 
-  deleteAssignment() {
+  protected deleteAssignment() {
     this.appStore.deleteAssignment(this.assignment().id);
   }
 
