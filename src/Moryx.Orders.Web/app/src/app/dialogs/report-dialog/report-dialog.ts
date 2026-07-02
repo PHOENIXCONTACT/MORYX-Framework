@@ -86,7 +86,7 @@ export class ReportDialog implements OnInit {
   protected async submit(): Promise<void> {
     this.isLoading.update(_=> true);
 
-    let report = <ReportModel>{
+    const report = <ReportModel>{
       successCount: this.success(),
       failureCount: this.scrap(),
       comment: this.comment(),

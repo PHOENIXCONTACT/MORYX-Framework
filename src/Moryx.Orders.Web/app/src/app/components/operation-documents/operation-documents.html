@@ -25,7 +25,7 @@
       <mat-list>
         @for (document of documents(); track document) {
           <mat-list-item
-            [class.moryx-selected]="selectedDocument()?.identifier == document.identifier"
+            [class.moryx-selected]="selectedDocument()?.identifier === document.identifier"
             class="operation-documents-list-item"
             (click)="onSelect(document)">
             <span matListItemTitle>
@@ -50,7 +50,7 @@
     @if (selectedDocument()) {
       <div class="operation-document-details">
         @if (isImage()) {
-          <img src="{{ path() }}" class="operation-image" />
+          <img src="{{ path() }}" class="operation-image" [alt]="TranslationConstants.DOCUMENTS.IMAGE_ALT | translate" />
         }
         @if (url() && !isImage()) {
           <ngx-doc-viewer

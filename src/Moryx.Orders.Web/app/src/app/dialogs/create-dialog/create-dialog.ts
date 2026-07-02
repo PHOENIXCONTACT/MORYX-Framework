@@ -4,7 +4,7 @@
 */
 
 import { CommonModule } from "@angular/common";
-import { Component, computed, effect, ElementRef, inject, linkedSignal, resource, signal, untracked, viewChild, ViewChild, ChangeDetectionStrategy } from "@angular/core";
+import { Component, computed, effect, ElementRef, inject, linkedSignal, resource, signal, untracked, viewChild, ChangeDetectionStrategy } from "@angular/core";
 import { FormControl, FormsModule, ReactiveFormsModule, UntypedFormControl } from "@angular/forms";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { MatButtonModule } from "@angular/material/button";
@@ -207,7 +207,7 @@ export class CreateDialog {
   }
 
   deleteOperation(operation: OperationCreationContextModel): void {
-    let index = this.operations().indexOf(operation);
+    const index = this.operations().indexOf(operation);
     this.operations.update((items) => {
       items.splice(index, 1);
       return items;

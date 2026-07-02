@@ -64,7 +64,8 @@
   "DOCUMENTS": {
     "DOCUMENTS_OF": "Dokumente von",
     "EMPTY_STATE_HEADER": "Kein Dokument ausgewählt",
-    "EMPTY_STATE_TEXT": "Klicken Sie auf eines der Dokumente aus der Liste auf der linken Seite, um es zu öffnen."
+    "EMPTY_STATE_TEXT": "Klicken Sie auf eines der Dokumente aus der Liste auf der linken Seite, um es zu öffnen.",
+    "IMAGE_ALT": "Vorgangsdokument"
   },
   "REPORT_DIALOG": {
     "REPORT_TITLE": "Vorgang rückmelden",

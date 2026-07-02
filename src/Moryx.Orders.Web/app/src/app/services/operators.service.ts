@@ -26,7 +26,7 @@ export class OperatorsService {
       .getAll$Response()
       .toAsync()
       .then(o => (operators = o.body))
-      .catch(e => (this._available = false));
+      .catch(() => (this._available = false));
     return operators;
   }
 

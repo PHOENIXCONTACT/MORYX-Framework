@@ -257,7 +257,7 @@ export class Operations implements OnInit {
     await this.orderManagementService
       .reload({guid: operation.model.identifier!})
       .toAsync()
-      .catch(async (e: HttpErrorResponse) => await this.snackbarService.showError(this.translateService.instant(TranslationConstants.OPERATIONS.REASSIGN_NOT_POSSIBLE)));
+      .catch(async () => await this.snackbarService.showError(this.translateService.instant(TranslationConstants.OPERATIONS.REASSIGN_NOT_POSSIBLE)));
   }
 
   protected showRecipes(operation: OperationViewModel) {

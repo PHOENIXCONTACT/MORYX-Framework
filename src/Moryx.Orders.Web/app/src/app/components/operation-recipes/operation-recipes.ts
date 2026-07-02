@@ -57,7 +57,7 @@ export class OperationRecipes implements OnInit {
   protected isEditMode = signal(false);
   protected selectedWorkplan = signal<WorkplanModel | undefined>(undefined)
   protected isEditBarOpened = computed(
-    () => !!this.selectedRecipe() && this.selectedRecipe()?.id! > 0
+    () => !!this.selectedRecipe() && (this.selectedRecipe()?.id ?? 0) > 0
   );
   protected selectedRecipe = signal<RecipeModel | undefined>(undefined);
   protected hasWorkplans = computed(() => this.possibleWorkplans().length > 0);

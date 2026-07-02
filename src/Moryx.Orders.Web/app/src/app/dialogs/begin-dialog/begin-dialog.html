@@ -11,17 +11,17 @@
   @if (restrictions.length) {
     <div class="restrictions">
       @for (restriction of restrictions; track restriction) {
-        @if (restriction.severity == 'Error') {
+        @if (restriction.severity === 'Error') {
           <mat-card class="error-restriction" appearance="outlined">
             <mat-card-content> {{ restriction.text }}</mat-card-content>
           </mat-card>
         }
-        @if (restriction.severity == 'Warning') {
+        @if (restriction.severity === 'Warning') {
           <mat-card class="warning-restriction" appearance="outlined">
             <mat-card-content> {{ restriction.text }}</mat-card-content>
           </mat-card>
         }
-        @if (restriction.severity == 'Info') {
+        @if (restriction.severity === 'Info') {
           <mat-card class="info-restriction" appearance="outlined">
             <mat-card-content> {{ restriction.text }}</mat-card-content>
           </mat-card>
