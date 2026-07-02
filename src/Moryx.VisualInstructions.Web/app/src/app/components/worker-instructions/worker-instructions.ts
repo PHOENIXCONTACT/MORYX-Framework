@@ -28,6 +28,7 @@ import { MatCardModule } from "@angular/material/card";
 import { MediaContents } from "../media-contents/media-contents";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
 import { MarkdownComponent } from "ngx-markdown";
 import { InstructionStateService } from '@app/services/instruction-state.service';
 
@@ -44,6 +45,7 @@ import { InstructionStateService } from '@app/services/instruction-state.service
     EmptyState,
     TranslatePipe,
     MatButtonModule,
+    MatIconModule,
     MatCardModule,
     MarkdownComponent
   ]

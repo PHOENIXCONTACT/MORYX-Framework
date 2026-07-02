@@ -4,7 +4,7 @@
 */
 
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
-import { ApplicationConfig, enableProdMode, importProvidersFrom } from "@angular/core";
+import { ApplicationConfig, enableProdMode, importProvidersFrom, inject, provideAppInitializer } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatBadgeModule } from "@angular/material/badge";
 import { MatButtonModule } from "@angular/material/button";
@@ -14,7 +14,7 @@ import { MatDialogModule } from "@angular/material/dialog";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatGridListModule } from "@angular/material/grid-list";
-import { MatIconModule } from "@angular/material/icon";
+import { MatIconModule, MatIconRegistry } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
 import { MatListModule } from "@angular/material/list";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
@@ -83,6 +83,11 @@ export const appConfig: ApplicationConfig = {
       fallbackLang: 'en'
     }),
     provideAnimationsAsync(),
+    provideAppInitializer(() => {
+      // Use material-symbols as default icon font
+      const iconRegistry = inject(MatIconRegistry);
+      iconRegistry.setDefaultFontSetClass('material-symbols-outlined');
+    }),
   ],
 };
 

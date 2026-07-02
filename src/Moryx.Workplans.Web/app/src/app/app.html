@@ -1,6 +1,7 @@
 <mat-sidenav-container class="workplans">
   <mat-sidenav disableClose opened role="group" mode="side" class="workplan-steps">
     <div class="workplans-side-bar">
+      <div class="toolbar-wrapper">
       <mat-toolbar
         [ngStyle]="{ 'background-image': 'url(' + workplansToolbarImage + ')' }"
         class="workplans-toolbar">
@@ -36,6 +37,7 @@
           <mat-icon>add</mat-icon>
         </button>
       }
+      </div>
 
       <!-- Render the toolbox only when session is open -->
       @if (router.url.includes('session')) {

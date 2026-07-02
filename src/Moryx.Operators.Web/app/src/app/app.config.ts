@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { ApplicationConfig, importProvidersFrom } from "@angular/core";
+import { ApplicationConfig, importProvidersFrom, inject, provideAppInitializer } from "@angular/core";
 import { environment } from "../environments/environment";
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from "@angular/common/http";
 import { ApiModule } from "@api/api.module";
@@ -17,7 +17,7 @@ import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatDialogModule } from "@angular/material/dialog";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatIconModule } from "@angular/material/icon";
+import { MatIconModule, MatIconRegistry } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
 import { MatListModule } from "@angular/material/list";
 import { MatMenuModule } from "@angular/material/menu";
@@ -79,6 +79,11 @@ export const appConfig: ApplicationConfig = {
       fallbackLang: 'en'
     }),
     provideAnimationsAsync(),
+    provideAppInitializer(() => {
+      // Use material-symbols as default icon font
+      const iconRegistry = inject(MatIconRegistry);
+      iconRegistry.setDefaultFontSetClass('material-symbols-outlined');
+    }),
   ],
 };
 

@@ -20,6 +20,7 @@ import { InstructionService } from './services/instruction.service';
 
 import { WorkerInstructions } from './components/worker-instructions/worker-instructions';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 const COOKIE_NAME = 'moryx-client-identifier';
 
@@ -30,7 +31,8 @@ const COOKIE_NAME = 'moryx-client-identifier';
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     WorkerInstructions,
-    MatButtonModule
+    MatButtonModule,
+    MatIconModule
   ],
   host: {
     '(window:beforeunload)': 'disconnectEvents()'

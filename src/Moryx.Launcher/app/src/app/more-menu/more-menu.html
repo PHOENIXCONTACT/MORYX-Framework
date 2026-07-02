@@ -1,0 +1,124 @@
+<mat-menu #appMenu="matMenu">
+  <button mat-menu-item [matMenuTriggerFor]="languageMenu">
+    <mat-icon>language</mat-icon>
+    <span>{{ TranslationConstants.MORE.LANGUAGE | translate }}</span>
+  </button>
+  <button mat-menu-item [matMenuTriggerFor]="viewsMenu">
+    <mat-icon>visibility</mat-icon>
+    <span>{{ TranslationConstants.MORE.VIEWS | translate }}</span>
+  </button>
+  <button mat-menu-item [matMenuTriggerFor]="themeMenu">
+    <mat-icon>palette</mat-icon>
+    <span>{{ TranslationConstants.MORE.THEME | translate }}</span>
+  </button>
+
+  @if (otherModules().length) {
+    <mat-divider></mat-divider>
+    @for (module of otherModules(); track module.route) {
+      <a mat-menu-item [href]="resolveHref(module)" title="{{ module.description }}">
+        <mat-icon>{{ module.icon }}</mat-icon>
+        <span>{{ module.title }}</span>
+      </a>
+    }
+  }
+
+  <mat-divider></mat-divider>
+  <button mat-menu-item (click)="openSpotlight()">
+    <mat-icon>search</mat-icon>
+    <span>{{ TranslationConstants.MORE.SPOTLIGHT | translate }}</span>
+  </button>
+  <button mat-menu-item (click)="openAbout()">
+    <mat-icon>info_outline</mat-icon>
+    <span>{{ TranslationConstants.MORE.ABOUT | translate }}</span>
+  </button>
+</mat-menu>
+
+<mat-menu #viewsMenu="matMenu">
+  <button mat-menu-item (click)="setLayout(LauncherLayout.Full)">
+    @if (currentLayout() === LauncherLayout.Full) {
+      <mat-icon>check</mat-icon>
+    } @else {
+      <mat-icon></mat-icon>
+    }
+    <span>{{ TranslationConstants.MORE.FULL_MODE  | translate }}</span>
+  </button>
+  <button mat-menu-item (click)="setLayout(LauncherLayout.Operator)">
+    @if (currentLayout() === LauncherLayout.Operator) {
+      <mat-icon>check</mat-icon>
+    } @else {
+      <mat-icon></mat-icon>
+    }
+    <span>{{ TranslationConstants.MORE.OPERATOR_MODE  | translate }}</span>
+  </button>
+  <button mat-menu-item (click)="setLayout(LauncherLayout.Fullscreen)">
+    @if (currentLayout() === LauncherLayout.Fullscreen) {
+      <mat-icon>check</mat-icon>
+    } @else {
+      <mat-icon></mat-icon>
+    }
+    <span>{{ TranslationConstants.MORE.FULLSCREEN_MODE  | translate }}</span>
+  </button>
+  @if (topRegionAvailable() || rightRegionAvailable()) {
+    <mat-divider></mat-divider>
+    @if (topRegionAvailable()) {
+      <button mat-menu-item (click)="toggleTopRegion()">
+        @if (topRegionEnabled()) {
+          <mat-icon>check</mat-icon>
+        } @else {
+          <mat-icon></mat-icon>
+        }
+        <span>{{ TranslationConstants.MORE.TOP_REGION  | translate }}</span>
+      </button>
+    }
+    @if (rightRegionAvailable()) {
+      <button mat-menu-item (click)="toggleRightRegion()">
+        @if (rightRegionEnabled()) {
+          <mat-icon>check</mat-icon>
+        } @else {
+          <mat-icon></mat-icon>
+        }
+        <span>{{ TranslationConstants.MORE.RIGHT_REGION  | translate }}</span>
+      </button>
+    }
+  }
+</mat-menu>
+
+<mat-menu #themeMenu="matMenu">
+  <button mat-menu-item (click)="setTheme('light')">
+    @if (currentTheme() === 'light') {
+      <mat-icon>check</mat-icon>
+    } @else {
+      <mat-icon></mat-icon>
+    }
+    <span>{{ TranslationConstants.MORE.THEME_LIGHT | translate }}</span>
+  </button>
+  <button mat-menu-item (click)="setTheme('dark')">
+    @if (currentTheme() === 'dark') {
+      <mat-icon>check</mat-icon>
+    } @else {
+      <mat-icon></mat-icon>
+    }
+    <span>{{ TranslationConstants.MORE.THEME_DARK | translate }}</span>
+  </button>
+  <button mat-menu-item (click)="setTheme('system')">
+    @if (currentTheme() === 'system') {
+      <mat-icon>check</mat-icon>
+    } @else {
+      <mat-icon></mat-icon>
+    }
+    <span>{{ TranslationConstants.MORE.THEME_SYSTEM | translate }}</span>
+  </button>
+</mat-menu>
+
+<mat-menu #languageMenu="matMenu">
+  @for (culture of supportedCultures(); track culture.name) {
+    <button mat-menu-item (click)="selectCulture(culture)">
+      @if (culture.name === currentCulture()) {
+        <mat-icon>check</mat-icon>
+      } @else {
+        <mat-icon></mat-icon>
+      }
+      <span>{{ culture.displayName }}</span>
+    </button>
+  }
+</mat-menu>

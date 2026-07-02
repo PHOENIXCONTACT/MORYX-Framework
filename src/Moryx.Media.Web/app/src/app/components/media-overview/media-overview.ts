@@ -159,14 +159,9 @@ export class MediaOverview implements OnInit, OnDestroy {
   remove(content: ContentDescriptorModel) {
     if (typeof content.id === 'string') {
       this.mediaService.removeContent(content.id).subscribe(() => {
-        const index = this.contents().findIndex((c) => c.id === content.id);
-        if (index > -1) {
-          this.contents.update(items => {
-            items.splice(index, 1);
-            return items;
-          });
-          this.selectedContent.update(_ => undefined);
-        }
+        this.contents.update(items => items.filter(c => c.id !== content.id));
+        this.filteredContents.update(items => items.filter(c => c.id !== content.id));
+        this.selectedContent.update(_ => undefined);
       });
     }
   }

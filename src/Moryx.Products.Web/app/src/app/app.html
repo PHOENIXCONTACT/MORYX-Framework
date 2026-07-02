@@ -7,6 +7,7 @@
     (click)="clickContainer($event)"
   >
     <div class="overview-tree">
+      <div class="toolbar-wrapper">
       @if (!selected()) {
         <mat-toolbar
           [ngStyle]="{ 'background-image': 'url(' + productsToolbarImage + ')' }"
@@ -25,7 +26,7 @@
                 "
                 matTooltipShowDelay="500"
               >
-                <mat-icon class="mat-icon-outlined">account_tree</mat-icon>
+                <mat-icon>account_tree</mat-icon>
               </button>
             }
             @if (hierarchic()) {
@@ -85,7 +86,7 @@
               [matTooltip]="TranslationConstants.SHARED.CANCEL | translate"
               matTooltipShowDelay="500"
             >
-              <span class="material-symbols-outlined">close</span>
+              <mat-icon>close</mat-icon>
             </button>
             <span class="spacer"></span>
             <!-- Edit Button -->
@@ -111,7 +112,7 @@
                 type="button"
                 (click)="onDuplicate(selected()?.id)"
               >
-                <span class="material-symbols-outlined">content_copy</span>
+                <mat-icon>content_copy</mat-icon>
               </button>
               <!-- Revision Button -->
               <button
@@ -122,7 +123,7 @@
                 type="button"
                 (click)="onRevisions(selected()?.id)"
               >
-                <span class="material-symbols-outlined">history</span>
+                <mat-icon>history</mat-icon>
               </button>
               <button
                 mat-icon-button
@@ -132,7 +133,7 @@
                 type="button"
                 (click)="onDelete(selected()?.id)"
               >
-                <span class="material-symbols-outlined">delete_forever</span>
+                <mat-icon>delete_forever</mat-icon>
               </button>
             }
 
@@ -147,7 +148,7 @@
                 type="submit"
                 (click)="onSave()"
               >
-                <span class="material-symbols-outlined">save</span>
+                <mat-icon>save</mat-icon>
               </button>
               <!-- Cancel Button -->
               <button
@@ -158,7 +159,7 @@
                 [matTooltip]="TranslationConstants.SHARED.CANCEL | translate"
                 matTooltipShowDelay="500"
               >
-                <span class="material-symbols-outlined">cancel</span>
+                <mat-icon>cancel</mat-icon>
               </button>
             }
           </mat-toolbar-row>
@@ -181,6 +182,7 @@
           <mat-icon>add</mat-icon>
         </button>
       }
+      </div>
 
       <mat-drawer-container class="overview-tree-content">
         <mat-drawer

@@ -77,9 +77,9 @@
   @for (restriction of reportContext()?.restrictions; track restriction) {
     <mat-list>
       <mat-list-item>
-        <span matListItemIcon class="material-symbols-outlined">
+        <mat-icon matListItemIcon>
           {{ restriction.severity === 'Error' ? 'error' : restriction.severity === 'Warning' ? 'warning' : 'info' }}
-        </span>
+        </mat-icon>
         <div matListItemTitle>{{ restriction.text }}</div>
       </mat-list-item>
     </mat-list>

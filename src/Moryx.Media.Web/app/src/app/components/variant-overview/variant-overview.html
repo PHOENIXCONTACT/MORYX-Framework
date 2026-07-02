@@ -2,6 +2,7 @@
   <mat-sidenav-container class="content-details">
     <mat-sidenav opened role="navigation" mode="side" position="start" class="media-sidenav">
       <div class="media-side-bar">
+        <div class="toolbar-wrapper">
         <mat-toolbar
           color="primary"
           [ngStyle]="{ 'background-image': 'url(' + mediaImage() + ')' }"
@@ -20,6 +21,16 @@
             <span>{{ TranslationConstants.MEDIA_FILE_VARIANTS | translate }}</span>
           </mat-toolbar-row>
         </mat-toolbar>
+        <button
+          mat-fab
+          class="upload-button"
+          type="button"
+          aria-label="Upload Media"
+          (click)="onUpload()"
+          >
+          <mat-icon>upload</mat-icon>
+        </button>
+        </div>
         <mat-menu #contextMenu="matMenu">
           <ng-template matMenuContent let-variant="variant">
             <button mat-menu-item type="button" (click)="onInfo(variant)">
@@ -45,42 +56,35 @@
           [style.top]="menuTopLeftPosition().y"
           [matMenuTriggerFor]="contextMenu"
         ></div>
-        <mat-selection-list class="variant-list" [multiple]="false" [hideSingleSelectionIndicator]="true">
+        <mat-nav-list class="variant-list">
           @for (variant of content()?.variants; track variant) {
-            <mat-list-option
+            <mat-list-item
               (mousedown)="onMouseDown($event, variant)"
               (mouseup)="onMouseUp($event, variant)"
               (contextmenu)="onContext($event, variant)"
               class="variant-item"
-              [ngClass]="{ selected: selectedVariant()?.name == variant.name }"
+              [activated]="selectedVariant()?.name == variant.name"
               >
-              @if (variant.name) {
-                <img src="{{ previews().get(variant.name) }}" alt="..." />
-              }
-              <div class="variant-item-details">
-                <h3>
-                  <b>{{ variant.name }}</b>
-                </h3>
-                <p [matTooltip]="TranslationConstants.VARIANT_OVERVIEW.CREATION_DATE | translate" >
-                  {{ variant.creationDate | date: 'dd/MM/yyyy H:mm' }}
-                </p>
-                <p [matTooltip]="TranslationConstants.VARIANT_OVERVIEW.SIZE | translate" >
-                  {{ (variant.size ? variant.size/1024 : 0) | number: '1.0-2'}} KB
-                </p>
+              <div class="variant-item-content">
+                @if (variant.name) {
+                  <img src="{{ previews().get(variant.name) }}" alt="..." />
+                }
+                <div class="variant-item-details">
+                  <h3>
+                    <b>{{ variant.name }}</b>
+                  </h3>
+                  <p [matTooltip]="TranslationConstants.VARIANT_OVERVIEW.CREATION_DATE | translate" >
+                    {{ variant.creationDate | date: 'dd/MM/yyyy H:mm' }}
+                  </p>
+                  <p [matTooltip]="TranslationConstants.VARIANT_OVERVIEW.SIZE | translate" >
+                    {{ (variant.size ? variant.size/1024 : 0) | number: '1.0-2'}} KB
+                  </p>
+                </div>
               </div>
-            </mat-list-option>
+            </mat-list-item>
           }
-        </mat-selection-list>
+        </mat-nav-list>
       </div>
-      <button
-        mat-fab
-        class="upload-button"
-        type="button"
-        aria-label="Upload Media"
-        (click)="onUpload()"
-        >
-        <mat-icon>upload</mat-icon>
-      </button>
     </mat-sidenav>
     <mat-sidenav-content class="variant-container">
       @switch (bigPictureLoadingState()) {

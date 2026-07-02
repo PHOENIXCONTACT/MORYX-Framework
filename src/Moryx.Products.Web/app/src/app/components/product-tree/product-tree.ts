@@ -6,7 +6,6 @@
 import { Component, inject, viewChild, input, output, effect, ChangeDetectionStrategy } from '@angular/core';
 import { MatTree, MatTreeModule } from '@angular/material/tree';
 import { MatIconModule } from '@angular/material/icon';
-import { CommonModule } from '@angular/common';
 import { ProductModel } from '@api/models';
 import { EditProductsService } from '@app/services/edit-products.service';
 import { SessionService } from '@app/services/session.service';
@@ -18,7 +17,7 @@ import { MatIconButton } from '@angular/material/button';
   templateUrl: './product-tree.html',
   styleUrls: ['./product-tree.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [CommonModule, MatTreeModule, MatIconModule, MatIconButton]
+  imports: [MatTreeModule, MatIconModule, MatIconButton]
 })
 export class ProductTree {
   private sessionService = inject(SessionService);
