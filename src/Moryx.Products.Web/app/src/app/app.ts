@@ -97,7 +97,7 @@ export class App implements OnInit, OnDestroy {
   protected revisionOptions = signal<string[]>(Object.keys(RevisionFilter));
   protected selectorOptions = signal<string[]>(Object.keys(Selector));
   importers = toSignal(this.cacheService.importers$, { initialValue: [] });
-  protected menuTopLeftPosition = signal<{ x: String, y: String }>({x: '0', y: '0'});
+  protected menuTopLeftPosition = signal<{ x: string, y: string }>({x: '0', y: '0'});
   protected readonly trigger = viewChild.required(MatMenuTrigger);
 
   protected TranslationConstants = TranslationConstants;
@@ -172,7 +172,7 @@ export class App implements OnInit, OnDestroy {
       });
     } else {
       const searchSuggestions = [] as SearchSuggestion[];
-      for (let product of products) {
+      for (const product of products) {
         //TODO: change this in MORYX 12
         const url = "Products/details/" + product.id; // <= BAD, hard coding a parent url 'Products' is no reliable.
         if (!product.id) continue;
@@ -199,7 +199,7 @@ export class App implements OnInit, OnDestroy {
       dataSource = this.SortTypesToDefinitions();
     } else {
       const products = this.SortTypesToDefinitions();
-      for (let p of products) {
+      for (const p of products) {
         if (p.baseType && p.baseType !== "ProductType") {
           //check for parent in configured types
           let parent = products.find((e) => e.typeName === p.baseType);
@@ -253,12 +253,12 @@ export class App implements OnInit, OnDestroy {
 
   private SortTypesToDefinitions(): ProductNode[] {
     if (this.productDefinitions().length === 0) return [];
-    let products = [] as ProductNode[];
-    for (let definition of this.productDefinitions()) {
+    const products = [] as ProductNode[];
+    for (const definition of this.productDefinitions()) {
       const d = this.ConvertTypeDefinitionToNode(definition);
       const types = this.products().filter((p) => p.type === definition.name);
       if (types) {
-        for (let type of types) {
+        for (const type of types) {
           const t = this.ConvertTypeToNode(type);
           d.children?.push(t);
         }

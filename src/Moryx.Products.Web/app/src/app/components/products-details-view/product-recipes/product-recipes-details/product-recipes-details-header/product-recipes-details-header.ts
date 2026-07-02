@@ -16,6 +16,7 @@ import { MatSelectModule } from "@angular/material/select";
 import { EditProductsService } from "@app/services/edit-products.service";
 import { toSignal } from "@angular/core/rxjs-interop";
 import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
+import { RestrictKeywordValidatorDirective } from "./restrict-keyword-validator.directive";
 
 @Component({
   selector: "app-product-recipes-details-header",
@@ -30,7 +31,8 @@ import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
     ReactiveFormsModule,
     MatInput,
     MatSelectModule,
-    EmptyState
+    EmptyState,
+    RestrictKeywordValidatorDirective
   ]
 })
 export class ProductRecipesDetailsHeader {

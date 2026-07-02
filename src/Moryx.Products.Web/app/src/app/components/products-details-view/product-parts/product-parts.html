@@ -22,7 +22,7 @@
                     [routerLink]="getPartRoute(partElement)"
                     [queryParamsHandling]="'preserve'"
                     class="item"
-                    [class.moryx-selected]="currentPart?.id == partElement.id">
+                    [class.moryx-selected]="currentPart?.id === partElement.id">
                     <span matListItemTitle>{{ partElement.product?.name }}</span>
                     <span matListItemLine>{{ partElement.product?.identifier }}-{{ partElement.product?.revision }}</span>
                     <button

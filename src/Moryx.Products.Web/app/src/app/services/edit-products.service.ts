@@ -122,7 +122,7 @@ export class EditProductsService {
 
     // Find the maximum id of the part connectors of this product
     if (currentProduct?.parts?.length) {
-      let allPartIds = currentProduct.parts
+      const allPartIds = currentProduct.parts
         .flatMap((p) => p.parts)
         .map((e) => e?.id)
         .filter(filterEmpties);
@@ -142,7 +142,7 @@ export class EditProductsService {
     if (productModel.properties)
       PrototypeToEntryConverter.convertToEntry(productModel.properties);
 
-    for (let recipe of productModel.recipes ?? []) {
+    for (const recipe of productModel.recipes ?? []) {
       // Recipes with the id 0 will be created and saved as new recipes in the backend
       if (!recipe.id || recipe.id > this.maximumAlreadySavedRecipeId) {
         recipe.id = 0;
@@ -152,8 +152,8 @@ export class EditProductsService {
         PrototypeToEntryConverter.convertToEntry(recipe.properties);
     }
 
-    for (let partConnector of productModel?.parts ?? []) {
-      for (let part of partConnector.parts ?? []) {
+    for (const partConnector of productModel?.parts ?? []) {
+      for (const part of partConnector.parts ?? []) {
         if (!part.id || part.id > this.maximumAlreadySavedPartId) {
           part.id = 0;
         }

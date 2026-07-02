@@ -78,7 +78,7 @@ export class ProductParts {
     if (!product) return;
 
     // Create new Part
-    let newPart = <PartModel>{};
+    const newPart = <PartModel>{};
     newPart.product = product;
     if (connector?.propertyTemplates) {
       newPart.properties = structuredClone(connector.propertyTemplates!);

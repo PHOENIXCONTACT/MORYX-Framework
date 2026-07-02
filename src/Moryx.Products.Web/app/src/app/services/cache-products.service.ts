@@ -131,7 +131,7 @@ export class CacheProductsService {
       next: (products) => {
         if (products !== null) this.productsShownInTheTree.next(products);
       },
-      error: async (err) => await this.showErrorSnackbar(),
+      error: async () => await this.showErrorSnackbar(),
     });
   }
 
