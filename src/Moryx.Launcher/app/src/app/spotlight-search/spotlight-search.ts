@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, DestroyRef, effect, ElementRef, inject, signal, ViewChild } from '@angular/core';
+import { Component, DestroyRef, effect, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -28,8 +28,8 @@ export class SpotlightSearch {
   private shortcutService = inject(ShortcutService);
   private destroyRef = inject(DestroyRef);
 
-  @ViewChild('searchInput') protected readonly searchInput!: ElementRef<HTMLInputElement>;
-  @ViewChild('resultsList') protected readonly resultsList!: ElementRef<HTMLUListElement>;
+  protected readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
+  protected readonly resultsList = viewChild<ElementRef<HTMLUListElement>>('resultsList');
 
   protected TranslationConstants = TranslationConstants;
 
@@ -57,7 +57,7 @@ export class SpotlightSearch {
       if (this.isOpen()) {
         this.query.set('');
         this.activeIndex.set(0);
-        setTimeout(() => this.searchInput?.nativeElement.focus(), 0);
+        setTimeout(() => this.searchInput()?.nativeElement.focus(), 0);
       }
     });
   }
@@ -112,7 +112,7 @@ export class SpotlightSearch {
   }
 
   private scrollActiveIntoView(): void {
-    const list = this.resultsList?.nativeElement;
+    const list = this.resultsList()?.nativeElement;
     if (!list) return;
     const item = list.children[this.activeIndex()] as HTMLElement | undefined;
     item?.scrollIntoView({block: 'nearest'});

@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, inject, viewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenu, MatMenuModule } from '@angular/material/menu';
@@ -48,7 +48,7 @@ export class MoreMenu {
   protected supportedCultures = this.cultureService.supportedCultures;
   protected currentCulture = this.cultureService.currentCulture;
 
-  @ViewChild('appMenu') readonly appMenu!: MatMenu;
+  readonly appMenu = viewChild.required<MatMenu>('appMenu');
   protected readonly LauncherLayout = LauncherLayout;
 
   protected setLayout(layout: LauncherLayout) {

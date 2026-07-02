@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, ElementRef, inject, signal, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
@@ -21,7 +21,7 @@ import { TranslationConstants } from '../translation-constants';
 export class ToolbarSearch {
   private searchService = inject(SearchService);
 
-  @ViewChild('searchInput') protected readonly searchInput!: ElementRef<HTMLInputElement>;
+  protected readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
 
   protected TranslationConstants = TranslationConstants;
 
@@ -34,13 +34,13 @@ export class ToolbarSearch {
 
   protected expand(): void {
     this.expanded.set(true);
-    setTimeout(() => this.searchInput?.nativeElement.focus(), 0);
+    setTimeout(() => this.searchInput()?.nativeElement.focus(), 0);
   }
 
   protected collapse(): void {
     this.expanded.set(false);
     this.query.set('');
-    this.searchInput.nativeElement.value = '';
+    this.searchInput()!.nativeElement.value = '';
     this.searchService.search('', false);
     this.searchService.clearSuggestions();
   }
