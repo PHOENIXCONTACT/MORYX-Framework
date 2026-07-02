@@ -17,7 +17,7 @@ export function getHierarchieLineFor(
 ): number[] {
   if (!targetId || !resourceTree) return [];
   let line: number[] = [];
-  for (let r of resourceTree) {
+  for (const r of resourceTree) {
     const possibleLine = exploreHierarchieLineFor(r, targetId);
     if (!possibleLine) continue;
     line = possibleLine;
@@ -45,7 +45,7 @@ export function exploreHierarchieLineFor(
       source.references?.find((ref) => ref.name == "Children")?.targets ?? [];
     if (!childReferences.length) return undefined;
 
-    for (let c of childReferences) {
+    for (const c of childReferences) {
       const path = exploreHierarchieLineFor(c, targetId);
       if (!path) continue;
       path.push(source.id!);

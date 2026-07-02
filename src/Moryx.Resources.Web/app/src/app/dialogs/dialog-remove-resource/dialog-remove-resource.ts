@@ -30,7 +30,7 @@ export class DialogRemoveResource {
   protected TranslationConstants = TranslationConstants;
 
   constructor() {
-    this.resourceToBeRemoved.update(_ => this.data);
+    this.resourceToBeRemoved.set(this.data);
   }
 
   protected onClose() {

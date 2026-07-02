@@ -58,7 +58,7 @@ export class DetailsView {
 
   private onRoutingEvent(event: Event) {
     if (event instanceof NavigationEnd || event instanceof NavigationCancel) {
-      let url = this.router.url;
+      const url = this.router.url;
       const regexProperty: RegExp = /(details\/\d*\/properties)/;
       const regexReferences: RegExp = /(details\/\d*\/references)/;
       const regexMethods: RegExp = /(details\/\d*\/methods)/;

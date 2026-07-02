@@ -42,7 +42,7 @@ export class SearchService {
   }
   
   private onSearch(result: SearchRequest) {
-    let possibleResults = this.getMatchingResources(result.term);
+    const possibleResults = this.getMatchingResources(result.term);
     if (!possibleResults.length) {
       this.searchBarService.provideSuggestions([]);
     }
@@ -102,7 +102,7 @@ export class SearchService {
 
   private updateSuggestions(possibleResults: ResourceModel[]) {
     const searchSuggestions = [] as SearchSuggestion[];
-    for (let resource of possibleResults) {
+    for (const resource of possibleResults) {
       const urlBase = 'Resources/details/';
       const url = urlBase + resource.id;
       searchSuggestions.push({ text: this.createSuggestionText(resource), url: url });
