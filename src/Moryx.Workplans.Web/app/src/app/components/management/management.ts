@@ -166,7 +166,7 @@ export class Management implements OnInit, OnDestroy {
           <ConfirmDialogButton>{
             text: 'Ok', // ToDo: internationalize
             action: () => {
-              this.workplanService.deleteWorkplan({id: workplan?.id!}).subscribe({
+              this.workplanService.deleteWorkplan({id: workplan?.id ?? 0}).subscribe({
                 next: () => {
                   this.completeTheDeletion(session, workplan, translations);
                   confirmDialog.close();

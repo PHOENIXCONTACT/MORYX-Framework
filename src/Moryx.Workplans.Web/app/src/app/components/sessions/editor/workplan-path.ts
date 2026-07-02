@@ -40,31 +40,31 @@ export class NodeConnectionPath {
         const factor =  (output.index ?? 1) + 1;
         const pathCurveWidth = 5*stepSize;
 
-        let startId = 'out_' + node.id + '-' + output.index;
-        let endId = 'in_' + connection.nodeId + '-' + connection.index;
-        let path = new NodeConnectionPath();
+        const startId = 'out_' + node.id + '-' + output.index;
+        const endId = 'in_' + connection.nodeId + '-' + connection.index;
+        const path = new NodeConnectionPath();
         path.startNode = node;
         path.startInput = output;
 
         // Get start (output-span) and end (input-span)
-        let start = document.getElementById(startId);
-        let end = document.getElementById(endId);
+        const start = document.getElementById(startId);
+        const end = document.getElementById(endId);
 
         if(!start ||  !start.parentElement ||  !start.parentElement.parentElement ||
            !end || !end.parentElement || !end.parentElement.parentElement)
             return path;
 
         // Calculate absolute start position from DOM element dimensions
-        let startPosition = this.calculatePosition(start, scale);
+        const startPosition = this.calculatePosition(start, scale);
 
         // Calculate absolute end position from DOM element dimensions
-        let endPosition = this.calculatePosition(end, scale);
+        const endPosition = this.calculatePosition(end, scale);
 
         // Determine intermediate steps
         if(startPosition.top < endPosition.top)
         {
-            let firstStop = new Position(startPosition.left, startPosition.top + stepSize*factor);
-            let secondStop = new Position(endPosition.left, firstStop.top);
+            const firstStop = new Position(startPosition.left, startPosition.top + stepSize*factor);
+            const secondStop = new Position(endPosition.left, firstStop.top);
 
             // Construct path from start to finish
             path.segments.push(new Segment(startPosition, firstStop));
@@ -73,10 +73,10 @@ export class NodeConnectionPath {
         }
         else
         {
-            let firstStop = new Position(startPosition.left, startPosition.top + stepSize*factor);
-            let secondStop = new Position(endPosition.left + pathCurveWidth, firstStop.top);
-            let thirdStop = new Position(secondStop.left, endPosition.top - stepSize);
-            let fourthStop = new Position(endPosition.left, thirdStop.top);
+            const firstStop = new Position(startPosition.left, startPosition.top + stepSize*factor);
+            const secondStop = new Position(endPosition.left + pathCurveWidth, firstStop.top);
+            const thirdStop = new Position(secondStop.left, endPosition.top - stepSize);
+            const fourthStop = new Position(endPosition.left, thirdStop.top);
 
             // Construct path from start to finish
             path.segments.push(new Segment(startPosition, firstStop));
@@ -93,13 +93,13 @@ export class NodeConnectionPath {
         if(!connector.parentElement || !connector.parentElement.parentElement)
             return new Position(0,0);
 
-        let connectorRect = connector.getBoundingClientRect()
-        let nodeRect = connector.parentElement.parentElement.getBoundingClientRect();
-        let nodePosition = window.getComputedStyle(connector.parentElement.parentElement)
+        const connectorRect = connector.getBoundingClientRect()
+        const nodeRect = connector.parentElement.parentElement.getBoundingClientRect();
+        const nodePosition = window.getComputedStyle(connector.parentElement.parentElement)
 
-        let leftOffset = (connectorRect.left - nodeRect.left) + connectorRect.width/2;
-        let topOffset = (connectorRect.top - nodeRect.top) + connectorRect.height/2;
-        let position = new Position(parseInt(nodePosition.left) + leftOffset/scale, parseInt(nodePosition.top) + topOffset/scale);
+        const leftOffset = (connectorRect.left - nodeRect.left) + connectorRect.width/2;
+        const topOffset = (connectorRect.top - nodeRect.top) + connectorRect.height/2;
+        const position = new Position(parseInt(nodePosition.left) + leftOffset/scale, parseInt(nodePosition.top) + topOffset/scale);
         return position;
     }
 }

@@ -6,7 +6,7 @@
 import { Directive } from '@angular/core';
 
 @Directive({
-  selector: '[click-stop-propagation]',
+  selector: '[appClickStopPropagation]',
   host: {
     '(click)': 'onClick($event)'
   }

@@ -31,7 +31,7 @@ export class StepCreator implements OnInit, OnDestroy {
   //TODO: remove this and change stepRecipe to type of model.required<..>() in future refactoring of the UI
   readonly created = output<WorkplanStepRecipe>();
   protected stepRecipe = signal<WorkplanStepRecipe | undefined>(undefined);
-  recipeType = signal<String | undefined>(undefined);
+  recipeType = signal<string | undefined>(undefined);
 
   private activatedRoute = inject(ActivatedRoute);
   sub?: Subscription;

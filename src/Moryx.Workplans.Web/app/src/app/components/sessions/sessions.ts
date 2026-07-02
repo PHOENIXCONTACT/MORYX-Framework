@@ -155,7 +155,7 @@ export class Sessions implements OnInit, OnDestroy {
       });
     } else {
       const searchSuggestions = [] as SearchSuggestion[];
-      for (let session of sessions) {
+      for (const session of sessions) {
         if (!session.sessionToken || !session.name) continue;
 
         const url = urlWorkplans + urlSession + session.sessionToken;
@@ -241,7 +241,7 @@ export class Sessions implements OnInit, OnDestroy {
   }
 
   protected autoLayout() {
-    this.workplanEditingService.autoLayout({sessionId: this.activeSession()?.sessionToken!}).subscribe({
+    this.workplanEditingService.autoLayout({sessionId: this.activeSession()?.sessionToken ?? ''}).subscribe({
       next: layoutedSession => {
         this.sessionService.registerUpdatedSession(layoutedSession);
         this.editorStateService.setWorkplan(layoutedSession);

@@ -96,7 +96,7 @@ export class NodeProperties implements OnDestroy {
   protected onNavigateClick() {
     if (!this.node()?.subworkplanId) return;
     this.sessionsService
-      .getSessionForWorkplan(this.node()?.subworkplanId!)
+      .getSessionForWorkplan(this.node()?.subworkplanId ?? 0)
       .toAsync()
       .then(session => this.sessionsService.activateSession(session.sessionToken!))
       .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err));

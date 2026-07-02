@@ -271,7 +271,7 @@ export class Editor implements OnInit {
       x: this.dragPosition().x * this.canvasScale,
       y: this.dragPosition().y * this.canvasScale
     };
-    let mouseEvent = event.event as MouseEvent;
+    const mouseEvent = event.event as MouseEvent;
     this.cursorOffset.x = mouseEvent.clientX - event.source.element.nativeElement.getBoundingClientRect().left;
     this.cursorOffset.y = mouseEvent.clientY - event.source.element.nativeElement.getBoundingClientRect().top;
     event.source._dragRef.setFreeDragPosition(position);
@@ -357,7 +357,7 @@ export class Editor implements OnInit {
 
   //--- Connect output to input
   protected connected(event: CdkDragDrop<WorkplanNodeModel[]>, node: WorkplanNodeModel, input: NodeConnectionPoint) {
-    let sourceNode = <WorkplanNodeModel>event.item.data[0];
+    const sourceNode = <WorkplanNodeModel>event.item.data[0];
     const draggedConnector = <NodeConnectionPoint>event.item.data[1];
     this.workplanEditingService
       .connectStep({
@@ -386,9 +386,9 @@ export class Editor implements OnInit {
     const result = nodes.flatMap(node => {
       return node.outputs!.flatMap(output => {
         return output.connections!.map(connection => {
-          let path = NodeConnectionPath.findPath(node, output, connection, this.canvasScale, this.stepSize);
+          const path = NodeConnectionPath.findPath(node, output, connection, this.canvasScale, this.stepSize);
           path.endNode = nodes.find(n => n.id === connection.nodeId)!;
-          path.endInput = path.endNode.inputs?.find(i => i.index === connection.index)!;
+          path.endInput = path.endNode.inputs!.find(i => i.index === connection.index)!;
           return path;
         });
       });

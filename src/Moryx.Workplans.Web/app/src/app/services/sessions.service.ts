@@ -48,7 +48,7 @@ export class SessionsService {
 
   getSessionForWorkplan(workplanId: number, duplicate: boolean = false): Observable<WorkplanSessionModel> {
     let cachedModel = undefined;
-    for (let cs of this.cachedSessionModels.values()) if (cs.workplanId === workplanId) cachedModel = cs;
+    for (const cs of this.cachedSessionModels.values()) if (cs.workplanId === workplanId) cachedModel = cs;
     if (cachedModel) return from([cachedModel]);
 
     return this.workplanEditing.editWorkplan({ body: { workplanId: workplanId, duplicate: duplicate } }).pipe(

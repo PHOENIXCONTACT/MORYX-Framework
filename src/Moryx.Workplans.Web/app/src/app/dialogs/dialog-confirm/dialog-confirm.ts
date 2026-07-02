@@ -48,7 +48,7 @@ export interface ConfirmDialogData {
 
 export interface ConfirmDialogButton {
   text: string;
-  action: Function;
+  action: () => void;
   focused?: boolean;
 }
 
