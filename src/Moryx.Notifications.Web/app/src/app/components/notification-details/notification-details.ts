@@ -10,7 +10,7 @@ import { NotificationService } from '@app/services/notification.service';
 import { environment } from '../../../environments/environment';
 import { NotificationModel } from '@api/models/notification-model';
 import { Subscription } from 'rxjs';
-import { CommonModule } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { getIcon } from '@app/utils';
@@ -23,7 +23,7 @@ import { MatButtonModule } from '@angular/material/button';
   templateUrl: './notification-details.html',
   styleUrls: ['./notification-details.scss'],
   imports: [
-    CommonModule,
+    DatePipe,
     MatCardModule,
     MatIconModule,
     TranslatePipe,

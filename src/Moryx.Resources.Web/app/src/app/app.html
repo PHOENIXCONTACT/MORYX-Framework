@@ -7,7 +7,7 @@
       @if (!active) {
         <mat-toolbar
           color="primary"
-          [ngStyle]="{ 'background-image': 'url(' + resourceToolbarImage + ')' }"
+          [style.background-image]="'url(' + resourceToolbarImage + ')'"
           >
           <mat-toolbar-row>
             <button mat-icon-button aria-label="Disabled Menu" disabled>
@@ -34,7 +34,7 @@
         </mat-toolbar>
       } @else {
         <mat-toolbar
-          [ngStyle]="{ 'background-image': 'url(' + resourceToolbarImage + ')' }"
+          [style.background-image]="'url(' + resourceToolbarImage + ')'"
           class="resources-toolbar"
           >
           <mat-toolbar-row>

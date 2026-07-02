@@ -11,7 +11,6 @@ import { TranslationConstants } from '@app/extensions/translation-constants.exte
 import { PartConnector, ProductModel, ProductQuery, RevisionFilter, Selector } from '../../api/models';
 import { ProductManagementService } from '../../api/services';
 import { EditProductsService } from '@app/services/edit-products.service';
-import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatListModule } from '@angular/material/list';
@@ -26,7 +25,6 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrls: ['./dialog-add-part.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
-    CommonModule,
     TranslatePipe,
     FormsModule,
     ReactiveFormsModule,

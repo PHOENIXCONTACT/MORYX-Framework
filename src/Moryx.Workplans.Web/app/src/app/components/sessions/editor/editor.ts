@@ -23,7 +23,6 @@ import { EditorStateService } from '@app/services/editor-state.service';
 import { SessionsService } from '@app/services/sessions.service';
 import { Position } from './position';
 import { NodeConnectionPath, Segment } from './workplan-path';
-import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatCardModule } from '@angular/material/card';
@@ -46,7 +45,6 @@ enum EditQueries {
   styleUrls: ['./editor.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
-    CommonModule,
     MatSidenavModule,
     MatIconModule,
     MatTabsModule,

@@ -5,7 +5,6 @@
 
 import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { IconSize } from '../models/types';
-import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
@@ -14,9 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './work-hours-icon.scss',
   changeDetection: ChangeDetectionStrategy.Eager,
   imports : [
-    CommonModule,
     MatIconModule,
-
   ]
 })
 export class WorkHoursIcon {

@@ -15,7 +15,7 @@ import { environment } from "../../../environments/environment";
 import "../../extensions/observable.extensions";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
 import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
-import { CommonModule } from "@angular/common";
+
 import { MatExpansionModule } from "@angular/material/expansion";
 import { MatIconModule } from "@angular/material/icon";
 import { TranslatePipe } from "@ngx-translate/core";
@@ -32,7 +32,6 @@ import { ProcessEngineStreamService } from "@app/services/process-engine-stream.
   templateUrl: "./jobs.html",
   styleUrls: ["./jobs.scss"],
   imports: [
-    CommonModule,
     MatExpansionModule,
     MatIconModule,
     TranslatePipe,

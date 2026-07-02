@@ -1,9 +1,7 @@
 @if(assignment().notes || assignment().priority >= 1 ){
 <div
   class="px-2 py-1 group"
-  [ngClass]="{
-    'invisible': !assignmentIsForGivenDay(calendarDate())
-  }"
+  [class.invisible]="!assignmentIsForGivenDay(calendarDate())"
 >
   <div
     class="relative flex flex-col w-full p-2 bg-red rounded-sm border border-gray-300 group-hover:border group-hover:border-primary-700"
@@ -48,9 +46,7 @@
 <!-- ROW -->
 <div
   class="px-2 py-1 group"
-  [ngClass]="{
-    'invisible': !assignmentIsForGivenDay(calendarDate())
-  }"
+  [class.invisible]="!assignmentIsForGivenDay(calendarDate())"
   
 >
   <div

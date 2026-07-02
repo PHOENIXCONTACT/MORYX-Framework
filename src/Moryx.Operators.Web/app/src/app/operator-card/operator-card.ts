@@ -6,7 +6,6 @@
 import { Component, computed, input, output, ChangeDetectionStrategy } from '@angular/core';
 import { OperatorViewModel } from '../models/operator-view-model';
 import { TranslationConstants } from '../extensions/translation-constants.extensions';
-import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
@@ -15,7 +14,6 @@ import { MatIconModule } from '@angular/material/icon';
     styleUrl: './operator-card.scss',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-      CommonModule,
       MatIconModule
     ]
 })

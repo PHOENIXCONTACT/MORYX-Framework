@@ -4,7 +4,7 @@
 */
 
 import { Component, inject, OnInit, signal, viewChild, ChangeDetectionStrategy, DestroyRef } from "@angular/core";
-import { CommonModule } from "@angular/common";
+
 import { MatTree, MatTreeModule } from "@angular/material/tree";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
@@ -29,7 +29,6 @@ import { ProcessHolderGroupModelArrayApiResponse } from "@api/models/process-hol
 @Component({
   selector: "app-process-holders",
   imports: [
-    CommonModule,
     MatTreeModule,
     MatIconModule,
     MatButtonModule,

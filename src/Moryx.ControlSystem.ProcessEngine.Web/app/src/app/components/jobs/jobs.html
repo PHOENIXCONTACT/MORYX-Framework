@@ -2,13 +2,11 @@
   <div class="overall-container">
     @if (jobCollection().length) {
       <mat-accordion
-        [ngStyle]="{
-          'background-image':
+        [style.background-image]="
             'url(' +
             environment.assets +
             'assets/moryx_transparent_colored.png' +
-            ')'
-        }"
+            ')'"
         class="process-list">
         @for (job of jobCollection(); track job.model.id) {
           <mat-expansion-panel class="job">
@@ -70,17 +68,17 @@
                   </div>
                   <div class="job-progress">
                     <mat-progress-bar mode="determinate" value="100" class="progress-accent-color"
-                                      [ngStyle]="{ width: job.productionSuccessPercent + '%' }">
+                                      [style.width]="job.productionSuccessPercent + '%'">
                     </mat-progress-bar>
                     <mat-progress-bar
                                       mode="determinate" value="100" class="progress-warn-color"
-                                      [ngStyle]="{ width: job.productionScrapPercent + '%' }">
+                                      [style.width]="job.productionScrapPercent + '%'">
                     </mat-progress-bar>
                     <mat-progress-bar mode="determinate" value="100"
-                                      [ngStyle]="{ width: job.productionRunningPercent + '%' }">
+                                      [style.width]="job.productionRunningPercent + '%'">
                     </mat-progress-bar>
                     <mat-progress-bar mode="determinate" value="0"
-                                      [ngStyle]="{ width: job.productionResidualPercent + '%' }">
+                                      [style.width]="job.productionResidualPercent + '%'">
                     </mat-progress-bar>
                   </div>
                 </div>
@@ -101,13 +99,13 @@
                   </div>
                   <div class="job-progress">
                     <mat-progress-bar mode="determinate" value="100" class="progress-accent-color"
-                                      [ngStyle]="{ width: job.setupCompletedPercent + '%' }">
+                                      [style.width]="job.setupCompletedPercent + '%'">
                     </mat-progress-bar>
                     <mat-progress-bar mode="determinate" value="100"
-                                      [ngStyle]="{ width: job.setupRunningPercent + '%' }">
+                                      [style.width]="job.setupRunningPercent + '%'">
                     </mat-progress-bar>
                     <mat-progress-bar mode="determinate" value="0"
-                                      [ngStyle]="{ width: job.setupResidualPercent + '%' }">
+                                      [style.width]="job.setupResidualPercent + '%'">
                     </mat-progress-bar>
                   </div>
                 </div>

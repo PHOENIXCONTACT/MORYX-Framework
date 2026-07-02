@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { CommonModule } from "@angular/common";
+import { DatePipe } from "@angular/common";
 import { HttpErrorResponse } from "@angular/common/http";
 import {
   ChangeDetectorRef,
@@ -33,7 +33,7 @@ import { ProcessEngineStreamService } from "@app/services/process-engine-stream.
   selector: "app-processes",
   templateUrl: "./processes.html",
   imports: [
-    CommonModule,
+    DatePipe,
     TranslatePipe,
     MatListModule,
     NavigableEntryEditor,

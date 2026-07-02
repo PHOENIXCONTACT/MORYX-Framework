@@ -17,7 +17,6 @@ import { RecipeClassificationModel, RecipeModel, WorkplanModel, OperationModel }
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatToolbarModule } from "@angular/material/toolbar";
-import { CommonModule } from "@angular/common";
 import { MatListModule } from "@angular/material/list";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
@@ -36,7 +35,6 @@ import { MatSelectModule } from '@angular/material/select';
     MatProgressBarModule,
     MatSidenavModule,
     MatToolbarModule,
-    CommonModule,
     TranslatePipe,
     MatListModule,
     MatIconModule,

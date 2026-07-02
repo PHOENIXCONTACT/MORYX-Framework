@@ -11,7 +11,6 @@ import { EditMenuService } from '@app/services/edit-menu.service';
 import { FactorySelectionService } from '@app/services/factory-selection.service';
 import { CellState } from '@api/models/cell-state';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { VisualizableItemModel } from '@api/models';
@@ -25,7 +24,6 @@ import { SnackbarService } from '@moryx/ngx-web-framework/services';
   selector: 'app-factory',
   templateUrl: './factory.html',
   imports: [
-    CommonModule,
     DragDropModule,
     MatIconModule
   ],

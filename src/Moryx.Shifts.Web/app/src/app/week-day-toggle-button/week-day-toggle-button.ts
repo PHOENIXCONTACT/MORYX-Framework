@@ -9,7 +9,6 @@ import { TranslationConstants } from '../extensions/translation-constants.extens
 import { formatDateDigits, getDayName, getShortDayName, isDayInInterval, localizedDayName, shortDayName } from '../utils';
 import  moment from 'moment';
 import { MatButtonToggleChange, MatButtonToggleModule } from '@angular/material/button-toggle';
-import { CommonModule } from '@angular/common';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -20,7 +19,6 @@ import { TranslatePipe } from '@ngx-translate/core';
   styleUrl: './week-day-toggle-button.scss',
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
-    CommonModule,
     MatDialogModule,
     MatButtonModule,
     MatButtonToggleModule,

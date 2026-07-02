@@ -7,7 +7,7 @@ import { Component, inject, OnDestroy, OnInit, signal, ChangeDetectionStrategy }
 import { NotificationModel } from '@api/models/notification-model';
 import { NotificationService } from '@app/services/notification.service';
 import { Subscription } from 'rxjs';
-import { CommonModule } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { getIcon } from '@app/utils';
@@ -18,7 +18,7 @@ import { getIcon } from '@app/utils';
     styleUrls: ['./notifications.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-      CommonModule,
+      DatePipe,
       MatCardModule,
       MatIconModule
     ]

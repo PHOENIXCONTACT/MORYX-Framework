@@ -45,7 +45,6 @@ import {
   ProductStorageDetails,
   SessionService,
 } from "./services/session.service";
-import { CommonModule } from "@angular/common";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatButtonModule } from "@angular/material/button";
 import { MatTooltipModule } from "@angular/material/tooltip";
@@ -60,7 +59,6 @@ import { MatInputModule } from "@angular/material/input";
   templateUrl: "./app.html",
   styleUrls: ["./app.scss"],
   imports: [
-    CommonModule,
     MatSidenavModule,
     MatToolbarModule,
     MatButtonModule,

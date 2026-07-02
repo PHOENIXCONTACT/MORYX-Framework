@@ -14,7 +14,6 @@ import { SessionsService } from './services/sessions.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { CommonModule } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 import { Toolbox } from './components/toolbox/toolbox';
@@ -28,7 +27,6 @@ import { MatButtonModule } from '@angular/material/button';
   imports: [
     MatSidenavModule,
     MatToolbarModule,
-    CommonModule,
     MatTooltipModule,
     MatIconModule,
     TranslatePipe,

@@ -15,7 +15,6 @@ import { AppStoreService } from '../services/app-store.service';
 import moment from 'moment';
 import { TranslationConstants } from '../extensions/translation-constants.extensions';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
@@ -26,7 +25,6 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './assignment.scss',
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
-    CommonModule,
     MatButtonModule,
     MatMenuModule,
     MatIconModule,

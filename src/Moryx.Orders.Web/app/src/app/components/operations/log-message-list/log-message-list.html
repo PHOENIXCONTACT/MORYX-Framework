@@ -5,7 +5,7 @@
         <span class="log-time light-text">
           {{ logMessage.timeStamp | date: 'dd.LL.yyyy HH:mm:ss' }}
         </span>
-        <div class="log-level-indicator" [ngClass]="getColor(logMessage.logLevel)">
+        <div class="log-level-indicator" [class]="getColor(logMessage.logLevel)">
           <span class="log-level">
             {{ logMessage.logLevel }}
           </span>

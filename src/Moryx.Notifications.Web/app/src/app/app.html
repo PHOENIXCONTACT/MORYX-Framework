@@ -6,9 +6,7 @@
       <mat-sidenav opened mode="side" position="start" class="notifications-sidenav">
         <div class="notifications-sidebar">
           <mat-toolbar
-          [ngStyle]="{
-            'background-image': 'url(' + notificationsToolbarImage() + ')'
-          }"
+          [style.background-image]="'url(' + notificationsToolbarImage() + ')'"
             class="notifications-toolbar"
             >
             <mat-toolbar-row>

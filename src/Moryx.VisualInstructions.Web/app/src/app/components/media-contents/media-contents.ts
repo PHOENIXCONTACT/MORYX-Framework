@@ -6,7 +6,6 @@
 import { Component, effect, inject, input, OnInit, signal, untracked, ChangeDetectionStrategy } from '@angular/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { DisplayedMediaContent } from './displayed-media-content';
-import { CommonModule } from '@angular/common';
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -18,7 +17,6 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
     styleUrls: ['./media-contents.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-      CommonModule,
       NgxDocViewerModule,
       MatIconModule,
       MatButtonModule

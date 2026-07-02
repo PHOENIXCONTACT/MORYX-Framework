@@ -46,7 +46,6 @@ import {
   CopyShiftAndAssignment,
   CopyShiftAndAssignmentData
 } from './dialogs/copy-shift-and-assignment/copy-shift-and-assignment';
-import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -64,7 +63,6 @@ import { OrderItem } from './order-item/order-item';
   styleUrls: ['./app.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
-    CommonModule,
     MatButtonModule,
     MatIconModule,
     MatFormFieldModule,

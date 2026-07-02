@@ -13,7 +13,7 @@ import { NotificationService } from "./services/notification.service";
 import ConnectionState from "./models/ConnectionState";
 import "./extensions/notification.extensions";
 import { Subscription } from "rxjs";
-import { CommonModule } from "@angular/common";
+
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { Notifications } from "./components/notifications/notifications";
@@ -26,7 +26,6 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
   styleUrls: ["./app.scss"],
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
-    CommonModule,
     MatSidenavModule,
     MatToolbarModule,
     Notifications,

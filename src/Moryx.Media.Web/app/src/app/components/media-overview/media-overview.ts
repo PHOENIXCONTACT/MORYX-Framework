@@ -16,7 +16,6 @@ import { DialogDelete } from '@app/dialogs/dialog-delete/dialog-delete';
 import { MediaService } from '@app/services/media-service/media.service';
 import { SnackbarService, SearchBarService, SearchRequest, SearchSuggestion, } from '@moryx/ngx-web-framework/services';
 import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
-import { NgStyle, CommonModule } from '@angular/common';
 import { FileDragAndDropDirective } from '@app/extensions/file-drag-and-drop.directive';
 import { MediaFile } from './media-file/media-file';
 import { MatIcon } from '@angular/material/icon';
@@ -29,7 +28,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
   styleUrls: ['./media-overview.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
-    FileDragAndDropDirective, NgStyle, CommonModule,
+    FileDragAndDropDirective,
     MediaFile, MatMenu, MatMenuContent,
     MatMenuItem, MatIcon, MatMenuTrigger,
     MatFabButton, MatProgressSpinner, TranslatePipe,

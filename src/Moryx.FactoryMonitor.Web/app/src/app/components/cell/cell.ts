@@ -4,7 +4,6 @@
 */
 
 import { CdkDragEnd, DragDropModule } from '@angular/cdk/drag-drop';
-import { CommonModule } from '@angular/common';
 import { Component, computed, ElementRef, inject, input, linkedSignal, OnDestroy, OnInit, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatIcon } from '@angular/material/icon';
@@ -24,7 +23,6 @@ import { CellState } from '@api/models/cell-state';
   styleUrls: ['./cell.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
-    CommonModule,
     MatIcon,
     DragDropModule
   ]
