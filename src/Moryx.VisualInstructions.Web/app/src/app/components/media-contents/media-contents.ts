@@ -27,7 +27,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 export class MediaContents implements OnInit {
 
   protected medias = signal<DisplayedMediaContent[]>([]);
-  displayedContents = input.required<DisplayedMediaContent[]>();
+  readonly displayedContents = input.required<DisplayedMediaContent[]>();
   protected selectedContent = signal<DisplayedMediaContent | undefined>(undefined) ;
   private sanitizer = inject(DomSanitizer);
   protected TranslationConstants = TranslationConstants;

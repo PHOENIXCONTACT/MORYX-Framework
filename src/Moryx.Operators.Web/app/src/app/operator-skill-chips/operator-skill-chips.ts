@@ -20,10 +20,10 @@ import {MatChipsModule} from '@angular/material/chips';
 ]
 })
 export class OperatorSkillChips {
-  operatorId = input.required<string>();
-  skills = input.required<OperatorSkill[]>();
-  skillTypes = input.required<SkillTypeModel[]>();
-  useTagStyle = input<boolean>();
+  readonly operatorId = input.required<string>();
+  readonly skills = input.required<OperatorSkill[]>();
+  readonly skillTypes = input.required<SkillTypeModel[]>();
+  readonly useTagStyle = input<boolean>();
   protected operatorSkills = computed(()=> this.skills().filter(x => x.operatorId === this.operatorId()));
 
   protected findSkillTypeById(id: number){

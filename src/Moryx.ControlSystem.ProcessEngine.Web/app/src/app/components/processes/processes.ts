@@ -62,7 +62,7 @@ export class Processes implements OnInit, OnDestroy {
     return activity?.possibleResources?.map((r) => r.name)?.join(", ");
   });
   protected showAll = signal(true);
-  job = input.required<JobViewModel>();
+  readonly job = input.required<JobViewModel>();
 
   protected TranslationConstants = TranslationConstants;
 

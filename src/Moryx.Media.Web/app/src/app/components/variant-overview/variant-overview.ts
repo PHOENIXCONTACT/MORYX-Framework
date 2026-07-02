@@ -71,7 +71,7 @@ export class VariantOverview implements OnInit, OnDestroy {
   protected TranslationConstants = TranslationConstants;
   protected menuTopLeftPosition = signal<{ x: string, y: string }>({x: '0', y: '0'});
   timeoutHandler: ReturnType<typeof setTimeout> | undefined;
-  trigger = viewChild.required(MatMenuTrigger);
+  readonly trigger = viewChild.required(MatMenuTrigger);
   private pdfObjectUrl?: string;
   private previewObjectUrls = new Map<string, string>();
 

@@ -27,7 +27,7 @@ export class LogMessageList implements OnInit {
   private translateService = inject(TranslateService);
   private orderManagementService = inject(OrderManagementService);
 
-  guid = input.required<string>();
+  readonly guid = input.required<string>();
   protected logMessages = signal<OperationLogMessageModel[]>([]);
   protected isLoading = signal<boolean>(false);
   protected notification = signal<string>('');

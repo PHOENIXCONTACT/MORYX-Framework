@@ -24,13 +24,13 @@ import { getHierarchieLineFor } from '@app/models/TypeTree';
 export class ResourceTree {
   private sessionService = inject(SessionService);
 
-  resources = input.required<ResourceModel[]>();
-  selected = input<ResourceModel | undefined>(undefined);
+  readonly resources = input.required<ResourceModel[]>();
+  readonly selected = input<ResourceModel | undefined>(undefined);
 
-  nodeSelected = output<number>();
-  nodeContextMenu = output<{ event: MouseEvent; id: number }>();
+  readonly nodeSelected = output<number>();
+  readonly nodeContextMenu = output<{ event: MouseEvent; id: number }>();
 
-  protected tree = viewChild<MatTree<ResourceModel>>(MatTree);
+  protected readonly tree = viewChild<MatTree<ResourceModel>>(MatTree);
 
   protected childrenAccessor = (node: ResourceModel) =>
     (node.references?.find(ref => ref.name === 'Children')?.targets ?? []) as ResourceModel[];

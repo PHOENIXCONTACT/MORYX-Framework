@@ -29,8 +29,8 @@ import { TranslatePipe } from '@ngx-translate/core';
 })
 export class Operators implements OnInit {
 
-  workstation = input.required<WorkstationViewModel>();
-  mainContainerStyle = input.required<string>();
+  readonly workstation = input.required<WorkstationViewModel>();
+  readonly mainContainerStyle = input.required<string>();
   protected operators = signal<OperatorViewModel[]>([]);
 
   private appStoreService = inject(AppStoreService);

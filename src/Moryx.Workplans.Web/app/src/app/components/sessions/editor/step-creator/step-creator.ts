@@ -27,9 +27,9 @@ import { MatButtonModule } from '@angular/material/button';
   ]
 })
 export class StepCreator implements OnInit, OnDestroy {
-  availableSteps = input.required<WorkplanStepRecipe[]>();
+  readonly availableSteps = input.required<WorkplanStepRecipe[]>();
   //TODO: remove this and change stepRecipe to type of model.required<..>() in future refactoring of the UI
-  created = output<WorkplanStepRecipe>();
+  readonly created = output<WorkplanStepRecipe>();
   protected stepRecipe = signal<WorkplanStepRecipe | undefined>(undefined);
   recipeType = signal<String | undefined>(undefined);
 

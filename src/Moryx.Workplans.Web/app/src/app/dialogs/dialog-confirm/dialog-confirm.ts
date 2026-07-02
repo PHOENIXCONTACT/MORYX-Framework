@@ -22,7 +22,7 @@ export class ConfirmDialog implements AfterViewInit {
   private dialogRef = inject(MatDialogRef<ConfirmDialog>);
   protected data = inject<ConfirmDialogData>(MAT_DIALOG_DATA);
 
-  actionButtons = viewChildren<MatButton>('actionButton');
+  readonly actionButtons = viewChildren<MatButton>('actionButton');
   protected buttons: ConfirmDialogButton[] | undefined;
 
   constructor() {

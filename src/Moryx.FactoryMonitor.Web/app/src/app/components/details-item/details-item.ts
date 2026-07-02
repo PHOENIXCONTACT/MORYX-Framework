@@ -16,7 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
     imports: [CommonModule, MatIconModule]
 })
 export class DetailsItem {
-  value = input.required<CellPropertySettings>();
-  name = input.required<string>();
+  readonly value = input.required<CellPropertySettings>();
+  readonly name = input.required<string>();
 }
 

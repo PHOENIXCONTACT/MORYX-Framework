@@ -49,7 +49,7 @@ export class MediaOverview implements OnInit, OnDestroy {
   protected contents = signal<ContentDescriptorModel[]>([]);
   protected selectedContent = signal<string | undefined>(undefined);
 
-  trigger = viewChild.required(MatMenuTrigger);
+  readonly trigger = viewChild.required(MatMenuTrigger);
   protected TranslationConstants = TranslationConstants;
   protected menuTopLeftPosition = {x: '0', y: '0'};
 

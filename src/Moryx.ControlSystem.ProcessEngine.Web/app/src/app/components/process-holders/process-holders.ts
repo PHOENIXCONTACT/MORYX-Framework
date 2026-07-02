@@ -69,7 +69,7 @@ export class ProcessHolders implements OnInit {
   private _snackbarService = inject(SnackbarService);
   private _translate = inject(TranslateService);
 
-  private _tree = viewChild<MatTree<ProcessHolderNode, ProcessHolderNode>>("tree");
+  private readonly _tree = viewChild<MatTree<ProcessHolderNode, ProcessHolderNode>>("tree");
 
   constructor() {
     this.destroyRef.onDestroy(() => this.disconnectEvents());

@@ -17,7 +17,7 @@ import { Component, DestroyRef, effect, inject, input, signal, ChangeDetectionSt
 })
 export class NotificationBadge {
   private destroyRef = inject(DestroyRef);
-  eventStream = input('');
+  readonly eventStream = input('');
   protected count = signal(0);
   private eventSource: EventSource | undefined;
 

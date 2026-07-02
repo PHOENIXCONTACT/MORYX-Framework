@@ -24,15 +24,15 @@ export class ProductTree {
   private editProductsService = inject(EditProductsService);
 
   // Inputs
-  treeData = input.required<ProductNode[]>();
-  selected = input<ProductModel | undefined>(undefined);
+  readonly treeData = input.required<ProductNode[]>();
+  readonly selected = input<ProductModel | undefined>(undefined);
 
   // Outputs
-  nodeSelected = output<number>();
-  nodeContextMenu = output<{ event: MouseEvent; id: number }>();
+  readonly nodeSelected = output<number>();
+  readonly nodeContextMenu = output<{ event: MouseEvent; id: number }>();
 
   // Tree internals
-  protected tree = viewChild<MatTree<ProductNode>>(MatTree);
+  protected readonly tree = viewChild<MatTree<ProductNode>>(MatTree);
 
   protected childrenAccessor = (node: ProductNode) => node.children ?? [];
   protected hasChild = (_: number, node: ProductNode) => !!node.children?.length;

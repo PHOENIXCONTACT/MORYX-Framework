@@ -23,7 +23,7 @@ export class ModuleGridMenu {
   protected modules = this.moduleService.userModules;
   protected activeRoute = this.moduleService.activeRoute;
 
-  @ViewChild('moduleGridMenu') moduleGridMenu!: MatMenu;
+  @ViewChild('moduleGridMenu') readonly moduleGridMenu!: MatMenu;
 
   protected resolveHref(module: ModuleItem): string {
     return this.locationPersistenceService.resolveHref(module);

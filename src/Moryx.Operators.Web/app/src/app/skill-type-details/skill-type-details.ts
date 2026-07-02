@@ -40,7 +40,7 @@ import { MatInputModule } from "@angular/material/input";
   ]
 })
 export class SkillTypeDetails implements OnInit {
-  id = input.required<number>();
+  readonly id = input.required<number>();
   protected skillType = signal<SkillType>(<SkillType>{
     id: 0,
     name: "",

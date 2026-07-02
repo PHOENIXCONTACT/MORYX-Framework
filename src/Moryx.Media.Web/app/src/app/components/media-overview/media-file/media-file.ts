@@ -33,15 +33,15 @@ export class MediaFile implements OnInit {
   private snackbarService = inject(SnackbarService);
 
   protected TranslationConstants = TranslationConstants;
-  name = model.required<string>()
-  amount = model.required<string>();
-  content = model.required<ContentDescriptorModel>();
-  selected = model.required<boolean>();
+  readonly name = model.required<string>()
+  readonly amount = model.required<string>();
+  readonly content = model.required<ContentDescriptorModel>();
+  readonly selected = model.required<boolean>();
   protected loaded = signal(false);
   protected path = signal<string | null | ArrayBuffer>('');
 
-  show = output<ContentDescriptorModel>();
-  delete = output<ContentDescriptorModel>();
+  readonly show = output<ContentDescriptorModel>();
+  readonly delete = output<ContentDescriptorModel>();
   img: any;
 
   ngOnInit(): void {

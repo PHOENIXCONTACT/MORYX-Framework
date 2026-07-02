@@ -20,14 +20,14 @@ import { TranslationConstants } from '../extensions/translation-constants.extens
   ]
 })
 export class MultiProgressBar {
-  totalAmount = input.required<number>();
-  successCount = input<number>(0);
-  scrapCount = input<number>(0);
-  activeCount = input<number>(0);
-  pendingCount = input<number>(0);
+  readonly totalAmount = input.required<number>();
+  readonly successCount = input<number>(0);
+  readonly scrapCount = input<number>(0);
+  readonly activeCount = input<number>(0);
+  readonly pendingCount = input<number>(0);
 
   // Customization
-  activeLabel = input.required<string>();
+  readonly activeLabel = input.required<string>();
 
   protected TranslationConstants = TranslationConstants;
 

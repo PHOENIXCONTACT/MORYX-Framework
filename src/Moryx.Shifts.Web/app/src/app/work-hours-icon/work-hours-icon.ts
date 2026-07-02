@@ -20,8 +20,8 @@ import { MatIconModule } from '@angular/material/icon';
   ]
 })
 export class WorkHoursIcon {
-  orderHours = input.required<number>();
-  operatorHours = input.required<number>();
-  size = input.required<IconSize>();
+  readonly orderHours = input.required<number>();
+  readonly operatorHours = input.required<number>();
+  readonly size = input.required<IconSize>();
 }
 

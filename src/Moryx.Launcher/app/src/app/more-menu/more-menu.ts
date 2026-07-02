@@ -48,7 +48,7 @@ export class MoreMenu {
   protected supportedCultures = this.cultureService.supportedCultures;
   protected currentCulture = this.cultureService.currentCulture;
 
-  @ViewChild('appMenu') appMenu!: MatMenu;
+  @ViewChild('appMenu') readonly appMenu!: MatMenu;
   protected readonly LauncherLayout = LauncherLayout;
 
   protected setLayout(layout: LauncherLayout) {

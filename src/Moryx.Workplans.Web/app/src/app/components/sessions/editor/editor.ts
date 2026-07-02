@@ -64,8 +64,8 @@ enum EditQueries {
   ]
 })
 export class Editor implements OnInit {
-  pathMenuTrigger = viewChild.required<MatMenuTrigger>('pathMenuTrigger');
-  stepMenuTrigger = viewChild.required<MatMenuTrigger>('stepMenuTrigger');
+  readonly pathMenuTrigger = viewChild.required<MatMenuTrigger>('pathMenuTrigger');
+  readonly stepMenuTrigger = viewChild.required<MatMenuTrigger>('stepMenuTrigger');
   protected availableSteps = signal<WorkplanStepRecipe[]>([]);
   protected inputIds = signal<string[]>([]);
   protected workplanPaths = signal<NodeConnectionPath[]>([]);

@@ -15,7 +15,7 @@ import { Directive, output } from '@angular/core';
   }
 })
 export class FileDragAndDropDirective {
-  fileDropped = output<{ target: { files: FileList } }>();
+  readonly fileDropped = output<{ target: { files: FileList } }>();
   fileover = false;
 
   //Drag over listener

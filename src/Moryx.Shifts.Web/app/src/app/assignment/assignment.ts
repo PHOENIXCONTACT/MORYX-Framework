@@ -38,10 +38,10 @@ export class Assignment {
   private appStore = inject(AppStoreService);
   private translateService = inject(TranslateService);
 
-  assignment = model.required<AssignmentCardModel>();
-  calendarState = input.required<CalendarState>();
-  calendarDate = input.required<CalendarDate>();
-  shift = input.required<ShiftCardModel>();
+  readonly assignment = model.required<AssignmentCardModel>();
+  readonly calendarState = input.required<CalendarState>();
+  readonly calendarDate = input.required<CalendarDate>();
+  readonly shift = input.required<ShiftCardModel>();
   protected assignments = signal<AssignmentCardModel[]>([]);
 
   protected TranslationConstants = TranslationConstants;

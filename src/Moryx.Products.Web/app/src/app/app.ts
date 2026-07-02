@@ -100,7 +100,7 @@ export class App implements OnInit, OnDestroy {
   protected selectorOptions = signal<string[]>(Object.keys(Selector));
   importers = toSignal(this.cacheService.importers$, { initialValue: [] });
   protected menuTopLeftPosition = signal<{ x: String, y: String }>({x: '0', y: '0'});
-  protected trigger = viewChild.required(MatMenuTrigger);
+  protected readonly trigger = viewChild.required(MatMenuTrigger);
 
   protected TranslationConstants = TranslationConstants;
 

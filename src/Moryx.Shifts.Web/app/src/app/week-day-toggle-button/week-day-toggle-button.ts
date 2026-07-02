@@ -29,13 +29,13 @@ import { TranslatePipe } from '@ngx-translate/core';
 })
 export class WeekDayToggleButton {
 
-  startDate = input.required<Date>();
-  readOnly = input.required<boolean>();
-  endDate = input.required<Date>();
-  calendarState = input.required<CalendarState>();
-  shiftNumberOfDay= input.required<number>();
-  days = input.required<CalendarDate[]>();
-  onButtonToggled = output<CalendarDate>();
+  readonly startDate = input.required<Date>();
+  readonly readOnly = input.required<boolean>();
+  readonly endDate = input.required<Date>();
+  readonly calendarState = input.required<CalendarState>();
+  readonly shiftNumberOfDay= input.required<number>();
+  readonly days = input.required<CalendarDate[]>();
+  readonly onButtonToggled = output<CalendarDate>();
 
   protected TranslationConstants = TranslationConstants;
   protected formatDateDigits = formatDateDigits;

@@ -51,7 +51,7 @@ import { InstructionStateService } from '@app/services/instruction-state.service
   ]
 })
 export class WorkerInstructions implements OnInit, OnDestroy {
-  clientIdentifier = model.required<string>();
+  readonly clientIdentifier = model.required<string>();
 
   protected instructions = signal<InstructionModel[]>([]);
   protected activeInstructionIndex = signal(0);

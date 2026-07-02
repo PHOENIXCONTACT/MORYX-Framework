@@ -40,8 +40,8 @@ export class Factory implements OnInit {
   private router = inject(Router);
 
   private factoryElement = viewChild.required<ElementRef<HTMLElement>>('FactoryElement');
-  container = input.required<ElementRef<HTMLElement>>();
-  parameters = input.required<VisualizableItemModel>();
+  readonly container = input.required<ElementRef<HTMLElement>>();
+  readonly parameters = input.required<VisualizableItemModel>();
   protected cells = linkedSignal(() => this.cellStoreService.getCells(this.parameters()));
   private editMenuState = toSignal(inject(EditMenuService).activeState$);
 

@@ -28,8 +28,8 @@ export class SpotlightSearch {
   private shortcutService = inject(ShortcutService);
   private destroyRef = inject(DestroyRef);
 
-  @ViewChild('searchInput') protected searchInput!: ElementRef<HTMLInputElement>;
-  @ViewChild('resultsList') protected resultsList!: ElementRef<HTMLUListElement>;
+  @ViewChild('searchInput') protected readonly searchInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('resultsList') protected readonly resultsList!: ElementRef<HTMLUListElement>;
 
   protected TranslationConstants = TranslationConstants;
 

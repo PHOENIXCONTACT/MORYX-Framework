@@ -36,9 +36,9 @@ export class Cell implements OnInit, OnDestroy {
 
   private subscriptions = new Subscription();
 
-  cellElement = viewChild.required<ElementRef<HTMLElement>>('cell');
-  container = input.required<ElementRef<HTMLElement>>();
-  parameters = input.required<VisualizableItemModel>();
+  readonly cellElement = viewChild.required<ElementRef<HTMLElement>>('cell');
+  readonly container = input.required<ElementRef<HTMLElement>>();
+  readonly parameters = input.required<VisualizableItemModel>();
   protected isEditMode = computed(() => this.editMenuState() === EditMenuState.EditingCells);
   private editMenuState = toSignal(this.editMenuService.activeState$);
   protected currentCell = linkedSignal<CellModel>(() => this.cellStoreService.getCell(this.parameters().id!));

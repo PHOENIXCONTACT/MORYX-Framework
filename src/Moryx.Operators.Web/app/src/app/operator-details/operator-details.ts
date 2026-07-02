@@ -52,7 +52,7 @@ export class OperatorDetails implements OnInit {
   private dialog = inject(MatDialog);
   private translateService = inject(TranslateService);
 
-  id = input.required<string>();
+  readonly id = input.required<string>();
   protected editMode = signal(false);
   protected operator = signal<AssignableOperator>({
     assignedResources: [],

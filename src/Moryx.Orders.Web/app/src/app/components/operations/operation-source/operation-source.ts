@@ -17,6 +17,6 @@ import { Entry, NavigableEntryEditor } from '@moryx/ngx-web-framework/entry-edit
 ]
 })
 export class OperationSource {
-  operationSource = input.required<Entry>();
+  readonly operationSource = input.required<Entry>();
 }
 

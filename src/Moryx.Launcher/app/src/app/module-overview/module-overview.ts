@@ -18,7 +18,7 @@ import { LocationPersistenceService } from '../services/location-persistence.ser
 export class ModuleOverview {
   private locationPersistenceService = inject(LocationPersistenceService);
 
-  webModuleItems = input.required<WebModuleItem[]>();
+  readonly webModuleItems = input.required<WebModuleItem[]>();
   protected userModules = computed(() => this.webModuleItems().filter(m => m.category === ModuleCategory.User));
 
   protected resolveHref(module: ModuleItem): string {

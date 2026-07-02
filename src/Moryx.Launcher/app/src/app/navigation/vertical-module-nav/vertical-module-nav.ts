@@ -20,5 +20,5 @@ import { ModuleNavBase } from '../module-nav-base';
   }
 })
 export class VerticalModuleNav extends ModuleNavBase {
-  collapsed = input(false);
+  readonly collapsed = input(false);
 }

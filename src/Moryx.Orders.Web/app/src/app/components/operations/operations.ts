@@ -93,7 +93,7 @@ export class Operations implements OnInit {
   protected isLoading = signal<boolean>(true);
   protected mobileQuery: MediaQueryList;
   private searchTerm = signal<string>('');
-  protected drawer = viewChild.required<MatDrawer>('drawer');
+  protected readonly drawer = viewChild.required<MatDrawer>('drawer');
   protected hideCompleted = toSignal(this.filterService.hideCompleted$, { initialValue: true });
 
   constructor() {

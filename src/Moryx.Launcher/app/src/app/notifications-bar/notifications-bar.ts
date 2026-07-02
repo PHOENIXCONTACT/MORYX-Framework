@@ -38,8 +38,8 @@ export interface Notification {
 })
 export class NotificationsBar {
   private destroyRef = inject(DestroyRef);
-  url = input('Notifications');
-  api = input('/api/moryx/notifications/stream');
+  readonly url = input('Notifications');
+  readonly api = input('/api/moryx/notifications/stream');
   private eventSource: EventSource | undefined;
 
   protected notifications = signal<Array<Notification> | undefined>(undefined);

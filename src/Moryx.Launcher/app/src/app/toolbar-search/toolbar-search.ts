@@ -21,7 +21,7 @@ import { TranslationConstants } from '../translation-constants';
 export class ToolbarSearch {
   private searchService = inject(SearchService);
 
-  @ViewChild('searchInput') protected searchInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('searchInput') protected readonly searchInput!: ElementRef<HTMLInputElement>;
 
   protected TranslationConstants = TranslationConstants;
 

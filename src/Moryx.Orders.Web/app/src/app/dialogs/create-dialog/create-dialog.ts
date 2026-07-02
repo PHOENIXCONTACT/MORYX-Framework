@@ -105,7 +105,7 @@ export class CreateDialog {
   }});
   protected dropdownDisabled = computed(() => !this.canAdd() && !this.canCreate());
 
-  protected productInput = viewChild.required<ElementRef<HTMLInputElement>>('productInput');
+  protected readonly productInput = viewChild.required<ElementRef<HTMLInputElement>>('productInput');
   private productsLoader = resource<ProductModel[], { query: ProductQuery }>({
     params: () => ({ query:
       <ProductQuery>{
@@ -129,7 +129,7 @@ export class CreateDialog {
   protected selectedProduct = signal<ProductModel | undefined>(undefined);
   protected productFormControl = new FormControl<ProductModel | undefined>(undefined);
 
-  protected recipeInput = viewChild.required<ElementRef<HTMLInputElement>>('recipeInput');
+  protected readonly recipeInput = viewChild.required<ElementRef<HTMLInputElement>>('recipeInput');
   private recipesLoader = resource<RecipeModel[], { product: ProductModel | undefined }>({
     params: () => ({ product: this.selectedProduct() }),
     loader: ({ params }) => {

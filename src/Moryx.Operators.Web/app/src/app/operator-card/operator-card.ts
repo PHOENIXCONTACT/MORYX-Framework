@@ -20,9 +20,9 @@ import { MatIconModule } from '@angular/material/icon';
     ]
 })
 export class OperatorCard {
-  workstationId = input.required<number>();
-  operator = input.required<OperatorViewModel>();
-  toggleAssignment = output<OperatorViewModel>();
+  readonly workstationId = input.required<number>();
+  readonly operator = input.required<OperatorViewModel>();
+  readonly toggleAssignment = output<OperatorViewModel>();
   protected TranslationConstants = TranslationConstants;
   protected isAssigned = computed(() => this.operator().data.assignedResources?.some(x => x.id === this.workstationId()) );
 
