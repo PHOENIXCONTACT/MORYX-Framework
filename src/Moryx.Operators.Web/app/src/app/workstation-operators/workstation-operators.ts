@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, computed, inject, signal, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { WorkstationViewModel } from '../models/workstation-view-model';
 import { WorkstationTogglingState } from './WorkstationTogglingState';
 import { MatDialog } from '@angular/material/dialog';
@@ -38,7 +38,7 @@ import { MatButtonModule } from '@angular/material/button';
     RouterLink
   ]
 })
-export class WorkstationOperators {
+export class WorkstationOperators implements OnInit {
   private appStoreService = inject(AppStoreService);
   private dialog = inject(MatDialog);
   private router = inject(Router);
