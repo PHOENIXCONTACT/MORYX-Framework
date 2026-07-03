@@ -56,7 +56,9 @@ export class CellImageDialog {
     this.cellSettings.set(this.data.cellSettings);
     this.name = this.data.name;
     //checks if there is an image url
-    if (this.cellSettings()?.image) this.imageControl.patchValue(this.cellSettings()?.image!);
+    if (this.cellSettings()?.image) {
+      this.imageControl.patchValue(this.cellSettings()?.image ?? null);
+    }
   }
 
   protected openCellIconUploader() {

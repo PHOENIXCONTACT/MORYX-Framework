@@ -33,23 +33,23 @@ export class CellStoreService {
   public readonly cellUpdated$ = this._cellUpdated.asObservable();
 
   public initialize(factoryState: FactoryStateModel) {
-    let cells: { [id: string]: CellModel; } = {};
+    const cells: { [id: string]: CellModel; } = {};
     const initialRecourceChanges = factoryState.resourceChangedModels ?? [];
-    for (let raw of initialRecourceChanges) {
+    for (const raw of initialRecourceChanges) {
       const cell = Converter.resourceChangedModelToCell(raw);
       if (cell.id)
         cells[cell.id] = cell;
     }
 
     const initialStateChanges = factoryState.cellStateChangedModels ?? [];
-    for (let raw of initialStateChanges) {
+    for (const raw of initialStateChanges) {
       if (!raw.id) continue;
       const cell = cells[raw.id];
       Converter.addStateDataToCell(cell, raw);
     }
 
     const initialActivityChanges = factoryState.activityChangedModels ?? [];
-    for (let raw of initialActivityChanges) {
+    for (const raw of initialActivityChanges) {
       if (!raw.resourceId) continue;
       const cell = cells[raw.resourceId];
       Converter.addActivityChangedModelToCell(cell, raw);
@@ -99,7 +99,7 @@ export class CellStoreService {
   // so we need to merge the incoming data with the existing cell data
   public updateCell(cell: CellModel) {
     const indexToUpdate = this._cells.findIndex(x => x.id === cell.id);
-    let cellToUpdate = {... this._cells[indexToUpdate]};
+    const cellToUpdate = {... this._cells[indexToUpdate]};
 
     if (cell.iconName != '' && cell.iconName) {
       cellToUpdate.iconName = cell.iconName;
