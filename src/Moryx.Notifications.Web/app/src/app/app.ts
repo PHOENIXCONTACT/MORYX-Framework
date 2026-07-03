@@ -71,7 +71,9 @@ export class App implements OnInit {
 
     this.stateSubscription = this.notificationService.state$.subscribe(
       (state) => {
-        if (state == ConnectionState.Connected) this.isLoading.update(_ => false);
+        if (state == ConnectionState.Connected) {
+          this.isLoading.update(_ => false);
+        }
       }
     );
     this.notificationSubscription =

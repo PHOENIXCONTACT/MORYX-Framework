@@ -19,7 +19,9 @@ export class OperatorsService {
   }
 
   async getOperators(): Promise<AssignableOperator[]> {
-    if (!this._available) return [];
+    if (!this._available) {
+      return [];
+    }
 
     let operators = [] as AssignableOperator[];
     await this.operators
@@ -31,7 +33,9 @@ export class OperatorsService {
   }
 
   async addOperator(identifier: string) {
-    if (!this._available) return;
+    if (!this._available) {
+      return;
+    }
 
     return await this.operators.add({body: {identifier: identifier} as OperatorModel}).toAsync();
   }

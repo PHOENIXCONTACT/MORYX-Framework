@@ -140,7 +140,9 @@ export class BeginDialog implements OnInit {
       this.operators = o;
     });
 
-    if (!this.canBegin) this.operatorFormControl.disable();
+    if (!this.canBegin) {
+      this.operatorFormControl.disable();
+    }
   }
 
   protected limitTargetAmount() {

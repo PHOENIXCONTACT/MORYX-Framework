@@ -31,7 +31,9 @@ export class ConfirmDialog implements AfterViewInit {
 
   ngAfterViewInit(): void {
     const focusedButtonIndex = this.buttons?.findIndex(b => b.focused);
-    if (focusedButtonIndex === undefined || focusedButtonIndex < 0) return;
+    if (focusedButtonIndex === undefined || focusedButtonIndex < 0) {
+      return;
+    }
 
     const focusedButton = this.actionButtons()[focusedButtonIndex];
     if (focusedButton) {

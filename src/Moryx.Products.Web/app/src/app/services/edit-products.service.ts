@@ -115,8 +115,10 @@ export class EditProductsService {
       const recipeIds = currentProduct.recipes
         .map((e) => e.id)
         .filter((val) => typeof val === "number") as number[];
-      if (recipeIds.length === 0) this.currentRecipeNumber = 0;
-      else this.currentRecipeNumber = Math.max(...recipeIds);
+      if (recipeIds.length === 0) {
+        this.currentRecipeNumber = 0;
+      }
+      else {this.currentRecipeNumber = Math.max(...recipeIds);}
       this.maximumAlreadySavedRecipeId = this.currentRecipeNumber;
     }
 
@@ -126,8 +128,10 @@ export class EditProductsService {
         .flatMap((p) => p.parts)
         .map((e) => e?.id)
         .filter(filterEmpties);
-      if (allPartIds.length === 0) this.currentPartId = 0;
-      else this.currentPartId = Math.max(...allPartIds);
+      if (allPartIds.length === 0) {
+        this.currentPartId = 0;
+      }
+      else {this.currentPartId = Math.max(...allPartIds);}
       this.maximumAlreadySavedPartId = this.currentPartId;
     }
 
@@ -136,11 +140,14 @@ export class EditProductsService {
 
   async onSave() {
     const productModel = this.currentProduct.value;
-    if (!productModel || productModel.id === undefined) return;
+    if (!productModel || productModel.id === undefined) {
+      return;
+    }
 
     // Replace CREATED<number> with CREATED in collections
-    if (productModel.properties)
+    if (productModel.properties) {
       PrototypeToEntryConverter.convertToEntry(productModel.properties);
+    }
 
     for (const recipe of productModel.recipes ?? []) {
       // Recipes with the id 0 will be created and saved as new recipes in the backend
@@ -148,8 +155,9 @@ export class EditProductsService {
         recipe.id = 0;
       }
 
-      if (recipe.properties)
+      if (recipe.properties) {
         PrototypeToEntryConverter.convertToEntry(recipe.properties);
+      }
     }
 
     for (const partConnector of productModel?.parts ?? []) {
@@ -158,8 +166,9 @@ export class EditProductsService {
           part.id = 0;
         }
 
-        if (part.properties)
+        if (part.properties) {
           PrototypeToEntryConverter.convertToEntry(part.properties);
+        }
       }
     }
 
@@ -184,7 +193,9 @@ export class EditProductsService {
   }
 
   async onDuplicate(infos: DuplicateProductInfos) {
-    if (!infos.revision || !infos.identifier || !infos.product?.id) return;
+    if (!infos.revision || !infos.identifier || !infos.product?.id) {
+      return;
+    }
 
     const id = infos.product.id;
     const identifier = this.createProductIdentity(
@@ -205,7 +216,9 @@ export class EditProductsService {
     identifier: string | undefined | null,
     revision: number | undefined
   ): string {
-    if (!identifier || revision === undefined) return "";
+    if (!identifier || revision === undefined) {
+      return "";
+    }
 
     const formatedRevision = formatNumber(revision, "en-US", "2.0-0");
     const identity = identifier + "-" + formatedRevision;
@@ -219,7 +232,9 @@ export class EditProductsService {
     shortened: boolean = false,
     maxLength: number = 40
   ) {
-    if (!product) return "";
+    if (!product) {
+      return "";
+    }
     let productName =
       this.createProductIdentity(product.identifier, product.revision) +
       " " +
@@ -265,7 +280,9 @@ export class EditProductsService {
 
   removeRecipe(recipe: RecipeModel) {
     const currentProduct = this.currentProduct.value;
-    if (!currentProduct?.recipes) return;
+    if (!currentProduct?.recipes) {
+      return;
+    }
     currentProduct.recipes = currentProduct.recipes.filter(
       (r) => r.id !== recipe.id
     );

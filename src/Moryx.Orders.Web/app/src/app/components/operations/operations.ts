@@ -179,7 +179,9 @@ export class Operations implements OnInit {
       .sort((a, b) => {
         // Primary sort by sortOrder
         const orderDiff = (a.model.sortOrder ?? 0) - (b.model.sortOrder ?? 0);
-        if (orderDiff !== 0) return orderDiff;
+        if (orderDiff !== 0) {
+          return orderDiff;
+        }
 
         // Secondary sort by plannedStart - (works because ISO date strings sort lexicographically)
         const startA = a.model.plannedStart ?? '';
@@ -200,7 +202,9 @@ export class Operations implements OnInit {
       }
     });
     const beginModel = await beginDialog.afterClosed().toAsync();
-    if (!beginModel || !operation.model.identifier) return;
+    if (!beginModel || !operation.model.identifier) {
+      return;
+    }
 
     this.orderManagementService
       .beginOperation({

@@ -115,7 +115,9 @@ export class AppStoreService {
               const assignedResource = this._workstations
                 .getValue()
                 .find((x) => x.data.id === workstation.data.id);
-              if (!assignedResource) return;
+              if (!assignedResource) {
+                return;
+              }
 
               operator.data.assignedResources =
                 operatorResult.assignedResources?.map(
@@ -193,7 +195,9 @@ export class AppStoreService {
     const model = this.currentOperatorList().find(
       (x) => x.data.identifier === operator.identifier
     );
-    if (!model) return new Promise(() => {});
+    if (!model) {
+      return new Promise(() => {});
+    }
 
     return lastValueFrom(this.operatorManagementService.update({ identifier: model.data.identifier ?? "", body: operator }))
       .then((result) => {
@@ -218,11 +222,15 @@ export class AppStoreService {
     const result: OperatorViewModel | undefined = this.currentOperatorList().find(
       (x) => x.data.identifier === identifier
     );
-    if (result) return Promise.resolve(result);
+    if (result) {
+      return Promise.resolve(result);
+    }
 
     return firstValueFrom(this.operatorManagementService.getAll()).then(
       (operators) => {
-        if (!operators) return undefined;
+        if (!operators) {
+          return undefined;
+        }
         this.mapOperatorsToModel(operators);
         return this.currentOperatorList().find(
           (x) => x.data.identifier === identifier
@@ -289,7 +297,9 @@ export class AppStoreService {
   }
 
   newSkillType(skillType: SkillType) {
-    if (!skillType) return;
+    if (!skillType) {
+      return;
+    }
 
     const skillData = <SkillTypeCreationContextModel>{
       duration: skillType.duration,
@@ -314,7 +324,9 @@ export class AppStoreService {
   }
 
   updateType(type: SkillType) {
-    if (!type) return;
+    if (!type) {
+      return;
+    }
 
     const skillData = <SkillTypeModel>{
       id: type.id,

@@ -102,8 +102,12 @@ export class App implements OnInit, OnDestroy {
   }
 
   protected changeView() {
-    if (this.navigatedUrl() !== '/management') this.router.navigate(['/management']);
-    else if (this.activeSession) this.router.navigate(['session', this.activeSession]);
+    if (this.navigatedUrl() !== '/management') {
+      this.router.navigate(['/management']);
+    }
+    else if (this.activeSession) {
+      this.router.navigate(['session', this.activeSession]);
+    }
   }
 
   ngOnDestroy(): void {

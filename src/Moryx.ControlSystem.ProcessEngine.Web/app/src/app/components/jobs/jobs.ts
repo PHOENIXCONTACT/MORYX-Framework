@@ -110,7 +110,9 @@ export class Jobs implements OnInit {
   }
 
   private updateOperations(updatedOperation: OperationModel | undefined) {
-    if (!updatedOperation) return;
+    if (!updatedOperation) {
+      return;
+    }
 
     const existent = this.operations().find(
       (o) => o.identifier === updatedOperation.identifier
@@ -154,14 +156,16 @@ export class Jobs implements OnInit {
   }
 
   protected getOrderNumber(job: JobModel): string {
-    if (job.productionJob)
+    if (job.productionJob) {
       return this.operations().find(operation => operation.jobIds?.find(j => j === job.id))?.order ?? "";
+    }
     return "";
   }
 
   protected getOperationNumber(job: JobModel): string {
-    if (job.productionJob)
+    if (job.productionJob) {
       return this.operations().find(operation => operation.jobIds?.find(j => j === job.id))?.number ?? "";
+    }
     return "";
   }
 

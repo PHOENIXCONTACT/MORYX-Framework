@@ -153,8 +153,9 @@ export class ResourceMethods {
     //clear the entry parameter values for boolean types
     if (method.parameters?.subEntries?.length) {
       for (const p of method.parameters.subEntries) {
-        if (p.value?.type === EntryValueType.Boolean)
+        if (p.value?.type === EntryValueType.Boolean) {
           p.value.current = 'false';
+        }
       }
     }
   }

@@ -52,11 +52,13 @@ export class NotificationsBar {
   protected currentNotification = computed<Notification | undefined | null>(() => {
     const notifications = this.notifications();
 
-    if (notifications === undefined)
+    if (notifications === undefined) {
       return undefined;
+    }
 
-    if (notifications.length === 0)
+    if (notifications.length === 0) {
       return null;
+    }
 
     return notifications[this.notificationIndex()];
   });
@@ -148,8 +150,9 @@ export class NotificationsBar {
     this.intervalId = window.setInterval(() => {
       const notifications = this.notifications();
 
-      if (notifications === undefined)
+      if (notifications === undefined) {
         return;
+      }
 
       this.notificationIndex.update(v => (v + 1) % notifications.length);
     }, 5000);
@@ -165,11 +168,13 @@ export class NotificationsBar {
   protected getSeverityBackgroundColor(severity: Severity | undefined | null, errorAvailabe: boolean): string {
     const computedStyle = getComputedStyle(this.elementRef.nativeElement);
 
-    if (errorAvailabe)
+    if (errorAvailabe) {
       return computedStyle.getPropertyValue('--color-Info').trim();
+    }
 
-    if (severity === undefined || severity === null)
+    if (severity === undefined || severity === null) {
       return computedStyle.getPropertyValue('--color-Success').trim();
+    }
 
     const color = computedStyle.getPropertyValue('--color-' + severity).trim();
 

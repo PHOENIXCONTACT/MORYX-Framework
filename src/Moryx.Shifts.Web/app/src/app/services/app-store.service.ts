@@ -174,7 +174,9 @@ export class AppStoreService {
             isDayInInterval(x.endDate, start, end)
         );
 
-        if (!instancesForPreviousWeek.length) return shiftsAndAssignment;
+        if (!instancesForPreviousWeek.length) {
+          return shiftsAndAssignment;
+        }
 
         for (const previousInstance of instancesForPreviousWeek) {
           const newStartDate = moment(previousInstance.endDate).add(1, 'days');
@@ -266,29 +268,31 @@ export class AppStoreService {
   selectOperator(operator: OperatorModel) {
     if (
       !this.operatorsSelectedForFilter.value.some((x) => operator.id === x.id)
-    )
+    ) {
       this.operatorsSelectedForFilter.next([
         ...this.operatorsSelectedForFilter.value,
         operator,
       ]);
-    else
+    } else {
       this.operatorsSelectedForFilter.next(
         this.operatorsSelectedForFilter.value.filter((x) => x.id != operator.id)
       );
+    }
   }
 
   selectResource(resource: AttendableResourceModel) {
     if (
       !this.resourcesSelectedForFilter.value.some((x) => resource.id === x.id)
-    )
+    ) {
       this.resourcesSelectedForFilter.next([
         ...this.resourcesSelectedForFilter.value,
         resource,
       ]);
-    else
+    } else {
       this.resourcesSelectedForFilter.next(
         this.resourcesSelectedForFilter.value.filter((x) => x.id != resource.id)
       );
+    }
   }
 
   addShiftType(shift: ShiftTypeModel, calendarState: CalendarState) {

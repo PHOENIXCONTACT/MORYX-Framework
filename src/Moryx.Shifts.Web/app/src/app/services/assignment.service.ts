@@ -94,10 +94,12 @@ export class AssignmentService {
         //   ...this.assignments.value.filter((x) => x.id != assignmentId),
         //   updated,
         // ]);
-        if (update.operator)
+        if (update.operator) {
           foundAssignment.operator = update.operator;
-        if (update.resource)
+        }
+        if (update.resource) {
           foundAssignment.resource = update.resource;
+        }
         foundAssignment.days = update.days;
         foundAssignment.notes = update.notes;
         foundAssignment.priority = update.priority;

@@ -79,7 +79,9 @@ export class Processes implements OnInit, OnDestroy {
         next: (data) => {
           this.processes.update((_) => data);
           const firstProcess = this.processes().find(() => true);
-          if (firstProcess) this.onSelectProcess(firstProcess);
+          if (firstProcess) {
+            this.onSelectProcess(firstProcess);
+          }
         },
         error: async (e: HttpErrorResponse) =>
           await this.snackbarService.handleError(e)
@@ -131,8 +133,9 @@ export class Processes implements OnInit, OnDestroy {
           return items;
         });
       }
-      if (this.selectedProcess()?.id === updatedProcess.id)
+      if (this.selectedProcess()?.id === updatedProcess.id) {
         this.selectedProcess.update((_) => updatedProcess);
+      }
     }
   }
 
@@ -169,8 +172,9 @@ export class Processes implements OnInit, OnDestroy {
     //  This should be fixed by using immutable data structures or by extending the model with a method to update activities.
     this.changeDetectorRef.markForCheck();
 
-    if (this.selectedActivity()?.id === updatedActivity.id)
+    if (this.selectedActivity()?.id === updatedActivity.id) {
       this.selectedActivity.update((_) => updatedActivity);
+    }
   }
 
   protected onSelectProcess(process: JobProcessModel) {

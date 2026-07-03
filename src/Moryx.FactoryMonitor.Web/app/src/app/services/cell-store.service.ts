@@ -37,20 +37,25 @@ export class CellStoreService {
     const initialRecourceChanges = factoryState.resourceChangedModels ?? [];
     for (const raw of initialRecourceChanges) {
       const cell = Converter.resourceChangedModelToCell(raw);
-      if (cell.id)
+      if (cell.id) {
         cells[cell.id] = cell;
+      }
     }
 
     const initialStateChanges = factoryState.cellStateChangedModels ?? [];
     for (const raw of initialStateChanges) {
-      if (!raw.id) continue;
+      if (!raw.id) {
+        continue;
+      }
       const cell = cells[raw.id];
       Converter.addStateDataToCell(cell, raw);
     }
 
     const initialActivityChanges = factoryState.activityChangedModels ?? [];
     for (const raw of initialActivityChanges) {
-      if (!raw.resourceId) continue;
+      if (!raw.resourceId) {
+        continue;
+      }
       const cell = cells[raw.resourceId];
       Converter.addActivityChangedModelToCell(cell, raw);
       this.orderService.applyOrderColor(cell);
@@ -86,8 +91,9 @@ export class CellStoreService {
 
   public getCell(cellId: number) : CellModel {
     const cell = this._cells.find(c => c.id === cellId)
-    if (!cell)
+    if (!cell) {
       throw Error(`Tried to process unknown cell with id ${cellId}`);
+    }
     return cell;
   }
 

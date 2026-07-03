@@ -49,8 +49,9 @@ export class WorkstationOperators implements OnInit {
   protected operatorsSkills = signal<OperatorSkill[]>([]);
   protected skillTypes = signal<SkillTypeModel[]>([]);
   protected isCardExpanded = computed(() => {
-    if (!this.workstationTogglingState())
+    if (!this.workstationTogglingState()) {
       return false;
+    }
 
     return this.workstationTogglingState()?.isExpanded;
   })
@@ -60,7 +61,9 @@ export class WorkstationOperators implements OnInit {
   ngOnInit(): void {
     this.appStoreService.workstations$.subscribe((stations) => {
       this.workstations.update(_ => stations);
-      if (stations.length) this.expandPreviousCard(this.workstations());
+      if (stations.length) {
+        this.expandPreviousCard(this.workstations());
+      }
     });
 
     this.appStoreService.skills$.subscribe(skills => this.operatorsSkills.update(_ => skills));
@@ -72,12 +75,16 @@ export class WorkstationOperators implements OnInit {
 
     // ie : /?stationId=2
     const urlFragments = this.router.url.split('?');// ['/', 'stationId=2']
-    if (urlFragments.length === 0) return;
+    if (urlFragments.length === 0) {
+      return;
+    }
 
     const stationIdUrl = urlFragments[urlFragments.length - 1].split('=')[1]// ['stationId', '2']
     const stationId = Number(stationIdUrl);
     const station = stations.find((x) => x.data.id === stationId);
-    if (!stationId || !station) return;
+    if (!stationId || !station) {
+      return;
+    }
 
     //expand this workstation card
     this.workstationTogglingState.update(_ => <WorkstationTogglingState>{
@@ -91,9 +98,10 @@ export class WorkstationOperators implements OnInit {
       station,
       isExpanded: !this.workstationTogglingState()?.isExpanded
     });
-    if (this.workstationTogglingState()?.isExpanded)
+    if (this.workstationTogglingState()?.isExpanded) {
       this.updateUrlParam(station?.data.id ?? null);
-    else this.updateUrlParam(null);
+    }
+    else {this.updateUrlParam(null);}
   }
 
   protected addOperator() {

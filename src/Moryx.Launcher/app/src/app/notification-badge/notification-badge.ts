@@ -57,7 +57,9 @@ export class NotificationBadge {
   }
 
   protected countString() {
-    if (this.count() > 9) return '9+';
+    if (this.count() > 9) {
+      return '9+';
+    }
     return this.count();
   }
 }

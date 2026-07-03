@@ -11,8 +11,6 @@ import { environment } from '../../environments/environment';
 })
 export class CookieService {
 
-  constructor() { }
-
   getCookie(name: string) {
     const ca: Array<string> = document.cookie.split(';');
     const caLen: number = ca.length;
@@ -33,10 +31,11 @@ export class CookieService {
     d.setTime(d.getTime() + expireDays * 24 * 60 * 60 * 1000);
     const expires: string = `expires=${d.toUTCString()}`;
     const cpath: string = path ? `; path=${path}` : '; path=/';
-    if (environment.production)
+    if (environment.production) {
       document.cookie = `${name}=${encodeURI(value)}; ${expires}${cpath}`;
-    else
+    } else {
       document.cookie = `${name}=${encodeURI(value)}; ${expires}${cpath}; samesite=none; secure`;
+    }
   }
 }
 

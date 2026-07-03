@@ -50,10 +50,15 @@ export class ShiftInstanceDialog {
   }
 
   protected submit() {
-    if (!this.form.valid) return;
-    if (this.form.value.startDate)
+    if (!this.form.valid) {
+      return;
+    }
+    if (this.form.value.startDate) {
       this.data.startDate = this.form.value.startDate;
-    if (this.form.value.endDate) this.data.endDate = this.form.value.endDate;
+    }
+    if (this.form.value.endDate) {
+      this.data.endDate = this.form.value.endDate;
+    }
     this.dialogRef.close(this.data);
   }
 

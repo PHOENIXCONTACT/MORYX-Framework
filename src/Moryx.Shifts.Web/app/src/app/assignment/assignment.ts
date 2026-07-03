@@ -60,7 +60,9 @@ export class Assignment {
   }
 
   private initialize(value: AssignmentCardModel) {
-    if (!value?.resource?.id) return;
+    if (!value?.resource?.id) {
+      return;
+    }
 
     this.appStore
       .getOperatorsBasedOnResource(value.resource.id)
@@ -111,7 +113,9 @@ export class Assignment {
       });
 
       dialogResult.afterClosed().subscribe((weekAssigmentResult: AssignmentData) => {
-        if (!weekAssigmentResult) return;
+        if (!weekAssigmentResult) {
+          return;
+        }
         const foundAssignment = this.assignments().find(
           (x) =>
             x.operator.id === weekAssigmentResult.operator?.id &&

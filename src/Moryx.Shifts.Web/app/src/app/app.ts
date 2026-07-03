@@ -213,11 +213,11 @@ export class App implements OnInit {
 
 
   protected getFilterButtonStyle(button: FilterButtonType) {
-    if (
-      (this.isOperatorFilterPanelOpened() && button === 'Operator') ||
+    if ((this.isOperatorFilterPanelOpened() && button === 'Operator') ||
       (this.isResourceFilterPanelOpened() && button === 'Resource')
-    )
+    ) {
       return 'flex flex-row items-center gap-x-2 px-2 py-1 border border-gray-200 border-solid rounded-sm bg-primary text-white';
+    }
     return 'flex flex-row items-center gap-x-2 px-2 py-1 border border-gray-200 border-solid hover:bg-gray-100 rounded-sm';
   }
 
@@ -234,7 +234,9 @@ export class App implements OnInit {
     this.drawerIsOpened.set(false);
     this.appStore.dragItemFromShiftElementDrawer(dragging)
 
-    if (!dragging) return;
+    if (!dragging) {
+      return;
+    }
   }
 
   protected dropElement(
@@ -243,8 +245,12 @@ export class App implements OnInit {
     day?: CalendarDate
   ) {
     //the element was not drop on a different container
-    if (event.previousContainer === event.container) return;
-    if (event.container.id != this.dayDropListId && event.container.id != this.weekDropListId) return;
+    if (event.previousContainer === event.container) {
+      return;
+    }
+    if (event.container.id != this.dayDropListId && event.container.id != this.weekDropListId) {
+      return;
+    }
     this.handleAssignment(event, shift, day);
   }
 
@@ -256,9 +262,11 @@ export class App implements OnInit {
     let operator: OperatorModel | undefined = undefined;
     let resource: AttendableResourceModel | undefined = undefined;
     //operator was dropped
-    if (instanceOfOperator(event.item.data))
+    if (instanceOfOperator(event.item.data)) {
       operator = <OperatorModel>event.item.data;
-    else resource = <AttendableResourceModel>event.item.data;
+    } else {
+      resource = <AttendableResourceModel>event.item.data;
+    }
 
     this.translateService
       .get([
@@ -281,7 +289,9 @@ export class App implements OnInit {
       dialogResult
         .afterClosed()
         .subscribe(async (weekAssigmentResult: AssignmentData) => {
-          if (!weekAssigmentResult) return;
+          if (!weekAssigmentResult) {
+            return;
+          }
 
           const foundAssignment = this.filteredAssignments().find(
             (x) =>
@@ -340,16 +350,18 @@ export class App implements OnInit {
   }
 
   protected filteredResourceList(search: string | undefined | null) {
-    if (search)
+    if (search) {
       return this.resources().filter((x) =>
         x.name?.toLowerCase().startsWith(search?.toLocaleLowerCase() ?? '')
       );
+    }
     return this.resources();
   }
 
   protected filterdOperatorList(search: string | undefined | null) {
-    if (search)
+    if (search) {
       return this.operators().filter((x) => x.name.includes(search ?? ''));
+    }
     return this.operators();
   }
 
@@ -362,7 +374,9 @@ export class App implements OnInit {
       .afterClosed()
       .subscribe((shiftTypeResult: ShiftTypeModel) => {
 
-        if (!shiftTypeResult) return;
+        if (!shiftTypeResult) {
+          return;
+        }
 
         this.appStore.addShiftType(shiftTypeResult, this.calendarState()!);
         this.translateService
@@ -380,7 +394,9 @@ export class App implements OnInit {
 
   protected displayShiftInstance(shiftInstanceId: number) {
     const shiftInstance = this.shiftInstances().find(x => x.id === shiftInstanceId);
-    if (!shiftInstance) return;
+    if (!shiftInstance) {
+      return;
+    }
 
     const dialogResult = this.dialog.open(ShiftInstanceDialog, {
       width: '500px',
@@ -390,10 +406,14 @@ export class App implements OnInit {
     dialogResult
       .afterClosed()
       .subscribe((shiftInstanceResult: ShiftInstanceModel) => {
-        if (!shiftInstanceResult) return;
+        if (!shiftInstanceResult) {
+          return;
+        }
 
         const shiftInstance = this.shiftInstances().find(x => x.id === shiftInstanceResult.id);
-        if (!shiftInstance) return;
+        if (!shiftInstance) {
+          return;
+        }
         shiftInstance.endDate = shiftInstanceResult.endDate;
         shiftInstance.startDate = shiftInstanceResult.startDate;
         this.appStore.updateShiftInstance(shiftInstance);
@@ -438,7 +458,9 @@ export class App implements OnInit {
         dialogResult
           .afterClosed()
           .subscribe((shiftAndAssignmentsCopy: CopyShiftAndAssignmentData) => {
-            if (!shiftAndAssignmentsCopy?.shiftInstances.length) return;
+            if (!shiftAndAssignmentsCopy?.shiftInstances.length) {
+              return;
+            }
 
             this.appStore.createNewAssignmentAndShift(shiftAndAssignmentsCopy).then(() => {
               this.translateService

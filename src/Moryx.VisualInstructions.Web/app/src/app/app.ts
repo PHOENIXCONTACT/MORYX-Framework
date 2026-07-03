@@ -85,9 +85,13 @@ export class App implements OnInit {
   }
 
   private async handleDialogResult(result: any) {
-    if (result?.instructorName?.length) this.updateInstructor(result);
+    if (result?.instructorName?.length) {
+      this.updateInstructor(result);
+    }
 
-    if (!this.clientIdentifier) await this.showNoInstructorWarning();
+    if (!this.clientIdentifier) {
+      await this.showNoInstructorWarning();
+    }
   }
 
   private updateInstructor(result: any): void {

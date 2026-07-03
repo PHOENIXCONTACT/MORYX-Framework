@@ -82,11 +82,15 @@ export class OperatorDetails {
 
   initialize(id: string) {
     const identifier = id;
-    if (!identifier) return;
+    if (!identifier) {
+      return;
+    }
     const operatorDataPromise = this.appStoreService.getOperator(identifier);
 
     operatorDataPromise.then(result => {
-      if (!result) return;
+      if (!result) {
+        return;
+      }
 
       this.operatorViewModel.update(_ => result);
       this.operator.update(_ => result.data);
@@ -138,7 +142,9 @@ export class OperatorDetails {
     });
 
     dialogResult.afterClosed().subscribe(result => {
-      if (!result) return;
+      if (!result) {
+        return;
+      }
 
       this.appStoreService.addSkill(this.operatorViewModel()!, result);
       setTimeout(() => this.loadSkills(), 500);
@@ -161,7 +167,9 @@ export class OperatorDetails {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result.dialogResult === 'NO') return;
+      if (result.dialogResult === 'NO') {
+        return;
+      }
 
       this.appStoreService.deleteSkill(skill);
       setTimeout(() => this.loadSkills(), 500);

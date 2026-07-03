@@ -65,13 +65,17 @@ export enum DayOfTheWeek {
     }
 
     public currentViewDates(numberOfDays: number = 0) {
-      if(numberOfDays>0) return this.generateDates(numberOfDays);
+      if(numberOfDays>0) {
+        return this.generateDates(numberOfDays);
+      }
       return this.calendarDates;
     }
 
     public viewDatesStartingFrom(date: Date, numberOfDays: number = 0): CalendarDate[] {
       let lenght = 7;
-      if(numberOfDays > 0) lenght = numberOfDays;
+      if(numberOfDays > 0) {
+        lenght = numberOfDays;
+      }
       return this.generateDates(lenght,date);
     }
 
@@ -119,8 +123,10 @@ export enum DayOfTheWeek {
       const dates: CalendarDate[] = [];
       let currentMoment: moment.Moment;
 
-      if(!startDate) currentMoment =  moment(this.state.startDate);
-      else currentMoment = moment(startDate);
+      if(!startDate) {
+        currentMoment =  moment(this.state.startDate);
+      }
+      else {currentMoment = moment(startDate);}
 
       const end = moment(currentMoment).add(numberOfDays, 'days');
       for (

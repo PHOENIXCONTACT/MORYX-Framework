@@ -84,7 +84,9 @@ export class Sessions implements OnInit, OnDestroy {
   }
 
   onSessionUpdated(updated: WorkplanSessionModel) {
-    if (this.activeSession()?.sessionToken === updated.sessionToken) this.activeSession.update(_ => updated);
+    if (this.activeSession()?.sessionToken === updated.sessionToken) {
+      this.activeSession.update(_ => updated);
+    }
 
     this.sessions.update(_ => this.sessions().filter(s => s.sessionToken !== updated.sessionToken));
     this.sessions.update(items => {
@@ -110,7 +112,9 @@ export class Sessions implements OnInit, OnDestroy {
   private async onActiveSessionChanged(token: string | undefined) {
     const result = token ? await this.sessionService.getSession(token).toAsync() : undefined;
     this.activeSession.update(_ => result);
-    if (this.activeSession()) this.router.navigate(['session', this.activeSession()?.sessionToken]);
+    if (this.activeSession()) {
+      this.router.navigate(['session', this.activeSession()?.sessionToken]);
+    }
   }
 
   ngOnDestroy(): void {
@@ -131,14 +135,18 @@ export class Sessions implements OnInit, OnDestroy {
   }
 
   private onSearch(request: SearchRequest) {
-    if (!this.sessions().length) return;
+    if (!this.sessions().length) {
+      return;
+    }
 
     const urlWorkplans = 'Workplans/';
     const urlSession = 'session/';
     const searchterm = request.term.toLowerCase();
     let sessions = this.sessions().filter(s => s.name?.toLowerCase().includes(searchterm));
 
-    if (!sessions) sessions = [];
+    if (!sessions) {
+      sessions = [];
+    }
 
     if (request.submitted) {
       this.searchBarService.clearSuggestions();
@@ -156,7 +164,9 @@ export class Sessions implements OnInit, OnDestroy {
     } else {
       const searchSuggestions = [] as SearchSuggestion[];
       for (const session of sessions) {
-        if (!session.sessionToken || !session.name) continue;
+        if (!session.sessionToken || !session.name) {
+          continue;
+        }
 
         const url = urlWorkplans + urlSession + session.sessionToken;
         searchSuggestions.push({text: session.name, url: url});
@@ -175,7 +185,9 @@ export class Sessions implements OnInit, OnDestroy {
         } else if (this.sessions().length > 1) {
           this.activateSession(this.sessions()[1].sessionToken!);
           this.router.navigate(['session', this.sessions()[1].sessionToken]);
-        } else this.router.navigate(['management']);
+        } else {
+          this.router.navigate(['management']);
+        }
       },
       error: async (err: HttpErrorResponse) => await this.snackbarService.handleError(err)
     });
@@ -186,10 +198,14 @@ export class Sessions implements OnInit, OnDestroy {
   }
 
   protected async onCloseSession(sessionToken: string | undefined) {
-    if (!sessionToken) return;
+    if (!sessionToken) {
+      return;
+    }
 
     const sessionIndex = this.sessions().findIndex(s => s.sessionToken === sessionToken);
-    if (sessionIndex < 0) return;
+    if (sessionIndex < 0) {
+      return;
+    }
 
     const translations = await this.getTranslations();
 
@@ -221,7 +237,9 @@ export class Sessions implements OnInit, OnDestroy {
   }
 
   protected saveWorkplan() {
-    if (!this.activeSession()) return;
+    if (!this.activeSession()) {
+      return;
+    }
 
     const session = this.activeSession()!;
     this.sessionService.updateSession(session).toAsync()
@@ -233,7 +251,9 @@ export class Sessions implements OnInit, OnDestroy {
     this.sessionService.saveSession(session).toAsync()
       .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err))
       .then(async session => {
-        if (!session) return;
+        if (!session) {
+          return;
+        }
         this.editorStateService.setWorkplan(session);
         const translations = await this.getTranslations();
         this.snackbarService.showSuccess(translations[TranslationConstants.EDITOR.SNACK_BAR.SUCCESS]);

@@ -7,6 +7,18 @@ import { inject, Injectable } from '@angular/core';
 import { ApiConfiguration } from '@api/api-configuration';
 import { OperationAdvicedModel, OperationReportedModel, OperationStartedModel, OperationType } from '@app/models/operation-models';
 import { OperationModel } from '@api/models/operation-model';
+import { ReportModel } from '@api/models/report-model';
+import { AdviceModel } from '@api/models/advice-model';
+
+interface OperationTypeCallbackMap {
+  [OperationType.Start]: (operation: OperationModel, userId: string) => void;
+  [OperationType.Progress]: (operation: OperationModel) => void;
+  [OperationType.Update]: (operation: OperationModel) => void;
+  [OperationType.Completed]: (operation: OperationModel, report: ReportModel) => void;
+  [OperationType.Interrupted]: (operation: OperationModel, report: ReportModel) => void;
+  [OperationType.Report]: (operation: OperationModel, report: ReportModel) => void;
+  [OperationType.Advice]: (operation: OperationModel, advice: AdviceModel) => void;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -16,8 +28,10 @@ export class OrderManagementStreamService {
 
   private eventSource?: EventSource;
 
-  public connect(operationType: OperationType, callbackFunction: (...args: unknown[]) => void) {
+  public connect<T extends OperationType>(operationType: T, callbackFunction: OperationTypeCallbackMap[T]) {
     this.eventSource = new EventSource(this.config.rootUrl + '/api/moryx/orders/stream');
+    // Cast needed because TypeScript cannot narrow the generic T inside the method body
+    const callback = callbackFunction as (...args: unknown[]) => void;
 
     this.eventSource.addEventListener(OperationType[OperationType.Start], event => {
       const operationStartedModel = JSON.parse(event.data) as OperationStartedModel;
@@ -29,7 +43,7 @@ export class OrderManagementStreamService {
         return;
       }
 
-      callbackFunction(operationStartedModel.operationModel!, operationStartedModel.userId!);
+      callback(operationStartedModel.operationModel!, operationStartedModel.userId!);
     });
 
     this.eventSource.addEventListener(OperationType[OperationType.Progress], event => {
@@ -38,7 +52,7 @@ export class OrderManagementStreamService {
         return;
       }
 
-      callbackFunction(operationModel!);
+      callback(operationModel!);
     });
 
     this.eventSource.addEventListener(OperationType[OperationType.Completed], event => {
@@ -51,7 +65,7 @@ export class OrderManagementStreamService {
         return;
       }
 
-      callbackFunction(operationReportedModel.operationModel!, operationReportedModel.reportModel!);
+      callback(operationReportedModel.operationModel!, operationReportedModel.reportModel!);
     });
 
     this.eventSource.addEventListener(OperationType[OperationType.Interrupted], event => {
@@ -64,7 +78,7 @@ export class OrderManagementStreamService {
         return;
       }
 
-      callbackFunction(operationReportedModel.operationModel!, operationReportedModel.reportModel!);
+      callback(operationReportedModel.operationModel!, operationReportedModel.reportModel!);
     });
 
     this.eventSource.addEventListener(OperationType[OperationType.Report], event => {
@@ -77,7 +91,7 @@ export class OrderManagementStreamService {
         return;
       }
 
-      callbackFunction(operationReportedModel.operationModel!, operationReportedModel.reportModel!);
+      callback(operationReportedModel.operationModel!, operationReportedModel.reportModel!);
     });
 
     this.eventSource.addEventListener(OperationType[OperationType.Advice], event => {
@@ -90,7 +104,7 @@ export class OrderManagementStreamService {
         return;
       }
 
-      callbackFunction(operationadvicedModel.operationModel!, operationadvicedModel.adviceModel!);
+      callback(operationadvicedModel.operationModel!, operationadvicedModel.adviceModel!);
     });
 
     this.eventSource.addEventListener(OperationType[OperationType.Update], event => {
@@ -99,7 +113,7 @@ export class OrderManagementStreamService {
         return;
       }
 
-      callbackFunction(operationModel!);
+      callback(operationModel!);
     });
   }
 

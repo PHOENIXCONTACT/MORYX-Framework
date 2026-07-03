@@ -102,10 +102,14 @@ export class Management implements OnInit, OnDestroy {
   }
 
   private onSearch(request: SearchRequest) {
-    if (!this.workplans().length) return;
+    if (!this.workplans().length) {
+      return;
+    }
 
     let workplans = this.workplans().filter(w => w.name?.includes(request.term));
-    if (!workplans) workplans = [];
+    if (!workplans) {
+      workplans = [];
+    }
 
     if (request.submitted) {
       this.dataSource = new MatTableDataSource<WorkplanModel>(this.workplans());
@@ -191,7 +195,9 @@ export class Management implements OnInit, OnDestroy {
       });
     }
 
-    if (!this.workplans().length) return;
+    if (!this.workplans().length) {
+      return;
+    }
     this.workplans.update(items => {
       items.remove(workplan);
       return items;

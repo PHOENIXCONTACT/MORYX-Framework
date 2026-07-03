@@ -23,7 +23,7 @@ import {
   shortDayName,
 } from '@app/utils';
 import { CalendarDate } from '@app/models/calendar-state';
-import  moment from 'moment';
+import moment from 'moment';
 import { AppStoreService } from '@app/services/app-store.service';
 import { AttendableResourceModel } from '@app/api/models/attendable-resource-model';
 import { MatSelectModule } from '@angular/material/select';
@@ -56,7 +56,7 @@ import { WeekDayToggleButton } from '@app/week-day-toggle-button/week-day-toggle
     MatIconModule,
     MatTooltipModule,
     WeekDayToggleButton
-]
+  ]
 })
 export class WeekAssignmentDialog implements OnInit {
   private dialogRef = inject(MatDialogRef<WeekAssignmentDialog>);
@@ -100,23 +100,27 @@ export class WeekAssignmentDialog implements OnInit {
 
     if (this.isResourceSet()) {
       this.appStore.resources$.subscribe((resources) => {
-        this.resources.set( resources.filter((x) => x.id === this.data.resource?.id));
+        this.resources.set(resources.filter((x) => x.id === this.data.resource?.id));
         this.form.controls.resourceId.disable();
-        if (this.data.resource?.id)
+        if (this.data.resource?.id) {
           this.refreshOperators(this.data.resource?.id);
+        }
       });
     } else {
       this.operators.update(items => items.filter((x) => x.id === this.data.operator?.id));
       this.form.controls.operatorId.disable();
-      if (this.data.operator?.id)
+      if (this.data.operator?.id) {
         this.refreshResources(this.data.operator?.id);
+      }
     }
 
     const shiftInstancesAsync = firstValueFrom(this.appStore.shiftInstances$);
     shiftInstancesAsync.then((instances) => {
       this.shiftInstances.set(instances);
       const foundCurrentShift = instances.find((x) => x.id === this.data.shift.id);
-      if (!foundCurrentShift) return;
+      if (!foundCurrentShift) {
+        return;
+      }
       this.shiftNumberOfdays.set(foundCurrentShift.shiftType.duration);
     });
   }
@@ -128,19 +132,23 @@ export class WeekAssignmentDialog implements OnInit {
       .then((skilledOperators) => {
         this.operators.update(items => {
           items.forEach((operator) => {
-          const skilledOperator = skilledOperators.find(
-            (x) => x.id === operator.id
-          );
-          //the current operator has the skill
-          //TODO: is the current operator available?
-          if (skilledOperator) operator.status = OperatorStatus.Available;
-          else operator.status = OperatorStatus.NotQualified;
+            const skilledOperator = skilledOperators.find(
+              (x) => x.id === operator.id
+            );
+            //the current operator has the skill
+            //TODO: is the current operator available?
+            if (skilledOperator) {
+              operator.status = OperatorStatus.Available;
+            } else {
+              operator.status = OperatorStatus.NotQualified;
+            }
           })
           return items;
-      });
+        });
 
       });
   }
+
   refreshResources(operatorId: string) {
     // resources that the operator has skill for
     this.appStore
@@ -162,15 +170,19 @@ export class WeekAssignmentDialog implements OnInit {
   }
 
   protected submit() {
-    if (this.form.invalid || this.data.days.length === 0) return;
-    if(!this.isOperatorSet())
+    if (this.form.invalid || this.data.days.length === 0) {
+      return;
+    }
+    if (!this.isOperatorSet()) {
       this.data.operator = this.operators().find(
         (x) => x.id === this.form.value.operatorId
       );
-    if(!this.isResourceSet())
+    }
+    if (!this.isResourceSet()) {
       this.data.resource = this.resources().find(
         (x) => x.id === this.form.value.resourceId
       );
+    }
     this.data.notes = this.form.value.notes ?? undefined;
     this.data.priority = this.form.value.priority ?? 0;
 
@@ -182,14 +194,16 @@ export class WeekAssignmentDialog implements OnInit {
   }
 
   protected dayButtonClicked(calendarDate: CalendarDate) {
-      const foundClickedDay = this.data.days.some(
-          (x) => moment(x.date).diff(moment(calendarDate.date), 'days') === 0
-      );
-      if (foundClickedDay)
+    const foundClickedDay = this.data.days.some(
+      (x) => moment(x.date).diff(moment(calendarDate.date), 'days') === 0
+    );
+    if (foundClickedDay) {
       this.data.days = this.data.days.filter(
         (e) => moment(e.date).diff(moment(calendarDate.date), 'days') != 0
       );
-    else this.data.days.push(calendarDate);
+    } else {
+      this.data.days.push(calendarDate);
+    }
   }
 
   protected isOperatorSet() {

@@ -42,7 +42,9 @@ export class ShiftTypeDialog {
   });
 
   protected submit(){
-    if(!this.form.valid) return;
+    if(!this.form.valid) {
+      return;
+    }
 
     const startHours = this.form.value.startTime?.split(':')[0] ?? '0';
     const startMinutes = this.form.value.startTime?.split(':')[1] ?? '0';

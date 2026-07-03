@@ -96,8 +96,12 @@ export class AboutDialog {
     const h = Math.floor((seconds % 86400) / 3600);
     const m = Math.floor((seconds % 3600) / 60);
     const parts = [];
-    if (d) parts.push(`${d}d`);
-    if (h) parts.push(`${h}h`);
+    if (d) {
+      parts.push(`${d}d`);
+    }
+    if (h) {
+      parts.push(`${h}h`);
+    }
     parts.push(`${m}m`);
     return parts.join(' ');
   }

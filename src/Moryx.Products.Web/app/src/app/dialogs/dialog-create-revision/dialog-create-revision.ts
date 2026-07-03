@@ -48,7 +48,9 @@ export class DialogCreateRevision {
   }
 
   protected onCreate() {
-    if (this.revision === undefined) return;
+    if (this.revision === undefined) {
+      return;
+    }
 
     this.dialogRef.close();
     const infos = <DuplicateProductInfos>{};

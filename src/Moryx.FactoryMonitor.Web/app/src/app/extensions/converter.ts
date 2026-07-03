@@ -37,7 +37,9 @@ export class Converter {
   }
 
   public static resourceChangedModelToCell(resourceModel: ResourceChangedModel): CellModel {
-    if (!resourceModel.id) throw new TypeError("Cannot create resource without id");
+    if (!resourceModel.id) {
+      throw new TypeError("Cannot create resource without id");
+    }
     const cell = <CellModel>{};
     cell.id = resourceModel.id;
 

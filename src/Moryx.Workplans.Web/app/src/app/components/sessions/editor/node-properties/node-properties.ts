@@ -57,7 +57,9 @@ export class NodeProperties implements OnDestroy {
       this.editorStateService.isEditingStep$.subscribe(async step => {
         // Awaiting this results in a race condition,
         // this.node needs to be set before the observable provides the next value
-        if (this.node()) this.updateNode(this.node()!);
+        if (this.node()) {
+          this.updateNode(this.node()!);
+        }
 
         this.node.update(_ => step);
         this.properties.update(_ => step?.properties?.subEntries?.find(p => p.identifier === 'Parameters'));
@@ -66,18 +68,25 @@ export class NodeProperties implements OnDestroy {
   }
 
   async updateNode(node: WorkplanNodeModel) {
-    if (!this.activeSession || !node.id || !this.editorStateService.workplan) return;
+    if (!this.activeSession || !node.id || !this.editorStateService.workplan) {
+      return;
+    }
 
-    if (node.properties)
+    if (node.properties) {
       PrototypeToEntryConverter.convertToEntry(node.properties);
+    }
 
     await this.workplanEditingService
       .updateStep({sessionId: this.activeSession, nodeId: node.id, body: node})
       .toAsync()
       .then(updatedNode => {
-        if (!this.editorStateService.workplan) return;
+        if (!this.editorStateService.workplan) {
+          return;
+        }
         const newNodes = this.editorStateService.workplan.nodes?.filter(keep => keep.id != updatedNode?.id);
-        if (newNodes?.length === this.editorStateService.workplan.nodes?.length) return;
+        if (newNodes?.length === this.editorStateService.workplan.nodes?.length) {
+          return;
+        }
         this.editorStateService.workplan.nodes = newNodes;
         this.editorStateService.workplan.nodes?.push(updatedNode);
         this.sessionsService.registerUpdatedSession(this.editorStateService.workplan);
@@ -94,7 +103,9 @@ export class NodeProperties implements OnDestroy {
   }
 
   protected onNavigateClick() {
-    if (!this.node()?.subworkplanId) return;
+    if (!this.node()?.subworkplanId) {
+      return;
+    }
     this.sessionsService
       .getSessionForWorkplan(this.node()?.subworkplanId ?? 0)
       .toAsync()

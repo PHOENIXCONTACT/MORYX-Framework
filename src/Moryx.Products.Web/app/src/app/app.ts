@@ -152,19 +152,25 @@ export class App implements OnInit, OnDestroy {
   }
 
   onSearch(result: SearchRequest) {
-    if (!this.products().length) return;
+    if (!this.products().length) {
+      return;
+    }
 
     const searchTerm = result.term;
     let products = this.products().filter((p) =>
       this.editService.createProductNameWithIdentity(p).includes(searchTerm)
     );
-    if (!products.length) products = [];
+    if (!products.length) {
+      products = [];
+    }
     if (result.submitted) {
       this.searchbar.clearSuggestions();
-      if (products.length > 1)
+      if (products.length > 1) {
         this.router.navigate(["search"], {queryParams: {q: searchTerm}});
-      else if (products.length === 1)
+      }
+      else if (products.length === 1) {
         this.router.navigate(['/details', products[0].id ?? 0]);
+      }
       this.searchbar.subscribe({
         next: (newRequest: SearchRequest) => {
           this.onSearch(newRequest);
@@ -175,7 +181,9 @@ export class App implements OnInit, OnDestroy {
       for (const product of products) {
         //TODO: change this in MORYX 12
         const url = "Products/details/" + product.id; // <= BAD, hard coding a parent url 'Products' is no reliable.
-        if (!product.id) continue;
+        if (!product.id) {
+          continue;
+        }
 
         searchSuggestions.push({
           text: this.editService.createProductNameWithIdentity(product),
@@ -190,7 +198,9 @@ export class App implements OnInit, OnDestroy {
   protected treeData = signal<ProductNode[]>([]);
 
   createDatasource(hierarchic: boolean) {
-    if (this.productDefinitions().length === 0) return;
+    if (this.productDefinitions().length === 0) {
+      return;
+    }
 
     this.hierarchic.set(hierarchic);
 
@@ -252,7 +262,9 @@ export class App implements OnInit, OnDestroy {
   }
 
   private SortTypesToDefinitions(): ProductNode[] {
-    if (this.productDefinitions().length === 0) return [];
+    if (this.productDefinitions().length === 0) {
+      return [];
+    }
     const products = [] as ProductNode[];
     for (const definition of this.productDefinitions()) {
       const d = this.ConvertTypeDefinitionToNode(definition);
@@ -295,7 +307,9 @@ export class App implements OnInit, OnDestroy {
       return;
     }
     event.preventDefault();
-    if (productId === 0) return;
+    if (productId === 0) {
+      return;
+    }
 
     this.open(event.clientX, event.clientY, productId);
   }
@@ -317,11 +331,17 @@ export class App implements OnInit, OnDestroy {
   }
 
   protected onSelect(id: number) {
-    if (this.isEditMode()) return;
+    if (this.isEditMode()) {
+      return;
+    }
 
-    if (id == 0) return;
+    if (id == 0) {
+      return;
+    }
 
-    if (id === this.selected()?.id) return;
+    if (id === this.selected()?.id) {
+      return;
+    }
 
     this.router.navigate(['/details', id]);
   }
@@ -334,9 +354,13 @@ export class App implements OnInit, OnDestroy {
   }
 
   protected onDelete(id: number | undefined) {
-    if (!id) return;
+    if (!id) {
+      return;
+    }
     const product = this.products().find((p) => p.id == id);
-    if (!product) return;
+    if (!product) {
+      return;
+    }
 
     const dialogRef = this.dialog.open(DialogRemoveProduct, {
       data: product
@@ -407,25 +431,35 @@ export class App implements OnInit, OnDestroy {
   }
 
   protected onDuplicate(id: number | undefined) {
-    if (!id) return;
+    if (!id) {
+      return;
+    }
 
     const product = this.products().find((p) => p.id == id);
-    if (!product) return;
+    if (!product) {
+      return;
+    }
 
     const dialogRef = this.dialog.open(DialogDuplicateProduct, {
       data: product
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) this.editService.onDuplicate(result as DuplicateProductInfos);
+      if (result) {
+        this.editService.onDuplicate(result as DuplicateProductInfos);
+      }
     });
   }
 
   protected onRevisions(id: number | undefined) {
-    if (!id) return;
+    if (!id) {
+      return;
+    }
 
     const product = this.products().find((p) => p.id == id);
-    if (!product) return;
+    if (!product) {
+      return;
+    }
 
     const dialogRef = this.dialog.open(DialogShowRevisions, {
       data: product

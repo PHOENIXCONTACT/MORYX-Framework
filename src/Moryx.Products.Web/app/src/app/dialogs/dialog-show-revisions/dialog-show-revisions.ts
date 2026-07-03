@@ -53,7 +53,9 @@ export class DialogShowRevisions implements OnInit {
     };
     this.managementService.getTypes({body: body}).subscribe({
       next: (products) => {
-        if (products !== null) this.revisions.update(_ => products);
+        if (products !== null) {
+          this.revisions.update(_ => products);
+        }
       },
       error: async (e: HttpErrorResponse) =>
         await this.snackbarService.handleError(e)

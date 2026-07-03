@@ -37,8 +37,9 @@ export class OperationService {
   // Deprecated: Only use as reference for operation types and payload
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   public stream(operationType: OperationType, callbackFunction: Function) {
-    if (this.eventSource == null)
+    if (this.eventSource == null) {
       return;
+    }
 
     this.eventSource.addEventListener(OperationType[OperationType.Start], event => {
       const operationStartedModel = JSON.parse(event.data) as OperationStartedModel;

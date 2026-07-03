@@ -124,8 +124,9 @@ export class WorkerInstructions implements OnInit, OnDestroy {
       return Promise.resolve();
     }
     this.activeInstructionIndex.update(_ => index);
-    if (this.displayedInstruction()?.id === instruction.id)
+    if (this.displayedInstruction()?.id === instruction.id) {
       return Promise.resolve();
+    }
 
     this.displayedInstruction.update(_ => instruction);
     this.mediaItems.update(_ => instruction.items?.filter(
@@ -139,8 +140,9 @@ export class WorkerInstructions implements OnInit, OnDestroy {
   }
 
   private fetchMediaContents(): Promise<DisplayedMediaContent[]> {
-    if (!this.mediaItems().length)
+    if (!this.mediaItems().length) {
       return Promise.resolve<DisplayedMediaContent[]>([]);
+    }
     return this.instructionService.requestMediaContentsAsync(this.mediaItems());
   }
 
@@ -162,8 +164,12 @@ export class WorkerInstructions implements OnInit, OnDestroy {
   }
 
   private inputsChanged(entry: Entry): boolean {
-    if (entry.value.current !== entry.value.default) return true;
-    if (!entry.subEntries?.length) return false;
+    if (entry.value.current !== entry.value.default) {
+      return true;
+    }
+    if (!entry.subEntries?.length) {
+      return false;
+    }
     return entry.subEntries.some((s: any) => this.inputsChanged(s));
   }
 
@@ -216,7 +222,9 @@ export class WorkerInstructions implements OnInit, OnDestroy {
   }
 
   clearCurrentViewOf(id: number | undefined) {
-    if (this.displayedInstruction()?.id === id) this.clearCurrentView();
+    if (this.displayedInstruction()?.id === id) {
+      this.clearCurrentView();
+    }
   }
 
   clearCurrentView() {

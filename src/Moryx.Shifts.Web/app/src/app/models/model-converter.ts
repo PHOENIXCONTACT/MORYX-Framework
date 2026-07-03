@@ -69,7 +69,9 @@ export function addCalendarDaysToAssignment(
   shiftInstance: ShiftInstanceModel | undefined,
 ): AssignmentCardModel {
 
-  if (!shiftInstance) return model;
+  if (!shiftInstance) {
+    return model;
+  }
 
   model.days = assignedDaysToCalendarDates(shiftInstance.startDate, shiftInstance.endDate, model.assignedDays);
   return model;
@@ -82,7 +84,9 @@ export function assignedDaysToCalendarDates(
 ): CalendarDate[] {
   const calendarDates: CalendarDate[] = [];
 
-  if (!assignedDays) return calendarDates;
+  if (!assignedDays) {
+    return calendarDates;
+  }
 
   const dayStringArray = assignedDays.split(',');
   const start = moment(startDate);
@@ -170,12 +174,15 @@ export function calendarDatesToFlagEnumString(calendarDates: CalendarDate[], shi
     const day = PossibleAssignedDays[index];
     const correspondingCalendarDate = calendarDates.find(x => moment(x.date).diff(currentDate) === 0);
     //the current date is not in the calendar for the shift
-    if (!correspondingCalendarDate) continue;
+    if (!correspondingCalendarDate) {
+      continue;
+    }
 
-    if (stringResult === '')
+    if (stringResult === '') {
       stringResult += `${day}`;
-    else
+    } else {
       stringResult += `,${day}`
+    }
   }
   return stringResult;
 }

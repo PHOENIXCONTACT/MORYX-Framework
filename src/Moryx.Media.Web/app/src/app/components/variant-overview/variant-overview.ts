@@ -89,7 +89,9 @@ export class VariantOverview implements OnInit, OnDestroy {
       } else {
         this.mediaService.loadContent(id).subscribe((x) => {
           this.content.update(_ => x);
-          if (this.content() !== undefined) this.loadPreviews();
+          if (this.content() !== undefined) {
+            this.loadPreviews();
+          }
         });
       }
     }
@@ -121,7 +123,9 @@ export class VariantOverview implements OnInit, OnDestroy {
 
   protected onMouseDown(event: MouseEvent, variant: VariantDescriptor) {
     this.onSelect(variant);
-    if (event.button != 0) return;
+    if (event.button != 0) {
+      return;
+    }
 
     this.timeoutHandler = setTimeout(() => {
       this.onContext(event, variant);
@@ -144,8 +148,9 @@ export class VariantOverview implements OnInit, OnDestroy {
         if (
           typeof variant.name === 'string' &&
           typeof variant.mimeType === 'string'
-        )
+        ) {
           this.addPreview(variant.name, variant.mimeType, content.id);
+        }
       }
     }
   }
@@ -158,7 +163,9 @@ export class VariantOverview implements OnInit, OnDestroy {
           if (data !== null) {
             const blob = new Blob([data], {type: data.type});
             const old = this.previewObjectUrls.get(variantName);
-            if (old) URL.revokeObjectURL(old);
+            if (old) {
+              URL.revokeObjectURL(old);
+            }
 
             const url = URL.createObjectURL(blob);
             this.previewObjectUrls.set(variantName, url);
@@ -248,7 +255,9 @@ export class VariantOverview implements OnInit, OnDestroy {
         data: content.id,
       });
       dialogRef.afterClosed().subscribe(async (result) => {
-        if (result) await this.uploadVariant(result);
+        if (result) {
+          await this.uploadVariant(result);
+        }
       });
     }
   }

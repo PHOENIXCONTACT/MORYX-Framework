@@ -90,7 +90,9 @@ export class MediaOverview implements OnInit, OnDestroy {
     const contents = this.contents().filter((c) =>
       c.name?.toLowerCase()?.includes(result.term.toLowerCase())
     );
-    if (!contents) return;
+    if (!contents) {
+      return;
+    }
 
     if (result.submitted) {
       this.searchBarService.clearSuggestions();
@@ -103,7 +105,9 @@ export class MediaOverview implements OnInit, OnDestroy {
     } else {
       const searchSuggestions = [] as SearchSuggestion[];
       for (const content of contents) {
-        if (!content.name) continue;
+        if (!content.name) {
+          continue;
+        }
 
         const url = urlBase + content.id;
         searchSuggestions.push({text: content.name, url: url});
@@ -149,7 +153,9 @@ export class MediaOverview implements OnInit, OnDestroy {
       });
 
       dialogRef.afterClosed().subscribe((result) => {
-        if (result === true) this.remove(content);
+        if (result === true) {
+          this.remove(content);
+        }
       });
     }
   }

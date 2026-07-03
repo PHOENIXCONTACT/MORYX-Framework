@@ -7,7 +7,9 @@ import moment from 'moment';
 import { DayOfTheWeek } from "./calendar-state";
 
 export function dateToString(date: Date | undefined): string{
-    if(!date) return "N/A";
+    if(!date) {
+      return "N/A";
+    }
     return date.toDateString();
 }
 
@@ -29,7 +31,9 @@ export function isDayInInterval(
     startDate?: Date,
     endDate?: Date
   ): boolean {
-    if (!startDate || !endDate) return false;
+    if (!startDate || !endDate) {
+      return false;
+    }
 
     const startMoment = moment(startDate);
     const endMoment = moment(endDate);

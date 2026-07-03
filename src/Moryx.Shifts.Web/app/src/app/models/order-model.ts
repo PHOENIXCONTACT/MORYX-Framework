@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import  moment from 'moment';
+import moment from 'moment';
 
 export interface OrderModel {
   operationNumber: string;
@@ -27,10 +27,14 @@ export function getOrderOfTheDayBasedOnOperatorHours(
   );
 
   for (const order of filteredOrders) {
-    if(hoursAvailable === 0) break;
+    if (hoursAvailable === 0) {
+      break;
+    }
 
     const alreadyExist = ordersOfTheDay.find(x => x.operationNumber === order.orderNumber && x.orderNumber === order.orderNumber);
-    if (order.totalHours > hoursAvailable || alreadyExist) continue;
+    if (order.totalHours > hoursAvailable || alreadyExist) {
+      continue;
+    }
 
     hoursAvailable = hoursAvailable - order.totalHours;
     ordersOfTheDay.push(order);
@@ -39,40 +43,47 @@ export function getOrderOfTheDayBasedOnOperatorHours(
   return ordersOfTheDay;
 }
 
-export function getOrderHoursForTheDay(  orders: OrderModel[],
-    currentDate: Date,
-    operatorHours: number) : number{
-    const results = getOrderOfTheDayBasedOnOperatorHours(orders,currentDate,operatorHours);
-    return totalOrderHours(results);
+export function getOrderHoursForTheDay(orders: OrderModel[],
+                                       currentDate: Date,
+                                       operatorHours: number): number {
+  const results = getOrderOfTheDayBasedOnOperatorHours(orders, currentDate, operatorHours);
+  return totalOrderHours(results);
 }
 
-export function totalOrderHours(orders: OrderModel[]){
-    let sum = 0;
-    for (const order of orders)
-        sum = sum + order.totalHours;
+export function totalOrderHours(orders: OrderModel[]) {
+  let sum = 0;
+  for (const order of orders) {
+    sum = sum + order.totalHours;
+  }
 
-    return sum;
+  return sum;
 }
 
 export function getOrdersBasedOnOperatorHours(startDate: Date | undefined,
-    endDate: Date | undefined,
-    orders: OrderModel[],operatorHours: number): OrderModel[] {
-    if(!startDate || !endDate) return [];
-    const orderList: OrderModel[] = [];
-    let totalHoursLeft = operatorHours;
-    const start = moment(startDate);
-    const end = moment(endDate);
-    for (let now = start; now.diff(end,'days') <= 0; now =  now.add(1,'days')) {
-        if(totalHoursLeft <= 0) break;
-
-        const ordersOfTheDay = getOrderOfTheDayBasedOnOperatorHours(orders, now.toDate(), operatorHours);
-        if(!ordersOfTheDay.length) continue;
-
-        orderList.push(...ordersOfTheDay);
-        totalHoursLeft = totalHoursLeft - totalOrderHours(ordersOfTheDay);
+                                              endDate: Date | undefined,
+                                              orders: OrderModel[], operatorHours: number): OrderModel[] {
+  if (!startDate || !endDate) {
+    return [];
+  }
+  const orderList: OrderModel[] = [];
+  let totalHoursLeft = operatorHours;
+  const start = moment(startDate);
+  const end = moment(endDate);
+  for (let now = start; now.diff(end, 'days') <= 0; now = now.add(1, 'days')) {
+    if (totalHoursLeft <= 0) {
+      break;
     }
 
-    return orderList;
+    const ordersOfTheDay = getOrderOfTheDayBasedOnOperatorHours(orders, now.toDate(), operatorHours);
+    if (!ordersOfTheDay.length) {
+      continue;
+    }
+
+    orderList.push(...ordersOfTheDay);
+    totalHoursLeft = totalHoursLeft - totalOrderHours(ordersOfTheDay);
+  }
+
+  return orderList;
 }
 
 

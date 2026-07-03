@@ -60,8 +60,9 @@ export class SearchService {
    */
   private getMatchingResources(searchTerm: string): ResourceModel[] {
     const resources = this.resources();
-    if (!resources) 
+    if (!resources)  {
       return [];
+    }
 
     const possibleResults = resources.filter(r => this.matchById(searchTerm, r) 
       || this.matchByName(searchTerm, r) 
@@ -96,7 +97,9 @@ export class SearchService {
   }
 
   private selectResource(id: number) {
-    if (this.blockedByEditing() || this.editService.activeResource()?.id === id) return;
+    if (this.blockedByEditing() || this.editService.activeResource()?.id === id) {
+      return;
+    }
     this.router.navigate([`/details/${id}`]);
   }
 

@@ -3,7 +3,16 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, computed, effect, inject, linkedSignal, signal, untracked, ChangeDetectionStrategy } from "@angular/core";
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  linkedSignal,
+  signal,
+  untracked,
+  ChangeDetectionStrategy
+} from "@angular/core";
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from "@angular/forms";
 import { TranslatePipe } from "@ngx-translate/core";
 import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
@@ -39,14 +48,16 @@ export class ProductRecipesDetailsHeader {
   private cacheService = inject(CacheProductsService);
   private editProductsService = inject(EditProductsService);
 
-  protected isEditMode = toSignal(this.editProductsService.edit$, { initialValue: false });
+  protected isEditMode = toSignal(this.editProductsService.edit$, {initialValue: false});
   protected currentRecipe = linkedSignal(this.editProductsService.currentRecipe);
 
   protected hasWorkplans = computed(() => {
-    if (this.currentRecipe()?.workplanModel === undefined) return false;
+    if (this.currentRecipe()?.workplanModel === undefined) {
+      return false;
+    }
     return true;
   });
-  protected possibleWorkplans = toSignal(this.cacheService.workplans, { initialValue: [] });
+  protected possibleWorkplans = toSignal(this.cacheService.workplans, {initialValue: []});
   protected recipeClassifications = signal(Object.keys(RecipeClassificationModel));
 
   protected recipeControl = new UntypedFormControl({
@@ -58,10 +69,11 @@ export class ProductRecipesDetailsHeader {
     effect(() => {
       const edit = this.isEditMode();
       untracked(() => {
-        if (edit)
+        if (edit) {
           this.recipeControl.enable();
-        else
+        } else {
           this.recipeControl.disable();
+        }
       })
     });
   }

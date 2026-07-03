@@ -47,7 +47,9 @@ export class InterruptDialog {
         failed = true;
         this.isLoading.set(false);
       });
-    if (!failed) this.dialog.close();
+    if (!failed) {
+      this.dialog.close();
+    }
   }
 }
 

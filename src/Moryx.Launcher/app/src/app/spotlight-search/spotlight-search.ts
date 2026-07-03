@@ -84,7 +84,9 @@ export class SpotlightSearch {
         break;
       case 'Enter': {
         const q = this.query().trim();
-        if (!q) break;
+        if (!q) {
+          break;
+        }
         const active = this.suggestions()[this.activeIndex()];
         if (active) {
           this.navigate(active);
@@ -113,7 +115,9 @@ export class SpotlightSearch {
 
   private scrollActiveIntoView(): void {
     const list = this.resultsList()?.nativeElement;
-    if (!list) return;
+    if (!list) {
+      return;
+    }
     const item = list.children[this.activeIndex()] as HTMLElement | undefined;
     item?.scrollIntoView({block: 'nearest'});
   }

@@ -91,10 +91,11 @@ export class MediaFile implements OnInit {
   }
 
   protected onClick(event: MouseEvent) {
-    if ((<HTMLElement>event.target).nodeName === 'MAT-ICON')
+    if ((<HTMLElement>event.target).nodeName === 'MAT-ICON') {
       this.delete.emit(this.content());
-    else
+    } else {
       this.show.emit(this.content());
+    }
   }
 }
 

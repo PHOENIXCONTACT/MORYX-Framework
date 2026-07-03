@@ -66,7 +66,9 @@ export class ProductParts {
   }
 
   protected onDeselectPartConnector(part: PartConnector) {
-    if (part.name !== this.expandedPart()?.name) return;
+    if (part.name !== this.expandedPart()?.name) {
+      return;
+    }
     this.router.navigate(['details', this.currentProduct()!.id, 'parts', 'base', 0]);
   }
 
@@ -75,7 +77,9 @@ export class ProductParts {
     const dialogRef = this.dialog.open(DialogAddPart, { data: connector });
 
     const product = await firstValueFrom(dialogRef.afterClosed());
-    if (!product) return;
+    if (!product) {
+      return;
+    }
 
     // Create new Part
     const newPart = <PartModel>{};
