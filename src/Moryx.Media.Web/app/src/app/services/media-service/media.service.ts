@@ -45,7 +45,7 @@ export class MediaService {
   }
 
   getContent(id: string): ContentDescriptorModel | undefined {
-    let contentValues = this.contents.getValue();
+    const contentValues = this.contents.getValue();
     return contentValues.find((c) => c.id === id);
   }
 

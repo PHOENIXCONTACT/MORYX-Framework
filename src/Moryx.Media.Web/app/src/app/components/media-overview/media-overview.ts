@@ -102,7 +102,7 @@ export class MediaOverview implements OnInit, OnDestroy {
       });
     } else {
       const searchSuggestions = [] as SearchSuggestion[];
-      for (let content of contents) {
+      for (const content of contents) {
         if (!content.name) continue;
 
         const url = urlBase + content.id;

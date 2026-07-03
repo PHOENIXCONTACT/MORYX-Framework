@@ -140,7 +140,7 @@ export class VariantOverview implements OnInit, OnDestroy {
       content.variants !== null &&
       typeof content.id === 'string'
     ) {
-      for (let variant of content.variants) {
+      for (const variant of content.variants) {
         if (
           typeof variant.name === 'string' &&
           typeof variant.mimeType === 'string'
@@ -206,7 +206,7 @@ export class VariantOverview implements OnInit, OnDestroy {
             const bigPicture = new Blob([data], {type: data.type});
             const reader = new FileReader();
             reader.readAsDataURL(bigPicture);
-            reader.onload = (_event) => {
+            reader.onload = (event) => {
               this.downloadPictureUrl = reader.result;
               if (
                 typeof variant.mimeType === 'string' &&
@@ -260,7 +260,7 @@ export class VariantOverview implements OnInit, OnDestroy {
       content !== null &&
       typeof content.id === 'string'
     ) {
-      let id = content.id;
+      const id = content.id;
       if (
         content.variants !== null &&
         content.variants !== undefined &&
@@ -328,7 +328,7 @@ export class VariantOverview implements OnInit, OnDestroy {
       const url =
         location.origin +
         this.interpolateUrl(MediaServerService.GetVariantStreamPath, values);
-      const dialogRef = this.dialog.open(DialogVariantInfo, {
+      this.dialog.open(DialogVariantInfo, {
         data: {
           name: selectedVariant.name,
           contentName: content.name,
