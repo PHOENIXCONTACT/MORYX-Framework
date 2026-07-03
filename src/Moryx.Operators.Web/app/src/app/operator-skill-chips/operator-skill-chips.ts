@@ -32,7 +32,7 @@ export class OperatorSkillChips {
 
   protected skillTooltipText(){
     let skillNameArray: string[] = [];
-    skillNameArray = this.operatorSkills().map((x,index) => this.findSkillTypeById(x.typeId)?.name ?? 'UNKNOWN');
+    skillNameArray = this.operatorSkills().map((x) => this.findSkillTypeById(x.typeId)?.name ?? 'UNKNOWN');
     return skillNameArray.join(', ');
   }
 }

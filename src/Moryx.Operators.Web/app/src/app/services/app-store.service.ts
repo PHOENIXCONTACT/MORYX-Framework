@@ -215,7 +215,7 @@ export class AppStoreService {
   }
 
   getOperator(identifier: string): Promise<OperatorViewModel | undefined> {
-    let result: OperatorViewModel | undefined = this.currentOperatorList().find(
+    const result: OperatorViewModel | undefined = this.currentOperatorList().find(
       (x) => x.data.identifier === identifier
     );
     if (result) return Promise.resolve(result);

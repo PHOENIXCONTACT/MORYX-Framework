@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, effect, inject, input, OnInit, signal, untracked, ChangeDetectionStrategy } from "@angular/core";
+import { Component, effect, inject, input, signal, untracked, ChangeDetectionStrategy } from "@angular/core";
 import { RouterLink } from "@angular/router";
 import { TranslationConstants } from "../extensions/translation-constants.extensions";
 import { OperatorSkillView } from "../models/type";
@@ -47,7 +47,7 @@ import { MatButtonModule } from "@angular/material/button";
     RouterLink
   ]
 })
-export class OperatorDetails implements OnInit {
+export class OperatorDetails {
   private appStoreService = inject(AppStoreService);
   private dialog = inject(MatDialog);
   private translateService = inject(TranslateService);
@@ -78,9 +78,6 @@ export class OperatorDetails implements OnInit {
       const id = this.id();
       untracked(() => this.initialize(id))
     })
-  }
-
-  ngOnInit(): void {
   }
 
   initialize(id: string) {
@@ -141,7 +138,7 @@ export class OperatorDetails implements OnInit {
     });
 
     dialogResult.afterClosed().subscribe(result => {
-      if (!result) result;
+      if (!result) return;
 
       this.appStoreService.addSkill(this.operatorViewModel()!, result);
       setTimeout(() => this.loadSkills(), 500);
