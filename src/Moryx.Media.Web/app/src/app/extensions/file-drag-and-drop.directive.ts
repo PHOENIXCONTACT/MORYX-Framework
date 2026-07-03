@@ -19,14 +19,14 @@ export class FileDragAndDropDirective {
   fileover = false;
 
   //Drag over listener
-  onDragOver(event: any) {
+  onDragOver(event: DragEvent) {
     event.preventDefault();
     event.stopPropagation();
     this.fileover = true;
   }
 
   //Drag leave listener
-  onDragLeave(event: any) {
+  onDragLeave(event: DragEvent) {
     event.preventDefault();
     event.stopPropagation();
     this.fileover = false;

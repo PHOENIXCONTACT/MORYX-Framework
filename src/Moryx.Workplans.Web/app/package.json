@@ -36,6 +36,7 @@
     "@angular/build": "^22.0.0",
     "@angular/cli": "^22.0.0",
     "@angular/compiler-cli": "^22.0.0",
+    "@types/hammerjs": "^2.0.46",
     "angular-eslint": "^22.0.0",
     "eslint": "^10.6.0",
     "jsdom": "^29.1.1",

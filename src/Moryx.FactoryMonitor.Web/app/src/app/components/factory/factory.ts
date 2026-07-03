@@ -95,7 +95,7 @@ export class Factory implements OnInit {
     });
   }
 
-  protected async onCellMove(event: CdkDragEnd<any>) {
+  protected async onCellMove(event: CdkDragEnd) {
     const params = this.parameters();
 
     // Calculate new position as percetage value relative to the cell-container

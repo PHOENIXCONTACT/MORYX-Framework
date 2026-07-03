@@ -326,8 +326,8 @@ export class VariantOverview implements OnInit, OnDestroy {
     }
   }
 
-  interpolateUrl = (string: string, values: any) =>
-    string.replace(/{(.*?)}/g, (match, offset) => values[offset]);
+  interpolateUrl = (string: string, values: Record<string, string | null | undefined>) =>
+    string.replace(/{(.*?)}/g, (match, offset) => values[offset] ?? '');
 
   protected onInfo(variant: VariantDescriptor): void {
     const content = this.content();

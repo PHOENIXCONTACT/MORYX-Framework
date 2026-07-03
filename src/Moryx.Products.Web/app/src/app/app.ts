@@ -303,7 +303,7 @@ export class App implements OnInit, OnDestroy {
 
   protected onProductContext(event: MouseEvent, productId: number) {
     // Only handle right-click, not touch long-press
-    if ((event as any).pointerType === 'touch') {
+    if ((event as PointerEvent).pointerType === 'touch') {
       return;
     }
     event.preventDefault();

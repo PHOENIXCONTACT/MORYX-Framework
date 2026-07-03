@@ -53,7 +53,7 @@ export class ResourceReferences {
 
   protected TranslationConstants = TranslationConstants;
 
-  protected compareWith = (o1: any, o2: any) => {
+  protected compareWith = (o1: ResourceModel, o2: ResourceModel) => {
     return o1?.id === o2?.id;
   };
   private router = inject(Router);

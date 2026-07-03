@@ -102,7 +102,7 @@ export class Cell implements OnInit, OnDestroy {
     this.cellStoreService.selectCell(this.currentCell().id!);
   }
 
-  protected async onCellMove(event: CdkDragEnd<any>) {
+  protected async onCellMove(event: CdkDragEnd) {
     const params = this.parameters();
 
     // Calculate new position as percetage value relative to the cell-container

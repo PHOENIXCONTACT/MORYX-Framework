@@ -58,7 +58,7 @@ export class NotificationDetails implements OnInit, OnDestroy {
     this.notificationService.acknowledge(notification.identifier);
   }
 
-  protected isArrayNotEmpty(array: any[] | undefined | null): boolean {
+  protected isArrayNotEmpty(array: unknown[] | undefined | null): boolean {
     return array !== undefined && array !== null && array.length > 0;
   }
 }

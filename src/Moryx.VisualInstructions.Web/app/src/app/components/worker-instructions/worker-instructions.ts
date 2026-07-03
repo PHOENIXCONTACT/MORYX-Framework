@@ -170,7 +170,7 @@ export class WorkerInstructions implements OnInit, OnDestroy {
     if (!entry.subEntries?.length) {
       return false;
     }
-    return entry.subEntries.some((s: any) => this.inputsChanged(s));
+    return entry.subEntries.some((s: Entry) => this.inputsChanged(s));
   }
 
   private updateInstructions(update: InstructionModel[]) {

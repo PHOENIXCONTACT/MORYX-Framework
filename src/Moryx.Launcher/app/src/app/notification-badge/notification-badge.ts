@@ -44,7 +44,7 @@ export class NotificationBadge {
     this.eventSource = undefined;
   }
 
-  onReceived(event: any) {
+  onReceived(event: MessageEvent<string>) {
     // Check if data is plain number
     let integer = parseInt(event.data);
     // Parse data assuming collection

@@ -117,7 +117,7 @@ export class MediaOverview implements OnInit, OnDestroy {
     }
   }
 
-  onOpenMenuOnTouch(event: any, content: ContentDescriptorModel) {
+  onOpenMenuOnTouch(event: { pointers: PointerEvent[] }, content: ContentDescriptorModel) {
     this.trigger().menuData = {content: content};
     this.menuTopLeftPosition.x = event.pointers[0].clientX + 'px';
     this.menuTopLeftPosition.y = event.pointers[0].clientY + 'px';
@@ -131,8 +131,12 @@ export class MediaOverview implements OnInit, OnDestroy {
 
 
   //upload new content
-  protected onUpload(event: any) {
-    for (const fileElement of event.target.files) {
+  protected onUpload(event: Event | { target: { files: FileList } }) {
+    const files = (event.target as HTMLInputElement).files;
+    if (!files) {
+      return;
+    }
+    for (const fileElement of files) {
       const file: File = fileElement;
       if (file) {
         this.mediaService.uploadContent(file);
@@ -171,7 +175,7 @@ export class MediaOverview implements OnInit, OnDestroy {
     }
   }
 
-  protected fileDropped(arg: any) {
+  protected fileDropped(arg: { target: { files: FileList } }) {
     this.onUpload(arg);
   }
 }

@@ -42,8 +42,6 @@ export class MediaFile implements OnInit {
 
   readonly show = output<ContentDescriptorModel>();
   readonly delete = output<ContentDescriptorModel>();
-  img: any;
-
   ngOnInit(): void {
     this.showFile();
   }

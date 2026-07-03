@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { CdkDragDrop, CdkDragEnd, CdkDragStart, DragDropModule, DragRef } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, CdkDragEnd, CdkDragStart, DragDropModule, DragRef, Point } from '@angular/cdk/drag-drop';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, OnInit, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
@@ -261,7 +261,7 @@ export class Editor implements OnInit {
   //#endregion
 
   //#region Drag and Drop
-  protected dragConstrainPoint = (point: any, dragRef: DragRef) => {
+  protected dragConstrainPoint = (point: Point, dragRef: DragRef) => {
     // Consider scaling of parent element when dragging cards
     let zoomMoveXDifference = 0;
     let zoomMoveYDifference = 0;
@@ -286,7 +286,9 @@ export class Editor implements OnInit {
     this.cursorOffset.x = mouseEvent.clientX - event.source.element.nativeElement.getBoundingClientRect().left;
     this.cursorOffset.y = mouseEvent.clientY - event.source.element.nativeElement.getBoundingClientRect().top;
     event.source._dragRef.setFreeDragPosition(position);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- accessing private CDK DragRef internals for zoom support
     (event.source._dragRef as any)._activeTransform = this.dragPosition;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (event.source._dragRef as any)._applyRootElementTransform(this.dragPosition().x, this.dragPosition().y);
   }
 
@@ -476,13 +478,14 @@ export class Editor implements OnInit {
     this.onClickStep(node);
   }
 
-  protected openStepPressMenu(event: any, node: WorkplanNodeModel) {
-    if (event.type != 'press' || event.pointer?.length > 1) {
+  protected openStepPressMenu(event: Event, node: WorkplanNodeModel) {
+    const hammerEvent = event as unknown as HammerInput;
+    if (hammerEvent.type != 'press' || hammerEvent.pointers.length > 1) {
       return;
     }
-    event.preventDefault();
-    this.menuX = event.pointers[0].clientX + 'px';
-    this.menuY = event.pointers[0].clientY + 'px';
+    hammerEvent.preventDefault();
+    this.menuX = hammerEvent.pointers[0].clientX + 'px';
+    this.menuY = hammerEvent.pointers[0].clientY + 'px';
     this.openContextMenu(node);
   }
 
@@ -499,18 +502,19 @@ export class Editor implements OnInit {
     this.pathMenuTrigger()?.openMenu();
   }
 
-  protected openPathTapMenu(event: any, path: NodeConnectionPath) {
-    if (event.type != 'tap' || event.pointer?.length > 1) {
+  protected openPathTapMenu(event: Event, path: NodeConnectionPath) {
+    const hammerEvent = event as unknown as HammerInput;
+    if (hammerEvent.type != 'tap' || hammerEvent.pointers.length > 1) {
       return;
     }
-    event.preventDefault();
-    this.menuX = event.pointers[0].clientX + 'px';
-    this.menuY = event.pointers[0].clientY + 'px';
+    hammerEvent.preventDefault();
+    this.menuX = hammerEvent.pointers[0].clientX + 'px';
+    this.menuY = hammerEvent.pointers[0].clientY + 'px';
     this.pathMenuTrigger().menuData = path;
     this.pathMenuTrigger()?.openMenu();
   }
 
-  protected getPathMenuAreaStyles(segment: Segment): { [klass: string]: any } {
+  protected getPathMenuAreaStyles(segment: Segment): Record<string, string> {
     return segment.width > segment.height
       ? {width: `${segment.width}px`, height: `${segment.height * 5}px`, top: `${-4}px`}
       : {width: `${segment.width * 5}px`, height: `${segment.height}px`, left: `${-4}px`};

@@ -156,7 +156,7 @@ export class App implements OnInit, OnDestroy {
 
   protected openContextMenuByClicking(event: MouseEvent, resourceId: number) {
     // Only handle right-click, not touch long-press
-    if ((event as any).pointerType === 'touch') {
+    if ((event as PointerEvent).pointerType === 'touch') {
       return;
     }
     event.preventDefault();

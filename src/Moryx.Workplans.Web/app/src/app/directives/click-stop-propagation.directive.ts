@@ -13,7 +13,7 @@ import { Directive } from '@angular/core';
 })
 export class ClickStopPropagationDirective {
 
-  onClick(event: any): void {
+  onClick(event: Event): void {
     event.stopPropagation();
   }
 

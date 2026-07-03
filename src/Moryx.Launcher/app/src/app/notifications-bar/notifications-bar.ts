@@ -98,7 +98,7 @@ export class NotificationsBar {
     this.clearInterval();
   }
 
-  private onMessageReceived(event: any) {
+  private onMessageReceived(event: MessageEvent<string>) {
     //send notifications to listeners
     const data = <Array<Notification>>JSON.parse(event.data);
 
