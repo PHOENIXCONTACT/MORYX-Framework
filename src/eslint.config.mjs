@@ -70,9 +70,10 @@ export function moryxConfig(tseslint, angular) {
         // Angular style guide: prefer native class/style bindings
         "@angular-eslint/template/no-negated-async": "error",
 
-        // Accessibility rules as warnings (not blocking)
-        "@angular-eslint/template/click-events-have-key-events": "warn",
-        "@angular-eslint/template/interactive-supports-focus": "warn",
+        // Disabled: Angular Material components (mat-tab-link, mat-icon-button, etc.)
+        // already handle keyboard accessibility internally, causing false positives.
+        "@angular-eslint/template/click-events-have-key-events": "off",
+        "@angular-eslint/template/interactive-supports-focus": "off",
       },
     },
   ];
