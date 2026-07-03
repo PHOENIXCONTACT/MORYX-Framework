@@ -39,11 +39,15 @@
               <div cdkDrag (mousedown)="onRegisterClickStart()" (mouseup)="onRegisterClickEnd()">
                 <div
                   class="workplan-canvas"
-                  [style]="getCanvasStyling()"
+                  [style.height]="size * 2 + 'px'"
+                  [style.width]="size * 2 + 'px'"
+                  [style.top]="canvasPosition.top + 'px'"
+                  [style.left]="canvasPosition.left + 'px'"
+                  [style.transform]="'scale(' + canvasScale + ')'"
+                  [style.background-size]="stepSize + 'px ' + stepSize + 'px'"
                   (wheel)="scaleCanvas($event)"
                   (dragover)="allowDrop($event)"
                   (drop)="recipeDropped($event)"
-                  [style]="{ 'background-size': '' + stepSize + 'px ' + stepSize + 'px' }"
                   cdkDropList>
                   @for (node of editorState.workplan?.nodes; track node) {
                     <mat-card

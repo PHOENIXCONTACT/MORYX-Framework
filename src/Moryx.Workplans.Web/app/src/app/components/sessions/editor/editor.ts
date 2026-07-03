@@ -247,16 +247,6 @@ export class Editor implements OnInit {
     this.canvasScale = Math.min(Math.max(0.125, scale), 1.2);
   }
 
-  protected getCanvasStyling() {
-    return {
-      height: this.size * 2 + 'px',
-      width: this.size * 2 + 'px',
-      top: this.canvasPosition?.top + 'px',
-      left: this.canvasPosition?.left + 'px',
-      transform: 'scale(' + this.canvasScale + ')'
-    };
-  }
-
   //#endregion
 
   //#region Drag and Drop
