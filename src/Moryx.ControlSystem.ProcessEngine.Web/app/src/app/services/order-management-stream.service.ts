@@ -16,7 +16,7 @@ export class OrderManagementStreamService {
 
   private eventSource?: EventSource;
 
-  public connect(operationType: OperationType, callbackFunction: Function) {
+  public connect(operationType: OperationType, callbackFunction: (...args: unknown[]) => void) {
     this.eventSource = new EventSource(this.config.rootUrl + '/api/moryx/orders/stream');
 
     this.eventSource.addEventListener(OperationType[OperationType.Start], event => {

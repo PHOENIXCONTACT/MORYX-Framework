@@ -116,7 +116,7 @@ export class Jobs implements OnInit {
       (o) => o.identifier === updatedOperation.identifier
     );
     if (existent) {
-      let index = this.operations().indexOf(existent);
+      const index = this.operations().indexOf(existent);
       this.operations.update(items => {
         items[index] = updatedOperation;
         return items;
@@ -155,13 +155,13 @@ export class Jobs implements OnInit {
 
   protected getOrderNumber(job: JobModel): string {
     if (job.productionJob)
-      return this.operations().find(operation => operation.jobIds?.find(j => j === job.id))?.order!;
+      return this.operations().find(operation => operation.jobIds?.find(j => j === job.id))?.order ?? "";
     return "";
   }
 
   protected getOperationNumber(job: JobModel): string {
     if (job.productionJob)
-      return this.operations().find(operation => operation.jobIds?.find(j => j === job.id))?.number!;
+      return this.operations().find(operation => operation.jobIds?.find(j => j === job.id))?.number ?? "";
     return "";
   }
 

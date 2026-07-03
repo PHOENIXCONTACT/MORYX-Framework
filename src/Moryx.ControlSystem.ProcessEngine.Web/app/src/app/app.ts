@@ -1,9 +1,8 @@
-import { Component, inject, signal, ChangeDetectionStrategy } from "@angular/core";
+import { Component, inject, ChangeDetectionStrategy } from "@angular/core";
 import { TranslationConstants } from "./extensions/translation-constants.extensions";
 import { TranslateService } from "@ngx-translate/core";
 import { LanguageService } from "@moryx/ngx-web-framework/services";
 import {
-  NavigationEnd,
   Router,
   RouterLink,
   RouterLinkActive,
