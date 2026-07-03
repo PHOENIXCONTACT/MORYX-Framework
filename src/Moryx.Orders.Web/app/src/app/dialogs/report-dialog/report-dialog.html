@@ -23,15 +23,15 @@
 
   <div class="report-dialog-amounts-row">
     <div class="amounts-data-entry">
-      <label><b>{{ TranslationConstants.REPORT_DIALOG.AMOUNT | translate }}</b></label>
+      <span><b>{{ TranslationConstants.REPORT_DIALOG.AMOUNT | translate }}</b></span>
       <div>{{ data.operation.model.totalAmount }}</div>
     </div>
     <div class="amounts-data-entry">
-      <label><b>{{ TranslationConstants.REPORT_DIALOG.OVERDELIVERY | translate }}</b></label>
+      <span><b>{{ TranslationConstants.REPORT_DIALOG.OVERDELIVERY | translate }}</b></span>
       <div>{{ data.operation.model.overDeliveryAmount }} ({{ data.operation.overDelivery }} %)</div>
     </div>
     <div class="amounts-data-entry">
-      <label><b>{{ TranslationConstants.REPORT_DIALOG.UNDERDELIVERY | translate }}</b></label>
+      <span><b>{{ TranslationConstants.REPORT_DIALOG.UNDERDELIVERY | translate }}</b></span>
       <div>{{ data.operation.model.underDeliveryAmount }} ({{ data.operation.underDelivery }} %)</div>
     </div>
   </div>

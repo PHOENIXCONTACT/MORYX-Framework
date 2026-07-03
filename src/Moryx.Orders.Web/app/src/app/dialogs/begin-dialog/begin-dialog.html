@@ -50,17 +50,17 @@
   <mat-grid-list cols="3" rowHeight="50px">
     <mat-grid-tile>
       <div class="content-data-entry">
-        <label><b>{{
+        <span><b>{{
             TranslationConstants.BEGIN_DIALOG.TOTAL_AMOUNT | translate
-          }}</b></label>
+          }}</b></span>
         <div>{{ operation.model.totalAmount }}</div>
       </div>
     </mat-grid-tile>
     <mat-grid-tile>
       <div class="content-data-entry">
-        <label><b>{{
+        <span><b>{{
             TranslationConstants.BEGIN_DIALOG.OVERDELIVERY | translate
-          }}</b></label>
+          }}</b></span>
         <div [style.color]="overDeliveryReached() ? 'var(--mat-sys-error)' : 'var(--mat-sys-on-surface)'">
           {{ operation.model.overDeliveryAmount }} ({{ operation.overDelivery }}
           %)
@@ -69,9 +69,9 @@
     </mat-grid-tile>
     <mat-grid-tile>
       <div class="content-data-entry">
-        <label><b>{{
+        <span><b>{{
             TranslationConstants.BEGIN_DIALOG.UNDERDELIVERY | translate
-          }}</b></label>
+          }}</b></span>
         <div [style.color]="underDeliveryReached() ? 'var(--mat-sys-error)' : 'var(--mat-sys-on-surface)'">
           {{ operation.model.underDeliveryAmount }} ({{
             operation.underDelivery
@@ -82,25 +82,25 @@
     </mat-grid-tile>
     <mat-grid-tile>
       <div class="content-data-entry">
-        <label><b>{{
+        <span><b>{{
             TranslationConstants.BEGIN_DIALOG.ESTIMATED | translate
-          }}</b></label>
+          }}</b></span>
         <div>{{ currentPartialAmount }}</div>
       </div>
     </mat-grid-tile>
     <mat-grid-tile>
       <div class="content-data-entry">
-        <label><b>{{
+        <span><b>{{
             TranslationConstants.BEGIN_DIALOG.SUCCESS | translate
-          }}</b></label>
+          }}</b></span>
         <div>{{ successCount }}</div>
       </div>
     </mat-grid-tile>
     <mat-grid-tile>
       <div class="content-data-entry">
-        <label><b>{{
+        <span><b>{{
             TranslationConstants.BEGIN_DIALOG.SCRAP | translate
-          }}</b></label>
+          }}</b></span>
         <div>{{ scrapCount }}</div>
       </div>
     </mat-grid-tile>
