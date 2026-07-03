@@ -34,7 +34,7 @@
           (click)="onSelect(content)"
           class="image-quick-link"
           mat-mini-fab
-          [class.selected]="selectedContent()?.url == content.url"
+          [class.selected]="selectedContent()?.url === content.url"
           aria-label="Example icon button with a vertical three dot icon"
         ></button>
       }

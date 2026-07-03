@@ -150,7 +150,7 @@ export class WorkerInstructions implements OnInit, OnDestroy {
   }
 
   private updateInstructionIndex() {
-    let updatedIndex = this.instructions().findIndex(
+    const updatedIndex = this.instructions().findIndex(
       (i) => i.id === this.displayedInstruction()?.id
     );
     if (updatedIndex < 0 || !this.inputs || !this.inputsChanged(this.inputs()!)) {
