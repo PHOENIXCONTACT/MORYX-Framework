@@ -117,8 +117,9 @@ export class EditProductsService {
         .filter((val) => typeof val === "number") as number[];
       if (recipeIds.length === 0) {
         this.currentRecipeNumber = 0;
+      } else {
+        this.currentRecipeNumber = Math.max(...recipeIds);
       }
-      else {this.currentRecipeNumber = Math.max(...recipeIds);}
       this.maximumAlreadySavedRecipeId = this.currentRecipeNumber;
     }
 
@@ -130,8 +131,9 @@ export class EditProductsService {
         .filter(filterEmpties);
       if (allPartIds.length === 0) {
         this.currentPartId = 0;
+      } else {
+        this.currentPartId = Math.max(...allPartIds);
       }
-      else {this.currentPartId = Math.max(...allPartIds);}
       this.maximumAlreadySavedPartId = this.currentPartId;
     }
 

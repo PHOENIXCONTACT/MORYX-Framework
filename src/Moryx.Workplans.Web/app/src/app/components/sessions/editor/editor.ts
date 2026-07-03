@@ -149,9 +149,9 @@ export class Editor implements OnInit {
     const ids = this.editorState.workplan?.nodes!.flatMap(n => n.inputs!.map(i => 'in_' + n.id + '-' + i.index));
     if (ids) {
       this.inputIds.update(_ => ids);
+    } else {
+      this.inputIds.update(_ => []);
     }
-    else
-      {this.inputIds.update(_ => []);}
   }
 
   processInitialRoute() {

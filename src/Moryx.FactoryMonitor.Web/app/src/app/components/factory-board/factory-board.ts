@@ -51,8 +51,9 @@ export class FactoryBoard implements OnInit {
     });
 
 
-    if (this.factoryId != undefined && this.factoryId > 0)
+    if (this.factoryId != undefined && this.factoryId > 0) {
       //select a new factory based on the id in the url
-      {this.factorySelectionService.selectFactory(this.factoryId);}
+      this.factorySelectionService.selectFactory(this.factoryId);
+    }
   }
 }

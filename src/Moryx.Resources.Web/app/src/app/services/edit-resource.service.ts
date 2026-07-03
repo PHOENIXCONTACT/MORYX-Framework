@@ -94,19 +94,15 @@ export class EditResourceService {
       return;
     }
 
-    if (resourceModel.properties)
-    {
+    if (resourceModel.properties) {
       PrototypeToEntryConverter.convertToEntry(resourceModel.properties);
     }
 
-    if (this.editingUnsavedResource)
-    {
+    if (this.editingUnsavedResource) {
       await lastValueFrom(this.resourceModificationService.save$Response({body: resourceModel}))
         .then(async response => await this.handleSaveResponse(response))
         .catch(async e => await this.snackbarService.handleError(e));
-    }
-    else
-    {
+    } else {
       await lastValueFrom(this.resourceModificationService.update$Response({id: resourceModel.id!, body: resourceModel}))
         .then(async response => await this.handleUpdateResponse(response))
         .catch(async e => await this.snackbarService.handleError(e));

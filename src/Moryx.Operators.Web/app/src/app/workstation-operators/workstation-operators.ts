@@ -100,8 +100,9 @@ export class WorkstationOperators implements OnInit {
     });
     if (this.workstationTogglingState()?.isExpanded) {
       this.updateUrlParam(station?.data.id ?? null);
+    } else {
+      this.updateUrlParam(null);
     }
-    else {this.updateUrlParam(null);}
   }
 
   protected addOperator() {

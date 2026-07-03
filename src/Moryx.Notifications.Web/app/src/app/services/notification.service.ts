@@ -59,8 +59,9 @@ export class NotificationService {
     else if (notifications.some(m => m.identifier === identifier)) {
       selected = identifier;
     }
-    else
-      {selected = notifications[0].identifier;}
+    else {
+      selected = notifications[0].identifier;
+    }
 
     this.selectionSubject.next(selected);
   }

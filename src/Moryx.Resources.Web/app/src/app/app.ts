@@ -196,11 +196,12 @@ export class App implements OnInit, OnDestroy {
       if (referenceToParent) {
         referenceToParent.targets = [parent] as ResourceModel[];
       }
-      else
-        {constructed.references?.push({
+      else {
+        constructed.references?.push({
           name: 'Parent',
           targets: [parent] as ResourceModel[],
-        } as ResourceReferenceModel);}
+        } as ResourceReferenceModel);
+      }
     });
   }
 

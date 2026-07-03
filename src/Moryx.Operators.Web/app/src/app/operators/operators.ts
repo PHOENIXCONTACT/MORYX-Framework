@@ -79,8 +79,10 @@ export class Operators implements OnInit {
       operator.data.assignedResources?.some(
         (e) => e.id === this.workstation()?.data.id
       )
-    )
-      {this.appStoreService.unassignOperator(operator, this.workstation()!);}
-    else {this.appStoreService.assignOperator(this.workstation()!, operator);}
+    ) {
+      this.appStoreService.unassignOperator(operator, this.workstation()!);
+    } else {
+      this.appStoreService.assignOperator(this.workstation()!, operator);
+    }
   }
 }

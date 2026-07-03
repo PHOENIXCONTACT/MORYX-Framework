@@ -66,8 +66,9 @@ export class SessionsService {
   private processOpenedSession(session: WorkplanSessionModel): void {
     if (!this.availableSessions.value.any(token => token === session.sessionToken)) {
       this.addNewSession(session);
+    } else {
+      this.addSessionToCache(session);
     }
-    else {this.addSessionToCache(session);}
   }
 
   private addNewSession(session: WorkplanSessionModel) {

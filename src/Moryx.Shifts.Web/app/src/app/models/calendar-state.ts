@@ -137,8 +137,9 @@ export class CalendarState {
 
     if(!startDate) {
       currentMoment =  moment(this.state.startDate);
+    } else {
+      currentMoment = moment(startDate);
     }
-    else {currentMoment = moment(startDate);}
 
     const end = moment(currentMoment).add(numberOfDays, 'days');
     for (
