@@ -38,8 +38,11 @@ export interface Notification {
 })
 export class NotificationsBar {
   private destroyRef = inject(DestroyRef);
+  private elementRef = inject(ElementRef);
+
   readonly url = input('Notifications');
   readonly api = input('/api/moryx/notifications/stream');
+
   private eventSource: EventSource | undefined;
 
   protected notifications = signal<Array<Notification> | undefined>(undefined);
@@ -67,7 +70,7 @@ export class NotificationsBar {
     Fatal: 3
   };
 
-  constructor(private elementRef: ElementRef) {
+  constructor() {
     effect((onCleanup) => {
       const url = this.api();
       if (!url) {
@@ -122,7 +125,7 @@ export class NotificationsBar {
     this.errorAvailable.set(false);
   }
 
-  private onErrorReceived(event: any) {
+  private onErrorReceived(event: Event) {
     if (!this.errorAvailable()) {
       this.errorAvailable.set(true);
 
