@@ -19,7 +19,7 @@ import { NavigableEntryEditor } from '@moryx/ngx-web-framework/entry-editor';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
-  selector: 'notification-details',
+  selector: 'app-notification-details',
   templateUrl: './notification-details.html',
   styleUrls: ['./notification-details.scss'],
   imports: [

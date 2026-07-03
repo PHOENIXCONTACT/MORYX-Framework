@@ -5,10 +5,10 @@
     (mouseover)="onUpdateHoveredIdentifier(notification?.identifier)"
     (mouseout)="onUpdateHoveredIdentifier(undefined)"
   [class.hovered]="
-    hoveredNotificationIdentifier() == notification.identifier &&
-    selectedNotificationIdentifier() != notification.identifier
+    hoveredNotificationIdentifier() === notification.identifier &&
+    selectedNotificationIdentifier() !== notification.identifier
   "
-  [class.selected]="selectedNotificationIdentifier() == notification.identifier
+  [class.selected]="selectedNotificationIdentifier() === notification.identifier
   "
     >
     <div class="notification-container">

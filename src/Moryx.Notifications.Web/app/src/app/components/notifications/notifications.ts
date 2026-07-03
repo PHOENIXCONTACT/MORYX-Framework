@@ -13,7 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { getIcon } from '@app/utils';
 
 @Component({
-    selector: 'moryx-notifications',
+    selector: 'app-notifications',
     templateUrl: './notifications.html',
     styleUrls: ['./notifications.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
