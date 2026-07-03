@@ -9,8 +9,10 @@ using System.Threading.Channels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Moryx.Configuration;
 using Moryx.Runtime.Modules;
 using Moryx.Serialization;
+using static Moryx.VisualInstructions.Endpoints.Converter;
 
 namespace Moryx.VisualInstructions.Endpoints;
 
@@ -31,11 +33,11 @@ public class VisualInstructionsController : ControllerBase
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         Converters = { new JsonStringEnumConverter() }
     };
-
+    private readonly Converter _converter;
     public VisualInstructionsController(IVisualInstructions visualInstructions, IModuleManager moduleManager, IServiceProvider serviceProvider)
     {
         _visualInstructions = visualInstructions;
-        Converter._serialization = new VisualInstructionsSerialization(moduleManager.AllModules.FirstOrDefault(module => module is IFacadeContainer<IVisualInstructions>)?.Container, serviceProvider); 
+        _converter = new Converter(new PossibleValuesSerialization(moduleManager.AllModules.FirstOrDefault(module => module is IFacadeContainer<IVisualInstructions>)?.Container, serviceProvider, new EmptyValueProvider())); ; 
     }
 
     [HttpGet("stream")]
@@ -85,7 +87,7 @@ public class VisualInstructionsController : ControllerBase
             _instructionStreamSubscribers[id] = (identifier, channel);
 
             // Send all instructions as first item
-            var initialInstructions = _visualInstructions.GetInstructions(identifier).Select(Converter.ToModel).ToArray();
+            var initialInstructions = _visualInstructions.GetInstructions(identifier).Select(_converter.ToModel).ToArray();
             yield return JsonSerializer.Serialize(initialInstructions, _serializerOptions);
 
             try
@@ -104,7 +106,7 @@ public class VisualInstructionsController : ControllerBase
         // Local helper to broadcast instruction changes to all matching subscribers
         void Broadcast(string targetIdentifier)
         {
-            var instructions = _visualInstructions.GetInstructions(targetIdentifier).Select(Converter.ToModel).ToArray();
+            var instructions = _visualInstructions.GetInstructions(targetIdentifier).Select(_converter.ToModel).ToArray();
 
             foreach (var (clientIdentifier, channel) in _instructionStreamSubscribers.Values)
             {
@@ -125,7 +127,7 @@ public class VisualInstructionsController : ControllerBase
         if (string.IsNullOrEmpty(identifier))
             return BadRequest($"{identifier} is not a valid identifier");
 
-        return _visualInstructions.GetInstructions(identifier).Select(Converter.ToModel).ToArray();
+        return _visualInstructions.GetInstructions(identifier).Select(_converter.ToModel).ToArray();
     }
 
     [HttpPost("{identifier}")]
