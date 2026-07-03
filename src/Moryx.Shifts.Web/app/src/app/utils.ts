@@ -99,7 +99,7 @@ export function totalHoursOfTheShift(shiftInstance: ShiftInstanceModel | undefin
   if (!shiftInstance) return 0;
   const dailyShiftLengthHours = shiftDayLengthInHours(shiftInstance, assignments);
   let sumShiftHours = 0;
-  for (let assignment of assignments.filter(x => x.shiftInstanceId === shiftInstance.id)) {
+  for (const assignment of assignments.filter(x => x.shiftInstanceId === shiftInstance.id)) {
     sumShiftHours = sumShiftHours + assignment.days.length * dailyShiftLengthHours;
   }
   return sumShiftHours;

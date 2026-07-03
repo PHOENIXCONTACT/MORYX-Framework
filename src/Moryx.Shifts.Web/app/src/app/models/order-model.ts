@@ -21,12 +21,12 @@ export function getOrderOfTheDayBasedOnOperatorHours(
 ): OrderModel[] {
 
   let hoursAvailable = operatorHours;
-  let ordersOfTheDay: OrderModel[] = [];
+  const ordersOfTheDay: OrderModel[] = [];
   const filteredOrders: OrderModel[] = orders.filter(
     (x) => moment(x.date).diff(moment(currentDate), 'days') === 0
   );
 
-  for (let order of filteredOrders) {
+  for (const order of filteredOrders) {
     if(hoursAvailable === 0) break;
 
     const alreadyExist = ordersOfTheDay.find(x => x.operationNumber === order.orderNumber && x.orderNumber === order.orderNumber);

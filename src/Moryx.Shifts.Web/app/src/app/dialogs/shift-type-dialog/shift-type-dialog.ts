@@ -4,7 +4,7 @@
 */
 
 import { Time } from '@angular/common';
-import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -29,6 +29,9 @@ import { MatButtonModule } from '@angular/material/button';
 ]
 })
 export class ShiftTypeDialog {
+  private data = inject<ShiftTypeModel>(MAT_DIALOG_DATA);
+  private dialogRef = inject(MatDialogRef<ShiftTypeDialog>);
+
   protected TranslationConstants = TranslationConstants;
   protected HOURS_REGEX = /^(?:[01][0-9]|2[0-3]):[0-5][0-9](?::[0-5][0-9])?$/
   protected form = new FormGroup({
@@ -37,11 +40,6 @@ export class ShiftTypeDialog {
     startTime: new FormControl<string>('',[Validators.pattern(this.HOURS_REGEX),Validators.required]),
     endTime: new FormControl<string>('',[Validators.pattern(this.HOURS_REGEX),Validators.required])
   });
-
-  constructor(@Inject(MAT_DIALOG_DATA) public data: ShiftTypeModel,
-  public dialogRef: MatDialogRef<ShiftTypeDialog>){
-
-  }
 
   protected submit(){
     if(!this.form.valid) return;

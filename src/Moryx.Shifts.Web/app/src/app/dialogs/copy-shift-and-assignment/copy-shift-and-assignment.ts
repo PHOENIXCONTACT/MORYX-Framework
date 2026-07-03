@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, Inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ShiftInstanceModel } from '@app/models/shift-instance-model';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import AssignmentData from '@app/models/assignment-data';
@@ -38,17 +38,14 @@ import { MatInputModule } from '@angular/material/input';
 ]
 })
 export class CopyShiftAndAssignment {
-  protected calendarState = signal<CalendarState | undefined>(undefined);
-  protected formData = signal<CopyShiftAndAssignmentData | undefined>(undefined);
+  private data = inject<CopyShiftAndAssignmentData>(MAT_DIALOG_DATA);
+  private dialogRef = inject(MatDialogRef<CopyShiftAndAssignment>);
+  private translate = inject(TranslateService);
+
+  protected calendarState = signal(new CalendarState(this.translate));
+  protected formData = signal<CopyShiftAndAssignmentData>({... this.data});
 
   protected TranslationConstants = TranslationConstants;
-
-  constructor(@Inject(MAT_DIALOG_DATA) public data: CopyShiftAndAssignmentData,
-  public dialogRef: MatDialogRef<CopyShiftAndAssignment>,
-  public translate: TranslateService){
-    this.calendarState.set(new CalendarState(translate));
-    this.formData.set({... this.data});
-  }
 
   protected onStartDateChanged(shiftInstance: ShiftInstanceModel) {
     const now = moment(shiftInstance.startDate);

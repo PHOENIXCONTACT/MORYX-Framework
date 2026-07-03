@@ -65,7 +65,7 @@ export class Assignment {
     this.appStore
       .getOperatorsBasedOnResource(value.resource.id)
       .then((skilledOperators) => {
-        let skilledOperator = skilledOperators.find(
+        const skilledOperator = skilledOperators.find(
           (x) => x.id === value.operator.id
         );
 

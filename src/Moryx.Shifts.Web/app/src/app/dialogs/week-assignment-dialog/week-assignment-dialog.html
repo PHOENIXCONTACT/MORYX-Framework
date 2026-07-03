@@ -72,7 +72,7 @@
 
             <app-week-day-toggle-button
               [days]="data.days"
-              (onButtonToggled)="dayButtonClicked($event)"
+              (buttonToggled)="dayButtonClicked($event)"
               [calendarState]="data.calendarState"
               [shiftNumberOfDay]="shiftNumberOfdays()"
               [startDate]="data.shift.startDate"

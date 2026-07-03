@@ -21,7 +21,6 @@ import { AttendableResourceModel } from '@api/models/attendable-resource-model';
 import { ExtendedOperatorModel } from '@api/models/extended-operator-model';
 
 
-
 export function assignableOperatorToOperatorModel(
   operator: AssignableOperator
 ): OperatorModel {
@@ -81,7 +80,7 @@ export function assignedDaysToCalendarDates(
   endDate: Date,
   assignedDays: string
 ): CalendarDate[] {
-  let calendarDates: CalendarDate[] = [];
+  const calendarDates: CalendarDate[] = [];
 
   if (!assignedDays) return calendarDates;
 
@@ -102,7 +101,7 @@ export function assignedDaysToCalendarDates(
       continue;
     }
 
-    for (let dayString of dayStringArray) {
+    for (const dayString of dayStringArray) {
       const dayEnum = PossibleAssignedDays[day];
       const dayValue = dayString.replace(' ', '');
       if (dayEnum === dayValue) {
@@ -117,11 +116,7 @@ export function assignedDaysToCalendarDates(
   return calendarDates;
 }
 
-export function shiftTypeToShiftTypeModel(
-  shiftType: MoryxShiftsEndpointsShiftTypeModel
-): ShiftTypeModel {
-
-
+export function shiftTypeToShiftTypeModel(shiftType: MoryxShiftsEndpointsShiftTypeModel): ShiftTypeModel {
   const data = <ShiftTypeModel>{
     id: shiftType.id,
     name: shiftType.name,

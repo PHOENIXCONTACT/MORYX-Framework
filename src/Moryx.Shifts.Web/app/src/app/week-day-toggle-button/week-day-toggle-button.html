@@ -10,7 +10,7 @@
           <mat-button-toggle
             [value]="calendarDay"
             [checked]="isDaySelected(calendarDay) && isDayInInterval(calendarDay.date,startDate(),endDate())"
-            (change)="buttonToggled($event)"
+            (change)="onButtonToggled($event)"
             [disabled]="!isDayInInterval(calendarDay.date,startDate(),endDate())">
             {{ (shortDayName(localizedDayName(calendarDay.day) | translate)).toUpperCase() }} {{formatDateDigits(calendarDay.date.getDate())}}
           </mat-button-toggle>

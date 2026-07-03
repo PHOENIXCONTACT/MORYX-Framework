@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, Inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import AssignmentData from '../../models/assignment-data';
 import { OperatorModel, OperatorStatus } from '@app/models/operator-model';
@@ -59,6 +59,10 @@ import { WeekDayToggleButton } from '@app/week-day-toggle-button/week-day-toggle
 ]
 })
 export class WeekAssignmentDialog implements OnInit {
+  private dialogRef = inject(MatDialogRef<WeekAssignmentDialog>);
+  private appStore = inject(AppStoreService);
+  protected data = inject<AssignmentData>(MAT_DIALOG_DATA);
+
   protected operators = signal<OperatorModel[]>([]);
   protected resources = signal<AttendableResourceModel[]>([]);
   protected shiftInstances = signal<ShiftInstanceModel[]>([]);
@@ -81,16 +85,13 @@ export class WeekAssignmentDialog implements OnInit {
   protected isDayInInterval = isDayInInterval;
   protected localizedDayName = localizedDayName;
   protected shortDayName = shortDayName;
-  constructor(
-    @Inject(MAT_DIALOG_DATA) public data: AssignmentData,
-    public dialogRef: MatDialogRef<WeekAssignmentDialog>,
-    private appStore: AppStoreService
-  ) {
+
+  constructor() {
     this.form.patchValue({
-      operatorId: data.operator?.id ?? '',
-      resourceId: data.resource?.id ?? -1,
-      notes: data.notes ?? '',
-      priority: data.priority ?? 0
+      operatorId: this.data.operator?.id ?? '',
+      resourceId: this.data.resource?.id ?? -1,
+      notes: this.data.notes ?? '',
+      priority: this.data.priority ?? 0
     });
 
     this.appStore.operators$.subscribe(
@@ -99,22 +100,22 @@ export class WeekAssignmentDialog implements OnInit {
 
     if (this.isResourceSet()) {
       this.appStore.resources$.subscribe((resources) => {
-        this.resources.set( resources.filter((x) => x.id === data.resource?.id));
+        this.resources.set( resources.filter((x) => x.id === this.data.resource?.id));
         this.form.controls.resourceId.disable();
-        if (data.resource?.id)
-          this.refreshOperators(data.resource?.id);
+        if (this.data.resource?.id)
+          this.refreshOperators(this.data.resource?.id);
       });
     } else {
-      this.operators.update(items => items.filter((x) => x.id === data.operator?.id));
+      this.operators.update(items => items.filter((x) => x.id === this.data.operator?.id));
       this.form.controls.operatorId.disable();
-      if (data.operator?.id)
-        this.refreshResources(data.operator?.id);
+      if (this.data.operator?.id)
+        this.refreshResources(this.data.operator?.id);
     }
 
     const shiftInstancesAsync = firstValueFrom(this.appStore.shiftInstances$);
     shiftInstancesAsync.then((instances) => {
       this.shiftInstances.set(instances);
-      const foundCurrentShift = instances.find((x) => x.id === data.shift.id);
+      const foundCurrentShift = instances.find((x) => x.id === this.data.shift.id);
       if (!foundCurrentShift) return;
       this.shiftNumberOfdays.set(foundCurrentShift.shiftType.duration);
     });
@@ -127,7 +128,7 @@ export class WeekAssignmentDialog implements OnInit {
       .then((skilledOperators) => {
         this.operators.update(items => {
           items.forEach((operator) => {
-          let skilledOperator = skilledOperators.find(
+          const skilledOperator = skilledOperators.find(
             (x) => x.id === operator.id
           );
           //the current operator has the skill

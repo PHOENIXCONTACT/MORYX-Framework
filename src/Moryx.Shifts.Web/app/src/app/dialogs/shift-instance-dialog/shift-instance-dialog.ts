@@ -4,7 +4,7 @@
 */
 
 
-import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -33,18 +33,19 @@ import { MatButtonModule } from '@angular/material/button';
 ]
 })
 export class ShiftInstanceDialog {
+  public data = inject<ShiftInstanceModel>(MAT_DIALOG_DATA);
+  public dialogRef = inject(MatDialogRef<ShiftInstanceDialog>);
+
   protected form = new FormGroup({
     startDate: new FormControl<Date>(new Date()),
     endDate: new FormControl<Date>(new Date())
   });
   protected TranslationConstants = TranslationConstants;
-  constructor(
-    @Inject(MAT_DIALOG_DATA) public data: ShiftInstanceModel,
-    public dialogRef: MatDialogRef<ShiftInstanceDialog>
-  ) {
+
+  constructor() {
     this.form.patchValue({
-      startDate: data.startDate,
-      endDate: data.endDate
+      startDate: this.data.startDate,
+      endDate: this.data.endDate
     });
   }
 
@@ -56,7 +57,7 @@ export class ShiftInstanceDialog {
     this.dialogRef.close(this.data);
   }
 
-  protected onStartDateChanged(event: any) {
+  protected onStartDateChanged(event: Date | null) {
     const now = moment(this.form.value.startDate);
     const endDate = now.add(this.data.shiftType.duration-1, 'days').toDate();
     this.form.controls.endDate.setValue(endDate);
