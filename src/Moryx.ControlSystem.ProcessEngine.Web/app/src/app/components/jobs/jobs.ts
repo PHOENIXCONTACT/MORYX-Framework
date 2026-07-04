@@ -15,7 +15,7 @@ import { environment } from "../../../environments/environment";
 import "../../extensions/observable.extensions";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
 import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
-import { CommonModule } from "@angular/common";
+
 import { MatExpansionModule } from "@angular/material/expansion";
 import { MatIconModule } from "@angular/material/icon";
 import { TranslatePipe } from "@ngx-translate/core";
@@ -32,7 +32,6 @@ import { ProcessEngineStreamService } from "@app/services/process-engine-stream.
   templateUrl: "./jobs.html",
   styleUrls: ["./jobs.scss"],
   imports: [
-    CommonModule,
     MatExpansionModule,
     MatIconModule,
     TranslatePipe,
@@ -58,12 +57,12 @@ export class Jobs implements OnInit {
   private snackbarService = inject(SnackbarService);
   private changeDetectorRef = inject(ChangeDetectorRef);
 
-  jobCollection = signal<JobViewModel[]>([]);
-  operations = signal<OperationModel[]>([]);
-  isLoading = signal<boolean>(true);
+  protected jobCollection = signal<JobViewModel[]>([]);
+  protected operations = signal<OperationModel[]>([]);
+  protected isLoading = signal<boolean>(true);
 
-  environment = environment;
-  TranslationConstants = TranslationConstants;
+  protected environment = environment;
+  protected TranslationConstants = TranslationConstants;
 
   constructor() {
       this.destroyRef.onDestroy(() => this.disconnectEvents());
@@ -140,33 +139,33 @@ export class Jobs implements OnInit {
     });
   }
 
-  async onComplete(job: JobModel) {
+  protected async onComplete(job: JobModel) {
     await this.jobManagementService
       .complete({jobId: job.id!})
       .toAsync()
       .catch(async (error) => await this.snackbarService.handleError(error));
   }
 
-  async onAbort(job: JobModel) {
+  protected async onAbort(job: JobModel) {
     await this.jobManagementService
       .abort({jobId: job.id!})
       .toAsync()
       .catch(async (error) => await this.snackbarService.handleError(error));
   }
 
-  getOrderNumber(job: JobModel): string {
+  protected getOrderNumber(job: JobModel): string {
     if (job.productionJob)
       return this.operations().find(operation => operation.jobIds?.find(j => j === job.id))?.order!;
     return "";
   }
 
-  getOperationNumber(job: JobModel): string {
+  protected getOperationNumber(job: JobModel): string {
     if (job.productionJob)
       return this.operations().find(operation => operation.jobIds?.find(j => j === job.id))?.number!;
     return "";
   }
 
-  disconnectEvents() {
+  protected disconnectEvents() {
     this.jobManagementEvents.disconnect();
     this.processEngineEvents.disconnect();
     this.orderManagementEvents.disconnect();

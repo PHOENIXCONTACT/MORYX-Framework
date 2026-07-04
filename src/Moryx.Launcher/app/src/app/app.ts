@@ -42,12 +42,12 @@ export class App {
   private destroyRef = inject(DestroyRef);
 
   // Web component inputs
-  webModuleItems = input.required<WebModuleItem[]>();
-  externalModuleItems = input.required<ExternalModuleItem[]>();
-  supportedCultures = input.required<CultureModel[]>();
-  authBaseAddress = input<string>();
+  readonly webModuleItems = input.required<WebModuleItem[]>();
+  readonly externalModuleItems = input.required<ExternalModuleItem[]>();
+  readonly supportedCultures = input.required<CultureModel[]>();
+  readonly authBaseAddress = input<string>();
 
-  layout = this.launcherLayoutService.layout;
+  protected layout = this.launcherLayoutService.layout;
 
   constructor() {
     window.shell = new MoryxLauncherShell(this.cultureService, this.searchService);

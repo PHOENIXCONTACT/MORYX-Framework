@@ -47,8 +47,8 @@ export class App implements OnInit {
   private languageService = inject(LanguageService);
   private destroyRef = inject(DestroyRef);
 
-  environment = environment;
-  clientIdentifier: string = '';
+  protected environment = environment;
+  protected clientIdentifier: string = '';
 
   constructor() {
     const cookie = this.cookieService.getCookie(COOKIE_NAME);
@@ -72,7 +72,7 @@ export class App implements OnInit {
      this.instructionService.connect();
   }
 
-  openConfigDialog(): void {
+  protected openConfigDialog(): void {
     const dialogRef = this.dialog.open(ConfigurationDialog, {
       data: <DialogData>{
         instructorName: this.clientIdentifier,

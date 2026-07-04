@@ -27,12 +27,12 @@ export class LogMessageList implements OnInit {
   private translateService = inject(TranslateService);
   private orderManagementService = inject(OrderManagementService);
 
-  guid = input.required<string>();
-  logMessages = signal<OperationLogMessageModel[]>([]);
-  isLoading = signal<boolean>(false);
-  notification = signal<string>('');
+  readonly guid = input.required<string>();
+  protected logMessages = signal<OperationLogMessageModel[]>([]);
+  protected isLoading = signal<boolean>(false);
+  protected notification = signal<string>('');
 
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
   translations: Record<string, string> = {};
 
   constructor() {
@@ -74,7 +74,7 @@ export class LogMessageList implements OnInit {
     return a > b ? -1 : a < b ? 1 : 0;
   }
 
-  getColor(logLevel?: LogLevel): string {
+  protected getColor(logLevel?: LogLevel): string {
     switch (logLevel) {
       case LogLevel.Information:
         return 'chip-color-info';

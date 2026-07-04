@@ -6,7 +6,6 @@
 import { Component, effect, inject, input, OnInit, signal, untracked, ChangeDetectionStrategy } from '@angular/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { DisplayedMediaContent } from './displayed-media-content';
-import { CommonModule } from '@angular/common';
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -18,7 +17,6 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
     styleUrls: ['./media-contents.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-      CommonModule,
       NgxDocViewerModule,
       MatIconModule,
       MatButtonModule
@@ -26,11 +24,11 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 })
 export class MediaContents implements OnInit {
 
-  medias = signal<DisplayedMediaContent[]>([]);
-  displayedContents = input.required<DisplayedMediaContent[]>();
-  selectedContent = signal<DisplayedMediaContent | undefined>(undefined) ;
+  protected medias = signal<DisplayedMediaContent[]>([]);
+  readonly displayedContents = input.required<DisplayedMediaContent[]>();
+  protected selectedContent = signal<DisplayedMediaContent | undefined>(undefined) ;
   private sanitizer = inject(DomSanitizer);
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
   constructor(){
     effect(() => {
@@ -44,23 +42,23 @@ export class MediaContents implements OnInit {
 
   ngOnInit(): void {}
 
-  onSelect(selected: DisplayedMediaContent): void {
+  protected onSelect(selected: DisplayedMediaContent): void {
     this.selectedContent.update(_ => selected);
   }
 
-  onNext() {
+  protected onNext() {
     const currentIndex = this.medias().findIndex(c => c.url === this.selectedContent()?.url);
     const nextIndex = (1 + currentIndex) % this.medias().length;
     this.selectedContent.update(_ => this.medias()[nextIndex]);
   }
 
-  onPrevious() {
+  protected onPrevious() {
     const currentIndex = this.medias().findIndex(c => c.url === this.selectedContent()?.url);
     const previousIndex = (this.medias().length - 1 + currentIndex) % this.medias().length;
     this.selectedContent.update(_ => this.medias()[previousIndex]);
   }
 
-  getSafeUrl(url: string): SafeResourceUrl {
+  protected getSafeUrl(url: string): SafeResourceUrl {
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 }

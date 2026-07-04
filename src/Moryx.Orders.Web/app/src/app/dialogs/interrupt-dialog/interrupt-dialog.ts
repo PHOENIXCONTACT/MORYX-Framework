@@ -27,16 +27,16 @@ import { InterruptDialogData } from "./interrupt-dialog-data";
 })
 export class InterruptDialog {
 
-  isLoading = signal(false);
-  TranslationConstants = TranslationConstants;
+  protected isLoading = signal(false);
+  protected TranslationConstants = TranslationConstants;
 
   private dialog = inject(MatDialogRef<InterruptDialog>);
-  data = inject<InterruptDialogData>(MAT_DIALOG_DATA);
+  protected data = inject<InterruptDialogData>(MAT_DIALOG_DATA);
 
   constructor() {
   }
 
-  async submit(): Promise<void> {
+  protected async submit(): Promise<void> {
     this.isLoading.set(true);
     let failed = false;
 

@@ -16,11 +16,11 @@
       <mat-icon>fullscreen_exit</mat-icon>
       {{ TranslationConstants.FULLSCREEN_LAYOUT.EXIT_FULLSCREEN | translate }}
     </button>
-    <button mat-raised-button [matMenuTriggerFor]="moduleGridMenu.moduleGridMenu">
+    <button mat-raised-button [matMenuTriggerFor]="moduleGridMenu.moduleGridMenu()">
       <mat-icon>view_module</mat-icon>
       {{ TranslationConstants.FULLSCREEN_LAYOUT.MODULES | translate }}
     </button>
-    <button mat-raised-button [matMenuTriggerFor]="moreMenu.appMenu">
+    <button mat-raised-button [matMenuTriggerFor]="moreMenu.appMenu()">
       <mat-icon>more_horiz</mat-icon>
       {{ TranslationConstants.FULLSCREEN_LAYOUT.MORE | translate }}
     </button>

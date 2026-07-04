@@ -20,8 +20,8 @@ import { TranslationConstants } from '@app/extensions/translation-constants.exte
   ]
 })
 export class DefaultView implements OnInit {
-  headerText = signal('');
-  messageText = signal('');
+  protected headerText = signal('');
+  protected messageText = signal('');
 
   private router = inject(Router);
   private translateService = inject(TranslateService);

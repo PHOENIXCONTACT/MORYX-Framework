@@ -26,14 +26,14 @@ export class DialogRemoveResource {
   private dialogRef = inject(MatDialogRef<DialogRemoveResource>);
   private data = inject<ResourceModel>(MAT_DIALOG_DATA);
 
-  resourceToBeRemoved = signal<ResourceModel | undefined>(undefined);
-  TranslationConstants = TranslationConstants;
+  protected resourceToBeRemoved = signal<ResourceModel | undefined>(undefined);
+  protected TranslationConstants = TranslationConstants;
 
   constructor() {
     this.resourceToBeRemoved.update(_ => this.data);
   }
 
-  onClose() {
+  protected onClose() {
     this.dialogRef.close();
   }
 }

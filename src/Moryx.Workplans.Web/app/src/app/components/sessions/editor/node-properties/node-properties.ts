@@ -42,11 +42,11 @@ export class NodeProperties implements OnDestroy {
   private snackbarService = inject(SnackbarService);
   private editorStateService = inject(EditorStateService);
 
-  node = signal<WorkplanNodeModel | undefined>(undefined);
-  properties = signal<Entry | undefined>(undefined);
+  protected node = signal<WorkplanNodeModel | undefined>(undefined);
+  protected properties = signal<Entry | undefined>(undefined);
 
-  readonly workplanNodeClassification = WorkplanNodeClassification;
-  readonly TranslationConstants = TranslationConstants;
+  protected readonly workplanNodeClassification = WorkplanNodeClassification;
+  protected readonly TranslationConstants = TranslationConstants;
 
   private subscriptions: Subscription[] = [];
   private activeSession: string | undefined;
@@ -93,7 +93,7 @@ export class NodeProperties implements OnDestroy {
     this.subscriptions.forEach(s => s.unsubscribe());
   }
 
-  onNavigateClick() {
+  protected onNavigateClick() {
     if (!this.node()?.subworkplanId) return;
     this.sessionsService
       .getSessionForWorkplan(this.node()?.subworkplanId!)

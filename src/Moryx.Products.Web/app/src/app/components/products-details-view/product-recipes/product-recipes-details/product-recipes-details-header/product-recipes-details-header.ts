@@ -37,20 +37,20 @@ export class ProductRecipesDetailsHeader {
   private cacheService = inject(CacheProductsService);
   private editProductsService = inject(EditProductsService);
 
-  isEditMode = toSignal(this.editProductsService.edit$, { initialValue: false });
-  currentRecipe = linkedSignal(this.editProductsService.currentRecipe);
+  protected isEditMode = toSignal(this.editProductsService.edit$, { initialValue: false });
+  protected currentRecipe = linkedSignal(this.editProductsService.currentRecipe);
 
-  hasWorkplans = computed(() => {
+  protected hasWorkplans = computed(() => {
     if (this.currentRecipe()?.workplanModel === undefined) return false;
     return true;
   });
-  possibleWorkplans = toSignal(this.cacheService.workplans, { initialValue: [] });
-  recipeClassifications = signal(Object.keys(RecipeClassificationModel));
+  protected possibleWorkplans = toSignal(this.cacheService.workplans, { initialValue: [] });
+  protected recipeClassifications = signal(Object.keys(RecipeClassificationModel));
 
-  recipeControl = new UntypedFormControl({
+  protected recipeControl = new UntypedFormControl({
     value: RecipeClassificationModel.Unset
   });
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
   constructor() {
     effect(() => {
@@ -64,7 +64,7 @@ export class ProductRecipesDetailsHeader {
     });
   }
 
-  byWorkplanId(workplan1: WorkplanModel, workplan2: WorkplanModel) {
+  protected byWorkplanId(workplan1: WorkplanModel, workplan2: WorkplanModel) {
     return workplan1?.id === workplan2?.id;
   }
 }

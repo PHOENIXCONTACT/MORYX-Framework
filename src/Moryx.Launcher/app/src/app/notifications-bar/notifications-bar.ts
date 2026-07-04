@@ -38,15 +38,15 @@ export interface Notification {
 })
 export class NotificationsBar {
   private destroyRef = inject(DestroyRef);
-  url = input('Notifications');
-  api = input('/api/moryx/notifications/stream');
+  readonly url = input('Notifications');
+  readonly api = input('/api/moryx/notifications/stream');
   private eventSource: EventSource | undefined;
 
-  notifications = signal<Array<Notification> | undefined>(undefined);
-  notificationIndex = signal<number>(0);
-  errorAvailable = signal<boolean>(false);
+  protected notifications = signal<Array<Notification> | undefined>(undefined);
+  protected notificationIndex = signal<number>(0);
+  protected errorAvailable = signal<boolean>(false);
 
-  currentNotification = computed<Notification | undefined | null>(() => {
+  protected currentNotification = computed<Notification | undefined | null>(() => {
     const notifications = this.notifications();
 
     if (notifications === undefined)
@@ -88,7 +88,7 @@ export class NotificationsBar {
     });
   }
 
-  clearAll() {
+  protected clearAll() {
     this.clearEventSource();
     this.clearInterval();
   }
@@ -159,7 +159,7 @@ export class NotificationsBar {
     }
   }
 
-  getSeverityBackgroundColor(severity: Severity | undefined | null, errorAvailabe: boolean): string {
+  protected getSeverityBackgroundColor(severity: Severity | undefined | null, errorAvailabe: boolean): string {
     const computedStyle = getComputedStyle(this.elementRef.nativeElement);
 
     if (errorAvailabe)
@@ -173,7 +173,7 @@ export class NotificationsBar {
     return color;
   }
 
-  getIcon(severity: Severity | undefined): string {
+  protected getIcon(severity: Severity | undefined): string {
     switch (severity) {
       case 'Info':
         return 'info_outline';

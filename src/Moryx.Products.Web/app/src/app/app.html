@@ -10,7 +10,7 @@
       <div class="toolbar-wrapper">
       @if (!selected()) {
         <mat-toolbar
-          [ngStyle]="{ 'background-image': 'url(' + productsToolbarImage + ')' }"
+          [style.background-image]="'url(' + productsToolbarImage + ')'"
           class="overview-tree-header"
           color="primary"
         >
@@ -73,7 +73,7 @@
         </mat-toolbar>
       } @else {
         <mat-toolbar
-          [ngStyle]="{ 'background-image': 'url(' + productsToolbarImage + ')' }"
+          [style.background-image]="'url(' + productsToolbarImage + ')'"
           class="products-toolbar"
         >
           <mat-toolbar-row>

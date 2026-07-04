@@ -34,9 +34,9 @@ export class DialogRemoveProduct {
   private productManagementService = inject(ProductManagementService);
   private snackbarService = inject(SnackbarService);
 
-  productToBeRemoved = signal<ProductModel | undefined>(undefined);
-  productsWhichContainProduct = signal<ProductModel[]>([]);
-  TranslationConstants = TranslationConstants;
+  protected productToBeRemoved = signal<ProductModel | undefined>(undefined);
+  protected productsWhichContainProduct = signal<ProductModel[]>([]);
+  protected TranslationConstants = TranslationConstants;
 
   constructor() {
     this.productToBeRemoved.update(_ => this.data);
@@ -55,7 +55,7 @@ export class DialogRemoveProduct {
     });
   }
 
-  onClose() {
+  protected onClose() {
     this.dialogRef.close();
   }
 }

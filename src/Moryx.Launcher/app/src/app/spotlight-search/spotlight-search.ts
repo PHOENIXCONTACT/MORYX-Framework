@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, DestroyRef, effect, ElementRef, inject, signal, ViewChild } from '@angular/core';
+import { Component, DestroyRef, effect, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -28,18 +28,18 @@ export class SpotlightSearch {
   private shortcutService = inject(ShortcutService);
   private destroyRef = inject(DestroyRef);
 
-  @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
-  @ViewChild('resultsList') resultsList!: ElementRef<HTMLUListElement>;
+  protected readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
+  protected readonly resultsList = viewChild<ElementRef<HTMLUListElement>>('resultsList');
 
   protected TranslationConstants = TranslationConstants;
 
-  isOpen = this.searchService.isOpen;
-  query = signal('');
-  activeIndex = signal(0);
+  protected isOpen = this.searchService.isOpen;
+  protected query = signal('');
+  protected activeIndex = signal(0);
 
-  suggestions = this.searchService.suggestions;
-  hasProvider = this.searchService.hasProvider;
-  disableSearchBox = this.searchService.disableSearchBox;
+  protected suggestions = this.searchService.suggestions;
+  protected hasProvider = this.searchService.hasProvider;
+  protected disableSearchBox = this.searchService.disableSearchBox;
 
   constructor() {
     this.shortcutService.register(
@@ -57,12 +57,12 @@ export class SpotlightSearch {
       if (this.isOpen()) {
         this.query.set('');
         this.activeIndex.set(0);
-        setTimeout(() => this.searchInput?.nativeElement.focus(), 0);
+        setTimeout(() => this.searchInput()?.nativeElement.focus(), 0);
       }
     });
   }
 
-  onKeyDown(event: KeyboardEvent): void {
+  protected onKeyDown(event: KeyboardEvent): void {
     if (!this.isOpen()) {
       return;
     }
@@ -96,15 +96,15 @@ export class SpotlightSearch {
     }
   }
 
-  open(): void {
+  protected open(): void {
     this.searchService.open();
   }
 
-  close(): void {
+  protected close(): void {
     this.searchService.close();
   }
 
-  navigate(suggestion: SearchSuggestion): void {
+  protected navigate(suggestion: SearchSuggestion): void {
     if (suggestion.url) {
       window.location.assign(suggestion.url);
     }
@@ -112,13 +112,13 @@ export class SpotlightSearch {
   }
 
   private scrollActiveIntoView(): void {
-    const list = this.resultsList?.nativeElement;
+    const list = this.resultsList()?.nativeElement;
     if (!list) return;
     const item = list.children[this.activeIndex()] as HTMLElement | undefined;
     item?.scrollIntoView({block: 'nearest'});
   }
 
-  onQueryChange(value: string): void {
+  protected onQueryChange(value: string): void {
     this.query.set(value);
     this.activeIndex.set(0);
     if (value.trim()) {

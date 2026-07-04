@@ -24,11 +24,11 @@ export class DetailsView {
   private router = inject(Router);
   private editResourceService = inject(EditResourceService);
 
-  isEditMode = toSignal(this.editResourceService.edit$, { initialValue: false });
-  activeLink = signal<number | undefined>(undefined);
-  activeResource = linkedSignal(() => this.editResourceService.activeResource());
+  protected isEditMode = toSignal(this.editResourceService.edit$, { initialValue: false });
+  protected activeLink = signal<number | undefined>(undefined);
+  protected activeResource = linkedSignal(() => this.editResourceService.activeResource());
 
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
   private oldResourceId?: number;
 

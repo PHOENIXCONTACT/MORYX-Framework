@@ -29,9 +29,9 @@ import { MatButtonModule } from '@angular/material/button';
 ]
 })
 export class ShiftTypeDialog {
-  TranslationConstants = TranslationConstants;
-  HOURS_REGEX = /^(?:[01][0-9]|2[0-3]):[0-5][0-9](?::[0-5][0-9])?$/
-  form = new FormGroup({
+  protected TranslationConstants = TranslationConstants;
+  protected HOURS_REGEX = /^(?:[01][0-9]|2[0-3]):[0-5][0-9](?::[0-5][0-9])?$/
+  protected form = new FormGroup({
     name: new FormControl('', [Validators.required]),
     duration: new FormControl<number>(7, [Validators.min(1),Validators.required]),
     startTime: new FormControl<string>('',[Validators.pattern(this.HOURS_REGEX),Validators.required]),
@@ -43,7 +43,7 @@ export class ShiftTypeDialog {
 
   }
 
-  submit(){
+  protected submit(){
     if(!this.form.valid) return;
 
     const startHours = this.form.value.startTime?.split(':')[0] ?? '0';

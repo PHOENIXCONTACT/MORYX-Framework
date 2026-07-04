@@ -26,9 +26,7 @@
       {
       <div class="grid grid-cols-7">
         @for (calendarDay of week; track $index) {
-          <span class="font-medium border text-center py-3" [ngClass]="{
-            'line-through': !isDayInInterval(calendarDay.date,startDate(),endDate())
-          }">
+          <span class="font-medium border text-center py-3" [class.line-through]="!isDayInInterval(calendarDay.date,startDate(),endDate())">
             {{ (shortDayName(localizedDayName(calendarDay.day) | translate)).toUpperCase() }} {{formatDateDigits(calendarDay.date.getDate())}}
           </span>
         }

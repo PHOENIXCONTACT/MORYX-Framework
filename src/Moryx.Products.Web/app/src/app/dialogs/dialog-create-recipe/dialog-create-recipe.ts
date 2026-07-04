@@ -39,12 +39,12 @@ export class DialogCreateRecipe {
   private dialogRef = inject(MatDialogRef<DialogCreateRecipe>);
   private cacheService = inject(CacheProductsService);
 
-  result = signal<CreateRecipeDialogResult>({} as CreateRecipeDialogResult);
-  possibleRecipes = signal<RecipeDefinitionModel[]>([]);
-  possibleWorkplans = signal<WorkplanModel[]>([]);
-  hasWorkplans = signal<boolean>(false);
+  protected result = signal<CreateRecipeDialogResult>({} as CreateRecipeDialogResult);
+  protected possibleRecipes = signal<RecipeDefinitionModel[]>([]);
+  protected possibleWorkplans = signal<WorkplanModel[]>([]);
+  protected hasWorkplans = signal<boolean>(false);
 
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
   constructor() {
     this.cacheService.recipeDefinitions.subscribe((recipeDefintions) => {
@@ -64,11 +64,11 @@ export class DialogCreateRecipe {
     });
   }
 
-  onClose() {
+  protected onClose() {
     this.dialogRef.close();
   }
 
-  onSelectedRecipeTypeChanged() {
+  protected onSelectedRecipeTypeChanged() {
     // Check if selected recipe type needs a workplan
     this.hasWorkplans.set(this.result()?.selectedRecipe?.hasWorkplans !== undefined);
   }

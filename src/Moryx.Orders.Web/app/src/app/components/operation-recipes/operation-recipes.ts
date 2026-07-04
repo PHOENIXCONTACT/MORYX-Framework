@@ -17,7 +17,6 @@ import { RecipeClassificationModel, RecipeModel, WorkplanModel, OperationModel }
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatToolbarModule } from "@angular/material/toolbar";
-import { CommonModule } from "@angular/common";
 import { MatListModule } from "@angular/material/list";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
@@ -36,7 +35,6 @@ import { MatSelectModule } from '@angular/material/select';
     MatProgressBarModule,
     MatSidenavModule,
     MatToolbarModule,
-    CommonModule,
     TranslatePipe,
     MatListModule,
     MatIconModule,
@@ -52,21 +50,21 @@ import { MatSelectModule } from '@angular/material/select';
   ]
 })
 export class OperationRecipes implements OnInit {
-  recipes = signal<RecipeModel[]>([]);
-  operation = signal<OperationModel>(<OperationModel>{});
-  possibleWorkplans = signal<WorkplanModel[]>([]);
-  isLoading = signal(false);
-  isEditMode = signal(false);
-  selectedWorkplan = signal<WorkplanModel | undefined>(undefined)
-  isEditBarOpened = computed(
+  protected recipes = signal<RecipeModel[]>([]);
+  protected operation = signal<OperationModel>(<OperationModel>{});
+  protected possibleWorkplans = signal<WorkplanModel[]>([]);
+  protected isLoading = signal(false);
+  protected isEditMode = signal(false);
+  protected selectedWorkplan = signal<WorkplanModel | undefined>(undefined)
+  protected isEditBarOpened = computed(
     () => !!this.selectedRecipe() && this.selectedRecipe()?.id! > 0
   );
-  selectedRecipe = signal<RecipeModel | undefined>(undefined);
-  hasWorkplans = computed(() => this.possibleWorkplans().length > 0);
-  recipeClassifications: string[] = Object.keys(RecipeClassificationModel);
-  operationRecipeToolbarImage: string =
+  protected selectedRecipe = signal<RecipeModel | undefined>(undefined);
+  protected hasWorkplans = computed(() => this.possibleWorkplans().length > 0);
+  protected recipeClassifications: string[] = Object.keys(RecipeClassificationModel);
+  protected operationRecipeToolbarImage: string =
     environment.assets + "assets/operation-recipe-editor.jpg";
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
   identifier: string = "";
 
   private activatedRoute = inject(ActivatedRoute);
@@ -150,15 +148,15 @@ export class OperationRecipes implements OnInit {
       });
   }
 
-  onSelect(recipe: RecipeModel) {
+  protected onSelect(recipe: RecipeModel) {
     this.selectedRecipe.update((_) => recipe);
   }
 
-  onEdit() {
+  protected onEdit() {
     this.isEditMode.update((_) => true);
   }
 
-  async onSave() {
+  protected async onSave() {
     this.isEditMode.update((_) => false);
     this.isLoading.update((_) => true);
     this.selectedRecipe.update((item) => {
@@ -179,7 +177,7 @@ export class OperationRecipes implements OnInit {
     this.isLoading.update((_) => false);
   }
 
-  async onCancel() {
+  protected async onCancel() {
     this.isEditMode.update((_) => false);
     this.isLoading.update((_) => true);
     await this.loadRecipes();

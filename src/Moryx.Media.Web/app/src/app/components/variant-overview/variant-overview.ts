@@ -50,16 +50,16 @@ import { NgxDocViewerModule } from 'ngx-doc-viewer';
   ]
 })
 export class VariantOverview implements OnInit, OnDestroy {
-  mediaImage = signal(environment.assets + "assets/media-toolbar.webp");
-  content = signal<ContentDescriptorModel | undefined>(undefined);
-  selectedVariant = signal<VariantDescriptor | undefined>(undefined);
+  protected mediaImage = signal(environment.assets + "assets/media-toolbar.webp");
+  protected content = signal<ContentDescriptorModel | undefined>(undefined);
+  protected selectedVariant = signal<VariantDescriptor | undefined>(undefined);
   // 0: no picture loaded, 1: picture loading, 2: picture loaded
-  bigPictureLoadingState = signal(0);
-  bigPictureUrl = signal<string | null | ArrayBuffer>('');
-  pdfUrl = signal<string | undefined>(undefined);
-  previews = signal<Map<string, string | ArrayBuffer | null>>(new Map());
-  bigPictureIsPdf = signal(false);
-  defaultPictureUrl = signal(environment.assets + 'assets/no_preview.jpg');
+  protected bigPictureLoadingState = signal(0);
+  protected bigPictureUrl = signal<string | null | ArrayBuffer>('');
+  protected pdfUrl = signal<string | undefined>(undefined);
+  protected previews = signal<Map<string, string | ArrayBuffer | null>>(new Map());
+  protected bigPictureIsPdf = signal(false);
+  protected defaultPictureUrl = signal(environment.assets + 'assets/no_preview.jpg');
 
   private dialog = inject(MatDialog);
   private activatedRoute = inject(ActivatedRoute);
@@ -68,10 +68,10 @@ export class VariantOverview implements OnInit, OnDestroy {
   private translateService = inject(TranslateService);
 
   downloadPictureUrl: string | null | ArrayBuffer = '';
-  TranslationConstants = TranslationConstants;
-  menuTopLeftPosition = signal<{ x: string, y: string }>({x: '0', y: '0'});
+  protected TranslationConstants = TranslationConstants;
+  protected menuTopLeftPosition = signal<{ x: string, y: string }>({x: '0', y: '0'});
   timeoutHandler: ReturnType<typeof setTimeout> | undefined;
-  trigger = viewChild.required(MatMenuTrigger);
+  readonly trigger = viewChild.required(MatMenuTrigger);
   private pdfObjectUrl?: string;
   private previewObjectUrls = new Map<string, string>();
 
@@ -104,7 +104,7 @@ export class VariantOverview implements OnInit, OnDestroy {
     this.previewObjectUrls.clear();
   }
 
-  onContext(event: MouseEvent, variant: VariantDescriptor) {
+  protected onContext(event: MouseEvent, variant: VariantDescriptor) {
     event.preventDefault();
     event.stopPropagation();
     this.trigger()!.menuData = {variant: variant};
@@ -112,14 +112,14 @@ export class VariantOverview implements OnInit, OnDestroy {
     this.trigger()!.openMenu();
   }
 
-  onMouseUp(event: MouseEvent, variant: VariantDescriptor) {
+  protected onMouseUp(event: MouseEvent, variant: VariantDescriptor) {
     if (this.timeoutHandler) {
       clearTimeout(this.timeoutHandler);
       this.timeoutHandler = undefined;
     }
   }
 
-  onMouseDown(event: MouseEvent, variant: VariantDescriptor) {
+  protected onMouseDown(event: MouseEvent, variant: VariantDescriptor) {
     this.onSelect(variant);
     if (event.button != 0) return;
 
@@ -241,7 +241,7 @@ export class VariantOverview implements OnInit, OnDestroy {
   }
 
   //Adds a new variant to content and uploads the file from the PC
-  onUpload(): void {
+  protected onUpload(): void {
     const content = this.content();
     if (content !== undefined) {
       const dialogRef = this.dialog.open(DialogAddVariant, {
@@ -298,7 +298,7 @@ export class VariantOverview implements OnInit, OnDestroy {
   }
 
   //downloads currently selected variant to PC
-  onDownload(variant: VariantDescriptor) {
+  protected onDownload(variant: VariantDescriptor) {
     const content = this.content();
     const selectedVariant = this.selectedVariant();
     if (
@@ -320,7 +320,7 @@ export class VariantOverview implements OnInit, OnDestroy {
   interpolateUrl = (string: string, values: any) =>
     string.replace(/{(.*?)}/g, (match, offset) => values[offset]);
 
-  onInfo(variant: VariantDescriptor): void {
+  protected onInfo(variant: VariantDescriptor): void {
     const content = this.content();
     const selectedVariant = this.selectedVariant();
     if (selectedVariant !== undefined && content !== undefined) {
@@ -341,7 +341,7 @@ export class VariantOverview implements OnInit, OnDestroy {
     }
   }
 
-  async onDelete(variant: VariantDescriptor): Promise<void> {
+  protected async onDelete(variant: VariantDescriptor): Promise<void> {
     const content = this.content();
     const selectedVariant = this.selectedVariant();
     if (

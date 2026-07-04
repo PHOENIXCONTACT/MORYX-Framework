@@ -6,7 +6,6 @@
 import { Component, computed, input, output, ChangeDetectionStrategy } from '@angular/core';
 import { OperatorViewModel } from '../models/operator-view-model';
 import { TranslationConstants } from '../extensions/translation-constants.extensions';
-import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
@@ -15,18 +14,17 @@ import { MatIconModule } from '@angular/material/icon';
     styleUrl: './operator-card.scss',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-      CommonModule,
       MatIconModule
     ]
 })
 export class OperatorCard {
-  workstationId = input.required<number>();
-  operator = input.required<OperatorViewModel>();
-  toggleAssignment = output<OperatorViewModel>();
-  TranslationConstants = TranslationConstants;
-  isAssigned = computed(() => this.operator().data.assignedResources?.some(x => x.id === this.workstationId()) );
+  readonly workstationId = input.required<number>();
+  readonly operator = input.required<OperatorViewModel>();
+  readonly toggleAssignment = output<OperatorViewModel>();
+  protected TranslationConstants = TranslationConstants;
+  protected isAssigned = computed(() => this.operator().data.assignedResources?.some(x => x.id === this.workstationId()) );
 
-  toggle(){
+  protected toggle(){
     this.toggleAssignment.emit(this.operator());
   }
 

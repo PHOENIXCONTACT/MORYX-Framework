@@ -278,9 +278,7 @@
                                     <button
                                       mat-icon-button
                                       aria-label="Drawer closer"
-                [ngClass]="{
-                  'invisible':drawerIsOpened()
-                }"
+                [class.invisible]="drawerIsOpened()"
                                       (click)="toggleDrawer()"
                                       >
                                       <mat-icon>keyboard_double_arrow_left</mat-icon>
@@ -298,13 +296,11 @@
                                         <!-- Day Header -->
                                         <div
                                           class="flex flex-row px-4 items-center justify-between h-8 bg-white border border-gray-100"
-                  [ngClass]="{
-                    'line-through': !isDayInInterval(
+                  [class.line-through]="!isDayInInterval(
                     viewDate.date,
                     getShiftInstanceById(shift.id)?.startDate,
                     getShiftInstanceById(shift.id)?.endDate
-                  ) && currentView() === 'Assignments'
-                  }"
+                  ) && currentView() === 'Assignments'"
                                           >
                                           <!-- Operators count -->
                                           @if (currentView() === 'Assignments') {
@@ -313,15 +309,13 @@
                                               >
                                               <span
                                                 class="font-medium"
-                      [ngClass]="{
-                        'text-warning-800': !totalOperators(
+                      [class.text-warning-800]="!totalOperators(
                           calendarState()!.startDate,
                           calendarState()!.endDate,
                           viewDate,
                           filteredAssignments(),
                           getShiftInstanceById(shift.id)
-                        ) 
-                      }"
+                        )"
                                                 >
                                                 {{
                                                 totalOperators(
@@ -451,9 +445,7 @@
                                                   class="px-2 py-1 day-assignment-drop-zone-height rounded-xs border border-gray-200 flex flex-col justify-center items-center"
                                                   cdkDropList
                                                   (cdkDropListDropped)="dropElement($event, shift, viewDate)"
-                  [ngClass]="{
-                    'hidden': !isDraggingItem()
-                  }"
+                  [class.hidden]="!isDraggingItem()"
                                                   [id]="dayDropListId"
                                                   >
                                                   <span class="text-lg text-gray-500"
@@ -471,9 +463,7 @@
                                                   ) {
                                                   <div
                                                     class="px-2 py-1 day-assignment-drop-zone-height bg-gray-50 border border-dashed border-gray-100 rounded-xs flex flex-col justify-center items-center"
-                  [ngClass]="{
-                    'hidden': !isDraggingItem()
-                  }"
+                  [class.hidden]="!isDraggingItem()"
                                                     >
                                                     <mat-icon class="text-gray-500">block</mat-icon>
                                                   </div>
@@ -494,9 +484,7 @@
                                               class="mx-2 py-1 h-36 week-assignment-drop-zone-height rounded-xs border border-dashed border-gray-200 flex flex-col justify-center items-center"
                                               cdkDropList
                                               (cdkDropListDropped)="dropElement($event, shift)"
-              [ngClass]="{
-                'hidden': !isDraggingItem()
-              }"
+              [class.hidden]="!isDraggingItem()"
                                               [id]="weekDropListId"
                                               >
                                               <span class="text-2xl text-gray-500">{{ TranslationConstants.APP_COMPONENT.ASSIGN_TO_SHIFT | translate }}</span>
@@ -512,9 +500,7 @@
                                             ) {
                                             <div
                                               class="px-2 py-1 h-36 bg-gray-50 border border-dashed border-gray-100 rounded-xs flex flex-col justify-center items-center"
-              [ngClass]="{
-                'hidden': !isDraggingItem()
-              }"
+              [class.hidden]="!isDraggingItem()"
                                               [id]="weekDropListId"
                                               >
                                               <mat-icon class="text-gray-500">block</mat-icon>
@@ -530,10 +516,7 @@
                                   <!-- Big Drawer -->
                                   <div
                                     class="transition ease-in duration-700 bg-white border-l right-0 top-0 drop-shadow-md h-full z-1"
-        [ngClass]="{
-          'hidden w-0': !drawerIsOpened(),
-          'absolute w-80': drawerIsOpened()
-        }"
+        [class]="drawerIsOpened() ? 'absolute w-80' : 'hidden w-0'"
                                     >
                                     <!-- Drawer header -->
                                     <div
@@ -565,20 +548,14 @@
                                       <div class="flex flex-row w-full mb-2">
                                         <button
                                           class="transition-all ease-in-out w-full px-5 py-3 border-b-2 text-center font-medium hover:text-primary-700"
-              [ngClass]="{
-                'border-primary-600': selectedShiftElementTab() === 'Locations',
-                'border-transparent': selectedShiftElementTab() !== 'Locations'
-              }"
+              [class]="selectedShiftElementTab() === 'Locations' ? 'border-primary-600' : 'border-transparent'"
                                           (click)="selectedShiftElementTab.set('Locations')"
                                           >
                                           {{ TranslationConstants.APP_COMPONENT.RESOURCES | translate }}
                                         </button>
                                         <button
                                           class="transition-all ease-in-out w-full px-5 py-3 border-b-2 text-center font-medium hover:text-primary-700"
-              [ngClass]="{
-                'border-primary-600': selectedShiftElementTab() === 'Operators',
-                'border-transparent': selectedShiftElementTab() !== 'Operators'
-              }"
+              [class]="selectedShiftElementTab() === 'Operators' ? 'border-primary-600' : 'border-transparent'"
                                           (click)="selectedShiftElementTab.set('Operators')"
                                           >
                                           {{ TranslationConstants.APP_COMPONENT.OPERATORS | translate }}

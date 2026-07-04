@@ -16,7 +16,6 @@ import { DialogDelete } from '@app/dialogs/dialog-delete/dialog-delete';
 import { MediaService } from '@app/services/media-service/media.service';
 import { SnackbarService, SearchBarService, SearchRequest, SearchSuggestion, } from '@moryx/ngx-web-framework/services';
 import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
-import { NgStyle, CommonModule } from '@angular/common';
 import { FileDragAndDropDirective } from '@app/extensions/file-drag-and-drop.directive';
 import { MediaFile } from './media-file/media-file';
 import { MatIcon } from '@angular/material/icon';
@@ -29,7 +28,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
   styleUrls: ['./media-overview.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
-    FileDragAndDropDirective, NgStyle, CommonModule,
+    FileDragAndDropDirective,
     MediaFile, MatMenu, MatMenuContent,
     MatMenuItem, MatIcon, MatMenuTrigger,
     MatFabButton, MatProgressSpinner, TranslatePipe,
@@ -43,15 +42,15 @@ export class MediaOverview implements OnInit, OnDestroy {
   private searchBarService = inject(SearchBarService);
   private snackbarService = inject(SnackbarService);
 
-  filteredContents = signal<ContentDescriptorModel[]>([]);
-  backgroundImgPath = signal(environment.assets + 'assets/moryx_transparent_colored.png');
-  isLoading = signal(true);
-  contents = signal<ContentDescriptorModel[]>([]);
-  selectedContent = signal<string | undefined>(undefined);
+  protected filteredContents = signal<ContentDescriptorModel[]>([]);
+  protected backgroundImgPath = signal(environment.assets + 'assets/moryx_transparent_colored.png');
+  protected isLoading = signal(true);
+  protected contents = signal<ContentDescriptorModel[]>([]);
+  protected selectedContent = signal<string | undefined>(undefined);
 
-  trigger = viewChild.required(MatMenuTrigger);
-  TranslationConstants = TranslationConstants;
-  menuTopLeftPosition = {x: '0', y: '0'};
+  readonly trigger = viewChild.required(MatMenuTrigger);
+  protected TranslationConstants = TranslationConstants;
+  protected menuTopLeftPosition = {x: '0', y: '0'};
 
   constructor() {
   }
@@ -121,14 +120,14 @@ export class MediaOverview implements OnInit, OnDestroy {
     this.trigger().openMenu();
   }
 
-  onSelectMedia(content: ContentDescriptorModel) {
+  protected onSelectMedia(content: ContentDescriptorModel) {
     this.selectedContent.update(_ => content.id);
     this.router.navigate(['/details/', content.id]);
   }
 
 
   //upload new content
-  onUpload(event: any) {
+  protected onUpload(event: any) {
     for (const fileElement of event.target.files) {
       const file: File = fileElement;
       if (file) {
@@ -138,7 +137,7 @@ export class MediaOverview implements OnInit, OnDestroy {
   }
 
   //open dialog in order to check if content should really be deleted
-  async onDelete(content: ContentDescriptorModel): Promise<void> {
+  protected async onDelete(content: ContentDescriptorModel): Promise<void> {
     if (content !== undefined) {
       const deleteMessage = await lastValueFrom(this.translateService
         .get(TranslationConstants.MEDIA_OVERVIEW.DELETE_MESSAGE));
@@ -166,7 +165,7 @@ export class MediaOverview implements OnInit, OnDestroy {
     }
   }
 
-  fileDropped(arg: any) {
+  protected fileDropped(arg: any) {
     this.onUpload(arg);
   }
 }

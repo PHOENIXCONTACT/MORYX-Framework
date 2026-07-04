@@ -9,20 +9,20 @@ import { LauncherLayoutService } from '../services/launcher-layout.service';
 export abstract class LayoutBase {
   protected launcherLayoutService = inject(LauncherLayoutService);
 
-  showTopRegion = computed(() =>
+  protected showTopRegion = computed(() =>
     this.launcherLayoutService.topRegionAvailable() && this.launcherLayoutService.topRegionEnabled()
   );
 
-  showRightRegion = computed(() =>
+  protected showRightRegion = computed(() =>
     this.launcherLayoutService.rightRegionAvailable() && this.launcherLayoutService.rightRegionEnabled()
   );
 
-  onTopRegionSlotChange(event: Event): void {
+  protected onTopRegionSlotChange(event: Event): void {
     const slot = event.target as HTMLSlotElement;
     this.launcherLayoutService.topRegionAvailable.set(slot.assignedNodes().length > 0);
   }
 
-  onRightRegionSlotChange(event: Event): void {
+  protected onRightRegionSlotChange(event: Event): void {
     const slot = event.target as HTMLSlotElement;
     this.launcherLayoutService.rightRegionAvailable.set(slot.assignedNodes().length > 0);
   }

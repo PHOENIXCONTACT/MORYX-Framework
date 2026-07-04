@@ -13,7 +13,7 @@ import { NotificationService } from "./services/notification.service";
 import ConnectionState from "./models/ConnectionState";
 import "./extensions/notification.extensions";
 import { Subscription } from "rxjs";
-import { CommonModule } from "@angular/common";
+
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { Notifications } from "./components/notifications/notifications";
@@ -26,7 +26,6 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
   styleUrls: ["./app.scss"],
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
-    CommonModule,
     MatSidenavModule,
     MatToolbarModule,
     Notifications,
@@ -45,14 +44,14 @@ export class App implements OnInit {
   private notificationService = inject(NotificationService);
   private destroyRef = inject(DestroyRef);
 
-  isLoading = signal(true);
-  isEmpty = signal(true);
-  notificationsToolbarImage = signal(
+  protected isLoading = signal(true);
+  protected isEmpty = signal(true);
+  protected notificationsToolbarImage = signal(
     environment.assets + "assets/notifications_toolbar.jpg");
 
 
   title = "Moryx.Notifications.Web";
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
   private stateSubscription: Subscription | undefined;
   private notificationSubscription: Subscription | undefined;
 
@@ -81,7 +80,7 @@ export class App implements OnInit {
       });
   }
 
-  disconnectEvents(): void {
+  protected disconnectEvents(): void {
     this.stateSubscription?.unsubscribe();
     this.notificationSubscription?.unsubscribe();
     this.notificationService.disconnect();

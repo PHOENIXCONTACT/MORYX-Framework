@@ -35,8 +35,8 @@ export class CellDetails implements OnInit {
   private matDialog = inject(MatDialog);
   private cellStoreService = inject(CellStoreService);
 
-  cellDetails = signal<CellModel | undefined>(undefined);
-  TranslationConstants = TranslationConstants;
+  protected cellDetails = signal<CellModel | undefined>(undefined);
+  protected TranslationConstants = TranslationConstants;
 
   ngOnInit(): void {
     this.cellStoreService.cellSelected$.subscribe({

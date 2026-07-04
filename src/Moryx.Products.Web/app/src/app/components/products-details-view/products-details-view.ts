@@ -34,11 +34,11 @@ export class ProductsDetailsView {
   private activatedRoute = inject(ActivatedRoute);
 
   isEditMode = toSignal(this.editProductsService.edit$, { initialValue: false });
-  currentProduct = toSignal(this.editProductsService.currentProduct$);
-  activeLink = signal<Tabs>(Tabs.Unknown);
+  protected currentProduct = toSignal(this.editProductsService.currentProduct$);
+  protected activeLink = signal<Tabs>(Tabs.Unknown);
 
-  Tabs = Tabs;
-  TranslationConstants = TranslationConstants;
+  protected Tabs = Tabs;
+  protected TranslationConstants = TranslationConstants;
   regexParts: RegExp = /(details\/\d*\/parts)/;
   regexRecipes: RegExp = /(details\/\d*\/recipes)/;
   regexReferences: RegExp = /(details\/\d*\/references)/;
@@ -61,7 +61,7 @@ export class ProductsDetailsView {
     });
   }
 
-  routeTo(target: number) {
+  protected routeTo(target: number) {
     const url = this.router.url;
     const regexSpecificRecipe: RegExp = /(details\/\d*\/recipes\/\d*)/;
     const regexParts: RegExp = /(details\/\d*\/parts)/;

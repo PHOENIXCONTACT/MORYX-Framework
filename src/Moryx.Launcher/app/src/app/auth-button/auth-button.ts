@@ -19,8 +19,8 @@ import { TranslationConstants } from '../translation-constants';
 export class AuthButton implements OnInit {
   private authService = inject(AuthService);
 
-  isLoggedIn = this.authService.isLoggedIn;
-  userName = this.authService.userName;
+  protected isLoggedIn = this.authService.isLoggedIn;
+  protected userName = this.authService.userName;
 
   protected TranslationConstants = TranslationConstants;
 
@@ -28,11 +28,11 @@ export class AuthButton implements OnInit {
     this.authService.checkSignedIn();
   }
 
-  signIn() {
+  protected signIn() {
     window.location.assign(`${this.authService.authBaseAddress}/login?returnUrl=${location.href}`);
   }
 
-  async signOut() {
+  protected async signOut() {
     return this.authService.signOut();
   }
 }

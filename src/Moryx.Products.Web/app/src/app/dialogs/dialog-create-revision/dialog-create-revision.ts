@@ -35,19 +35,19 @@ export class DialogCreateRevision implements OnInit {
   private data = inject<ProductModel>(MAT_DIALOG_DATA);
   private editService = inject(EditProductsService);
 
-  product = signal<ProductModel | undefined>(undefined);
-  revision = signal<number | undefined>(undefined);
-  TranslationConstants = TranslationConstants;
+  protected product = signal<ProductModel | undefined>(undefined);
+  protected revision = signal<number | undefined>(undefined);
+  protected TranslationConstants = TranslationConstants;
 
   constructor() {
     this.product.update(_ => this.data);
   }
 
-  onClose() {
+  protected onClose() {
     this.dialogRef.close();
   }
 
-  onCreate() {
+  protected onCreate() {
     if (this.revision === undefined) return;
 
     this.dialogRef.close();
@@ -61,7 +61,7 @@ export class DialogCreateRevision implements OnInit {
   ngOnInit(): void {
   }
 
-  createProductIdentity(identifier: string | undefined | null, revision: number | undefined): string {
+  protected createProductIdentity(identifier: string | undefined | null, revision: number | undefined): string {
     return this.editService.createProductIdentity(identifier, revision);
   }
 }

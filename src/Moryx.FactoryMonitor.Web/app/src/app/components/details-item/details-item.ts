@@ -5,7 +5,6 @@
 
 import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { CellPropertySettings } from '@api/models/cell-property-settings';
-import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
@@ -13,10 +12,10 @@ import { MatIconModule } from '@angular/material/icon';
     templateUrl: './details-item.html',
     styleUrls: ['./details-item.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [CommonModule, MatIconModule]
+    imports: [MatIconModule]
 })
 export class DetailsItem {
-  value = input.required<CellPropertySettings>();
-  name = input.required<string>();
+  readonly value = input.required<CellPropertySettings>();
+  readonly name = input.required<string>();
 }
 

@@ -61,7 +61,7 @@
         <label><b>{{
             TranslationConstants.BEGIN_DIALOG.OVERDELIVERY | translate
           }}</b></label>
-        <div [ngStyle]="{ color: overDeliveryReached() ? 'var(--mat-sys-error)' : 'var(--mat-sys-on-surface)' }">
+        <div [style.color]="overDeliveryReached() ? 'var(--mat-sys-error)' : 'var(--mat-sys-on-surface)'">
           {{ operation.model.overDeliveryAmount }} ({{ operation.overDelivery }}
           %)
         </div>
@@ -72,7 +72,7 @@
         <label><b>{{
             TranslationConstants.BEGIN_DIALOG.UNDERDELIVERY | translate
           }}</b></label>
-        <div [ngStyle]="{ color: underDeliveryReached() ? 'var(--mat-sys-error)' : 'var(--mat-sys-on-surface)' }">
+        <div [style.color]="underDeliveryReached() ? 'var(--mat-sys-error)' : 'var(--mat-sys-on-surface)'">
           {{ operation.model.underDeliveryAmount }} ({{
             operation.underDelivery
           }}

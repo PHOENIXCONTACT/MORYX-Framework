@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, inject, viewChild } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenu, MatMenuModule } from '@angular/material/menu';
 import { ModuleItem } from '../../models/module-item';
@@ -20,12 +20,12 @@ export class ModuleGridMenu {
   private moduleService = inject(ModuleService);
   private locationPersistenceService = inject(LocationPersistenceService);
 
-  modules = this.moduleService.userModules;
-  activeRoute = this.moduleService.activeRoute;
+  protected modules = this.moduleService.userModules;
+  protected activeRoute = this.moduleService.activeRoute;
 
-  @ViewChild('moduleGridMenu') moduleGridMenu!: MatMenu;
+  readonly moduleGridMenu = viewChild.required<MatMenu>('moduleGridMenu');
 
-  resolveHref(module: ModuleItem): string {
+  protected resolveHref(module: ModuleItem): string {
     return this.locationPersistenceService.resolveHref(module);
   }
 }

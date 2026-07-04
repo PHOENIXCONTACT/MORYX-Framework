@@ -27,13 +27,13 @@ export class ProductRecipesDetails {
   private editProductsService = inject(EditProductsService);
   private cacheService = inject(CacheProductsService);
 
-  isEditMode = toSignal(this.editProductsService.edit$, { initialValue: false });
+  protected isEditMode = toSignal(this.editProductsService.edit$, { initialValue: false });
   currentProduct = toSignal(this.editProductsService.currentProduct$);
-  currentRecipe = linkedSignal(this.editProductsService.currentRecipe);
+  protected currentRecipe = linkedSignal(this.editProductsService.currentRecipe);
   recipeDefinitions = toSignal(this.cacheService.recipeDefinitions, { initialValue: [] });
   TranslationConstants = TranslationConstants;
 
-  updateRecipe(properties: Entry | undefined) {
+  protected updateRecipe(properties: Entry | undefined) {
     if (!properties) return;
     this.editProductsService.updateCurrentRecipe({... this.currentRecipe()!, properties});
   }

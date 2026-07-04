@@ -39,21 +39,21 @@ export class CellIconUploaderDialog {
   private dialogRef = inject(MatDialogRef<CellIconUploaderDialog>);
   private data = inject<{ cellName: string; iconName: string }>(MAT_DIALOG_DATA);
 
-  iconControl = new FormControl<string | null>(null, Validators.required);
-  TranslationConstants = TranslationConstants;
-  cellName = signal<string | undefined>(undefined);
-  matcher = new MyErrorStateMatcher();
+  protected iconControl = new FormControl<string | null>(null, Validators.required);
+  protected TranslationConstants = TranslationConstants;
+  protected cellName = signal<string | undefined>(undefined);
+  protected matcher = new MyErrorStateMatcher();
 
   constructor() {
     this.cellName.set(this.data.cellName);
     this.iconControl.patchValue(this.data.iconName);
   }
 
-  saveIcon() {
+  protected saveIcon() {
     this.dialogRef.close(this.iconControl.value);
   }
 
-  get canSave() {
+  protected get canSave() {
     return this.data.iconName != this.iconControl.value && this.iconControl.value != null && this.iconControl.value != '';
   }
 }

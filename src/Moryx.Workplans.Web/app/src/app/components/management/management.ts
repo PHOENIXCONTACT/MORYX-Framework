@@ -49,15 +49,15 @@ export class Management implements OnInit, OnDestroy {
   private dialog = inject(MatDialog);
   private translateService = inject(TranslateService);
 
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
   private availableSessionsSubscription?: Subscription;
-  readonly displayedColumns: string[] = ['name', 'state', 'version', 'actions'];
+  protected readonly displayedColumns: string[] = ['name', 'state', 'version', 'actions'];
 
-  workplans = signal<WorkplanModel[]>([]);
-  sessions = signal<WorkplanSessionModel[]>([]);
-  isLoading = signal(false);
+  protected workplans = signal<WorkplanModel[]>([]);
+  protected sessions = signal<WorkplanSessionModel[]>([]);
+  protected isLoading = signal(false);
 
-  dataSource!: MatTableDataSource<WorkplanModel>;
+  protected dataSource!: MatTableDataSource<WorkplanModel>;
 
   constructor() {
   }
@@ -141,7 +141,7 @@ export class Management implements OnInit, OnDestroy {
       .toAsync();
   }
 
-  onDeleteWorkplan(workplan: WorkplanModel) {
+  protected onDeleteWorkplan(workplan: WorkplanModel) {
     const session = this.sessions().find(s => s.workplanId === workplan.id);
     this.openConfirmDialog(session, workplan);
   }
@@ -204,7 +204,7 @@ export class Management implements OnInit, OnDestroy {
     );
   }
 
-  onOpenSession(workplan: WorkplanModel) {
+  protected onOpenSession(workplan: WorkplanModel) {
     this.sessionService
       .getSessionForWorkplan(workplan.id!)
       .toAsync()
@@ -212,7 +212,7 @@ export class Management implements OnInit, OnDestroy {
       .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err));
   }
 
-  onDuplicateWorkplan(workplan: WorkplanModel): void {
+  protected onDuplicateWorkplan(workplan: WorkplanModel): void {
     this.sessionService
       .getSessionForWorkplan(workplan.id!, true)
       .toAsync()

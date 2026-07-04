@@ -11,7 +11,6 @@ import { TranslationConstants } from '@app/extensions/translation-constants.exte
 import { PartConnector, ProductModel, ProductQuery, RevisionFilter, Selector } from '../../api/models';
 import { ProductManagementService } from '../../api/services';
 import { EditProductsService } from '@app/services/edit-products.service';
-import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatListModule } from '@angular/material/list';
@@ -26,7 +25,6 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrls: ['./dialog-add-part.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
-    CommonModule,
     TranslatePipe,
     FormsModule,
     ReactiveFormsModule,
@@ -46,12 +44,12 @@ export class DialogAddPart {
   private editProductsService = inject(EditProductsService);
   private snackbarService = inject(SnackbarService);
 
-  possibleParts = signal<ProductModel[]>([]);
-  filteredPossibleParts = signal<ProductModel[]>([]);
-  selectedPart = signal<ProductModel | undefined>(undefined);
-  searchText = signal('');
+  protected possibleParts = signal<ProductModel[]>([]);
+  protected filteredPossibleParts = signal<ProductModel[]>([]);
+  protected selectedPart = signal<ProductModel | undefined>(undefined);
+  protected searchText = signal('');
 
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
   constructor() {
     const body = {
@@ -76,15 +74,15 @@ export class DialogAddPart {
     });
   }
 
-  onClose() {
+  protected onClose() {
     this.dialogRef.close();
   }
 
-  onSelectPart(part: ProductModel) {
+  protected onSelectPart(part: ProductModel) {
     this.selectedPart.update(_ => part);
   }
 
-  onSearchTextChanged() {
+  protected onSearchTextChanged() {
     this.filteredPossibleParts.update(_ => this.possibleParts().filter((part) =>
       this.partContainsSearchText(part)
     ));
@@ -99,7 +97,7 @@ export class DialogAddPart {
     return false;
   }
 
-  createProductNameWithIdentity(product: ProductModel | undefined, shortened: boolean = false, maxLength: number = 40): string {
+  protected createProductNameWithIdentity(product: ProductModel | undefined, shortened: boolean = false, maxLength: number = 40): string {
     return this.editProductsService.createProductNameWithIdentity(product, shortened, maxLength);
   }
 }

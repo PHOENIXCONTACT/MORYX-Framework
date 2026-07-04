@@ -18,11 +18,11 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 export class OperationsFilter {
   private filterService = inject(FilterService);
 
-  hideCompleted = toSignal(this.filterService.hideCompleted$, { initialValue: true });
+  protected hideCompleted = toSignal(this.filterService.hideCompleted$, { initialValue: true });
 
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
-  toggleHideCompleted(): void {
+  protected toggleHideCompleted(): void {
     this.filterService.toggleHideCompleted();
   }
 }

@@ -45,14 +45,14 @@ export class OperatorsManagement implements OnInit {
   private router = inject(Router);
   private translateService = inject(TranslateService);
 
-  operators = signal<OperatorViewModel[]>([]);
-  deleteDialogTitle = signal('');
-  deleteDialogMessage = signal('');
-  inMenuMode = signal(false);
-  skills = signal<OperatorSkill[]>([]);
-  skillTypes = signal<SkillTypeModel[]>([]);
+  protected operators = signal<OperatorViewModel[]>([]);
+  protected deleteDialogTitle = signal('');
+  protected deleteDialogMessage = signal('');
+  protected inMenuMode = signal(false);
+  protected skills = signal<OperatorSkill[]>([]);
+  protected skillTypes = signal<SkillTypeModel[]>([]);
 
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
   ngOnInit(): void {
     this.appStoreService.operators$
@@ -77,11 +77,11 @@ export class OperatorsManagement implements OnInit {
 
   }
 
-  updateMenuMode(value: boolean) {
+  protected updateMenuMode(value: boolean) {
     this.inMenuMode.update(_ => value);
   }
 
-  onDeleteClick(operator: OperatorViewModel) {
+  protected onDeleteClick(operator: OperatorViewModel) {
 
     const dialogRef = this.dialog.open(ConfirmationDialog, {
       data: {
@@ -98,7 +98,7 @@ export class OperatorsManagement implements OnInit {
     });
   }
 
-  onAddClick() {
+  protected onAddClick() {
     const dialogResult = this.dialog.open(AddOperatorDialog);
     //navigate to operator details
     dialogResult.afterClosed()
@@ -107,7 +107,7 @@ export class OperatorsManagement implements OnInit {
       );
   }
 
-  getSkillsForOperator(id: string) {
+  protected getSkillsForOperator(id: string) {
     return this.skills().filter(x => x.operatorId === id);
   }
 }

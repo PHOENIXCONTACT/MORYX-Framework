@@ -43,14 +43,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 export class CellImageDialog {
   private cellImageDialogRef = inject(MatDialogRef<CellImageDialog>);
   private matDialog = inject(MatDialog);
-  data = inject<{ name: string; cellId: number; cellSettings: CellSettingsModel }>(MAT_DIALOG_DATA);
+  protected data = inject<{ name: string; cellId: number; cellSettings: CellSettingsModel }>(MAT_DIALOG_DATA);
   private cellSettingsService = inject(CellSettingsService);
 
-  cellSettings = signal< CellSettingsModel | undefined>(undefined);
-  name!: string;
-  imageControl = new FormControl<string | null>(null, Validators.required);
-  TranslationConstants = TranslationConstants;
-  matcher = new MyErrorStateMatcher();
+  protected cellSettings = signal< CellSettingsModel | undefined>(undefined);
+  protected name!: string;
+  protected imageControl = new FormControl<string | null>(null, Validators.required);
+  protected TranslationConstants = TranslationConstants;
+  protected matcher = new MyErrorStateMatcher();
 
   constructor() {
     this.cellSettings.set(this.data.cellSettings);
@@ -59,7 +59,7 @@ export class CellImageDialog {
     if (this.cellSettings()?.image) this.imageControl.patchValue(this.cellSettings()?.image!);
   }
 
-  openCellIconUploader() {
+  protected openCellIconUploader() {
     const cellIconDialog = this.matDialog.open(CellIconUploaderDialog, {
       data: {
         cellName: this.name,
@@ -74,12 +74,12 @@ export class CellImageDialog {
     });
   }
 
-  saveCellSettings() {
+  protected saveCellSettings() {
     this.cellSettingsService.changeCellSettings(this.data.cellId, this.cellSettings()!);
     this.matDialog.closeAll();
   }
 
-  urlChanged() {
+  protected urlChanged() {
     //when the input/url value changes update the image displayed
     this.cellSettings.update(cell => {
       cell!.image = this.imageControl.value ?? environment.assets + 'assets/Bedienstation.png';

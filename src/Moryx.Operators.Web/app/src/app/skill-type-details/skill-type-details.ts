@@ -40,8 +40,8 @@ import { MatInputModule } from "@angular/material/input";
   ]
 })
 export class SkillTypeDetails implements OnInit {
-  id = input.required<number>();
-  skillType = signal<SkillType>(<SkillType>{
+  readonly id = input.required<number>();
+  protected skillType = signal<SkillType>(<SkillType>{
     id: 0,
     name: "",
     acquiredCapabilities: <Entry>{
@@ -54,12 +54,12 @@ export class SkillTypeDetails implements OnInit {
   private route = inject(Router);
   private appStoreService = inject(AppStoreService);
 
-  form = new FormGroup({
+  protected form = new FormGroup({
     name: new FormControl("", [Validators.required]),
     duration: new FormControl(0, [Validators.min(1)])
   });
 
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
   constructor() {
     effect(() => {
@@ -106,7 +106,7 @@ export class SkillTypeDetails implements OnInit {
     });
   }
 
-  onSave() {
+  protected onSave() {
     this.skillType.update(skill => {
       skill.name = this.form.value.name ?? "";
       skill.duration = `${Number(this.form.value.duration)}.00:00:00`;

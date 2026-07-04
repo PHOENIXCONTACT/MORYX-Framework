@@ -32,16 +32,16 @@ export class MediaFile implements OnInit {
   private mediaService = inject(MediaService);
   private snackbarService = inject(SnackbarService);
 
-  TranslationConstants = TranslationConstants;
-  name = model.required<string>()
-  amount = model.required<string>();
-  content = model.required<ContentDescriptorModel>();
-  selected = model.required<boolean>();
-  loaded = signal(false);
-  path = signal<string | null | ArrayBuffer>('');
+  protected TranslationConstants = TranslationConstants;
+  readonly name = model.required<string>()
+  readonly amount = model.required<string>();
+  readonly content = model.required<ContentDescriptorModel>();
+  readonly selected = model.required<boolean>();
+  protected loaded = signal(false);
+  protected path = signal<string | null | ArrayBuffer>('');
 
-  show = output<ContentDescriptorModel>();
-  delete = output<ContentDescriptorModel>();
+  readonly show = output<ContentDescriptorModel>();
+  readonly delete = output<ContentDescriptorModel>();
   img: any;
 
   ngOnInit(): void {
@@ -90,7 +90,7 @@ export class MediaFile implements OnInit {
     }
   }
 
-  onClick(event: MouseEvent) {
+  protected onClick(event: MouseEvent) {
     if ((<HTMLElement>event.target).nodeName === 'MAT-ICON')
       this.delete.emit(this.content());
     else

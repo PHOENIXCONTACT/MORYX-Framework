@@ -55,55 +55,55 @@ import { MultiProgressBar } from "@app/multi-progress-bar/multi-progress-bar";
 })
 export class BeginDialog implements OnInit {
   // Class properties for context values
-  canBegin: boolean;
-  canReduce: boolean;
-  currentPartialAmount: number;
-  successCount: number;
-  scrapCount: number;
-  runningCount: number;
-  residualAmount: number;
-  minimalTargetAmount: number;
-  restrictions: RestrictionDescription[];
-  operation: OperationViewModel;
+  protected canBegin: boolean;
+  protected canReduce: boolean;
+  protected currentPartialAmount: number;
+  protected successCount: number;
+  protected scrapCount: number;
+  protected runningCount: number;
+  protected residualAmount: number;
+  protected minimalTargetAmount: number;
+  protected restrictions: RestrictionDescription[];
+  protected operation: OperationViewModel;
 
   // Count values for progress bar
-  estimatedTotal = computed(() => {
+  protected estimatedTotal = computed(() => {
     const residual = this.residualAmount > this.newPartialAmount() ? this.residualAmount - this.newPartialAmount() : 0;
     const active = this.scrapCount + this.successCount + this.runningCount;
     const current = this.newTargetAmount() > active ? this.newTargetAmount() : active;
     return current + residual;
   });
-  partialCount = computed(() => {
+  protected partialCount = computed(() => {
     const partial = this.newTargetAmount() - this.successCount - this.scrapCount;
     return partial < 0 ? 0 : partial;
   });
 
-  overDeliveryReached = computed(() => {
+  protected overDeliveryReached = computed(() => {
     return this.operation.model.overDeliveryAmount
       ? this.newTargetAmount() > this.operation.model.overDeliveryAmount!
       : false;
   });
-  underDeliveryReached = computed(() => {
+  protected underDeliveryReached = computed(() => {
     return this.operation.model.underDeliveryAmount
       ? this.newTargetAmount() < this.operation.model.underDeliveryAmount!
       : false;
   });
 
-  hasMinimalValue = computed<boolean>(
+  protected hasMinimalValue = computed<boolean>(
     () => this.newPartialAmount() <= this.minimalTargetAmount - this.currentPartialAmount
   );
 
-  newTargetAmount: WritableSignal<number>;
+  protected newTargetAmount: WritableSignal<number>;
   private newPartialAmount = computed(() => this.newTargetAmount() - this.currentPartialAmount);
 
-  targetAmountControl: FormControl;
-  TranslationConstants = TranslationConstants;
-  OperationStateClassification = OperationStateClassification;
+  protected targetAmountControl: FormControl;
+  protected TranslationConstants = TranslationConstants;
+  protected OperationStateClassification = OperationStateClassification;
 
-  providesOperatorSelection: boolean = false;
-  operatorFormControl = new FormControl('');
+  protected providesOperatorSelection: boolean = false;
+  protected operatorFormControl = new FormControl('');
   operators: AssignableOperator[] = [];
-  filteredOperators!: Observable<AssignableOperator[]>;
+  protected filteredOperators!: Observable<AssignableOperator[]>;
 
   private dialog = inject(MatDialogRef<BeginDialog, BeginModel | undefined>);
   private data = inject<BeginDialogData>(MAT_DIALOG_DATA);
@@ -143,17 +143,17 @@ export class BeginDialog implements OnInit {
     if (!this.canBegin) this.operatorFormControl.disable();
   }
 
-  limitTargetAmount() {
+  protected limitTargetAmount() {
     if (this.targetAmountControl.value < this.minimalTargetAmount) {
       this.setMinTargetAmount();
     }
   }
 
-  setMinTargetAmount() {
+  protected setMinTargetAmount() {
     this.targetAmountControl.setValue(this.minimalTargetAmount);
   }
 
-  changeTargetAmount(change: number) {
+  protected changeTargetAmount(change: number) {
     this.targetAmountControl.setValue(this.targetAmountControl.value + change);
   }
 
@@ -164,7 +164,7 @@ export class BeginDialog implements OnInit {
     );
   }
 
-  closeDialog() {
+  protected closeDialog() {
     const operatorIdentifier = this.operatorFormControl.value?.trim();
     if (!operatorIdentifier) {
       this.dialog.close({amount: this.newPartialAmount()});

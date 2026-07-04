@@ -35,14 +35,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   ]
 })
 export class ChangeBackgroundDialog {
-  backgroundUrlFormControl = new FormControl<string>('', Validators.required);
-  TranslationConstants = TranslationConstants;
+  protected backgroundUrlFormControl = new FormControl<string>('', Validators.required);
+  protected TranslationConstants = TranslationConstants;
   private dialogRef = inject(MatDialogRef<ChangeBackgroundDialog>);
-  backgroundChangeService = inject(ChangeBackgroundService);
-  matcher = new MyErrorStateMatcher();
+  protected backgroundChangeService = inject(ChangeBackgroundService);
+  protected matcher = new MyErrorStateMatcher();
 
   //save the link
-  onSave() {
+  protected onSave() {
     this.backgroundChangeService.changeBackground(this.backgroundUrlFormControl.value ?? '');
     this.dialogRef.close();
   }

@@ -7,9 +7,7 @@
   <mat-sidenav opened mode="side" position="start">
     <div class="">
       <mat-toolbar
-        [ngStyle]="{
-          'background-image': 'url(' + operationRecipeToolbarImage + ')'
-        }"
+        [style.background-image]="'url(' + operationRecipeToolbarImage + ')'"
         color="primary"
         class="operation-recipe-toolbar">
         <mat-toolbar-row>
@@ -27,7 +25,7 @@
       <mat-list>
         @for (recipe of recipes(); track recipe) {
           <mat-list-item
-            [ngClass]="{ 'moryx-selected': selectedRecipe()?.id == recipe.id }"
+            [class.moryx-selected]="selectedRecipe()?.id == recipe.id"
             class="operation-recipes-list-item"
             (click)="onSelect(recipe)">
             <span>{{ recipe.name }}</span>

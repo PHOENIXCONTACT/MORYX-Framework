@@ -31,7 +31,7 @@ export class FullscreenLayout extends LayoutBase {
   protected TranslationConstants = TranslationConstants;
   private hideTimeout: ReturnType<typeof setTimeout> | null = null;
 
-  showExitButton = signal(false);
+  protected showExitButton = signal(false);
 
   private static readonly HIDE_DELAY = 3000;
 
@@ -40,20 +40,20 @@ export class FullscreenLayout extends LayoutBase {
     this.destroyRef.onDestroy(() => this.clearTimeout());
   }
 
-  onKeyDown(event: KeyboardEvent) {
+  protected onKeyDown(event: KeyboardEvent) {
     this.onInteraction();
     if (event.key === 'Escape' && !event.defaultPrevented) {
       this.exitFullscreen();
     }
   }
 
-  onInteraction() {
+  protected onInteraction() {
     this.showExitButton.set(true);
     this.clearTimeout();
     this.hideTimeout = setTimeout(() => this.showExitButton.set(false), FullscreenLayout.HIDE_DELAY);
   }
 
-  exitFullscreen() {
+  protected exitFullscreen() {
     this.launcherLayoutService.updateLayout(LauncherLayout.Full);
   }
 

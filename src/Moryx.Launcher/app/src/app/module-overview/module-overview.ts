@@ -18,10 +18,10 @@ import { LocationPersistenceService } from '../services/location-persistence.ser
 export class ModuleOverview {
   private locationPersistenceService = inject(LocationPersistenceService);
 
-  webModuleItems = input.required<WebModuleItem[]>();
-  userModules = computed(() => this.webModuleItems().filter(m => m.category === ModuleCategory.User));
+  readonly webModuleItems = input.required<WebModuleItem[]>();
+  protected userModules = computed(() => this.webModuleItems().filter(m => m.category === ModuleCategory.User));
 
-  resolveHref(module: ModuleItem): string {
+  protected resolveHref(module: ModuleItem): string {
     return this.locationPersistenceService.resolveHref(module);
   }
 }

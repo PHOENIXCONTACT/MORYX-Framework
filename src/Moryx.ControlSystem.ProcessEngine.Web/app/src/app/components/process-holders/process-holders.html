@@ -111,10 +111,8 @@
             <div class="process-holder-group-title-section">
               <div class="process-holder-group-title">
                 <mat-icon
-              [ngClass]="{
-                active: !node.data.isEmpty,
-                default: node.data.isEmpty
-              }"
+              [class.active]="!node.data.isEmpty"
+              [class.default]="node.data.isEmpty"
                   >
                   @if(node.data?.visualization?.category === visualizationCategory.ProcessHolderGroup){
                     token

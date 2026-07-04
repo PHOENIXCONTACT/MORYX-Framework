@@ -43,17 +43,17 @@ export class ProductParts {
   private router = inject(Router);
   private dialog = inject(MatDialog);
 
-  isEditMode = toSignal(this.editProductsService.edit$, { initialValue: false });
-  currentProduct = toSignal(this.editProductsService.currentProduct$);
-  expandedPart = linkedSignal(this.editProductsService.currentPartConnector);
-  selectedPart = linkedSignal(this.editProductsService.currentPart);
-  TranslationConstants = TranslationConstants;
+  protected isEditMode = toSignal(this.editProductsService.edit$, { initialValue: false });
+  protected currentProduct = toSignal(this.editProductsService.currentProduct$);
+  protected expandedPart = linkedSignal(this.editProductsService.currentPartConnector);
+  protected selectedPart = linkedSignal(this.editProductsService.currentPart);
+  protected TranslationConstants = TranslationConstants;
 
-  getPartRoute(part: PartModel): string[] {
+  protected getPartRoute(part: PartModel): string[] {
     return ['/', 'details', this.currentProduct()!.id!.toString(), 'parts', this.expandedPart()!.name!, part.id!.toString()];
   }
 
-  onSelectPartConnector(connector: PartConnector) {
+  protected onSelectPartConnector(connector: PartConnector) {
     // Skip navigation if current part already belongs to this connector (e.g. on initial page load)
     const currentPart = this.selectedPart();
     const alreadyOnConnector = currentPart && connector.parts?.some(p => p.id === currentPart.id);
@@ -65,12 +65,12 @@ export class ProductParts {
     this.router.navigate(['details', this.currentProduct()!.id, 'parts', connector.name, firstPartId]);
   }
 
-  onDeselectPartConnector(part: PartConnector) {
+  protected onDeselectPartConnector(part: PartConnector) {
     if (part.name !== this.expandedPart()?.name) return;
     this.router.navigate(['details', this.currentProduct()!.id, 'parts', 'base', 0]);
   }
 
-  async addPart() {
+  protected async addPart() {
     const connector = this.expandedPart();
     const dialogRef = this.dialog.open(DialogAddPart, { data: connector });
 
@@ -88,7 +88,7 @@ export class ProductParts {
     this.router.navigate(['details', this.currentProduct()!.id, 'parts', connector!.name, addedPart.id]);
   }
 
-  removePart() {
+  protected removePart() {
     const connector = this.expandedPart();
     if (!connector) {
       return;
@@ -107,7 +107,7 @@ export class ProductParts {
     return this.editProductsService.createProductNameWithIdentity(product, shortened, maxLength);
   }
 
-  getConnectorPreview(connector: PartConnector): string {
+  protected getConnectorPreview(connector: PartConnector): string {
     if (!connector.parts || connector.parts.length === 0) {
       return '';
     }
@@ -115,7 +115,7 @@ export class ProductParts {
     return partNames.join(', ');
   }
 
-  openProduct(part: PartModel) {
+  protected openProduct(part: PartModel) {
     if (this.isEditMode()) {
       this.router.navigate(['details', this.currentProduct()!.id, 'parts', this.expandedPart()!.name, part.id], { queryParamsHandling: 'preserve' });
       return;

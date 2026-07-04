@@ -84,17 +84,17 @@ export class Operations implements OnInit {
   private filterService = inject(FilterService);
   private destroyRef = inject(DestroyRef);
 
-  operations = signal<OperationViewModel[]>([]);
-  DrawerContent = DrawerContent;
-  drawerContent = signal<DrawerContent>(DrawerContent.None);
-  selectedOperation = signal<OperationModel | undefined>(undefined);
-  TranslationConstants = TranslationConstants;
-  OperationStateClassification = OperationStateClassification;
-  isLoading = signal<boolean>(true);
-  mobileQuery: MediaQueryList;
+  protected operations = signal<OperationViewModel[]>([]);
+  protected DrawerContent = DrawerContent;
+  protected drawerContent = signal<DrawerContent>(DrawerContent.None);
+  protected selectedOperation = signal<OperationModel | undefined>(undefined);
+  protected TranslationConstants = TranslationConstants;
+  protected OperationStateClassification = OperationStateClassification;
+  protected isLoading = signal<boolean>(true);
+  protected mobileQuery: MediaQueryList;
   private searchTerm = signal<string>('');
-  drawer = viewChild.required<MatDrawer>('drawer');
-  hideCompleted = toSignal(this.filterService.hideCompleted$, { initialValue: true });
+  protected readonly drawer = viewChild.required<MatDrawer>('drawer');
+  protected hideCompleted = toSignal(this.filterService.hideCompleted$, { initialValue: true });
 
   constructor() {
     this.mobileQuery = this.mediaMatcher.matchMedia('(max-width: 1279px)');
@@ -153,7 +153,7 @@ export class Operations implements OnInit {
     });
   }
 
-  onSearch(request: SearchRequest) {
+  protected onSearch(request: SearchRequest) {
     if (request.submitted) {
       this.searchBarService.clearSuggestions();
       this.searchTerm.set('');
@@ -167,7 +167,7 @@ export class Operations implements OnInit {
     }
   }
 
-  filteringOperations(operations: OperationViewModel[]): OperationViewModel[] {
+  protected filteringOperations(operations: OperationViewModel[]): OperationViewModel[] {
     const searchTerm = this.searchTerm();
     const hideCompleted = this.hideCompleted();
 
@@ -188,7 +188,7 @@ export class Operations implements OnInit {
       });
   }
 
-  async onBegin(operation: OperationViewModel) {
+  protected async onBegin(operation: OperationViewModel) {
     const context = await this.orderManagementService
       .getBeginContext({guid: operation.model.identifier!})
       .toAsync()
@@ -212,7 +212,7 @@ export class Operations implements OnInit {
       });
   }
 
-  onInterrupt(operation: OperationViewModel) {
+  protected onInterrupt(operation: OperationViewModel) {
     this.dialog.open(InterruptDialog, {
       data: <InterruptDialogData>{
         operation: operation,
@@ -227,7 +227,7 @@ export class Operations implements OnInit {
     });
   }
 
-  onReport(operation: OperationViewModel) {
+  protected onReport(operation: OperationViewModel) {
     this.dialog.open(ReportDialog, {
       data: <ReportDialogData>{
         operation: operation,
@@ -249,32 +249,32 @@ export class Operations implements OnInit {
     });
   }
 
-  onCreate() {
+  protected onCreate() {
     this.dialog.open(CreateDialog);
   }
 
-  async onAssign(operation: OperationViewModel) {
+  protected async onAssign(operation: OperationViewModel) {
     await this.orderManagementService
       .reload({guid: operation.model.identifier!})
       .toAsync()
       .catch(async (e: HttpErrorResponse) => await this.snackbarService.showError(this.translateService.instant(TranslationConstants.OPERATIONS.REASSIGN_NOT_POSSIBLE)));
   }
 
-  showRecipes(operation: OperationViewModel) {
+  protected showRecipes(operation: OperationViewModel) {
     const identifier: string = `${operation.model.identifier}`;
     this.router.navigate(['operation-recipes', identifier]);
   }
 
-  showDocuments(operation: OperationViewModel) {
+  protected showDocuments(operation: OperationViewModel) {
     const identifier: string = `${operation.model.identifier}`;
     this.router.navigate(['operation-documents', identifier]);
   }
 
-  onShowMessages(operationViewModel: OperationViewModel) {
+  protected onShowMessages(operationViewModel: OperationViewModel) {
     this.modifyDrawer(operationViewModel.model, DrawerContent.Messages);
   }
 
-  onToggleFilter() {
+  protected onToggleFilter() {
     if (this.drawerContent() === DrawerContent.Filter) {
       this.closeDrawer();
     } else  {
@@ -305,15 +305,15 @@ export class Operations implements OnInit {
     );
   }
 
-  onShowPartList(operation: OperationViewModel) {
+  protected onShowPartList(operation: OperationViewModel) {
     this.modifyDrawer(operation.model, DrawerContent.Parts);
   }
 
-  onToggleSource(operation: OperationViewModel) {
+  protected onToggleSource(operation: OperationViewModel) {
     this.modifyDrawer(operation.model, DrawerContent.Source);
   }
 
-  onPanelExpandedChange(isExpanded: boolean, operation: OperationViewModel): void {
+  protected onPanelExpandedChange(isExpanded: boolean, operation: OperationViewModel): void {
     if (isExpanded) {
       // Panel is being expanded
       this.selectedOperation.set(operation.model);
@@ -335,12 +335,12 @@ export class Operations implements OnInit {
     }
   }
 
-  closeDrawer() {
+  protected closeDrawer() {
     this.drawerContent.set(DrawerContent.None);
     this.drawer().close();
   }
 
-  disconnectEvents(): void {
+  protected disconnectEvents(): void {
     this.mobileQuery.removeEventListener('change', this._mobileQueryListener);
     this.searchBarService.unsubscribe();
     this.operationService.disconnect();

@@ -15,16 +15,16 @@ export abstract class ModuleNavBase {
   private moduleService = inject(ModuleService);
   private locationPersistenceService = inject(LocationPersistenceService);
 
-  modules = this.moduleService.userModules;
-  activeRoute = this.moduleService.activeRoute;
+  protected modules = this.moduleService.userModules;
+  protected activeRoute = this.moduleService.activeRoute;
 
   protected TranslationConstants = TranslationConstants;
 
-  resolveHref(module: ModuleItem): string {
+  protected resolveHref(module: ModuleItem): string {
     return this.locationPersistenceService.resolveHref(module);
   }
 
-  asWeb(item: WebModuleItem | ExternalModuleItem): WebModuleItem | null {
+  protected asWeb(item: WebModuleItem | ExternalModuleItem): WebModuleItem | null {
     return 'eventStream' in item ? item as WebModuleItem : null;
   }
 }

@@ -51,26 +51,26 @@ import { InstructionStateService } from '@app/services/instruction-state.service
   ]
 })
 export class WorkerInstructions implements OnInit, OnDestroy {
-  clientIdentifier = model.required<string>();
+  readonly clientIdentifier = model.required<string>();
 
-  instructions = signal<InstructionModel[]>([]);
-  activeInstructionIndex = signal(0);
-  inputs = signal<Entry | undefined>(undefined);
-  mediaItems = signal<InstructionItemModel[]>([]);
-  displayedInstruction = signal<InstructionModel | undefined>(undefined);
-  mediaItemsContent = signal<DisplayedMediaContent[]>([]);
-  textItems = signal<InstructionItemModel[]>([]);
+  protected instructions = signal<InstructionModel[]>([]);
+  protected activeInstructionIndex = signal(0);
+  protected inputs = signal<Entry | undefined>(undefined);
+  protected mediaItems = signal<InstructionItemModel[]>([]);
+  protected displayedInstruction = signal<InstructionModel | undefined>(undefined);
+  protected mediaItemsContent = signal<DisplayedMediaContent[]>([]);
+  protected textItems = signal<InstructionItemModel[]>([]);
 
-  InstructionType = InstructionType;
-  InstructionContentType = InstructionContentType;
-  environment = environment;
-  TranslationConstants = TranslationConstants;
+  protected InstructionType = InstructionType;
+  protected InstructionContentType = InstructionContentType;
+  protected environment = environment;
+  protected TranslationConstants = TranslationConstants;
 
   private visualInstructionsService = inject(VisualInstructionsService);
   private instructionService = inject(InstructionService);
   private translateService = inject(TranslateService);
   private snackbarService = inject(SnackbarService);
-  instructionStateService = inject(InstructionStateService);
+  protected instructionStateService = inject(InstructionStateService);
 
   private activeInstructionIndexChange: Subject<number> = new ReplaySubject<number>(
     1
@@ -183,20 +183,20 @@ export class WorkerInstructions implements OnInit, OnDestroy {
     );
   }
 
-  onSwipeLeft(): void {
+  protected onSwipeLeft(): void {
     const rightIndex =
       (1 + this.activeInstructionIndex()) % this.instructions().length;
     this.activeInstructionIndexChange.next(rightIndex);
   }
 
-  onSwipeRight(): void {
+  protected onSwipeRight(): void {
     const leftIndex =
       (this.instructions().length - 1 + this.activeInstructionIndex()) %
       this.instructions().length;
     this.activeInstructionIndexChange.next(leftIndex);
   }
 
-  onSelectResult(result: InstructionResultModel): void {
+  protected onSelectResult(result: InstructionResultModel): void {
     const target = this.displayedInstruction()?.id;
     const response = <InstructionResponseModel>{
       id: this.displayedInstruction()?.id,
@@ -227,7 +227,7 @@ export class WorkerInstructions implements OnInit, OnDestroy {
     this.inputs.update(_ => undefined);
   }
 
-  toggleFullscreen() {
+  protected toggleFullscreen() {
     this.instructionStateService.toggleFullscreen();
   }
 }

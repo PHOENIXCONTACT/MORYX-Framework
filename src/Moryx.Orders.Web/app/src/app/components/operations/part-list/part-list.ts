@@ -21,10 +21,10 @@ import { TranslationConstants } from '@app/extensions/translation-constants.exte
   ]
 })
 export class PartList implements OnInit {
-  guid = input.required<string>();
-  isLoading = signal(false);
-  parts = signal<ProductPartModel[]>([]);
-  TranslationConstants = TranslationConstants;
+  readonly guid = input.required<string>();
+  protected isLoading = signal(false);
+  protected parts = signal<ProductPartModel[]>([]);
+  protected TranslationConstants = TranslationConstants;
 
   private orderManagementService = inject(OrderManagementService);
   private snackbarService = inject(SnackbarService);

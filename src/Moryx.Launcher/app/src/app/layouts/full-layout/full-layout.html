@@ -18,7 +18,7 @@
     @if (authConfigured()) {
       <app-auth-button></app-auth-button>
     }
-    <button mat-icon-button aria-label="More options" [matMenuTriggerFor]="moreMenu.appMenu">
+    <button mat-icon-button aria-label="More options" [matMenuTriggerFor]="moreMenu.appMenu()">
       <mat-icon>more_vert</mat-icon>
     </button>
     <app-more-menu #moreMenu></app-more-menu>

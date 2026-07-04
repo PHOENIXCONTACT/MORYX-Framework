@@ -36,10 +36,10 @@ export class DialogAddVariant {
   private dialogRef = inject(MatDialogRef<DialogAddVariant>);
   private data = inject<string>(MAT_DIALOG_DATA);
 
-  TranslationConstants = TranslationConstants;
-  fileName = signal<string | undefined>(undefined);
-  resultData = signal<AddVariantResultData>({} as AddVariantResultData);
-  selectedFileLoaded = signal<boolean>(false);
+  protected TranslationConstants = TranslationConstants;
+  protected fileName = signal<string | undefined>(undefined);
+  protected resultData = signal<AddVariantResultData>({} as AddVariantResultData);
+  protected selectedFileLoaded = signal<boolean>(false);
 
   constructor() {
     this.resultData.update(item => {
@@ -52,7 +52,7 @@ export class DialogAddVariant {
     this.dialogRef.close();
   }
 
-  onFileSelected(event: any) {
+  protected onFileSelected(event: any) {
     const file: File = event.target.files[0];
     this.selectedFileLoaded.update(_ => false);
     if (file) {
