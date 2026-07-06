@@ -3,12 +3,12 @@
 
 using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
-using Moryx.Orders;
+using Moryx.Runtime.Hooks;
 using Moryx.Runtime.Modules;
 using Moryx.Runtime.Modules.Hooks;
 using Moryx.Tools;
 
-namespace Moryx.Runtime.Hooks;
+namespace Moryx.Orders.Management.Hooks;
 
 /// <summary>
 /// Hook that can be used to automatically create orders on startup

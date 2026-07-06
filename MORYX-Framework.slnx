@@ -60,6 +60,7 @@
   </Folder>
   <Folder Name="/Orders/">
     <Project Path="src/Moryx.Orders.Endpoints/Moryx.Orders.Endpoints.csproj" />
+    <Project Path="src/Moryx.Orders.Hooks/Moryx.Orders.Hooks.csproj" />
     <Project Path="src/Moryx.Orders.Management/Moryx.Orders.Management.csproj" />
     <Project Path="src/Moryx.Orders.Web/Moryx.Orders.Web.csproj" />
     <Project Path="src/Moryx.Orders/Moryx.Orders.csproj" />
