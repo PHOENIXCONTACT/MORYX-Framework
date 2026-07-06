@@ -18,5 +18,5 @@ public interface IStartupHook
     /// Execute the main functionality of the hook
     /// </summary>
     /// <returns></returns>
-    Task RunAsync(CancellationToken cancellationToken);
+    Task RunAsync(CancellationToken cancellationToken = default);
 }

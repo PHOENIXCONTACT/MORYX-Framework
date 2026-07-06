@@ -67,7 +67,7 @@ public abstract class ModuleHook<TFacade, TConfig> : IStartupHook where TConfig 
     protected abstract Task OnStateChanged(IServerModule module, TFacade facade, ModuleStateChangedEventArgs eventArgs);
 
     /// <inheritdoc/>
-    public virtual async Task RunAsync(CancellationToken cancellationToken)
+    public virtual async Task RunAsync(CancellationToken cancellationToken = default)
     {
         if (!InitializationResult.Success)
         {

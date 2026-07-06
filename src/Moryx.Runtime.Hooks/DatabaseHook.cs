@@ -16,7 +16,7 @@ public sealed class DatabaseHook(IConfigManager configuration, IDbContextManager
     public int Priority { get; set; } = configuration.GetConfiguration<DatabaseHookConfig>().Priority;
 
     /// <inheritdoc />
-    public async Task RunAsync(CancellationToken cancellationToken)
+    public async Task RunAsync(CancellationToken cancellationToken = default)
     {
         var config = configuration.GetConfiguration<DatabaseHookConfig>();
         if (config is null || config.Disabled)

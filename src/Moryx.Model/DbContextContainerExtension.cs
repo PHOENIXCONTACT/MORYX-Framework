@@ -35,47 +35,47 @@ public static class DbContextContainerExtension
         /// Tries to create the database for each context.
         /// Applies missing migrations as well.
         /// </summary>
-        public async Task CreateAllConfiguredDatabasesAsync(ILogger logger = null, CancellationToken token = default)
+        public async Task CreateAllConfiguredDatabasesAsync(ILogger logger = null, CancellationToken cancellationToken = default)
         {
             var dbContextManager = serviceProvider.GetRequiredService<IDbContextManager>();
             logger ??= serviceProvider.GetService<ILogger>();
-            await dbContextManager.CreateAllConfiguredDatabasesAsync(logger, token);
+            await dbContextManager.CreateAllConfiguredDatabasesAsync(logger, cancellationToken);
         }
 
         /// <summary>
         /// Removes all databases
         /// </summary>
-        public async Task DeleteAllConfiguredDatabasesAsync(ILogger logger = null, CancellationToken token = default)
+        public async Task DeleteAllConfiguredDatabasesAsync(ILogger logger = null, CancellationToken cancellationToken = default)
         {
             var dbContextManager = serviceProvider.GetRequiredService<IDbContextManager>();
             logger ??= serviceProvider.GetService<ILogger>();
             foreach (var context in dbContextManager.Contexts)
             {
-                token.ThrowIfCancellationRequested();
-                await dbContextManager.DeleteDatabaseInternalAsync(context, logger, token);
+                cancellationToken.ThrowIfCancellationRequested();
+                await dbContextManager.DeleteDatabaseInternalAsync(context, logger, cancellationToken);
             }
         }
 
         /// <summary>
         /// Deletes the database for the given context type
         /// </summary>
-        public async Task DeleteDatabaseAsync(Type context, ILogger logger = null, CancellationToken token = default)
+        public async Task DeleteDatabaseAsync(Type context, ILogger logger = null, CancellationToken cancellationToken = default)
         {
 
             var dbContextManager = serviceProvider.GetRequiredService<IDbContextManager>();
             logger ??= serviceProvider.GetService<ILogger>();
-            await dbContextManager.DeleteDatabaseInternalAsync(context, logger, token);
+            await dbContextManager.DeleteDatabaseInternalAsync(context, logger, cancellationToken);
         }
 
         /// <summary>
         /// Deletes the database for the context with the given name
         /// </summary>
-        public async Task DeleteDatabaseByNameAsync(string name, ILogger logger = null, CancellationToken token = default)
+        public async Task DeleteDatabaseByNameAsync(string name, ILogger logger = null, CancellationToken cancellationToken = default)
         {
 
             var dbContextManager = serviceProvider.GetRequiredService<IDbContextManager>();
             logger ??= serviceProvider.GetService<ILogger>();
-            await dbContextManager.DeleteDatabaseByNameAsync(name, logger, token);
+            await dbContextManager.DeleteDatabaseByNameAsync(name, logger, cancellationToken);
         }
     }
 
@@ -85,18 +85,18 @@ public static class DbContextContainerExtension
         /// Tries to create the database for each context.
         /// Applies missing migrations as well.
         /// </summary>
-        public async Task CreateAllConfiguredDatabasesAsync(ILogger logger, CancellationToken token = default)
+        public async Task CreateAllConfiguredDatabasesAsync(ILogger logger, CancellationToken cancellationToken = default)
         {
             foreach (var context in dbContextManager.Contexts)
             {
-                token.ThrowIfCancellationRequested();
+                cancellationToken.ThrowIfCancellationRequested();
                 var configurator = dbContextManager.GetConfigurator(context);
-                var testResult = await configurator.TestConnectionAsync(configurator.Config, token);
+                var testResult = await configurator.TestConnectionAsync(configurator.Config, cancellationToken);
 
                 if (testResult is TestConnectionResult.ConnectionOkDbDoesNotExist)
                 {
                     logger?.LogInformation("Db for {db} does not exist. Trying to create", context.Name);
-                    var createResult = await configurator.CreateDatabaseAsync(configurator.Config, token);
+                    var createResult = await configurator.CreateDatabaseAsync(configurator.Config, cancellationToken);
                     if (createResult)
                     {
                         logger?.LogInformation("Successfully created database for context {context}", context.Name);
@@ -112,7 +112,7 @@ public static class DbContextContainerExtension
                 }
                 else if (testResult is TestConnectionResult.PendingMigrations)
                 {
-                    var summary = await configurator.MigrateDatabaseAsync(configurator.Config, token);
+                    var summary = await configurator.MigrateDatabaseAsync(configurator.Config, cancellationToken);
                     if (summary.Result is Configuration.MigrationResult.Error)
                     {
                         logger?.LogError("Failed to apply missing migration to context {context}", context.Name);
@@ -128,12 +128,12 @@ public static class DbContextContainerExtension
         /// <summary>
         /// Removes all databases
         /// </summary>
-        public async Task DeleteAllConfiguredDatabasesAsync(ILogger logger, CancellationToken token = default)
+        public async Task DeleteAllConfiguredDatabasesAsync(ILogger logger, CancellationToken cancellationToken = default)
         {
             foreach (var context in dbContextManager.Contexts)
             {
-                token.ThrowIfCancellationRequested();
-                await DeleteDatabaseInternalAsync(dbContextManager, context, logger, token);
+                cancellationToken.ThrowIfCancellationRequested();
+                await DeleteDatabaseInternalAsync(dbContextManager, context, logger, cancellationToken);
             }
         }
 
@@ -142,12 +142,10 @@ public static class DbContextContainerExtension
         /// </summary>
         /// <param name="context">Type of the context. Used to find the db to delete</param>
         /// <param name="logger">optional logger</param>
-        /// <param name="token">Token to cancel the operation</param>
-        /// <returns></returns>
-        public async Task DeleteDatabaseAsync(Type context, ILogger logger, CancellationToken token = default)
+        /// <param name="cancellationToken">Token to cancel the operation</param>
+        public Task DeleteDatabaseAsync(Type context, ILogger logger, CancellationToken cancellationToken = default)
         {
-
-            await DeleteDatabaseInternalAsync(dbContextManager, context, logger, token);
+            return DeleteDatabaseInternalAsync(dbContextManager, context, logger, cancellationToken);
         }
 
         /// <summary>
@@ -155,15 +153,14 @@ public static class DbContextContainerExtension
         /// </summary>
         /// <param name="name">Name of the context. Used to find the db to delete</param>
         /// <param name="logger">optional logger</param>
-        /// <param name="token">Token to cancel the operation</param>
-        /// <returns></returns>
-        public async Task DeleteDatabaseByNameAsync(string name, ILogger? logger, CancellationToken token = default)
+        /// <param name="cancellationToken">Token to cancel the operation</param>
+        public async Task DeleteDatabaseByNameAsync(string name, ILogger? logger, CancellationToken cancellationToken = default)
         {
             var context = dbContextManager.Contexts.FirstOrDefault(context =>
                 context.Name == name || context.FullName == name);
             if (context is not null)
             {
-                await DeleteDatabaseInternalAsync(dbContextManager, context, logger, token);
+                await DeleteDatabaseInternalAsync(dbContextManager, context, logger, cancellationToken);
             }
             else
             {
@@ -171,14 +168,14 @@ public static class DbContextContainerExtension
             }
         }
 
-        private async Task DeleteDatabaseInternalAsync(Type context, ILogger logger, CancellationToken token = default)
+        private async Task DeleteDatabaseInternalAsync(Type context, ILogger logger, CancellationToken cancellationToken = default)
         {
             var configurator = dbContextManager.GetConfigurator(context);
-            var testResult = await configurator.TestConnectionAsync(configurator.Config, token);
+            var testResult = await configurator.TestConnectionAsync(configurator.Config, cancellationToken);
             if (testResult is TestConnectionResult.Success or TestConnectionResult.PendingMigrations)
             {
-                await configurator.DeleteDatabaseAsync(configurator.Config, token);
-                var result = await configurator.TestConnectionAsync(configurator.Config, token);
+                await configurator.DeleteDatabaseAsync(configurator.Config, cancellationToken);
+                var result = await configurator.TestConnectionAsync(configurator.Config, cancellationToken);
                 if (result is TestConnectionResult.ConnectionOkDbDoesNotExist)
                 {
                     logger?.LogInformation("Successfully deleted database for context {context}", context.Name);

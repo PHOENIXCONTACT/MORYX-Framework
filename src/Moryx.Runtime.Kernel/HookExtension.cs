@@ -31,7 +31,7 @@ public static class HookExtension
         /// <summary>
         /// Runs all registered startup hooks
         /// </summary>
-        public async Task RunHooksAsync(CancellationToken cancellationToken)
+        public async Task RunHooksAsync(CancellationToken cancellationToken = default)
         {
             var hooks = provider.GetServices<IStartupHook>().ToArray();
 
