@@ -285,8 +285,6 @@ internal sealed class SeamlessScheduler : JobSchedulerBase<SeamlessSchedulerConf
     /// <summary>
     /// Moved the <paramref name="job"/> from the <paramref name="source"/> to the running slot
     /// </summary>
-    /// <param name="job"></param>
-    /// <param name="source"></param>
     private void MoveToRunning(Job job, JobSource source)
     {
         if (source != JobSource.FromResumed)
@@ -340,7 +338,6 @@ internal sealed class SeamlessScheduler : JobSchedulerBase<SeamlessSchedulerConf
     /// <summary>
     /// Assign a new resume slot to the given <paramref name="job"/>
     /// </summary>
-    /// <param name="job"></param>
     private void AssignResumed(Job job)
     {
         _resumeSlots.TryResize(_resumeSlots.Size + 1);
