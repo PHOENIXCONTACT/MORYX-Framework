@@ -29,7 +29,7 @@
             </mat-card-content>
             @if (inputs()) {
               <div class="input-instructions">
-                <navigable-entry-editor [disabled]="false" [entry]="inputs()!"></navigable-entry-editor>
+                <navigable-entry-editor queryParam="inputs" [disabled]="false" [entry]="inputs()!"></navigable-entry-editor>
               </div>
             }
           </div>
