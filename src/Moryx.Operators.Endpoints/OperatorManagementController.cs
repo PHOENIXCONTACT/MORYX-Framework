@@ -205,16 +205,16 @@ public class OperatorManagementController(
     /// </item>
     /// </list>
     /// </summary>
-    /// <param name="token"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpGet("stream")]
-    public IResult Stream(CancellationToken token)
+    public IResult Stream(CancellationToken cancellationToken)
     {
-        var stream = GetChangeStream(token);
+        var stream = GetChangeStream(cancellationToken);
         return TypedResults.ServerSentEvents(stream);
     }
 
-    private async IAsyncEnumerable<SseItem<object>> GetChangeStream([EnumeratorCancellation] CancellationToken token)
+    private async IAsyncEnumerable<SseItem<object>> GetChangeStream([EnumeratorCancellation] CancellationToken cancellationToken)
     {
         var channel = Channel.CreateUnbounded<SseItem<object>>();
         void OnStatusChanged(object? sender, SignInStatusChangedArgs e)
@@ -236,7 +236,7 @@ public class OperatorManagementController(
             extended.SignInStatusChanged += OnStatusChanged;
         }
 
-        await foreach (var item in channel.Reader.ReadAllAsync(token))
+        await foreach (var item in channel.Reader.ReadAllAsync(cancellationToken))
         {
             yield return item;
         }
