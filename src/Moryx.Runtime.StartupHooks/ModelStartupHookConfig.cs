@@ -5,10 +5,10 @@ using System.Runtime.Serialization;
 using Moryx.Configuration;
 using Moryx.Serialization;
 
-namespace Moryx.Runtime.Hooks;
+namespace Moryx.Runtime.StartupHooks;
 
 [ProvidedConfig("Hooks:Databases")]
-public sealed class DatabaseHookConfig : ConfigBase
+public sealed class ModelStartupHookConfig : ConfigBase
 {
     /// <summary>
     /// Allows disabling this config entry
@@ -38,5 +38,5 @@ public sealed class DatabaseHookConfig : ConfigBase
     /// Configures when to run this hook
     /// </summary>
     [DataMember, EntrySerialize]
-    public int Priority { get; internal set; }
+    public int Priority { get; set; }
 }

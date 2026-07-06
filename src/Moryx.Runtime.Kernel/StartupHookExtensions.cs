@@ -5,10 +5,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Moryx.Tools;
 
 namespace Moryx.Runtime.Kernel;
+
 /// <summary>
 /// Extensions to make registering and running startup hooks more convenient
 /// </summary>
-public static class HookExtension
+public static class StartupHookExtensions
 {
     extension(IServiceCollection services)
     {

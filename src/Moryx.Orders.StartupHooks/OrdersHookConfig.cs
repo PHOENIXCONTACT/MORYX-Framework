@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 using Moryx.Configuration;
 using Moryx.Serialization;
 
-namespace Moryx.Runtime.Hooks;
+namespace Moryx.Orders.StartupHooks;
 
 [ProvidedConfig("Hooks:Orders")]
 public sealed class OrdersHookConfig : ConfigBase
@@ -19,7 +19,7 @@ public sealed class OrdersHookConfig : ConfigBase
         public bool Disabled { get; set; }
 
         /// <summary>
-        /// Only run this hook, when the database contains no operations 
+        /// Only run this hook, when the database contains no operations
         /// </summary>
         public bool OnlyOnEmptyDb { get; set; }
 

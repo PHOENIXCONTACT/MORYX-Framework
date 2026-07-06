@@ -4,29 +4,28 @@
 using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 
-namespace Moryx.Runtime.Modules.Hooks;
+namespace Moryx.Runtime.Modules.StartupHooks;
 
 /// <summary>
-/// Base class for StarupHooks that react to module starts.
+/// Base class for StartupHooks that react to module starts.
 /// </summary>
 /// <typeparam name="TFacade">The facade of the Module. Is used to select the correct module</typeparam>
 /// <typeparam name="TConfig">The type of config this hook requires</typeparam>
-public abstract class ModuleStartHook<TFacade, TConfig>(IModuleManager moduleManager, IConfigManager configManager, ILogger logger)
-    : ModuleHook<TFacade, TConfig>(moduleManager, configManager, logger) where TConfig : ConfigBase, new()
+public abstract class ModuleStartupStartHookBase<TFacade, TConfig>(IModuleManager moduleManager, IConfigManager configManager, ILogger logger)
+    : ModuleStartupHookBase<TFacade, TConfig>(moduleManager, configManager, logger) where TConfig : ConfigBase, new()
 {
+    private readonly SemaphoreSlim _semaphore = new(1);
 
     /// <summary>
-    /// Will be true for the first run of OnModuleStarted and will be set to false afterwards,
+    /// Will be true for the first run of OnModuleStarted and will be set to false afterward,
     /// regardless of the outcome of the call.
     /// </summary>
-    protected bool _firstStart = true;
+    protected bool FirstStart { get; set; } = true;
 
     /// <summary>
     /// Will be false until OnModuleStarted ran to completion without throwing an exception.
     /// </summary>
-    protected bool _succeededAtLeastOnce;
-
-    private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
+    protected bool SucceededAtLeastOnce { get; set; }
 
     /// <inheritdoc/>
     protected override async Task OnStateChanged(IServerModule module, TFacade facade, ModuleStateChangedEventArgs eventArgs)
@@ -40,11 +39,11 @@ public abstract class ModuleStartHook<TFacade, TConfig>(IModuleManager moduleMan
         {
             await _semaphore.WaitAsync();
             await OnModuleStarted(module, facade);
-            _succeededAtLeastOnce = true;
+            SucceededAtLeastOnce = true;
         }
         finally
         {
-            _firstStart = false;
+            FirstStart = false;
             _semaphore.Release();
         }
     }
