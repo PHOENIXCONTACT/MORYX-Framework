@@ -3,36 +3,36 @@
 
 using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
-using Moryx.Runtime.Hooks;
 using Moryx.Runtime.Modules;
-using Moryx.Runtime.Modules.Hooks;
-using Moryx.Tools;
 
-namespace Moryx.Orders.Management.Hooks;
+namespace Moryx.Orders.Management;
 
 /// <summary>
 /// Hook that can be used to automatically create orders on startup
 /// </summary>
-public sealed class OrdersHook : ModuleStartHook<IOrderManagement, OrdersHookConfig>
+public sealed class OrdersLifecycleHook : ModuleLifecycleHookBase<IOrderManagement, OrdersLifecycleHookConfig>
 {
+    /// <inheritdoc />
+    protected override ServerModuleState[] TargetStates => [ServerModuleState.Running];
+
     /// <summary>
-    /// Construct the OrdersHook
+    /// Construct the OrdersLifecycleHook
     /// </summary>
-    public OrdersHook(IModuleManager moduleManager, ILogger<OrdersHook> logger, IConfigManager configuration)
+    public OrdersLifecycleHook(IModuleManager moduleManager, ILogger<OrdersLifecycleHook> logger, IConfigManager configuration)
         : base(moduleManager, configuration, logger)
     {
-        if (_config.Operations is not { Length: > 0 })
+        if (Config.Operations is not { Length: > 0 })
         {
-            InitializationResult = FunctionResult.WithError("No operations defined");
+            SkipReason = "No operations defined";
         }
     }
 
     /// <inheritdoc />
-    protected override async Task OnModuleStarted(IServerModule module, IOrderManagement facade)
+    protected override async Task OnTargetStateReached(IServerModule module, IOrderManagement facade, ServerModuleState state)
     {
-        var hasEntries = facade.GetOperations(o => true).Any();
+        var hasEntries = facade.GetOperations(_ => true).Any();
 
-        foreach (var operationDescription in _config.Operations!)
+        foreach (var operationDescription in Config.Operations!)
         {
             if (operationDescription.Disabled || (operationDescription.OnlyOnEmptyDb && hasEntries))
             {
@@ -44,9 +44,9 @@ public sealed class OrdersHook : ModuleStartHook<IOrderManagement, OrdersHookCon
         }
     }
 
-    private static OperationCreationContext CreateOperationsContext(OrdersHookConfig.ImporterConfig operation)
+    private static OperationCreationContext CreateOperationsContext(OperationImportConfig operation)
     {
-        return new()
+        return new OperationCreationContext
         {
             Number = operation.Number,
             Order = new OrderCreationContext()

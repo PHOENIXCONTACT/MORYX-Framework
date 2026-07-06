@@ -1,13 +1,12 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Runtime;
+namespace Moryx.Tools;
 
 /// <summary>
-/// Base class for reusable hooks that should run during application startup.
-/// See docs/articles/framework/startup-hooks.md
+/// Interface for hooks that participate in a lifecycle.
 /// </summary>
-public interface IStartupHook
+public interface ILifecycleHook
 {
     /// <summary>
     /// Lowest value gets executed first

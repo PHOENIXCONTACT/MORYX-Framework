@@ -1,25 +1,25 @@
-# Add Startup Hooks to your application
+# Add Lifecycle Hooks to your application
 
-Startup hooks are a standardized and extensible mechanism to execute custom logic before the MORYX modules of your application are launched.
+Lifecycle hooks are a standardized and extensible mechanism to execute custom logic before the MORYX modules of your application are launched.
 They are designed to enable reusable, composable startup tasks that help ensure your application starts in a predictable and controlled state.
 
-Originally, startup hooks were introduced to simplify manual testing scenarios by preparing the application with predefined data or state.
+Originally, lifecycle hooks were introduced to simplify manual testing scenarios by preparing the application with predefined data or state.
 However, their usage extends far beyond testing — they are equally useful for setting up infrastructure, validating external dependencies, or initializing required resources.
 
 ## Definition
 
-Startup hooks are lightweight components that implement the `IStartupHook` interface.
+Lifecycle hooks are lightweight components that implement the `ILifecycleHook` interface.
 
 Each hook defines:
 
 - **Priority** – Determines execution order. Hooks with lower priority values are typically executed first.
-- **RunAsync** – The asynchronous method where the hook’s logic is executed.
+- **RunAsync** – The asynchronous method where the hook's logic is executed.
 
 This simple contract allows hooks to remain focused, easy to implement, and highly reusable.
 
 ## Modify the `Program.cs`
 
-To enable startup hooks in your application, you need to:
+To enable lifecycle hooks in your application, you need to:
 
 1. Register all hook implementations in the DI container
 2. Execute them before starting the MORYX modules
@@ -30,30 +30,30 @@ The `Moryx.Runtime.Kernel` package provides convenient extension methods to simp
 var builder = WebApplication.CreateBuilder();
 
 // Register application services
-builder.Services.AddStartupHooks();
+builder.Services.AddMoryxLifecycleHooks();
 
 var app = builder.Build();
 
 // Configure middleware, endpoints, etc.
 
-// Execute all registered startup hooks
-await app.Services.RunHooks();
+// Execute all registered lifecycle hooks
+await app.Services.RunMoryxLifecycleHooksAsync();
 
 app.Run();
 ```
 
 ### What happens under the hood?
 
-- `AddStartupHooks()` scans for all implementations of `IStartupHook` and registers them in the service collection.
-- `RunHooks()` resolves all registered hooks and executes them in order of their configured priority.
+- `AddMoryxLifecycleHooks()` scans for all implementations of `ILifecycleHook` and registers them in the service collection.
+- `RunMoryxLifecycleHooksAsync()` resolves all registered hooks and executes them in order of their configured priority.
 
 ## Predefined Hooks
 
-The MORYX framework already provides ready-to-use hooks in the `Moryx.Runtime.Hooks` project.
+The MORYX framework already provides ready-to-use hooks:
 
-### DatabaseHook
+### ModelLifecycleHook (`Moryx.Model`)
 
-The `DatabaseHook` ensures that all databases required by your application are in the expected state before startup.
+The `ModelLifecycleHook` ensures that all databases required by your application are in the expected state before startup.
 
 Typical use cases include:
 
@@ -62,11 +62,11 @@ Typical use cases include:
 
 This hook is particularly useful for local development environments, CI pipelines, and integration testing scenarios.
 
-### OrdersHook
+### OrdersLifecycleHook (`Moryx.Orders.Management`)
 
-The `OrdersHook` is a testing-oriented helper designed to ensure that operations are available immediately after application startup.
+The `OrdersLifecycleHook` is a testing-oriented helper designed to ensure that operations are available immediately after application startup.
 
-To make use of this hook, you must configure at least one operation via `OrdersHookConfig`.
+To make use of this hook, you must configure at least one operation via `OrdersLifecycleHookConfig`.
 
 Each operation configuration requires:
 
@@ -80,14 +80,14 @@ This allows test environments to start with meaningful data already in place.
 
 ## Custom Hooks
 
-You can easily extend the system by implementing your own startup hooks.
+You can easily extend the system by implementing your own lifecycle hooks.
 
 ### Basic example
 
-Create a class that implements `IStartupHook`:
+Create a class that implements `ILifecycleHook`:
 
 ```csharp
-public class MyCustomHook : IStartupHook
+public class MyCustomHook : ILifecycleHook
 {
     public int Priority => 100;
 
@@ -98,33 +98,29 @@ public class MyCustomHook : IStartupHook
 }
 ```
 
-
 ### Module-aware hooks
 
 If your hook depends on the lifecycle of a specific MORYX module, you can use the following base classes:
 
-- `ModuleHook`
-- `ModuleStartHook`
+- `ModuleLifecycleHookBase`
 
-These abstractions:
+This abstraction:
 
-- Handle registration with the `ModuleManager`
-- Allow you to target specific modules using their facade
-- Provide lifecycle-aware execution points
+- Handles registration with the `ModuleManager`
+- Allows you to target specific modules using their facade and specific states via `TargetStates`
+- Provides lifecycle-aware execution points
 
-For a concrete implementation example, refer to the `OrdersHook` in the framework.
+For a concrete implementation example, refer to the [`OrdersLifecycleHook`](/src/Moryx.Orders.Management/Tools/OrdersLifecycleHook.cs) in the framework.
 
 ## Dependency Injection
 
-Startup hooks are instantiated via the global dependency injection container.
+Lifecycle hooks are instantiated via the global dependency injection container.
 
 This means you can inject:
 
 - ASP.NET Core services
 - MORYX runtime services
 - Custom services from your application
-
-This enables powerful integration scenarios with minimal boilerplate.
 
 ## Best Practices
 

@@ -61,7 +61,6 @@ public static class DbContextContainerExtension
         /// </summary>
         public async Task DeleteDatabaseAsync(Type context, ILogger logger = null, CancellationToken cancellationToken = default)
         {
-
             var dbContextManager = serviceProvider.GetRequiredService<IDbContextManager>();
             logger ??= serviceProvider.GetService<ILogger>();
             await dbContextManager.DeleteDatabaseInternalAsync(context, logger, cancellationToken);
@@ -72,7 +71,6 @@ public static class DbContextContainerExtension
         /// </summary>
         public async Task DeleteDatabaseByNameAsync(string name, ILogger logger = null, CancellationToken cancellationToken = default)
         {
-
             var dbContextManager = serviceProvider.GetRequiredService<IDbContextManager>();
             logger ??= serviceProvider.GetService<ILogger>();
             await dbContextManager.DeleteDatabaseByNameAsync(name, logger, cancellationToken);

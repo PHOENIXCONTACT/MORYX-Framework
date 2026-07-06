@@ -3,40 +3,39 @@
 
 using System.Runtime.Serialization;
 using Moryx.Configuration;
-using Moryx.Serialization;
 
-namespace Moryx.Runtime.Hooks;
+namespace Moryx.Model;
 
-[ProvidedConfig("Hooks:Databases")]
-public sealed class DatabaseHookConfig : ConfigBase
+[ProvidedConfig("LifecycleHooks:Model")]
+public sealed class ModelLifecycleHookConfig : ConfigBase
 {
     /// <summary>
     /// Allows disabling this config entry
     /// </summary>
-    [DataMember, EntrySerialize]
+    [DataMember]
     public bool Disabled { get; set; }
 
     /// <summary>
     /// Delete all dbs on startup
     /// </summary>
-    [DataMember, EntrySerialize]
+    [DataMember]
     public bool DeleteAllDbs { get; set; }
 
     /// <summary>
     /// Allows deleting only specific databases by the context name
     /// </summary>
-    [DataMember, EntrySerialize]
-    public string[]? DbsToDelete { get; set; }
+    [DataMember]
+    public string[] DbsToDelete { get; set; }
 
     /// <summary>
     /// Create all missing dbs
     /// </summary>
-    [DataMember, EntrySerialize]
+    [DataMember]
     public bool CreateDbs { get; set; }
 
     /// <summary>
     /// Configures when to run this hook
     /// </summary>
-    [DataMember, EntrySerialize]
-    public int Priority { get; internal set; }
+    [DataMember]
+    public int Priority { get; set; }
 }
