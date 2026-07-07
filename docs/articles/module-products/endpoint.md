@@ -4,7 +4,7 @@ The Products Endpoint provides a REST API for managing product types, product in
 
 ## Facade
 
-This endpoint is based on the `IProductManagement` facade.
+This endpoint is based on the [`IProductManagement`](/src/Moryx.AbstractionLayer/Products/IProductManagement.cs) facade for product types, instances, and recipes.
 
 ## Controllers
 

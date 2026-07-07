@@ -6,9 +6,9 @@ The Runtime Endpoint provides a REST API for managing the MORYX runtime, includi
 
 This endpoint is based on the following facades:
 
-- `IModuleManager` - for module management operations
-- `IConfigManager` - for configuration management
-- `IDbContextManager` - for database management operations
+- [`IModuleManager`](/src/Moryx.Runtime/Modules/Management/IModuleManager.cs) - for module management operations
+- [`IConfigManager`](/src/Moryx/Configuration/IConfigManager.cs) - for configuration management
+- [`IDbContextManager`](/src/Moryx.Model/IDbContextManager.cs) - for database management operations
 
 ## Controllers
 

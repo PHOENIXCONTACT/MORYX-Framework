@@ -4,7 +4,7 @@ The Orders Endpoint provides a REST API for managing orders and operations, incl
 
 ## Facade
 
-This endpoint is based on the `IOrderManagement` facade.
+This endpoint is based on the [`IOrderManagement`](/src/Moryx.Orders/Facade/IOrderManagement.cs) facade for orders and operations.
 
 ## Controllers
 

@@ -6,9 +6,9 @@ The Factory Monitor Endpoint provides a REST API for monitoring factory operatio
 
 This endpoint is based on the following facades:
 
-- `IResourceManagement` - for resource data
-- `IProcessControl` - for process monitoring
-- `IOrderManagement` - for order data
+- [`IResourceManagement`](/src/Moryx.AbstractionLayer/Resources/IResourceManagement.cs) - for resource data
+- [`IProcessControl`](/src/Moryx.ControlSystem/Processes/IProcessControl.cs) - for process monitoring
+- [`IOrderManagement`](/src/Moryx.Orders/Facade/IOrderManagement.cs) - for orders and operations
 
 ## Controllers
 

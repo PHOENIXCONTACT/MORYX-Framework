@@ -22,7 +22,7 @@ This includes the responsibility for ...
 
 ## Provided Facades
 
-This modules exports the `IOrderManagement` facade.
+This modules exports the [`IOrderManagement`](/src/Moryx.Orders/Facade/IOrderManagement.cs) facade.
 
 ## Provided Endpoint
 

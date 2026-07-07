@@ -4,7 +4,7 @@ The Notifications Endpoint provides a REST API for viewing and acknowledging sys
 
 ## Facade
 
-This endpoint is based on the `INotificationPublisher` facade.
+This endpoint is based on the [`INotificationPublisher`](/src/Moryx.Notifications/INotificationPublisher.cs) facade for notifications.
 
 ## Controllers
 

@@ -6,7 +6,7 @@ This module provides the functiality to edit workplans graphically. It provides 
 
 ## Provided facades
 
-`IWorkplanEditing` (see Moryx.Workplans.IWorkplanEditing in Moryx Platform)
+[`IWorkplanEditing`](/src/Moryx.Workplans/IWorkplanEditing.cs)
 
 ## Provided Endpoint
 
@@ -14,17 +14,16 @@ This module provides a REST API for editing workplans. See [Workplans Endpoint](
 
 ## Dependencies
 
-Working with wokplans is done using the following APIs:
+Working with workplans is done using the following APIs:
 
-`IWorkplanEditing` (see Moryx.Workplans.IWorkplanEditing in Moryx Platform)
-
-`IWorkplans` (see Moryx.Workplans.IWorkplans in Moryx Platform)
+- [`IWorkplanEditing`](/src/Moryx.Workplans/IWorkplanEditing.cs)
+- [`IWorkplans`](/src/Moryx/Workplans/API/IWorkplans.cs)
 
 ### Referenced facades
 
 Plugin API | Start Dependency | Optional | Usage
 -----------|------------------|----------|------
-`IProductManagement` (see Moryx.AbstractionLayer.Products.IProductManagement in AbstractionLayer)| Yes | No | The Product Management is used the get products and workplan information.
+[`IProductManagement`](/src/Moryx.AbstractionLayer/Products/IProductManagement.cs) | Yes | No | The Product Management is used the get products and workplan information.
 
 ### Used DataModels
 

@@ -15,8 +15,8 @@ In addition it imports all global components which are needed.
 
 The Process Engine exports facades and forwards external requests to the internal components.
 
-- [IJobManagement](xref:Moryx.ControlSystem.Jobs.IJobManagement)
-- [IProcessControl](xref:Moryx.ControlSystem.Processes.IProcessControl)
+- [`IJobManagement`](/src/Moryx.ControlSystem/Jobs/IJobManagement.cs)
+- [`IProcessControl`](/src/Moryx.ControlSystem/Processes/IProcessControl.cs)
 
 ## Provided Endpoint
 

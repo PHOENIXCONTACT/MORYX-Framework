@@ -6,8 +6,8 @@ The Process Engine Endpoint provides a REST API for managing jobs and processes 
 
 This endpoint is based on the following facades:
 
-- `IJobManagement` - for job management operations
-- `IProcessControl` - for process control and monitoring
+- [`IJobManagement`](/src/Moryx.ControlSystem/Jobs/IJobManagement.cs) - for job management operations
+- [`IProcessControl`](/src/Moryx.ControlSystem/Processes/IProcessControl.cs) - for process control and monitoring
 
 ## Controllers
 

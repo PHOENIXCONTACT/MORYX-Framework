@@ -6,8 +6,8 @@ The Workplans Endpoint provides a REST API for editing and managing workplans gr
 
 This endpoint is based on the following facades:
 
-- `IWorkplans` - for workplan access
-- `IWorkplanEditing` - for workplan editing operations
+- [`IWorkplans`](/src/Moryx/Workplans/API/IWorkplans.cs) - for workplan access
+- [`IWorkplanEditing`](/src/Moryx.Workplans/IWorkplanEditing.cs) - for workplan editing operations
 
 ## Controllers
 

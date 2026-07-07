@@ -4,7 +4,7 @@ The Shifts module provides management capabilities for shifts, shift types, and 
 
 ## Provided Facade
 
-- `IShiftManagement` - for shift management operations
+- [`IShiftManagement`](/src/Moryx.Shifts/IShiftManagement.cs) - for shift management operations
 
 ## Provided Endpoint
 

@@ -6,9 +6,9 @@ The Operators Endpoint provides a REST API for managing operators and their skil
 
 This endpoint is based on the following facades:
 
-- `IOperatorManagement` - for operator management
-- `ISkillManagement` - for skill management
-- `IAttendanceManagement` - for attendance tracking
+- [`IOperatorManagement`](/src/Moryx.Operators/IOperatorManagement.cs) - for operator management
+- [`ISkillManagement`](/src/Moryx.Operators/Skills/ISkillManagement.cs) - for skill management
+- [`IAttendanceManagement`](/src/Moryx.Operators/Attendances/IAttendanceManagement.cs) - for attendance tracking
 
 ## Controllers
 

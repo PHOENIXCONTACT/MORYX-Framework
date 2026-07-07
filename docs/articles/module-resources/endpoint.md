@@ -4,7 +4,7 @@ The Resources Endpoint provides a REST API for managing the resource graph, incl
 
 ## Facade
 
-This endpoint is based on the `IResourceManagement` facade.
+This endpoint is based on the [`IResourceManagement`](/src/Moryx.AbstractionLayer/Resources/IResourceManagement.cs) facade for resource management.
 
 ## Controllers
 

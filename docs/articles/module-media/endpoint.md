@@ -4,7 +4,7 @@ The Media Endpoint provides a REST API for managing media files, including uploa
 
 ## Facade
 
-This endpoint is based on the `IMediaServer` facade.
+This endpoint is based on the [`IMediaServer`](/src/Moryx.Media/IMediaServer.cs) facade for media file management.
 
 ## Controllers
 

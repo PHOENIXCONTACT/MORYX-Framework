@@ -4,7 +4,7 @@ The Shifts Endpoint provides a REST API for managing shifts, shift types, and sh
 
 ## Facade
 
-This endpoint is based on the `IShiftManagement` facade.
+This endpoint is based on the [`IShiftManagement`](/src/Moryx.Shifts/IShiftManagement.cs) facade for shifts, shift types, and shift assignments.
 
 ## Controllers
 

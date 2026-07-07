@@ -4,7 +4,7 @@ The Visual Instructions Endpoint provides a REST API for managing visual instruc
 
 ## Facade
 
-This endpoint is based on the `IVisualInstructions` facade.
+This endpoint is based on the [`IVisualInstructions`](/src/Moryx.VisualInstructions/IVisualInstructions.cs) facade for visual instructions.
 
 ## Controllers
 
