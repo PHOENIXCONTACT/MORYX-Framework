@@ -1,0 +1,41 @@
+
+:host {
+  display: block;
+}
+
+.card {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 56px;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 4px;
+  cursor: pointer;
+
+  &.assigned {
+    background-color: #96be0d;
+    color: white;
+  }
+
+  &.unassigned {
+    background-color: var(--mat-sys-surface-container);
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+.card-label {
+  font-size: 1.125rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.card-icon {
+  position: absolute;
+  right: 8px;
+  width: 44px;
+  height: 44px;
+}

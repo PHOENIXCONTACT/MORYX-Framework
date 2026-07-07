@@ -1,93 +1,60 @@
-<div class="tw:relative w-full tw:h-full tw:bg-gray-50">
-  <div
-    class="tw:w-full tw:flex tw:justify-between tw:p-2 tw:items-center tw:bg-white tw:border-b tw:border-b-gray-200"
-    >
-    <div class="tw:flex tw:flex-row tw:items-center tw:gap-2">
-      <a
-        mat-icon-button
-        aria-label="Go back"
-        [matTooltip]="
-          TranslationConstants.WORKSTATION_OPERATORS.GO_BACK | translate
-        "
-        class="go-back-button"
-        routerLink="/workstations"
-        >
-        <mat-icon>arrow_back</mat-icon>
-      </a>
-      <span class="tw:text-lg tw:font-medium">{{
-        TranslationConstants.OPERATORS_MANAGEMENT.MANAGE_OPERATORS | translate
-      }}</span>
-    </div>
-    <div class="tw:flex tw:gap-1 tw:items-center">
-      <span class="tw:text-lg tw:font-medium">{{ operators().length }}</span>
-      <mat-icon>groups</mat-icon>
-    </div>
-  </div>
-  <div class="tw:w-full tw:overflow-y-auto tw:p-2 tw:gap-y-2 main-content" role="main">
-    <mat-accordion class="" multi>
+<div class="management-container">
+  <mat-toolbar>
+    <a
+      mat-icon-button
+      aria-label="Go back"
+      [matTooltip]="TranslationConstants.WORKSTATION_OPERATORS.GO_BACK | translate"
+      routerLink="/workstations">
+      <mat-icon>arrow_back</mat-icon>
+    </a>
+    <span>{{ TranslationConstants.OPERATORS_MANAGEMENT.MANAGE_OPERATORS | translate }}</span>
+    <span class="spacer"></span>
+    <span>{{ operators().length }}</span>
+    <mat-icon>groups</mat-icon>
+  </mat-toolbar>
+  <div class="main-content" role="main">
+    <mat-accordion multi>
       @for (operator of operators(); track operator) {
         <mat-expansion-panel #expansion>
           <mat-expansion-panel-header>
-            <mat-panel-title> {{ operator.data.pseudonym ?? 'UNKNOWN' }} </mat-panel-title>
+            <mat-panel-title>{{ operator.data.pseudonym ?? 'UNKNOWN' }}</mat-panel-title>
             @if (!expansion.expanded) {
-              <mat-panel-description class="flex flex-row-reverse">
+              <mat-panel-description class="panel-description">
                 <app-operator-skill-chips
                   [operatorId]="operator.data.identifier ?? ''"
                   [skills]="skills()"
                   [skillTypes]="skillTypes()"
-                  [useTagStyle]="false"
-                  />
+                  [useTagStyle]="false"></app-operator-skill-chips>
               </mat-panel-description>
             }
           </mat-expansion-panel-header>
           <app-operator-skill-chips
             [operatorId]="operator.data.identifier ?? ''"
             [skills]="skills()"
-            [skillTypes]="skillTypes()"
-            />
+            [skillTypes]="skillTypes()"></app-operator-skill-chips>
           <mat-action-row>
-            <button mat-button  (click)="onDeleteClick(operator)">{{ TranslationConstants.OPERATORS_MANAGEMENT.DELETE | translate}}</button>
-            <a mat-flat-button  [routerLink]="['operator/details', operator.data.identifier]" >
-              {{ TranslationConstants.OPERATORS_MANAGEMENT.EDIT| translate}}
+            <button mat-button (click)="onDeleteClick(operator)">
+              {{ TranslationConstants.OPERATORS_MANAGEMENT.DELETE | translate }}
+            </button>
+            <a mat-flat-button [routerLink]="['operator/details', operator.data.identifier]">
+              {{ TranslationConstants.OPERATORS_MANAGEMENT.EDIT | translate }}
             </a>
           </mat-action-row>
         </mat-expansion-panel>
       }
-
-
     </mat-accordion>
-    <!-- Operators
-    <a
-      class="flex flex-row items-center h-9 p-2 justify-between hover:cursor-pointer bg-white shadow-md rounded-sm mb-1"
-      [routerLink]="['operator/details', operator.data.identifier]"
-      *ngFor="let operator of operators"
-      >
-      <span class="font-medium">{{ operator.data.pseudonym ?? 'UNKNOWN' }}</span>
-      Skills
-      <div class="">
-        <app-operator-skill-chips
-          [operatorId]="operator.data.identifier ?? ''"
-          [skills]="skills"
-          [skillTypes]="skillTypes"
-          />
-      </div>
-    </a> -->
   </div>
-  <div class="tw:absolute tw:z-100 tw:bottom-2 tw:right-2">
-    <div
-      class="tw:flex tw:flex-col tw:justify-center tw:items-center tw:gap-1"
+  <div class="fab-container">
+    <div class="fab-stack"
       (mouseenter)="updateMenuMode(true)"
-      (mouseleave)="updateMenuMode(false)"
-      >
+      (mouseleave)="updateMenuMode(false)">
       <div>
         <a
           mat-mini-fab
-          [matTooltip]="TranslationConstants.OPERATORS_MANAGEMENT.SKILL_TYPES | translate
-        "
+          [matTooltip]="TranslationConstants.OPERATORS_MANAGEMENT.SKILL_TYPES | translate"
           matTooltipPosition="left"
           routerLink="/skill-types"
-          class="secondary-button"
-          >
+          class="secondary-button">
           <mat-icon>school</mat-icon>
         </a>
       </div>
