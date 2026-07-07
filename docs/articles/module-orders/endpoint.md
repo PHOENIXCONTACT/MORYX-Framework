@@ -14,6 +14,8 @@ This endpoint is based on the [`IOrderManagement`](/src/Moryx.Orders/Facade/IOrd
 
 Permissions are defined in [`OrderPermissions`](/src/Moryx.Orders.Endpoints/OrderPermissions.cs).
 
+The `Moryx.Orders.CanView` permission controls access to the UI page.
+
 | Permission String | Description |
 |-------------------|-------------|
 | `Moryx.Orders.CanView` | Permission for all actions related to viewing orders and order details |

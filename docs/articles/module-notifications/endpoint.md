@@ -14,6 +14,8 @@ This endpoint is based on the [`INotificationPublisher`](/src/Moryx.Notification
 
 Permissions are defined in [`NotificationPermissions`](/src/Moryx.Notifications.Endpoints/NotificationPermissions.cs).
 
+The `Moryx.Notifications.CanView` permission controls access to the UI page.
+
 | Permission String | Description |
 |-------------------|-------------|
 | `Moryx.Notifications.CanView` | Permission for all actions related to viewing notifications |

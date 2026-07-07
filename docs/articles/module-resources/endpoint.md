@@ -14,6 +14,8 @@ This endpoint is based on the [`IResourceManagement`](/src/Moryx.AbstractionLaye
 
 Permissions are defined in [`ResourcePermissions`](/src/Moryx.AbstractionLayer.Resources.Endpoints/ResourcePermissions.cs).
 
+The `Moryx.Resources.CanViewTree` permission controls access to the UI page.
+
 | Permission String | Description |
 |-------------------|-------------|
 | `Moryx.Resources.CanViewTree` | Permission for all actions related to viewing the resource instance tree |

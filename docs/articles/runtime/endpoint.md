@@ -20,6 +20,8 @@ This endpoint is based on the following facades:
 
 Permissions are defined in [`RuntimePermissions`](/src/Moryx.Runtime.Endpoints/RuntimePermissions.cs).
 
+The `Moryx.Runtime.Database.CanView` permission controls access to the UI page.
+
 ### Common Permissions
 
 | Permission String | Description |

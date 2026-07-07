@@ -18,6 +18,8 @@ This endpoint is based on the following facades:
 
 Permissions are defined in [`JobPermissions`](/src/Moryx.ControlSystem.Jobs.Endpoints/JobPermissions.cs) and [`ProcessPermissions`](/src/Moryx.ControlSystem.Processes.Endpoints/ProcessPermissions.cs).
 
+The `Moryx.Processes.CanView` permission controls access to the UI page.
+
 ### Job Permissions
 
 | Permission String | Description |

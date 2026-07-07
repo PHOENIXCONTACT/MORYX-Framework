@@ -18,6 +18,8 @@ This endpoint is based on the following facades:
 
 Permissions are defined in [`FactoryMonitorPermissions`](/src/Moryx.FactoryMonitor.Endpoints/FactoryMonitorPermissions.cs).
 
+The `Moryx.FactoryMonitor.CanView` permission controls access to the UI page.
+
 | Permission String | Description |
 |-------------------|-------------|
 | `Moryx.FactoryMonitor.CanView` | Permission for all actions related to viewing factory monitor data |

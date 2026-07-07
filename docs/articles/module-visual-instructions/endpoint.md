@@ -14,6 +14,8 @@ This endpoint is based on the [`IVisualInstructions`](/src/Moryx.VisualInstructi
 
 Permissions are defined in [`VisualInstructionsPermissions`](/src/Moryx.VisualInstructions.Endpoints/VisualInstructionsPermissions.cs).
 
+The `Moryx.VisualInstructions.CanView` permission controls access to the UI page.
+
 | Permission String | Description |
 |-------------------|-------------|
 | `Moryx.VisualInstructions.CanView` | Permission for all actions related to viewing visual instructions |

@@ -14,6 +14,8 @@ This endpoint is based on the [`IProductManagement`](/src/Moryx.AbstractionLayer
 
 Permissions are defined in [`ProductPermissions`](/src/Moryx.AbstractionLayer.Products.Endpoints/ProductPermissions.cs).
 
+The `Moryx.Products.CanViewTypes` permission controls access to the UI page.
+
 | Permission String | Description |
 |-------------------|-------------|
 | `Moryx.Products.CanViewTypes` | Permission for all actions related to viewing one or multiple product types |
