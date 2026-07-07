@@ -1,10 +1,8 @@
-@use "@moryx/ngx-web-framework/styles/theme";
 @use "@moryx/ngx-web-framework/styles/variables";
 @use "@angular/material" as mat;
 
 html, body {
   height: 100%;
-  font-family: Roboto;
 }
 body { margin: 0; overflow: hidden; }
 
