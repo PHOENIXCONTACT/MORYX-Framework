@@ -162,6 +162,7 @@ mat-toolbar {
 
 .main-content {
   flex: 1;
+  background-color: var(--mat-sys-background); // use neutral background, --mat-sys-surface has a primary tint
 }
 
 .main-grid {
