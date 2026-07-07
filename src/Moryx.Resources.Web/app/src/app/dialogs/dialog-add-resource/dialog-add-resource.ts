@@ -65,13 +65,17 @@ export class DialogAddResource implements OnInit {
   }
 
   protected typeSelected(stepper: MatStepper) {
-    if (!this.resourceType()?.constructors?.length) this.skipCtorSelection(stepper);
+    if (!this.resourceType()?.constructors?.length) {
+      this.skipCtorSelection(stepper);
+    }
     stepper.next();
   }
 
   private skipCtorSelection(stepper: MatStepper) {
     stepper.next();
-    if (stepper.selected) stepper.selected.interacted = true;
+    if (stepper.selected) {
+      stepper.selected.interacted = true;
+    }
   }
 
   protected secondStepComplete(): boolean {

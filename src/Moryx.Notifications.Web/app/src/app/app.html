@@ -17,11 +17,11 @@
               <span>{{ TranslationConstants.APP.NOTIFICATIONS | translate }}</span>
             </mat-toolbar-row>
           </mat-toolbar>
-          <moryx-notifications class="notifications-list"></moryx-notifications>
+          <app-notifications class="notifications-list"></app-notifications>
         </div>
       </mat-sidenav>
       <mat-sidenav-content class="notification-details-container">
-        <notification-details class="notification-details"></notification-details>
+        <app-notification-details class="notification-details"></app-notification-details>
       </mat-sidenav-content>
     </mat-sidenav-container>
   } @else {

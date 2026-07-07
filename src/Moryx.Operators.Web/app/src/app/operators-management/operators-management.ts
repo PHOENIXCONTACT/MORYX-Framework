@@ -92,7 +92,9 @@ export class OperatorsManagement implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result.dialogResult === 'NO') return;
+      if (result.dialogResult === 'NO') {
+        return;
+      }
 
       this.appStoreService.deleteOperator(operator);
     });

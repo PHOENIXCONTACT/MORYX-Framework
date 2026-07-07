@@ -58,7 +58,7 @@ export class EditMenu implements OnInit {
     },
   ];
   protected editingEnabled = signal(false);
-  protected buttons = signal<any[]>([]);
+  protected buttons = signal<{ icon: string; state: EditMenuState }[]>([]);
   protected activeState = signal<EditMenuState>(EditMenuState.Closed);
   protected backgroundState: EditMenuState = EditMenuState.EditingBackground;
   protected TranslationConstants = TranslationConstants;

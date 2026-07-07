@@ -53,7 +53,7 @@ export class ResourceReferences {
 
   protected TranslationConstants = TranslationConstants;
 
-  protected compareWith = (o1: any, o2: any) => {
+  protected compareWith = (o1: ResourceModel, o2: ResourceModel) => {
     return o1?.id === o2?.id;
   };
   private router = inject(Router);
@@ -61,7 +61,9 @@ export class ResourceReferences {
   constructor() {
     effect(() => {
       const resource = this.editResourceService.activeResource();
-      if (!resource) return;
+      if (!resource) {
+        return;
+      }
       untracked(() => this.loadReferences(resource));
     });
   }
@@ -97,7 +99,9 @@ export class ResourceReferences {
   }
 
   protected addTarget(table: MatTable<ResourceModel>) {
-    if (!this.selectedTarget || !this.selectedReference()) return;
+    if (!this.selectedTarget || !this.selectedReference()) {
+      return;
+    }
 
     this.selectedReference()?.targets?.push(this.selectedTarget as ResourceModel);
     this.possibleResources.update(() => this.getPossibleResources());
@@ -118,7 +122,9 @@ export class ResourceReferences {
   }
 
   private resetTarget() {
-    if (!this.selectedReference()) return;
+    if (!this.selectedReference()) {
+      return;
+    }
 
     this.selectedReference.update(ref => {
       ref!.targets = []
@@ -127,7 +133,9 @@ export class ResourceReferences {
   }
 
   protected deleteTarget(target: ResourceModel) {
-    if (!this.selectedReference) return;
+    if (!this.selectedReference) {
+      return;
+    }
 
     this.selectedReference.update(ref => {
       ref!.targets = this.selectedReference()?.targets?.filter(t => t.id != target.id);
@@ -146,11 +154,14 @@ export class ResourceReferences {
     let possibleResources = [] as ResourceModel[];
     const supportedTypes = this.getAllSupportedTypes(this.selectedReferenceType()?.supportedTypes);
     this.cacheResourceService.flatResources.getValue()?.forEach(r => {
-      if (supportedTypes.find(t => r.type === t) && this.resource?.id != r.id) possibleResources.push(r);
+      if (supportedTypes.find(t => r.type === t) && this.resource?.id != r.id) {
+        possibleResources.push(r);
+      }
     });
 
-    if (this.selectedReferenceType()?.isCollection)
+    if (this.selectedReferenceType()?.isCollection) {
       possibleResources = possibleResources.filter(r => !this.selectedReference()?.targets?.find(t => t.id == r.id));
+    }
 
     return possibleResources;
   }
@@ -162,13 +173,17 @@ export class ResourceReferences {
    * @returns The combined list
    */
   private getAllSupportedTypes(supportedRootTypes: string[] | null | undefined): string[] {
-    if (!supportedRootTypes) return [];
+    if (!supportedRootTypes) {
+      return [];
+    }
 
     const supportedSubTypes = Object.assign<string[], string[]>([], supportedRootTypes);
     for (let index = 0; index < supportedSubTypes.length; index++) {
       const rootType = this.cacheResourceService.flatTypes?.find(t => t.name == supportedSubTypes[index]);
       rootType?.derivedTypes?.forEach(t => {
-        if (t.name && !supportedSubTypes.find(et => t.name === et)) supportedSubTypes.push(t.name);
+        if (t.name && !supportedSubTypes.find(et => t.name === et)) {
+          supportedSubTypes.push(t.name);
+        }
       });
     }
 

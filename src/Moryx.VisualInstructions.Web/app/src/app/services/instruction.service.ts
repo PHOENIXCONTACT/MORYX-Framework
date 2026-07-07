@@ -60,8 +60,9 @@ export class InstructionService {
   }
 
   private convertBlobResponse(data: HttpEvent<Blob>): DisplayedMediaContent {
-    if (data.type != HttpEventType.Response || data.body == null)
+    if (data.type != HttpEventType.Response || data.body == null) {
       return {type: 'undefined', url: environment.assets + 'assets/broken_image.png'} as DisplayedMediaContent;
+    }
 
     const downloadedFile = new Blob([data.body], {type: data.body.type});
     const url = window.URL.createObjectURL(downloadedFile);

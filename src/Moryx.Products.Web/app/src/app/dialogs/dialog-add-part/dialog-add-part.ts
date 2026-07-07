@@ -93,7 +93,9 @@ export class DialogAddPart {
     const indexSearchText = name
       .toLowerCase()
       .indexOf(this.searchText().toLowerCase());
-    if (indexSearchText >= 0) return true;
+    if (indexSearchText >= 0) {
+      return true;
+    }
     return false;
   }
 

@@ -36,8 +36,12 @@ export class DetailsView {
     this.router.events.subscribe(event => this.onRoutingEvent(event));
     effect(() => {
       const resource = this.activeResource();
-      if (!resource) return;
-      if (this.oldResourceId === resource.id) return;
+      if (!resource) {
+        return;
+      }
+      if (this.oldResourceId === resource.id) {
+        return;
+      }
       untracked(() => this.onNewResource(resource));
     });
   }
@@ -58,7 +62,7 @@ export class DetailsView {
 
   private onRoutingEvent(event: Event) {
     if (event instanceof NavigationEnd || event instanceof NavigationCancel) {
-      let url = this.router.url;
+      const url = this.router.url;
       const regexProperty: RegExp = /(details\/\d*\/properties)/;
       const regexReferences: RegExp = /(details\/\d*\/references)/;
       const regexMethods: RegExp = /(details\/\d*\/methods)/;

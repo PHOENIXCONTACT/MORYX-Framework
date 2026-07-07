@@ -79,9 +79,9 @@ export class App implements OnInit, OnDestroy {
 
     const routerSubscription = this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe(async (e: any) => {
+      .subscribe(async (e: NavigationEnd) => {
         const translations = await this.getTranslations();
-        this.navigatedUrl.update(_ => e['url']);
+        this.navigatedUrl.update(_ => e.url);
         if (this.navigatedUrl() !== '/management') {
           this.changeViewTooltip.update(_ => translations[TranslationConstants.APP.OPEN_WORKPLAN_MANAGEMENT]);
           this.changeViewDisabled.update(_ => false);
@@ -102,8 +102,12 @@ export class App implements OnInit, OnDestroy {
   }
 
   protected changeView() {
-    if (this.navigatedUrl() !== '/management') this.router.navigate(['/management']);
-    else if (this.activeSession) this.router.navigate(['session', this.activeSession]);
+    if (this.navigatedUrl() !== '/management') {
+      this.router.navigate(['/management']);
+    }
+    else if (this.activeSession) {
+      this.router.navigate(['session', this.activeSession]);
+    }
   }
 
   ngOnDestroy(): void {

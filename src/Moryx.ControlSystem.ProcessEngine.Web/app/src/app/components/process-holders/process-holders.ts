@@ -117,7 +117,9 @@ export class ProcessHolders implements OnInit {
           this._tree()?.collapse(foundNode);
           this._tree()?.expand(foundNode);
         }
-      } else nodes.push(node);
+      } else {
+        nodes.push(node);
+      }
       return nodes;
     });
   }

@@ -25,7 +25,7 @@
       <mat-list>
         @for (recipe of recipes(); track recipe) {
           <mat-list-item
-            [class.moryx-selected]="selectedRecipe()?.id == recipe.id"
+            [class.moryx-selected]="selectedRecipe()?.id === recipe.id"
             class="operation-recipes-list-item"
             (click)="onSelect(recipe)">
             <span>{{ recipe.name }}</span>

@@ -89,7 +89,9 @@ export class VariantOverview implements OnInit, OnDestroy {
       } else {
         this.mediaService.loadContent(id).subscribe((x) => {
           this.content.update(_ => x);
-          if (this.content() !== undefined) this.loadPreviews();
+          if (this.content() !== undefined) {
+            this.loadPreviews();
+          }
         });
       }
     }
@@ -121,7 +123,9 @@ export class VariantOverview implements OnInit, OnDestroy {
 
   protected onMouseDown(event: MouseEvent, variant: VariantDescriptor) {
     this.onSelect(variant);
-    if (event.button != 0) return;
+    if (event.button != 0) {
+      return;
+    }
 
     this.timeoutHandler = setTimeout(() => {
       this.onContext(event, variant);
@@ -140,12 +144,13 @@ export class VariantOverview implements OnInit, OnDestroy {
       content.variants !== null &&
       typeof content.id === 'string'
     ) {
-      for (let variant of content.variants) {
+      for (const variant of content.variants) {
         if (
           typeof variant.name === 'string' &&
           typeof variant.mimeType === 'string'
-        )
+        ) {
           this.addPreview(variant.name, variant.mimeType, content.id);
+        }
       }
     }
   }
@@ -158,7 +163,9 @@ export class VariantOverview implements OnInit, OnDestroy {
           if (data !== null) {
             const blob = new Blob([data], {type: data.type});
             const old = this.previewObjectUrls.get(variantName);
-            if (old) URL.revokeObjectURL(old);
+            if (old) {
+              URL.revokeObjectURL(old);
+            }
 
             const url = URL.createObjectURL(blob);
             this.previewObjectUrls.set(variantName, url);
@@ -206,7 +213,7 @@ export class VariantOverview implements OnInit, OnDestroy {
             const bigPicture = new Blob([data], {type: data.type});
             const reader = new FileReader();
             reader.readAsDataURL(bigPicture);
-            reader.onload = (_event) => {
+            reader.onload = (event) => {
               this.downloadPictureUrl = reader.result;
               if (
                 typeof variant.mimeType === 'string' &&
@@ -248,7 +255,9 @@ export class VariantOverview implements OnInit, OnDestroy {
         data: content.id,
       });
       dialogRef.afterClosed().subscribe(async (result) => {
-        if (result) await this.uploadVariant(result);
+        if (result) {
+          await this.uploadVariant(result);
+        }
       });
     }
   }
@@ -260,7 +269,7 @@ export class VariantOverview implements OnInit, OnDestroy {
       content !== null &&
       typeof content.id === 'string'
     ) {
-      let id = content.id;
+      const id = content.id;
       if (
         content.variants !== null &&
         content.variants !== undefined &&
@@ -317,8 +326,8 @@ export class VariantOverview implements OnInit, OnDestroy {
     }
   }
 
-  interpolateUrl = (string: string, values: any) =>
-    string.replace(/{(.*?)}/g, (match, offset) => values[offset]);
+  interpolateUrl = (string: string, values: Record<string, string | null | undefined>) =>
+    string.replace(/{(.*?)}/g, (match, offset) => values[offset] ?? '');
 
   protected onInfo(variant: VariantDescriptor): void {
     const content = this.content();
@@ -328,7 +337,7 @@ export class VariantOverview implements OnInit, OnDestroy {
       const url =
         location.origin +
         this.interpolateUrl(MediaServerService.GetVariantStreamPath, values);
-      const dialogRef = this.dialog.open(DialogVariantInfo, {
+      this.dialog.open(DialogVariantInfo, {
         data: {
           name: selectedVariant.name,
           contentName: content.name,

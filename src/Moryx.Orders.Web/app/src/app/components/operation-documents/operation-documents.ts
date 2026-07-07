@@ -66,7 +66,7 @@ export class OperationDocuments implements OnInit {
   async ngOnInit(): Promise<void> {
     this.isLoading.update(_ => true);
     this.activatedRoute.params.subscribe(async params => {
-      let identifier = params['identifier'];
+      const identifier = params['identifier'];
       await this.orderManagementService
         .getOperation({guid: identifier})
         .toAsync()
@@ -92,16 +92,16 @@ export class OperationDocuments implements OnInit {
     this.orderManagementService
       .getDocumentStream({
         guid: this.operation().identifier!,
-        identifier: this.selectedDocument()?.identifier!
+        identifier: this.selectedDocument()?.identifier ?? ''
       })
       .subscribe({
         next: data => {
           if (data !== null && document.contentType) {
-            let downloadedFile = new Blob([data], {
+            const downloadedFile = new Blob([data], {
               type: document.contentType
             });
             this.url.update(_ => URL.createObjectURL(downloadedFile));
-            let reader = new FileReader();
+            const reader = new FileReader();
             reader.readAsDataURL(downloadedFile);
             reader.onload = () => {
               this.path.update(_ => reader.result);

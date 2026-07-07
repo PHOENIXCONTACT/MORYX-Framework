@@ -52,7 +52,9 @@ export class AddOperatorDialog {
 
   protected save() {
 
-    if (!this.operatorForm.valid) return;
+    if (!this.operatorForm.valid) {
+      return;
+    }
 
     const operator = <AssignableOperator>{
       firstName: this.operatorForm.value.firstName,

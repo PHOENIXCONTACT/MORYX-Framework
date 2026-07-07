@@ -5,7 +5,7 @@
         @for (process of processes(); track process.id) {
           @if (process.recipeId === job().model.recipeId) {
             <mat-list-item
-              [class.moryx-selected]="selectedProcess()?.id == process.id"
+              [class.moryx-selected]="selectedProcess()?.id === process.id"
               (click)="onSelectProcess(process)"
               class="processes-list-item">
               <div matListItemTitle>Id: {{ process.id }} {{ process.state }}</div>
@@ -23,7 +23,7 @@
       <mat-list class="processes-list">
         @for (activity of selectedProcess()?.activities; track activity.id) {
           <mat-list-item
-            [class.moryx-selected]="selectedActivity()?.id == activity.id"
+            [class.moryx-selected]="selectedActivity()?.id === activity.id"
             (click)="onSelectActivity(activity)"
             class="processes-list-item">
             <div matListItemTitle>{{ activity.type }}</div>

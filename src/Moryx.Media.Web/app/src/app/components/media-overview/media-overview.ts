@@ -90,7 +90,9 @@ export class MediaOverview implements OnInit, OnDestroy {
     const contents = this.contents().filter((c) =>
       c.name?.toLowerCase()?.includes(result.term.toLowerCase())
     );
-    if (!contents) return;
+    if (!contents) {
+      return;
+    }
 
     if (result.submitted) {
       this.searchBarService.clearSuggestions();
@@ -102,8 +104,10 @@ export class MediaOverview implements OnInit, OnDestroy {
       });
     } else {
       const searchSuggestions = [] as SearchSuggestion[];
-      for (let content of contents) {
-        if (!content.name) continue;
+      for (const content of contents) {
+        if (!content.name) {
+          continue;
+        }
 
         const url = urlBase + content.id;
         searchSuggestions.push({text: content.name, url: url});
@@ -113,7 +117,7 @@ export class MediaOverview implements OnInit, OnDestroy {
     }
   }
 
-  onOpenMenuOnTouch(event: any, content: ContentDescriptorModel) {
+  onOpenMenuOnTouch(event: { pointers: PointerEvent[] }, content: ContentDescriptorModel) {
     this.trigger().menuData = {content: content};
     this.menuTopLeftPosition.x = event.pointers[0].clientX + 'px';
     this.menuTopLeftPosition.y = event.pointers[0].clientY + 'px';
@@ -127,8 +131,12 @@ export class MediaOverview implements OnInit, OnDestroy {
 
 
   //upload new content
-  protected onUpload(event: any) {
-    for (const fileElement of event.target.files) {
+  protected onUpload(event: Event | { target: { files: FileList } }) {
+    const files = (event.target as HTMLInputElement).files;
+    if (!files) {
+      return;
+    }
+    for (const fileElement of files) {
       const file: File = fileElement;
       if (file) {
         this.mediaService.uploadContent(file);
@@ -149,7 +157,9 @@ export class MediaOverview implements OnInit, OnDestroy {
       });
 
       dialogRef.afterClosed().subscribe((result) => {
-        if (result === true) this.remove(content);
+        if (result === true) {
+          this.remove(content);
+        }
       });
     }
   }
@@ -165,7 +175,7 @@ export class MediaOverview implements OnInit, OnDestroy {
     }
   }
 
-  protected fileDropped(arg: any) {
+  protected fileDropped(arg: { target: { files: FileList } }) {
     this.onUpload(arg);
   }
 }

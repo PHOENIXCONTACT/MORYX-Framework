@@ -3,6 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
+import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Component, effect, inject, input, OnInit, signal, untracked, ChangeDetectionStrategy } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -63,7 +64,7 @@ export class LogMessageList implements OnInit {
           this.logMessages.update(_ => logs.sort((a, b) => this.sortDescending(a.timeStamp!, b.timeStamp!)));
           this.isLoading.update(_ => false);
         },
-        error: (err: any) => {
+        error: (err: HttpErrorResponse) => {
           this.notification.update(_ => err.message);
           this.isLoading.update(_ => false);
         }

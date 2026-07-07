@@ -5,7 +5,6 @@
 
 import { inject, Injectable } from '@angular/core';
 import { FactoryMonitorService } from '@api/services';
-import { Subject } from 'rxjs';
 import { CellSettingsModel } from '@api/models/cell-settings-model';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { CellStoreService } from './cell-store.service';
@@ -18,8 +17,7 @@ export class CellSettingsService {
   private factoryMonitorService = inject(FactoryMonitorService);
   private snackbarService = inject(SnackbarService);
   private cellStoreService = inject(CellStoreService);
-
-
+  
   changeCellSettings(cellId: number, cellSettings: CellSettingsModel) {
     this.factoryMonitorService
       .cellSettings({

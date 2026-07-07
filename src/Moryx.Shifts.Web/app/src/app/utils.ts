@@ -21,7 +21,9 @@ export function getShortDayName(day: DayOfTheWeek): string {
 export function localizedDayName(dayOfTheWeek: DayOfTheWeek) {
   const day = DayOfTheWeek[dayOfTheWeek];
   for (const [key, value] of Object.entries(TranslationConstants.DAYS_OF_THE_WEEK)) {
-    if (key === day) return value;
+    if (key === day) {
+      return value;
+    }
   }
   return TranslationConstants.DAYS_OF_THE_WEEK.Monday;
 }
@@ -36,7 +38,9 @@ export function isDayInInterval(
   startDate?: Date,
   endDate?: Date
 ): boolean {
-  if (!startDate || !endDate) return false;
+  if (!startDate || !endDate) {
+    return false;
+  }
 
   const startMoment = moment(startDate);
   const endMoment = moment(endDate);
@@ -50,7 +54,9 @@ export function hasDayInShiftInterval(
   shiftStartDate?: Date,
   shiftEndDate?: Date
 ): boolean {
-  if (!shiftStartDate || !shiftEndDate) return false;
+  if (!shiftStartDate || !shiftEndDate) {
+    return false;
+  }
 
   return calendarCurrentWeek.some(currentWeek => isDayInInterval(currentWeek.date, shiftStartDate, shiftEndDate));
 }
@@ -70,7 +76,9 @@ export function totalOperatorForTheDay(from: Date, to: Date,
                                        calendarDate: CalendarDate,
                                        assignements: AssignmentCardModel[],
                                        shiftInstance?: ShiftInstanceModel): number {
-  if (!shiftInstance) return 0;
+  if (!shiftInstance) {
+    return 0;
+  }
   const operators = assignements.filter(assignment => assignment.shiftInstanceId === shiftInstance.id && assignment.days
       .some(e => moment(e.date).diff(moment(calendarDate.date), 'days') === 0) &&
     isDayInInterval(calendarDate.date, shiftInstance.startDate, shiftInstance.endDate) && isDayInInterval(calendarDate.date, from, to)) ?? [];
@@ -83,7 +91,9 @@ export function randomNumber(min: number, max: number) {
 
 //how many hours of work exist for a given shift day
 export function shiftDayLengthInHours(shiftInstance: ShiftInstanceModel | undefined, assignments: AssignmentCardModel[]): number {
-  if (!shiftInstance) return 0;
+  if (!shiftInstance) {
+    return 0;
+  }
   const startDate = moment(shiftInstance.startDate);
   // 00:00 is equal to 24:00 in moment.js library
   const from = startDate.format('MM/DD/YYYY') + ' ' + `${formatDateDigits(shiftInstance.shiftType.startTime.hours === 0 ? 24 : shiftInstance.shiftType.startTime.hours)}:${formatDateDigits(shiftInstance.shiftType.startTime.minutes)}`;
@@ -96,10 +106,12 @@ export function shiftDayLengthInHours(shiftInstance: ShiftInstanceModel | undefi
 //returns total operators hours for a given shift
 export function totalHoursOfTheShift(shiftInstance: ShiftInstanceModel | undefined, assignments: AssignmentCardModel[]) {
 
-  if (!shiftInstance) return 0;
+  if (!shiftInstance) {
+    return 0;
+  }
   const dailyShiftLengthHours = shiftDayLengthInHours(shiftInstance, assignments);
   let sumShiftHours = 0;
-  for (let assignment of assignments.filter(x => x.shiftInstanceId === shiftInstance.id)) {
+  for (const assignment of assignments.filter(x => x.shiftInstanceId === shiftInstance.id)) {
     sumShiftHours = sumShiftHours + assignment.days.length * dailyShiftLengthHours;
   }
   return sumShiftHours;

@@ -45,20 +45,20 @@ export class MediaService {
   }
 
   getContent(id: string): ContentDescriptorModel | undefined {
-    let contentValues = this.contents.getValue();
+    const contentValues = this.contents.getValue();
     return contentValues.find((c) => c.id === id);
   }
 
-  removeContent(id: string): Observable<any> {
+  removeContent(id: string): Observable<void> {
     return this.mediaServerService
       .removeContent({guid: id})
-      .pipe(catchError(this.handleError<any>('Removing content')));
+      .pipe(catchError(this.handleError<void>('Removing content')));
   }
 
-  removeVariant(id: string, variantName: string): Observable<any> {
+  removeVariant(id: string, variantName: string): Observable<void> {
     return this.mediaServerService
       .removeVariant({guid: id, variantName: variantName})
-      .pipe(catchError(this.handleError<any>('Removing variant')));
+      .pipe(catchError(this.handleError<void>('Removing variant')));
   }
 
   uploadContent(file: File): void {

@@ -57,7 +57,7 @@ export class OperationRecipes implements OnInit {
   protected isEditMode = signal(false);
   protected selectedWorkplan = signal<WorkplanModel | undefined>(undefined)
   protected isEditBarOpened = computed(
-    () => !!this.selectedRecipe() && this.selectedRecipe()?.id! > 0
+    () => !!this.selectedRecipe() && (this.selectedRecipe()?.id ?? 0) > 0
   );
   protected selectedRecipe = signal<RecipeModel | undefined>(undefined);
   protected hasWorkplans = computed(() => this.possibleWorkplans().length > 0);
@@ -77,8 +77,9 @@ export class OperationRecipes implements OnInit {
     effect(() => {
       const recipe = this.selectedRecipe();
       untracked(() => {
-        if (recipe?.workplanModel)
+        if (recipe?.workplanModel) {
           this.selectedWorkplan.set(this.getCurrentWorkplan(recipe));
+        }
       })
     })
   }
@@ -124,7 +125,9 @@ export class OperationRecipes implements OnInit {
             items.push(value);
             return items;
           });
-          if (this.getCurrentWorkplan(value)) return;
+          if (this.getCurrentWorkplan(value)) {
+            return;
+          }
           await this.fetchWorkplan(value);
         })
         .catch(
@@ -132,12 +135,15 @@ export class OperationRecipes implements OnInit {
             await this.snackbarService.handleError(e)
         );
     }
-    if (this.selectedRecipe())
+    if (this.selectedRecipe()) {
       this.selectedRecipe.set(this.recipes().find((r) => r.id === this.selectedRecipe()?.id));
+    }
   }
 
   async fetchWorkplan(recipe: RecipeModel) {
-    if (!recipe.workplanModel?.id) return;
+    if (!recipe.workplanModel?.id) {
+      return;
+    }
     await this.workplanService
       .getWorkplan({id: recipe.workplanModel?.id})
       .subscribe((value) => {

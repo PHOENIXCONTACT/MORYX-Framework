@@ -38,8 +38,11 @@ export interface Notification {
 })
 export class NotificationsBar {
   private destroyRef = inject(DestroyRef);
+  private elementRef = inject(ElementRef);
+
   readonly url = input('Notifications');
   readonly api = input('/api/moryx/notifications/stream');
+
   private eventSource: EventSource | undefined;
 
   protected notifications = signal<Array<Notification> | undefined>(undefined);
@@ -49,11 +52,13 @@ export class NotificationsBar {
   protected currentNotification = computed<Notification | undefined | null>(() => {
     const notifications = this.notifications();
 
-    if (notifications === undefined)
+    if (notifications === undefined) {
       return undefined;
+    }
 
-    if (notifications.length === 0)
+    if (notifications.length === 0) {
       return null;
+    }
 
     return notifications[this.notificationIndex()];
   });
@@ -67,7 +72,7 @@ export class NotificationsBar {
     Fatal: 3
   };
 
-  constructor(private elementRef: ElementRef) {
+  constructor() {
     effect((onCleanup) => {
       const url = this.api();
       if (!url) {
@@ -93,7 +98,7 @@ export class NotificationsBar {
     this.clearInterval();
   }
 
-  private onMessageReceived(event: any) {
+  private onMessageReceived(event: MessageEvent<string>) {
     //send notifications to listeners
     const data = <Array<Notification>>JSON.parse(event.data);
 
@@ -122,7 +127,7 @@ export class NotificationsBar {
     this.errorAvailable.set(false);
   }
 
-  private onErrorReceived(event: any) {
+  private onErrorReceived(event: Event) {
     if (!this.errorAvailable()) {
       this.errorAvailable.set(true);
 
@@ -145,8 +150,9 @@ export class NotificationsBar {
     this.intervalId = window.setInterval(() => {
       const notifications = this.notifications();
 
-      if (notifications === undefined)
+      if (notifications === undefined) {
         return;
+      }
 
       this.notificationIndex.update(v => (v + 1) % notifications.length);
     }, 5000);
@@ -162,11 +168,13 @@ export class NotificationsBar {
   protected getSeverityBackgroundColor(severity: Severity | undefined | null, errorAvailabe: boolean): string {
     const computedStyle = getComputedStyle(this.elementRef.nativeElement);
 
-    if (errorAvailabe)
+    if (errorAvailabe) {
       return computedStyle.getPropertyValue('--color-Info').trim();
+    }
 
-    if (severity === undefined || severity === null)
+    if (severity === undefined || severity === null) {
       return computedStyle.getPropertyValue('--color-Success').trim();
+    }
 
     const color = computedStyle.getPropertyValue('--color-' + severity).trim();
 

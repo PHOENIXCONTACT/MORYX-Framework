@@ -8,7 +8,8 @@
     "build:prod": "ng build --delete-output-path --configuration production --progress false",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "generate-api": "NODE_TLS_REJECT_UNAUTHORIZED=0 ng-openapi-gen -c openapi-gen.json && node ../../fix-openapi-gen.js"
+    "generate-api": "NODE_TLS_REJECT_UNAUTHORIZED=0 ng-openapi-gen -c openapi-gen.json && node ../../fix-openapi-gen.js",
+    "lint": "ng lint"
   },
   "private": true,
   "dependencies": {
@@ -37,12 +38,15 @@
     "@angular/cli": "^22.0.0",
     "@angular/compiler-cli": "^22.0.0",
     "@tailwindcss/postcss": "^4.3.1",
+    "angular-eslint": "^22.0.0",
     "autoprefixer": "^10.5.0",
+    "eslint": "^10.6.0",
     "jsdom": "^29.1.1",
     "ng-openapi-gen": "^1.0.5",
     "postcss": "^8.5.15",
     "tailwindcss": "^4.3.1",
     "typescript": "~6.0.3",
+    "typescript-eslint": "^8.62.1",
     "vitest": "^4.1.9"
   }
 }

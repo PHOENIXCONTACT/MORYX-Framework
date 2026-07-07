@@ -34,7 +34,9 @@ export class ProductRecipesDetails {
   TranslationConstants = TranslationConstants;
 
   protected updateRecipe(properties: Entry | undefined) {
-    if (!properties) return;
+    if (!properties) {
+      return;
+    }
     this.editProductsService.updateCurrentRecipe({... this.currentRecipe()!, properties});
   }
 }

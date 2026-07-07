@@ -42,8 +42,6 @@ export class MediaFile implements OnInit {
 
   readonly show = output<ContentDescriptorModel>();
   readonly delete = output<ContentDescriptorModel>();
-  img: any;
-
   ngOnInit(): void {
     this.showFile();
   }
@@ -72,10 +70,10 @@ export class MediaFile implements OnInit {
           .subscribe({
             next: (data) => {
               if (data !== null) {
-                let downloadedFile = new Blob([data], {type: data.type});
+                const downloadedFile = new Blob([data], {type: data.type});
                 const reader = new FileReader();
                 reader.readAsDataURL(downloadedFile); //FileStream response from .NET core backend
-                reader.onload = (_event) => {
+                reader.onload = (event) => {
                   this.path.update(_ => reader.result) //url declared earlier
                 };
                 this.loaded.update(_ => true);
@@ -91,10 +89,11 @@ export class MediaFile implements OnInit {
   }
 
   protected onClick(event: MouseEvent) {
-    if ((<HTMLElement>event.target).nodeName === 'MAT-ICON')
+    if ((<HTMLElement>event.target).nodeName === 'MAT-ICON') {
       this.delete.emit(this.content());
-    else
+    } else {
       this.show.emit(this.content());
+    }
   }
 }
 

@@ -75,7 +75,9 @@ export class SkillTypes {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result.dialogResult === 'NO') return;
+      if (result.dialogResult === 'NO') {
+        return;
+      }
 
       this.appStoreService.deleteSkillType(skillType);
     });

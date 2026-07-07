@@ -33,8 +33,9 @@ export class SessionService {
 
   getProductTreeHierarchy(): boolean {
     const hierarchic = sessionStorage.getItem(this.PRODUCT_TREE_HIERARCHY);
-    if(!hierarchic)
+    if(!hierarchic) {
       return false;
+    }
     return JSON.parse(hierarchic);
   }
 
@@ -45,16 +46,17 @@ export class SessionService {
   saveProductTreeExpansion(node: ProductNode, expanded: boolean) {
     let expandedNodesString = "";
     const expandedNodes = sessionStorage.getItem(this.PRODUCT_TREE);
-    let expandedNodesArray = expandedNodes ? expandedNodes.split(',') : [];
+    const expandedNodesArray = expandedNodes ? expandedNodes.split(',') : [];
     const nodeName = node.name;
 
-    if (expanded && !expandedNodesArray.includes(nodeName))
+    if (expanded && !expandedNodesArray.includes(nodeName)) {
       expandedNodesString = expandedNodes ? expandedNodes + ',' + nodeName : nodeName;
+    }
     else if (!expanded && expandedNodesArray.includes(nodeName)) {
       const index = expandedNodesArray.indexOf(nodeName, 0);
       if (index > -1) {
         expandedNodesArray.splice(index, 1);
-        for (let id of expandedNodesArray) {
+        for (const id of expandedNodesArray) {
           expandedNodesString += id + ',';
         }
         expandedNodesString = expandedNodesString.slice(0, -1);

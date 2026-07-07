@@ -50,13 +50,17 @@ export class ReportDialog implements OnInit {
   protected estimatedSuccess = computed(() => this.success() + (this.reportContext()?.reportedSuccess ?? 0));
   protected estimatedFailure = computed(() => this.scrap() + (this.reportContext()?.reportedFailure ?? 0));
   protected canReport = computed(() => {
-    if (this.success() < 0 || this.scrap() < 0) return false;
-
-    if (this.confirmationType() == "partial" && !this.reportContext()?.canPartial)
+    if (this.success() < 0 || this.scrap() < 0) {
       return false;
+    }
 
-    if (this.confirmationType() == "final" && !this.reportContext()?.canFinal)
+    if (this.confirmationType() == "partial" && !this.reportContext()?.canPartial) {
       return false;
+    }
+
+    if (this.confirmationType() == "final" && !this.reportContext()?.canFinal) {
+      return false;
+    }
 
     return true;
   })
@@ -86,7 +90,7 @@ export class ReportDialog implements OnInit {
   protected async submit(): Promise<void> {
     this.isLoading.update(_=> true);
 
-    let report = <ReportModel>{
+    const report = <ReportModel>{
       successCount: this.success(),
       failureCount: this.scrap(),
       comment: this.comment(),
@@ -104,7 +108,9 @@ export class ReportDialog implements OnInit {
         failed = true;
         this.isLoading.update(_=> false);
       });
-    if (!failed) this.dialog.close();
+    if (!failed) {
+      this.dialog.close();
+    }
   }
 }
 

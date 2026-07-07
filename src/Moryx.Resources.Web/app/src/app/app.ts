@@ -85,7 +85,9 @@ export class App implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
   protected beforeUnloadHander() {
-    if (this.isEditMode()) this.editResourceService.stashResource();
+    if (this.isEditMode()) {
+      this.editResourceService.stashResource();
+    }
   }
 
   constructor() {
@@ -140,17 +142,21 @@ export class App implements OnInit, OnDestroy {
   }
 
   protected selectResource(id: number) {
-    if (this.isEditMode() || this.selected()?.id === id) return;
+    if (this.isEditMode() || this.selected()?.id === id) {
+      return;
+    }
     this.router.navigate(['details', id]);
   }
 
   protected clickContainer(event: MouseEvent) {
-    if ((event.target as HTMLElement).tagName === 'MAT-TREE') this.onDeselect();
+    if ((event.target as HTMLElement).tagName === 'MAT-TREE') {
+      this.onDeselect();
+    }
   }
 
   protected openContextMenuByClicking(event: MouseEvent, resourceId: number) {
     // Only handle right-click, not touch long-press
-    if ((event as any).pointerType === 'touch') {
+    if ((event as PointerEvent).pointerType === 'touch') {
       return;
     }
     event.preventDefault();
@@ -165,7 +171,9 @@ export class App implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(async (result: ResourceConstructionParameters | undefined) => {
-      if (!result) return;
+      if (!result) {
+        return;
+      }
       const constructed = await lastValueFrom(this.modificationService
         .constructWithParameters({
           type: result.name,
@@ -174,34 +182,47 @@ export class App implements OnInit, OnDestroy {
         }))
       .catch(async (e: HttpErrorResponse) => await this.snackbarService.handleError(e));
 
-      if (!constructed) return;
+      if (!constructed) {
+        return;
+      }
       this.editResourceService.registerNewResource(constructed);
       this.router.navigate(['details', constructed.id]);
 
-      if (!parent) return;
+      if (!parent) {
+        return;
+      }
 
       const referenceToParent = constructed.references?.find(r => r.name == 'Parent');
-      if (referenceToParent) referenceToParent.targets = [parent] as ResourceModel[];
-      else
+      if (referenceToParent) {
+        referenceToParent.targets = [parent] as ResourceModel[];
+      }
+      else {
         constructed.references?.push({
           name: 'Parent',
           targets: [parent] as ResourceModel[],
         } as ResourceReferenceModel);
+      }
     });
   }
 
   protected onDelete(resourceId: number | undefined) {
-    if (!resourceId) return;
+    if (!resourceId) {
+      return;
+    }
 
     const resource = this.resourcesFlat?.find(r => r.id === resourceId);
-    if (!resource) return;
+    if (!resource) {
+      return;
+    }
 
     const dialogRef = this.dialog.open(DialogRemoveResource, {
       data: resource
     });
 
     dialogRef.afterClosed().subscribe(async (resourceToBeDeleted) => {
-      if (!resourceToBeDeleted) return;
+      if (!resourceToBeDeleted) {
+        return;
+      }
 
       const actualResource = resourceToBeDeleted;
       this.modificationService
@@ -214,8 +235,9 @@ export class App implements OnInit, OnDestroy {
 
   private removeResource(deletedResource: ResourceModel) {
     this.cacheResourceService.removeResource(deletedResource);
-    if (this.selected()?.id === deletedResource.id)
+    if (this.selected()?.id === deletedResource.id) {
       this.router.navigate(['']);
+    }
   }
 
   protected onEdit() {
@@ -228,10 +250,12 @@ export class App implements OnInit, OnDestroy {
   }
 
   protected onCancelEditing() {
-    if(this.editResourceService.editingUnsavedResource)
+    if(this.editResourceService.editingUnsavedResource) {
       this.router.navigate(['']);
-    else
+    }
+    else {
       this.editResourceService.onCancel();
+    }
   }
 
   protected onDeselect() {

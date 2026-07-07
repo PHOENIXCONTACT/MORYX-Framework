@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, effect, inject, input, OnInit, signal, untracked, ChangeDetectionStrategy } from "@angular/core";
+import { Component, effect, inject, input, signal, untracked, ChangeDetectionStrategy } from "@angular/core";
 import { TranslationConstants } from "../extensions/translation-constants.extensions";
 import { SkillType } from "../models/skill-type-model";
 import { Router, RouterLink } from "@angular/router";
@@ -39,7 +39,7 @@ import { MatInputModule } from "@angular/material/input";
     RouterLink
   ]
 })
-export class SkillTypeDetails implements OnInit {
+export class SkillTypeDetails {
   readonly id = input.required<number>();
   protected skillType = signal<SkillType>(<SkillType>{
     id: 0,
@@ -66,9 +66,6 @@ export class SkillTypeDetails implements OnInit {
       const id = this.id();
       untracked(() => this.initialize(id));
     })
-  }
-
-  ngOnInit(): void {
   }
 
   initialize(id: number) {

@@ -37,8 +37,9 @@ export class WorkplanProperties implements OnDestroy {
   protected readonly WorkplanStates = Object.values(WorkplanState);
 
   ngOnDestroy(): void {
-    if (this.editorState.workplan)
+    if (this.editorState.workplan) {
       this.sessionService.updateSession(this.editorState.workplan);
+    }
   }
 }
 

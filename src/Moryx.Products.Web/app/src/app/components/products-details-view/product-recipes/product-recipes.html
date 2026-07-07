@@ -3,7 +3,7 @@
     @for (recipe of recipes(); track recipe) {
       <mat-list-item
         (click)="onSelect(recipe)"
-        [activated]="selectedRecipe()?.id == recipe.id"
+        [activated]="selectedRecipe()?.id === recipe.id"
         class="overview-item"
         >
         <div class="overview-item-content">

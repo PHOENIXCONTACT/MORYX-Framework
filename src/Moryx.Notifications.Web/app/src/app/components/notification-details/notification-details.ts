@@ -19,7 +19,7 @@ import { NavigableEntryEditor } from '@moryx/ngx-web-framework/entry-editor';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
-  selector: 'notification-details',
+  selector: 'app-notification-details',
   templateUrl: './notification-details.html',
   styleUrls: ['./notification-details.scss'],
   imports: [
@@ -58,7 +58,7 @@ export class NotificationDetails implements OnInit, OnDestroy {
     this.notificationService.acknowledge(notification.identifier);
   }
 
-  protected isArrayNotEmpty(array: any[] | undefined | null): boolean {
+  protected isArrayNotEmpty(array: unknown[] | undefined | null): boolean {
     return array !== undefined && array !== null && array.length > 0;
   }
 }

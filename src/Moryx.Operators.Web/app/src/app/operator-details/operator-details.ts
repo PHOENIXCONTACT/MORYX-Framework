@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, effect, inject, input, OnInit, signal, untracked, ChangeDetectionStrategy } from "@angular/core";
+import { Component, effect, inject, input, signal, untracked, ChangeDetectionStrategy } from "@angular/core";
 import { RouterLink } from "@angular/router";
 import { TranslationConstants } from "../extensions/translation-constants.extensions";
 import { OperatorSkillView } from "../models/type";
@@ -47,7 +47,7 @@ import { MatButtonModule } from "@angular/material/button";
     RouterLink
   ]
 })
-export class OperatorDetails implements OnInit {
+export class OperatorDetails {
   private appStoreService = inject(AppStoreService);
   private dialog = inject(MatDialog);
   private translateService = inject(TranslateService);
@@ -80,16 +80,17 @@ export class OperatorDetails implements OnInit {
     })
   }
 
-  ngOnInit(): void {
-  }
-
   initialize(id: string) {
     const identifier = id;
-    if (!identifier) return;
+    if (!identifier) {
+      return;
+    }
     const operatorDataPromise = this.appStoreService.getOperator(identifier);
 
     operatorDataPromise.then(result => {
-      if (!result) return;
+      if (!result) {
+        return;
+      }
 
       this.operatorViewModel.update(_ => result);
       this.operator.update(_ => result.data);
@@ -141,7 +142,9 @@ export class OperatorDetails implements OnInit {
     });
 
     dialogResult.afterClosed().subscribe(result => {
-      if (!result) result;
+      if (!result) {
+        return;
+      }
 
       this.appStoreService.addSkill(this.operatorViewModel()!, result);
       setTimeout(() => this.loadSkills(), 500);
@@ -164,7 +167,9 @@ export class OperatorDetails implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result.dialogResult === 'NO') return;
+      if (result.dialogResult === 'NO') {
+        return;
+      }
 
       this.appStoreService.deleteSkill(skill);
       setTimeout(() => this.loadSkills(), 500);

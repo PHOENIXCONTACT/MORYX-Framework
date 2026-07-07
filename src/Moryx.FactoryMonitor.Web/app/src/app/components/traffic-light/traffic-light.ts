@@ -47,7 +47,9 @@ export class TrafficLight implements OnInit {
   }
 
   private async updateState(newCellParameters: CellModel | undefined): Promise<void> {
-    if (newCellParameters?.id != this.id) return;
+    if (newCellParameters?.id != this.id) {
+      return;
+    }
 
     this.currentStateString.set(await this.getStringState(newCellParameters?.state ?? CellState.Idle));
     this.currentState.set(newCellParameters?.state ?? CellState.Idle);

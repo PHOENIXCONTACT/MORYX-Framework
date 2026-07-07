@@ -4,9 +4,9 @@
     <mat-card class="container">
       <div class="content">
         @if (mediaItemsContent().length) {
-          <media-contents [displayedContents]="mediaItemsContent()"
+          <app-media-contents [displayedContents]="mediaItemsContent()"
             class="media-instructions-container">
-          </media-contents>
+          </app-media-contents>
         }
         @if ((textItems().length || inputs()) && mediaItemsContent().length) {
           <button class="fullscreen hover-button" mat-mini-fab

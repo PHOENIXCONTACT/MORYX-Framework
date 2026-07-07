@@ -38,7 +38,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     FormsModule,
     ReactiveFormsModule,
     TranslatePipe
-]
+  ]
 })
 export class CellImageDialog {
   private cellImageDialogRef = inject(MatDialogRef<CellImageDialog>);
@@ -46,7 +46,7 @@ export class CellImageDialog {
   protected data = inject<{ name: string; cellId: number; cellSettings: CellSettingsModel }>(MAT_DIALOG_DATA);
   private cellSettingsService = inject(CellSettingsService);
 
-  protected cellSettings = signal< CellSettingsModel | undefined>(undefined);
+  protected cellSettings = signal<CellSettingsModel | undefined>(undefined);
   protected name!: string;
   protected imageControl = new FormControl<string | null>(null, Validators.required);
   protected TranslationConstants = TranslationConstants;
@@ -56,7 +56,9 @@ export class CellImageDialog {
     this.cellSettings.set(this.data.cellSettings);
     this.name = this.data.name;
     //checks if there is an image url
-    if (this.cellSettings()?.image) this.imageControl.patchValue(this.cellSettings()?.image!);
+    if (this.cellSettings()?.image) {
+      this.imageControl.patchValue(this.cellSettings()?.image ?? null);
+    }
   }
 
   protected openCellIconUploader() {
@@ -68,9 +70,10 @@ export class CellImageDialog {
     });
 
     cellIconDialog.afterClosed().subscribe(result => {
-      if (result)
-        //set the icon from the user input dialog
+      //set the icon from the user input dialog
+      if (result) {
         this.cellSettings.set(result);
+      }
     });
   }
 

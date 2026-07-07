@@ -19,19 +19,23 @@ export class OperatorsService {
   }
 
   async getOperators(): Promise<AssignableOperator[]> {
-    if (!this._available) return [];
+    if (!this._available) {
+      return [];
+    }
 
     let operators = [] as AssignableOperator[];
     await this.operators
       .getAll$Response()
       .toAsync()
       .then(o => (operators = o.body))
-      .catch(e => (this._available = false));
+      .catch(() => (this._available = false));
     return operators;
   }
 
   async addOperator(identifier: string) {
-    if (!this._available) return;
+    if (!this._available) {
+      return;
+    }
 
     return await this.operators.add({body: {identifier: identifier} as OperatorModel}).toAsync();
   }

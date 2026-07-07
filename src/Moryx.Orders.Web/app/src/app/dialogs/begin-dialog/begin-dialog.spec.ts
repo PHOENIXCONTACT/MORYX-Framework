@@ -23,13 +23,13 @@ import {
 } from './begin-dialog';
 
 class DialogRefMock {
-  close(result: any) {}
+  close(result: unknown) {}
 }
 
 describe('BeginDialog', () => {
   let component: BeginDialog;
   let fixture: ComponentFixture<BeginDialog>;
-  let dialogData = <BeginDialogData>{ context: {}, operation: { model: {} } };
+  const dialogData = <BeginDialogData>{ context: {}, operation: { model: {} } };
   let dialogRef: MatDialogRef<BeginDialog>;
 
   beforeEach(async () => {

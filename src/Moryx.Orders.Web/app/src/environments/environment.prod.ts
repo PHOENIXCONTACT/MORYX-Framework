@@ -5,7 +5,7 @@
 
 import { getPathBase } from '@moryx/ngx-web-framework/environments';
 
-let path_base = getPathBase("/Orders");
+const path_base = getPathBase("/Orders");
 
 export const environment = {
   production: true,

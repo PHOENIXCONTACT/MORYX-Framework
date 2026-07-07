@@ -51,8 +51,12 @@ export class ProductRecipes {
     const dialogRef = this.dialog.open(DialogCreateRecipe, {});
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (!result) return;
-      if (!result.selectedRecipe) return;
+      if (!result) {
+        return;
+      }
+      if (!result.selectedRecipe) {
+        return;
+      }
 
       this.createRecipe(result.recipeName, result.selectedRecipe.name, result.workplanModel);
     });

@@ -53,13 +53,17 @@ export class Factory implements OnInit {
 
   protected borderColor = computed(() => {
     const workingCell = this.firstWorkingCell();
-    if (this.isHighlighted() && workingCell?.orderColor) return workingCell.orderColor;
+    if (this.isHighlighted() && workingCell?.orderColor) {
+      return workingCell.orderColor;
+    }
     return this.backgroundColor;
   });
 
   protected iconColor = computed(() => {
     const workingCell = this.firstWorkingCell();
-    if (this.isHighlighted() && workingCell?.orderColor) return workingCell.orderColor;
+    if (this.isHighlighted() && workingCell?.orderColor) {
+      return workingCell.orderColor;
+    }
     return '#585858';
   });
 
@@ -79,7 +83,9 @@ export class Factory implements OnInit {
   }
 
   protected onCellClicked() {
-    if (this.editMenuState() !== EditMenuState.Closed) return;
+    if (this.editMenuState() !== EditMenuState.Closed) {
+      return;
+    }
 
     // ToDo: Move to a RouteResolver to cleanly load and unload data
     this.router.navigate(['/factory', this.parameters().id]).then(() => {
@@ -89,7 +95,7 @@ export class Factory implements OnInit {
     });
   }
 
-  protected async onCellMove(event: CdkDragEnd<any>) {
+  protected async onCellMove(event: CdkDragEnd) {
     const params = this.parameters();
 
     // Calculate new position as percetage value relative to the cell-container

@@ -52,26 +52,31 @@ export class Cell implements OnInit, OnDestroy {
   );
   protected borderColor = computed(() => {
     const cell = this.currentCell();
-    if (this.isHighlighted() && cell.orderColor)
+    if (this.isHighlighted() && cell.orderColor) {
       return cell.orderColor!;
-    if (cell.state === CellState.NotReadyToWork)
+    }
+    if (cell.state === CellState.NotReadyToWork) {
       return '#e46d6d';
+    }
     return 'white';
   });
   protected iconColor = computed(() => {
     const cell = this.currentCell();
-    if (this.isHighlighted() && cell.orderColor)
+    if (this.isHighlighted() && cell.orderColor) {
       return cell.orderColor!;
-    if (cell.state === CellState.NotReadyToWork)
+    }
+    if (cell.state === CellState.NotReadyToWork) {
       return 'white';
+    }
     return '#585858';
   });
 
   ngOnInit(): void {
     // React to toggling of an order
     this.subscriptions.add(this.orderStoreService.toggledOrder$.subscribe(o => {
-      if (this.currentOrder()?.orderNumber !== o.orderNumber || this.currentOrder()?.operationNumber !== o.operationNumber)
+      if (this.currentOrder()?.orderNumber !== o.orderNumber || this.currentOrder()?.operationNumber !== o.operationNumber) {
         return;
+      }
       this.currentOrderIsToggled.set(o.isToggled);
     }));
 
@@ -91,11 +96,13 @@ export class Cell implements OnInit, OnDestroy {
 
   protected onCellClicked() {
     //Do not show details menu if the edit button is not closed
-    if (this.editMenuState() != EditMenuState.Closed) return;
+    if (this.editMenuState() != EditMenuState.Closed) {
+      return;
+    }
     this.cellStoreService.selectCell(this.currentCell().id!);
   }
 
-  protected async onCellMove(event: CdkDragEnd<any>) {
+  protected async onCellMove(event: CdkDragEnd) {
     const params = this.parameters();
 
     // Calculate new position as percetage value relative to the cell-container

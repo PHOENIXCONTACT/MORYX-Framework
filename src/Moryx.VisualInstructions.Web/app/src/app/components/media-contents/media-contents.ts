@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, effect, inject, input, OnInit, signal, untracked, ChangeDetectionStrategy } from '@angular/core';
+import { Component, effect, inject, input, signal, untracked, ChangeDetectionStrategy } from '@angular/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { DisplayedMediaContent } from './displayed-media-content';
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
@@ -12,25 +12,25 @@ import { MatButtonModule } from '@angular/material/button';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
-    selector: 'media-contents',
-    templateUrl: './media-contents.html',
-    styleUrls: ['./media-contents.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [
-      NgxDocViewerModule,
-      MatIconModule,
-      MatButtonModule
-    ]
+  selector: 'app-media-contents',
+  templateUrl: './media-contents.html',
+  styleUrls: ['./media-contents.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [
+    NgxDocViewerModule,
+    MatIconModule,
+    MatButtonModule
+  ]
 })
-export class MediaContents implements OnInit {
+export class MediaContents {
 
   protected medias = signal<DisplayedMediaContent[]>([]);
   readonly displayedContents = input.required<DisplayedMediaContent[]>();
-  protected selectedContent = signal<DisplayedMediaContent | undefined>(undefined) ;
+  protected selectedContent = signal<DisplayedMediaContent | undefined>(undefined);
   private sanitizer = inject(DomSanitizer);
   protected TranslationConstants = TranslationConstants;
 
-  constructor(){
+  constructor() {
     effect(() => {
       const contentData = this.displayedContents();
       untracked(() => {
@@ -39,8 +39,6 @@ export class MediaContents implements OnInit {
       })
     })
   }
-
-  ngOnInit(): void {}
 
   protected onSelect(selected: DisplayedMediaContent): void {
     this.selectedContent.update(_ => selected);

@@ -47,7 +47,7 @@ export class ProductsDetailsView {
   constructor() {
     this.router.events.subscribe((val) => {
       if (val instanceof NavigationEnd || val instanceof NavigationCancel) {
-        let url = this.router.url;
+        const url = this.router.url;
         if (this.regexProperties.test(url)) {
           this.activeLink.update(_ => Tabs.Properties);
         } else if (this.regexParts.test(url)) {

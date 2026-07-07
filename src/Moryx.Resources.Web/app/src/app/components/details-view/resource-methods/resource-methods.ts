@@ -92,7 +92,7 @@ export class ResourceMethods {
 
     let param = {};
     if (method.parameters?.subEntries && method.parameters.subEntries.length > 0) {
-      for (let p of method.parameters.subEntries) {
+      for (const p of method.parameters.subEntries) {
         if (!p.value) {
           return;
         }
@@ -152,9 +152,10 @@ export class ResourceMethods {
     this.snackBar.dismiss();
     //clear the entry parameter values for boolean types
     if (method.parameters?.subEntries?.length) {
-      for (let p of method.parameters.subEntries) {
-        if (p.value?.type === EntryValueType.Boolean)
+      for (const p of method.parameters.subEntries) {
+        if (p.value?.type === EntryValueType.Boolean) {
           p.value.current = 'false';
+        }
       }
     }
   }

@@ -63,7 +63,7 @@
               (mouseup)="onMouseUp($event, variant)"
               (contextmenu)="onContext($event, variant)"
               class="variant-item"
-              [activated]="selectedVariant()?.name == variant.name"
+              [activated]="selectedVariant()?.name === variant.name"
               >
               <div class="variant-item-content">
                 @if (variant.name) {

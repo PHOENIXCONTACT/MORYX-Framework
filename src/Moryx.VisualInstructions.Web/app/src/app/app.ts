@@ -84,13 +84,17 @@ export class App implements OnInit {
       .subscribe(result => this.handleDialogResult(result));
   }
 
-  private async handleDialogResult(result: any) {
-    if (result?.instructorName?.length) this.updateInstructor(result);
+  private async handleDialogResult(result: DialogData | undefined) {
+    if (result?.instructorName?.length) {
+      this.updateInstructor(result);
+    }
 
-    if (!this.clientIdentifier) await this.showNoInstructorWarning();
+    if (!this.clientIdentifier) {
+      await this.showNoInstructorWarning();
+    }
   }
 
-  private updateInstructor(result: any): void {
+  private updateInstructor(result: DialogData): void {
     this.clientIdentifier = result.instructorName;
     this.cookieService.setCookie(COOKIE_NAME, result.instructorName, 365);
 

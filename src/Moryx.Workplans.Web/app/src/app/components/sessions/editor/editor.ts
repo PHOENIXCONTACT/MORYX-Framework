@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { CdkDragDrop, CdkDragEnd, CdkDragStart, DragDropModule, DragRef } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, CdkDragEnd, CdkDragStart, DragDropModule, DragRef, Point } from '@angular/cdk/drag-drop';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, OnInit, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
@@ -110,11 +110,13 @@ export class Editor implements OnInit {
   constructor() {
     // Amending this strategy to use management, but this piece of code needs refactoring
     this.router.routeReuseStrategy.shouldReuseRoute = (future: ActivatedRouteSnapshot, curr: ActivatedRouteSnapshot) => {
-      if (future.routeConfig?.path && future.routeConfig?.path !== 'session' && future.routeConfig?.path !== ':token')
+      if (future.routeConfig?.path && future.routeConfig?.path !== 'session' && future.routeConfig?.path !== ':token') {
         return false;
+      }
 
-      if (curr.routeConfig?.path && curr.routeConfig?.path !== 'session' && future.routeConfig?.path !== ':token')
+      if (curr.routeConfig?.path && curr.routeConfig?.path !== 'session' && future.routeConfig?.path !== ':token') {
         return false;
+      }
 
       return future.paramMap.get('token') === curr.paramMap.get('token');
     };
@@ -145,10 +147,11 @@ export class Editor implements OnInit {
 
   private gatherInputIds() {
     const ids = this.editorState.workplan?.nodes!.flatMap(n => n.inputs!.map(i => 'in_' + n.id + '-' + i.index));
-    if (ids)
+    if (ids) {
       this.inputIds.update(_ => ids);
-    else
+    } else {
       this.inputIds.update(_ => []);
+    }
   }
 
   processInitialRoute() {
@@ -163,17 +166,23 @@ export class Editor implements OnInit {
 
   private checkPropertiesEditing(queries: ParamMap) {
     const editMode = queries.get(this.editQuery);
-    if (editMode === EditQueries.Properties) this.editorState.startEditingProps();
+    if (editMode === EditQueries.Properties) {
+      this.editorState.startEditingProps();
+    }
   }
 
   private checkStepEditing(queries: ParamMap) {
     const stepId = Number(queries.get(this.selectedQuery));
-    if (stepId) this.editorState.startEditingStep(stepId);
+    if (stepId) {
+      this.editorState.startEditingStep(stepId);
+    }
   }
 
   private checkStepCreation(queries: ParamMap) {
     const createdType = queries.get(this.typeQuery);
-    if (queries.get(this.editQuery) === EditQueries.New && createdType) this.editorState.startCreatingStep(createdType);
+    if (queries.get(this.editQuery) === EditQueries.New && createdType) {
+      this.editorState.startCreatingStep(createdType);
+    }
   }
 
   ngOnInit(): void {
@@ -226,7 +235,9 @@ export class Editor implements OnInit {
 
   protected onRegisterClickEnd(): void {
     const clickDuration: number = Date.now() - this.clickStartTime;
-    if (clickDuration > 250) return;
+    if (clickDuration > 250) {
+      return;
+    }
 
     this.editorState.onNodeDeselected();
     this.editorState.stopEditingStep();
@@ -250,7 +261,7 @@ export class Editor implements OnInit {
   //#endregion
 
   //#region Drag and Drop
-  protected dragConstrainPoint = (point: any, dragRef: DragRef) => {
+  protected dragConstrainPoint = (point: Point, dragRef: DragRef) => {
     // Consider scaling of parent element when dragging cards
     let zoomMoveXDifference = 0;
     let zoomMoveYDifference = 0;
@@ -271,16 +282,20 @@ export class Editor implements OnInit {
       x: this.dragPosition().x * this.canvasScale,
       y: this.dragPosition().y * this.canvasScale
     };
-    let mouseEvent = event.event as MouseEvent;
+    const mouseEvent = event.event as MouseEvent;
     this.cursorOffset.x = mouseEvent.clientX - event.source.element.nativeElement.getBoundingClientRect().left;
     this.cursorOffset.y = mouseEvent.clientY - event.source.element.nativeElement.getBoundingClientRect().top;
     event.source._dragRef.setFreeDragPosition(position);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- accessing private CDK DragRef internals for zoom support
     (event.source._dragRef as any)._activeTransform = this.dragPosition;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (event.source._dragRef as any)._applyRootElementTransform(this.dragPosition().x, this.dragPosition().y);
   }
 
   protected endDragging(event: CdkDragEnd, node: WorkplanNodeModel) {
-    if (!this.editorState.workplan) return;
+    if (!this.editorState.workplan) {
+      return;
+    }
 
     // Copy changes respecting the scaling
     node.positionLeft = (node.positionLeft ?? 0) + Math.ceil(event.distance.x / this.canvasScale);
@@ -310,7 +325,9 @@ export class Editor implements OnInit {
       ? this.availableSteps().find(s => s.subworkplanId == recipe?.subworkplanId)
       : this.availableSteps().find(s => s.type == recipe?.type);
 
-    if (!stepRecipe) return;
+    if (!stepRecipe) {
+      return;
+    }
 
     this.newStepPosition.update(_ => new Position(event.offsetX - this.size, event.offsetY - this.size));
     stepRecipe.positionLeft = this.newStepPosition()?.left;
@@ -335,7 +352,9 @@ export class Editor implements OnInit {
   }
 
   private onStepCreationSuccessResponse(step: WorkplanNodeModel) {
-    if (!this.editorState.workplan) return;
+    if (!this.editorState.workplan) {
+      return;
+    }
 
     this.editorState.workplan.nodes?.push(step);
     this.sessionService.registerUpdatedSession(this.editorState.workplan);
@@ -347,7 +366,9 @@ export class Editor implements OnInit {
   }
 
   protected onClickStep(node: WorkplanNodeModel) {
-    if (!node.id) return;
+    if (!node.id) {
+      return;
+    }
 
     // ToDo: Check if query update on editorEvents can be done
     this.updateQuery({edit: EditQueries.Node, selected: node.id});
@@ -357,7 +378,7 @@ export class Editor implements OnInit {
 
   //--- Connect output to input
   protected connected(event: CdkDragDrop<WorkplanNodeModel[]>, node: WorkplanNodeModel, input: NodeConnectionPoint) {
-    let sourceNode = <WorkplanNodeModel>event.item.data[0];
+    const sourceNode = <WorkplanNodeModel>event.item.data[0];
     const draggedConnector = <NodeConnectionPoint>event.item.data[1];
     this.workplanEditingService
       .connectStep({
@@ -386,9 +407,9 @@ export class Editor implements OnInit {
     const result = nodes.flatMap(node => {
       return node.outputs!.flatMap(output => {
         return output.connections!.map(connection => {
-          let path = NodeConnectionPath.findPath(node, output, connection, this.canvasScale, this.stepSize);
+          const path = NodeConnectionPath.findPath(node, output, connection, this.canvasScale, this.stepSize);
           path.endNode = nodes.find(n => n.id === connection.nodeId)!;
-          path.endInput = path.endNode.inputs?.find(i => i.index === connection.index)!;
+          path.endInput = path.endNode.inputs!.find(i => i.index === connection.index)!;
           return path;
         });
       });
@@ -397,7 +418,9 @@ export class Editor implements OnInit {
   }
 
   protected onPathDeleteClick() {
-    if (!this.pathMenuTrigger().menuData) return;
+    if (!this.pathMenuTrigger().menuData) {
+      return;
+    }
 
     const data = this.pathMenuTrigger().menuData as NodeConnectionPath;
     this.workplanEditingService
@@ -419,7 +442,9 @@ export class Editor implements OnInit {
   }
 
   protected onStepDeleteClick() {
-    if (!this.stepMenuTrigger().menuData) return;
+    if (!this.stepMenuTrigger().menuData) {
+      return;
+    }
 
     const data = this.stepMenuTrigger().menuData as WorkplanNodeModel;
     this.editorState.stopEditingStep();
@@ -453,11 +478,14 @@ export class Editor implements OnInit {
     this.onClickStep(node);
   }
 
-  protected openStepPressMenu(event: any, node: WorkplanNodeModel) {
-    if (event.type != 'press' || event.pointer?.length > 1) return;
-    event.preventDefault();
-    this.menuX = event.pointers[0].clientX + 'px';
-    this.menuY = event.pointers[0].clientY + 'px';
+  protected openStepPressMenu(event: Event, node: WorkplanNodeModel) {
+    const hammerEvent = event as unknown as HammerInput;
+    if (hammerEvent.type != 'press' || hammerEvent.pointers.length > 1) {
+      return;
+    }
+    hammerEvent.preventDefault();
+    this.menuX = hammerEvent.pointers[0].clientX + 'px';
+    this.menuY = hammerEvent.pointers[0].clientY + 'px';
     this.openContextMenu(node);
   }
 
@@ -474,16 +502,19 @@ export class Editor implements OnInit {
     this.pathMenuTrigger()?.openMenu();
   }
 
-  protected openPathTapMenu(event: any, path: NodeConnectionPath) {
-    if (event.type != 'tap' || event.pointer?.length > 1) return;
-    event.preventDefault();
-    this.menuX = event.pointers[0].clientX + 'px';
-    this.menuY = event.pointers[0].clientY + 'px';
+  protected openPathTapMenu(event: Event, path: NodeConnectionPath) {
+    const hammerEvent = event as unknown as HammerInput;
+    if (hammerEvent.type != 'tap' || hammerEvent.pointers.length > 1) {
+      return;
+    }
+    hammerEvent.preventDefault();
+    this.menuX = hammerEvent.pointers[0].clientX + 'px';
+    this.menuY = hammerEvent.pointers[0].clientY + 'px';
     this.pathMenuTrigger().menuData = path;
     this.pathMenuTrigger()?.openMenu();
   }
 
-  protected getPathMenuAreaStyles(segment: Segment): { [klass: string]: any } {
+  protected getPathMenuAreaStyles(segment: Segment): Record<string, string> {
     return segment.width > segment.height
       ? {width: `${segment.width}px`, height: `${segment.height * 5}px`, top: `${-4}px`}
       : {width: `${segment.width * 5}px`, height: `${segment.height}px`, left: `${-4}px`};

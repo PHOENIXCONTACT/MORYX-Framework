@@ -6,7 +6,7 @@
     (click)="onNodeClick(node.id)"
     (contextmenu)="onContextMenu($event, node.id)"
     class="tree-item"
-    [class.selected]="selected()?.id == node.id"
+    [class.selected]="selected()?.id === node.id"
     [class.italic]="!(node.name && node.name.trim())">
     <button mat-icon-button title="Disabled toggle" disabled></button>
     {{ (node.name && node.name.trim()) ? node.name : TranslationConstants.APP.NO_NAME | translate }}
@@ -20,7 +20,7 @@
     (click)="onNodeClick(node.id)"
     (contextmenu)="onContextMenu($event, node.id)"
     class="tree-item"
-    [class.selected]="selected()?.id == node.id"
+    [class.selected]="selected()?.id === node.id"
     [class.italic]="!(node.name && node.name.trim())">
     <button
       mat-icon-button
