@@ -41,7 +41,7 @@ app-root {
   }
 }
 
-.navigation-bar {
+.navigation-bar:has(> .navigation-bar-item:only-child) {
   display: none !important;
 }
 
