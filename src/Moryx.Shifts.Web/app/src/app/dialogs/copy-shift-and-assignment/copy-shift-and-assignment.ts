@@ -10,7 +10,7 @@ import AssignmentData from '@app/models/assignment-data';
 import { CalendarState } from '@app/models/calendar-state';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import  moment from 'moment';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/translation-constants';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';

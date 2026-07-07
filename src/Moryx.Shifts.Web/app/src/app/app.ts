@@ -39,7 +39,7 @@ import {
 import { addCalendarDaysToAssignment } from './models/model-converter';
 import { AttendableResourceModel } from '@api/models/attendable-resource-model';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { TranslationConstants } from './extensions/translation-constants.extensions';
+import { TranslationConstants } from './translation-constants';
 import { LanguageService, SnackbarService } from '@moryx/ngx-web-framework/services';
 import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
 import {
@@ -47,12 +47,14 @@ import {
   CopyShiftAndAssignmentData
 } from './dialogs/copy-shift-and-assignment/copy-shift-and-assignment';
 import { MatButtonModule } from '@angular/material/button';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatTabsModule } from '@angular/material/tabs';
 import { WorkHoursIcon } from './work-hours-icon/work-hours-icon';
 import { Assignment } from './assignment/assignment';
 import { OrderItem } from './order-item/order-item';
@@ -63,6 +65,7 @@ import { OrderItem } from './order-item/order-item';
   styleUrls: ['./app.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
+    MatToolbarModule,
     MatButtonModule,
     MatIconModule,
     MatFormFieldModule,
@@ -71,6 +74,7 @@ import { OrderItem } from './order-item/order-item';
     FormsModule,
     MatDividerModule,
     MatCheckboxModule,
+    MatTabsModule,
     EmptyState,
     WorkHoursIcon,
     Assignment,
@@ -216,9 +220,9 @@ export class App implements OnInit {
     if ((this.isOperatorFilterPanelOpened() && button === 'Operator') ||
       (this.isResourceFilterPanelOpened() && button === 'Resource')
     ) {
-      return 'flex flex-row items-center gap-x-2 px-2 py-1 border border-gray-200 border-solid rounded-sm bg-primary text-white';
+      return 'filter-button filter-button--active';
     }
-    return 'flex flex-row items-center gap-x-2 px-2 py-1 border border-gray-200 border-solid hover:bg-gray-100 rounded-sm';
+    return 'filter-button';
   }
 
 
@@ -231,11 +235,10 @@ export class App implements OnInit {
   }
 
   protected dragResourceOrOperator(dragging: boolean) {
-    this.drawerIsOpened.set(false);
-    this.appStore.dragItemFromShiftElementDrawer(dragging)
+    this.appStore.dragItemFromShiftElementDrawer(dragging);
 
     if (!dragging) {
-      return;
+      this.drawerIsOpened.set(false);
     }
   }
 
@@ -399,7 +402,6 @@ export class App implements OnInit {
     }
 
     const dialogResult = this.dialog.open(ShiftInstanceDialog, {
-      width: '500px',
       data: shiftInstance
     });
 
@@ -451,7 +453,6 @@ export class App implements OnInit {
           return;
         }
         const dialogResult = this.dialog.open(CopyShiftAndAssignment, {
-          width: '700px',
           data: assignmentsAndShift
         });
 
