@@ -12,6 +12,8 @@ This endpoint is based on the [`INotificationPublisher`](/src/Moryx.Notification
 
 ## Permissions
 
+Permissions are defined in [`NotificationPermissions`](/src/Moryx.Notifications.Endpoints/NotificationPermissions.cs).
+
 | Permission String | Description |
 |-------------------|-------------|
 | `Moryx.Notifications.CanView` | Permission for all actions related to viewing notifications |

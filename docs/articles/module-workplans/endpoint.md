@@ -15,6 +15,8 @@ This endpoint is based on the following facades:
 
 ## Permissions
 
+Permissions are defined in [`WorkplanPermissions`](/src/Moryx.AbstractionLayer.Products.Endpoints/WorkplanPermissions.cs).
+
 | Permission String | Description |
 |-------------------|-------------|
 | `Moryx.Workplans.CanView` | Permission for all actions related to viewing one or multiple workplans |

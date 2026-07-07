@@ -12,6 +12,8 @@ This endpoint is based on the [`IMediaServer`](/src/Moryx.Media/IMediaServer.cs)
 
 ## Permissions
 
+Permissions are defined in [`MediaPermissions`](/src/Moryx.Media.Endpoints/MediaPermissions.cs).
+
 | Permission String | Description |
 |-------------------|-------------|
 | `Moryx.Media.CanView` | Permission for all actions related to viewing media files and metadata |

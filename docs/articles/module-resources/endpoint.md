@@ -12,6 +12,8 @@ This endpoint is based on the [`IResourceManagement`](/src/Moryx.AbstractionLaye
 
 ## Permissions
 
+Permissions are defined in [`ResourcePermissions`](/src/Moryx.AbstractionLayer.Resources.Endpoints/ResourcePermissions.cs).
+
 | Permission String | Description |
 |-------------------|-------------|
 | `Moryx.Resources.CanViewTree` | Permission for all actions related to viewing the resource instance tree |

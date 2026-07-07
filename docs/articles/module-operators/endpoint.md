@@ -17,6 +17,8 @@ This endpoint is based on the following facades:
 
 ## Permissions
 
+Permissions are defined in [`OperatorPermissions`](/src/Moryx.Operators.Endpoints/OperatorPermissions.cs) and [`SkillPermissions`](/src/Moryx.Operators.Endpoints/SkillPermissions.cs).
+
 ### Operator Permissions
 
 | Permission String | Description |

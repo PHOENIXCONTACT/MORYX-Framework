@@ -18,6 +18,8 @@ This endpoint is based on the following facades:
 
 ## Permissions
 
+Permissions are defined in [`RuntimePermissions`](/src/Moryx.Runtime.Endpoints/RuntimePermissions.cs).
+
 ### Common Permissions
 
 | Permission String | Description |

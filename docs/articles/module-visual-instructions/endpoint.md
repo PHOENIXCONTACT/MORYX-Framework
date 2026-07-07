@@ -12,6 +12,8 @@ This endpoint is based on the [`IVisualInstructions`](/src/Moryx.VisualInstructi
 
 ## Permissions
 
+Permissions are defined in [`VisualInstructionsPermissions`](/src/Moryx.VisualInstructions.Endpoints/VisualInstructionsPermissions.cs).
+
 | Permission String | Description |
 |-------------------|-------------|
 | `Moryx.VisualInstructions.CanView` | Permission for all actions related to viewing visual instructions |

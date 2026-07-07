@@ -16,6 +16,8 @@ This endpoint is based on the following facades:
 
 ## Permissions
 
+Permissions are defined in [`FactoryMonitorPermissions`](/src/Moryx.FactoryMonitor.Endpoints/FactoryMonitorPermissions.cs).
+
 | Permission String | Description |
 |-------------------|-------------|
 | `Moryx.FactoryMonitor.CanView` | Permission for all actions related to viewing factory monitor data |
