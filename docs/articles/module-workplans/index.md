@@ -8,6 +8,10 @@ This module provides the functiality to edit workplans graphically. It provides 
 
 `IWorkplanEditing` (see Moryx.Workplans.IWorkplanEditing in Moryx Platform)
 
+## Provided Endpoint
+
+This module provides a REST API for editing workplans. See [Workplans Endpoint](endpoint.md) for details on available operations and permissions.
+
 ## Dependencies
 
 Working with wokplans is done using the following APIs:

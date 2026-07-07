@@ -18,6 +18,10 @@ The Process Engine exports facades and forwards external requests to the interna
 - [IJobManagement](xref:Moryx.ControlSystem.Jobs.IJobManagement)
 - [IProcessControl](xref:Moryx.ControlSystem.Processes.IProcessControl)
 
+## Provided Endpoint
+
+This module provides a REST API for managing jobs and processes. See [Process Engine Endpoint](endpoint.md) for details on available operations and permissions.
+
 ## Dependencies
 
 The Process Engine depends on the following APIs and data-models. Detailed documentation can be found by clicking the dependencies link.

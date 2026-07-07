@@ -24,6 +24,10 @@ This includes the responsibility for ...
 
 This modules exports the `IOrderManagement` facade.
 
+## Provided Endpoint
+
+This module provides a REST API for managing orders and operations. See [Orders Endpoint](endpoint.md) for details on available operations and permissions.
+
 ## Referenced facades
 
  Plugin API | Start Dependency | Optional | Usage
