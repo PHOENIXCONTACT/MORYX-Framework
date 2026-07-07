@@ -24,7 +24,6 @@ import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { BrowserModule } from "@angular/platform-browser";
-import { provideAnimationsAsync } from "@angular/platform-browser/animations/async";
 import { environment } from "../environments/environment";
 import { ApiModule } from "@api/api.module";
 import { AppStoreService } from "./services/app-store.service";
@@ -70,7 +69,6 @@ export const appConfig: ApplicationConfig = {
       }),
       fallbackLang: 'en'
     }),
-    provideAnimationsAsync(),
     provideNativeDateAdapter(),
     ShiftService,
     AppStoreService,
