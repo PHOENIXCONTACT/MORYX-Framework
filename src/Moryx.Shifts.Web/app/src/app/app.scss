@@ -13,9 +13,6 @@
 
 mat-toolbar {
   --mat-toolbar-container-background-color: var(--mat-sys-surface-container-lowest);
-  border-bottom: 1px solid var(--mat-sys-outline-variant);
-  box-shadow: 0 1px 2px 0 color-mix(in srgb, var(--mat-sys-shadow) 6%, transparent),
-              0 1px 1px -1px color-mix(in srgb, var(--mat-sys-shadow) 6%, transparent);
 }
 
 .header {
