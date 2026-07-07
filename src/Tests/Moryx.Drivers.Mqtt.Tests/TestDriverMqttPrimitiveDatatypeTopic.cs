@@ -107,10 +107,10 @@ public class TestDriverMqttPrimitiveDatatypeTopic
 
     }
 
-    private void SendMessagIntIConvertible(MqttApplicationMessage sentMsg, CancellationToken token)
+    private void SendMessagIntIConvertible(MqttApplicationMessage sentMsg, CancellationToken cancellationToken)
     {
         //Assert 2
-        Assert.That(token, Is.EqualTo(CancellationToken.None));
+        Assert.That(cancellationToken, Is.EqualTo(CancellationToken.None));
         Assert.That(sentMsg.Topic.Equals(_driver.Identifier + _mqttTopicInt.Identifier),
             "Topic should be " + _driver.Identifier + _mqttTopicInt.Identifier + ", but is " + sentMsg.Topic);
         Assert.That(sentMsg.QualityOfServiceLevel, Is.EqualTo(MqttQualityOfServiceLevel.ExactlyOnce),
@@ -137,10 +137,10 @@ public class TestDriverMqttPrimitiveDatatypeTopic
 
     }
 
-    private void SendMessagStringIConvertible(MqttApplicationMessage sentMsg, CancellationToken token)
+    private void SendMessagStringIConvertible(MqttApplicationMessage sentMsg, CancellationToken cancellationToken)
     {
         //Assert 2
-        Assert.That(token, Is.EqualTo(CancellationToken.None));
+        Assert.That(cancellationToken, Is.EqualTo(CancellationToken.None));
         Assert.That(sentMsg.Topic.Equals(_driver.Identifier + _mqttTopicString.Identifier),
             "Topic should be " + _driver.Identifier + _mqttTopicString.Identifier + ", but is " + sentMsg.Topic);
         Assert.That(sentMsg.QualityOfServiceLevel, Is.EqualTo(MqttQualityOfServiceLevel.ExactlyOnce),

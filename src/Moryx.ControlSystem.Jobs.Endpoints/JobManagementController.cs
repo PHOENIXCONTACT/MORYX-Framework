@@ -114,7 +114,7 @@ public class JobManagementController : ControllerBase
 
         return;
 
-        async IAsyncEnumerable<string> Subscribe([EnumeratorCancellation] CancellationToken token)
+        async IAsyncEnumerable<string> Subscribe([EnumeratorCancellation] CancellationToken cancelToken)
         {
             var channel = Channel.CreateUnbounded<string>();
             var id = Guid.NewGuid();
@@ -122,7 +122,7 @@ public class JobManagementController : ControllerBase
 
             try
             {
-                await foreach (var data in channel.Reader.ReadAllAsync(token))
+                await foreach (var data in channel.Reader.ReadAllAsync(cancelToken))
                 {
                     yield return data;
                 }
