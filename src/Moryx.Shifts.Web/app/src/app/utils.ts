@@ -7,7 +7,7 @@ import { AssignmentCardModel, DayOfTheWeek } from './models/assignment-card-mode
 import { CalendarDate } from './models/calendar-state';
 import moment from 'moment';
 import { ShiftInstanceModel } from './models/shift-instance-model';
-import { TranslationConstants } from './extensions/translation-constants.extensions';
+import { TranslationConstants } from './translation-constants';
 
 //given a day of the week enum returns the name of that day ex: 'Monday'
 export function getDayName(day: DayOfTheWeek): string {

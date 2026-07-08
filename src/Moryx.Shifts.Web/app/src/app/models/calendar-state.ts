@@ -6,7 +6,7 @@
 import  moment from 'moment';
 import { DayOfTheWeek } from './assignment-card-model';
 import { TranslateService } from '@ngx-translate/core';
-import { TranslationConstants } from '../extensions/translation-constants.extensions';
+import { TranslationConstants } from '../translation-constants';
 
 export interface CalendarModel {
   calendarWeek: number;

@@ -5,7 +5,7 @@
 
 import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
 import { CalendarDate, CalendarState } from '../models/calendar-state';
-import { TranslationConstants } from '../extensions/translation-constants.extensions';
+import { TranslationConstants } from '../translation-constants';
 import { formatDateDigits, getDayName, getShortDayName, isDayInInterval, localizedDayName, shortDayName } from '../utils';
 import  moment from 'moment';
 import { MatButtonToggleChange, MatButtonToggleModule } from '@angular/material/button-toggle';

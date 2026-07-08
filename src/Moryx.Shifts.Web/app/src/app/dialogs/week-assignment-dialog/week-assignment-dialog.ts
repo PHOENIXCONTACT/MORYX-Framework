@@ -28,7 +28,7 @@ import { AppStoreService } from '@app/services/app-store.service';
 import { AttendableResourceModel } from '@app/api/models/attendable-resource-model';
 import { MatSelectModule } from '@angular/material/select';
 import { firstValueFrom } from 'rxjs';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/translation-constants';
 import { ShiftInstanceModel } from '@app/models/shift-instance-model';
 
 import { MatFormFieldModule } from '@angular/material/form-field';

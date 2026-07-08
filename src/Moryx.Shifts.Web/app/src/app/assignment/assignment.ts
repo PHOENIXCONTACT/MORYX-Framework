@@ -13,7 +13,7 @@ import AssignmentData from '../models/assignment-data';
 import { CalendarDate, CalendarState } from '../models/calendar-state';
 import { AppStoreService } from '../services/app-store.service';
 import moment from 'moment';
-import { TranslationConstants } from '../extensions/translation-constants.extensions';
+import { TranslationConstants } from '../translation-constants';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
