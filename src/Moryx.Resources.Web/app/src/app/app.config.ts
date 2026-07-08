@@ -4,7 +4,6 @@
 */
 
 import { ApplicationConfig, provideEnvironmentInitializer } from "@angular/core";
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTreeModule } from '@angular/material/tree';
 import { MatButtonModule } from '@angular/material/button';
@@ -89,7 +88,6 @@ export const appConfig: ApplicationConfig = {
       }),
       fallbackLang: 'en'
     }),
-    provideAnimationsAsync(),
     provideAppInitializer(() => {
       // Use material-symbols as default icon font
       const iconRegistry = inject(MatIconRegistry);

@@ -25,7 +25,6 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule } from '@angular/platform-browser';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { ApiInterceptor, API_INTERCEPTOR_PROVIDER } from '@moryx/ngx-web-framework/interceptors';
 import { environment } from '../environments/environment';
 import { ApiModule } from '@api/api.module';
@@ -77,7 +76,6 @@ export const appConfig: ApplicationConfig = {
       }),
       fallbackLang: 'en'
     }),
-    provideAnimationsAsync(),
     provideAppInitializer(() => {
       // Use material-symbols as default icon font
       const iconRegistry = inject(MatIconRegistry);

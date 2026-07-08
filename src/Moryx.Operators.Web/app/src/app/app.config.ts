@@ -29,7 +29,6 @@ import { MatTableModule } from "@angular/material/table";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { BrowserModule } from "@angular/platform-browser";
-import { provideAnimationsAsync } from "@angular/platform-browser/animations/async";
 import { AppStoreService } from "./services/app-store.service";
 import { TranslateService } from '@ngx-translate/core';
 import { provideRouter, withComponentInputBinding } from "@angular/router";
@@ -78,7 +77,6 @@ export const appConfig: ApplicationConfig = {
       }),
       fallbackLang: 'en'
     }),
-    provideAnimationsAsync(),
     provideAppInitializer(() => {
       // Use material-symbols as default icon font
       const iconRegistry = inject(MatIconRegistry);
