@@ -22,7 +22,11 @@ This includes the responsibility for ...
 
 ## Provided Facades
 
-This modules exports the `IOrderManagement` facade.
+This modules exports the [`IOrderManagement`](/src/Moryx.Orders/Facade/IOrderManagement.cs) facade.
+
+## Provided Endpoint
+
+This module provides a REST API for managing orders and operations. See [Orders Endpoint](endpoint.md) for details on available operations and permissions.
 
 ## Referenced facades
 
