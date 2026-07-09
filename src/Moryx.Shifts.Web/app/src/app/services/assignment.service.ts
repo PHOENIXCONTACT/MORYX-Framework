@@ -3,8 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { inject, Injectable, signal } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import { AssignmentCardModel } from '../models/assignment-card-model';
 import AssignmentData from '../models/assignment-data';
 import { ShiftManagementService } from '@api/services';
@@ -20,14 +20,14 @@ import { ShiftAssignementCreationContextModel } from '@api/models/shift-assignem
 export class AssignmentService {
   private shiftAssignmentService = inject(ShiftManagementService);
 
-  public assignments = new BehaviorSubject<AssignmentCardModel[]>([]);
+  public assignments = signal<AssignmentCardModel[]>([]);
 
   constructor() {
 
   }
 
   public setAssignments(values: AssignmentCardModel[]) {
-    this.assignments.next(values);
+    this.assignments.set(values);
   }
 
   public addNewAssignment(assignment: AssignmentData) {
@@ -62,7 +62,7 @@ export class AssignmentService {
   }
 
   public updateAssignment(assignmentId: number, update: AssignmentData) {
-    const foundAssignment = this.assignments.value.find(
+    const foundAssignment = this.assignments().find(
       (x: AssignmentCardModel) => x.id == assignmentId
     );
 
@@ -90,8 +90,8 @@ export class AssignmentService {
       this.shiftAssignmentService.updateShiftAssignement({
         body: data
       }).subscribe(createdAssignment => {
-        // this.assignments.next([
-        //   ...this.assignments.value.filter((x) => x.id != assignmentId),
+        // this.assignments.set([
+        //   ...this.assignments().filter((x) => x.id != assignmentId),
         //   updated,
         // ]);
         if (update.operator) {
@@ -112,15 +112,15 @@ export class AssignmentService {
     this.shiftAssignmentService.deleteShiftAssignement({
       id: id
     }).subscribe({
-      next: succes => {
-        this.assignments.next(this.assignments.value.filter(x => x.id != id));
+      next: success => {
+        this.assignments.set(this.assignments().filter(x => x.id != id));
       },
       error: e => console.log(e)
     })
   }
 
   addAssignmentsToList(assignments: AssignmentCardModel[]) {
-    this.assignments.next([...this.assignments.value, ...assignments]);
+    this.assignments.set([...this.assignments(), ...assignments]);
   }
 }
 

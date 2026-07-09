@@ -3,8 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { inject, Injectable, signal } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import { ShiftTypeModel } from '../models/shift-type-model';
 import { ShiftInstanceModel } from '../models/shift-instance-model';
 import { ShiftManagementService } from '@api/services';
@@ -20,15 +20,15 @@ import { shiftToShitInstanceModel, shiftTypeToShiftTypeModel } from '../models/m
 })
 export class ShiftService {
   private shiftManagement = inject(ShiftManagementService);
-  public shiftTypes = new BehaviorSubject<ShiftTypeModel[]>([]);
-  public shiftInstances = new BehaviorSubject<ShiftInstanceModel[]>([]);
+  public shiftTypes = signal<ShiftTypeModel[]>([]);
+  public shiftInstances = signal<ShiftInstanceModel[]>([]);
 
   constructor() {
     //fetch shift types
     this.shiftManagement.getShiftTypes()
       .subscribe((shifts) => {
         const typeModels = shifts.map(shiftTypeToShiftTypeModel);
-        this.shiftTypes.next(typeModels);
+        this.shiftTypes.set(typeModels);
 
         // //fetch shift instances
         this.shiftManagement.getShifts()
@@ -36,17 +36,17 @@ export class ShiftService {
             const instances = instanceModels.map((x) =>
               shiftToShitInstanceModel(typeModels, x)
             );
-            this.shiftInstances.next(instances);
+            this.shiftInstances.set(instances);
           });
       });
   }
 
   public addToInstanceList(instance: ShiftInstanceModel) {
-    this.shiftInstances.next([...this.shiftInstances.value, instance]);
+    this.shiftInstances.set([...this.shiftInstances(), instance]);
   }
 
   public addToTypeList(type: ShiftTypeModel) {
-    this.shiftTypes.next([...this.shiftTypes.value, type]);
+    this.shiftTypes.set([...this.shiftTypes(), type]);
   }
 
   public addType(shift: ShiftTypeModel) {
@@ -77,7 +77,7 @@ export class ShiftService {
       body: data,
     }));
 
-    return shiftInstanceAsync.then(instance => shiftToShitInstanceModel(this.shiftTypes.value, instance));
+    return shiftInstanceAsync.then(instance => shiftToShitInstanceModel(this.shiftTypes(), instance));
   }
 
   updateInstance(id: number, shiftInstance: ShiftInstanceModel) {
@@ -92,7 +92,7 @@ export class ShiftService {
         body: update,
       })
       .subscribe((result) => {
-        const found = this.shiftInstances.value.find((x) => x.id === id);
+        const found = this.shiftInstances().find((x) => x.id === id);
         if (!found) {
           return;
         }
