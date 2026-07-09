@@ -22,6 +22,7 @@ import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { OperatorSkillChips } from "../operator-skill-chips/operator-skill-chips";
 import { MatButtonModule } from "@angular/material/button";
+import { MatToolbarModule } from "@angular/material/toolbar";
 
 @Component({
   selector: "app-operators-management",
@@ -36,7 +37,8 @@ import { MatButtonModule } from "@angular/material/button";
     OperatorSkillChips,
     RouterLink,
     TranslatePipe,
-    MatButtonModule
+    MatButtonModule,
+    MatToolbarModule
   ]
 })
 export class OperatorsManagement implements OnInit {

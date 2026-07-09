@@ -22,6 +22,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-workstation-operators',
@@ -35,6 +37,8 @@ import { MatButtonModule } from '@angular/material/button';
     EmptyState,
     TranslatePipe,
     MatButtonModule,
+    MatToolbarModule,
+    MatCardModule,
     RouterLink
   ]
 })

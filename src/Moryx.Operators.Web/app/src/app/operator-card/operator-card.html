@@ -1,18 +1,12 @@
-<div class="tw:flex tw:flex-row tw:w-full tw:rounded tw:h-14 
-tw:items-center tw:justify-center tw:relative tw:border tw:border-gray-200  
- tw:cursor-pointer"
-  [class.tw:bg-success]="isAssigned()"
-  [class.tw:text-white]="isAssigned()"
-  [class.tw:bg-gray-100]="!isAssigned()"
-  [class.tw:text-gray-400]="!isAssigned()"
-  (click)="toggle()">
-  <span class="tw:text-lg tw:truncate"
-  >{{ operator().data.pseudonym ?? operator().data.identifier }}</span>
-  <mat-icon class="tw:absolute tw:right-2 tw:w-11 tw:h-11"> 
-    @if(isAssigned() ){
+<div class="card"
+     [class.assigned]="isAssigned()"
+     [class.unassigned]="!isAssigned()"
+     (click)="toggle()">
+  <span class="card-label">{{ operator().data.pseudonym ?? operator().data.identifier }}</span>
+  <mat-icon class="card-icon">
+    @if (isAssigned()) {
       person
-    }
-    @else {
+    } @else {
       person_off
     }
   </mat-icon>

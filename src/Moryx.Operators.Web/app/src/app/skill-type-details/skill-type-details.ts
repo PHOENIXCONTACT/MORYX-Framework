@@ -12,12 +12,12 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { firstValueFrom } from "rxjs";
 import { AppStoreService } from "../services/app-store.service";
 
-import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatIconModule } from "@angular/material/icon";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatButtonModule } from "@angular/material/button";
+import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatInputModule } from "@angular/material/input";
 
 @Component({
@@ -28,13 +28,13 @@ import { MatInputModule } from "@angular/material/input";
   imports: [
     ReactiveFormsModule,
     FormsModule,
-    MatSidenavModule,
     MatTooltipModule,
     MatIconModule,
     MatFormFieldModule,
     NavigableEntryEditor,
     TranslatePipe,
     MatButtonModule,
+    MatToolbarModule,
     MatInputModule,
     RouterLink
   ]
