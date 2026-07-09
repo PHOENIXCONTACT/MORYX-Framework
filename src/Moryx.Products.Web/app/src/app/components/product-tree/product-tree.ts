@@ -6,7 +6,6 @@
 import { Component, inject, viewChild, input, output, effect, ChangeDetectionStrategy } from '@angular/core';
 import { MatTree, MatTreeModule } from '@angular/material/tree';
 import { MatIconModule } from '@angular/material/icon';
-import { CommonModule } from '@angular/common';
 import { ProductModel } from '@api/models';
 import { EditProductsService } from '@app/services/edit-products.service';
 import { SessionService } from '@app/services/session.service';
@@ -18,25 +17,25 @@ import { MatIconButton } from '@angular/material/button';
   templateUrl: './product-tree.html',
   styleUrls: ['./product-tree.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [CommonModule, MatTreeModule, MatIconModule, MatIconButton]
+  imports: [MatTreeModule, MatIconModule, MatIconButton]
 })
 export class ProductTree {
   private sessionService = inject(SessionService);
   private editProductsService = inject(EditProductsService);
 
   // Inputs
-  treeData = input.required<ProductNode[]>();
-  selected = input<ProductModel | undefined>(undefined);
+  readonly treeData = input.required<ProductNode[]>();
+  readonly selected = input<ProductModel | undefined>(undefined);
 
   // Outputs
-  nodeSelected = output<number>();
-  nodeContextMenu = output<{ event: MouseEvent; id: number }>();
+  readonly nodeSelected = output<number>();
+  readonly nodeContextMenu = output<{ event: MouseEvent; id: number }>();
 
   // Tree internals
-  tree = viewChild<MatTree<ProductNode>>(MatTree);
+  protected readonly tree = viewChild<MatTree<ProductNode>>(MatTree);
 
-  childrenAccessor = (node: ProductNode) => node.children ?? [];
-  hasChild = (_: number, node: ProductNode) => !!node.children?.length;
+  protected childrenAccessor = (node: ProductNode) => node.children ?? [];
+  protected hasChild = (_: number, node: ProductNode) => !!node.children?.length;
 
   constructor() {
     // Re-expand saved nodes whenever treeData or tree instance changes
@@ -51,19 +50,19 @@ export class ProductTree {
     });
   }
 
-  onNodeClick(id: number) {
+  protected onNodeClick(id: number) {
     this.nodeSelected.emit(id);
   }
 
-  onContextMenu(event: MouseEvent, id: number) {
+  protected onContextMenu(event: MouseEvent, id: number) {
     this.nodeContextMenu.emit({ event, id });
   }
 
-  onExpandOrCollapseNode(node: ProductNode) {
+  protected onExpandOrCollapseNode(node: ProductNode) {
     this.sessionService.saveProductTreeExpansion(node, this.tree()!.isExpanded(node));
   }
 
-  createProductIdentity(identifier: string | undefined | null, revision: number | undefined): string {
+  protected createProductIdentity(identifier: string | undefined | null, revision: number | undefined): string {
     return this.editProductsService.createProductIdentity(identifier, revision);
   }
 

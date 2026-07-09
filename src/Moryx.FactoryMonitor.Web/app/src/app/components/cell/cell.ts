@@ -4,7 +4,6 @@
 */
 
 import { CdkDragEnd, DragDropModule } from '@angular/cdk/drag-drop';
-import { CommonModule } from '@angular/common';
 import { Component, computed, ElementRef, inject, input, linkedSignal, OnDestroy, OnInit, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatIcon } from '@angular/material/icon';
@@ -24,7 +23,6 @@ import { CellState } from '@api/models/cell-state';
   styleUrls: ['./cell.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
-    CommonModule,
     MatIcon,
     DragDropModule
   ]
@@ -36,44 +34,49 @@ export class Cell implements OnInit, OnDestroy {
 
   private subscriptions = new Subscription();
 
-  cellElement = viewChild.required<ElementRef<HTMLElement>>('cell');
-  container = input.required<ElementRef<HTMLElement>>();
-  parameters = input.required<VisualizableItemModel>();
-  isEditMode = computed(() => this.editMenuState() === EditMenuState.EditingCells);
+  readonly cellElement = viewChild.required<ElementRef<HTMLElement>>('cell');
+  readonly container = input.required<ElementRef<HTMLElement>>();
+  readonly parameters = input.required<VisualizableItemModel>();
+  protected isEditMode = computed(() => this.editMenuState() === EditMenuState.EditingCells);
   private editMenuState = toSignal(this.editMenuService.activeState$);
-  currentCell = linkedSignal<CellModel>(() => this.cellStoreService.getCell(this.parameters().id!));
+  protected currentCell = linkedSignal<CellModel>(() => this.cellStoreService.getCell(this.parameters().id!));
   private currentOrder = computed(() => this.orderStoreService.getOrder(this.currentCell()));
   private currentOrderIsToggled = linkedSignal(() => !!this.currentOrder()?.isToggled);
-  isHighlighted = computed(() => {
+  protected isHighlighted = computed(() => {
     const cell = this.currentCell();
     return !!cell && cell.state == CellState.Running && !!cell.orderNumber && !!cell.operationNumber &&
         this.currentOrderIsToggled();
   });
-  backgroundColor = computed(() =>
+  protected backgroundColor = computed(() =>
     this.currentCell()?.state === CellState.NotReadyToWork ? '#e46d6d' : 'white'
   );
-  borderColor = computed(() => {
+  protected borderColor = computed(() => {
     const cell = this.currentCell();
-    if (this.isHighlighted() && cell.orderColor)
+    if (this.isHighlighted() && cell.orderColor) {
       return cell.orderColor!;
-    if (cell.state === CellState.NotReadyToWork)
+    }
+    if (cell.state === CellState.NotReadyToWork) {
       return '#e46d6d';
+    }
     return 'white';
   });
-  iconColor = computed(() => {
+  protected iconColor = computed(() => {
     const cell = this.currentCell();
-    if (this.isHighlighted() && cell.orderColor)
+    if (this.isHighlighted() && cell.orderColor) {
       return cell.orderColor!;
-    if (cell.state === CellState.NotReadyToWork)
+    }
+    if (cell.state === CellState.NotReadyToWork) {
       return 'white';
+    }
     return '#585858';
   });
 
   ngOnInit(): void {
     // React to toggling of an order
     this.subscriptions.add(this.orderStoreService.toggledOrder$.subscribe(o => {
-      if (this.currentOrder()?.orderNumber !== o.orderNumber || this.currentOrder()?.operationNumber !== o.operationNumber)
+      if (this.currentOrder()?.orderNumber !== o.orderNumber || this.currentOrder()?.operationNumber !== o.operationNumber) {
         return;
+      }
       this.currentOrderIsToggled.set(o.isToggled);
     }));
 
@@ -91,13 +94,15 @@ export class Cell implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  onCellClicked() {
+  protected onCellClicked() {
     //Do not show details menu if the edit button is not closed
-    if (this.editMenuState() != EditMenuState.Closed) return;
+    if (this.editMenuState() != EditMenuState.Closed) {
+      return;
+    }
     this.cellStoreService.selectCell(this.currentCell().id!);
   }
 
-  async onCellMove(event: CdkDragEnd<any>) {
+  protected async onCellMove(event: CdkDragEnd) {
     const params = this.parameters();
 
     // Calculate new position as percetage value relative to the cell-container

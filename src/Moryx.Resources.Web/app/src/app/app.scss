@@ -16,7 +16,7 @@
 }
 
 .resources-toolbar {
-  color: var(--mat-sys-surface-container-low);
+  color: white;
   background-color: rgba(0, 0, 0, 0.60);
   background-blend-mode: darken;
 }
@@ -32,17 +32,23 @@
 }
 
 .mat-toolbar-row{
-  color: var(--mat-sys-surface-container-lowest);
+  color: white;
   button{
-    color: var(--mat-sys-surface-container-lowest);
-    margin: 10px;
+    color: white;
+    margin: 4px;
   }
+}
+
+.toolbar-wrapper {
+  position: relative;
+  overflow: visible;
 }
 
 .resources-add-button {
   position: absolute;
-  top: 75px;
+  bottom: 0;
   right: 16px;
+  transform: translateY(50%);
   z-index: 10;
 }
 

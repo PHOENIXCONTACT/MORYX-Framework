@@ -4,7 +4,7 @@
 */
 
 import { Component, inject, OnInit, signal, viewChild, ChangeDetectionStrategy, DestroyRef } from "@angular/core";
-import { CommonModule } from "@angular/common";
+
 import { MatTree, MatTreeModule } from "@angular/material/tree";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
@@ -29,7 +29,6 @@ import { ProcessHolderGroupModelArrayApiResponse } from "@api/models/process-hol
 @Component({
   selector: "app-process-holders",
   imports: [
-    CommonModule,
     MatTreeModule,
     MatIconModule,
     MatButtonModule,
@@ -52,24 +51,24 @@ import { ProcessHolderGroupModelArrayApiResponse } from "@api/models/process-hol
 })
 export class ProcessHolders implements OnInit {
   private destroyRef = inject(DestroyRef);
-  processHolderGroups = signal<Array<ProcessHolderGroup>>([]);
-  dataSource = signal<Array<ProcessHolderNode>>([]);
-  loading = signal(false);
-  filterText = signal("");
-  visualizationCategory = Category;
+  protected processHolderGroups = signal<Array<ProcessHolderGroup>>([]);
+  protected dataSource = signal<Array<ProcessHolderNode>>([]);
+  protected loading = signal(false);
+  protected filterText = signal("");
+  protected visualizationCategory = Category;
 
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
-  hasChild = (_: number, node: ProcessHolderNode) =>
+  protected hasChild = (_: number, node: ProcessHolderNode) =>
     !!node.children && node.children.length > 0;
-  childrenAccessor = (node: ProcessHolderNode) => node.children ?? [];
+  protected childrenAccessor = (node: ProcessHolderNode) => node.children ?? [];
 
   private _processHolderStreamService = inject(ProcessHolderStreamService);
   private _processService = inject(ProcessEngineService);
   private _snackbarService = inject(SnackbarService);
   private _translate = inject(TranslateService);
 
-  private _tree = viewChild<MatTree<ProcessHolderNode, ProcessHolderNode>>("tree");
+  private readonly _tree = viewChild<MatTree<ProcessHolderNode, ProcessHolderNode>>("tree");
 
   constructor() {
     this.destroyRef.onDestroy(() => this.disconnectEvents());
@@ -118,7 +117,9 @@ export class ProcessHolders implements OnInit {
           this._tree()?.collapse(foundNode);
           this._tree()?.expand(foundNode);
         }
-      } else nodes.push(node);
+      } else {
+        nodes.push(node);
+      }
       return nodes;
     });
   }
@@ -132,7 +133,7 @@ export class ProcessHolders implements OnInit {
     this.dataSource.set(nodes);
   }
 
-  resetGroup(id: number) {
+  protected resetGroup(id: number) {
     this._processService
       .resetGroup({
         id,
@@ -143,7 +144,7 @@ export class ProcessHolders implements OnInit {
       });
   }
 
-  resetPosition(id: number) {
+  protected resetPosition(id: number) {
     this._processService
       .resetPosition({
         id,
@@ -154,12 +155,12 @@ export class ProcessHolders implements OnInit {
       });
   }
 
-  clear() {
+  protected clear() {
     this.filterText.set("");
     this.buildTree(this.processHolderGroups());
   }
 
-  filter(event: Event) {
+  protected filter(event: Event) {
     if (!this.filterText().length) {
       this.buildTree(this.processHolderGroups());
     }
@@ -176,7 +177,7 @@ export class ProcessHolders implements OnInit {
     this.buildTree(filteredResults);
   }
 
-  disconnectEvents() {
+  protected disconnectEvents() {
     this._processHolderStreamService.disconnect();
   }
 }

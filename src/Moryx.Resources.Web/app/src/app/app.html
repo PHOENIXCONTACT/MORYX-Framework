@@ -3,10 +3,11 @@
 <mat-sidenav-container class="resources">
   <mat-sidenav opened role="navigation" mode="side" class="resources-tree" [disableClose]="true">
     <div class="resources-side-bar" (click)="clickContainer($event)">
+      <div class="toolbar-wrapper">
       @if (!active) {
         <mat-toolbar
           color="primary"
-          [ngStyle]="{ 'background-image': 'url(' + resourceToolbarImage + ')' }"
+          [style.background-image]="'url(' + resourceToolbarImage + ')'"
           >
           <mat-toolbar-row>
             <button mat-icon-button aria-label="Disabled Menu" disabled>
@@ -33,7 +34,7 @@
         </mat-toolbar>
       } @else {
         <mat-toolbar
-          [ngStyle]="{ 'background-image': 'url(' + resourceToolbarImage + ')' }"
+          [style.background-image]="'url(' + resourceToolbarImage + ')'"
           class="resources-toolbar"
           >
           <mat-toolbar-row>
@@ -45,7 +46,7 @@
               [matTooltip]="TranslationConstants.SHARED.CANCEL | translate"
               matTooltipShowDelay="500"
               >
-              <span class="material-symbols-outlined">close</span>
+              <mat-icon>close</mat-icon>
             </button>
             <span class="resources-toolbar-spacer"></span>
             @if (!isEditMode()) {
@@ -57,7 +58,7 @@
                 [matTooltip]="TranslationConstants.SHARED.EDIT | translate"
                 matTooltipShowDelay="500"
                 >
-                <span class="material-symbols-outlined">edit</span>
+                <mat-icon>edit</mat-icon>
               </button>
             }
             @if (!isEditMode()) {
@@ -69,7 +70,7 @@
                 [matTooltip]="TranslationConstants.SHARED.ADD_CHILD | translate"
                 matTooltipShowDelay="500"
                 >
-                <span class="material-symbols-outlined">masked_transitions_add</span>
+                <mat-icon>masked_transitions_add</mat-icon>
               </button>
             }
             @if (!isEditMode()) {
@@ -81,7 +82,7 @@
                 [matTooltip]="TranslationConstants.SHARED.DELETE | translate"
                 matTooltipShowDelay="500"
                 >
-                <span class="material-symbols-outlined">delete</span>
+                <mat-icon>delete</mat-icon>
               </button>
             }
             @if (isEditMode()) {
@@ -93,7 +94,7 @@
                 [matTooltip]="TranslationConstants.SHARED.SAVE | translate"
                 matTooltipShowDelay="500"
                 >
-                <span class="material-symbols-outlined">save</span>
+                <mat-icon>save</mat-icon>
               </button>
             }
             @if (isEditMode()) {
@@ -105,13 +106,29 @@
                 [matTooltip]="TranslationConstants.SHARED.CANCEL | translate"
                 matTooltipShowDelay="500"
                 >
-                <span class="material-symbols-outlined">cancel</span>
+                <mat-icon>cancel</mat-icon>
               </button>
             }
           </mat-toolbar-row>
           <mat-toolbar-row></mat-toolbar-row>
         </mat-toolbar>
       }
+
+      @if (!active) {
+        <button
+          mat-fab
+          color="primary"
+          class="resources-add-button"
+          type="button"
+          aria-label="Add resource"
+          (click)="onAdd()"
+          [matTooltip]="TranslationConstants.SHARED.ADD | translate"
+          matTooltipShowDelay="500"
+          >
+          <mat-icon>add</mat-icon>
+        </button>
+      }
+      </div>
 
       <mat-menu #contextMenu="matMenu">
         <ng-template matMenuContent let-id="id">
@@ -148,21 +165,6 @@
         (nodeContextMenu)="openContextMenuByClicking($event.event, $event.id)"
       />
     </div>
-
-    @if (!active) {
-      <button
-        mat-fab
-        color="primary"
-        class="resources-add-button"
-        type="button"
-        aria-label="Add resource"
-        (click)="onAdd()"
-        [matTooltip]="TranslationConstants.SHARED.ADD | translate"
-        matTooltipShowDelay="500"
-        >
-        <mat-icon>add</mat-icon>
-      </button>
-    }
   </mat-sidenav>
 
   <mat-sidenav-content role="main">

@@ -144,7 +144,7 @@ public class Navigation : INavigation
         descriptorModuleTuples.AddRange(externalModuleTuples);
 
         // Sort by module item sort indices (and title if sort index is not set)
-        var index = _launcherConfig.ModuleSortIndices.Select(i => i.SortIndex).Max();
+        var index = _launcherConfig.ModuleSortIndices.Select(i => i.SortIndex).DefaultIfEmpty(0).Max();
         foreach (var descriptorAndModule in descriptorModuleTuples.OrderBy(t => t.ModuleItem.Title))
         {
             var module  = descriptorAndModule.ModuleItem;

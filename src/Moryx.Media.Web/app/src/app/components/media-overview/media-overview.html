@@ -6,7 +6,7 @@
     >
     @if (filteredContents().length) {
       <div
-        [ngStyle]="{ 'background-image': 'url(' + backgroundImgPath() + ')' }"
+        [style.background-image]="'url(' + backgroundImgPath() + ')'"
         class="contents-list"
         >
         @for (content of filteredContents(); track content) {

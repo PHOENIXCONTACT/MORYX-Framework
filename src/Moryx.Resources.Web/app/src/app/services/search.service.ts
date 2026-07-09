@@ -42,7 +42,7 @@ export class SearchService {
   }
   
   private onSearch(result: SearchRequest) {
-    let possibleResults = this.getMatchingResources(result.term);
+    const possibleResults = this.getMatchingResources(result.term);
     if (!possibleResults.length) {
       this.searchBarService.provideSuggestions([]);
     }
@@ -60,8 +60,9 @@ export class SearchService {
    */
   private getMatchingResources(searchTerm: string): ResourceModel[] {
     const resources = this.resources();
-    if (!resources) 
+    if (!resources)  {
       return [];
+    }
 
     const possibleResults = resources.filter(r => this.matchById(searchTerm, r) 
       || this.matchByName(searchTerm, r) 
@@ -96,13 +97,15 @@ export class SearchService {
   }
 
   private selectResource(id: number) {
-    if (this.blockedByEditing() || this.editService.activeResource()?.id === id) return;
+    if (this.blockedByEditing() || this.editService.activeResource()?.id === id) {
+      return;
+    }
     this.router.navigate([`/details/${id}`]);
   }
 
   private updateSuggestions(possibleResults: ResourceModel[]) {
     const searchSuggestions = [] as SearchSuggestion[];
-    for (let resource of possibleResults) {
+    for (const resource of possibleResults) {
       const urlBase = 'Resources/details/';
       const url = urlBase + resource.id;
       searchSuggestions.push({ text: this.createSuggestionText(resource), url: url });

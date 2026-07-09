@@ -37,8 +37,9 @@ export class NotificationService {
     const data: NotificationModel[] = JSON.parse(event.data);
     const notifications = data.filter(n => !!n.identifier).sortBySeverity();
 
-    if (this.stateSubject.value != ConnectionState.Connected)
+    if (this.stateSubject.value != ConnectionState.Connected) {
       this.stateSubject.next(ConnectionState.Connected)
+    }
     this.notificationSubject.next(notifications);
     this.checkSelection();
   }
@@ -52,12 +53,15 @@ export class NotificationService {
     let selected: string | undefined;
     const notifications = this.notificationSubject.value;
 
-    if (!notifications.length)
+    if (!notifications.length) {
       selected = undefined;
-    else if (notifications.some(m => m.identifier === identifier))
+    }
+    else if (notifications.some(m => m.identifier === identifier)) {
       selected = identifier;
-    else
+    }
+    else {
       selected = notifications[0].identifier;
+    }
 
     this.selectionSubject.next(selected);
   }
@@ -67,7 +71,9 @@ export class NotificationService {
   }
 
   public acknowledge(identifier: string | undefined): void {
-    if (!identifier) return;
+    if (!identifier) {
+      return;
+    }
 
     this.notificationPublisherService.acknowledge$Response({guid: identifier}).subscribe({
       error: async (e: HttpErrorResponse) => await this.snackbarService.handleError(e),
@@ -77,8 +83,9 @@ export class NotificationService {
   private checkSelection(): void {
     const currentSelection = this.selectionSubject.value
     const requiresReset = !this.notificationSubject.value.some(n => n.identifier === currentSelection)
-    if (requiresReset)
+    if (requiresReset) {
       this.resetSelection();
+    }
   }
 
   private resetSelection() {

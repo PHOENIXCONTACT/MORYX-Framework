@@ -3,14 +3,14 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, Inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ShiftInstanceModel } from '@app/models/shift-instance-model';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import AssignmentData from '@app/models/assignment-data';
 import { CalendarState } from '@app/models/calendar-state';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import  moment from 'moment';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/translation-constants';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
@@ -38,36 +38,33 @@ import { MatInputModule } from '@angular/material/input';
 ]
 })
 export class CopyShiftAndAssignment {
-  calendarState = signal<CalendarState | undefined>(undefined);
-  formData = signal<CopyShiftAndAssignmentData | undefined>(undefined);
+  private data = inject<CopyShiftAndAssignmentData>(MAT_DIALOG_DATA);
+  private dialogRef = inject(MatDialogRef<CopyShiftAndAssignment>);
+  private translate = inject(TranslateService);
 
-  TranslationConstants = TranslationConstants;
+  protected calendarState = signal(new CalendarState(this.translate));
+  protected formData = signal<CopyShiftAndAssignmentData>({... this.data});
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: CopyShiftAndAssignmentData,
-  public dialogRef: MatDialogRef<CopyShiftAndAssignment>,
-  public translate: TranslateService){
-    this.calendarState.set(new CalendarState(translate));
-    this.formData.set({... this.data});
-  }
+  protected TranslationConstants = TranslationConstants;
 
-  onStartDateChanged(shiftInstance: ShiftInstanceModel) {
+  protected onStartDateChanged(shiftInstance: ShiftInstanceModel) {
     const now = moment(shiftInstance.startDate);
     const endDate = now.add(shiftInstance.shiftType.duration-1, 'days').toDate();
     shiftInstance.endDate = endDate;
   }
 
-  deleteItem(shiftInstance: ShiftInstanceModel){
+  protected deleteItem(shiftInstance: ShiftInstanceModel){
     this.formData.update(form => {
       form!.shiftInstances = form!.shiftInstances.filter(x => x !== shiftInstance);
       return form;
     })
   }
 
-  save(){
+  protected save(){
     this.dialogRef.close(this.formData());
   }
 
-  cancel(){
+  protected cancel(){
     this.dialogRef.close(undefined);
   }
 

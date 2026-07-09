@@ -13,9 +13,8 @@ import AssignmentData from '../models/assignment-data';
 import { CalendarDate, CalendarState } from '../models/calendar-state';
 import { AppStoreService } from '../services/app-store.service';
 import moment from 'moment';
-import { TranslationConstants } from '../extensions/translation-constants.extensions';
+import { TranslationConstants } from '../translation-constants';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
@@ -26,7 +25,6 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './assignment.scss',
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
-    CommonModule,
     MatButtonModule,
     MatMenuModule,
     MatIconModule,
@@ -38,15 +36,15 @@ export class Assignment {
   private appStore = inject(AppStoreService);
   private translateService = inject(TranslateService);
 
-  assignment = model.required<AssignmentCardModel>();
-  calendarState = input.required<CalendarState>();
-  calendarDate = input.required<CalendarDate>();
-  shift = input.required<ShiftCardModel>();
-  assignments = signal<AssignmentCardModel[]>([]);
+  readonly assignment = model.required<AssignmentCardModel>();
+  readonly calendarState = input.required<CalendarState>();
+  readonly calendarDate = input.required<CalendarDate>();
+  readonly shift = input.required<ShiftCardModel>();
+  protected assignments = signal<AssignmentCardModel[]>([]);
 
-  TranslationConstants = TranslationConstants;
-  notQualified = OperatorStatus.NotQualified;
-  qualified = OperatorStatus.Available;
+  protected TranslationConstants = TranslationConstants;
+  protected notQualified = OperatorStatus.NotQualified;
+  protected qualified = OperatorStatus.Available;
 
   constructor() {
     this.appStore.assignments$.subscribe(
@@ -62,12 +60,14 @@ export class Assignment {
   }
 
   private initialize(value: AssignmentCardModel) {
-    if (!value?.resource?.id) return;
+    if (!value?.resource?.id) {
+      return;
+    }
 
     this.appStore
       .getOperatorsBasedOnResource(value.resource.id)
       .then((skilledOperators) => {
-        let skilledOperator = skilledOperators.find(
+        const skilledOperator = skilledOperators.find(
           (x) => x.id === value.operator.id
         );
 
@@ -87,13 +87,13 @@ export class Assignment {
       });
   }
 
-  public assignmentIsForGivenDay(
+  protected assignmentIsForGivenDay(
     calendarDate: CalendarDate
   ): boolean {
     return this.assignment().days.some((x) => moment(x.date).diff(moment(calendarDate.date), 'days') === 0);
   }
 
-  showAssigmentDetails() {
+  protected showAssigmentDetails() {
     this.translateService
       .get([
         TranslationConstants.DATE_FORMAT.SHORT_DATE,
@@ -113,7 +113,9 @@ export class Assignment {
       });
 
       dialogResult.afterClosed().subscribe((weekAssigmentResult: AssignmentData) => {
-        if (!weekAssigmentResult) return;
+        if (!weekAssigmentResult) {
+          return;
+        }
         const foundAssignment = this.assignments().find(
           (x) =>
             x.operator.id === weekAssigmentResult.operator?.id &&
@@ -125,7 +127,7 @@ export class Assignment {
     });
   }
 
-  deleteAssignment() {
+  protected deleteAssignment() {
     this.appStore.deleteAssignment(this.assignment().id);
   }
 

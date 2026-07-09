@@ -39,21 +39,22 @@ import {
 import { addCalendarDaysToAssignment } from './models/model-converter';
 import { AttendableResourceModel } from '@api/models/attendable-resource-model';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { TranslationConstants } from './extensions/translation-constants.extensions';
+import { TranslationConstants } from './translation-constants';
 import { LanguageService, SnackbarService } from '@moryx/ngx-web-framework/services';
 import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
 import {
   CopyShiftAndAssignment,
   CopyShiftAndAssignmentData
 } from './dialogs/copy-shift-and-assignment/copy-shift-and-assignment';
-import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatTabsModule } from '@angular/material/tabs';
 import { WorkHoursIcon } from './work-hours-icon/work-hours-icon';
 import { Assignment } from './assignment/assignment';
 import { OrderItem } from './order-item/order-item';
@@ -64,7 +65,7 @@ import { OrderItem } from './order-item/order-item';
   styleUrls: ['./app.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
-    CommonModule,
+    MatToolbarModule,
     MatButtonModule,
     MatIconModule,
     MatFormFieldModule,
@@ -73,6 +74,7 @@ import { OrderItem } from './order-item/order-item';
     FormsModule,
     MatDividerModule,
     MatCheckboxModule,
+    MatTabsModule,
     EmptyState,
     WorkHoursIcon,
     Assignment,
@@ -88,26 +90,26 @@ export class App implements OnInit {
   private snackbarService = inject(SnackbarService);
   private languageService = inject(LanguageService);
 
-  isOperatorFilterPanelOpened = signal(false);
-  isResourceFilterPanelOpened = signal(false);
-  operators = signal<OperatorModel[]>([]);
-  resources = signal<AttendableResourceModel[]>([]);
-  shifts = signal<ShiftCardModel[]>([]);
-  operatorsSelectedForFilter = signal<OperatorModel[]>([]);
-  resourcesSelectedForFilter = signal<AttendableResourceModel[]>([]);
-  droppableElementSearchString = signal<string | undefined>(undefined);
-  searchOperatorInCalendarString = signal<string | undefined>(undefined);
-  searchResourceInCalendarString = signal<string | undefined>(undefined);
-  shiftTypes = signal<ShiftTypeModel[]>([]);
-  shiftInstances = signal<ShiftInstanceModel[]>([]);
-  assignments = signal<AssignmentCardModel[]>([]);
-  orders = signal<OrderModel[]>([]);
-  currentView = signal<ViewType>('Assignments');
-  drawerIsOpened = signal(false);
-  selectedShiftElementTab = signal<ShiftElementTab>('Locations');
-  isDraggingItem = signal(false);
-  calendarState = signal<CalendarState | undefined>(undefined);
-  filteredAssignments = computed(() => {
+  protected isOperatorFilterPanelOpened = signal(false);
+  protected isResourceFilterPanelOpened = signal(false);
+  protected operators = signal<OperatorModel[]>([]);
+  protected resources = signal<AttendableResourceModel[]>([]);
+  protected shifts = signal<ShiftCardModel[]>([]);
+  protected operatorsSelectedForFilter = signal<OperatorModel[]>([]);
+  protected resourcesSelectedForFilter = signal<AttendableResourceModel[]>([]);
+  protected droppableElementSearchString = signal<string | undefined>(undefined);
+  protected searchOperatorInCalendarString = signal<string | undefined>(undefined);
+  protected searchResourceInCalendarString = signal<string | undefined>(undefined);
+  protected shiftTypes = signal<ShiftTypeModel[]>([]);
+  protected shiftInstances = signal<ShiftInstanceModel[]>([]);
+  protected assignments = signal<AssignmentCardModel[]>([]);
+  protected orders = signal<OrderModel[]>([]);
+  protected currentView = signal<ViewType>('Assignments');
+  protected drawerIsOpened = signal(false);
+  protected selectedShiftElementTab = signal<ShiftElementTab>('Locations');
+  protected isDraggingItem = signal(false);
+  protected calendarState = signal<CalendarState | undefined>(undefined);
+  protected filteredAssignments = computed(() => {
     const result = this.operatorsSelectedForFilter().length
       ? this.assignments().filter((a) =>
         this.operatorsSelectedForFilter().some((o) => o.id === a.operator.id)
@@ -121,22 +123,22 @@ export class App implements OnInit {
     return result;
   })
 
-  TranslationConstants = TranslationConstants;
-  totalOperators = totalOperatorForTheDay;
-  dayDropListId = 'day-list';
-  weekDropListId = 'week-list';
-  isDayInInterval = isDayInInterval;
-  formatDateDigits = formatDateDigits;
-  hasDayInShiftInterval = hasDayInShiftInterval;
-  getOrderOfTheDayBasedOnOperatorHours = getOrderOfTheDayBasedOnOperatorHours;
-  getOrderHoursForTheDay = getOrderHoursForTheDay;
-  getOrdersBasedOnOperatorHours = getOrdersBasedOnOperatorHours;
-  totalOrderHours = totalOrderHours;
-  totalHoursOfTheShift = totalHoursOfTheShift;
-  shiftDayLengthInHours = shiftDayLengthInHours;
-  localizedDayName = localizedDayName;
-  shortDayName = shortDayName;
-  localizedFormatDate = localizedFormatDate;
+  protected TranslationConstants = TranslationConstants;
+  protected totalOperators = totalOperatorForTheDay;
+  protected dayDropListId = 'day-list';
+  protected weekDropListId = 'week-list';
+  protected isDayInInterval = isDayInInterval;
+  protected formatDateDigits = formatDateDigits;
+  protected hasDayInShiftInterval = hasDayInShiftInterval;
+  protected getOrderOfTheDayBasedOnOperatorHours = getOrderOfTheDayBasedOnOperatorHours;
+  protected getOrderHoursForTheDay = getOrderHoursForTheDay;
+  protected getOrdersBasedOnOperatorHours = getOrdersBasedOnOperatorHours;
+  protected totalOrderHours = totalOrderHours;
+  protected totalHoursOfTheShift = totalHoursOfTheShift;
+  protected shiftDayLengthInHours = shiftDayLengthInHours;
+  protected localizedDayName = localizedDayName;
+  protected shortDayName = shortDayName;
+  protected localizedFormatDate = localizedFormatDate;
 
   constructor() {
     this.translateService.addLangs([
@@ -214,39 +216,44 @@ export class App implements OnInit {
   }
 
 
-  getFilterButtonStyle(button: FilterButtonType) {
-    if (
-      (this.isOperatorFilterPanelOpened() && button === 'Operator') ||
+  protected getFilterButtonStyle(button: FilterButtonType) {
+    if ((this.isOperatorFilterPanelOpened() && button === 'Operator') ||
       (this.isResourceFilterPanelOpened() && button === 'Resource')
-    )
-      return 'flex flex-row items-center gap-x-2 px-2 py-1 border border-gray-200 border-solid rounded-sm bg-primary text-white';
-    return 'flex flex-row items-center gap-x-2 px-2 py-1 border border-gray-200 border-solid hover:bg-gray-100 rounded-sm';
+    ) {
+      return 'filter-button filter-button--active';
+    }
+    return 'filter-button';
   }
 
 
-  operatorFilterButtonClicked() {
+  protected operatorFilterButtonClicked() {
     this.appStore.operatorFilterButtonClicked();
   }
 
-  resourceFilterButtonClicked() {
+  protected resourceFilterButtonClicked() {
     this.appStore.resourceFilterButtonClicked();
   }
 
-  dragResourceOrOperator(dragging: boolean) {
-    this.drawerIsOpened.set(false);
-    this.appStore.dragItemFromShiftElementDrawer(dragging)
+  protected dragResourceOrOperator(dragging: boolean) {
+    this.appStore.dragItemFromShiftElementDrawer(dragging);
 
-    if (!dragging) return;
+    if (!dragging) {
+      this.drawerIsOpened.set(false);
+    }
   }
 
-  dropElement(
+  protected dropElement(
     event: CdkDragDrop<AttendableResourceModel[] | OperatorModel[]>,
     shift?: ShiftCardModel,
     day?: CalendarDate
   ) {
     //the element was not drop on a different container
-    if (event.previousContainer === event.container) return;
-    if (event.container.id != this.dayDropListId && event.container.id != this.weekDropListId) return;
+    if (event.previousContainer === event.container) {
+      return;
+    }
+    if (event.container.id != this.dayDropListId && event.container.id != this.weekDropListId) {
+      return;
+    }
     this.handleAssignment(event, shift, day);
   }
 
@@ -258,9 +265,11 @@ export class App implements OnInit {
     let operator: OperatorModel | undefined = undefined;
     let resource: AttendableResourceModel | undefined = undefined;
     //operator was dropped
-    if (instanceOfOperator(event.item.data))
+    if (instanceOfOperator(event.item.data)) {
       operator = <OperatorModel>event.item.data;
-    else resource = <AttendableResourceModel>event.item.data;
+    } else {
+      resource = <AttendableResourceModel>event.item.data;
+    }
 
     this.translateService
       .get([
@@ -283,7 +292,9 @@ export class App implements OnInit {
       dialogResult
         .afterClosed()
         .subscribe(async (weekAssigmentResult: AssignmentData) => {
-          if (!weekAssigmentResult) return;
+          if (!weekAssigmentResult) {
+            return;
+          }
 
           const foundAssignment = this.filteredAssignments().find(
             (x) =>
@@ -303,7 +314,7 @@ export class App implements OnInit {
   }
 
 
-  navigateToNextWeek() {
+  protected navigateToNextWeek() {
     this.translateService
       .get([
         TranslationConstants.DATE_FORMAT.SHORT_DATE,
@@ -312,7 +323,7 @@ export class App implements OnInit {
     });
   }
 
-  navigateToPreviousWeek() {
+  protected navigateToPreviousWeek() {
     this.translateService
       .get([
         TranslationConstants.DATE_FORMAT.SHORT_DATE,
@@ -321,41 +332,43 @@ export class App implements OnInit {
     });
   }
 
-  navigateToCurrentWeek() {
+  protected navigateToCurrentWeek() {
     this.appStore.navigateToCurrentWeek(this.calendarState()!);
   }
 
-  selectOperator(operator: OperatorModel) {
+  protected selectOperator(operator: OperatorModel) {
     this.appStore.selectOperator(operator);
   }
 
-  isOperatorSelected(operator: OperatorModel) {
+  protected isOperatorSelected(operator: OperatorModel) {
     return this.operatorsSelectedForFilter().some((x) => x.id === operator.id);
   }
 
-  isResourceSelected(resource: AttendableResourceModel) {
+  protected isResourceSelected(resource: AttendableResourceModel) {
     return this.resourcesSelectedForFilter().some((x) => x.id === resource.id);
   }
 
-  selectResource(resource: AttendableResourceModel) {
+  protected selectResource(resource: AttendableResourceModel) {
     this.appStore.selectResource(resource);
   }
 
-  filteredResourceList(search: string | undefined | null) {
-    if (search)
+  protected filteredResourceList(search: string | undefined | null) {
+    if (search) {
       return this.resources().filter((x) =>
         x.name?.toLowerCase().startsWith(search?.toLocaleLowerCase() ?? '')
       );
+    }
     return this.resources();
   }
 
-  filterdOperatorList(search: string | undefined | null) {
-    if (search)
+  protected filterdOperatorList(search: string | undefined | null) {
+    if (search) {
       return this.operators().filter((x) => x.name.includes(search ?? ''));
+    }
     return this.operators();
   }
 
-  addShiftType() {
+  protected addShiftType() {
     const dialogResult = this.dialog.open(ShiftTypeDialog, {
       data: {}
     });
@@ -364,7 +377,9 @@ export class App implements OnInit {
       .afterClosed()
       .subscribe((shiftTypeResult: ShiftTypeModel) => {
 
-        if (!shiftTypeResult) return;
+        if (!shiftTypeResult) {
+          return;
+        }
 
         this.appStore.addShiftType(shiftTypeResult, this.calendarState()!);
         this.translateService
@@ -376,26 +391,31 @@ export class App implements OnInit {
       });
   }
 
-  shiftInstancesForCurrentView(): ShiftCardModel[] {
+  protected shiftInstancesForCurrentView(): ShiftCardModel[] {
     return this.shifts().filter(x => hasDayInShiftInterval(this.calendarState()!.currentViewDates(), x.startDate, x.endDate));
   }
 
-  displayShiftInstance(shiftInstanceId: number) {
+  protected displayShiftInstance(shiftInstanceId: number) {
     const shiftInstance = this.shiftInstances().find(x => x.id === shiftInstanceId);
-    if (!shiftInstance) return;
+    if (!shiftInstance) {
+      return;
+    }
 
     const dialogResult = this.dialog.open(ShiftInstanceDialog, {
-      width: '500px',
       data: shiftInstance
     });
 
     dialogResult
       .afterClosed()
       .subscribe((shiftInstanceResult: ShiftInstanceModel) => {
-        if (!shiftInstanceResult) return;
+        if (!shiftInstanceResult) {
+          return;
+        }
 
         const shiftInstance = this.shiftInstances().find(x => x.id === shiftInstanceResult.id);
-        if (!shiftInstance) return;
+        if (!shiftInstance) {
+          return;
+        }
         shiftInstance.endDate = shiftInstanceResult.endDate;
         shiftInstance.startDate = shiftInstanceResult.startDate;
         this.appStore.updateShiftInstance(shiftInstance);
@@ -408,19 +428,19 @@ export class App implements OnInit {
       });
   }
 
-  getShiftInstanceById(id: number) {
+  protected getShiftInstanceById(id: number) {
     return this.shiftInstances().find(x => x.id === id);
   }
 
-  changeView(view: ViewType) {
+  protected changeView(view: ViewType) {
     this.appStore.changeView(view);
   }
 
-  toggleDrawer() {
+  protected toggleDrawer() {
     this.drawerIsOpened.update(value => !value);
   }
 
-  copyShiftAndAssignment() {
+  protected copyShiftAndAssignment() {
     this.appStore.getCopyOfAssignmentAndShiftForPeriod(this.calendarState()!.startDate, this.calendarState()!.endDate, this.calendarState()!)
       .then(assignmentsAndShift => {
         if (!assignmentsAndShift.shiftInstances.length) {
@@ -433,14 +453,15 @@ export class App implements OnInit {
           return;
         }
         const dialogResult = this.dialog.open(CopyShiftAndAssignment, {
-          width: '700px',
           data: assignmentsAndShift
         });
 
         dialogResult
           .afterClosed()
           .subscribe((shiftAndAssignmentsCopy: CopyShiftAndAssignmentData) => {
-            if (!shiftAndAssignmentsCopy?.shiftInstances.length) return;
+            if (!shiftAndAssignmentsCopy?.shiftInstances.length) {
+              return;
+            }
 
             this.appStore.createNewAssignmentAndShift(shiftAndAssignmentsCopy).then(() => {
               this.translateService

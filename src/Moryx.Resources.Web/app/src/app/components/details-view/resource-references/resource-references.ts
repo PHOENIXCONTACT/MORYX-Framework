@@ -8,7 +8,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { MatTable, MatTableModule } from '@angular/material/table';
 import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
-import { ReferenceTypeModel, ResourceModel, ResourceReferenceModel } from '../../../api/models';
+import { ReferenceTypeModel, ResourceModel, ResourceReferenceModel, ResourceReferenceRole } from '@api/models';
 import { CacheResourceService } from '@app/services/cache-resource.service';
 import { EditResourceService } from '@app/services/edit-resource.service';
 import { Router } from '@angular/router';
@@ -19,6 +19,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
+
 
 @Component({
   selector: 'app-resource-references',
@@ -39,21 +40,21 @@ import { MatButtonModule } from '@angular/material/button';
 export class ResourceReferences {
   private cacheResourceService = inject(CacheResourceService);
   private editResourceService = inject(EditResourceService);
-
+  protected readonly ResourceReferenceRole = ResourceReferenceRole;
   resource: ResourceModel | undefined;
   references: ResourceReferenceModel[] | null | undefined;
-  selectedTarget: ResourceModel | undefined;
+  protected selectedTarget: ResourceModel | undefined;
 
-  isEditMode = toSignal(this.editResourceService.edit$, { initialValue: false });
-  referenceTypes = signal<ReferenceTypeModel[] | null | undefined>(undefined);
-  selectedReferenceType = signal<ReferenceTypeModel | undefined>(undefined);
-  selectedReference = signal<ResourceReferenceModel | undefined>(undefined);
+  protected isEditMode = toSignal(this.editResourceService.edit$, { initialValue: false });
+  protected referenceTypes = signal<ReferenceTypeModel[] | null | undefined>(undefined);
+  protected selectedReferenceType = signal<ReferenceTypeModel | undefined>(undefined);
+  protected selectedReference = signal<ResourceReferenceModel | undefined>(undefined);
 
-  possibleResources = signal<ResourceModel[]>([]);
+  protected possibleResources = signal<ResourceModel[]>([]);
 
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
-  compareWith = (o1: any, o2: any) => {
+  protected compareWith = (o1: ResourceModel, o2: ResourceModel) => {
     return o1?.id === o2?.id;
   };
   private router = inject(Router);
@@ -61,7 +62,9 @@ export class ResourceReferences {
   constructor() {
     effect(() => {
       const resource = this.editResourceService.activeResource();
-      if (!resource) return;
+      if (!resource) {
+        return;
+      }
       untracked(() => this.loadReferences(resource));
     });
   }
@@ -75,7 +78,6 @@ export class ResourceReferences {
       this.router.navigate([`/details/${resource.id}`]);
       return;
     }
-
     this.resource = resource;
     this.references = resource.references;
     this.referenceTypes.update(() => resourceType?.references);
@@ -84,7 +86,7 @@ export class ResourceReferences {
     }
   }
 
-  onReferenceChanged(type: ReferenceTypeModel | undefined) {
+  protected onReferenceChanged(type: ReferenceTypeModel | undefined) {
     this.selectedReferenceType.update(() => type);
     this.selectedReference.update(() => this.references?.find(r => r.name == this.selectedReferenceType()?.name));
 
@@ -96,8 +98,10 @@ export class ResourceReferences {
     }
   }
 
-  addTarget(table: MatTable<ResourceModel>) {
-    if (!this.selectedTarget || !this.selectedReference()) return;
+  protected addTarget(table: MatTable<ResourceModel>) {
+    if (!this.selectedTarget || !this.selectedReference()) {
+      return;
+    }
 
     this.selectedReference()?.targets?.push(this.selectedTarget as ResourceModel);
     this.possibleResources.update(() => this.getPossibleResources());
@@ -105,7 +109,7 @@ export class ResourceReferences {
     table.renderRows();
   }
 
-  setTarget() {
+  protected setTarget() {
     if (!this.selectedTarget || !this.selectedReference()) {
       this.resetTarget();
       return;
@@ -118,7 +122,9 @@ export class ResourceReferences {
   }
 
   private resetTarget() {
-    if (!this.selectedReference()) return;
+    if (!this.selectedReference()) {
+      return;
+    }
 
     this.selectedReference.update(ref => {
       ref!.targets = []
@@ -126,8 +132,10 @@ export class ResourceReferences {
     });
   }
 
-  deleteTarget(target: ResourceModel) {
-    if (!this.selectedReference) return;
+  protected deleteTarget(target: ResourceModel) {
+    if (!this.selectedReference) {
+      return;
+    }
 
     this.selectedReference.update(ref => {
       ref!.targets = this.selectedReference()?.targets?.filter(t => t.id != target.id);
@@ -146,11 +154,14 @@ export class ResourceReferences {
     let possibleResources = [] as ResourceModel[];
     const supportedTypes = this.getAllSupportedTypes(this.selectedReferenceType()?.supportedTypes);
     this.cacheResourceService.flatResources.getValue()?.forEach(r => {
-      if (supportedTypes.find(t => r.type === t) && this.resource?.id != r.id) possibleResources.push(r);
+      if (supportedTypes.find(t => r.type === t) && this.resource?.id != r.id) {
+        possibleResources.push(r);
+      }
     });
 
-    if (this.selectedReferenceType()?.isCollection)
+    if (this.selectedReferenceType()?.isCollection) {
       possibleResources = possibleResources.filter(r => !this.selectedReference()?.targets?.find(t => t.id == r.id));
+    }
 
     return possibleResources;
   }
@@ -162,16 +173,43 @@ export class ResourceReferences {
    * @returns The combined list
    */
   private getAllSupportedTypes(supportedRootTypes: string[] | null | undefined): string[] {
-    if (!supportedRootTypes) return [];
+    if (!supportedRootTypes) {
+      return [];
+    }
 
     const supportedSubTypes = Object.assign<string[], string[]>([], supportedRootTypes);
     for (let index = 0; index < supportedSubTypes.length; index++) {
       const rootType = this.cacheResourceService.flatTypes?.find(t => t.name == supportedSubTypes[index]);
       rootType?.derivedTypes?.forEach(t => {
-        if (t.name && !supportedSubTypes.find(et => t.name === et)) supportedSubTypes.push(t.name);
+        if (t.name && !supportedSubTypes.find(et => t.name === et)) {
+          supportedSubTypes.push(t.name);
+        }
       });
     }
 
     return supportedSubTypes;
   }
+
+  private truncateDescription(description: string): string {
+    const maxLength = 35;
+    return description.length > maxLength
+      ? `${description.substring(0, maxLength)}...`
+      : description;
+  }
+
+  protected getMetaText(referenceType: ReferenceTypeModel): string {
+    const reference = this.references?.find(
+      r => r.name === referenceType.name
+    );
+    const description = referenceType.description?.trim() ?? '';
+    const resourceText = reference?.targets
+      ?.map(target => target.name)
+      .filter(Boolean)
+      .join(', ') ?? '';
+    if (description && resourceText) {
+      return `${this.truncateDescription(description)} • ${resourceText}`;
+    }
+    return description || resourceText;
+  }
+
 }

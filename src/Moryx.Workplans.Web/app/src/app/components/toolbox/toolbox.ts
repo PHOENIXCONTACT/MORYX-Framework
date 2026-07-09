@@ -37,7 +37,7 @@ export class Toolbox implements OnInit, OnDestroy {
 
   subscription: Subscription | undefined;
   stepRecipes: WorkplanStepRecipe[] = [];
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
   constructor() {
   }
@@ -58,11 +58,11 @@ export class Toolbox implements OnInit, OnDestroy {
     });
   }
 
-  handleDragStart(stepRecipe: WorkplanStepRecipe, event: DragEvent) {
+  protected handleDragStart(stepRecipe: WorkplanStepRecipe, event: DragEvent) {
     event.dataTransfer?.setData('string', stepRecipe.type ? JSON.stringify(stepRecipe) : '');
   }
 
-  getStepIcon(classification: WorkplanNodeClassification | undefined) {
+  protected getStepIcon(classification: WorkplanNodeClassification | undefined) {
     switch (classification) {
       case WorkplanNodeClassification.Input:
         return 'arrow_circle_down';
@@ -79,15 +79,15 @@ export class Toolbox implements OnInit, OnDestroy {
     }
   }
 
-  getControlFlow(): WorkplanStepRecipe[] {
+  protected getControlFlow(): WorkplanStepRecipe[] {
     return this.stepRecipes.filter(sr => sr.classification == WorkplanNodeClassification.ControlFlow);
   }
 
-  getExecution(): WorkplanStepRecipe[] {
+  protected getExecution(): WorkplanStepRecipe[] {
     return this.stepRecipes.filter(sr => sr.classification == WorkplanNodeClassification.Execution);
   }
 
-  getSubworkplans(): WorkplanStepRecipe[] {
+  protected getSubworkplans(): WorkplanStepRecipe[] {
     return this.stepRecipes.filter(sr => sr.classification == WorkplanNodeClassification.Subworkplan);
   }
 

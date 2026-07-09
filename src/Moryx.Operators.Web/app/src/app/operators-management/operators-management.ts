@@ -22,6 +22,7 @@ import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { OperatorSkillChips } from "../operator-skill-chips/operator-skill-chips";
 import { MatButtonModule } from "@angular/material/button";
+import { MatToolbarModule } from "@angular/material/toolbar";
 
 @Component({
   selector: "app-operators-management",
@@ -36,7 +37,8 @@ import { MatButtonModule } from "@angular/material/button";
     OperatorSkillChips,
     RouterLink,
     TranslatePipe,
-    MatButtonModule
+    MatButtonModule,
+    MatToolbarModule
   ]
 })
 export class OperatorsManagement implements OnInit {
@@ -45,14 +47,14 @@ export class OperatorsManagement implements OnInit {
   private router = inject(Router);
   private translateService = inject(TranslateService);
 
-  operators = signal<OperatorViewModel[]>([]);
-  deleteDialogTitle = signal('');
-  deleteDialogMessage = signal('');
-  inMenuMode = signal(false);
-  skills = signal<OperatorSkill[]>([]);
-  skillTypes = signal<SkillTypeModel[]>([]);
+  protected operators = signal<OperatorViewModel[]>([]);
+  protected deleteDialogTitle = signal('');
+  protected deleteDialogMessage = signal('');
+  protected inMenuMode = signal(false);
+  protected skills = signal<OperatorSkill[]>([]);
+  protected skillTypes = signal<SkillTypeModel[]>([]);
 
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
   ngOnInit(): void {
     this.appStoreService.operators$
@@ -77,11 +79,11 @@ export class OperatorsManagement implements OnInit {
 
   }
 
-  updateMenuMode(value: boolean) {
+  protected updateMenuMode(value: boolean) {
     this.inMenuMode.update(_ => value);
   }
 
-  onDeleteClick(operator: OperatorViewModel) {
+  protected onDeleteClick(operator: OperatorViewModel) {
 
     const dialogRef = this.dialog.open(ConfirmationDialog, {
       data: {
@@ -92,13 +94,15 @@ export class OperatorsManagement implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result.dialogResult === 'NO') return;
+      if (result.dialogResult === 'NO') {
+        return;
+      }
 
       this.appStoreService.deleteOperator(operator);
     });
   }
 
-  onAddClick() {
+  protected onAddClick() {
     const dialogResult = this.dialog.open(AddOperatorDialog);
     //navigate to operator details
     dialogResult.afterClosed()
@@ -107,7 +111,7 @@ export class OperatorsManagement implements OnInit {
       );
   }
 
-  getSkillsForOperator(id: string) {
+  protected getSkillsForOperator(id: string) {
     return this.skills().filter(x => x.operatorId === id);
   }
 }

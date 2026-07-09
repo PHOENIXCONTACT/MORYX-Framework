@@ -1,0 +1,40 @@
+@use "@moryx/ngx-web-framework/styles/variables" as *;
+
+:host {
+  display: block;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 56px;
+  padding: 0 8px;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 4px;
+  cursor: pointer;
+
+  &.assigned {
+    background-color: $primary;
+    color: var(--mat-sys-on-surface);
+  }
+
+  &.unassigned {
+    background-color: var(--mat-sys-surface-container);
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+.card-label {
+  flex: 1;
+  font-size: 1.125rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.card-icon {
+  flex-shrink: 0;
+  margin-right: 8px;
+}

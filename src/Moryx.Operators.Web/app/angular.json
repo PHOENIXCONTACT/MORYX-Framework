@@ -30,10 +30,14 @@
               "src/assets"
             ],
             "styles": [
-              "@fontsource/roboto/300.css",
-              "@fontsource/roboto/400.css",
-              "@fontsource/roboto/500.css",
-              "material-icons/iconfont/material-icons.css",
+              "@fontsource/roboto/latin-300.css",
+              "@fontsource/roboto/latin-400.css",
+              "@fontsource/roboto/latin-500.css",
+              "@fontsource/roboto/latin-700.css",
+              "@fontsource/roboto/latin-ext-300.css",
+              "@fontsource/roboto/latin-ext-400.css",
+              "@fontsource/roboto/latin-ext-500.css",
+              "@fontsource/roboto/latin-ext-700.css",
               "material-symbols/outlined.css",
               "node_modules/@moryx/ngx-web-framework/styles/theme.scss",
               "src/styles.scss"
@@ -56,17 +60,17 @@
                 }
               ],
               "fileReplacements": [
-								{
-									"replace": "src/environments/environment.ts",
-									"with": "src/environments/environment.prod.ts"
-								}
-							],
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
               "outputHashing": "none",
               "optimization": {
                 "scripts": true,
-                 "styles": true,
-                 "fonts": false
-             }
+                "styles": true,
+                "fonts": false
+              }
             },
             "development": {
               "optimization": false,
@@ -97,6 +101,15 @@
         },
         "test": {
           "builder": "@angular/build:unit-test"
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
+          }
         }
       }
     }

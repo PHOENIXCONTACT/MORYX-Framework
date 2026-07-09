@@ -29,12 +29,12 @@ import { TranslatePipe } from '@ngx-translate/core';
 })
 export class Operators implements OnInit {
 
-  workstation = input.required<WorkstationViewModel>();
-  mainContainerStyle = input.required<string>();
-  operators = signal<OperatorViewModel[]>([]);
+  readonly workstation = input.required<WorkstationViewModel>();
+  readonly mainContainerStyle = input.required<string>();
+  protected operators = signal<OperatorViewModel[]>([]);
 
   private appStoreService = inject(AppStoreService);
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
   ngOnInit(): void {
     //load operators
@@ -69,16 +69,20 @@ export class Operators implements OnInit {
           ));
   }
 
-  async handleToggleAssignment(operator: OperatorViewModel) {
-    if (!this.workstation()) return;
+  protected async handleToggleAssignment(operator: OperatorViewModel) {
+    if (!this.workstation()) {
+      return;
+    }
 
     //operator is already assigned to this resource so unassign the operator
     if (
       operator.data.assignedResources?.some(
         (e) => e.id === this.workstation()?.data.id
       )
-    )
+    ) {
       this.appStoreService.unassignOperator(operator, this.workstation()!);
-    else this.appStoreService.assignOperator(this.workstation()!, operator);
+    } else {
+      this.appStoreService.assignOperator(this.workstation()!, operator);
+    }
   }
 }

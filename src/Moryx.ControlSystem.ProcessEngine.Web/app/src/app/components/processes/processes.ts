@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { CommonModule } from "@angular/common";
+import { DatePipe } from "@angular/common";
 import { HttpErrorResponse } from "@angular/common/http";
 import {
   ChangeDetectorRef,
@@ -33,7 +33,7 @@ import { ProcessEngineStreamService } from "@app/services/process-engine-stream.
   selector: "app-processes",
   templateUrl: "./processes.html",
   imports: [
-    CommonModule,
+    DatePipe,
     TranslatePipe,
     MatListModule,
     NavigableEntryEditor,
@@ -53,18 +53,18 @@ export class Processes implements OnInit, OnDestroy {
   private snackbarService = inject(SnackbarService);
   private changeDetectorRef = inject(ChangeDetectorRef);
 
-  processes = signal<JobProcessModel[]>([]);
-  processesAvailable = computed(() => this.processes().length > 0);
-  selectedProcess = signal<JobProcessModel | undefined>(undefined);
-  selectedActivity = signal<ProcessActivityModel | undefined>(undefined);
-  possibleResources = computed(() => {
+  protected processes = signal<JobProcessModel[]>([]);
+  protected processesAvailable = computed(() => this.processes().length > 0);
+  protected selectedProcess = signal<JobProcessModel | undefined>(undefined);
+  protected selectedActivity = signal<ProcessActivityModel | undefined>(undefined);
+  protected possibleResources = computed(() => {
     const activity = this.selectedActivity();
     return activity?.possibleResources?.map((r) => r.name)?.join(", ");
   });
-  showAll = signal(true);
-  job = input.required<JobViewModel>();
+  protected showAll = signal(true);
+  readonly job = input.required<JobViewModel>();
 
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
   private processSubscription!: Subscription;
   private activitySubscription!: Subscription;
@@ -79,7 +79,9 @@ export class Processes implements OnInit, OnDestroy {
         next: (data) => {
           this.processes.update((_) => data);
           const firstProcess = this.processes().find(() => true);
-          if (firstProcess) this.onSelectProcess(firstProcess);
+          if (firstProcess) {
+            this.onSelectProcess(firstProcess);
+          }
         },
         error: async (e: HttpErrorResponse) =>
           await this.snackbarService.handleError(e)
@@ -131,8 +133,9 @@ export class Processes implements OnInit, OnDestroy {
           return items;
         });
       }
-      if (this.selectedProcess()?.id === updatedProcess.id)
+      if (this.selectedProcess()?.id === updatedProcess.id) {
         this.selectedProcess.update((_) => updatedProcess);
+      }
     }
   }
 
@@ -169,20 +172,21 @@ export class Processes implements OnInit, OnDestroy {
     //  This should be fixed by using immutable data structures or by extending the model with a method to update activities.
     this.changeDetectorRef.markForCheck();
 
-    if (this.selectedActivity()?.id === updatedActivity.id)
+    if (this.selectedActivity()?.id === updatedActivity.id) {
       this.selectedActivity.update((_) => updatedActivity);
+    }
   }
 
-  onSelectProcess(process: JobProcessModel) {
+  protected onSelectProcess(process: JobProcessModel) {
     this.selectedProcess.update((_) => process);
     this.selectedActivity.update((_) => process.activities?.find(() => true));
   }
 
-  onSelectActivity(activity: ProcessActivityModel) {
+  protected onSelectActivity(activity: ProcessActivityModel) {
     this.selectedActivity.update((_) => activity);
   }
 
-  setShowAll(change: MatSlideToggleChange) {
+  protected setShowAll(change: MatSlideToggleChange) {
     this.showAll.update((_) => change.checked);
     this.processEngineService
       .getRunningProcessesOfJob({

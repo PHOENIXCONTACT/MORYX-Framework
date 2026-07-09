@@ -20,10 +20,10 @@ export class ResourceProperties {
 
   private editResourceService = inject(EditResourceService);
 
-  isEditMode = toSignal(this.editResourceService.edit$, { initialValue: false });
-  properties = linkedSignal(() => this.editResourceService.activeResource()?.properties);
+  protected isEditMode = toSignal(this.editResourceService.edit$, { initialValue: false });
+  protected properties = linkedSignal(() => this.editResourceService.activeResource()?.properties);
 
-  propertiesChanged(properties: Entry): void {
+  protected propertiesChanged(properties: Entry): void {
     const resource = this.editResourceService.activeResource();
     if (!resource){
       throw new Error('Trying to update properties of a resource, but no resource is active.');

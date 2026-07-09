@@ -19,6 +19,6 @@ import { map } from 'rxjs';
 export class ProductProperties {
   private editProductsService = inject(EditProductsService);
 
-  isEditMode = toSignal(this.editProductsService.edit$, { initialValue: false });
-  properties = toSignal(this.editProductsService.currentProduct$.pipe(map(product => product?.properties)));
+  protected isEditMode = toSignal(this.editProductsService.edit$, { initialValue: false });
+  protected properties = toSignal(this.editProductsService.currentProduct$.pipe(map(product => product?.properties)));
 }

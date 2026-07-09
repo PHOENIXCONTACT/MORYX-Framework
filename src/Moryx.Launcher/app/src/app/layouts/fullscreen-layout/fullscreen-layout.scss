@@ -1,0 +1,35 @@
+@use "../layout";
+
+.top-bar {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  padding: 4px 0;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}
+
+.floating-toolbar {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  visibility: hidden;
+  transition: visibility 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+  z-index: 1000;
+  display: flex;
+  gap: 8px;
+
+  &.visible {
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+    pointer-events: auto;
+  }
+}

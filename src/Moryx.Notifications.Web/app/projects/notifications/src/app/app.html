@@ -6,9 +6,7 @@
       <mat-sidenav opened mode="side" position="start" class="notifications-sidenav">
         <div class="notifications-sidebar">
           <mat-toolbar
-          [ngStyle]="{
-            'background-image': 'url(' + notificationsToolbarImage() + ')'
-          }"
+          [style.background-image]="'url(' + notificationsToolbarImage() + ')'"
             class="notifications-toolbar"
             >
             <mat-toolbar-row>
@@ -19,11 +17,11 @@
               <span>{{ TranslationConstants.APP.NOTIFICATIONS | translate }}</span>
             </mat-toolbar-row>
           </mat-toolbar>
-          <moryx-notifications class="notifications-list"></moryx-notifications>
+          <app-notifications class="notifications-list"></app-notifications>
         </div>
       </mat-sidenav>
       <mat-sidenav-content class="notification-details-container">
-        <notification-details class="notification-details"></notification-details>
+        <app-notification-details class="notification-details"></app-notification-details>
       </mat-sidenav-content>
     </mat-sidenav-container>
   } @else {

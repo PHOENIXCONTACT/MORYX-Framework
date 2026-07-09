@@ -4,12 +4,12 @@
 */
 
 import { Time } from '@angular/common';
-import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/translation-constants';
 import { ShiftTypeModel } from '@app/models/shift-type-model';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -29,22 +29,22 @@ import { MatButtonModule } from '@angular/material/button';
 ]
 })
 export class ShiftTypeDialog {
-  TranslationConstants = TranslationConstants;
-  HOURS_REGEX = /^(?:[01][0-9]|2[0-3]):[0-5][0-9](?::[0-5][0-9])?$/
-  form = new FormGroup({
+  private data = inject<ShiftTypeModel>(MAT_DIALOG_DATA);
+  private dialogRef = inject(MatDialogRef<ShiftTypeDialog>);
+
+  protected TranslationConstants = TranslationConstants;
+  protected HOURS_REGEX = /^(?:[01][0-9]|2[0-3]):[0-5][0-9](?::[0-5][0-9])?$/
+  protected form = new FormGroup({
     name: new FormControl('', [Validators.required]),
     duration: new FormControl<number>(7, [Validators.min(1),Validators.required]),
     startTime: new FormControl<string>('',[Validators.pattern(this.HOURS_REGEX),Validators.required]),
     endTime: new FormControl<string>('',[Validators.pattern(this.HOURS_REGEX),Validators.required])
   });
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: ShiftTypeModel,
-  public dialogRef: MatDialogRef<ShiftTypeDialog>){
-
-  }
-
-  submit(){
-    if(!this.form.valid) return;
+  protected submit(){
+    if(!this.form.valid) {
+      return;
+    }
 
     const startHours = this.form.value.startTime?.split(':')[0] ?? '0';
     const startMinutes = this.form.value.startTime?.split(':')[1] ?? '0';

@@ -39,13 +39,17 @@ export class CacheResourceService {
 
   private pushFlattenedResources(resources: ResourceModel[] | undefined) {
     const flattendResources = [] as ResourceModel[];
-    if (resources) resources.forEach(r => this.collectflattenedResources(r, flattendResources));
+    if (resources) {
+      resources.forEach(r => this.collectflattenedResources(r, flattendResources));
+    }
 
     this.flatResources.next(flattendResources);
   }
 
   private collectflattenedResources(root: ResourceModel, flattendResources: ResourceModel[]) {
-    if (flattendResources?.find(r => r.id === root.id)) return;
+    if (flattendResources?.find(r => r.id === root.id)) {
+      return;
+    }
     flattendResources.push(root);
     root.references
       ?.find(ref => ref.name === this.ChildReferenceName)
@@ -75,7 +79,9 @@ export class CacheResourceService {
 
   private removeChildFromParent(parent: ResourceModel, child: ResourceModel) {
     const childrenReferences = parent?.references?.find(ref => ref.name === this.ChildReferenceName);
-    if (childrenReferences) childrenReferences.targets = childrenReferences.targets?.filter(t => t.id != child.id);
+    if (childrenReferences) {
+      childrenReferences.targets = childrenReferences.targets?.filter(t => t.id != child.id);
+    }
   }
 
   async loadResources() {
@@ -106,7 +112,9 @@ export class CacheResourceService {
   }
 
   private collectflattenedTypes(root: ResourceTypeModel, flattendTypes: ResourceTypeModel[]) {
-    if (flattendTypes?.find(t => t.name === root.name)) return;
+    if (flattendTypes?.find(t => t.name === root.name)) {
+      return;
+    }
     flattendTypes.push(root);
     root.derivedTypes?.forEach(t => this.collectflattenedTypes(t, flattendTypes));
   }

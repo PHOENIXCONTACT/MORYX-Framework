@@ -6,7 +6,7 @@
 import { Component, inject, linkedSignal, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { PartConnector, PartModel, ProductModel } from '@api/models';
@@ -35,6 +35,7 @@ import { MatTooltip } from "@angular/material/tooltip";
     TranslatePipe,
     MatIcon,
     MatTooltip,
+    RouterLink,
 ]
 })
 export class ProductParts {
@@ -42,35 +43,46 @@ export class ProductParts {
   private router = inject(Router);
   private dialog = inject(MatDialog);
 
-  isEditMode = toSignal(this.editProductsService.edit$, { initialValue: false });
-  currentProduct = toSignal(this.editProductsService.currentProduct$);
-  expandedPart = linkedSignal(this.editProductsService.currentPartConnector);
-  selectedPart = linkedSignal(this.editProductsService.currentPart);
-  TranslationConstants = TranslationConstants;
+  protected isEditMode = toSignal(this.editProductsService.edit$, { initialValue: false });
+  protected currentProduct = toSignal(this.editProductsService.currentProduct$);
+  protected expandedPart = linkedSignal(this.editProductsService.currentPartConnector);
+  protected selectedPart = linkedSignal(this.editProductsService.currentPart);
+  protected TranslationConstants = TranslationConstants;
 
-  selectPart(part: PartModel) {
-    this.router.navigate(['details', this.currentProduct()!.id, 'parts', this.expandedPart()!.name, part.id], { queryParamsHandling: 'preserve' });
+  protected getPartRoute(part: PartModel): string[] {
+    return ['/', 'details', this.currentProduct()!.id!.toString(), 'parts', this.expandedPart()!.name!, part.id!.toString()];
   }
 
-  onSelectPartConnector(connector: PartConnector) {
+  protected onSelectPartConnector(connector: PartConnector) {
+    // Skip navigation if current part already belongs to this connector (e.g. on initial page load)
+    const currentPart = this.selectedPart();
+    const alreadyOnConnector = currentPart && connector.parts?.some(p => p.id === currentPart.id);
+    if (alreadyOnConnector) {
+      return;
+    }
+
     const firstPartId = connector.parts && connector.parts.length > 0 ? connector.parts[0].id : 0;
     this.router.navigate(['details', this.currentProduct()!.id, 'parts', connector.name, firstPartId]);
   }
 
-  onDeselectPartConnector(part: PartConnector) {
-    if (part.name !== this.expandedPart()?.name) return;
+  protected onDeselectPartConnector(part: PartConnector) {
+    if (part.name !== this.expandedPart()?.name) {
+      return;
+    }
     this.router.navigate(['details', this.currentProduct()!.id, 'parts', 'base', 0]);
   }
 
-  async addPart() {
+  protected async addPart() {
     const connector = this.expandedPart();
     const dialogRef = this.dialog.open(DialogAddPart, { data: connector });
 
     const product = await firstValueFrom(dialogRef.afterClosed());
-    if (!product) return;
+    if (!product) {
+      return;
+    }
 
     // Create new Part
-    let newPart = <PartModel>{};
+    const newPart = <PartModel>{};
     newPart.product = product;
     if (connector?.propertyTemplates) {
       newPart.properties = structuredClone(connector.propertyTemplates!);
@@ -80,7 +92,7 @@ export class ProductParts {
     this.router.navigate(['details', this.currentProduct()!.id, 'parts', connector!.name, addedPart.id]);
   }
 
-  removePart() {
+  protected removePart() {
     const connector = this.expandedPart();
     if (!connector) {
       return;
@@ -95,11 +107,11 @@ export class ProductParts {
     }
   }
 
-  createProductNameWithIdentity(product: ProductModel | undefined, shortened: boolean = false, maxLength: number = 40): string {
+  private createProductNameWithIdentity(product: ProductModel | undefined, shortened: boolean = false, maxLength: number = 40): string {
     return this.editProductsService.createProductNameWithIdentity(product, shortened, maxLength);
   }
 
-  getConnectorPreview(connector: PartConnector): string {
+  protected getConnectorPreview(connector: PartConnector): string {
     if (!connector.parts || connector.parts.length === 0) {
       return '';
     }
@@ -107,7 +119,7 @@ export class ProductParts {
     return partNames.join(', ');
   }
 
-  openProduct(part: PartModel) {
+  protected openProduct(part: PartModel) {
     if (this.isEditMode()) {
       this.router.navigate(['details', this.currentProduct()!.id, 'parts', this.expandedPart()!.name, part.id], { queryParamsHandling: 'preserve' });
       return;

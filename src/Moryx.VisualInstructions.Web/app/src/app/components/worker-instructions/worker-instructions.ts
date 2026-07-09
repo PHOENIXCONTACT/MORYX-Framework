@@ -28,6 +28,7 @@ import { MatCardModule } from "@angular/material/card";
 import { MediaContents } from "../media-contents/media-contents";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
 import { MarkdownComponent } from "ngx-markdown";
 import { InstructionStateService } from '@app/services/instruction-state.service';
 
@@ -44,31 +45,32 @@ import { InstructionStateService } from '@app/services/instruction-state.service
     EmptyState,
     TranslatePipe,
     MatButtonModule,
+    MatIconModule,
     MatCardModule,
     MarkdownComponent
   ]
 })
 export class WorkerInstructions implements OnInit, OnDestroy {
-  clientIdentifier = model.required<string>();
+  readonly clientIdentifier = model.required<string>();
 
-  instructions = signal<InstructionModel[]>([]);
-  activeInstructionIndex = signal(0);
-  inputs = signal<Entry | undefined>(undefined);
-  mediaItems = signal<InstructionItemModel[]>([]);
-  displayedInstruction = signal<InstructionModel | undefined>(undefined);
-  mediaItemsContent = signal<DisplayedMediaContent[]>([]);
-  textItems = signal<InstructionItemModel[]>([]);
+  protected instructions = signal<InstructionModel[]>([]);
+  protected activeInstructionIndex = signal(0);
+  protected inputs = signal<Entry | undefined>(undefined);
+  protected mediaItems = signal<InstructionItemModel[]>([]);
+  protected displayedInstruction = signal<InstructionModel | undefined>(undefined);
+  protected mediaItemsContent = signal<DisplayedMediaContent[]>([]);
+  protected textItems = signal<InstructionItemModel[]>([]);
 
-  InstructionType = InstructionType;
-  InstructionContentType = InstructionContentType;
-  environment = environment;
-  TranslationConstants = TranslationConstants;
+  protected InstructionType = InstructionType;
+  protected InstructionContentType = InstructionContentType;
+  protected environment = environment;
+  protected TranslationConstants = TranslationConstants;
 
   private visualInstructionsService = inject(VisualInstructionsService);
   private instructionService = inject(InstructionService);
   private translateService = inject(TranslateService);
   private snackbarService = inject(SnackbarService);
-  instructionStateService = inject(InstructionStateService);
+  protected instructionStateService = inject(InstructionStateService);
 
   private activeInstructionIndexChange: Subject<number> = new ReplaySubject<number>(
     1
@@ -122,8 +124,9 @@ export class WorkerInstructions implements OnInit, OnDestroy {
       return Promise.resolve();
     }
     this.activeInstructionIndex.update(_ => index);
-    if (this.displayedInstruction()?.id === instruction.id)
+    if (this.displayedInstruction()?.id === instruction.id) {
       return Promise.resolve();
+    }
 
     this.displayedInstruction.update(_ => instruction);
     this.mediaItems.update(_ => instruction.items?.filter(
@@ -137,8 +140,9 @@ export class WorkerInstructions implements OnInit, OnDestroy {
   }
 
   private fetchMediaContents(): Promise<DisplayedMediaContent[]> {
-    if (!this.mediaItems().length)
+    if (!this.mediaItems().length) {
       return Promise.resolve<DisplayedMediaContent[]>([]);
+    }
     return this.instructionService.requestMediaContentsAsync(this.mediaItems());
   }
 
@@ -148,7 +152,7 @@ export class WorkerInstructions implements OnInit, OnDestroy {
   }
 
   private updateInstructionIndex() {
-    let updatedIndex = this.instructions().findIndex(
+    const updatedIndex = this.instructions().findIndex(
       (i) => i.id === this.displayedInstruction()?.id
     );
     if (updatedIndex < 0 || !this.inputs || !this.inputsChanged(this.inputs()!)) {
@@ -160,9 +164,13 @@ export class WorkerInstructions implements OnInit, OnDestroy {
   }
 
   private inputsChanged(entry: Entry): boolean {
-    if (entry.value.current !== entry.value.default) return true;
-    if (!entry.subEntries?.length) return false;
-    return entry.subEntries.some((s: any) => this.inputsChanged(s));
+    if (entry.value.current !== entry.value.default) {
+      return true;
+    }
+    if (!entry.subEntries?.length) {
+      return false;
+    }
+    return entry.subEntries.some((s: Entry) => this.inputsChanged(s));
   }
 
   private updateInstructions(update: InstructionModel[]) {
@@ -181,20 +189,20 @@ export class WorkerInstructions implements OnInit, OnDestroy {
     );
   }
 
-  onSwipeLeft(): void {
+  protected onSwipeLeft(): void {
     const rightIndex =
       (1 + this.activeInstructionIndex()) % this.instructions().length;
     this.activeInstructionIndexChange.next(rightIndex);
   }
 
-  onSwipeRight(): void {
+  protected onSwipeRight(): void {
     const leftIndex =
       (this.instructions().length - 1 + this.activeInstructionIndex()) %
       this.instructions().length;
     this.activeInstructionIndexChange.next(leftIndex);
   }
 
-  onSelectResult(result: InstructionResultModel): void {
+  protected onSelectResult(result: InstructionResultModel): void {
     const target = this.displayedInstruction()?.id;
     const response = <InstructionResponseModel>{
       id: this.displayedInstruction()?.id,
@@ -214,7 +222,9 @@ export class WorkerInstructions implements OnInit, OnDestroy {
   }
 
   clearCurrentViewOf(id: number | undefined) {
-    if (this.displayedInstruction()?.id === id) this.clearCurrentView();
+    if (this.displayedInstruction()?.id === id) {
+      this.clearCurrentView();
+    }
   }
 
   clearCurrentView() {
@@ -225,7 +235,7 @@ export class WorkerInstructions implements OnInit, OnDestroy {
     this.inputs.update(_ => undefined);
   }
 
-  toggleFullscreen() {
+  protected toggleFullscreen() {
     this.instructionStateService.toggleFullscreen();
   }
 }

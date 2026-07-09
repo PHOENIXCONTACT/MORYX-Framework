@@ -1,9 +1,6 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
-  "cli": {
-    "packageManager": "npm"
-  },
   "newProjectRoot": "projects",
   "projects": {
     "notifications": {
@@ -33,14 +30,24 @@
               }
             ],
             "styles": [
-              "@fontsource/roboto/300.css",
-              "@fontsource/roboto/400.css",
-              "@fontsource/roboto/500.css",
-              "material-icons/iconfont/material-icons.css",
+              "@fontsource/roboto/latin-300.css",
+              "@fontsource/roboto/latin-400.css",
+              "@fontsource/roboto/latin-500.css",
+              "@fontsource/roboto/latin-700.css",
+              "@fontsource/roboto/latin-ext-300.css",
+              "@fontsource/roboto/latin-ext-400.css",
+              "@fontsource/roboto/latin-ext-500.css",
+              "@fontsource/roboto/latin-ext-700.css",
               "material-symbols/outlined.css",
               "node_modules/@moryx/ngx-web-framework/styles/theme.scss",
               "projects/notifications/src/styles.scss"
-            ]
+            ],
+            "scripts": [],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "node_modules"
+              ]
+            }
           },
           "configurations": {
             "production": {
@@ -91,6 +98,15 @@
         },
         "test": {
           "builder": "@angular/build:unit-test"
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
+          }
         }
       }
     },
@@ -121,10 +137,14 @@
               }
             ],
             "styles": [
-              "@fontsource/roboto/300.css",
-              "@fontsource/roboto/400.css",
-              "@fontsource/roboto/500.css",
-              "material-icons/iconfont/material-icons.css",
+              "@fontsource/roboto/latin-300.css",
+              "@fontsource/roboto/latin-400.css",
+              "@fontsource/roboto/latin-500.css",
+              "@fontsource/roboto/latin-700.css",
+              "@fontsource/roboto/latin-ext-300.css",
+              "@fontsource/roboto/latin-ext-400.css",
+              "@fontsource/roboto/latin-ext-500.css",
+              "@fontsource/roboto/latin-ext-700.css",
               "material-symbols/outlined.css",
               "node_modules/@moryx/ngx-web-framework/styles/theme.scss",
               "projects/notifications-bar/src/styles.scss"
@@ -133,7 +153,7 @@
           "configurations": {
             "production": {
               "budgets": [
-                 {
+                {
                   "type": "initial",
                   "maximumWarning": "2mb",
                   "maximumError": "4mb"

@@ -24,7 +24,9 @@ export class ChangeBackgroundService {
   public canSaveBackground = computed(() => !!this._factory());
 
   public changeBackground(url: string) {
-    if (!url || !this._factory) return;
+    if (!url || !this._factory) {
+      return;
+    }
 
     this.factoryMonitorService
       .changeBackground({

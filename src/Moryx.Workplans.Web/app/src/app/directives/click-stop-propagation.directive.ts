@@ -6,14 +6,14 @@
 import { Directive } from '@angular/core';
 
 @Directive({
-  selector: '[click-stop-propagation]',
+  selector: '[appClickStopPropagation]',
   host: {
     '(click)': 'onClick($event)'
   }
 })
 export class ClickStopPropagationDirective {
 
-  onClick(event: any): void {
+  onClick(event: Event): void {
     event.stopPropagation();
   }
 

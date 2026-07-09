@@ -7,16 +7,16 @@
 
 <nav mat-tab-nav-bar class="product-details-navigation" [tabPanel]="tabPanel">
   @if (product?.properties !== undefined) {
-  <a mat-tab-link [active]="link == Tabs.Properties" (click)="routeTo(Tabs.Properties)">{{
+  <a mat-tab-link [active]="link === Tabs.Properties" (click)="routeTo(Tabs.Properties)">{{
     TranslationConstants.SHARED.PROPERTIES | translate }}</a>
   }
   @if (product?.parts && product?.parts?.length) {
-  <a mat-tab-link [active]="link == Tabs.Parts" (click)="routeTo(Tabs.Parts)">{{
+  <a mat-tab-link [active]="link === Tabs.Parts" (click)="routeTo(Tabs.Parts)">{{
     TranslationConstants.DETAILS.PARTS | translate }}</a>
   }
-  <a mat-tab-link [active]="link == Tabs.Recipes" (click)="routeTo(Tabs.Recipes)">{{
+  <a mat-tab-link [active]="link === Tabs.Recipes" (click)="routeTo(Tabs.Recipes)">{{
     TranslationConstants.DETAILS.RECIPES | translate }}</a>
-  <a mat-tab-link [active]="link == Tabs.References" (click)="routeTo(Tabs.References)">{{
+  <a mat-tab-link [active]="link === Tabs.References" (click)="routeTo(Tabs.References)">{{
     TranslationConstants.DETAILS.REFERENCES | translate }}</a>
 </nav>
 

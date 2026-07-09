@@ -27,15 +27,15 @@ import { MatButtonModule } from '@angular/material/button';
   ]
 })
 export class StepCreator implements OnInit, OnDestroy {
-  availableSteps = input.required<WorkplanStepRecipe[]>();
+  readonly availableSteps = input.required<WorkplanStepRecipe[]>();
   //TODO: remove this and change stepRecipe to type of model.required<..>() in future refactoring of the UI
-  created = output<WorkplanStepRecipe>();
-  stepRecipe = signal<WorkplanStepRecipe | undefined>(undefined);
-  recipeType = signal<String | undefined>(undefined);
+  readonly created = output<WorkplanStepRecipe>();
+  protected stepRecipe = signal<WorkplanStepRecipe | undefined>(undefined);
+  recipeType = signal<string | undefined>(undefined);
 
   private activatedRoute = inject(ActivatedRoute);
   sub?: Subscription;
-  readonly TranslationConstants = TranslationConstants;
+  protected readonly TranslationConstants = TranslationConstants;
 
   ngOnInit(): void {
     this.sub = this.activatedRoute.queryParamMap.subscribe(m => {
@@ -48,7 +48,7 @@ export class StepCreator implements OnInit, OnDestroy {
     this.sub?.unsubscribe();
   }
 
-  onCreate(): void {
+  protected onCreate(): void {
     this.created.emit(this.stepRecipe()!);
   }
 }

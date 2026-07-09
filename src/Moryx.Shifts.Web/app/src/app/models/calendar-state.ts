@@ -6,7 +6,7 @@
 import  moment from 'moment';
 import { DayOfTheWeek } from './assignment-card-model';
 import { TranslateService } from '@ngx-translate/core';
-import { TranslationConstants } from '../extensions/translation-constants.extensions';
+import { TranslationConstants } from '../translation-constants';
 
 export interface CalendarModel {
   calendarWeek: number;
@@ -73,13 +73,17 @@ export class CalendarState {
   }
 
   public currentViewDates(numberOfDays: number = 0) {
-    if(numberOfDays>0) return this.generateDates(numberOfDays);
+    if(numberOfDays>0) {
+      return this.generateDates(numberOfDays);
+    }
     return this.calendarDates;
   }
 
   public viewDatesStartingFrom(date: Date, numberOfDays: number = 0): CalendarDate[] {
     let lenght = 7;
-    if(numberOfDays > 0) lenght = numberOfDays;
+    if(numberOfDays > 0) {
+      lenght = numberOfDays;
+    }
     return this.generateDates(lenght,date);
   }
 
@@ -131,8 +135,11 @@ export class CalendarState {
     const dates: CalendarDate[] = [];
     let currentMoment: moment.Moment;
 
-    if(!startDate) currentMoment =  moment(this.state.startDate);
-    else currentMoment = moment(startDate);
+    if(!startDate) {
+      currentMoment =  moment(this.state.startDate);
+    } else {
+      currentMoment = moment(startDate);
+    }
 
     const end = moment(currentMoment).add(numberOfDays, 'days');
     for (

@@ -38,7 +38,9 @@ export class SessionsService {
 
   getSession(sessionToken: string): Observable<WorkplanSessionModel> {
     const cachedModel = this.cachedSessionModels.get(sessionToken);
-    if (cachedModel) return from([cachedModel]);
+    if (cachedModel) {
+      return from([cachedModel]);
+    }
 
     return this.workplanEditing.openSession({ sessionId: sessionToken }).pipe(
       tap(session => this.processOpenedSession(session)),
@@ -48,8 +50,12 @@ export class SessionsService {
 
   getSessionForWorkplan(workplanId: number, duplicate: boolean = false): Observable<WorkplanSessionModel> {
     let cachedModel = undefined;
-    for (let cs of this.cachedSessionModels.values()) if (cs.workplanId === workplanId) cachedModel = cs;
-    if (cachedModel) return from([cachedModel]);
+    for (const cs of this.cachedSessionModels.values()) {if (cs.workplanId === workplanId) {
+      cachedModel = cs;}
+    }
+    if (cachedModel) {
+      return from([cachedModel]);
+    }
 
     return this.workplanEditing.editWorkplan({ body: { workplanId: workplanId, duplicate: duplicate } }).pipe(
       tap(session => this.processOpenedSession(session)),
@@ -58,8 +64,11 @@ export class SessionsService {
   }
 
   private processOpenedSession(session: WorkplanSessionModel): void {
-    if (!this.availableSessions.value.any(token => token === session.sessionToken)) this.addNewSession(session);
-    else this.addSessionToCache(session);
+    if (!this.availableSessions.value.any(token => token === session.sessionToken)) {
+      this.addNewSession(session);
+    } else {
+      this.addSessionToCache(session);
+    }
   }
 
   private addNewSession(session: WorkplanSessionModel) {
@@ -130,7 +139,9 @@ export class SessionsService {
     const remainingSessions = this.availableSessions.value.filter(st => st != sessionToken);
     this.availableSessions.next(remainingSessions);
 
-    if (this.activeSession.value != sessionToken) return;
+    if (this.activeSession.value != sessionToken) {
+      return;
+    }
 
     this.browserStorage.removeActiveSession();
     this.activeSession.next(undefined);

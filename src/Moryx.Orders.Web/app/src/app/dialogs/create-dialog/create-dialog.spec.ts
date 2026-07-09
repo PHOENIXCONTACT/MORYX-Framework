@@ -45,7 +45,7 @@ describe('CreateDialog', () => {
   let fixture: ComponentFixture<CreateDialog>;
   let overlayContainerElement: HTMLElement;
 
-  let recipes = [
+  const recipes = [
     <RecipeModel>{
       id: 1,
       name: 'Recipe 1',
@@ -66,13 +66,13 @@ describe('CreateDialog', () => {
     },
   ];
 
-  let orderManagementMock = {
+  const orderManagementMock = {
     getAssignableRecipes: function (params?: { identifier?: string; revision?: number }) {
       return of(recipes.map(r => <OperationRecipeModel>{ id: r.id, name: r.name }));
     },
   };
 
-  let productManagementMock = {
+  const productManagementMock = {
     getRecipe: function (params: { id: number }) {
       return of(recipes.find(r => r.id === params.id));
     },

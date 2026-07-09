@@ -42,22 +42,22 @@ import { environment } from '../../../environments/environment';
   ]
 })
 export class OperationDocuments implements OnInit {
-  isLoading = signal<boolean>(false);
-  operation = signal<OperationModel>(<OperationModel>{});
-  documents = signal<DocumentModel[]>([]);
-  selectedDocument = signal<DocumentModel | undefined>(undefined);
-  isImage = computed(() => {
+  protected isLoading = signal<boolean>(false);
+  protected operation = signal<OperationModel>(<OperationModel>{});
+  protected documents = signal<DocumentModel[]>([]);
+  protected selectedDocument = signal<DocumentModel | undefined>(undefined);
+  protected isImage = computed(() => {
     const document = this.selectedDocument()
     return document
       ? document?.contentType?.includes('image') ?? false
       : false;
   });
-  url = signal<string | undefined>(undefined);
-  path = signal<string | null | ArrayBuffer>('');
+  protected url = signal<string | undefined>(undefined);
+  protected path = signal<string | null | ArrayBuffer>('');
 
-  operationDocumentViewerToolbarImage: string =
+  protected operationDocumentViewerToolbarImage: string =
     environment.assets + 'assets/operation-document-viewer.jpg';
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
   private activatedRoute = inject(ActivatedRoute);
   private orderManagementService = inject(OrderManagementService);
@@ -66,7 +66,7 @@ export class OperationDocuments implements OnInit {
   async ngOnInit(): Promise<void> {
     this.isLoading.update(_ => true);
     this.activatedRoute.params.subscribe(async params => {
-      let identifier = params['identifier'];
+      const identifier = params['identifier'];
       await this.orderManagementService
         .getOperation({guid: identifier})
         .toAsync()
@@ -86,22 +86,22 @@ export class OperationDocuments implements OnInit {
     });
   }
 
-  async onSelect(document: DocumentModel) {
+  protected async onSelect(document: DocumentModel) {
     this.isLoading.update(_ => true);
     this.selectedDocument.update(_ => document);
     this.orderManagementService
       .getDocumentStream({
         guid: this.operation().identifier!,
-        identifier: this.selectedDocument()?.identifier!
+        identifier: this.selectedDocument()?.identifier ?? ''
       })
       .subscribe({
         next: data => {
           if (data !== null && document.contentType) {
-            let downloadedFile = new Blob([data], {
+            const downloadedFile = new Blob([data], {
               type: document.contentType
             });
             this.url.update(_ => URL.createObjectURL(downloadedFile));
-            let reader = new FileReader();
+            const reader = new FileReader();
             reader.readAsDataURL(downloadedFile);
             reader.onload = () => {
               this.path.update(_ => reader.result);

@@ -45,8 +45,9 @@ export class EditResourceService {
    * Updates the active resource, e.g. with new property values, pushing the @param resource on the subject.
    */
   public updateActiveResource(resource: ResourceModel) {
-    if (this.resource.value && this.resource.value?.id !== resource.id)
+    if (this.resource.value && this.resource.value?.id !== resource.id) {
       throw new Error('Trying to update the active resource with a different resource.');
+    }
     this.resource.next(resource);
   }
 
@@ -57,7 +58,9 @@ export class EditResourceService {
   }
 
   public stashResource() {
-    if (!this.resource.value) return;
+    if (!this.resource.value) {
+      return;
+    }
 
     this.sessionService.setWipResource(this.resource.value, <ResourceStorageDetails>{
       createNewResource: this.editingUnsavedResource,
@@ -87,21 +90,19 @@ export class EditResourceService {
 
   public async onSave() {
     const resourceModel = this.resource.getValue();
-    if (!resourceModel) return;
+    if (!resourceModel) {
+      return;
+    }
 
-    if (resourceModel.properties)
-    {
+    if (resourceModel.properties) {
       PrototypeToEntryConverter.convertToEntry(resourceModel.properties);
     }
 
-    if (this.editingUnsavedResource)
-    {
+    if (this.editingUnsavedResource) {
       await lastValueFrom(this.resourceModificationService.save$Response({body: resourceModel}))
         .then(async response => await this.handleSaveResponse(response))
         .catch(async e => await this.snackbarService.handleError(e));
-    }
-    else
-    {
+    } else {
       await lastValueFrom(this.resourceModificationService.update$Response({id: resourceModel.id!, body: resourceModel}))
         .then(async response => await this.handleUpdateResponse(response))
         .catch(async e => await this.snackbarService.handleError(e));

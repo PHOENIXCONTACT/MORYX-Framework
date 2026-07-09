@@ -64,7 +64,8 @@
   "DOCUMENTS": {
     "DOCUMENTS_OF": "文档 -",
     "EMPTY_STATE_HEADER": "未选择文档",
-    "EMPTY_STATE_TEXT": "在左侧的列表中单击一个文档以显示其内容。"
+    "EMPTY_STATE_TEXT": "在左侧的列表中单击一个文档以显示其内容。",
+    "IMAGE_ALT": "操作文档"
   },
   "REPORT_DIALOG": {
     "REPORT_TITLE": "报告操作",
