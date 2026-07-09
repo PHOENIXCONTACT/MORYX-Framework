@@ -4,7 +4,7 @@
 */
 
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, effect, inject, model, OnDestroy, OnInit, signal, untracked, ChangeDetectionStrategy } from "@angular/core";
+import { Component, effect, inject, model, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from "@angular/core";
 import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
 import { Entry, NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
@@ -51,6 +51,12 @@ import { InstructionStateService } from '@app/services/instruction-state.service
   ]
 })
 export class WorkerInstructions implements OnInit, OnDestroy {
+  private visualInstructionsService = inject(VisualInstructionsService);
+  private instructionService = inject(InstructionService);
+  private translateService = inject(TranslateService);
+  private snackbarService = inject(SnackbarService);
+  protected instructionStateService = inject(InstructionStateService);
+
   readonly clientIdentifier = model.required<string>();
 
   protected instructions = signal<InstructionModel[]>([]);
@@ -66,24 +72,13 @@ export class WorkerInstructions implements OnInit, OnDestroy {
   protected environment = environment;
   protected TranslationConstants = TranslationConstants;
 
-  private visualInstructionsService = inject(VisualInstructionsService);
-  private instructionService = inject(InstructionService);
-  private translateService = inject(TranslateService);
-  private snackbarService = inject(SnackbarService);
-  protected instructionStateService = inject(InstructionStateService);
-
-  private activeInstructionIndexChange: Subject<number> = new ReplaySubject<number>(
-    1
-  );
-  private _instructorSubscription?: Subscription;
+  private activeInstructionIndexChange: Subject<number> = new ReplaySubject<number>(1);
   private _instructionSubscription?: Subscription;
 
   constructor() {
     effect(() => {
-      const identifier = this.clientIdentifier();
-      untracked(() => {
-        this.initialize(identifier);
-      })
+      const instructions = this.instructionService.instructions();
+      this.onInstructionsUpdated(instructions);
     });
 
     this.translateService.addLangs([
@@ -91,13 +86,6 @@ export class WorkerInstructions implements OnInit, OnDestroy {
       TranslationConstants.LANGUAGES.DE,
       TranslationConstants.LANGUAGES.IT,
     ]);
-  }
-
-  initialize(value: string) {
-    this._instructorSubscription?.unsubscribe();
-    this._instructorSubscription =
-      this.instructionService.instructions$.subscribe(instructions => this.onInstructionsUpdated(instructions)
-      );
   }
 
   ngOnInit(): void {
@@ -111,7 +99,6 @@ export class WorkerInstructions implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this._instructionSubscription?.unsubscribe();
-    this._instructorSubscription?.unsubscribe();
   }
 
   private switchInstruction(index: number): Promise<void> {
