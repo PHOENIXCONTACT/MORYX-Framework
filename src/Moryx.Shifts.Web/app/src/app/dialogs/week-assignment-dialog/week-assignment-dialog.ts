@@ -125,6 +125,12 @@ export class WeekAssignmentDialog implements OnInit {
     });
   }
 
+  ngOnInit(): void {
+    this.appStore.resources$.subscribe((resources) => {
+      this.resources.set(resources);
+    });
+  }
+
   refreshOperators(resourceId: number) {
     //skilled operators
     this.appStore
@@ -161,12 +167,6 @@ export class WeekAssignmentDialog implements OnInit {
       this.data.shift.startDate,
       this.shiftNumberOfdays()
     );
-  }
-
-  ngOnInit(): void {
-    this.appStore.resources$.subscribe((resources) => {
-      this.resources.set(resources);
-    });
   }
 
   protected submit() {

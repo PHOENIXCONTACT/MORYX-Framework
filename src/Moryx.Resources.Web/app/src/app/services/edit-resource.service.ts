@@ -3,8 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, lastValueFrom } from 'rxjs';
+import { inject, Injectable, signal } from '@angular/core';
+import { lastValueFrom } from 'rxjs';
 import { ResourceModel } from '../api/models';
 import { ResourceModificationService } from '../api/services';
 import { StrictHttpResponse } from '@api/strict-http-response';
@@ -14,7 +14,6 @@ import { TranslationConstants } from '../extensions/translation-constants.extens
 import { HttpErrorResponse } from '@angular/common/http';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { PrototypeToEntryConverter } from '@moryx/ngx-web-framework/entry-editor';
-import { toSignal } from '@angular/core/rxjs-interop';
 
 /**
  * This service tracks and manages the resource that is currently edited in the edit view.
@@ -29,48 +28,45 @@ export class EditResourceService {
   private readonly sessionService = inject(SessionService);
   private readonly snackbarService = inject(SnackbarService);
 
-  public readonly edit$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  private readonly resource: BehaviorSubject<ResourceModel | undefined> = new BehaviorSubject<ResourceModel | undefined>(
-    undefined
-  );
-  public activeResource = toSignal(this.resource);
+  readonly editing = signal<boolean>(false);
+  readonly activeResource = signal<ResourceModel | undefined>(undefined);
   public editingUnsavedResource: boolean = false;
   TranslationConstants = TranslationConstants;
 
   public setResource(resource: ResourceModel | undefined) {
-    this.resource.next(resource);
+    this.activeResource.set(resource);
   }
 
   /**
    * Updates the active resource, e.g. with new property values, pushing the @param resource on the subject.
    */
   public updateActiveResource(resource: ResourceModel) {
-    if (this.resource.value && this.resource.value?.id !== resource.id) {
+    if (this.activeResource() && this.activeResource()?.id !== resource.id) {
       throw new Error('Trying to update the active resource with a different resource.');
     }
-    this.resource.next(resource);
+    this.activeResource.set(resource);
   }
 
   public resetEditor() {
-    this.edit$.next(false);
+    this.editing.set(false);
     this.editingUnsavedResource = false;
-    this.resource.next(undefined);
+    this.activeResource.set(undefined);
   }
 
   public stashResource() {
-    if (!this.resource.value) {
+    if (!this.activeResource()) {
       return;
     }
 
-    this.sessionService.setWipResource(this.resource.value, <ResourceStorageDetails>{
+    this.sessionService.setWipResource(this.activeResource()!, <ResourceStorageDetails>{
       createNewResource: this.editingUnsavedResource,
     });
   }
 
   public setResourceFromStorage(resourceStorageObject: ResourceStorageObject) {
     this.editingUnsavedResource = resourceStorageObject.details.createNewResource;
-    this.resource.next(resourceStorageObject.resource);
-    this.edit$.next(true);
+    this.activeResource.set(resourceStorageObject.resource);
+    this.editing.set(true);
   }
 
   public async registerNewResource(constructed: ResourceModel) {
@@ -80,16 +76,16 @@ export class EditResourceService {
       await this.cacheResourceService.loadResources();
     }
 
-    this.resource.next(constructed);
-    this.edit$.next(true);
+    this.activeResource.set(constructed);
+    this.editing.set(true);
   }
 
   public onEdit() {
-    this.edit$.next(true);
+    this.editing.set(true);
   }
 
   public async onSave() {
-    const resourceModel = this.resource.getValue();
+    const resourceModel = this.activeResource();
     if (!resourceModel) {
       return;
     }
@@ -111,8 +107,8 @@ export class EditResourceService {
 
   private async handleUpdateResponse(response: StrictHttpResponse<ResourceModel>) {
     await this.cacheResourceService.loadResources();
-    this.resource.next(response.body);
-    this.edit$.next(false);
+    this.activeResource.set(response.body);
+    this.editing.set(false);
   }
 
   private async handleSaveResponse(response: StrictHttpResponse<ResourceModel>) {
@@ -121,8 +117,8 @@ export class EditResourceService {
     await this.cacheResourceService.loadResources();
     const resourceModel = response.body;
     this.editingUnsavedResource = false;
-    this.edit$.next(false);
-    this.resource.next(resourceModel);
+    this.editing.set(false);
+    this.activeResource.set(resourceModel);
   }
 
   public async onCancel() {
@@ -131,10 +127,10 @@ export class EditResourceService {
       this.resetEditor();
       return;
     }
-    this.edit$.next(false);
+    this.editing.set(false);
     try {
       const resource = await lastValueFrom(this.resourceModificationService.getDetails({id: resourceId}));
-      this.resource.next(resource);
+      this.activeResource.set(resource);
     }
     catch (e) {
       await this.snackbarService.handleError(e as HttpErrorResponse);

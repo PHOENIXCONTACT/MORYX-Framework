@@ -32,7 +32,6 @@ import { environment } from "../environments/environment";
 import { BrowserModule } from "@angular/platform-browser";
 import { ApiModule } from "@api/api.module";
 import { CacheResourceService } from "./services/cache-resource.service";
-import { FormControlService } from "./services/form-control-service.service";
 import { provideRouter } from "@angular/router";
 import { routes } from "./app.routes";
 
@@ -79,7 +78,6 @@ export const appConfig: ApplicationConfig = {
     ApiInterceptor,
     API_INTERCEPTOR_PROVIDER,
     SnackbarService,
-    FormControlService,
     provideHttpClient(withInterceptorsFromDi()),
     provideTranslateService({
       loader: provideTranslateHttpLoader({
