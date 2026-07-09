@@ -3,16 +3,17 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnInit, signal, ChangeDetectionStrategy, DestroyRef } from "@angular/core";
+import { Component, computed, inject, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from "@angular/core";
+import { toSignal } from "@angular/core/rxjs-interop";
 import { LanguageService } from "@moryx/ngx-web-framework/services";
 import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { environment } from "../environments/environment";
 import { TranslationConstants } from "./extensions/translation-constants.extensions";
 import { NotificationService } from "./services/notification.service";
+import { NotificationModel } from "@api/models/notification-model";
 import ConnectionState from "./models/ConnectionState";
 import "./extensions/notification.extensions";
-import { Subscription } from "rxjs";
 
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatToolbarModule } from "@angular/material/toolbar";
@@ -38,22 +39,23 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
     '(window:beforeunload)': 'disconnectEvents()'
   }
 })
-export class App implements OnInit {
+export class App implements OnInit, OnDestroy {
   private languageService = inject(LanguageService);
   private translateService = inject(TranslateService);
   private notificationService = inject(NotificationService);
-  private destroyRef = inject(DestroyRef);
 
-  protected isLoading = signal(true);
-  protected isEmpty = signal(true);
+  private state = toSignal(this.notificationService.state$);
+  private notifications = toSignal(this.notificationService.notifications$, {
+    initialValue: [] as NotificationModel[]
+  });
+
+  protected isLoading = computed(() => this.state() !== ConnectionState.Connected);
+  protected isEmpty = computed(() => !this.notifications().length);
   protected notificationsToolbarImage = signal(
     environment.assets + "assets/notifications_toolbar.jpg");
 
-
   title = "Moryx.Notifications.Web";
   protected TranslationConstants = TranslationConstants;
-  private stateSubscription: Subscription | undefined;
-  private notificationSubscription: Subscription | undefined;
 
   constructor() {
     this.translateService.addLangs([
@@ -63,28 +65,17 @@ export class App implements OnInit {
     ]);
     this.translateService.setFallbackLang("en");
     this.translateService.use(this.languageService.getFallbackLang());
-    this.destroyRef.onDestroy(() => this.disconnectEvents());
   }
 
   ngOnInit(): void {
     this.notificationService.connect();
+  }
 
-    this.stateSubscription = this.notificationService.state$.subscribe(
-      (state) => {
-        if (state == ConnectionState.Connected) {
-          this.isLoading.update(_ => false);
-        }
-      }
-    );
-    this.notificationSubscription =
-      this.notificationService.notifications$.subscribe((n) => {
-        this.isEmpty.update(_ => !n.length);
-      });
+  ngOnDestroy(): void {
+    this.disconnectEvents();
   }
 
   protected disconnectEvents(): void {
-    this.stateSubscription?.unsubscribe();
-    this.notificationSubscription?.unsubscribe();
     this.notificationService.disconnect();
   }
 }

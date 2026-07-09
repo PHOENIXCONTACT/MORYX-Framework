@@ -3,7 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { CellImageDialog } from '@app/dialogs/cell-image-dialog/cell-image-dialog';
 import { CellStoreService } from '@app/services/cell-store.service';
@@ -31,18 +32,12 @@ import { DetailsItem } from '../details-item/details-item';
     MatIconModule
   ]
 })
-export class CellDetails implements OnInit {
+export class CellDetails {
   private matDialog = inject(MatDialog);
   private cellStoreService = inject(CellStoreService);
 
-  protected cellDetails = signal<CellModel | undefined>(undefined);
+  protected cellDetails = toSignal(this.cellStoreService.cellSelected$);
   protected TranslationConstants = TranslationConstants;
-
-  ngOnInit(): void {
-    this.cellStoreService.cellSelected$.subscribe({
-      next: result => this.cellDetails.set(result)
-    });
-  }
 
   openCellImageDialog() {
     this.matDialog.open(CellImageDialog, {

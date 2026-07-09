@@ -3,7 +3,9 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from "@angular/core";
+import { Component, computed, inject, signal, ChangeDetectionStrategy } from "@angular/core";
+import { toSignal } from "@angular/core/rxjs-interop";
+import { map } from "rxjs";
 import { OperatorViewModel } from "../models/operator-view-model";
 import { MatDialog } from "@angular/material/dialog";
 import { ConfirmationDialog } from "../dialogs/confirmation-dialog/confirmation-dialog";
@@ -41,43 +43,27 @@ import { MatToolbarModule } from "@angular/material/toolbar";
     MatToolbarModule
   ]
 })
-export class OperatorsManagement implements OnInit {
+export class OperatorsManagement {
   private appStoreService = inject(AppStoreService);
   private dialog = inject(MatDialog);
   private router = inject(Router);
   private translateService = inject(TranslateService);
 
-  protected operators = signal<OperatorViewModel[]>([]);
-  protected deleteDialogTitle = signal('');
-  protected deleteDialogMessage = signal('');
+  protected operators = toSignal(this.appStoreService.operators$, {initialValue: [] as OperatorViewModel[]});
+  private translations = toSignal(this.translateService.get([
+    TranslationConstants.OPERATORS_MANAGEMENT.DELETE_TITLE,
+    TranslationConstants.OPERATORS_MANAGEMENT.DELETE_MESSAGE,
+  ]));
+  protected deleteDialogTitle = computed(() => this.translations()?.[TranslationConstants.OPERATORS_MANAGEMENT.DELETE_TITLE] ?? '');
+  protected deleteDialogMessage = computed(() => this.translations()?.[TranslationConstants.OPERATORS_MANAGEMENT.DELETE_MESSAGE] ?? '');
   protected inMenuMode = signal(false);
-  protected skills = signal<OperatorSkill[]>([]);
-  protected skillTypes = signal<SkillTypeModel[]>([]);
+  protected skills = toSignal(this.appStoreService.skills$, {initialValue: [] as OperatorSkill[]});
+  protected skillTypes = toSignal(
+    this.appStoreService.skillTypes$.pipe(map(types => types.map(skillTypeToModel))),
+    {initialValue: [] as SkillTypeModel[]}
+  );
 
   protected TranslationConstants = TranslationConstants;
-
-  ngOnInit(): void {
-    this.appStoreService.operators$
-      .subscribe(
-        (operators) => (this.operators.update(_ => operators))
-      );
-
-    this.appStoreService.skills$.subscribe(
-      allSkills => this.skills.update(_ => allSkills)
-    );
-
-    this.appStoreService.skillTypes$.subscribe(types => this.skillTypes.update(_ => types.map(skillTypeToModel)));
-
-    this.translateService
-      .get([
-        TranslationConstants.OPERATORS_MANAGEMENT.DELETE_TITLE,
-        TranslationConstants.OPERATORS_MANAGEMENT.DELETE_MESSAGE,
-      ]).subscribe(translations => {
-      this.deleteDialogMessage = translations[TranslationConstants.OPERATORS_MANAGEMENT.DELETE_MESSAGE];
-      this.deleteDialogTitle = translations[TranslationConstants.OPERATORS_MANAGEMENT.DELETE_TITLE];
-    });
-
-  }
 
   protected updateMenuMode(value: boolean) {
     this.inMenuMode.update(_ => value);

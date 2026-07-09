@@ -4,7 +4,8 @@
 */
 
 
-import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -35,19 +36,13 @@ import { MatInputModule } from '@angular/material/input';
     MatInputModule
   ]
 })
-export class SkillNewDialog implements OnInit {
+export class SkillNewDialog {
   protected data = inject<OperatorSkill>(MAT_DIALOG_DATA);
   private dialogRef = inject(MatDialogRef<SkillNewDialog>);
   private appStoreService = inject(AppStoreService);
 
   protected TranslationConstants = TranslationConstants;
-  protected skillTypes = signal<SkillType[]>([]);
-
-  ngOnInit(): void {
-    this.appStoreService.skillTypes$.subscribe(types => {
-      this.skillTypes.update(_ => types);
-    })
-  }
+  protected skillTypes = toSignal(this.appStoreService.skillTypes$, { initialValue: [] as SkillType[] });
 
   protected save() {
     this.dialogRef.close(this.data);
