@@ -49,7 +49,6 @@ export class App implements OnInit, OnDestroy {
   protected navigatedUrl = signal('');
   protected changeViewTooltip = signal('');
 
-  private activeSession: string | undefined;
   private subscriptions: Subscription[] = [];
 
   protected TranslationConstants = TranslationConstants;
@@ -75,8 +74,6 @@ export class App implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subscriptions.push(this.sessionService.activeSession$.subscribe(as => (this.activeSession = as)));
-
     const routerSubscription = this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(async (e: NavigationEnd) => {
@@ -88,7 +85,7 @@ export class App implements OnInit, OnDestroy {
           return;
         }
 
-        if (this.activeSession) {
+        if (this.sessionService.activeSession()) {
           this.changeViewTooltip.update(_ => translations[TranslationConstants.APP.OPEN_WORKPLAN_SESSIONS]);
           this.changeViewDisabled.update(_ => false);
           return;
@@ -105,8 +102,8 @@ export class App implements OnInit, OnDestroy {
     if (this.navigatedUrl() !== '/management') {
       this.router.navigate(['/management']);
     }
-    else if (this.activeSession) {
-      this.router.navigate(['session', this.activeSession]);
+    else if (this.sessionService.activeSession()) {
+      this.router.navigate(['session', this.sessionService.activeSession()]);
     }
   }
 

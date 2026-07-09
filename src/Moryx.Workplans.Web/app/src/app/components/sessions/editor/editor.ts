@@ -5,7 +5,7 @@
 
 import { CdkDragDrop, CdkDragEnd, CdkDragStart, DragDropModule, DragRef, Point } from '@angular/cdk/drag-drop';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject, OnInit, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatDrawer, MatDrawerMode, MatSidenavModule } from '@angular/material/sidenav';
 import { ActivatedRoute, ActivatedRouteSnapshot, ParamMap, Params, Router } from '@angular/router';
@@ -64,17 +64,25 @@ enum EditQueries {
 export class Editor implements OnInit {
   readonly pathMenuTrigger = viewChild.required<MatMenuTrigger>('pathMenuTrigger');
   readonly stepMenuTrigger = viewChild.required<MatMenuTrigger>('stepMenuTrigger');
+
+  private activatedRoute = inject(ActivatedRoute);
+  private router = inject(Router);
+  private workplanEditingService = inject(WorkplanEditingService);
+  private sessionService = inject(SessionsService);
+  private snackbarService = inject(SnackbarService);
+  protected editorState = inject(EditorStateService);
+
   protected availableSteps = signal<WorkplanStepRecipe[]>([]);
   protected inputIds = signal<string[]>([]);
   protected workplanPaths = signal<NodeConnectionPath[]>([]);
-  protected isCreatingStep = signal(false);
-  protected isEditingStep = signal(false);
-  protected isEditingProps = signal(false);
   protected newStepPosition = signal<Position | undefined>(undefined);
-  protected selectedNode = signal<number | undefined>(undefined);
+  protected selectedNode = this.editorState.selectedNode;
+  protected isEditingProps = computed(() => this.editorState.isEditingProps());
+  protected isEditingStep = computed(() => !!this.editorState.isEditingStep());
+  protected isCreatingStep = computed(() => !!this.editorState.isCreatingStep());
+  protected drawerIsOpen = computed(() => this.isEditingProps() || this.isEditingStep() || this.isCreatingStep());
+  protected drawerMode = computed<MatDrawerMode>(() => this.isCreatingStep() ? 'over' : 'side');
   protected isLoading = signal(true);
-  protected drawerIsOpen = signal(false);
-  protected drawerMode = signal<MatDrawerMode>('side');
   protected dragPosition = signal<{ x: number; y: number }>({x: 0, y: 0});
 
   protected readonly size = 5000;
@@ -91,19 +99,11 @@ export class Editor implements OnInit {
   private sessionToken!: string;
   private stepMove: boolean = false;
 
-
   protected canvasPosition: Position = new Position(-this.size, -this.size);
   protected canvasScale: number = 1.0;
   protected cursorOffset = {x: 0, y: 0};
   protected menuX: string = '0';
   protected menuY: string = '0';
-
-  private activatedRoute = inject(ActivatedRoute);
-  private router = inject(Router);
-  private workplanEditingService = inject(WorkplanEditingService);
-  private sessionService = inject(SessionsService);
-  private snackbarService = inject(SnackbarService);
-  protected editorState = inject(EditorStateService);
 
   protected TranslationConstants = TranslationConstants;
 
@@ -121,24 +121,11 @@ export class Editor implements OnInit {
       return future.paramMap.get('token') === curr.paramMap.get('token');
     };
 
-    // React to changes in the state of the editor
-    this.editorState.workplanChangedSubject$.subscribe(() => {
+    // React to workplan changes
+    effect(() => {
+      this.editorState.notifyWorkplanChanged();
       this.scheduleRenderPaths();
       this.gatherInputIds();
-    });
-    this.editorState.selectedNode$.subscribe(nodeId => (this.selectedNode.update(_ => nodeId)));
-    this.editorState.isEditingProps$.subscribe(b => {
-      this.drawerIsOpen.update(_ => b);
-      this.isEditingProps.update(_ => b);
-    });
-    this.editorState.isEditingStep$.subscribe(stepId => {
-      this.drawerIsOpen.update(_ => !!stepId);
-      this.isEditingStep.update(_ => !!stepId);
-    });
-    this.editorState.isCreatingStep$.subscribe(type => {
-      this.drawerIsOpen.update(_ => !!type);
-      this.drawerMode.update(_ => !!type ? 'over' : 'side');
-      this.isCreatingStep.update(_ => !!type);
     });
 
     // Configure initial state of the editor from route
@@ -362,7 +349,7 @@ export class Editor implements OnInit {
     this.updateQuery({edit: EditQueries.Node, selected: step.id, type: null});
     this.editorState.startEditingStep(step.id!);
     this.editorState.onNodeSelected(step.id!);
-    this.editorState.workplanChanged();
+    this.editorState.notifyWorkplanChanged();
   }
 
   protected onClickStep(node: WorkplanNodeModel) {

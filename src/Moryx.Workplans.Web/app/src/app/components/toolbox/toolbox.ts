@@ -4,10 +4,9 @@
 */
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, effect, inject, ChangeDetectionStrategy } from '@angular/core';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { TranslatePipe } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
 import { WorkplanNodeClassification, WorkplanStepRecipe } from '@api/models';
 import { WorkplanEditingService } from '@api/services';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
@@ -30,21 +29,18 @@ import { MatCardModule } from '@angular/material/card';
     TranslatePipe
   ]
 })
-export class Toolbox implements OnInit, OnDestroy {
+export class Toolbox {
   private workplanEditing = inject(WorkplanEditingService);
   private snackbarService = inject(SnackbarService);
   private sessionService = inject(SessionsService);
 
-  subscription: Subscription | undefined;
   stepRecipes: WorkplanStepRecipe[] = [];
   protected TranslationConstants = TranslationConstants;
 
   constructor() {
-  }
-
-  ngOnInit(): void {
-    this.subscription = this.sessionService.activeSession$.subscribe(changed => {
-      if (changed) {
+    effect(() => {
+      const session = this.sessionService.activeSession();
+      if (session) {
         this.getAvailableSteps();
       }
     });
@@ -91,8 +87,5 @@ export class Toolbox implements OnInit, OnDestroy {
     return this.stepRecipes.filter(sr => sr.classification == WorkplanNodeClassification.Subworkplan);
   }
 
-  ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
-  }
 }
 

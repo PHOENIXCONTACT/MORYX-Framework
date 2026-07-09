@@ -3,8 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { Injectable, signal } from '@angular/core';
 import { WorkplanSessionModel } from '@api/models/workplan-session-model';
 import { WorkplanNodeModel } from '@api/models';
 
@@ -12,50 +11,43 @@ import { WorkplanNodeModel } from '@api/models';
   providedIn: 'root',
 })
 export class EditorStateService {
-  private workplansChangedSource = new Subject<boolean>();
-  private _currentWorkplan = new BehaviorSubject<WorkplanSessionModel | undefined>(undefined);
-  private _selectedNode = new BehaviorSubject<number | undefined>(undefined);
-  private isEditingProps = new BehaviorSubject<boolean>(false);
-  private isEditingStep = new BehaviorSubject<WorkplanNodeModel | undefined>(undefined);
-  private isCreatingStep = new BehaviorSubject<string | undefined>(undefined);
-
-  workplanChangedSubject$ = this.workplansChangedSource.asObservable();
-  currentWorkplan$ = this._currentWorkplan.asObservable();
-  selectedNode$ = this._selectedNode.asObservable();
-  isEditingProps$ = this.isEditingProps.asObservable();
-  isEditingStep$ = this.isEditingStep.asObservable();
-  isCreatingStep$ = this.isCreatingStep.asObservable();
+  workplanChanged = signal(0);
+  currentWorkplan = signal<WorkplanSessionModel | undefined>(undefined);
+  selectedNode = signal<number | undefined>(undefined);
+  isEditingProps = signal(false);
+  isEditingStep = signal<WorkplanNodeModel | undefined>(undefined);
+  isCreatingStep = signal<string | undefined>(undefined);
 
   public get workplan() {
-    return this._currentWorkplan.value;
+    return this.currentWorkplan();
   }
 
-  workplanChanged() {
-    this.workplansChangedSource.next(true);
+  notifyWorkplanChanged() {
+    this.workplanChanged.update(v => v + 1);
   }
 
   setWorkplan(workplan: WorkplanSessionModel) {
-    this._currentWorkplan.next(workplan);
-    this.workplanChanged();
+    this.currentWorkplan.set(workplan);
+    this.notifyWorkplanChanged();
   }
 
   onNodeSelected(nodeId: number) {
-    this._selectedNode.next(nodeId);
+    this.selectedNode.set(nodeId);
   }
 
   onNodeDeselected() {
-    this._selectedNode.next(undefined);
+    this.selectedNode.set(undefined);
   }
 
   startEditingProps() {
     this.stopEditingStep();
     this.stopCreatingStep();
-    this.isEditingProps.next(true);
+    this.isEditingProps.set(true);
   }
 
   stopEditingProps() {
-    if (this.isEditingProps.value) {
-      this.isEditingProps.next(false);
+    if (this.isEditingProps()) {
+      this.isEditingProps.set(false);
     }
   }
 
@@ -65,13 +57,13 @@ export class EditorStateService {
     this.stopCreatingStep();
     const node = this.workplan?.nodes?.find(node => node.id === nodeId);
     if (node) {
-      this.isEditingStep.next(node);
+      this.isEditingStep.set(node);
     }
   }
 
   stopEditingStep() {
-    if (this.isEditingStep.value) {
-      this.isEditingStep.next(undefined);
+    if (this.isEditingStep()) {
+      this.isEditingStep.set(undefined);
     }
   }
 
@@ -79,13 +71,12 @@ export class EditorStateService {
     this.stopEditingProps();
     this.stopEditingStep();
     this.stopCreatingStep();
-    this.isCreatingStep.next(type);
+    this.isCreatingStep.set(type);
   }
 
   stopCreatingStep() {
-    if (this.isCreatingStep.value) {
-      this.isCreatingStep.next(undefined);
+    if (this.isCreatingStep()) {
+      this.isCreatingStep.set(undefined);
     }
   }
 }
-

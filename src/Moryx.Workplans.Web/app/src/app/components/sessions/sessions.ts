@@ -4,12 +4,11 @@
 */
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, effect, inject, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, RouterOutlet } from '@angular/router';
 import { SnackbarService, SearchBarService, SearchRequest, SearchSuggestion } from '@moryx/ngx-web-framework/services';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { SubscriptionLike } from 'rxjs';
 import { WorkplanSessionModel } from '@api/models';
 import { WorkplanEditingService } from '@api/services';
 import {
@@ -57,25 +56,26 @@ export class Sessions implements OnInit, OnDestroy {
   protected sessions = signal<WorkplanSessionModel[]>([]);
   protected activeSession = signal<WorkplanSessionModel | undefined>(undefined);
 
-  private subscriptions: SubscriptionLike[] = [];
   protected TranslationConstants = TranslationConstants;
 
+  constructor() {
+    effect(() => {
+      const tokens = this.sessionService.availableSessions();
+      this.onSessionsChanged(tokens);
+    });
+    effect(() => {
+      const token = this.sessionService.activeSession();
+      this.onActiveSessionChanged(token);
+    });
+    effect(() => {
+      const session = this.sessionService.sessionUpdated();
+      if (session) {
+        this.onSessionUpdated(session);
+      }
+    });
+  }
+
   async ngOnInit(): Promise<void> {
-    const availableSessionsSubscription = this.sessionService.availableSessions$.subscribe(
-      async tokens => await this.onSessionsChanged(tokens)
-    );
-    this.subscriptions.push(availableSessionsSubscription);
-
-    const activeSessionSubscription = this.sessionService.activeSession$.subscribe(
-      async token => await this.onActiveSessionChanged(token)
-    );
-    this.subscriptions.push(activeSessionSubscription);
-
-    const sessionUpdatedSubscription = this.sessionService.sessionUpdated$.subscribe(session =>
-      this.onSessionUpdated(session)
-    );
-    this.subscriptions.push(sessionUpdatedSubscription);
-
     this.searchBarService.subscribe({
       next: (request: SearchRequest) => {
         this.onSearch(request);
@@ -118,7 +118,6 @@ export class Sessions implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.forEach(s => s.unsubscribe());
     this.searchBarService.unsubscribe();
   }
 

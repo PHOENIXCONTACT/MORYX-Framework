@@ -3,9 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, Subject, catchError, from, tap, throwError } from 'rxjs';
-import { Observable } from 'rxjs';
+import { inject, Injectable, signal } from '@angular/core';
+import { catchError, from, Observable, tap, throwError } from 'rxjs';
 import { WorkplanSessionModel } from '@api/models';
 import { WorkplanEditingService } from '@api/services';
 import { PrototypeToEntryConverter } from '@moryx/ngx-web-framework/entry-editor';
@@ -16,25 +15,15 @@ import { HttpErrorResponse } from '@angular/common/http';
   providedIn: 'root',
 })
 export class SessionsService {
-  private activeSession: BehaviorSubject<string | undefined>;
-  activeSession$: Observable<string | undefined>;
-  private availableSessions: BehaviorSubject<string[]>;
-  availableSessions$: Observable<string[]>;
-  private sessionUpdated = new Subject<WorkplanSessionModel>();
-  sessionUpdated$ = this.sessionUpdated.asObservable();
-
   private workplanEditing = inject(WorkplanEditingService);
   private browserStorage = inject(BrowserStorageService);
   private cachedSessionModels = new Map<string, WorkplanSessionModel>();
 
-  constructor() {
-    this.activeSession = new BehaviorSubject<string | undefined>(this.browserStorage.getActiveSession());
-    this.activeSession$ = this.activeSession.asObservable();
-    this.availableSessions = new BehaviorSubject<string[]>(
-      this.browserStorage.getStorageSessions().map(sso => sso.sessionToken)
-    );
-    this.availableSessions$ = this.availableSessions.asObservable();
-  }
+  readonly activeSession = signal<string | undefined>(this.browserStorage.getActiveSession());
+  readonly availableSessions = signal<string[]>(
+    this.browserStorage.getStorageSessions().map(sso => sso.sessionToken)
+  );
+  readonly sessionUpdated = signal<WorkplanSessionModel | undefined>(undefined);
 
   getSession(sessionToken: string): Observable<WorkplanSessionModel> {
     const cachedModel = this.cachedSessionModels.get(sessionToken);
@@ -64,7 +53,7 @@ export class SessionsService {
   }
 
   private processOpenedSession(session: WorkplanSessionModel): void {
-    if (!this.availableSessions.value.any(token => token === session.sessionToken)) {
+    if (!this.availableSessions().any(token => token === session.sessionToken)) {
       this.addNewSession(session);
     } else {
       this.addSessionToCache(session);
@@ -74,9 +63,7 @@ export class SessionsService {
   private addNewSession(session: WorkplanSessionModel) {
     this.browserStorage.addSession(session);
 
-    const newAvailableSessions = this.availableSessions.value;
-    newAvailableSessions.push(session.sessionToken!);
-    this.availableSessions.next(newAvailableSessions);
+    this.availableSessions.update(sessions => [...sessions, session.sessionToken!]);
 
     this.addSessionToCache(session);
   }
@@ -108,21 +95,21 @@ export class SessionsService {
   registerUpdatedSession(session: WorkplanSessionModel) {
     this.cachedSessionModels.set(session.sessionToken!, session);
     this.browserStorage.updateSession(session);
-    this.sessionUpdated.next(session);
+    this.sessionUpdated.set(session);
   }
 
   async activateSession(sessionToken: string){
-    if (!this.availableSessions.value.any(t => t === sessionToken)) {
+    if (!this.availableSessions().any(t => t === sessionToken)) {
       await this.getSession(sessionToken).toAsync();
     }
 
     this.browserStorage.setActiveSession(sessionToken);
-    this.activeSession.next(sessionToken);
+    this.activeSession.set(sessionToken);
   }
 
   deactivateSession() {
     this.browserStorage.removeActiveSession();
-    this.activeSession.next(undefined);
+    this.activeSession.set(undefined);
   }
 
   closeSession(sessionToken: string): Observable<void> {
@@ -136,15 +123,14 @@ export class SessionsService {
     this.browserStorage.closeSession(sessionToken);
     this.cachedSessionModels.delete(sessionToken);
 
-    const remainingSessions = this.availableSessions.value.filter(st => st != sessionToken);
-    this.availableSessions.next(remainingSessions);
+    this.availableSessions.update(sessions => sessions.filter(st => st != sessionToken));
 
-    if (this.activeSession.value != sessionToken) {
+    if (this.activeSession() != sessionToken) {
       return;
     }
 
     this.browserStorage.removeActiveSession();
-    this.activeSession.next(undefined);
+    this.activeSession.set(undefined);
   }
 }
 
