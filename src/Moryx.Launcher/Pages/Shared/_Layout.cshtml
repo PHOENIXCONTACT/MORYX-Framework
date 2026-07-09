@@ -5,7 +5,8 @@
 @using Microsoft.Extensions.Options;
 @using Moryx.Identity
 @using Moryx.Launcher
-@inject IShellNavigator _navigator
+@using Moryx.Launcher.Models
+@inject INavigation _navigation
 @inject IOptionsMonitor<RequestLocalizationOptions> _localizationOptions
 @inject IOptionsMonitor<MoryxIdentityOptions> _identityOptions
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
@@ -24,8 +25,7 @@
     }) ?? [];
 
     // Modules
-    var launcher = _navigator as ILauncher;
-    var allModules = await _navigator.GetModuleItemsAsync(Context);
+    var allModules = await _navigation.GetModuleItemsAsync(Context);
     var webModuleItems = allModules.OfType<WebModuleItem>().ToList();
     webModuleItems.ForEach(m => m.EventStream = Url.Content(m.EventStream));
 
@@ -49,13 +49,13 @@
     <div slot="app">
         @RenderBody()
     </div>
-    @if (launcher != null && launcher.GetRegion(LauncherRegion.Top) is RegionItem topRegion)
+    @if (_navigation.GetRegion(LauncherRegion.Top) is RegionItem topRegion)
     {
         <div slot="topRegion">
             @await Html.PartialAsync(topRegion.PartialView)
         </div>
     }
-    @if (launcher != null && launcher.GetRegion(LauncherRegion.Right) is RegionItem rightRegion)
+    @if (_navigation.GetRegion(LauncherRegion.Right) is RegionItem rightRegion)
     {
         <div slot="rightRegion">
 

@@ -13,17 +13,15 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moryx.Configuration;
 using Moryx.Identity;
+using Moryx.Launcher.Models;
 using Moryx.Modules;
 using Moryx.Tools;
 using Moryx.Web;
 
 namespace Moryx.Launcher;
-//TODO: make it internal in next major
-/// <inheritdoc />
-public class Navigation : INavigation
-{
-    private const string NotificationsBarName = "NotificationsBar";
 
+internal class Navigation : INavigation
+{
     private static ILogger _logger;
     private static PageLoader _pageLoader;
     private static EndpointDataSource _endpointsDataSource;

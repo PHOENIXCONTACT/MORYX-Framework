@@ -2,13 +2,14 @@
 @using System.Text.Json
 @using System.Text.Json.Serialization
 @using Moryx.Launcher
-@inject IShellNavigator _navigator
+@using Moryx.Launcher.Models
+@inject INavigation _navigation
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Home page";
-    var allModules = await _navigator.GetModuleItemsAsync(HttpContext);
+    var allModules = await _navigation.GetModuleItemsAsync(HttpContext);
     var webModuleItems = allModules.OfType<WebModuleItem>().ToList();
 }
 
