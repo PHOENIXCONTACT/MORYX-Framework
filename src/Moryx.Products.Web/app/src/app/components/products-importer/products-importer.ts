@@ -52,7 +52,7 @@ export class ProductsImporter {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
 
-  protected possibleImporters = toSignal(this.cacheService.importers$, { initialValue: [] });
+  protected possibleImporters = this.cacheService.importers;
   protected currentImporterName = toSignal(this.route.paramMap.pipe(map((pm) => pm.get("importer"))), {
     initialValue: this.route.snapshot.paramMap.get("importer"),
   });

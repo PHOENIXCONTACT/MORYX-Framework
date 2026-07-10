@@ -4,7 +4,6 @@
 */
 
 import { Component, inject, linkedSignal, ChangeDetectionStrategy } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -43,8 +42,8 @@ export class ProductParts {
   private router = inject(Router);
   private dialog = inject(MatDialog);
 
-  protected isEditMode = toSignal(this.editProductsService.edit$, { initialValue: false });
-  protected currentProduct = toSignal(this.editProductsService.currentProduct$);
+  protected isEditMode = this.editProductsService.editing;
+  protected currentProduct = this.editProductsService.currentProduct;
   protected expandedPart = linkedSignal(this.editProductsService.currentPartConnector);
   protected selectedPart = linkedSignal(this.editProductsService.currentPart);
   protected TranslationConstants = TranslationConstants;

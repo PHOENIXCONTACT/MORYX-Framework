@@ -5,19 +5,17 @@
 
 import { formatNumber } from "@angular/common";
 import { HttpErrorResponse } from "@angular/common/http";
-import { inject, Injectable, linkedSignal } from "@angular/core";
+import { computed, inject, Injectable, linkedSignal, signal } from "@angular/core";
 import { Router } from "@angular/router";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
 import { PrototypeToEntryConverter } from "@moryx/ngx-web-framework/entry-editor";
-import { BehaviorSubject, lastValueFrom } from "rxjs";
-import { map } from "rxjs/operators";
+import { lastValueFrom } from "rxjs";
 import { PartConnector, PartModel, ProductModel, RecipeModel } from "../api/models";
 import { ProductManagementService } from "@api/services/product-management.service";
 import { TranslationConstants } from "../extensions/translation-constants.extensions";
 import { DuplicateProductInfos } from "../models/DuplicateProductInfos";
 import { CacheProductsService } from "./cache-products.service";
 import { ProductStorageObject } from "./session.service";
-import { toSignal } from "@angular/core/rxjs-interop";
 
 @Injectable({
   providedIn: "root",
@@ -28,18 +26,15 @@ export class EditProductsService {
   private cacheProductsService = inject(CacheProductsService);
   private snackbarService = inject(SnackbarService);
 
-  public edit$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  readonly editing = signal<boolean>(false);
 
-  private currentProduct: BehaviorSubject<ProductModel | undefined> = new BehaviorSubject<ProductModel | undefined>(undefined);
-  public currentProduct$ = this.currentProduct.asObservable();
-  public currentProductId = toSignal(this.currentProduct$.pipe(map((p) => p?.id)));
-  private productSignal = toSignal(this.currentProduct$, { initialValue: undefined });
+  readonly currentProduct = signal<ProductModel | undefined>(undefined);
+  readonly currentProductId = computed(() => this.currentProduct()?.id);
 
-  private references: BehaviorSubject<ProductModel[] | undefined> = new BehaviorSubject<ProductModel[] | undefined>(undefined);
-  public references$ = this.references.asObservable();
+  readonly references = signal<ProductModel[] | undefined>(undefined);
 
   private recipe = linkedSignal<ProductModel | undefined, RecipeModel | undefined>({
-    source: this.productSignal,
+    source: this.currentProduct,
     computation: (currentProduct, previous) => {
     if (!currentProduct) {
       return undefined;
@@ -51,7 +46,7 @@ export class EditProductsService {
   maximumAlreadySavedRecipeId: number = 0;
 
   private partConnector = linkedSignal<ProductModel | undefined, PartConnector | undefined>({
-    source: this.productSignal,
+    source: this.currentProduct,
     computation: (currentProduct, previous) => {
     if (!currentProduct) {
       return undefined;
@@ -77,40 +72,40 @@ export class EditProductsService {
     this.currentRecipeNumber = productStorageObject.details.currentRecipeNumber;
     this.maximumAlreadySavedPartId = productStorageObject.details.maximumAlreadySavedPartId;
     this.maximumAlreadySavedRecipeId = productStorageObject.details.maximumAlreadySavedRecipeId;
-    this.currentProduct.next(productStorageObject.product);
+    this.currentProduct.set(productStorageObject.product);
     this.recipe.set(productStorageObject.product.recipes?.find(r => r.id === productStorageObject.details.currentRecipeNumber));
 
-    this.edit$.next(true);
+    this.editing.set(true);
   }
 
   setProduct(product: ProductModel | undefined) {
-    this.currentProduct.next(product);
-    this.references.next(undefined);
+    this.currentProduct.set(product);
+    this.references.set(undefined);
   }
 
   updateCurrentProduct(product: ProductModel) {
-    const current = this.currentProduct.value;
+    const current = this.currentProduct();
     if (Object.is(product, current)) {
       return;
     }
     if (current?.id !== product.id) {
       throw new Error("Tried to update product with id " + product.id + " but current product has id " + current?.id);
     }
-    this.currentProduct.next(product);
+    this.currentProduct.set(product);
   }
 
   resetProduct() {
-    this.currentProduct.next(undefined);
-    this.references.next(undefined);
+    this.currentProduct.set(undefined);
+    this.references.set(undefined);
   }
 
   setReferences(references: ProductModel[] | undefined) {
-    this.references.next(references);
+    this.references.set(references);
   }
 
   onEdit() {
     // Find the maximum id of the recipes of this product
-    const currentProduct = this.currentProduct.value;
+    const currentProduct = this.currentProduct();
     if (currentProduct?.recipes) {
       const recipeIds = currentProduct.recipes
         .map((e) => e.id)
@@ -137,11 +132,11 @@ export class EditProductsService {
       this.maximumAlreadySavedPartId = this.currentPartId;
     }
 
-    this.edit$.next(true);
+    this.editing.set(true);
   }
 
   async onSave() {
-    const productModel = this.currentProduct.value;
+    const productModel = this.currentProduct();
     if (!productModel || productModel.id === undefined) {
       return;
     }
@@ -184,12 +179,12 @@ export class EditProductsService {
       return;
     }
 
-    this.currentProduct.next(updated);
-    this.edit$.next(false);
+    this.currentProduct.set(updated);
+    this.editing.set(false);
   }
 
   async onCancel() {
-    this.edit$.next(false);
+    this.editing.set(false);
     const to = this.router.url;
     await this.router.navigate(['/cancel'], { queryParams: { to: encodeURIComponent(to) }, replaceUrl: true, });
   }
@@ -247,12 +242,12 @@ export class EditProductsService {
     return productName;
   }
 
-  addRecipe(recipe: RecipeModel) {const currentProduct = this.currentProduct.value;
+  addRecipe(recipe: RecipeModel) {const currentProduct = this.currentProduct();
     if (!currentProduct) {
       throw new Error("Invalid State: No current product set");
     }
     currentProduct.recipes!.push(recipe);
-    this.currentProduct.next({...currentProduct, recipes: [...currentProduct.recipes!]});
+    this.currentProduct.set({...currentProduct, recipes: [...currentProduct.recipes!]});
   }
 
   setRecipe(recipe: RecipeModel | undefined) {
@@ -267,7 +262,7 @@ export class EditProductsService {
     if (currentRecipe?.id !== recipe.id) {
       throw new Error("Invalid State: Tried to update recipe with id " + recipe.id + " but current recipe has id " + currentRecipe?.id);
     }
-    const currentProduct = this.currentProduct.value;
+    const currentProduct = this.currentProduct();
     if (!currentProduct) {
       throw new Error("Invalid State: No current product set");
     }
@@ -277,18 +272,18 @@ export class EditProductsService {
     }
     this.recipe.set(recipe);
     currentProduct.recipes![recipeIndex] = recipe;
-    this.currentProduct.next({...currentProduct, recipes: [...currentProduct.recipes!]});
+    this.currentProduct.set({...currentProduct, recipes: [...currentProduct.recipes!]});
   }
 
   removeRecipe(recipe: RecipeModel) {
-    const currentProduct = this.currentProduct.value;
+    const currentProduct = this.currentProduct();
     if (!currentProduct?.recipes) {
       return;
     }
     currentProduct.recipes = currentProduct.recipes.filter(
       (r) => r.id !== recipe.id
     );
-    this.currentProduct.next(currentProduct);
+    this.currentProduct.set(currentProduct);
   }
 
   setPartConnector(partConnector: PartConnector | undefined) {
@@ -300,7 +295,7 @@ export class EditProductsService {
   }
 
   addPartToConnector(newPart: PartModel) {
-    const product = this.currentProduct.value;
+    const product = this.currentProduct();
     if (!product) {
       throw new Error("Invalid State: No current product set");
     }
@@ -320,12 +315,12 @@ export class EditProductsService {
     }
 
     const updatedConnectors = product.parts?.map(c => c.name === connector.name ? {...connector} : c) ?? [];
-    this.currentProduct.next({...product, parts: updatedConnectors});
+    this.currentProduct.set({...product, parts: updatedConnectors});
     return newPart;
   }
 
   removePartFromConnector() {
-    const product = this.currentProduct.value;
+    const product = this.currentProduct();
     if (!product) {
       throw new Error("Invalid State: No current product set");
     }
@@ -345,7 +340,7 @@ export class EditProductsService {
       connector.parts = [] as PartModel[];
     }
     const updatedConnectors = product.parts?.map(c => c.name === connector.name ? {...connector} : c) ?? [];
-    this.currentProduct.next({...product, parts: updatedConnectors});
+    this.currentProduct.set({...product, parts: updatedConnectors});
   }
 }
 

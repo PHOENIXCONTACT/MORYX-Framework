@@ -4,7 +4,6 @@
 */
 
 import { Component, inject, linkedSignal, ChangeDetectionStrategy } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { EditProductsService } from '@app/services/edit-products.service';
@@ -28,7 +27,7 @@ export class ProductPartsDetailsComponent {
 
   protected partConnector = linkedSignal(this.editProductsService.currentPartConnector);
   protected productPart = linkedSignal(this.editProductsService.currentPart);
-  protected isEditMode = toSignal(this.editProductsService.edit$, { initialValue: false });
+  protected isEditMode = this.editProductsService.editing;
 
   TranslationConstants = TranslationConstants;
 

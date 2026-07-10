@@ -5,6 +5,7 @@
 
 import {
   Component,
+  effect,
   inject,
   OnDestroy,
   OnInit,
@@ -12,7 +13,6 @@ import {
   viewChild,
   ChangeDetectionStrategy
 } from "@angular/core";
-import { toSignal } from "@angular/core/rxjs-interop";
 import { MatDialog } from "@angular/material/dialog";
 import { MatMenuModule, MatMenuTrigger } from "@angular/material/menu";
 import { MatDrawer, MatSidenavModule } from "@angular/material/sidenav";
@@ -89,14 +89,14 @@ export class App implements OnInit, OnDestroy {
   private languageService = inject(LanguageService);
   private translateService = inject(TranslateService);
 
-  protected isEditMode = toSignal(this.editService.edit$, { initialValue: false });
-  protected selected = toSignal(this.editService.currentProduct$);
+  protected isEditMode = this.editService.editing;
+  protected selected = this.editService.currentProduct;
   products = signal<ProductModel[]>([]);
   productDefinitions = signal<ProductDefinitionModel[]>([]);
   protected hierarchic = signal(false);
   protected revisionOptions = signal<string[]>(Object.keys(RevisionFilter));
   protected selectorOptions = signal<string[]>(Object.keys(Selector));
-  importers = toSignal(this.cacheService.importers$, { initialValue: [] });
+  importers = this.cacheService.importers;
   protected menuTopLeftPosition = signal<{ x: string, y: string }>({x: '0', y: '0'});
   protected readonly trigger = viewChild.required(MatMenuTrigger);
 
@@ -115,6 +115,16 @@ export class App implements OnInit, OnDestroy {
     ]);
     this.translateService.setFallbackLang("en");
     this.translateService.use(this.languageService.getFallbackLang());
+
+    effect(() => {
+      this.products.set(this.cacheService.productsShownInTheTree() ?? []);
+      this.createDatasource(this.hierarchic());
+    });
+
+    effect(() => {
+      this.productDefinitions.set(this.cacheService.definitions() ?? []);
+      this.createDatasource(this.hierarchic());
+    });
   }
 
   private async getTranslations(): Promise<{ [key: string]: string }> {
@@ -129,16 +139,6 @@ export class App implements OnInit, OnDestroy {
 
   async ngOnInit() {
     this.hierarchic.set(this.sessionService.getProductTreeHierarchy());
-
-    this.cacheService.productsShownInTheTree.subscribe((products) => {
-      this.products.set(products ?? []);
-      this.createDatasource(this.hierarchic());
-    });
-
-    this.cacheService.definitions.subscribe((definitions) => {
-      this.productDefinitions.set(definitions ?? []);
-      this.createDatasource(this.hierarchic());
-    });
 
     // ToDo: MOve to route resolver for base path
     this.cacheService.loadConfiguration();

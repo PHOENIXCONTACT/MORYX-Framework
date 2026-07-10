@@ -4,7 +4,6 @@
 */
 
 import { Component, inject, linkedSignal, ChangeDetectionStrategy } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { CacheProductsService } from '@app/services/cache-products.service';
@@ -27,10 +26,10 @@ export class ProductRecipesDetails {
   private editProductsService = inject(EditProductsService);
   private cacheService = inject(CacheProductsService);
 
-  protected isEditMode = toSignal(this.editProductsService.edit$, { initialValue: false });
-  currentProduct = toSignal(this.editProductsService.currentProduct$);
+  protected isEditMode = this.editProductsService.editing;
+  currentProduct = this.editProductsService.currentProduct;
   protected currentRecipe = linkedSignal(this.editProductsService.currentRecipe);
-  recipeDefinitions = toSignal(this.cacheService.recipeDefinitions, { initialValue: [] });
+  recipeDefinitions = this.cacheService.recipeDefinitions;
   TranslationConstants = TranslationConstants;
 
   protected updateRecipe(properties: Entry | undefined) {

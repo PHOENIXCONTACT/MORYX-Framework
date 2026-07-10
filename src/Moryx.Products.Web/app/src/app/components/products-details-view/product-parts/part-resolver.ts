@@ -7,7 +7,6 @@ import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, RedirectCommand, ResolveFn, Router } from '@angular/router';
 import { PartModel } from '@api/models';
 import { EditProductsService } from '@app/services/edit-products.service';
-import { toSignal } from '@angular/core/rxjs-interop';
 
 /**
  * Sets the current part connector and part in the EditProductsService based on the partName and partId route parameter.
@@ -16,7 +15,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 export const PartsResolver: ResolveFn<PartModel | undefined> = async (route: ActivatedRouteSnapshot) => {
   const editService = inject(EditProductsService);
   const router = inject(Router);
-  const currentProduct = toSignal(editService.currentProduct$)();
+  const currentProduct = editService.currentProduct();
   const partId = Number(route.paramMap.get('partId'));
   const connectorName = route.paramMap.get('partName');
 

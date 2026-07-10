@@ -7,7 +7,6 @@ import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, RedirectCommand, ResolveFn, Router } from '@angular/router';
 import { RecipeModel } from '@api/models';
 import { EditProductsService } from '@app/services/edit-products.service';
-import { toSignal } from '@angular/core/rxjs-interop';
 
 /**
  * Sets the current recipe in the EditProductsService based on the recipeId route parameter.
@@ -16,7 +15,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 export const RecipeResolver: ResolveFn<RecipeModel> = async (route: ActivatedRouteSnapshot) => {
   const editService = inject(EditProductsService);
   const router = inject(Router);
-  const currentProduct = toSignal(editService.currentProduct$)();
+  const currentProduct = editService.currentProduct();
   const recipeId = Number(route.paramMap.get('recipeId'));
 
   if (!currentProduct) {

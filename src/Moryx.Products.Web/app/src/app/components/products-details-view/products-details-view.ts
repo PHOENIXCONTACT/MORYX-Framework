@@ -4,7 +4,6 @@
 */
 
 import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationCancel, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
@@ -33,8 +32,8 @@ export class ProductsDetailsView {
   private editProductsService = inject(EditProductsService);
   private activatedRoute = inject(ActivatedRoute);
 
-  isEditMode = toSignal(this.editProductsService.edit$, { initialValue: false });
-  protected currentProduct = toSignal(this.editProductsService.currentProduct$);
+  isEditMode = this.editProductsService.editing;
+  protected currentProduct = this.editProductsService.currentProduct;
   protected activeLink = signal<Tabs>(Tabs.Unknown);
 
   protected Tabs = Tabs;

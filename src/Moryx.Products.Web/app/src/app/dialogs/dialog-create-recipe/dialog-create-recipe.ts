@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, effect, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
@@ -47,10 +47,10 @@ export class DialogCreateRecipe {
   protected TranslationConstants = TranslationConstants;
 
   constructor() {
-    this.cacheService.recipeDefinitions.subscribe((recipeDefintions) => {
-      this.possibleRecipes.update(_ => recipeDefintions ?? []);
-      if (this.possibleRecipes().length > 0
-      ) {
+    effect(() => {
+      const recipeDefintions = this.cacheService.recipeDefinitions();
+      this.possibleRecipes.set(recipeDefintions ?? []);
+      if (this.possibleRecipes().length > 0) {
         this.result.update(e => {
           e.selectedRecipe = this.possibleRecipes()[0]
           return e;
@@ -59,8 +59,8 @@ export class DialogCreateRecipe {
       }
     });
 
-    this.cacheService.workplans.subscribe((workplans) => {
-      this.possibleWorkplans.set(workplans ?? []);
+    effect(() => {
+      this.possibleWorkplans.set(this.cacheService.workplans() ?? []);
     });
   }
 
