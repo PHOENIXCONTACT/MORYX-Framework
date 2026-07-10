@@ -9,9 +9,9 @@ import {
   ChangeDetectorRef,
   Component,
   computed,
+  effect,
   inject,
   input,
-  OnDestroy,
   OnInit,
   signal,
   ChangeDetectionStrategy
@@ -21,7 +21,6 @@ import { MatSlideToggleChange, MatSlideToggleModule } from "@angular/material/sl
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
 import { NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
 import { TranslatePipe } from "@ngx-translate/core";
-import { Subscription } from "rxjs";
 import { JobProcessModel } from "@api/models/job-process-model";
 import { ProcessActivityModel } from "@api/models/process-activity-model";
 import { ProcessEngineService } from "@api/services";
@@ -47,7 +46,7 @@ import { ProcessEngineStreamService } from "@app/services/process-engine-stream.
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./processes.scss"]
 })
-export class Processes implements OnInit, OnDestroy {
+export class Processes implements OnInit {
   private processEngineService = inject(ProcessEngineService);
   private processEngineEvents = inject(ProcessEngineStreamService);
   private snackbarService = inject(SnackbarService);
@@ -66,8 +65,10 @@ export class Processes implements OnInit, OnDestroy {
 
   protected TranslationConstants = TranslationConstants;
 
-  private processSubscription!: Subscription;
-  private activitySubscription!: Subscription;
+  constructor() {
+    effect(() => this.onProcessUpdated(this.processEngineEvents.updatedProcess()));
+    effect(() => this.onActivityUpdated(this.processEngineEvents.updatedActivity()));
+  }
 
   ngOnInit(): void {
     this.processEngineService
@@ -86,23 +87,6 @@ export class Processes implements OnInit, OnDestroy {
         error: async (e: HttpErrorResponse) =>
           await this.snackbarService.handleError(e)
       });
-
-
-
-    this.processSubscription =
-      this.processEngineEvents.updatedProcess.subscribe((p) =>
-        this.onProcessUpdated(p)
-      );
-
-    this.activitySubscription =
-      this.processEngineEvents.updatedActivity.subscribe((a) =>
-        this.onActivityUpdated(a)
-      );
-  }
-
-  ngOnDestroy(): void {
-    this.processSubscription.unsubscribe();
-    this.activitySubscription.unsubscribe();
   }
 
   onProcessUpdated(updatedProcess: JobProcessModel | undefined) {

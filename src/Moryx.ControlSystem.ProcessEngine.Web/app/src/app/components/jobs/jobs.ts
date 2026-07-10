@@ -4,7 +4,7 @@
 */
 
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, inject, OnInit, signal, ChangeDetectorRef, ChangeDetectionStrategy, DestroyRef } from "@angular/core";
+import { Component, effect, inject, OnInit, signal, ChangeDetectorRef, ChangeDetectionStrategy, DestroyRef } from "@angular/core";
 import { JobManagementService, OrderManagementService } from "@api/services";
 import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
 import { JobViewModel } from "@app/models/job-view-model";
@@ -65,7 +65,9 @@ export class Jobs implements OnInit {
   protected TranslationConstants = TranslationConstants;
 
   constructor() {
-      this.destroyRef.onDestroy(() => this.disconnectEvents());
+    this.destroyRef.onDestroy(() => this.disconnectEvents());
+
+    effect(() => this.updateJobs(this.jobManagementEvents.updatedJob()));
   }
 
   ngOnInit(): void {
@@ -73,10 +75,6 @@ export class Jobs implements OnInit {
 
     this.jobManagementEvents.connect();
     this.processEngineEvents.connect();
-
-    this.jobManagementEvents.updatedJob.subscribe((updatedJob) =>
-      this.updateJobs(updatedJob)
-    );
 
     this.orderManagementService.getOperations().subscribe({
       next: (value) => this.operations.update(_ => value),

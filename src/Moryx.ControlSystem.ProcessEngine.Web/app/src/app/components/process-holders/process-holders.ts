@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnInit, signal, viewChild, ChangeDetectionStrategy, DestroyRef } from "@angular/core";
+import { Component, effect, inject, OnInit, signal, viewChild, ChangeDetectionStrategy, DestroyRef } from "@angular/core";
 
 import { MatTree, MatTreeModule } from "@angular/material/tree";
 import { MatIconModule } from "@angular/material/icon";
@@ -72,6 +72,13 @@ export class ProcessHolders implements OnInit {
 
   constructor() {
     this.destroyRef.onDestroy(() => this.disconnectEvents());
+
+    effect(() => {
+      const group = this._processHolderStreamService.updatedProcessHolderGroups();
+      if (group) {
+        this.updateTree(ConvertToProcessHolderGroup(group));
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -83,12 +90,6 @@ export class ProcessHolders implements OnInit {
         this.processHolderGroups.set(response.data?.map((x) => ConvertToProcessHolderGroup(x)) ?? []);
         this.buildTree(this.processHolderGroups());
         this.loading.set(false);
-
-        this._processHolderStreamService.$updatedProcessHolderGroups.subscribe((group) => {
-          if (group) {
-            this.updateTree(ConvertToProcessHolderGroup(group));
-          }
-        });
       },
       error: (e: HttpErrorResponse) => {
         this.loading.set(false);

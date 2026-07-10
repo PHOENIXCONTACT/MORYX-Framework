@@ -3,8 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { inject, Injectable, signal } from '@angular/core';
 import { ProcessHolderGroupModel } from '@api/models/process-holder-group-model';
 import { ProcessEngineService } from '@api/services';
 
@@ -15,14 +14,14 @@ export class ProcessHolderStreamService {
   private processEngineService = inject(ProcessEngineService);
   private eventSource?: EventSource;
 
-  $updatedProcessHolderGroups = new BehaviorSubject<ProcessHolderGroupModel | undefined>(undefined);
+  updatedProcessHolderGroups = signal<ProcessHolderGroupModel | undefined>(undefined);
 
   connect() {
     this.eventSource = new EventSource(this.processEngineService.rootUrl + ProcessEngineService.GroupStreamPath);
     this.eventSource.onmessage = event => {
       const holderGroup = JSON.parse(event.data);
       console.log('update received :', holderGroup);
-      this.$updatedProcessHolderGroups.next(holderGroup);
+      this.updatedProcessHolderGroups.set(holderGroup);
     };
   }
 
@@ -33,4 +32,3 @@ export class ProcessHolderStreamService {
     }
   }
 }
-
