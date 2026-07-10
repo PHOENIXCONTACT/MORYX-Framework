@@ -4,9 +4,9 @@
 */
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
-import { BehaviorSubject, catchError, Observable, of } from 'rxjs';
+import { catchError, Observable, of } from 'rxjs';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { ContentDescriptorModel, VariantDescriptor } from '@api/models';
 import { MediaServerService } from '@api/services';
@@ -18,7 +18,7 @@ export class MediaService {
   private mediaServerService = inject(MediaServerService);
   private snackbarService = inject(SnackbarService);
 
-  contents: BehaviorSubject<ContentDescriptorModel[]> = new BehaviorSubject<ContentDescriptorModel[]>([] as ContentDescriptorModel[]);
+  readonly contents = signal<ContentDescriptorModel[]>([]);
   TranslationConstants = TranslationConstants;
 
   loadContents(): void {
@@ -30,7 +30,7 @@ export class MediaService {
         )
       )
       .subscribe((response) => {
-        this.contents.next(response);
+        this.contents.set(response);
       });
   }
 
@@ -45,7 +45,7 @@ export class MediaService {
   }
 
   getContent(id: string): ContentDescriptorModel | undefined {
-    const contentValues = this.contents.getValue();
+    const contentValues = this.contents();
     return contentValues.find((c) => c.id === id);
   }
 
@@ -69,7 +69,7 @@ export class MediaService {
             if (x !== undefined) {
               // Delay until server generate the preview
               this.wait(1000).then(() => {
-                this.contents.next([...this.contents.value, x]);
+                this.contents.update(items => [...items, x]);
               });
             }
           },
