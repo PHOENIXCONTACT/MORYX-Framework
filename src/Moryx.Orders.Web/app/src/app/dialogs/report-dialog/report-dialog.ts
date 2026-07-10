@@ -19,6 +19,7 @@ import { MatListModule } from "@angular/material/list";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatButtonModule } from "@angular/material/button";
 import { MatInputModule } from "@angular/material/input";
+import { MatIconModule } from "@angular/material/icon";
 
 @Component({
   selector: "app-report-dialog",
@@ -37,7 +38,8 @@ import { MatInputModule } from "@angular/material/input";
     MatProgressBarModule,
     MatButtonModule,
     MatInputModule,
-    MatRadioGroup
+    MatRadioGroup,
+    MatIconModule
   ]
 })
 export class ReportDialog implements OnInit {
