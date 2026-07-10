@@ -99,7 +99,9 @@ export class App {
       if (this.selected()?.id === resource?.id) {
         return;
       }
-      untracked(() => this.select(resource));
+      untracked(() => {
+        this.select(resource);
+      });
     });
   }
 

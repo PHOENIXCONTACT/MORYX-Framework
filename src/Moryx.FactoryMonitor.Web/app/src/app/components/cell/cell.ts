@@ -4,7 +4,7 @@
 */
 
 import { CdkDragEnd, DragDropModule } from '@angular/cdk/drag-drop';
-import { Component, computed, effect, ElementRef, inject, input, linkedSignal, viewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, computed, effect, ElementRef, inject, input, linkedSignal, untracked, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { VisualizableItemModel } from '@api/models';
 import { createUpdatedLocation } from '@app/extensions/locations';
@@ -34,10 +34,12 @@ export class Cell {
     // React to updates to the cell data
     effect(() => {
       const c = this.cellStoreService.cellUpdated();
-      if (!c || c.id !== this.currentCell()?.id) {
-        return;
-      }
-      this.currentCell.set({... c});
+      untracked(() => {
+        if (!c || c.id !== this.currentCell()?.id) {
+          return;
+        }
+        this.currentCell.set({... c});
+      });
     });
 
     // React to toggling of an order

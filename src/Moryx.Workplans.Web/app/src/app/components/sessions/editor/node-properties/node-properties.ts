@@ -4,7 +4,7 @@
 */
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, effect, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, effect, inject, signal, untracked, ChangeDetectionStrategy } from '@angular/core';
 import { Entry, NavigableEntryEditor, PrototypeToEntryConverter } from '@moryx/ngx-web-framework/entry-editor';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -52,12 +52,14 @@ export class NodeProperties {
       const step = this.editorStateService.isEditingStep();
       // Awaiting this results in a race condition,
       // this.node needs to be set before the observable provides the next value
-      if (this.node()) {
-        this.updateNode(this.node()!);
-      }
+      untracked(() => {
+        if (this.node()) {
+          this.updateNode(this.node()!);
+        }
 
-      this.node.set(step);
-      this.properties.set(step?.properties?.subEntries?.find(p => p.identifier === 'Parameters'));
+        this.node.set(step);
+        this.properties.set(step?.properties?.subEntries?.find(p => p.identifier === 'Parameters'));
+      });
     });
   }
 

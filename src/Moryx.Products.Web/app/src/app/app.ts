@@ -10,6 +10,7 @@ import {
   OnDestroy,
   OnInit,
   signal,
+  untracked,
   viewChild,
   ChangeDetectionStrategy
 } from "@angular/core";
@@ -117,13 +118,19 @@ export class App implements OnInit, OnDestroy {
     this.translateService.use(this.languageService.getFallbackLang());
 
     effect(() => {
-      this.products.set(this.cacheService.productsShownInTheTree() ?? []);
-      this.createDatasource(this.hierarchic());
+      const products = this.cacheService.productsShownInTheTree() ?? [];
+      untracked(() => {
+        this.products.set(products);
+        this.createDatasource(this.hierarchic());
+      });
     });
 
     effect(() => {
-      this.productDefinitions.set(this.cacheService.definitions() ?? []);
-      this.createDatasource(this.hierarchic());
+      const definitions = this.cacheService.definitions() ?? [];
+      untracked(() => {
+        this.productDefinitions.set(definitions);
+        this.createDatasource(this.hierarchic());
+      });
     });
   }
 

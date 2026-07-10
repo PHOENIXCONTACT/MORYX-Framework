@@ -4,7 +4,7 @@
 */
 
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, effect, inject, model, signal, ChangeDetectionStrategy } from "@angular/core";
+import { Component, effect, inject, model, signal, untracked, ChangeDetectionStrategy } from "@angular/core";
 import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
 import { Entry, NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
@@ -75,7 +75,9 @@ export class WorkerInstructions {
   constructor() {
     effect(() => {
       const instructions = this.instructionService.instructions();
-      this.onInstructionsUpdated(instructions);
+      untracked(() => {
+        this.onInstructionsUpdated(instructions);
+      });
     });
 
     this.translateService.addLangs([
@@ -110,7 +112,7 @@ export class WorkerInstructions {
     this.textItems.set(instruction.items?.filter(
       (i) => i.contentType == InstructionContentType.Text
     ) ?? []);
-    this.inputs.set(instruction.inputs!);
+    this.inputs.set(instruction.inputs);
   }
 
   private async fetchMediaContents(): Promise<DisplayedMediaContent[]> {
@@ -129,7 +131,7 @@ export class WorkerInstructions {
     const updatedIndex = this.instructions().findIndex(
       (i) => i.id === this.displayedInstruction()?.id
     );
-    if (updatedIndex < 0 || !this.inputs || !this.inputsChanged(this.inputs()!)) {
+    if (updatedIndex < 0 || !this.inputs || !this.inputsChanged(this.inputs())) {
       this.onIndexChange(this.instructions().length - 1);
       return;
     }
@@ -137,11 +139,11 @@ export class WorkerInstructions {
     this.activeInstructionIndex.set(updatedIndex);
   }
 
-  private inputsChanged(entry: Entry): boolean {
-    if (entry.value.current !== entry.value.default) {
+  private inputsChanged(entry: Entry | undefined): boolean {
+    if (entry?.value.current !== entry?.value.default) {
       return true;
     }
-    if (!entry.subEntries?.length) {
+    if (!entry?.subEntries?.length) {
       return false;
     }
     return entry.subEntries.some((s: Entry) => this.inputsChanged(s));

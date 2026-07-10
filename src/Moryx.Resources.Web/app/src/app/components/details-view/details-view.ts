@@ -41,7 +41,9 @@ export class DetailsView {
       if (this.oldResourceId === resource.id) {
         return;
       }
-      untracked(() => this.onNewResource(resource));
+      untracked(() => {
+        this.onNewResource(resource);
+      });
     });
   }
 

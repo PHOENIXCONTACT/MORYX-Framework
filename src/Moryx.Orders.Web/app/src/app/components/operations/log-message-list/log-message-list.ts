@@ -39,7 +39,9 @@ export class LogMessageList implements OnInit {
   constructor() {
     effect(() => {
       const guid = this.guid();
-      untracked(() => this.fetchMessages(guid));
+      untracked(() => {
+        this.fetchMessages(guid);
+      });
     });
   }
 

@@ -64,8 +64,10 @@ export class SkillTypeDetails {
   constructor() {
     effect(() => {
       const id = this.id();
-      untracked(() => this.initialize(id));
-    })
+      untracked(() => {
+        this.initialize(id);
+      });
+    });
   }
 
   initialize(id: number) {

@@ -4,7 +4,7 @@
 */
 
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, effect, inject, OnInit, signal, ChangeDetectorRef, ChangeDetectionStrategy, DestroyRef } from "@angular/core";
+import { Component, effect, inject, OnInit, signal, untracked, ChangeDetectorRef, ChangeDetectionStrategy, DestroyRef } from "@angular/core";
 import { JobManagementService, OrderManagementService } from "@api/services";
 import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
 import { JobViewModel } from "@app/models/job-view-model";
@@ -67,7 +67,12 @@ export class Jobs implements OnInit {
   constructor() {
     this.destroyRef.onDestroy(() => this.disconnectEvents());
 
-    effect(() => this.updateJobs(this.jobManagementEvents.updatedJob()));
+    effect(() => {
+      const updatedJob = this.jobManagementEvents.updatedJob();
+      untracked(() => {
+        this.updateJobs(updatedJob);
+      });
+    });
   }
 
   ngOnInit(): void {

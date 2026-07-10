@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, ElementRef, inject, computed, effect, input, viewChild, linkedSignal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ElementRef, inject, computed, effect, input, viewChild, linkedSignal, untracked, ChangeDetectionStrategy } from '@angular/core';
 import { CellStoreService } from '@app/services/cell-store.service';
 import { CdkDragEnd, DragDropModule } from '@angular/cdk/drag-drop';
 import { EditMenuState } from '@app/services/EditMenutState';
@@ -69,14 +69,16 @@ export class Factory {
     // React to updates to the cell data
     effect(() => {
       const cell = this.cellStoreService.cellUpdated();
-      if (!cell || cell.factoryId != this.parameters().id) {
-        return;
-      }
+      untracked(() => {
+        if (!cell || cell.factoryId != this.parameters().id) {
+          return;
+        }
 
-      this.cells.update(cells => {
-        const index = cells.findIndex(c => c.id === cell.id);
-        cells[index] = cell;
-        return [... cells];
+        this.cells.update(cells => {
+          const index = cells.findIndex(c => c.id === cell.id);
+          cells[index] = cell;
+          return [... cells];
+        });
       });
     });
   }

@@ -4,7 +4,7 @@
 */
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, effect, inject, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, effect, inject, OnDestroy, OnInit, signal, untracked, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, RouterOutlet } from '@angular/router';
 import { SnackbarService, SearchBarService, SearchRequest, SearchSuggestion } from '@moryx/ngx-web-framework/services';
@@ -61,16 +61,22 @@ export class Sessions implements OnInit, OnDestroy {
   constructor() {
     effect(() => {
       const tokens = this.sessionService.availableSessions();
-      this.onSessionsChanged(tokens);
+      untracked(() => {
+        this.onSessionsChanged(tokens);
+      });
     });
     effect(() => {
       const token = this.sessionService.activeSession();
-      this.onActiveSessionChanged(token);
+      untracked(() => {
+        this.onActiveSessionChanged(token);
+      });
     });
     effect(() => {
       const session = this.sessionService.sessionUpdated();
       if (session) {
-        this.onSessionUpdated(session);
+        untracked(() => {
+          this.onSessionUpdated(session);
+        });
       }
     });
   }

@@ -14,6 +14,7 @@ import {
   input,
   OnInit,
   signal,
+  untracked,
   ChangeDetectionStrategy
 } from "@angular/core";
 import { MatListModule } from "@angular/material/list";
@@ -66,8 +67,18 @@ export class Processes implements OnInit {
   protected TranslationConstants = TranslationConstants;
 
   constructor() {
-    effect(() => this.onProcessUpdated(this.processEngineEvents.updatedProcess()));
-    effect(() => this.onActivityUpdated(this.processEngineEvents.updatedActivity()));
+    effect(() => {
+      const process = this.processEngineEvents.updatedProcess();
+      untracked(() => {
+        this.onProcessUpdated(process);
+      });
+    });
+    effect(() => {
+      const activity = this.processEngineEvents.updatedActivity();
+      untracked(() => {
+        this.onActivityUpdated(activity);
+      });
+    });
   }
 
   ngOnInit(): void {

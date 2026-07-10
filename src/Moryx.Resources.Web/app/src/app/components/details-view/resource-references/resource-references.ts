@@ -64,7 +64,9 @@ export class ResourceReferences {
       if (!resource) {
         return;
       }
-      untracked(() => this.loadReferences(resource));
+      untracked(() => {
+        this.loadReferences(resource);
+      });
     });
   }
 

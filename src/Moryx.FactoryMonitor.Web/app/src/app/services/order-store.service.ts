@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { computed, effect, inject, Injectable, signal } from '@angular/core';
+import { computed, effect, inject, Injectable, signal, untracked } from '@angular/core';
 import { FactoryStateModel } from '@api/models';
 import { InternalOperationClassification } from '@api/models/internal-operation-classification';
 import { Converter } from '../extensions/converter';
@@ -27,7 +27,9 @@ export class OrderStoreService {
     effect(() => {
       const order = this.factoryStateStreamService.updatedOrder();
       if (order) {
-        this.updateOrder(order);
+        untracked(() => {
+          this.updateOrder(order);
+        });
       }
     });
   }

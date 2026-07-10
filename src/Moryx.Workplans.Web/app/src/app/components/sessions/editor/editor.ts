@@ -5,7 +5,7 @@
 
 import { CdkDragDrop, CdkDragEnd, CdkDragStart, DragDropModule, DragRef, Point } from '@angular/cdk/drag-drop';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, computed, effect, inject, OnInit, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, signal, untracked, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatDrawer, MatDrawerMode, MatSidenavModule } from '@angular/material/sidenav';
 import { ActivatedRoute, ActivatedRouteSnapshot, ParamMap, Params, Router } from '@angular/router';
@@ -123,9 +123,11 @@ export class Editor implements OnInit {
 
     // React to workplan changes
     effect(() => {
-      this.editorState.notifyWorkplanChanged();
-      this.scheduleRenderPaths();
-      this.gatherInputIds();
+      this.editorState.workplanChanged();
+      untracked(() => {
+        this.scheduleRenderPaths();
+        this.gatherInputIds();
+      });
     });
 
     // Configure initial state of the editor from route
