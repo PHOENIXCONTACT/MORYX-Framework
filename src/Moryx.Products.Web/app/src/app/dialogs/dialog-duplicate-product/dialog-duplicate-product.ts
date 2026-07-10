@@ -38,10 +38,8 @@ export class DialogDuplicateProduct {
   protected TranslationConstants = TranslationConstants;
 
   constructor() {
-    this.productToDuplicate.update(_ => this.data);
-    this.duplicateInfos.update(_ => {
-      return {product: this.data} as DuplicateProductInfos
-    });
+    this.productToDuplicate.set(this.data);
+    this.duplicateInfos.set({product: this.data} as DuplicateProductInfos);
   }
 
   protected onClose() {

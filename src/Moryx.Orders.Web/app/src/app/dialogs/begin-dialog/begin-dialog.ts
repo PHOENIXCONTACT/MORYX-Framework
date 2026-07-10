@@ -126,7 +126,7 @@ export class BeginDialog implements OnInit {
       value: this.currentPartialAmount,
       disabled: !this.canBegin && !this.canReduce
     });
-    this.targetAmountControl.valueChanges.subscribe(value => this.newTargetAmount.update(_ => value));
+    this.targetAmountControl.valueChanges.subscribe(value => this.newTargetAmount.set(value));
   }
 
   ngOnInit(): void {

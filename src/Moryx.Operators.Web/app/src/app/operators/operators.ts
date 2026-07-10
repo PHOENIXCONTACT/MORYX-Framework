@@ -48,7 +48,7 @@ export class Operators {
       .getOperatorsByResourceId(this.workstation()?.data.id ?? 0)
       .subscribe(
         (skilledOperators: ExtendedOperatorModel[]) =>
-          (this.operators.update(_ => skilledOperators.map(
+          (this.operators.set(skilledOperators.map(
               (operator) =>
                 new OperatorViewModel(<AssignableOperator>{
                   identifier: operator.identifier,

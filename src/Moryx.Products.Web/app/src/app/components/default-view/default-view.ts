@@ -43,19 +43,19 @@ export class DefaultView implements OnInit {
       ])
       .subscribe(translations => {
         if (this.router.url.includes('recipes')) {
-          this.headerText.update(_ => translations[TranslationConstants.APP.EMPTY_STATE_RECIPES_HEADER]);
-          this.messageText.update(_ => translations[TranslationConstants.APP.EMPTY_STATE_RECIPES_TEXT]);
+          this.headerText.set(translations[TranslationConstants.APP.EMPTY_STATE_RECIPES_HEADER]);
+          this.messageText.set(translations[TranslationConstants.APP.EMPTY_STATE_RECIPES_TEXT]);
           return;
         }
 
         if (this.router.url.includes('parts')) {
-          this.headerText.update(_ => translations[TranslationConstants.APP.EMPTY_STATE_PARTS_HEADER]);
-          this.messageText.update(_ => translations[TranslationConstants.APP.EMPTY_STATE_PARTS_TEXT]);
+          this.headerText.set(translations[TranslationConstants.APP.EMPTY_STATE_PARTS_HEADER]);
+          this.messageText.set(translations[TranslationConstants.APP.EMPTY_STATE_PARTS_TEXT]);
           return;
         }
 
-        this.headerText.update(_ => translations[TranslationConstants.APP.EMPTY_STATE_HEADER]);
-        this.messageText.update(_ => translations[TranslationConstants.APP.EMPTY_STATE_TEXT]);
+        this.headerText.set(translations[TranslationConstants.APP.EMPTY_STATE_HEADER]);
+        this.messageText.set(translations[TranslationConstants.APP.EMPTY_STATE_TEXT]);
       });
   }
 }

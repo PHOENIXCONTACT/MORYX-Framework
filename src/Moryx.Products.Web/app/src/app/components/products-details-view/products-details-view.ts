@@ -48,13 +48,13 @@ export class ProductsDetailsView {
       if (val instanceof NavigationEnd || val instanceof NavigationCancel) {
         const url = this.router.url;
         if (this.regexProperties.test(url)) {
-          this.activeLink.update(_ => Tabs.Properties);
+          this.activeLink.set(Tabs.Properties);
         } else if (this.regexParts.test(url)) {
-          this.activeLink.update(_ => Tabs.Parts);
+          this.activeLink.set(Tabs.Parts);
         } else if (this.regexRecipes.test(url)) {
-          this.activeLink.update(_ => Tabs.Recipes);
+          this.activeLink.set(Tabs.Recipes);
         } else if (this.regexReferences.test(url)) {
-          this.activeLink.update(_ => Tabs.References);
+          this.activeLink.set(Tabs.References);
         }
       }
     });

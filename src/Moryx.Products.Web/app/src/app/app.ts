@@ -316,9 +316,7 @@ export class App implements OnInit, OnDestroy {
 
   private open(x: number, y: number, productId: number) {
     this.trigger().menuData = {id: productId};
-    this.menuTopLeftPosition.update(_ => {
-      return {x: `${x}px`, y: `${y}px`}
-    });
+    this.menuTopLeftPosition.set({x: `${x}px`, y: `${y}px`});
     this.trigger().openMenu();
   }
 

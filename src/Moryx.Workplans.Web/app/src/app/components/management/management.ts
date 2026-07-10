@@ -65,16 +65,16 @@ export class Management implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.isLoading.update(_ => true);
+    this.isLoading.set(true);
     this.workplanService.getAllWorkplans().subscribe({
       next: workplans => {
-        this.workplans.update(_ => workplans);
+        this.workplans.set(workplans);
         this.dataSource = new MatTableDataSource<WorkplanModel>(this.workplans());
-        this.isLoading.update(_ => false);
+        this.isLoading.set(false);
       },
       error: async (e: HttpErrorResponse) => {
         await this.snackbarService.handleError(e);
-        this.isLoading.update(_ => false);
+        this.isLoading.set(false);
       }
     });
 
@@ -84,7 +84,7 @@ export class Management implements OnInit, OnDestroy {
   }
 
   private async onSessionsChanged(tokens: string[]): Promise<void> {
-    this.sessions.update(_ => []);
+    this.sessions.set([]);
     await Promise.all(
       tokens.map(
         async token =>

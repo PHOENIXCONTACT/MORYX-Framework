@@ -77,7 +77,7 @@ export class Jobs implements OnInit {
     this.processEngineEvents.connect();
 
     this.orderManagementService.getOperations().subscribe({
-      next: (value) => this.operations.update(_ => value),
+      next: (value) => this.operations.set(value),
       error: async (e: HttpErrorResponse) =>
         await this.snackbarService.handleError(e)
     });
@@ -96,7 +96,7 @@ export class Jobs implements OnInit {
     if (!existingJob) {
       this.jobCollection().push(new JobViewModel(updatedJob));
     } else if (updatedJob.state === "Completed") {
-      this.jobCollection.update(_ => this.jobCollection().filter((jVm) => jVm !== existingJob));
+      this.jobCollection.set(this.jobCollection().filter((jVm) => jVm !== existingJob));
     } else {
       existingJob.updateModel(updatedJob);
 
@@ -129,12 +129,12 @@ export class Jobs implements OnInit {
   private fetchJobs() {
     this.jobManagementService.getAll().subscribe({
       next: (data) => {
-        this.jobCollection.update(_ => data.map((model) => new JobViewModel(model)));
-        this.isLoading.update(_ => false);
+        this.jobCollection.set(data.map((model) => new JobViewModel(model)));
+        this.isLoading.set(false);
       },
       error: async (err: HttpErrorResponse) => {
         await this.snackbarService.handleError(err);
-        this.isLoading.update(_ => false);
+        this.isLoading.set(false);
       }
     });
   }

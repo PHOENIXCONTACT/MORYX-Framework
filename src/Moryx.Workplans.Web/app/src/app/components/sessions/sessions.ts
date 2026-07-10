@@ -85,10 +85,10 @@ export class Sessions implements OnInit, OnDestroy {
 
   onSessionUpdated(updated: WorkplanSessionModel) {
     if (this.activeSession()?.sessionToken === updated.sessionToken) {
-      this.activeSession.update(_ => updated);
+      this.activeSession.set(updated);
     }
 
-    this.sessions.update(_ => this.sessions().filter(s => s.sessionToken !== updated.sessionToken));
+    this.sessions.set(this.sessions().filter(s => s.sessionToken !== updated.sessionToken));
     this.sessions.update(items => {
       items.push(updated);
       return items;
@@ -106,12 +106,12 @@ export class Sessions implements OnInit, OnDestroy {
             .then((value: WorkplanSessionModel) => newSessions.push(value))
             .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err))
       )
-    ).then(() => (this.sessions.update(_ => newSessions)));
+    ).then(() => (this.sessions.set(newSessions)));
   }
 
   private async onActiveSessionChanged(token: string | undefined) {
     const result = token ? await this.sessionService.getSession(token).toAsync() : undefined;
-    this.activeSession.update(_ => result);
+    this.activeSession.set(result);
     if (this.activeSession()) {
       this.router.navigate(['session', this.activeSession()?.sessionToken]);
     }

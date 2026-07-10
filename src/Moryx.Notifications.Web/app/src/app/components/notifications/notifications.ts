@@ -32,7 +32,7 @@ export class Notifications {
   protected getIcon = getIcon;
 
   protected onUpdateHoveredIdentifier(identifier: string | undefined){
-    this.hoveredNotificationIdentifier.update(_ => identifier)
+    this.hoveredNotificationIdentifier.set(identifier)
   }
 
   protected select(notification: NotificationModel): void {

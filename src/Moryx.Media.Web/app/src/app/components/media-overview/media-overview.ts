@@ -86,7 +86,7 @@ export class MediaOverview implements OnInit, OnDestroy {
 
     if (result.submitted) {
       this.searchBarService.clearSuggestions();
-      this.filteredContents.update(_ => contents);
+      this.filteredContents.set(contents);
       this.searchBarService.subscribe({
         next: (newRequest: SearchRequest) => {
           this.onSearch(newRequest);
@@ -102,7 +102,7 @@ export class MediaOverview implements OnInit, OnDestroy {
         const url = urlBase + content.id;
         searchSuggestions.push({text: content.name, url: url});
       }
-      this.filteredContents.update(_ => contents);
+      this.filteredContents.set(contents);
       this.searchBarService.provideSuggestions(searchSuggestions);
     }
   }
@@ -115,7 +115,7 @@ export class MediaOverview implements OnInit, OnDestroy {
   }
 
   protected onSelectMedia(content: ContentDescriptorModel) {
-    this.selectedContent.update(_ => content.id);
+    this.selectedContent.set(content.id);
     this.router.navigate(['/details/', content.id]);
   }
 
@@ -160,7 +160,7 @@ export class MediaOverview implements OnInit, OnDestroy {
       this.mediaService.removeContent(content.id).subscribe(() => {
         this.contents.update(items => items.filter(c => c.id !== content.id));
         this.filteredContents.update(items => items.filter(c => c.id !== content.id));
-        this.selectedContent.update(_ => undefined);
+        this.selectedContent.set(undefined);
       });
     }
   }

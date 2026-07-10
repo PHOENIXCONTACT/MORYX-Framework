@@ -40,7 +40,7 @@ export class DialogCreateRevision {
   protected TranslationConstants = TranslationConstants;
 
   constructor() {
-    this.product.update(_ => this.data);
+    this.product.set(this.data);
   }
 
   protected onClose() {

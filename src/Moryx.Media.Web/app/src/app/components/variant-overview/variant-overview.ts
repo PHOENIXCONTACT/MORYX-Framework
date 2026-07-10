@@ -88,7 +88,7 @@ export class VariantOverview implements OnInit, OnDestroy {
         this.loadPreviews();
       } else {
         this.mediaService.loadContent(id).subscribe((x) => {
-          this.content.update(_ => x);
+          this.content.set(x);
           if (this.content() !== undefined) {
             this.loadPreviews();
           }
@@ -192,8 +192,8 @@ export class VariantOverview implements OnInit, OnDestroy {
     }
 
     if (this.selectedVariant()?.name !== variant.name) {
-      this.selectedVariant.update(_ => variant);
-      this.bigPictureLoadingState.update(_ => 1);
+      this.selectedVariant.set(variant);
+      this.bigPictureLoadingState.set(1);
       this.loadPicture(variant);
     }
   }
@@ -219,7 +219,7 @@ export class VariantOverview implements OnInit, OnDestroy {
                 typeof variant.mimeType === 'string' &&
                 variant.mimeType.includes('image')
               ) {
-                this.bigPictureUrl.update(_ => this.downloadPictureUrl);
+                this.bigPictureUrl.set(this.downloadPictureUrl);
               } else if (
                 typeof variant.mimeType === 'string' &&
                 variant.mimeType.includes('application/pdf')
@@ -230,17 +230,17 @@ export class VariantOverview implements OnInit, OnDestroy {
                 this.pdfObjectUrl = URL.createObjectURL(bigPicture);
                 this.pdfUrl.update((_) => this.pdfObjectUrl);
               } else {
-                this.bigPictureUrl.update(_ => this.defaultPictureUrl());
+                this.bigPictureUrl.set(this.defaultPictureUrl());
               }
               if (
                 typeof variant.mimeType === 'string' &&
                 variant.mimeType.includes('application/pdf')
               ) {
-                this.bigPictureIsPdf.update(_ => true);
+                this.bigPictureIsPdf.set(true);
               } else {
-                this.bigPictureIsPdf.update(_ => false);
+                this.bigPictureIsPdf.set(false);
               }
-              this.bigPictureLoadingState.update(_ => 2);
+              this.bigPictureLoadingState.set(2);
             };
           }
         });
@@ -294,7 +294,7 @@ export class VariantOverview implements OnInit, OnDestroy {
                       resultData.file.type,
                       id
                     );
-                    this.content.update(_ => x);
+                    this.content.set(x);
                   });
                 }
               });

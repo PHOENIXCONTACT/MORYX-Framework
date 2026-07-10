@@ -135,9 +135,9 @@ export class Editor implements OnInit {
   private gatherInputIds() {
     const ids = this.editorState.workplan?.nodes!.flatMap(n => n.inputs!.map(i => 'in_' + n.id + '-' + i.index));
     if (ids) {
-      this.inputIds.update(_ => ids);
+      this.inputIds.set(ids);
     } else {
-      this.inputIds.update(_ => []);
+      this.inputIds.set([]);
     }
   }
 
@@ -174,7 +174,7 @@ export class Editor implements OnInit {
 
   ngOnInit(): void {
     this.workplanEditingService.availableSteps().subscribe({
-      next: steps => (this.availableSteps.update(_ => steps)),
+      next: steps => (this.availableSteps.set(steps)),
       error: async (e: HttpErrorResponse) => await this.snackbarService.handleError(e)
     });
     this.sessionService.getSession(this.sessionToken).subscribe({
@@ -186,10 +186,10 @@ export class Editor implements OnInit {
         await this.snackbarService.handleError(e);
         this.sessionService.deactivateSession();
         this.router.navigate(['session', 'management']);
-        this.isLoading.update(_ => false);
+        this.isLoading.set(false);
       },
       complete: () => {
-        this.isLoading.update(_ => false);
+        this.isLoading.set(false);
       }
     });
   }
@@ -288,9 +288,7 @@ export class Editor implements OnInit {
     node.positionLeft = (node.positionLeft ?? 0) + Math.ceil(event.distance.x / this.canvasScale);
     node.positionTop = (node.positionTop ?? 0) + Math.ceil(event.distance.y / this.canvasScale);
     // Reset drag position as the position is now changed on the node
-    this.dragPosition.update(_ => {
-      return {x: 0, y: 0};
-    });
+    this.dragPosition.set({x: 0, y: 0});
 
     this.sessionService.updateSession(this.editorState.workplan).subscribe({
       next: session => this.editorState.setWorkplan(session),
@@ -316,7 +314,7 @@ export class Editor implements OnInit {
       return;
     }
 
-    this.newStepPosition.update(_ => new Position(event.offsetX - this.size, event.offsetY - this.size));
+    this.newStepPosition.set(new Position(event.offsetX - this.size, event.offsetY - this.size));
     stepRecipe.positionLeft = this.newStepPosition()?.left;
     stepRecipe.positionTop = this.newStepPosition()?.top;
 
@@ -401,7 +399,7 @@ export class Editor implements OnInit {
         });
       });
     }) ?? [];
-    this.workplanPaths.update(_ => result);
+    this.workplanPaths.set(result);
   }
 
   protected onPathDeleteClick() {
@@ -421,7 +419,7 @@ export class Editor implements OnInit {
         next: session => {
           this.sessionService.registerUpdatedSession(session);
           this.editorState.setWorkplan(session);
-          this.workplanPaths.update(_ => this.workplanPaths().filter(p => p !== data));
+          this.workplanPaths.set(this.workplanPaths().filter(p => p !== data));
           this.pathMenuTrigger().menuData = undefined;
         },
         error: async (err: HttpErrorResponse) => await this.snackbarService.handleError(err)

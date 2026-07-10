@@ -78,21 +78,21 @@ export class App implements OnInit, OnDestroy {
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(async (e: NavigationEnd) => {
         const translations = await this.getTranslations();
-        this.navigatedUrl.update(_ => e.url);
+        this.navigatedUrl.set(e.url);
         if (this.navigatedUrl() !== '/management') {
-          this.changeViewTooltip.update(_ => translations[TranslationConstants.APP.OPEN_WORKPLAN_MANAGEMENT]);
-          this.changeViewDisabled.update(_ => false);
+          this.changeViewTooltip.set(translations[TranslationConstants.APP.OPEN_WORKPLAN_MANAGEMENT]);
+          this.changeViewDisabled.set(false);
           return;
         }
 
         if (this.sessionService.activeSession()) {
-          this.changeViewTooltip.update(_ => translations[TranslationConstants.APP.OPEN_WORKPLAN_SESSIONS]);
-          this.changeViewDisabled.update(_ => false);
+          this.changeViewTooltip.set(translations[TranslationConstants.APP.OPEN_WORKPLAN_SESSIONS]);
+          this.changeViewDisabled.set(false);
           return;
         }
 
-        this.changeViewTooltip.update(_ => translations[TranslationConstants.APP.NO_SESSION_IS_OPEN]);
-        this.changeViewDisabled.update(_ => true);
+        this.changeViewTooltip.set(translations[TranslationConstants.APP.NO_SESSION_IS_OPEN]);
+        this.changeViewDisabled.set(true);
       });
 
     this.subscriptions.push(routerSubscription);

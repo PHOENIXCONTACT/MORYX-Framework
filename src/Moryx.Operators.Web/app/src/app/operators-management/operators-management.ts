@@ -60,7 +60,7 @@ export class OperatorsManagement {
   protected TranslationConstants = TranslationConstants;
 
   protected updateMenuMode(value: boolean) {
-    this.inMenuMode.update(_ => value);
+    this.inMenuMode.set(value);
   }
 
   protected onDeleteClick(operator: OperatorViewModel) {

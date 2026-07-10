@@ -87,14 +87,14 @@ export class WorkstationOperators {
     }
 
     //expand this workstation card
-    this.workstationTogglingState.update(_ => <WorkstationTogglingState>{
+    this.workstationTogglingState.set(<WorkstationTogglingState>{
       station,
       isExpanded: true
     });
   }
 
   protected toggleWorkstationCard(station: WorkstationViewModel | undefined) {
-    this.workstationTogglingState.update(_ => <WorkstationTogglingState>{
+    this.workstationTogglingState.set(<WorkstationTogglingState>{
       station,
       isExpanded: !this.workstationTogglingState()?.isExpanded
     });

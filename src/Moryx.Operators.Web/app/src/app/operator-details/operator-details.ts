@@ -94,8 +94,8 @@ export class OperatorDetails {
         return;
       }
 
-      this.operatorViewModel.update(_ => result);
-      this.operator.update(_ => result.data);
+      this.operatorViewModel.set(result);
+      this.operator.set(result.data);
     });
 
 
@@ -113,18 +113,18 @@ export class OperatorDetails {
   }
 
   protected onStopEditing() {
-    this.operator.update(_ => this.appStoreService.cancelEditing(this.operator()));
-    this.editMode.update(_ => false);
+    this.operator.set(this.appStoreService.cancelEditing(this.operator()));
+    this.editMode.set(false);
   }
 
   protected onStartEditing() {
-    this.editMode.update(_ => true);
+    this.editMode.set(true);
   }
 
   protected async onSave() {
     await this.appStoreService.updateOperator(this.operator())
       .then(() => {
-        this.editMode.update(_ => false);
+        this.editMode.set(false);
       });
   }
 

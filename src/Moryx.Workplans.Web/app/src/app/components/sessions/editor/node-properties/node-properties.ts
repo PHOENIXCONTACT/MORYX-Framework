@@ -88,7 +88,7 @@ export class NodeProperties {
       })
       .catch(async (e: HttpErrorResponse) => {
         await this.snackbarService.handleError(e);
-        this.node.update(_ => node);
+        this.node.set(node);
       });
   }
 

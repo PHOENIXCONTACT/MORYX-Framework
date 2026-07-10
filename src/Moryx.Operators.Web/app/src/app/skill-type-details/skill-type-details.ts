@@ -72,7 +72,7 @@ export class SkillTypeDetails {
 
     if (id <= 0) {
       this.appStoreService.getSkillTypePrototype().then((prototype) => {
-        this.skillType.update(_ => <SkillType>{
+        this.skillType.set(<SkillType>{
           id: 0,
           name: "",
           acquiredCapabilities: prototype.capabilities,
@@ -94,7 +94,7 @@ export class SkillTypeDetails {
         duration: Number(skillData.duration?.split(".")[0] ?? 0)
       });
 
-      this.skillType.update(_ => <SkillType>{
+      this.skillType.set(<SkillType>{
         id: skillData.id,
         name: skillData.name,
         acquiredCapabilities: skillData.capabilities,

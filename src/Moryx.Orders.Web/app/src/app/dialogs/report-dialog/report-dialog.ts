@@ -71,24 +71,24 @@ export class ReportDialog implements OnInit {
   protected data = inject<ReportDialogData>(MAT_DIALOG_DATA);
 
   async ngOnInit() {
-    this.isLoading.update(_=> true);
+    this.isLoading.set(true);
     const result = await this.data
       .onGetContext(this.data.operation.model.identifier!)
       .toAsync();
-    this.reportContext.update(_=> result);
-    this.success.update(_=> this.reportContext()?.unreportedSuccess ?? 0);
-    this.scrap.update(_=> this.reportContext()?.unreportedFailure ?? 0);
-    this.isLoading.update(_=> false);
+    this.reportContext.set(result);
+    this.success.set(this.reportContext()?.unreportedSuccess ?? 0);
+    this.scrap.set(this.reportContext()?.unreportedFailure ?? 0);
+    this.isLoading.set(false);
     if (this.reportContext()?.canPartial) {
-      this.confirmationType.update(_=> "partial");
+      this.confirmationType.set("partial");
     }
     else {
-      this.confirmationType.update(_=> "final");
+      this.confirmationType.set("final");
     }
   }
 
   protected async submit(): Promise<void> {
-    this.isLoading.update(_=> true);
+    this.isLoading.set(true);
 
     const report = <ReportModel>{
       successCount: this.success(),
@@ -106,7 +106,7 @@ export class ReportDialog implements OnInit {
       .toAsync()
       .catch(() => {
         failed = true;
-        this.isLoading.update(_=> false);
+        this.isLoading.set(false);
       });
     if (!failed) {
       this.dialog.close();
