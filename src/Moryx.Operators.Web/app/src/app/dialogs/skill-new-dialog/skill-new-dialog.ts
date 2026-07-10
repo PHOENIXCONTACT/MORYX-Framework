@@ -5,7 +5,6 @@
 
 
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -13,7 +12,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { OperatorSkill } from '@app/models/operator-skill-model';
-import { SkillType } from '@app/models/skill-type-model';
 import { AppStoreService } from '@app/services/app-store.service';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -42,7 +40,7 @@ export class SkillNewDialog {
   private appStoreService = inject(AppStoreService);
 
   protected TranslationConstants = TranslationConstants;
-  protected skillTypes = toSignal(this.appStoreService.skillTypes$, { initialValue: [] as SkillType[] });
+  protected skillTypes = this.appStoreService.skillTypes;
 
   protected save() {
     this.dialogRef.close(this.data);

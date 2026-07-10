@@ -5,15 +5,12 @@
 
 import { Component, computed, inject, signal, ChangeDetectionStrategy } from "@angular/core";
 import { toSignal } from "@angular/core/rxjs-interop";
-import { map } from "rxjs";
 import { OperatorViewModel } from "../models/operator-view-model";
 import { MatDialog } from "@angular/material/dialog";
 import { ConfirmationDialog } from "../dialogs/confirmation-dialog/confirmation-dialog";
 import { AddOperatorDialog } from "../dialogs/add-operator/add-operator";
 import { TranslationConstants } from "../extensions/translation-constants.extensions";
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { OperatorSkill } from "../models/operator-skill-model";
-import { SkillTypeModel } from "@api/models/skill-type-model";
 import { skillTypeToModel } from "../models/model-converter";
 import { Router, RouterLink } from "@angular/router";
 import { AppStoreService } from "../services/app-store.service";
@@ -49,7 +46,7 @@ export class OperatorsManagement {
   private router = inject(Router);
   private translateService = inject(TranslateService);
 
-  protected operators = toSignal(this.appStoreService.operators$, {initialValue: [] as OperatorViewModel[]});
+  protected operators = this.appStoreService.operators;
   private translations = toSignal(this.translateService.get([
     TranslationConstants.OPERATORS_MANAGEMENT.DELETE_TITLE,
     TranslationConstants.OPERATORS_MANAGEMENT.DELETE_MESSAGE,
@@ -57,11 +54,8 @@ export class OperatorsManagement {
   protected deleteDialogTitle = computed(() => this.translations()?.[TranslationConstants.OPERATORS_MANAGEMENT.DELETE_TITLE] ?? '');
   protected deleteDialogMessage = computed(() => this.translations()?.[TranslationConstants.OPERATORS_MANAGEMENT.DELETE_MESSAGE] ?? '');
   protected inMenuMode = signal(false);
-  protected skills = toSignal(this.appStoreService.skills$, {initialValue: [] as OperatorSkill[]});
-  protected skillTypes = toSignal(
-    this.appStoreService.skillTypes$.pipe(map(types => types.map(skillTypeToModel))),
-    {initialValue: [] as SkillTypeModel[]}
-  );
+  protected skills = this.appStoreService.skills;
+  protected skillTypes = computed(() => this.appStoreService.skillTypes().map(skillTypeToModel));
 
   protected TranslationConstants = TranslationConstants;
 

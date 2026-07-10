@@ -101,9 +101,7 @@ export class OperatorDetails {
 
     this.loadSkills();
 
-    this.appStoreService
-      .skillTypes$
-      .subscribe(types => this.skillTypes.update(_ => types.map(skillTypeToModel)));
+    this.skillTypes.set(this.appStoreService.skillTypes().map(skillTypeToModel));
   }
 
   loadSkills() {
