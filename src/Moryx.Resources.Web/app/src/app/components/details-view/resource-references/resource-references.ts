@@ -162,7 +162,9 @@ export class ResourceReferences {
     if (this.selectedReferenceType()?.isCollection) {
       possibleResources = possibleResources.filter(r => !this.selectedReference()?.targets?.find(t => t.id == r.id));
     }
-
+    possibleResources = possibleResources.sort((a, b) =>
+      (a.name ?? '').localeCompare(b.name ?? '', undefined, { sensitivity: 'base' })
+    );
     return possibleResources;
   }
 
