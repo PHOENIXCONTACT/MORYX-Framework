@@ -8,8 +8,7 @@
 
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 
 import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
@@ -44,9 +43,9 @@ export class VisualInstructionsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  instructionStream$Response(params?: InstructionStream$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<InstructionModel>>> {
+  instructionStream$Response(params?: InstructionStream$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<InstructionModel>>> {
     const obs = instructionStream(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -55,11 +54,9 @@ export class VisualInstructionsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  instructionStream(params?: InstructionStream$Params, context?: HttpContext): Observable<Array<InstructionModel>> {
+  instructionStream(params?: InstructionStream$Params, context?: HttpContext): Promise<Array<InstructionModel>> {
     const resp = this.instructionStream$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<InstructionModel>>): Array<InstructionModel> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<InstructionModel>>): Array<InstructionModel> => r.body);
   }
 
   /** Path part for operation `getAll()` */
@@ -71,9 +68,9 @@ export class VisualInstructionsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getAll$Response(params: GetAll$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<InstructionModel>>> {
+  getAll$Response(params: GetAll$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<InstructionModel>>> {
     const obs = getAll(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -82,11 +79,9 @@ export class VisualInstructionsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getAll(params: GetAll$Params, context?: HttpContext): Observable<Array<InstructionModel>> {
+  getAll(params: GetAll$Params, context?: HttpContext): Promise<Array<InstructionModel>> {
     const resp = this.getAll$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<InstructionModel>>): Array<InstructionModel> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<InstructionModel>>): Array<InstructionModel> => r.body);
   }
 
   /** Path part for operation `addInstruction()` */
@@ -98,9 +93,9 @@ export class VisualInstructionsService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  addInstruction$Response(params: AddInstruction$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  addInstruction$Response(params: AddInstruction$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = addInstruction(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -109,11 +104,9 @@ export class VisualInstructionsService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  addInstruction(params: AddInstruction$Params, context?: HttpContext): Observable<void> {
+  addInstruction(params: AddInstruction$Params, context?: HttpContext): Promise<void> {
     const resp = this.addInstruction$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
   /** Path part for operation `clearInstruction()` */
@@ -125,9 +118,9 @@ export class VisualInstructionsService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  clearInstruction$Response(params: ClearInstruction$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  clearInstruction$Response(params: ClearInstruction$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = clearInstruction(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -136,11 +129,9 @@ export class VisualInstructionsService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  clearInstruction(params: ClearInstruction$Params, context?: HttpContext): Observable<void> {
+  clearInstruction(params: ClearInstruction$Params, context?: HttpContext): Promise<void> {
     const resp = this.clearInstruction$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
   /** Path part for operation `completeInstruction()` */
@@ -152,9 +143,9 @@ export class VisualInstructionsService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  completeInstruction$Response(params: CompleteInstruction$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  completeInstruction$Response(params: CompleteInstruction$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = completeInstruction(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -163,11 +154,9 @@ export class VisualInstructionsService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  completeInstruction(params: CompleteInstruction$Params, context?: HttpContext): Observable<void> {
+  completeInstruction(params: CompleteInstruction$Params, context?: HttpContext): Promise<void> {
     const resp = this.completeInstruction$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
   /** Path part for operation `getInstructors()` */
@@ -179,9 +168,9 @@ export class VisualInstructionsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getInstructors$Response(params?: GetInstructors$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<string>>> {
+  getInstructors$Response(params?: GetInstructors$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<string>>> {
     const obs = getInstructors(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -190,11 +179,9 @@ export class VisualInstructionsService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getInstructors(params?: GetInstructors$Params, context?: HttpContext): Observable<Array<string>> {
+  getInstructors(params?: GetInstructors$Params, context?: HttpContext): Promise<Array<string>> {
     const resp = this.getInstructors$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<string>>): Array<string> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<string>>): Array<string> => r.body);
   }
 
 }

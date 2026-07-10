@@ -33,6 +33,7 @@ const entryTypes = {
   'entry-value-type': 'EntryValueType',
   'entry-possible': 'EntryPossible',
   'data-type': 'DataType',
+  'method-entry': 'MethodEntry',
 };
 
 // Generate import patterns dynamically from entryTypes

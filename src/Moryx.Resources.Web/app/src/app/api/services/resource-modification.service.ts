@@ -10,8 +10,7 @@ import { Entry } from '@moryx/ngx-web-framework/entry-editor';
 
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 
 import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
@@ -53,9 +52,9 @@ export class ResourceModificationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getTypeTree$Response(params?: GetTypeTree$Params, context?: HttpContext): Observable<StrictHttpResponse<ResourceTypeModel>> {
+  getTypeTree$Response(params?: GetTypeTree$Params, context?: HttpContext): Promise<StrictHttpResponse<ResourceTypeModel>> {
     const obs = getTypeTree(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -64,11 +63,9 @@ export class ResourceModificationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getTypeTree(params?: GetTypeTree$Params, context?: HttpContext): Observable<ResourceTypeModel> {
+  getTypeTree(params?: GetTypeTree$Params, context?: HttpContext): Promise<ResourceTypeModel> {
     const resp = this.getTypeTree$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<ResourceTypeModel>): ResourceTypeModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<ResourceTypeModel>): ResourceTypeModel => r.body);
   }
 
   /** Path part for operation `getDetailsBatch()` */
@@ -80,9 +77,9 @@ export class ResourceModificationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getDetailsBatch$Response(params?: GetDetailsBatch$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ResourceModel>>> {
+  getDetailsBatch$Response(params?: GetDetailsBatch$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<ResourceModel>>> {
     const obs = getDetailsBatch(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -91,11 +88,9 @@ export class ResourceModificationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getDetailsBatch(params?: GetDetailsBatch$Params, context?: HttpContext): Observable<Array<ResourceModel>> {
+  getDetailsBatch(params?: GetDetailsBatch$Params, context?: HttpContext): Promise<Array<ResourceModel>> {
     const resp = this.getDetailsBatch$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<ResourceModel>>): Array<ResourceModel> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<ResourceModel>>): Array<ResourceModel> => r.body);
   }
 
   /** Path part for operation `save()` */
@@ -107,9 +102,9 @@ export class ResourceModificationService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  save$Response(params?: Save$Params, context?: HttpContext): Observable<StrictHttpResponse<ResourceModel>> {
+  save$Response(params?: Save$Params, context?: HttpContext): Promise<StrictHttpResponse<ResourceModel>> {
     const obs = save(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -118,11 +113,9 @@ export class ResourceModificationService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  save(params?: Save$Params, context?: HttpContext): Observable<ResourceModel> {
+  save(params?: Save$Params, context?: HttpContext): Promise<ResourceModel> {
     const resp = this.save$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<ResourceModel>): ResourceModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<ResourceModel>): ResourceModel => r.body);
   }
 
   /** Path part for operation `getResources()` */
@@ -134,9 +127,9 @@ export class ResourceModificationService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  getResources$Response(params?: GetResources$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ResourceModel>>> {
+  getResources$Response(params?: GetResources$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<ResourceModel>>> {
     const obs = getResources(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -145,11 +138,9 @@ export class ResourceModificationService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  getResources(params?: GetResources$Params, context?: HttpContext): Observable<Array<ResourceModel>> {
+  getResources(params?: GetResources$Params, context?: HttpContext): Promise<Array<ResourceModel>> {
     const resp = this.getResources$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<ResourceModel>>): Array<ResourceModel> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<ResourceModel>>): Array<ResourceModel> => r.body);
   }
 
   /** Path part for operation `getDetails()` */
@@ -161,9 +152,9 @@ export class ResourceModificationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getDetails$Response(params: GetDetails$Params, context?: HttpContext): Observable<StrictHttpResponse<ResourceModel>> {
+  getDetails$Response(params: GetDetails$Params, context?: HttpContext): Promise<StrictHttpResponse<ResourceModel>> {
     const obs = getDetails(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -172,11 +163,9 @@ export class ResourceModificationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getDetails(params: GetDetails$Params, context?: HttpContext): Observable<ResourceModel> {
+  getDetails(params: GetDetails$Params, context?: HttpContext): Promise<ResourceModel> {
     const resp = this.getDetails$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<ResourceModel>): ResourceModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<ResourceModel>): ResourceModel => r.body);
   }
 
   /** Path part for operation `update()` */
@@ -188,9 +177,9 @@ export class ResourceModificationService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  update$Response(params: Update$Params, context?: HttpContext): Observable<StrictHttpResponse<ResourceModel>> {
+  update$Response(params: Update$Params, context?: HttpContext): Promise<StrictHttpResponse<ResourceModel>> {
     const obs = update(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -199,11 +188,9 @@ export class ResourceModificationService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  update(params: Update$Params, context?: HttpContext): Observable<ResourceModel> {
+  update(params: Update$Params, context?: HttpContext): Promise<ResourceModel> {
     const resp = this.update$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<ResourceModel>): ResourceModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<ResourceModel>): ResourceModel => r.body);
   }
 
   /** Path part for operation `remove()` */
@@ -215,9 +202,9 @@ export class ResourceModificationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  remove$Response(params: Remove$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  remove$Response(params: Remove$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = remove(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -226,11 +213,9 @@ export class ResourceModificationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  remove(params: Remove$Params, context?: HttpContext): Observable<void> {
+  remove(params: Remove$Params, context?: HttpContext): Promise<void> {
     const resp = this.remove$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
   /** Path part for operation `invokeMethod()` */
@@ -242,9 +227,9 @@ export class ResourceModificationService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  invokeMethod$Response(params: InvokeMethod$Params, context?: HttpContext): Observable<StrictHttpResponse<Entry>> {
+  invokeMethod$Response(params: InvokeMethod$Params, context?: HttpContext): Promise<StrictHttpResponse<Entry>> {
     const obs = invokeMethod(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -253,11 +238,9 @@ export class ResourceModificationService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  invokeMethod(params: InvokeMethod$Params, context?: HttpContext): Observable<Entry> {
+  invokeMethod(params: InvokeMethod$Params, context?: HttpContext): Promise<Entry> {
     const resp = this.invokeMethod$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Entry>): Entry => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Entry>): Entry => r.body);
   }
 
   /** Path part for operation `constructWithParameters()` */
@@ -269,9 +252,9 @@ export class ResourceModificationService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  constructWithParameters$Response(params: ConstructWithParameters$Params, context?: HttpContext): Observable<StrictHttpResponse<ResourceModel>> {
+  constructWithParameters$Response(params: ConstructWithParameters$Params, context?: HttpContext): Promise<StrictHttpResponse<ResourceModel>> {
     const obs = constructWithParameters(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -280,11 +263,9 @@ export class ResourceModificationService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  constructWithParameters(params: ConstructWithParameters$Params, context?: HttpContext): Observable<ResourceModel> {
+  constructWithParameters(params: ConstructWithParameters$Params, context?: HttpContext): Promise<ResourceModel> {
     const resp = this.constructWithParameters$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<ResourceModel>): ResourceModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<ResourceModel>): ResourceModel => r.body);
   }
 
 }

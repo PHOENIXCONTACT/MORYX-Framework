@@ -8,8 +8,7 @@
 
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 
 import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
@@ -53,9 +52,9 @@ export class SkillManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getTypes$Response(params?: GetTypes$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<SkillTypeModel>>> {
+  getTypes$Response(params?: GetTypes$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<SkillTypeModel>>> {
     const obs = getTypes(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -64,11 +63,9 @@ export class SkillManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getTypes(params?: GetTypes$Params, context?: HttpContext): Observable<Array<SkillTypeModel>> {
+  getTypes(params?: GetTypes$Params, context?: HttpContext): Promise<Array<SkillTypeModel>> {
     const resp = this.getTypes$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<SkillTypeModel>>): Array<SkillTypeModel> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<SkillTypeModel>>): Array<SkillTypeModel> => r.body);
   }
 
   /** Path part for operation `update_1()` */
@@ -80,9 +77,9 @@ export class SkillManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  update_1$Response(params?: Update_1$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  update_1$Response(params?: Update_1$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = update_1(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -91,11 +88,9 @@ export class SkillManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  update_1(params?: Update_1$Params, context?: HttpContext): Observable<void> {
+  update_1(params?: Update_1$Params, context?: HttpContext): Promise<void> {
     const resp = this.update_1$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
   /** Path part for operation `create()` */
@@ -107,9 +102,9 @@ export class SkillManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  create$Response(params?: Create$Params, context?: HttpContext): Observable<StrictHttpResponse<SkillTypeModel>> {
+  create$Response(params?: Create$Params, context?: HttpContext): Promise<StrictHttpResponse<SkillTypeModel>> {
     const obs = create(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -118,11 +113,9 @@ export class SkillManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  create(params?: Create$Params, context?: HttpContext): Observable<SkillTypeModel> {
+  create(params?: Create$Params, context?: HttpContext): Promise<SkillTypeModel> {
     const resp = this.create$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<SkillTypeModel>): SkillTypeModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<SkillTypeModel>): SkillTypeModel => r.body);
   }
 
   /** Path part for operation `getType()` */
@@ -134,9 +127,9 @@ export class SkillManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getType$Response(params: GetType$Params, context?: HttpContext): Observable<StrictHttpResponse<SkillTypeModel>> {
+  getType$Response(params: GetType$Params, context?: HttpContext): Promise<StrictHttpResponse<SkillTypeModel>> {
     const obs = getType(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -145,11 +138,9 @@ export class SkillManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getType(params: GetType$Params, context?: HttpContext): Observable<SkillTypeModel> {
+  getType(params: GetType$Params, context?: HttpContext): Promise<SkillTypeModel> {
     const resp = this.getType$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<SkillTypeModel>): SkillTypeModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<SkillTypeModel>): SkillTypeModel => r.body);
   }
 
   /** Path part for operation `deleteType()` */
@@ -161,9 +152,9 @@ export class SkillManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  deleteType$Response(params: DeleteType$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  deleteType$Response(params: DeleteType$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = deleteType(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -172,11 +163,9 @@ export class SkillManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  deleteType(params: DeleteType$Params, context?: HttpContext): Observable<void> {
+  deleteType(params: DeleteType$Params, context?: HttpContext): Promise<void> {
     const resp = this.deleteType$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
   /** Path part for operation `getTypePrototype()` */
@@ -188,9 +177,9 @@ export class SkillManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getTypePrototype$Response(params?: GetTypePrototype$Params, context?: HttpContext): Observable<StrictHttpResponse<SkillTypeModel>> {
+  getTypePrototype$Response(params?: GetTypePrototype$Params, context?: HttpContext): Promise<StrictHttpResponse<SkillTypeModel>> {
     const obs = getTypePrototype(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -199,11 +188,9 @@ export class SkillManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getTypePrototype(params?: GetTypePrototype$Params, context?: HttpContext): Observable<SkillTypeModel> {
+  getTypePrototype(params?: GetTypePrototype$Params, context?: HttpContext): Promise<SkillTypeModel> {
     const resp = this.getTypePrototype$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<SkillTypeModel>): SkillTypeModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<SkillTypeModel>): SkillTypeModel => r.body);
   }
 
   /** Path part for operation `getSkills()` */
@@ -215,9 +202,9 @@ export class SkillManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getSkills$Response(params?: GetSkills$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<SkillModel>>> {
+  getSkills$Response(params?: GetSkills$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<SkillModel>>> {
     const obs = getSkills(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -226,11 +213,9 @@ export class SkillManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getSkills(params?: GetSkills$Params, context?: HttpContext): Observable<Array<SkillModel>> {
+  getSkills(params?: GetSkills$Params, context?: HttpContext): Promise<Array<SkillModel>> {
     const resp = this.getSkills$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<SkillModel>>): Array<SkillModel> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<SkillModel>>): Array<SkillModel> => r.body);
   }
 
   /** Path part for operation `create_1()` */
@@ -242,9 +227,9 @@ export class SkillManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  create_1$Response(params?: Create_1$Params, context?: HttpContext): Observable<StrictHttpResponse<SkillModel>> {
+  create_1$Response(params?: Create_1$Params, context?: HttpContext): Promise<StrictHttpResponse<SkillModel>> {
     const obs = create_1(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -253,11 +238,9 @@ export class SkillManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  create_1(params?: Create_1$Params, context?: HttpContext): Observable<SkillModel> {
+  create_1(params?: Create_1$Params, context?: HttpContext): Promise<SkillModel> {
     const resp = this.create_1$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<SkillModel>): SkillModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<SkillModel>): SkillModel => r.body);
   }
 
   /** Path part for operation `getSkill()` */
@@ -269,9 +252,9 @@ export class SkillManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getSkill$Response(params: GetSkill$Params, context?: HttpContext): Observable<StrictHttpResponse<SkillModel>> {
+  getSkill$Response(params: GetSkill$Params, context?: HttpContext): Promise<StrictHttpResponse<SkillModel>> {
     const obs = getSkill(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -280,11 +263,9 @@ export class SkillManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getSkill(params: GetSkill$Params, context?: HttpContext): Observable<SkillModel> {
+  getSkill(params: GetSkill$Params, context?: HttpContext): Promise<SkillModel> {
     const resp = this.getSkill$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<SkillModel>): SkillModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<SkillModel>): SkillModel => r.body);
   }
 
   /** Path part for operation `deleteSkill()` */
@@ -296,9 +277,9 @@ export class SkillManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  deleteSkill$Response(params: DeleteSkill$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  deleteSkill$Response(params: DeleteSkill$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = deleteSkill(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -307,11 +288,9 @@ export class SkillManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  deleteSkill(params: DeleteSkill$Params, context?: HttpContext): Observable<void> {
+  deleteSkill(params: DeleteSkill$Params, context?: HttpContext): Promise<void> {
     const resp = this.deleteSkill$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
 }
