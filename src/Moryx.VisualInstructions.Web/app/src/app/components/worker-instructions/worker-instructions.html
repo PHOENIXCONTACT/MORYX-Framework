@@ -14,10 +14,10 @@
             <mat-icon>fullscreen</mat-icon>
           </button>
         }
-        @if (textItems().length && mediaItems().length && !instructionStateService.fullscreen()) {
+        @if (textItems().length && mediaItems().length && !fullscreen()) {
           <mat-divider vertical></mat-divider>
         }
-        @if (textItems().length && !instructionStateService.fullscreen()) {
+        @if (textItems().length && !fullscreen()) {
           <div class="text-instruction-container">
             <mat-card-title class="card-title">{{ displayedInstruction()?.sender }}</mat-card-title>
             <mat-card-content class="card-content">
