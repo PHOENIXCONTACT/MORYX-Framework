@@ -16,7 +16,6 @@ import { EditMenu } from './components/edit-menu/edit-menu';
 import { OrdersContainer } from './components/orders-container/orders-container';
 import { CellDetails } from './components/cell-details/cell-details';
 import { RouterOutlet } from '@angular/router';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { FactoryStateStreamService } from './services/factory-state-stream.service';
 
 @Component({
@@ -35,19 +34,19 @@ import { FactoryStateStreamService } from './services/factory-state-stream.servi
   }
 })
 export class App implements OnInit {
+  private editMenuService = inject(EditMenuService);
+  private changeBackgroundService = inject(ChangeBackgroundService);
   private factoryStateStreamService = inject(FactoryStateStreamService);
   private languageService = inject(LanguageService);
   private translateService = inject(TranslateService);
   private cellStoreService = inject(CellStoreService);
   private destroyRef = inject(DestroyRef);
 
-  private editMenuState = toSignal(inject(EditMenuService).activeState$, { initialValue: EditMenuState.Closed });
-  private background = toSignal(inject(ChangeBackgroundService).backgroundChanged$);
   protected backgroundImage = computed(() => {
-    const bg = this.background();
+    const bg = this.changeBackgroundService.backgroundChanged();
     return bg ? `url(${bg})` : 'none';
   });
-  protected isEditMode = computed(() => this.editMenuState() === EditMenuState.EditingCells);
+  protected isEditMode = computed(() => this.editMenuService.activeState() === EditMenuState.EditingCells);
 
   constructor() {
     this.translateService.addLangs([

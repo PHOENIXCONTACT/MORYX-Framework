@@ -3,8 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Injectable, signal } from '@angular/core';
 import { EditMenuState } from './EditMenutState';
 
 @Injectable({
@@ -12,14 +11,9 @@ import { EditMenuState } from './EditMenutState';
 })
 export class EditMenuService {
 
-  private _activeState = new BehaviorSubject<EditMenuState>(EditMenuState.Closed);
+  public activeState = signal(EditMenuState.Closed);
 
-  public activeState$ = this._activeState.asObservable();
-  constructor() { }
-
-
-  public setActiveState(state : EditMenuState) {
-    this._activeState.next(state);
+  public setActiveState(state: EditMenuState) {
+    this.activeState.set(state);
   }
 }
-

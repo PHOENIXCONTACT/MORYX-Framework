@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, effect, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { lastValueFrom } from 'rxjs';
 import { CellState } from '@api/models/cell-state';
@@ -18,7 +18,7 @@ import { CellStoreService } from '@app/services/cell-store.service';
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: []
 })
-export class TrafficLight implements OnInit {
+export class TrafficLight {
   protected currentState = signal<CellState | undefined | null>(undefined);
   protected currentStateString = signal<string | undefined>(undefined);
   private cellStoreService = inject(CellStoreService);
@@ -27,14 +27,19 @@ export class TrafficLight implements OnInit {
   protected CellState = CellState;
   protected TranslationConstants = TranslationConstants;
 
-  ngOnInit(): void {
-    this.cellStoreService.cellSelected$.subscribe({
-      next: c => {
-        this.id = c?.id;
+  constructor() {
+    effect(() => {
+      const c = this.cellStoreService.cellSelected();
+      this.id = c?.id;
+      this.updateState(c);
+    });
+
+    effect(() => {
+      const c = this.cellStoreService.cellUpdated();
+      if (c) {
         this.updateState(c);
       }
     });
-    this.cellStoreService.cellUpdated$.subscribe(async c => await this.updateState(c));
   }
 
   async getTranslations(): Promise<{ [key: string]: string }> {
