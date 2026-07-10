@@ -4,7 +4,6 @@
 */
 
 import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { NotificationModel } from '@api/models/notification-model';
 import { NotificationService } from '@app/services/notification.service';
 import { DatePipe } from '@angular/common';
@@ -26,9 +25,9 @@ import { getIcon } from '@app/utils';
 export class Notifications {
   private notificationService = inject(NotificationService);
 
-  protected notificationList = toSignal(this.notificationService.notifications$, { initialValue: [] as NotificationModel[] });
+  protected notificationList = this.notificationService.notifications;
   protected hoveredNotificationIdentifier = signal<string | undefined>(undefined);
-  protected selectedNotificationIdentifier = toSignal(this.notificationService.selection$);
+  protected selectedNotificationIdentifier = this.notificationService.selection;
 
   protected getIcon = getIcon;
 

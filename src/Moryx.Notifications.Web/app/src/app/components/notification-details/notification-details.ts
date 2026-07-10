@@ -4,7 +4,6 @@
 */
 
 import { Component, computed, inject, ChangeDetectionStrategy } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { NotificationService } from '@app/services/notification.service';
@@ -37,9 +36,8 @@ import { MatButtonModule } from '@angular/material/button';
 export class NotificationDetails {
   private notificationService = inject(NotificationService);
 
-  private selection = toSignal(this.notificationService.selection$);
   protected notification = computed(() => {
-    const identifier = this.selection();
+    const identifier = this.notificationService.selection();
     return identifier ? this.notificationService.get(identifier) : undefined;
   });
 

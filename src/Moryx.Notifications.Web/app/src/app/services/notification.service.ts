@@ -3,10 +3,9 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { NotificationModel } from '@api/models';
 import { NotificationPublisherService } from '@api/services';
-import { BehaviorSubject, Observable } from 'rxjs';
 import { ConnectionState } from '../models/ConnectionState';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
@@ -15,17 +14,13 @@ import { SnackbarService } from '@moryx/ngx-web-framework/services';
   providedIn: 'root',
 })
 export class NotificationService {
-  private notificationPublisherService = inject(NotificationPublisherService);
-  private snackbarService = inject(SnackbarService);
+  private readonly notificationPublisherService = inject(NotificationPublisherService);
+  private readonly snackbarService = inject(SnackbarService);
 
   private eventSource?: EventSource;
-  private notificationSubject: BehaviorSubject<NotificationModel[]> = new BehaviorSubject<NotificationModel[]>([]);
-  private selectionSubject: BehaviorSubject<string | undefined> = new BehaviorSubject<string | undefined>(undefined)
-  private stateSubject: BehaviorSubject<ConnectionState> = new BehaviorSubject<ConnectionState>(ConnectionState.Initializing);
-
-  public notifications$: Observable<NotificationModel[]> = this.notificationSubject.asObservable();
-  public selection$: Observable<string | undefined> = this.selectionSubject.asObservable();
-  public state$: Observable<ConnectionState> = this.stateSubject.asObservable();
+  readonly notifications = signal<NotificationModel[]>([]);
+  readonly selection = signal<string | undefined>(undefined);
+  readonly state = signal<ConnectionState>(ConnectionState.Initializing);
 
   connect() {
     this.eventSource = new EventSource(this.notificationPublisherService.rootUrl + '/api/moryx/notifications/stream');
@@ -37,37 +32,36 @@ export class NotificationService {
     const data: NotificationModel[] = JSON.parse(event.data);
     const notifications = data.filter(n => !!n.identifier).sortBySeverity();
 
-    if (this.stateSubject.value != ConnectionState.Connected) {
-      this.stateSubject.next(ConnectionState.Connected)
+    if (this.state() != ConnectionState.Connected) {
+      this.state.set(ConnectionState.Connected);
     }
-    this.notificationSubject.next(notifications);
+    this.notifications.set(notifications);
     this.checkSelection();
   }
 
   private processError(event: Event): void {
-    this.stateSubject.next(ConnectionState.Reconnecting)
-    this.notificationSubject.error(event);
+    this.state.set(ConnectionState.Reconnecting);
   }
 
   public select(identifier: string | undefined): void {
     let selected: string | undefined;
-    const notifications = this.notificationSubject.value;
+    const currentNotifications = this.notifications();
 
-    if (!notifications.length) {
+    if (!currentNotifications.length) {
       selected = undefined;
     }
-    else if (notifications.some(m => m.identifier === identifier)) {
+    else if (currentNotifications.some(m => m.identifier === identifier)) {
       selected = identifier;
     }
     else {
-      selected = notifications[0].identifier;
+      selected = currentNotifications[0].identifier;
     }
 
-    this.selectionSubject.next(selected);
+    this.selection.set(selected);
   }
 
   public get(identifier: string | undefined): NotificationModel | undefined {
-    return this.notificationSubject.value.find(n => n.identifier === identifier);
+    return this.notifications().find(n => n.identifier === identifier);
   }
 
   public acknowledge(identifier: string | undefined): void {
@@ -81,8 +75,8 @@ export class NotificationService {
   }
 
   private checkSelection(): void {
-    const currentSelection = this.selectionSubject.value
-    const requiresReset = !this.notificationSubject.value.some(n => n.identifier === currentSelection)
+    const currentSelection = this.selection();
+    const requiresReset = !this.notifications().some(n => n.identifier === currentSelection);
     if (requiresReset) {
       this.resetSelection();
     }

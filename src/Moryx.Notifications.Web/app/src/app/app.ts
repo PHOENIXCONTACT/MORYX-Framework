@@ -4,14 +4,13 @@
 */
 
 import { Component, computed, inject, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from "@angular/core";
-import { toSignal } from "@angular/core/rxjs-interop";
 import { LanguageService } from "@moryx/ngx-web-framework/services";
 import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { environment } from "../environments/environment";
 import { TranslationConstants } from "./extensions/translation-constants.extensions";
 import { NotificationService } from "./services/notification.service";
-import { NotificationModel } from "@api/models/notification-model";
+
 import ConnectionState from "./models/ConnectionState";
 import "./extensions/notification.extensions";
 
@@ -44,13 +43,8 @@ export class App implements OnInit, OnDestroy {
   private translateService = inject(TranslateService);
   private notificationService = inject(NotificationService);
 
-  private state = toSignal(this.notificationService.state$);
-  private notifications = toSignal(this.notificationService.notifications$, {
-    initialValue: [] as NotificationModel[]
-  });
-
-  protected isLoading = computed(() => this.state() !== ConnectionState.Connected);
-  protected isEmpty = computed(() => !this.notifications().length);
+  protected isLoading = computed(() => this.notificationService.state() !== ConnectionState.Connected);
+  protected isEmpty = computed(() => !this.notificationService.notifications().length);
   protected notificationsToolbarImage = signal(
     environment.assets + "assets/notifications_toolbar.jpg");
 
