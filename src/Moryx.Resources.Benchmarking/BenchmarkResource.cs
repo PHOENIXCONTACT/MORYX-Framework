@@ -3,6 +3,7 @@
 
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Processes;
@@ -11,9 +12,9 @@ using Moryx.Benchmarking;
 using Moryx.ControlSystem.Activities;
 using Moryx.ControlSystem.Cells;
 using Moryx.ControlSystem.VisualInstructions;
-using Moryx.VisualInstructions;
 using Moryx.Notifications;
 using Moryx.Serialization;
+using Moryx.VisualInstructions;
 using Activity = Moryx.AbstractionLayer.Activities.Activity;
 
 namespace Moryx.Resources.Benchmarking;
@@ -245,5 +246,5 @@ public class BenchmarkResource : Cell, IBenchmarkResource, INotificationSender
         throw new NotImplementedException();
     }
 
-    string INotificationSender.Identifier => Id.ToString();
+    string INotificationSender.Identifier => Id.ToString(CultureInfo.InvariantCulture);
 }

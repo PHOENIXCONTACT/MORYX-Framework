@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Globalization;
 using System.Reflection;
 using Moryx.Bindings;
 using NUnit.Framework;
@@ -61,7 +62,7 @@ public class ReflectionResolverTests
 
         // Assert
         Assert.That(result);
-        Assert.That(obj.SimpleInt, Is.EqualTo(int.Parse(number)));
+        Assert.That(obj.SimpleInt, Is.EqualTo(int.Parse(number, CultureInfo.InvariantCulture)));
     }
 
     [Test]

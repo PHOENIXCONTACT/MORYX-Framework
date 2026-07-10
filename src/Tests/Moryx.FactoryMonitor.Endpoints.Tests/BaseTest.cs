@@ -117,7 +117,7 @@ public abstract class BaseTest
         _processFacadeMock.Setup(pm => pm.GetRunningProcesses())
             .Returns([]);
         _processFacadeMock.Setup(pm => pm.Targets(It.IsAny<Activity>()))
-            .Returns<Activity>(a => _activityTargets.ContainsKey(a) ? _activityTargets[a] : []);
+            .Returns<Activity>(a => _activityTargets.TryGetValue(a, out var activityTarget) ? activityTarget : []);
 
         //orders
         _orderFacadeMock.Setup(o => o.GetOperations(It.IsAny<Func<Operation, bool>>()))

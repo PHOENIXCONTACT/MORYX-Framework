@@ -57,7 +57,7 @@ internal class ResourceGraph : IManagedResourceGraph
     public Resource GetResource(long id)
     {
         _graphLock.EnterReadLock();
-        var match = _graph.ContainsKey(id) ? _graph[id] : null;
+        var match = _graph.TryGetValue(id, out var resource) ? resource : null;
         _graphLock.ExitReadLock();
 
         return match;

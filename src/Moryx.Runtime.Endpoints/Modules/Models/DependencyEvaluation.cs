@@ -56,7 +56,7 @@ public class DependencyEvaluation
     /// </summary>
     public int MaxDependends { get; set; }
 
-    private int CalculateTreeDepth(int currentLevel, IModuleDependency branch)
+    private static int CalculateTreeDepth(int currentLevel, IModuleDependency branch)
     {
         var childLevel = currentLevel + 1;
         return branch.Dependents.Any() ? branch.Dependents.Max(dependency => CalculateTreeDepth(childLevel, dependency)) : currentLevel;

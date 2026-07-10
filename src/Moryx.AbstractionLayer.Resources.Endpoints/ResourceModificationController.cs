@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -98,7 +99,7 @@ public class ResourceModificationController : ControllerBase
         var resourceModel = _resourceManagement.ReadUnsafe(id, converter.GetDetails);
         if (resourceModel is null)
         {
-            return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ResourceNotFoundException_ById_Message, id) });
+            return NotFound(new MoryxExceptionResponse { Title = string.Format(CultureInfo.CurrentCulture, Strings.ResourceNotFoundException_ById_Message, id) });
         }
 
         return resourceModel;
@@ -115,7 +116,7 @@ public class ResourceModificationController : ControllerBase
     {
         if (_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == id) is null)
         {
-            return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ResourceNotFoundException_ById_Message, id) });
+            return NotFound(new MoryxExceptionResponse { Title = string.Format(CultureInfo.CurrentCulture, Strings.ResourceNotFoundException_ById_Message, id) });
         }
 
         Entry entry = null;
@@ -253,7 +254,7 @@ public class ResourceModificationController : ControllerBase
     {
         if (_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == id) is null)
         {
-            return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ResourceNotFoundException_ById_Message, id) });
+            return NotFound(new MoryxExceptionResponse { Title = string.Format(CultureInfo.CurrentCulture, Strings.ResourceNotFoundException_ById_Message, id) });
         }
 
         try
@@ -293,7 +294,7 @@ public class ResourceModificationController : ControllerBase
         var existing = _resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == id);
         if (!existing.Any())
         {
-            return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ResourceNotFoundException_ById_Message, id) });
+            return NotFound(new MoryxExceptionResponse { Title = string.Format(CultureInfo.CurrentCulture, Strings.ResourceNotFoundException_ById_Message, id) });
         }
 
         var deleted = await _resourceManagement.DeleteAsync(id);

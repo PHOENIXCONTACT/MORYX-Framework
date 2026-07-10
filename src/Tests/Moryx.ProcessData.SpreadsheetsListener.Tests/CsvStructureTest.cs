@@ -380,17 +380,17 @@ public class CsvStructureTest
         }
     }
 
-    private IEnumerable<string> GetNames(Measurement measurement)
+    private static IEnumerable<string> GetNames(Measurement measurement)
     {
         return measurement.Fields.Select(f => f.Name).Concat(measurement.Tags.Select(t => t.Name));
     }
 
-    private IEnumerable<object> GetValues(Measurement measurement)
+    private static IEnumerable<object> GetValues(Measurement measurement)
     {
         return measurement.Fields.Select(f => f.Value).Concat(measurement.Tags.Select(t => t.Value));
     }
 
-    private string GetValueByName(Measurement measurement, string name)
+    private static string GetValueByName(Measurement measurement, string name)
     {
         return (string)measurement.Fields.Where(f => f.Name.Equals(name)).Select(f => f.Value)
             .Concat(
@@ -398,7 +398,7 @@ public class CsvStructureTest
             ).SingleOrDefault();
     }
 
-    private bool IsFileLocked(FileInfo file)
+    private static bool IsFileLocked(FileInfo file)
     {
         try
         {

@@ -99,15 +99,15 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
         {
             var index = trigger.SortOrder;
 
-            if (!stepGroups.TryGetValue(index, out var value))
+            if (!stepGroups.TryGetValue(index, out var stepGroup))
             {
-                value = new List<IWorkplanStep>();
-                stepGroups[index] = value;
+                stepGroup = new List<IWorkplanStep>();
+                stepGroups[index] = stepGroup;
             }
 
-            value.AddRange(TryCreateSteps(trigger, recipe));
+            stepGroup.AddRange(TryCreateSteps(trigger, recipe));
 
-            if (value.Count == 0)
+            if (stepGroup.Count == 0)
             {
                 Logger.LogWarning("Trigger '{triggerName}' with sort index {sortOrder} found the system to require a setup {executionType}, but did not create workplan steps.",
                     trigger.GetType().Name, index, trigger.Execution);

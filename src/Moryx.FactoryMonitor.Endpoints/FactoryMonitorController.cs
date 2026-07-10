@@ -2,27 +2,28 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Concurrent;
+using System.Globalization;
 using System.Net.ServerSentEvents;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading.Channels;
+using System.Timers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Moryx.AbstractionLayer.Capabilities;
+using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Resources;
+using Moryx.AspNetCore;
+using Moryx.ControlSystem.Cells;
 using Moryx.ControlSystem.Processes;
 using Moryx.Factory;
-using Moryx.ControlSystem.Cells;
-using System.Threading.Channels;
-using Microsoft.Extensions.Logging;
-using Moryx.Orders;
-using Moryx.AbstractionLayer.Capabilities;
-using System.Timers;
-using Moryx.FactoryMonitor.Endpoints.Models;
-using Moryx.AbstractionLayer.Processes;
-using Moryx.AspNetCore;
 using Moryx.FactoryMonitor.Endpoints.Converter;
-using Moryx.FactoryMonitor.Endpoints.Properties;
 using Moryx.FactoryMonitor.Endpoints.Extensions;
+using Moryx.FactoryMonitor.Endpoints.Models;
+using Moryx.FactoryMonitor.Endpoints.Properties;
+using Moryx.Orders;
 using Timer = System.Timers.Timer;
 
 namespace Moryx.FactoryMonitor.Endpoints;
@@ -390,7 +391,7 @@ public class FactoryMonitorController : ControllerBase
     public ActionResult<Dictionary<string, CellPropertySettings>> GetCellPropertiesSettings(string identifier)
     {
         var cellLocation = _resourceManager.GetResources<IMachineLocation>()?
-            .FirstOrDefault(x => x.Machine?.Id.ToString() == identifier);
+            .FirstOrDefault(x => x.Machine?.Id.ToString(CultureInfo.CurrentCulture) == identifier);
 
         if (cellLocation == null)
             return NotFound(new MoryxExceptionResponse { Title = "Cell/Resource not found" });

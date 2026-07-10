@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Globalization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -58,7 +59,7 @@ public class WorkplanController : ControllerBase
             return BadRequest($"Workplan id was 0");
         var versions = await _workplans.LoadVersionsAsync(id);
         if (versions == null)
-            return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.WorkplanController_WorkplanNotFound, id) });
+            return NotFound(new MoryxExceptionResponse { Title = string.Format(CultureInfo.CurrentCulture, Strings.WorkplanController_WorkplanNotFound, id) });
         var model = new List<WorkplanModel>();
         foreach (var v in versions)
         {
@@ -79,7 +80,7 @@ public class WorkplanController : ControllerBase
             return BadRequest($"Workplan id was 0");
         var workplan = await _workplans.LoadWorkplanAsync(id);
         if (workplan == null)
-            return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.WorkplanController_WorkplanNotFound, id) });
+            return NotFound(new MoryxExceptionResponse { Title = string.Format(CultureInfo.CurrentCulture, Strings.WorkplanController_WorkplanNotFound, id) });
         return ProductConverter.ConvertWorkplan(workplan);
     }
 

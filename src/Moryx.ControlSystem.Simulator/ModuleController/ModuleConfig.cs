@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
+using System.Globalization;
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Activities;
 using Moryx.Configuration;
@@ -57,9 +58,9 @@ public class ExecutionTimeDefinition
 
     public override string ToString()
     {
-        var cellString = CellId == 0 ? "" : CellId.ToString() + ": ";
+        var cellString = CellId == 0 ? "" : CellId.ToString(CultureInfo.CurrentCulture) + ": ";
         var activityString = Activity.Split('.')[^1];
-        var timeString = ExecutionTime <= 0 ? "Instant" : ExecutionTime.ToString() + "ms";
+        var timeString = ExecutionTime <= 0 ? "Instant" : ExecutionTime.ToString(CultureInfo.CurrentCulture) + "ms";
         return $"{cellString}{activityString} - {timeString}";
     }
 }

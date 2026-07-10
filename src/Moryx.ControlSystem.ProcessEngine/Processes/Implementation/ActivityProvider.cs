@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Globalization;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Processes;
@@ -303,7 +304,7 @@ internal sealed class ActivityProvider : IActivityPoolListener, ILoggingComponen
                 IsAcknowledgable = true,
                 Severity = Severity.Error,
                 Title = Strings.ActivityProvider_CreationException_Title,
-                Message = string.Format(Strings.ActivityProvider_CreationException_Message, taskTransition.Name, processData.Recipe.Name)
+                Message = string.Format(CultureInfo.CurrentCulture, Strings.ActivityProvider_CreationException_Message, taskTransition.Name, processData.Recipe.Name)
             }, processData);
         }
     }

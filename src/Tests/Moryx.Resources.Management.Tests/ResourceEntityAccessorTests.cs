@@ -149,14 +149,18 @@ public class ResourceEntityAccessorTests
 
     private class ExtensionDataTestBase
     {
+#pragma warning disable CA1822 // Mark members as static
         public int Value1 => 1;
 
         public string Value2 => "MyVal";
+#pragma warning restore CA1822 // Mark members as static
     }
 
     private class ExtensionDataInherited : ExtensionDataTestBase
     {
+#pragma warning disable CA1822 // Mark members as static
         public long Value3 => 42;
+#pragma warning restore CA1822 // Mark members as static
     }
 
     private class DefaultTestResource : Resource

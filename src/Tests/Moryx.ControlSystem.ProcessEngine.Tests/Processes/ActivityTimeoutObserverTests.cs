@@ -102,7 +102,7 @@ public class ActivityTimeoutObserverTests : ProcessTestsBase
         _activityPoolMock.Raise(a => a.ActivityChanged += null, _activityPoolMock.Object, new ActivityEventArgs(activityData, activityState));
     }
 
-    private DummyActivity CreateActivity(int timeout)
+    private static DummyActivity CreateActivity(int timeout)
     {
         var activity = new DummyActivity
         {
