@@ -7,7 +7,7 @@
   }}
 </h2>
 
-<mat-dialog-content>
+<mat-dialog-content class="dialog-container">
   @if (restrictions.length) {
     <div class="restrictions">
       @for (restriction of restrictions; track restriction) {
@@ -143,29 +143,11 @@
     }
   </mat-form-field>
 
-  @if (providesOperatorSelection) {
-    <mat-form-field appearance="outline" class="operator-selection">
-      <mat-label>
-        {{ TranslationConstants.BEGIN_DIALOG.OPERATOR_SELECTION_LABEL | translate }}
-      </mat-label>
-      <input type="text" placeholder="{{
-        TranslationConstants.BEGIN_DIALOG.OPERATOR_SELECTION_PLACEHOLDER
-          | translate
-      }}" aria-label="Operator" matInput [formControl]="operatorFormControl" [matAutocomplete]="auto"/>
-      <mat-autocomplete #auto="matAutocomplete">
-        @for (operator of filteredOperators | async; track operator) {
-          <mat-option [value]="operator.identifier">{{ operator.pseudonym ?? "-" }} ({{ operator.identifier }})
-          </mat-option>
-        }
-      </mat-autocomplete>
-      @if (operatorFormControl.hasError('failed')) {
-        <mat-error>{{
-            operatorFormControl.getError("failed")
-          }}
-        </mat-error>
-      }
-    </mat-form-field>
-  }
+  <app-operator-selector class="operator-selector"
+    [isEnabled]="canBegin"
+    [(selectedOperatorId)]="selectedOperatorId"
+    (creatingOperatorFailed)="creatingOperatorFailed.set($event)">
+  </app-operator-selector>
 </mat-dialog-content>
 
 <div mat-dialog-actions align="end">

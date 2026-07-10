@@ -2,7 +2,7 @@
   {{ TranslationConstants.REPORT_DIALOG.REPORT_TITLE | translate }}
 </h2>
 
-<mat-dialog-content>
+<mat-dialog-content class="dialog-container">
   <div class="dialog-context">
     <p class="dialog-context-item">
       <span class="info-label">{{ TranslationConstants.REPORT_DIALOG.ORDER | translate }}</span>
@@ -64,8 +64,8 @@
     <textarea matInput [(ngModel)]="comment" [disabled]="isLoading()"></textarea>
   </mat-form-field>
 
-  <h3 class="intermediate-header">{{ TranslationConstants.REPORT_DIALOG.CONFIRMATION | translate }}</h3>
-  <mat-radio-group aria-label="Select an report option" [(ngModel)]="confirmationType">
+  <h3 class="radio-group-header">{{ TranslationConstants.REPORT_DIALOG.CONFIRMATION | translate }}</h3>
+  <mat-radio-group class="radio-group" aria-label="Select an report option" [(ngModel)]="confirmationType">
     <mat-radio-button [disabled]="!reportContext()?.canPartial || isLoading()" value="partial">
       {{ TranslationConstants.REPORT_DIALOG.PARTIAL | translate }}
     </mat-radio-button>
@@ -73,6 +73,12 @@
       {{ TranslationConstants.REPORT_DIALOG.FINAL | translate }}
     </mat-radio-button>
   </mat-radio-group>
+
+  <app-operator-selector class="operator-selector"
+    [isEnabled]="canReport()"
+    [(selectedOperatorId)]="selectedOperatorId"
+    (creatingOperatorFailed)="creatingOperatorFailed.set($event)">
+  </app-operator-selector>
 
   @for (restriction of reportContext()?.restrictions; track restriction) {
     <mat-list>

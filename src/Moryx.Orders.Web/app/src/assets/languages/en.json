@@ -117,10 +117,11 @@
     "OVERDELIVERY": "Overdelivery",
     "UNDERDELIVERY": "Underdelivery",
     "PARTIAL_AMOUNT": "Target Amount",
-    "BEGIN": "BEGIN",
-    "OPERATOR_SELECTION_LABEL": "Operator",
-    "OPERATOR_SELECTION_PLACEHOLDER": "(Optional) Select an operator",
-    "OPERATOR_SELECTION_NOT_SUPPORTED": "Operator selection not supported"
+    "BEGIN": "BEGIN"
+  },
+  "OPERATOR_SELECTOR": {
+    "OPERATOR_SELECTOR_LABEL": "Operator",
+    "OPERATOR_SELECTOR_PLACEHOLDER": "(Optional) Select an operator"
   },
   "CHANGE_AMOUNT_DIALOG": {
     "TITLE": "Update the current target amount",

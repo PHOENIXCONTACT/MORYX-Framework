@@ -19,6 +19,7 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatButtonModule } from "@angular/material/button";
 import { MatInputModule } from "@angular/material/input";
 import { MatIconModule } from "@angular/material/icon";
+import { OperatorSelector } from "@app/components/operator-selector/operator-selector";
 
 @Component({
   selector: "app-report-dialog",
@@ -38,8 +39,9 @@ import { MatIconModule } from "@angular/material/icon";
     MatButtonModule,
     MatInputModule,
     MatRadioGroup,
-    MatIconModule
-  ]
+    MatIconModule,
+    OperatorSelector
+]
 })
 export class ReportDialog implements OnInit {
   protected reportContext = signal<ReportContext | undefined>(undefined);
@@ -50,6 +52,9 @@ export class ReportDialog implements OnInit {
   protected confirmationType = signal<"partial" | "final">("partial");
   protected estimatedSuccess = computed(() => this.success() + (this.reportContext()?.reportedSuccess ?? 0));
   protected estimatedFailure = computed(() => this.scrap() + (this.reportContext()?.reportedFailure ?? 0));
+  protected selectedOperatorId = signal<string|null>(null);
+  protected creatingOperatorFailed = signal<boolean>(false);
+
   protected canReport = computed(() => {
     if (this.success() < 0 || this.scrap() < 0) {
       return false;
@@ -87,7 +92,12 @@ export class ReportDialog implements OnInit {
     }
   }
 
+
   protected async submit(): Promise<void> {
+    if (this.creatingOperatorFailed()) {
+      return;
+    }
+
     this.isLoading.set(true);
 
     const report = <ReportModel>{
@@ -98,7 +108,9 @@ export class ReportDialog implements OnInit {
         this.confirmationType() === "partial"
           ? ConfirmationType.Partial
           : ConfirmationType.Final,
+      userIdentifier: this.selectedOperatorId()
     };
+
     let failed = false;
 
     await this.data
