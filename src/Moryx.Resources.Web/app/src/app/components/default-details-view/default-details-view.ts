@@ -16,5 +16,5 @@ import { TranslationConstants } from '@app/extensions/translation-constants.exte
   imports: [TranslatePipe, EmptyState,]
 })
 export class DefaultDetailsView {
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 }

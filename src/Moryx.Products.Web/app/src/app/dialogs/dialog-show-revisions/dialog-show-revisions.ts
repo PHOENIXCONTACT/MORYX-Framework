@@ -38,9 +38,9 @@ export class DialogShowRevisions implements OnInit {
   private router = inject(Router);
   private snackbarService = inject(SnackbarService);
 
-  revisions = signal<ProductModel[]>([]);
-  product = signal<ProductModel | undefined>(undefined);
-  TranslationConstants = TranslationConstants;
+  protected revisions = signal<ProductModel[]>([]);
+  protected product = signal<ProductModel | undefined>(undefined);
+  protected TranslationConstants = TranslationConstants;
 
   constructor() {
     this.product.update(_ => this.data);
@@ -53,23 +53,25 @@ export class DialogShowRevisions implements OnInit {
     };
     this.managementService.getTypes({body: body}).subscribe({
       next: (products) => {
-        if (products !== null) this.revisions.update(_ => products);
+        if (products !== null) {
+          this.revisions.update(_ => products);
+        }
       },
       error: async (e: HttpErrorResponse) =>
         await this.snackbarService.handleError(e)
     });
   }
 
-  onClose() {
+  protected onClose() {
     this.dialogRef.close();
   }
 
-  onOpen(product: ProductModel) {
+  protected onOpen(product: ProductModel) {
     this.dialogRef.close();
     this.router.navigate(['/details', product.id]);
   }
 
-  createProductIdentity(identifier: string | undefined | null, revision: number | undefined): string {
+  protected createProductIdentity(identifier: string | undefined | null, revision: number | undefined): string {
     return this.editService.createProductIdentity(identifier, revision);
   }
 }

@@ -20,6 +20,7 @@ import { InstructionService } from './services/instruction.service';
 
 import { WorkerInstructions } from './components/worker-instructions/worker-instructions';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 const COOKIE_NAME = 'moryx-client-identifier';
 
@@ -30,7 +31,8 @@ const COOKIE_NAME = 'moryx-client-identifier';
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     WorkerInstructions,
-    MatButtonModule
+    MatButtonModule,
+    MatIconModule
   ],
   host: {
     '(window:beforeunload)': 'disconnectEvents()'
@@ -45,8 +47,8 @@ export class App implements OnInit {
   private languageService = inject(LanguageService);
   private destroyRef = inject(DestroyRef);
 
-  environment = environment;
-  clientIdentifier: string = '';
+  protected environment = environment;
+  protected clientIdentifier: string = '';
 
   constructor() {
     const cookie = this.cookieService.getCookie(COOKIE_NAME);
@@ -70,7 +72,7 @@ export class App implements OnInit {
      this.instructionService.connect();
   }
 
-  openConfigDialog(): void {
+  protected openConfigDialog(): void {
     const dialogRef = this.dialog.open(ConfigurationDialog, {
       data: <DialogData>{
         instructorName: this.clientIdentifier,
@@ -82,13 +84,17 @@ export class App implements OnInit {
       .subscribe(result => this.handleDialogResult(result));
   }
 
-  private async handleDialogResult(result: any) {
-    if (result?.instructorName?.length) this.updateInstructor(result);
+  private async handleDialogResult(result: DialogData | undefined) {
+    if (result?.instructorName?.length) {
+      this.updateInstructor(result);
+    }
 
-    if (!this.clientIdentifier) await this.showNoInstructorWarning();
+    if (!this.clientIdentifier) {
+      await this.showNoInstructorWarning();
+    }
   }
 
-  private updateInstructor(result: any): void {
+  private updateInstructor(result: DialogData): void {
     this.clientIdentifier = result.instructorName;
     this.cookieService.setCookie(COOKIE_NAME, result.instructorName, 365);
 

@@ -52,10 +52,6 @@
     <Project Path="src/Moryx.Operators.Management/Moryx.Operators.Management.csproj" />
     <Project Path="src/Moryx.Operators.Web/Moryx.Operators.Web.csproj" />
     <Project Path="src/Moryx.Operators/Moryx.Operators.csproj" />
-    <Project Path="src/Moryx.Shifts.Endpoints/Moryx.Shifts.Endpoints.csproj" />
-    <Project Path="src/Moryx.Shifts.Management/Moryx.Shifts.Management.csproj" />
-    <Project Path="src/Moryx.Shifts.Web/Moryx.Shifts.Web.csproj" />
-    <Project Path="src/Moryx.Shifts/Moryx.Shifts.csproj" />
     <Project Path="src/Moryx.Users/Moryx.Users.csproj" />
   </Folder>
   <Folder Name="/Orders/">
@@ -95,6 +91,12 @@
     <Project Path="src/Moryx.Runtime.Endpoints/Moryx.Runtime.Endpoints.csproj" />
     <Project Path="src/Moryx.Runtime.Kernel/Moryx.Runtime.Kernel.csproj" />
     <Project Path="src/Moryx.Runtime/Moryx.Runtime.csproj" />
+  </Folder>
+  <Folder Name="/Shifts/">
+    <Project Path="src/Moryx.Shifts.Endpoints/Moryx.Shifts.Endpoints.csproj" />
+    <Project Path="src/Moryx.Shifts.Management/Moryx.Shifts.Management.csproj" />
+    <Project Path="src/Moryx.Shifts.Web/Moryx.Shifts.Web.csproj" />
+    <Project Path="src/Moryx.Shifts/Moryx.Shifts.csproj" />
   </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".build/Common.props" />

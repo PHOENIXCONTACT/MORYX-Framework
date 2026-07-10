@@ -7,7 +7,7 @@
     "start": "npm dev",
     "dev": "webpack-dev-server --progress --mode development --config webpack.dev.config.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npm install && rimraf --glob ../wwwroot/*.js && webpack --mode development --config webpack.prod.config.js"
+    "build:prod": "npm install && rimraf --glob ../wwwroot/*.js && webpack --mode production --config webpack.prod.config.js"
   },
   "author": "mma",
   "license": "Apache-2.0",
@@ -27,8 +27,8 @@
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-redux": "^9.3.0",
-    "react-router": "^7.17.0",
-    "react-toastify": "^11.0.5",
+    "react-router": "^8.1.0",
+    "react-toastify": "^11.1.0",
     "redux": "^5.0.1",
     "ts-loader": "^9.6.0",
     "uuid": "^14.0.0"
@@ -47,8 +47,8 @@
     "typescript": "^6.0.3",
     "url-loader": "^4.1.1",
     "webpack": "^5.107.2",
-    "webpack-cli": "^7.0.3",
-    "webpack-dev-server": "^5.2.5",
+    "webpack-cli": "^7.2.1",
+    "webpack-dev-server": "^6.0.0",
     "webpack-merge": "^6.0.1"
   }
 }

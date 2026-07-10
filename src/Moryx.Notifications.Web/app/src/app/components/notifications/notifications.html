@@ -5,10 +5,10 @@
     (mouseover)="onUpdateHoveredIdentifier(notification?.identifier)"
     (mouseout)="onUpdateHoveredIdentifier(undefined)"
   [class.hovered]="
-    hoveredNotificationIdentifier() == notification.identifier &&
-    selectedNotificationIdentifier() != notification.identifier
+    hoveredNotificationIdentifier() === notification.identifier &&
+    selectedNotificationIdentifier() !== notification.identifier
   "
-  [class.selected]="selectedNotificationIdentifier() == notification.identifier
+  [class.selected]="selectedNotificationIdentifier() === notification.identifier
   "
     >
     <div class="notification-container">
@@ -19,9 +19,9 @@
       </mat-card-content>
       <div
         class="notifications-item-sideLine"
-        [ngClass]="'has-background-' + notification.severity"
+        [class]="'has-background-' + notification.severity"
       ></div>
-      <div class="notifications-item-icon-container" [ngClass]="'has-background-' + notification.severity">
+      <div class="notifications-item-icon-container" [class]="'has-background-' + notification.severity">
         <mat-icon
           class="notifications-item-icon"
           [inline]="true"

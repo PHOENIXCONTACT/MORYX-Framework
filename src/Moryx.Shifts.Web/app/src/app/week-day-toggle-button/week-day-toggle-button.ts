@@ -5,11 +5,10 @@
 
 import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
 import { CalendarDate, CalendarState } from '../models/calendar-state';
-import { TranslationConstants } from '../extensions/translation-constants.extensions';
+import { TranslationConstants } from '../translation-constants';
 import { formatDateDigits, getDayName, getShortDayName, isDayInInterval, localizedDayName, shortDayName } from '../utils';
 import  moment from 'moment';
 import { MatButtonToggleChange, MatButtonToggleModule } from '@angular/material/button-toggle';
-import { CommonModule } from '@angular/common';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -20,7 +19,6 @@ import { TranslatePipe } from '@ngx-translate/core';
   styleUrl: './week-day-toggle-button.scss',
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
-    CommonModule,
     MatDialogModule,
     MatButtonModule,
     MatButtonToggleModule,
@@ -29,24 +27,24 @@ import { TranslatePipe } from '@ngx-translate/core';
 })
 export class WeekDayToggleButton {
 
-  startDate = input.required<Date>();
-  readOnly = input.required<boolean>();
-  endDate = input.required<Date>();
-  calendarState = input.required<CalendarState>();
-  shiftNumberOfDay= input.required<number>();
-  days = input.required<CalendarDate[]>();
-  onButtonToggled = output<CalendarDate>();
+  readonly startDate = input.required<Date>();
+  readonly readOnly = input.required<boolean>();
+  readonly endDate = input.required<Date>();
+  readonly calendarState = input.required<CalendarState>();
+  readonly shiftNumberOfDay= input.required<number>();
+  readonly days = input.required<CalendarDate[]>();
+  readonly buttonToggled = output<CalendarDate>();
 
-  TranslationConstants = TranslationConstants;
-  formatDateDigits = formatDateDigits;
-  getDayName = getDayName;
-  getShortDayName = getShortDayName;
-  isDayInInterval = isDayInInterval;
-  localizedDayName = localizedDayName;
-  shortDayName = shortDayName;
+  protected TranslationConstants = TranslationConstants;
+  protected formatDateDigits = formatDateDigits;
+  protected getDayName = getDayName;
+  protected getShortDayName = getShortDayName;
+  protected isDayInInterval = isDayInInterval;
+  protected localizedDayName = localizedDayName;
+  protected shortDayName = shortDayName;
 
-  getCalendarDaysPerWeek() {
-    let weeksAndDays: Array<CalendarDate[]> = [];
+  protected getCalendarDaysPerWeek() {
+    const weeksAndDays: Array<CalendarDate[]> = [];
     const numberOfWeeks = Math.ceil(this.shiftNumberOfDay() / 7);
     let lastDate = this.startDate();
     for (let index = 1; index <= numberOfWeeks; index++) {
@@ -59,11 +57,11 @@ export class WeekDayToggleButton {
   }
 
 
-  buttonToggled(event: MatButtonToggleChange) {
-    this.onButtonToggled.emit(event.value);
+  protected onButtonToggled(event: MatButtonToggleChange) {
+    this.buttonToggled.emit(event.value);
   }
 
-  isDaySelected(calendarDate: CalendarDate) {
+  protected isDaySelected(calendarDate: CalendarDate) {
     return this.days().some(
       (x) => moment(x.date).diff(moment(calendarDate.date), 'days') === 0
     );

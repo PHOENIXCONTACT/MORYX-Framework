@@ -21,7 +21,6 @@ import { AttendableResourceModel } from '@api/models/attendable-resource-model';
 import { ExtendedOperatorModel } from '@api/models/extended-operator-model';
 
 
-
 export function assignableOperatorToOperatorModel(
   operator: AssignableOperator
 ): OperatorModel {
@@ -70,7 +69,9 @@ export function addCalendarDaysToAssignment(
   shiftInstance: ShiftInstanceModel | undefined,
 ): AssignmentCardModel {
 
-  if (!shiftInstance) return model;
+  if (!shiftInstance) {
+    return model;
+  }
 
   model.days = assignedDaysToCalendarDates(shiftInstance.startDate, shiftInstance.endDate, model.assignedDays);
   return model;
@@ -81,9 +82,11 @@ export function assignedDaysToCalendarDates(
   endDate: Date,
   assignedDays: string
 ): CalendarDate[] {
-  let calendarDates: CalendarDate[] = [];
+  const calendarDates: CalendarDate[] = [];
 
-  if (!assignedDays) return calendarDates;
+  if (!assignedDays) {
+    return calendarDates;
+  }
 
   const dayStringArray = assignedDays.split(',');
   const start = moment(startDate);
@@ -102,7 +105,7 @@ export function assignedDaysToCalendarDates(
       continue;
     }
 
-    for (let dayString of dayStringArray) {
+    for (const dayString of dayStringArray) {
       const dayEnum = PossibleAssignedDays[day];
       const dayValue = dayString.replace(' ', '');
       if (dayEnum === dayValue) {
@@ -117,11 +120,7 @@ export function assignedDaysToCalendarDates(
   return calendarDates;
 }
 
-export function shiftTypeToShiftTypeModel(
-  shiftType: MoryxShiftsEndpointsShiftTypeModel
-): ShiftTypeModel {
-
-
+export function shiftTypeToShiftTypeModel(shiftType: MoryxShiftsEndpointsShiftTypeModel): ShiftTypeModel {
   const data = <ShiftTypeModel>{
     id: shiftType.id,
     name: shiftType.name,
@@ -175,12 +174,15 @@ export function calendarDatesToFlagEnumString(calendarDates: CalendarDate[], shi
     const day = PossibleAssignedDays[index];
     const correspondingCalendarDate = calendarDates.find(x => moment(x.date).diff(currentDate) === 0);
     //the current date is not in the calendar for the shift
-    if (!correspondingCalendarDate) continue;
+    if (!correspondingCalendarDate) {
+      continue;
+    }
 
-    if (stringResult === '')
+    if (stringResult === '') {
       stringResult += `${day}`;
-    else
+    } else {
       stringResult += `,${day}`
+    }
   }
   return stringResult;
 }

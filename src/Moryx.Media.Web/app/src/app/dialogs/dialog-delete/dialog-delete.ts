@@ -32,9 +32,9 @@ import { MatButton } from '@angular/material/button';
 })
 export class DialogDelete {
   private dialogRef = inject(MatDialogRef<DialogDelete>);
-  data = inject<DeleteDialogData>(MAT_DIALOG_DATA);
+  protected data = inject<DeleteDialogData>(MAT_DIALOG_DATA);
 
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
   constructor() {
   }

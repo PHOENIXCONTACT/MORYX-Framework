@@ -7,7 +7,6 @@ import { Component, inject, viewChild, input, output, effect, untracked, ChangeD
 import { MatTree, MatTreeModule } from '@angular/material/tree';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { CommonModule } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ResourceModel } from '../../api/models';
 import { SessionService } from '@app/services/session.service';
@@ -20,26 +19,26 @@ import { getHierarchieLineFor } from '@app/models/TypeTree';
   styleUrls: ['./resource-tree.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
   host: { '(window:beforeunload)': 'saveState()' },
-  imports: [CommonModule, MatTreeModule, MatIconModule, MatButtonModule, TranslatePipe]
+  imports: [MatTreeModule, MatIconModule, MatButtonModule, TranslatePipe]
 })
 export class ResourceTree {
   private sessionService = inject(SessionService);
 
-  resources = input.required<ResourceModel[]>();
-  selected = input<ResourceModel | undefined>(undefined);
+  readonly resources = input.required<ResourceModel[]>();
+  readonly selected = input<ResourceModel | undefined>(undefined);
 
-  nodeSelected = output<number>();
-  nodeContextMenu = output<{ event: MouseEvent; id: number }>();
+  readonly nodeSelected = output<number>();
+  readonly nodeContextMenu = output<{ event: MouseEvent; id: number }>();
 
-  tree = viewChild<MatTree<ResourceModel>>(MatTree);
+  protected readonly tree = viewChild<MatTree<ResourceModel>>(MatTree);
 
-  childrenAccessor = (node: ResourceModel) =>
+  protected childrenAccessor = (node: ResourceModel) =>
     (node.references?.find(ref => ref.name === 'Children')?.targets ?? []) as ResourceModel[];
 
-  hasChild = (_: number, node: ResourceModel) =>
+  protected hasChild = (_: number, node: ResourceModel) =>
     !!(node.references?.find(ref => ref.name === 'Children')?.targets?.length);
 
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
   constructor() {
     effect(() => {
@@ -65,19 +64,19 @@ export class ResourceTree {
     });
   }
 
-  saveState() {
+  protected saveState() {
     this.sessionService.storeTreeState(this.getExpandedIds());
   }
 
-  onNodeClick(id: number) {
+  protected onNodeClick(id: number) {
     this.nodeSelected.emit(id);
   }
 
-  onContextMenu(event: MouseEvent, id: number) {
+  protected onContextMenu(event: MouseEvent, id: number) {
     this.nodeContextMenu.emit({ event, id });
   }
 
-  onExpandOrCollapseNode() {
+  protected onExpandOrCollapseNode() {
     this.sessionService.storeTreeState(this.getExpandedIds());
   }
 

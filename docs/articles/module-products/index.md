@@ -38,9 +38,13 @@ Every process holds the reference to one product instance.
 The product instance may be removed from the facility and reworked somewhere else. 
 If it is inserted again later on, a new ProductionProcess is created. The `product instance` references all processes involved in its production.
 
+## Provided Endpoint
+
+This module provides a REST API for managing products. See [Products Endpoint](endpoint.md) for details on available operations and permissions.
+
 ## Further Readings regarding Products
 
-There are additional contents available to take a closer look into 
+There are additional contents available to take a closer look into
  * the [storage of products](product-storage.md) and [recipes](recipe-storage.md)
  * the [product management](product-management.md)
  * the possibility to [import products](product-import.md)

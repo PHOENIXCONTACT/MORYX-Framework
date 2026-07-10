@@ -90,23 +90,27 @@ public class ValueProviderExecutor : IEmptyPropertyProvider
             }
 
             var value = property.GetValue(target);
-            // Iterate each item of an enumerable
-            if (value is IEnumerable enumerable)
+
+            if (!property.PropertyType.IsPrimitive && property.PropertyType != typeof(string))
             {
-                int i = 0;
-                foreach (var item in enumerable)
+                // Iterate each item of an enumerable
+                if (value is IEnumerable enumerable)
                 {
-                    stack.Push(new ExecutorLevel(enumerable, null, new() { [IndexKey] = i++ }));
-                    if (item != null)
+                    int i = 0;
+                    foreach (var item in enumerable)
                     {
-                        Iterate(item, settings, stack);
+                        stack.Push(new ExecutorLevel(enumerable, null, new() { [IndexKey] = i++ }));
+                        if (item != null)
+                        {
+                            Iterate(item, settings, stack);
+                        }
+                        stack.Pop();
                     }
-                    stack.Pop();
                 }
-            }
-            else if (value != null && property.PropertyType.IsClass && property.PropertyType != typeof(string))
-            {
-                Iterate(value, settings, stack);
+                else if (value != null && property.PropertyType.IsClass)
+                {
+                    Iterate(value, settings, stack);
+                }
             }
             stack.Pop();
         }

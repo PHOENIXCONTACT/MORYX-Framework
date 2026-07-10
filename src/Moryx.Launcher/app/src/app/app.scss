@@ -1,0 +1,38 @@
+// Re-declare the icon font inside the Shadow DOM, since global styles don't penetrate the shadow root.
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+}
+
+:host {
+  display: flex;
+  height: 100%;
+}
+
+slot[name="app"] {
+  display: block;
+  flex: 1;
+  min-height: 0;
+
+  // CSS custom properties inherit across shadow DOM slot boundaries.
+  // Layout components (e.g. full-layout) set these tokens on their Material
+  // containers, which would otherwise cascade into the slotted module content
+  // and override the module's own Material component styles.
+  --mat-sidenav-container-shape: initial;
+  --mat-sidenav-container-background-color: initial;
+  --mat-toolbar-container-background-color: initial;
+}
+
+::slotted([slot="app"]) {
+  height: 100%;
+  overflow: hidden;
+}
+
+::slotted([slot="topRegion"]) {
+  flex: 1;
+  min-width: 0;
+}
+
+::slotted([slot="rightRegion"]) {
+  flex: 1;
+  min-height: 0;
+}

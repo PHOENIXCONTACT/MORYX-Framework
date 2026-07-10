@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using Moryx.Configuration;
@@ -131,4 +132,12 @@ public class ChildConfig : UpdatableEntry
 
 public class NonPersistedTestConfig : TestConfig
 {
+}
+
+[DataContract]
+[ProvidedConfig("ListConfig")]
+public class ListConfig : ConfigBase
+{
+    [DataMember]
+    public List<ChildConfig> Content { get; set; }
 }

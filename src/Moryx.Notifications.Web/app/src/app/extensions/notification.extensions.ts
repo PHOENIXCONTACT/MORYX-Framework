@@ -6,6 +6,7 @@
 import { NotificationModel, Severity } from '@api/models';
 
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface Array<T> {
     sortBySeverity(): NotificationModel[];
   }

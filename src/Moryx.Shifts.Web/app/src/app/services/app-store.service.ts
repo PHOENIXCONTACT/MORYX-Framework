@@ -174,9 +174,11 @@ export class AppStoreService {
             isDayInInterval(x.endDate, start, end)
         );
 
-        if (!instancesForPreviousWeek.length) return shiftsAndAssignment;
+        if (!instancesForPreviousWeek.length) {
+          return shiftsAndAssignment;
+        }
 
-        for (let previousInstance of instancesForPreviousWeek) {
+        for (const previousInstance of instancesForPreviousWeek) {
           const newStartDate = moment(previousInstance.endDate).add(1, 'days');
           const newInstance = <ShiftInstanceModel>{
             id: previousInstance.id,// temporary id
@@ -240,13 +242,13 @@ export class AppStoreService {
 
   async createNewAssignmentAndShift(data: CopyShiftAndAssignmentData) {
     //create new shift instance for the new week
-    for (let newInstance of data.shiftInstances) {
+    for (const newInstance of data.shiftInstances) {
       await this.shiftService.addInstance(newInstance)
         .then(async (instance) => {
           this.shiftService.addToInstanceList(instance);
 
           const assignments = data.assignments.filter(x => x.shift.id === newInstance.id); // based on temporary id
-          for (let assignment of assignments) {
+          for (const assignment of assignments) {
             assignment.shift = shiftInstanceToShiftCardModel(instance);
             await this.assignmentService.addNewAssignment(assignment)
               .then(newAssignment => this.assignmentService.addAssignmentsToList([newAssignment]))
@@ -266,29 +268,31 @@ export class AppStoreService {
   selectOperator(operator: OperatorModel) {
     if (
       !this.operatorsSelectedForFilter.value.some((x) => operator.id === x.id)
-    )
+    ) {
       this.operatorsSelectedForFilter.next([
         ...this.operatorsSelectedForFilter.value,
         operator,
       ]);
-    else
+    } else {
       this.operatorsSelectedForFilter.next(
         this.operatorsSelectedForFilter.value.filter((x) => x.id != operator.id)
       );
+    }
   }
 
   selectResource(resource: AttendableResourceModel) {
     if (
       !this.resourcesSelectedForFilter.value.some((x) => resource.id === x.id)
-    )
+    ) {
       this.resourcesSelectedForFilter.next([
         ...this.resourcesSelectedForFilter.value,
         resource,
       ]);
-    else
+    } else {
       this.resourcesSelectedForFilter.next(
         this.resourcesSelectedForFilter.value.filter((x) => x.id != resource.id)
       );
+    }
   }
 
   addShiftType(shift: ShiftTypeModel, calendarState: CalendarState) {

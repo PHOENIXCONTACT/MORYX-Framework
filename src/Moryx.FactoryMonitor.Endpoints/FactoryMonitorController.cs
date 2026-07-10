@@ -308,7 +308,7 @@ public class FactoryMonitorController : ControllerBase
 
         return;
 
-        async IAsyncEnumerable<SseItem<string>> Subscribe([EnumeratorCancellation] CancellationToken token)
+        async IAsyncEnumerable<SseItem<string>> Subscribe([EnumeratorCancellation] CancellationToken cancelToken)
         {
             var channel = Channel.CreateUnbounded<(string EventType, string Data)>();
             var id = Guid.NewGuid();
@@ -316,7 +316,7 @@ public class FactoryMonitorController : ControllerBase
 
             try
             {
-                await foreach (var (eventType, data) in channel.Reader.ReadAllAsync(token))
+                await foreach (var (eventType, data) in channel.Reader.ReadAllAsync(cancelToken))
                 {
                     yield return new SseItem<string>(data, eventType);
                 }

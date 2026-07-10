@@ -32,8 +32,8 @@ public static class KernelServiceCollectionExtensions
                     var manager = ActivatorUtilities.CreateInstance<ConfigManager>(serviceProvider);
                     return manager.ConfigureValueProviders(original => [
                         manager._sharedProvider,
-                        new ActivatorValueProvider(),
                         ActivatorUtilities.CreateInstance<MicrosoftExtensionsConfigProvider>(serviceProvider),
+                        new ActivatorValueProvider(),
                         new DefaultValueAttributeProvider(),
                     ]);
                 });

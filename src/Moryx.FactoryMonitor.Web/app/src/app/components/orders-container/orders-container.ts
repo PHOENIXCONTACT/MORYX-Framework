@@ -18,11 +18,11 @@ import Order from '@app/models/order';
     imports: [CommonModule]
 })
 export class OrdersContainer {
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
   private orderStoreService = inject(OrderStoreService);
-  runningOrders = toSignal(this.orderStoreService.runningOrders$);
+  protected runningOrders = toSignal(this.orderStoreService.runningOrders$);
 
-  toggleOrder(order: Order) {
+  protected toggleOrder(order: Order) {
     this.orderStoreService.toggleOrder(order);
   }
 }

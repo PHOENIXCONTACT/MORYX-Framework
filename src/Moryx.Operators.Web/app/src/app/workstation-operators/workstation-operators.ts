@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, computed, inject, signal, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { WorkstationViewModel } from '../models/workstation-view-model';
 import { WorkstationTogglingState } from './WorkstationTogglingState';
 import { MatDialog } from '@angular/material/dialog';
@@ -22,6 +22,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-workstation-operators',
@@ -35,32 +37,37 @@ import { MatButtonModule } from '@angular/material/button';
     EmptyState,
     TranslatePipe,
     MatButtonModule,
+    MatToolbarModule,
+    MatCardModule,
     RouterLink
   ]
 })
-export class WorkstationOperators {
+export class WorkstationOperators implements OnInit {
   private appStoreService = inject(AppStoreService);
   private dialog = inject(MatDialog);
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
 
-  workstations = signal<WorkstationViewModel[]>([]);
-  workstationTogglingState = signal<WorkstationTogglingState | undefined>(undefined);
-  operatorsSkills = signal<OperatorSkill[]>([]);
-  skillTypes = signal<SkillTypeModel[]>([]);
-  isCardExpanded = computed(() => {
-    if (!this.workstationTogglingState())
+  protected workstations = signal<WorkstationViewModel[]>([]);
+  protected workstationTogglingState = signal<WorkstationTogglingState | undefined>(undefined);
+  protected operatorsSkills = signal<OperatorSkill[]>([]);
+  protected skillTypes = signal<SkillTypeModel[]>([]);
+  protected isCardExpanded = computed(() => {
+    if (!this.workstationTogglingState()) {
       return false;
+    }
 
     return this.workstationTogglingState()?.isExpanded;
   })
 
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
   ngOnInit(): void {
     this.appStoreService.workstations$.subscribe((stations) => {
       this.workstations.update(_ => stations);
-      if (stations.length) this.expandPreviousCard(this.workstations());
+      if (stations.length) {
+        this.expandPreviousCard(this.workstations());
+      }
     });
 
     this.appStoreService.skills$.subscribe(skills => this.operatorsSkills.update(_ => skills));
@@ -72,12 +79,16 @@ export class WorkstationOperators {
 
     // ie : /?stationId=2
     const urlFragments = this.router.url.split('?');// ['/', 'stationId=2']
-    if (urlFragments.length === 0) return;
+    if (urlFragments.length === 0) {
+      return;
+    }
 
     const stationIdUrl = urlFragments[urlFragments.length - 1].split('=')[1]// ['stationId', '2']
     const stationId = Number(stationIdUrl);
     const station = stations.find((x) => x.data.id === stationId);
-    if (!stationId || !station) return;
+    if (!stationId || !station) {
+      return;
+    }
 
     //expand this workstation card
     this.workstationTogglingState.update(_ => <WorkstationTogglingState>{
@@ -86,17 +97,19 @@ export class WorkstationOperators {
     });
   }
 
-  toggleWorkstationCard(station: WorkstationViewModel | undefined) {
+  protected toggleWorkstationCard(station: WorkstationViewModel | undefined) {
     this.workstationTogglingState.update(_ => <WorkstationTogglingState>{
       station,
       isExpanded: !this.workstationTogglingState()?.isExpanded
     });
-    if (this.workstationTogglingState()?.isExpanded)
+    if (this.workstationTogglingState()?.isExpanded) {
       this.updateUrlParam(station?.data.id ?? null);
-    else this.updateUrlParam(null);
+    } else {
+      this.updateUrlParam(null);
+    }
   }
 
-  addOperator() {
+  protected addOperator() {
     const dialogResult = this.dialog.open(AddOperatorDialog);
     //navigate to operator details
     dialogResult.afterClosed()

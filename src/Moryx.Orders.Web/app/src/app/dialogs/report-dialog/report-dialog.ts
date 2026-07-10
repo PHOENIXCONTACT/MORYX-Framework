@@ -19,6 +19,7 @@ import { MatListModule } from "@angular/material/list";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatButtonModule } from "@angular/material/button";
 import { MatInputModule } from "@angular/material/input";
+import { MatIconModule } from "@angular/material/icon";
 
 @Component({
   selector: "app-report-dialog",
@@ -37,34 +38,39 @@ import { MatInputModule } from "@angular/material/input";
     MatProgressBarModule,
     MatButtonModule,
     MatInputModule,
-    MatRadioGroup
+    MatRadioGroup,
+    MatIconModule
   ]
 })
 export class ReportDialog implements OnInit {
-  reportContext = signal<ReportContext | undefined>(undefined);
-  isLoading = signal(false);
-  success = signal(0);
-  scrap = signal(0);
-  comment = signal("");
-  confirmationType = signal<"partial" | "final">("partial");
-  estimatedSuccess = computed(() => this.success() + (this.reportContext()?.reportedSuccess ?? 0));
-  estimatedFailure = computed(() => this.scrap() + (this.reportContext()?.reportedFailure ?? 0));
-  canReport = computed(() => {
-    if (this.success() < 0 || this.scrap() < 0) return false;
-
-    if (this.confirmationType() == "partial" && !this.reportContext()?.canPartial)
+  protected reportContext = signal<ReportContext | undefined>(undefined);
+  protected isLoading = signal(false);
+  protected success = signal(0);
+  protected scrap = signal(0);
+  protected comment = signal("");
+  protected confirmationType = signal<"partial" | "final">("partial");
+  protected estimatedSuccess = computed(() => this.success() + (this.reportContext()?.reportedSuccess ?? 0));
+  protected estimatedFailure = computed(() => this.scrap() + (this.reportContext()?.reportedFailure ?? 0));
+  protected canReport = computed(() => {
+    if (this.success() < 0 || this.scrap() < 0) {
       return false;
+    }
 
-    if (this.confirmationType() == "final" && !this.reportContext()?.canFinal)
+    if (this.confirmationType() == "partial" && !this.reportContext()?.canPartial) {
       return false;
+    }
+
+    if (this.confirmationType() == "final" && !this.reportContext()?.canFinal) {
+      return false;
+    }
 
     return true;
   })
 
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
   private dialog = inject(MatDialogRef<ReportDialog>);
-  data = inject<ReportDialogData>(MAT_DIALOG_DATA);
+  protected data = inject<ReportDialogData>(MAT_DIALOG_DATA);
 
   async ngOnInit() {
     this.isLoading.update(_=> true);
@@ -83,10 +89,10 @@ export class ReportDialog implements OnInit {
     }
   }
 
-  async submit(): Promise<void> {
+  protected async submit(): Promise<void> {
     this.isLoading.update(_=> true);
 
-    let report = <ReportModel>{
+    const report = <ReportModel>{
       successCount: this.success(),
       failureCount: this.scrap(),
       comment: this.comment(),
@@ -104,7 +110,9 @@ export class ReportDialog implements OnInit {
         failed = true;
         this.isLoading.update(_=> false);
       });
-    if (!failed) this.dialog.close();
+    if (!failed) {
+      this.dialog.close();
+    }
   }
 }
 

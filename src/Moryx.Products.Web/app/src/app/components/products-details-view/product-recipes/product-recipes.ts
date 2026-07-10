@@ -42,17 +42,21 @@ export class ProductRecipes {
   private productManagementService = inject(ProductManagementService);
   private snackbarService = inject(SnackbarService);
 
-  isEditMode = toSignal(this.editProductsService.edit$, { initialValue: false });
-  recipes = toSignal(this.editProductsService.currentProduct$.pipe(map(p => p?.recipes ?? []) ), { initialValue: [] });
-  selectedRecipe = linkedSignal(this.editProductsService.currentRecipe);
-  TranslationConstants = TranslationConstants;
+  protected isEditMode = toSignal(this.editProductsService.edit$, { initialValue: false });
+  protected recipes = toSignal(this.editProductsService.currentProduct$.pipe(map(p => p?.recipes ?? []) ), { initialValue: [] });
+  protected selectedRecipe = linkedSignal(this.editProductsService.currentRecipe);
+  protected TranslationConstants = TranslationConstants;
 
-  onAddRecipe() {
+  protected onAddRecipe() {
     const dialogRef = this.dialog.open(DialogCreateRecipe, {});
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (!result) return;
-      if (!result.selectedRecipe) return;
+      if (!result) {
+        return;
+      }
+      if (!result.selectedRecipe) {
+        return;
+      }
 
       this.createRecipe(result.recipeName, result.selectedRecipe.name, result.workplanModel);
     });
@@ -77,7 +81,7 @@ export class ProductRecipes {
     this.router.navigate(['details', this.editProductsService.currentProductId(), 'recipes', recipe.id]);
   }
 
-  onSelect(recipe: RecipeModel) {
+  protected onSelect(recipe: RecipeModel) {
     if (this.selectedRecipe()?.id === recipe.id) {
       return;
     }
@@ -85,7 +89,7 @@ export class ProductRecipes {
     this.router.navigate(['details', this.editProductsService.currentProductId(), 'recipes', recipe.id]);
   }
 
-  onDeleteRecipe(event: Event, recipe: RecipeModel) {
+  protected onDeleteRecipe(event: Event, recipe: RecipeModel) {
     event.stopPropagation();
     this.editProductsService.removeRecipe(recipe);
     this.router.navigate(['details', this.editProductsService.currentProductId(), 'recipes']);

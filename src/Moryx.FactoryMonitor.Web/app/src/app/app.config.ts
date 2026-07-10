@@ -9,13 +9,12 @@ import { ApplicationConfig, importProvidersFrom, inject, provideAppInitializer }
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MatIconModule } from '@angular/material/icon';
+import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule } from '@angular/platform-browser';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter } from '@angular/router';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -61,7 +60,11 @@ export const appConfig: ApplicationConfig = {
       }),
       fallbackLang: 'en'
     }),
-    provideAnimationsAsync(),
+    provideAppInitializer(() => {
+      // Use material-symbols as default icon font
+      const iconRegistry = inject(MatIconRegistry);
+      iconRegistry.setDefaultFontSetClass('material-symbols-outlined');
+    }),
     provideAppInitializer(async () => {
       const api = inject(FactoryMonitorService);
       const orderStore = inject(OrderStoreService);

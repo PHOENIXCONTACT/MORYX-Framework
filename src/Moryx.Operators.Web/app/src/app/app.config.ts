@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { ApplicationConfig, importProvidersFrom } from "@angular/core";
+import { ApplicationConfig, importProvidersFrom, inject, provideAppInitializer } from "@angular/core";
 import { environment } from "../environments/environment";
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from "@angular/common/http";
 import { ApiModule } from "@api/api.module";
@@ -17,7 +17,7 @@ import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatDialogModule } from "@angular/material/dialog";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatIconModule } from "@angular/material/icon";
+import { MatIconModule, MatIconRegistry } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
 import { MatListModule } from "@angular/material/list";
 import { MatMenuModule } from "@angular/material/menu";
@@ -29,7 +29,6 @@ import { MatTableModule } from "@angular/material/table";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { BrowserModule } from "@angular/platform-browser";
-import { provideAnimationsAsync } from "@angular/platform-browser/animations/async";
 import { AppStoreService } from "./services/app-store.service";
 import { TranslateService } from '@ngx-translate/core';
 import { provideRouter, withComponentInputBinding } from "@angular/router";
@@ -78,7 +77,11 @@ export const appConfig: ApplicationConfig = {
       }),
       fallbackLang: 'en'
     }),
-    provideAnimationsAsync(),
+    provideAppInitializer(() => {
+      // Use material-symbols as default icon font
+      const iconRegistry = inject(MatIconRegistry);
+      iconRegistry.setDefaultFontSetClass('material-symbols-outlined');
+    }),
   ],
 };
 

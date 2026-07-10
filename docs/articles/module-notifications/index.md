@@ -9,6 +9,10 @@ The NotificationPublisher module mainly collects all `INotificationSource` modul
 
 - No facade will be provided
 
+## Provided Endpoint
+
+This module provides a REST API for viewing and acknowledging notifications. See [Notifications Endpoint](endpoint.md) for details on available operations and permissions.
+
 ## Dependencies
 
 There are no direct dependencies to this module.

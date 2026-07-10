@@ -54,7 +54,9 @@ export class EditorStateService {
   }
 
   stopEditingProps() {
-    if (this.isEditingProps.value) this.isEditingProps.next(false);
+    if (this.isEditingProps.value) {
+      this.isEditingProps.next(false);
+    }
   }
 
   startEditingStep(nodeId: number) {
@@ -62,11 +64,15 @@ export class EditorStateService {
     this.stopEditingStep();
     this.stopCreatingStep();
     const node = this.workplan?.nodes?.find(node => node.id === nodeId);
-    if (node) this.isEditingStep.next(node);
+    if (node) {
+      this.isEditingStep.next(node);
+    }
   }
 
   stopEditingStep() {
-    if (this.isEditingStep.value) this.isEditingStep.next(undefined);
+    if (this.isEditingStep.value) {
+      this.isEditingStep.next(undefined);
+    }
   }
 
   startCreatingStep(type: string) {
@@ -77,7 +83,9 @@ export class EditorStateService {
   }
 
   stopCreatingStep() {
-    if (this.isCreatingStep.value) this.isCreatingStep.next(undefined);
+    if (this.isCreatingStep.value) {
+      this.isCreatingStep.next(undefined);
+    }
   }
 }
 

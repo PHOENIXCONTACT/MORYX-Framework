@@ -23,15 +23,15 @@
 
   <div class="report-dialog-amounts-row">
     <div class="amounts-data-entry">
-      <label><b>{{ TranslationConstants.REPORT_DIALOG.AMOUNT | translate }}</b></label>
+      <span><b>{{ TranslationConstants.REPORT_DIALOG.AMOUNT | translate }}</b></span>
       <div>{{ data.operation.model.totalAmount }}</div>
     </div>
     <div class="amounts-data-entry">
-      <label><b>{{ TranslationConstants.REPORT_DIALOG.OVERDELIVERY | translate }}</b></label>
+      <span><b>{{ TranslationConstants.REPORT_DIALOG.OVERDELIVERY | translate }}</b></span>
       <div>{{ data.operation.model.overDeliveryAmount }} ({{ data.operation.overDelivery }} %)</div>
     </div>
     <div class="amounts-data-entry">
-      <label><b>{{ TranslationConstants.REPORT_DIALOG.UNDERDELIVERY | translate }}</b></label>
+      <span><b>{{ TranslationConstants.REPORT_DIALOG.UNDERDELIVERY | translate }}</b></span>
       <div>{{ data.operation.model.underDeliveryAmount }} ({{ data.operation.underDelivery }} %)</div>
     </div>
   </div>
@@ -77,9 +77,9 @@
   @for (restriction of reportContext()?.restrictions; track restriction) {
     <mat-list>
       <mat-list-item>
-        <span matListItemIcon class="material-symbols-outlined">
+        <mat-icon matListItemIcon>
           {{ restriction.severity === 'Error' ? 'error' : restriction.severity === 'Warning' ? 'warning' : 'info' }}
-        </span>
+        </mat-icon>
         <div matListItemTitle>{{ restriction.text }}</div>
       </mat-list-item>
     </mat-list>

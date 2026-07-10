@@ -36,20 +36,20 @@ import { toSignal } from "@angular/core/rxjs-interop";
 export class ProductsDetailsHeader {
   private editService = inject(EditProductsService);
 
-  currentProduct = toSignal(this.editService.currentProduct$);
-  editMode = toSignal(this.editService.edit$, { initialValue: false });
-  identifier = linkedSignal(() => {
+  protected currentProduct = toSignal(this.editService.currentProduct$);
+  protected editMode = toSignal(this.editService.edit$, { initialValue: false });
+  protected identifier = linkedSignal(() => {
     const current = this.currentProduct();
     if (!current) {
       return;
     }
     return this.editService.createProductIdentity(current.identifier, current.revision);
   });
-  possibleStates = signal<string[]>(Object.values(ProductState));
+  protected possibleStates = signal<string[]>(Object.values(ProductState));
 
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
-  updateCurrentProduct(patch: Partial<ProductModel>) {
+  protected updateCurrentProduct(patch: Partial<ProductModel>) {
     const current = this.currentProduct();
     if (!current) {
       return;

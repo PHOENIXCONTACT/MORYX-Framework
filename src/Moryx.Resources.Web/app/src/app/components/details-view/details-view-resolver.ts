@@ -41,10 +41,11 @@ export const DetailsViewResolver: ResolveFn<ResourceModel> = async (route: Activ
   // edit service already holds the resource with all changes
   if (id === 0) {
     const resource = editService.activeResource();
-    if (resource)
+    if (resource) {
       return resource;
-    else
+    } else {
       return new RedirectCommand(router.parseUrl(''));
+    }
   }
 
   // Otherwise, we need to retrieve the resource details from the API
@@ -52,8 +53,7 @@ export const DetailsViewResolver: ResolveFn<ResourceModel> = async (route: Activ
     const resource = await lastValueFrom(apiService.getDetails({id: id}));
     editService.setResource(resource);
     return resource;
-  }
-  catch (error) {
+  } catch (error) {
     await snackbarService.handleError(error as HttpErrorResponse);
     return new RedirectCommand(router.parseUrl(''));
   }

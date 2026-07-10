@@ -5,7 +5,7 @@
 </div>
 <div mat-dialog-content class="remove-product">
   @if (
-    !productsWhichContainProduct() || productsWhichContainProduct().length == 0
+    !productsWhichContainProduct() || productsWhichContainProduct().length === 0
     ) {
     <p
       >
@@ -41,7 +41,7 @@
     {{ TranslationConstants.REMOVE_PRODUCT_DIALOG.CANCEL | translate }}
   </button>
   @if (
-    !productsWhichContainProduct() || productsWhichContainProduct().length == 0
+    !productsWhichContainProduct() || productsWhichContainProduct().length === 0
     ) {
     <button
       mat-flat-button

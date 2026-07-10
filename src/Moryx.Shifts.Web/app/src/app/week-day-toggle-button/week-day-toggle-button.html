@@ -1,18 +1,19 @@
-<span class="font-medium mb-2">{{ TranslationConstants.DIALOGS.WEEK_ASSIGNMENT_DIALOG.DAYS_OF_THE_SHIFT | translate }}</span>
+<span class="toggle-label">
+  {{ TranslationConstants.DIALOGS.WEEK_ASSIGNMENT_DIALOG.DAYS_OF_THE_SHIFT | translate }}
+</span>
+
 @if (!readOnly()) {
-  <div class="grid auto-rows-auto grid-flow-row">
-    @for (week of getCalendarDaysPerWeek(); track $index)
-      {
+  <div class="toggle-grid">
+    @for (week of getCalendarDaysPerWeek(); track $index) {
       <mat-button-toggle-group aria-label="days of the shift week 1" multiple
-        class="w-full"
-        hideMultipleSelectionIndicator>
+                               class="toggle-group" hideMultipleSelectionIndicator>
         @for (calendarDay of week; track $index) {
-          <mat-button-toggle
-            [value]="calendarDay"
-            [checked]="isDaySelected(calendarDay) && isDayInInterval(calendarDay.date,startDate(),endDate())"
-            (change)="buttonToggled($event)"
-            [disabled]="!isDayInInterval(calendarDay.date,startDate(),endDate())">
-            {{ (shortDayName(localizedDayName(calendarDay.day) | translate)).toUpperCase() }} {{formatDateDigits(calendarDay.date.getDate())}}
+          <mat-button-toggle [value]="calendarDay"
+                             [checked]="isDaySelected(calendarDay) && isDayInInterval(calendarDay.date, startDate(), endDate())"
+                             (change)="onButtonToggled($event)"
+                             [disabled]="!isDayInInterval(calendarDay.date, startDate(), endDate())">
+            {{ (shortDayName(localizedDayName(calendarDay.day) | translate)).toUpperCase() }}
+            {{ formatDateDigits(calendarDay.date.getDate()) }}
           </mat-button-toggle>
         }
       </mat-button-toggle-group>
@@ -21,15 +22,14 @@
 }
 
 @if (readOnly()) {
-  <div class="grid auto-rows-auto grid-flow-row">
-    @for (week of getCalendarDaysPerWeek(); track $index)
-      {
-      <div class="grid grid-cols-7">
+  <div class="toggle-grid">
+    @for (week of getCalendarDaysPerWeek(); track $index) {
+      <div class="readonly-week">
         @for (calendarDay of week; track $index) {
-          <span class="font-medium border text-center py-3" [ngClass]="{
-            'line-through': !isDayInInterval(calendarDay.date,startDate(),endDate())
-          }">
-            {{ (shortDayName(localizedDayName(calendarDay.day) | translate)).toUpperCase() }} {{formatDateDigits(calendarDay.date.getDate())}}
+          <span class="readonly-day"
+                [class.line-through]="!isDayInInterval(calendarDay.date, startDate(), endDate())">
+            {{ (shortDayName(localizedDayName(calendarDay.day) | translate)).toUpperCase() }}
+            {{ formatDateDigits(calendarDay.date.getDate()) }}
           </span>
         }
       </div>

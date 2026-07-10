@@ -49,15 +49,15 @@ export class Management implements OnInit, OnDestroy {
   private dialog = inject(MatDialog);
   private translateService = inject(TranslateService);
 
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
   private availableSessionsSubscription?: Subscription;
-  readonly displayedColumns: string[] = ['name', 'state', 'version', 'actions'];
+  protected readonly displayedColumns: string[] = ['name', 'state', 'version', 'actions'];
 
-  workplans = signal<WorkplanModel[]>([]);
-  sessions = signal<WorkplanSessionModel[]>([]);
-  isLoading = signal(false);
+  protected workplans = signal<WorkplanModel[]>([]);
+  protected sessions = signal<WorkplanSessionModel[]>([]);
+  protected isLoading = signal(false);
 
-  dataSource!: MatTableDataSource<WorkplanModel>;
+  protected dataSource!: MatTableDataSource<WorkplanModel>;
 
   constructor() {
   }
@@ -102,10 +102,14 @@ export class Management implements OnInit, OnDestroy {
   }
 
   private onSearch(request: SearchRequest) {
-    if (!this.workplans().length) return;
+    if (!this.workplans().length) {
+      return;
+    }
 
     let workplans = this.workplans().filter(w => w.name?.includes(request.term));
-    if (!workplans) workplans = [];
+    if (!workplans) {
+      workplans = [];
+    }
 
     if (request.submitted) {
       this.dataSource = new MatTableDataSource<WorkplanModel>(this.workplans());
@@ -141,7 +145,7 @@ export class Management implements OnInit, OnDestroy {
       .toAsync();
   }
 
-  onDeleteWorkplan(workplan: WorkplanModel) {
+  protected onDeleteWorkplan(workplan: WorkplanModel) {
     const session = this.sessions().find(s => s.workplanId === workplan.id);
     this.openConfirmDialog(session, workplan);
   }
@@ -166,7 +170,7 @@ export class Management implements OnInit, OnDestroy {
           <ConfirmDialogButton>{
             text: 'Ok', // ToDo: internationalize
             action: () => {
-              this.workplanService.deleteWorkplan({id: workplan?.id!}).subscribe({
+              this.workplanService.deleteWorkplan({id: workplan?.id ?? 0}).subscribe({
                 next: () => {
                   this.completeTheDeletion(session, workplan, translations);
                   confirmDialog.close();
@@ -191,7 +195,9 @@ export class Management implements OnInit, OnDestroy {
       });
     }
 
-    if (!this.workplans().length) return;
+    if (!this.workplans().length) {
+      return;
+    }
     this.workplans.update(items => {
       items.remove(workplan);
       return items;
@@ -204,7 +210,7 @@ export class Management implements OnInit, OnDestroy {
     );
   }
 
-  onOpenSession(workplan: WorkplanModel) {
+  protected onOpenSession(workplan: WorkplanModel) {
     this.sessionService
       .getSessionForWorkplan(workplan.id!)
       .toAsync()
@@ -212,7 +218,7 @@ export class Management implements OnInit, OnDestroy {
       .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err));
   }
 
-  onDuplicateWorkplan(workplan: WorkplanModel): void {
+  protected onDuplicateWorkplan(workplan: WorkplanModel): void {
     this.sessionService
       .getSessionForWorkplan(workplan.id!, true)
       .toAsync()

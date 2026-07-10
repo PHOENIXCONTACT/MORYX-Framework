@@ -35,52 +35,52 @@ export class FactoryStateStreamService {
   connect() {
     this.eventSource = new EventSource(this.factoryMonitorService.rootUrl + FactoryMonitorService.FactoryStatesStreamPath);
 
-    this.eventSource.addEventListener(this.Order_Event_Type_Key, (event: MessageEvent<any>) => {
+    this.eventSource.addEventListener(this.Order_Event_Type_Key, (event: MessageEvent<string>) => {
       this.transformOrderEvent(event);
     });
 
-    this.eventSource.addEventListener(this.Order_Changed_Event_Type_Key, (event: MessageEvent<any>) => {
+    this.eventSource.addEventListener(this.Order_Changed_Event_Type_Key, (event: MessageEvent<string>) => {
       this.transformOrderChangedEvent(event);
     });
 
-    this.eventSource.addEventListener(this.Cell_State_Event_Type_Key, (event: MessageEvent<any>) => {
+    this.eventSource.addEventListener(this.Cell_State_Event_Type_Key, (event: MessageEvent<string>) => {
       this.transformCellStateChangedEvent(event);
     });
 
-    this.eventSource.addEventListener(this.Activity_Event_Type_Key, (event: MessageEvent<any>) => {
+    this.eventSource.addEventListener(this.Activity_Event_Type_Key, (event: MessageEvent<string>) => {
       this.transformActivityChangedEvent(event);
     });
 
-    this.eventSource.addEventListener(this.Recource_Event_Type_Key, (event: MessageEvent<any>) => {
+    this.eventSource.addEventListener(this.Recource_Event_Type_Key, (event: MessageEvent<string>) => {
       this.transformResourceEvent(event);
     });
   }
 
-  private transformResourceEvent(event: MessageEvent<any>) {
+  private transformResourceEvent(event: MessageEvent<string>) {
     const resourceChangedModel = <ResourceChangedModel>JSON.parse(event.data);
     const cell = Converter.resourceChangedModelToCell(resourceChangedModel);
     this.updatedCell.next(cell);
   }
 
-  private transformActivityChangedEvent(event: MessageEvent<any>) {
+  private transformActivityChangedEvent(event: MessageEvent<string>) {
     const activityChangedModel = <ActivityChangedModel>JSON.parse(event.data);
     const cell = Converter.activityChangedModelToCell(activityChangedModel);
     this.updatedCell.next(cell);
   }
 
-  private transformCellStateChangedEvent(event: MessageEvent<any>) {
+  private transformCellStateChangedEvent(event: MessageEvent<string>) {
     const cellStateChangedModel = <CellStateChangedModel>JSON.parse(event.data);
     const cell = Converter.cellStateChangedModelToCell(cellStateChangedModel);
     this.updatedCell.next(cell);
   }
 
-  private transformOrderChangedEvent(event: MessageEvent<any>) {
+  private transformOrderChangedEvent(event: MessageEvent<string>) {
     const orderChangedModel = <OrderChangedModel>JSON.parse(event.data);
     const order = Converter.orderChangedModelToOrder(orderChangedModel);
     this.updatedOrder.next(order);
   }
 
-  private transformOrderEvent(event: MessageEvent<any>) {
+  private transformOrderEvent(event: MessageEvent<string>) {
     const orderModel = <OrderModel>JSON.parse(event.data);
     const order = Converter.orderModelToOrder(orderModel);
     this.updatedOrder.next(order);

@@ -3,7 +3,16 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, computed, effect, inject, linkedSignal, signal, untracked, ChangeDetectionStrategy } from "@angular/core";
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  linkedSignal,
+  signal,
+  untracked,
+  ChangeDetectionStrategy
+} from "@angular/core";
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from "@angular/forms";
 import { TranslatePipe } from "@ngx-translate/core";
 import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
@@ -16,6 +25,7 @@ import { MatSelectModule } from "@angular/material/select";
 import { EditProductsService } from "@app/services/edit-products.service";
 import { toSignal } from "@angular/core/rxjs-interop";
 import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
+import { RestrictKeywordValidatorDirective } from "./restrict-keyword-validator.directive";
 
 @Component({
   selector: "app-product-recipes-details-header",
@@ -30,41 +40,45 @@ import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
     ReactiveFormsModule,
     MatInput,
     MatSelectModule,
-    EmptyState
+    EmptyState,
+    RestrictKeywordValidatorDirective
   ]
 })
 export class ProductRecipesDetailsHeader {
   private cacheService = inject(CacheProductsService);
   private editProductsService = inject(EditProductsService);
 
-  isEditMode = toSignal(this.editProductsService.edit$, { initialValue: false });
-  currentRecipe = linkedSignal(this.editProductsService.currentRecipe);
+  protected isEditMode = toSignal(this.editProductsService.edit$, {initialValue: false});
+  protected currentRecipe = linkedSignal(this.editProductsService.currentRecipe);
 
-  hasWorkplans = computed(() => {
-    if (this.currentRecipe()?.workplanModel === undefined) return false;
+  protected hasWorkplans = computed(() => {
+    if (this.currentRecipe()?.workplanModel === undefined) {
+      return false;
+    }
     return true;
   });
-  possibleWorkplans = toSignal(this.cacheService.workplans, { initialValue: [] });
-  recipeClassifications = signal(Object.keys(RecipeClassificationModel));
+  protected possibleWorkplans = toSignal(this.cacheService.workplans, {initialValue: []});
+  protected recipeClassifications = signal(Object.keys(RecipeClassificationModel));
 
-  recipeControl = new UntypedFormControl({
+  protected recipeControl = new UntypedFormControl({
     value: RecipeClassificationModel.Unset
   });
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
   constructor() {
     effect(() => {
       const edit = this.isEditMode();
       untracked(() => {
-        if (edit)
+        if (edit) {
           this.recipeControl.enable();
-        else
+        } else {
           this.recipeControl.disable();
+        }
       })
     });
   }
 
-  byWorkplanId(workplan1: WorkplanModel, workplan2: WorkplanModel) {
+  protected byWorkplanId(workplan1: WorkplanModel, workplan2: WorkplanModel) {
     return workplan1?.id === workplan2?.id;
   }
 }

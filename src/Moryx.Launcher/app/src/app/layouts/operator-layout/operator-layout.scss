@@ -1,0 +1,15 @@
+@use "../layout";
+
+.top-region {
+  flex: 0 0 auto;
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}

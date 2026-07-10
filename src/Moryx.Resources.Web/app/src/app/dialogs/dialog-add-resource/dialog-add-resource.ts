@@ -38,11 +38,11 @@ import { MatButtonModule } from '@angular/material/button';
   ]
 })
 export class DialogAddResource implements OnInit {
-  types = signal<ResourceTypeModel[] | undefined>([]);
-  resourceType = signal<ResourceTypeModel | undefined>(undefined);
-  selectedCtor = signal<MethodEntry | undefined>(undefined);
+  protected types = signal<ResourceTypeModel[] | undefined>([]);
+  protected resourceType = signal<ResourceTypeModel | undefined>(undefined);
+  protected selectedCtor = signal<MethodEntry | undefined>(undefined);
 
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
   private data = inject<ResourceModel>(MAT_DIALOG_DATA);
   private dialogRef = inject(MatDialogRef<DialogAddResource>);
@@ -59,33 +59,37 @@ export class DialogAddResource implements OnInit {
     return (a.displayName ?? a.name)?.localeCompare(b.displayName ?? b.name ?? '') ?? -1;
   }
 
-  onTypeSelectionChanged(event: MatSelectionListChange) {
+  protected onTypeSelectionChanged(event: MatSelectionListChange) {
     this.resourceType.update(() => event.options[0].value);
     this.selectedCtor.update(() => undefined);
   }
 
-  typeSelected(stepper: MatStepper) {
-    if (!this.resourceType()?.constructors?.length) this.skipCtorSelection(stepper);
+  protected typeSelected(stepper: MatStepper) {
+    if (!this.resourceType()?.constructors?.length) {
+      this.skipCtorSelection(stepper);
+    }
     stepper.next();
   }
 
   private skipCtorSelection(stepper: MatStepper) {
     stepper.next();
-    if (stepper.selected) stepper.selected.interacted = true;
+    if (stepper.selected) {
+      stepper.selected.interacted = true;
+    }
   }
 
-  secondStepComplete(): boolean {
+  protected secondStepComplete(): boolean {
     return !!(
       this.selectedCtor() ||
       (this.resourceType() && (!this.resourceType()?.constructors || !this.resourceType()?.constructors?.length))
     );
   }
 
-  onCtorSelectionChanged(event: MatSelectionListChange) {
+  protected onCtorSelectionChanged(event: MatSelectionListChange) {
     this.selectedCtor.update(() => event.options[0].value);
   }
 
-  createResult(): ResourceConstructionParameters {
+  protected createResult(): ResourceConstructionParameters {
     return {
       name: this.resourceType()?.name,
       method: this.selectedCtor(),

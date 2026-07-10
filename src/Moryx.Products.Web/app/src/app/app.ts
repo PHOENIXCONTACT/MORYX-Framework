@@ -45,7 +45,6 @@ import {
   ProductStorageDetails,
   SessionService,
 } from "./services/session.service";
-import { CommonModule } from "@angular/common";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatButtonModule } from "@angular/material/button";
 import { MatTooltipModule } from "@angular/material/tooltip";
@@ -60,7 +59,6 @@ import { MatInputModule } from "@angular/material/input";
   templateUrl: "./app.html",
   styleUrls: ["./app.scss"],
   imports: [
-    CommonModule,
     MatSidenavModule,
     MatToolbarModule,
     MatButtonModule,
@@ -91,21 +89,21 @@ export class App implements OnInit, OnDestroy {
   private languageService = inject(LanguageService);
   private translateService = inject(TranslateService);
 
-  isEditMode = toSignal(this.editService.edit$, { initialValue: false });
-  selected = toSignal(this.editService.currentProduct$);
+  protected isEditMode = toSignal(this.editService.edit$, { initialValue: false });
+  protected selected = toSignal(this.editService.currentProduct$);
   products = signal<ProductModel[]>([]);
   productDefinitions = signal<ProductDefinitionModel[]>([]);
-  hierarchic = signal(false);
-  revisionOptions = signal<string[]>(Object.keys(RevisionFilter));
-  selectorOptions = signal<string[]>(Object.keys(Selector));
+  protected hierarchic = signal(false);
+  protected revisionOptions = signal<string[]>(Object.keys(RevisionFilter));
+  protected selectorOptions = signal<string[]>(Object.keys(Selector));
   importers = toSignal(this.cacheService.importers$, { initialValue: [] });
-  menuTopLeftPosition = signal<{ x: String, y: String }>({x: '0', y: '0'});
-  trigger = viewChild.required(MatMenuTrigger);
+  protected menuTopLeftPosition = signal<{ x: string, y: string }>({x: '0', y: '0'});
+  protected readonly trigger = viewChild.required(MatMenuTrigger);
 
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
   title = "Moryx.Products.Web";
-  productsToolbarImage: string =
+  protected productsToolbarImage: string =
     environment.assets + "assets/products_toolbar.jpg";
 
   constructor() {
@@ -154,19 +152,25 @@ export class App implements OnInit, OnDestroy {
   }
 
   onSearch(result: SearchRequest) {
-    if (!this.products().length) return;
+    if (!this.products().length) {
+      return;
+    }
 
     const searchTerm = result.term;
     let products = this.products().filter((p) =>
       this.editService.createProductNameWithIdentity(p).includes(searchTerm)
     );
-    if (!products.length) products = [];
+    if (!products.length) {
+      products = [];
+    }
     if (result.submitted) {
       this.searchbar.clearSuggestions();
-      if (products.length > 1)
+      if (products.length > 1) {
         this.router.navigate(["search"], {queryParams: {q: searchTerm}});
-      else if (products.length === 1)
+      }
+      else if (products.length === 1) {
         this.router.navigate(['/details', products[0].id ?? 0]);
+      }
       this.searchbar.subscribe({
         next: (newRequest: SearchRequest) => {
           this.onSearch(newRequest);
@@ -174,10 +178,12 @@ export class App implements OnInit, OnDestroy {
       });
     } else {
       const searchSuggestions = [] as SearchSuggestion[];
-      for (let product of products) {
+      for (const product of products) {
         //TODO: change this in MORYX 12
         const url = "Products/details/" + product.id; // <= BAD, hard coding a parent url 'Products' is no reliable.
-        if (!product.id) continue;
+        if (!product.id) {
+          continue;
+        }
 
         searchSuggestions.push({
           text: this.editService.createProductNameWithIdentity(product),
@@ -189,10 +195,12 @@ export class App implements OnInit, OnDestroy {
     }
   }
 
-  treeData = signal<ProductNode[]>([]);
+  protected treeData = signal<ProductNode[]>([]);
 
   createDatasource(hierarchic: boolean) {
-    if (this.productDefinitions().length === 0) return;
+    if (this.productDefinitions().length === 0) {
+      return;
+    }
 
     this.hierarchic.set(hierarchic);
 
@@ -201,7 +209,7 @@ export class App implements OnInit, OnDestroy {
       dataSource = this.SortTypesToDefinitions();
     } else {
       const products = this.SortTypesToDefinitions();
-      for (let p of products) {
+      for (const p of products) {
         if (p.baseType && p.baseType !== "ProductType") {
           //check for parent in configured types
           let parent = products.find((e) => e.typeName === p.baseType);
@@ -227,7 +235,7 @@ export class App implements OnInit, OnDestroy {
     this.treeData.set(dataSource);
   }
 
-  beforeUnloadHander() {
+  protected beforeUnloadHander() {
     const product = this.selected();
     if (this.isEditMode() && product) {
       this.sessionService.pushWipProduct(product, <ProductStorageDetails>{
@@ -239,7 +247,7 @@ export class App implements OnInit, OnDestroy {
     }
   }
 
-  saveDisabled(): boolean {
+  protected saveDisabled(): boolean {
     const anyUnsetRecipes = this.selected()?.recipes?.some((r) => r.classification === RecipeClassificationModel.Unset);
 
     if (this.isEditMode() && this.selected() && anyUnsetRecipes) {
@@ -248,19 +256,21 @@ export class App implements OnInit, OnDestroy {
     return false;
   }
 
-  setHierarchy(hierarchy: boolean) {
+  protected setHierarchy(hierarchy: boolean) {
     this.sessionService.setProductTreeHierarchy(hierarchy);
     this.createDatasource(hierarchy);
   }
 
   private SortTypesToDefinitions(): ProductNode[] {
-    if (this.productDefinitions().length === 0) return [];
-    let products = [] as ProductNode[];
-    for (let definition of this.productDefinitions()) {
+    if (this.productDefinitions().length === 0) {
+      return [];
+    }
+    const products = [] as ProductNode[];
+    for (const definition of this.productDefinitions()) {
       const d = this.ConvertTypeDefinitionToNode(definition);
       const types = this.products().filter((p) => p.type === definition.name);
       if (types) {
-        for (let type of types) {
+        for (const type of types) {
           const t = this.ConvertTypeToNode(type);
           d.children?.push(t);
         }
@@ -291,13 +301,15 @@ export class App implements OnInit, OnDestroy {
     } as ProductNode;
   }
 
-  onProductContext(event: MouseEvent, productId: number) {
+  protected onProductContext(event: MouseEvent, productId: number) {
     // Only handle right-click, not touch long-press
-    if ((event as any).pointerType === 'touch') {
+    if ((event as PointerEvent).pointerType === 'touch') {
       return;
     }
     event.preventDefault();
-    if (productId === 0) return;
+    if (productId === 0) {
+      return;
+    }
 
     this.open(event.clientX, event.clientY, productId);
   }
@@ -310,7 +322,7 @@ export class App implements OnInit, OnDestroy {
     this.trigger().openMenu();
   }
 
-  async onDeselect() {
+  protected async onDeselect() {
     if (this.isEditMode()) {
       await this.editService.onCancel();
     }
@@ -318,27 +330,37 @@ export class App implements OnInit, OnDestroy {
     await this.router.navigate([``]);
   }
 
-  onSelect(id: number) {
-    if (this.isEditMode()) return;
+  protected onSelect(id: number) {
+    if (this.isEditMode()) {
+      return;
+    }
 
-    if (id == 0) return;
+    if (id == 0) {
+      return;
+    }
 
-    if (id === this.selected()?.id) return;
+    if (id === this.selected()?.id) {
+      return;
+    }
 
     this.router.navigate(['/details', id]);
   }
 
-  async clickContainer(event: MouseEvent) {
+  protected async clickContainer(event: MouseEvent) {
     if ((event.target as HTMLElement).tagName !== "MAT-TREE") {
       return;
     }
     this.onDeselect();
   }
 
-  onDelete(id: number | undefined) {
-    if (!id) return;
+  protected onDelete(id: number | undefined) {
+    if (!id) {
+      return;
+    }
     const product = this.products().find((p) => p.id == id);
-    if (!product) return;
+    if (!product) {
+      return;
+    }
 
     const dialogRef = this.dialog.open(DialogRemoveProduct, {
       data: product
@@ -353,7 +375,7 @@ export class App implements OnInit, OnDestroy {
     });
   }
 
-  async onImport() {
+  protected async onImport() {
     const importers = this.importers();
     const target = importers?.length ? importers[0].name : undefined;
     if (target) {
@@ -371,13 +393,13 @@ export class App implements OnInit, OnDestroy {
     }
   }
 
-  onEdit() {
+  protected onEdit() {
     this.searchbar.clearSuggestions();
     this.searchbar.unsubscribe();
     this.editService.onEdit();
   }
 
-  async onCancel() {
+  protected async onCancel() {
     await this.editService.onCancel();
     this.searchbar.subscribe({
       next: (result: SearchRequest) => {
@@ -386,7 +408,7 @@ export class App implements OnInit, OnDestroy {
     });
   }
 
-  onSave() {
+  protected onSave() {
     this.editService.onSave();
     this.searchbar.subscribe({
       next: (result: SearchRequest) => {
@@ -395,7 +417,7 @@ export class App implements OnInit, OnDestroy {
     });
   }
 
-  onSelectAndEdit(id: number) {
+  protected onSelectAndEdit(id: number) {
     this.searchbar.clearSuggestions();
     this.searchbar.unsubscribe();
 
@@ -408,26 +430,36 @@ export class App implements OnInit, OnDestroy {
       .then(() => this.editService.onEdit());
   }
 
-  onDuplicate(id: number | undefined) {
-    if (!id) return;
+  protected onDuplicate(id: number | undefined) {
+    if (!id) {
+      return;
+    }
 
     const product = this.products().find((p) => p.id == id);
-    if (!product) return;
+    if (!product) {
+      return;
+    }
 
     const dialogRef = this.dialog.open(DialogDuplicateProduct, {
       data: product
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) this.editService.onDuplicate(result as DuplicateProductInfos);
+      if (result) {
+        this.editService.onDuplicate(result as DuplicateProductInfos);
+      }
     });
   }
 
-  onRevisions(id: number | undefined) {
-    if (!id) return;
+  protected onRevisions(id: number | undefined) {
+    if (!id) {
+      return;
+    }
 
     const product = this.products().find((p) => p.id == id);
-    if (!product) return;
+    if (!product) {
+      return;
+    }
 
     const dialogRef = this.dialog.open(DialogShowRevisions, {
       data: product
@@ -442,21 +474,21 @@ export class App implements OnInit, OnDestroy {
     });
   }
 
-  resetFilter(drawer: MatDrawer) {
+  protected resetFilter(drawer: MatDrawer) {
     this.cacheService.resetFilter();
     drawer.toggle();
   }
 
-  filter(drawer: MatDrawer) {
+  protected filter(drawer: MatDrawer) {
     this.cacheService.loadProductsForTree();
     drawer.toggle();
   }
 
-  get filterOptions() {
+  protected get filterOptions() {
     return this.cacheService.filterOptions;
   }
 
-  refreshProducts(): void {
+  protected refreshProducts(): void {
     this.cacheService.loadProductsForTree();
   }
 }

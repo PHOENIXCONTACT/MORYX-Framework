@@ -106,7 +106,7 @@ public class TestDriverMqttJsonTopic
 
     }
 
-    private void CheckSentMessage(MqttApplicationMessage sentMsg, CancellationToken token)
+    private void CheckSentMessage(MqttApplicationMessage sentMsg, CancellationToken cancellationToken)
     {
         var msg = new JsonMessageTest();
         var payloadArray = sentMsg.Payload.ToArray();

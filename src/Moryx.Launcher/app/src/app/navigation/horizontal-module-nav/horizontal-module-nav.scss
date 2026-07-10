@@ -1,0 +1,80 @@
+@use "@moryx/ngx-web-framework/styles/variables" as *;
+
+:host {
+  display: block;
+  border-top: 1px solid var(--mat-sys-outline-variant);
+  box-shadow: 0 -1px 2px 0 color-mix(in srgb, var(--mat-sys-shadow) 6%, transparent);
+  background: var(--mat-sys-surface);
+}
+
+nav {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  height: 60px;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  gap: 2px;
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+  padding: 8px 4px;
+  border-radius: 4px;
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: rgba($primary, 0.3);
+    color: $primary;
+  }
+
+  &.active {
+    color: $primary;
+  }
+}
+
+.icon-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  mat-icon {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+  }
+
+  app-notification-badge {
+    position: absolute;
+    top: -4px;
+    right: -8px;
+  }
+}
+
+.nav-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.2;
+}
+
+button.nav-item {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.empty {
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  font-size: 0.85rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+

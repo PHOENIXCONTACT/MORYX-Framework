@@ -27,8 +27,8 @@ export class SearchResult implements OnInit {
   private productManagementService = inject(ProductManagementService);
   private activatedRoute = inject(ActivatedRoute);
 
-  searchResults = signal<ProductModel[]>([]);
-  searchString = signal('');
+  protected searchResults = signal<ProductModel[]>([]);
+  protected searchString = signal('');
 
   ngOnInit(): void {
     this.activatedRoute.queryParamMap.subscribe((queryParam) => {
@@ -36,7 +36,7 @@ export class SearchResult implements OnInit {
     });
   }
 
-  getHref(productId: number | undefined): string {
+  protected getHref(productId: number | undefined): string {
     if (productId) {
       return '/Products/details/' + productId;
     }
@@ -60,7 +60,7 @@ export class SearchResult implements OnInit {
     this.searchResults.update(_ => result);
   }
 
-  createProductNameWithIdentity(product: ProductModel | undefined): string {
+  protected createProductNameWithIdentity(product: ProductModel | undefined): string {
     return this.editProductsService.createProductNameWithIdentity(product);
   }
 }
