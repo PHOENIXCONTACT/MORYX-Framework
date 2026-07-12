@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { VisualizableItemModel } from '@api/models';
 import { createUpdatedLocation } from '@app/extensions/locations';
-import { lastValueFrom } from 'rxjs';
+
 import { HttpErrorResponse } from '@angular/common/http';
 import { FactoryMonitorService } from '@api/services';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
@@ -105,7 +105,7 @@ export class Factory {
 
     // Save position and reset translation
     try {
-      await lastValueFrom(this.factoryMonitorService.moveCell({ body: updatedLocation }));
+      await this.factoryMonitorService.moveCell({ body: updatedLocation });
     } catch (error) {
       this.snackbarService.handleError(error as HttpErrorResponse);
       return;

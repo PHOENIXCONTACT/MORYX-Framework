@@ -5,7 +5,7 @@
 
 import { Component, effect, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { lastValueFrom } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { CellState } from '@api/models/cell-state';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import CellModel from '@app/models/cellModel';
@@ -43,7 +43,7 @@ export class TrafficLight {
   }
 
   async getTranslations(): Promise<{ [key: string]: string }> {
-    return await lastValueFrom(this.translateService
+    return await firstValueFrom(this.translateService
       .get([
         TranslationConstants.CELL_DETAILS.IDLE_STATE,
         TranslationConstants.CELL_DETAILS.RUNNING_STATE,
