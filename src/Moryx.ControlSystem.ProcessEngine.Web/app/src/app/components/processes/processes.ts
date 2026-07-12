@@ -87,17 +87,15 @@ export class Processes implements OnInit {
         jobId: this.job().model.id,
         allProcesses: this.showAll()
       })
-      .subscribe({
-        next: (data) => {
-          this.processes.update((_) => data);
-          const firstProcess = this.processes().find(() => true);
-          if (firstProcess) {
-            this.onSelectProcess(firstProcess);
-          }
-        },
-        error: async (e: HttpErrorResponse) =>
-          await this.snackbarService.handleError(e)
-      });
+      .then((data) => {
+        this.processes.update((_) => data);
+        const firstProcess = this.processes().find(() => true);
+        if (firstProcess) {
+          this.onSelectProcess(firstProcess);
+        }
+      })
+      .catch(async (e: HttpErrorResponse) =>
+        await this.snackbarService.handleError(e));
   }
 
   onProcessUpdated(updatedProcess: JobProcessModel | undefined) {
@@ -188,11 +186,9 @@ export class Processes implements OnInit {
         jobId: this.job().model.id,
         allProcesses: this.showAll()
       })
-      .subscribe({
-        next: (data) => this.updateData(data),
-        error: async (e: HttpErrorResponse) =>
-          await this.snackbarService.handleError(e)
-      });
+      .then((data) => this.updateData(data))
+      .catch(async (e: HttpErrorResponse) =>
+        await this.snackbarService.handleError(e));
   }
 
   private updateData(data: JobProcessModel[]) {

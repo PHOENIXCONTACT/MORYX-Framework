@@ -12,7 +12,6 @@ import { OperationType } from "@app/models/operation-models";
 import { JobManagementStreamService } from "@app/services/job-management-stream.service";
 import { OrderManagementStreamService } from "@app/services/order-management-stream.service";
 import { environment } from "../../../environments/environment";
-import "../../extensions/observable.extensions";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
 import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
 
@@ -81,11 +80,9 @@ export class Jobs implements OnInit {
     this.jobManagementEvents.connect();
     this.processEngineEvents.connect();
 
-    this.orderManagementService.getOperations().subscribe({
-      next: (value) => this.operations.set(value),
-      error: async (e: HttpErrorResponse) =>
-        await this.snackbarService.handleError(e)
-    });
+    this.orderManagementService.getOperations()
+      .then((value) => this.operations.set(value))
+      .catch(async (e: HttpErrorResponse) => await this.snackbarService.handleError(e));
 
     this.orderManagementEvents.connect(OperationType.Update, (updatedOperation: OperationModel) =>
         this.updateOperations(updatedOperation)
@@ -132,29 +129,24 @@ export class Jobs implements OnInit {
   }
 
   private fetchJobs() {
-    this.jobManagementService.getAll().subscribe({
-      next: (data) => {
-        this.jobCollection.set(data.map((model) => new JobViewModel(model)));
-        this.isLoading.set(false);
-      },
-      error: async (err: HttpErrorResponse) => {
-        await this.snackbarService.handleError(err);
-        this.isLoading.set(false);
-      }
+    this.jobManagementService.getAll().then((data) => {
+      this.jobCollection.set(data.map((model) => new JobViewModel(model)));
+      this.isLoading.set(false);
+    }).catch(async (err: HttpErrorResponse) => {
+      await this.snackbarService.handleError(err);
+      this.isLoading.set(false);
     });
   }
 
   protected async onComplete(job: JobModel) {
     await this.jobManagementService
       .complete({jobId: job.id!})
-      .toAsync()
       .catch(async (error) => await this.snackbarService.handleError(error));
   }
 
   protected async onAbort(job: JobModel) {
     await this.jobManagementService
       .abort({jobId: job.id!})
-      .toAsync()
       .catch(async (error) => await this.snackbarService.handleError(error));
   }
 
