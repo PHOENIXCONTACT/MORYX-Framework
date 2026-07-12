@@ -175,25 +175,21 @@ export class Editor implements OnInit {
   }
 
   ngOnInit(): void {
-    this.workplanEditingService.availableSteps().subscribe({
-      next: steps => (this.availableSteps.set(steps)),
-      error: async (e: HttpErrorResponse) => await this.snackbarService.handleError(e)
-    });
-    this.sessionService.getSession(this.sessionToken).subscribe({
-      next: workplan => {
+    this.workplanEditingService.availableSteps()
+      .then(steps => this.availableSteps.set(steps))
+      .catch(async (e: HttpErrorResponse) => await this.snackbarService.handleError(e));
+    this.sessionService.getSession(this.sessionToken)
+      .then(workplan => {
         // Todo: remove responsibility, sessionService should handle this
         this.editorState.setWorkplan(workplan);
-      },
-      error: async (e: HttpErrorResponse) => {
+        this.isLoading.set(false);
+      })
+      .catch(async (e: HttpErrorResponse) => {
         await this.snackbarService.handleError(e);
         this.sessionService.deactivateSession();
         this.router.navigate(['session', 'management']);
         this.isLoading.set(false);
-      },
-      complete: () => {
-        this.isLoading.set(false);
-      }
-    });
+      });
   }
 
   protected onToggleDrawer(): void {
@@ -292,10 +288,9 @@ export class Editor implements OnInit {
     // Reset drag position as the position is now changed on the node
     this.dragPosition.set({x: 0, y: 0});
 
-    this.sessionService.updateSession(this.editorState.workplan).subscribe({
-      next: session => this.editorState.setWorkplan(session),
-      error: async (e: HttpErrorResponse) => await this.snackbarService.handleError(e)
-    });
+    this.sessionService.updateSession(this.editorState.workplan)
+      .then(session => this.editorState.setWorkplan(session))
+      .catch(async (e: HttpErrorResponse) => await this.snackbarService.handleError(e));
   }
 
   protected allowDrop(event: DragEvent) {
@@ -332,10 +327,9 @@ export class Editor implements OnInit {
   //#endregion
 
   protected onStepCreated(stepRecipe: WorkplanStepRecipe) {
-    this.workplanEditingService.addStep({sessionId: this.sessionToken, body: stepRecipe}).subscribe({
-      next: step => this.onStepCreationSuccessResponse(step),
-      error: async (e: HttpErrorResponse) => await this.snackbarService.handleError(e)
-    });
+    this.workplanEditingService.addStep({sessionId: this.sessionToken, body: stepRecipe})
+      .then(step => this.onStepCreationSuccessResponse(step))
+      .catch(async (e: HttpErrorResponse) => await this.snackbarService.handleError(e));
   }
 
   private onStepCreationSuccessResponse(step: WorkplanNodeModel) {
@@ -374,13 +368,11 @@ export class Editor implements OnInit {
         targetIndex: input.index ?? 0,
         body: {nodeId: sourceNode.id, index: draggedConnector.index}
       })
-      .subscribe({
-        next: session => {
-          this.sessionService.registerUpdatedSession(session);
-          this.editorState.setWorkplan(session);
-        },
-        error: async (e: HttpErrorResponse) => await this.snackbarService.handleError(e)
-      });
+      .then(session => {
+        this.sessionService.registerUpdatedSession(session);
+        this.editorState.setWorkplan(session);
+      })
+      .catch(async (e: HttpErrorResponse) => await this.snackbarService.handleError(e));
   }
 
   //---
@@ -417,15 +409,13 @@ export class Editor implements OnInit {
         targetIndex: data?.endInput.index ?? 0,
         body: {nodeId: data?.startNode.id, index: data?.startInput.index}
       })
-      .subscribe({
-        next: session => {
-          this.sessionService.registerUpdatedSession(session);
-          this.editorState.setWorkplan(session);
-          this.workplanPaths.set(this.workplanPaths().filter(p => p !== data));
-          this.pathMenuTrigger().menuData = undefined;
-        },
-        error: async (err: HttpErrorResponse) => await this.snackbarService.handleError(err)
-      });
+      .then(session => {
+        this.sessionService.registerUpdatedSession(session);
+        this.editorState.setWorkplan(session);
+        this.workplanPaths.set(this.workplanPaths().filter(p => p !== data));
+        this.pathMenuTrigger().menuData = undefined;
+      })
+      .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err));
   }
 
   protected onStepDeleteClick() {
@@ -446,14 +436,12 @@ export class Editor implements OnInit {
         sessionId: this.sessionToken,
         nodeId: data.id ?? 0
       })
-      .subscribe({
-        next: session => {
-          this.sessionService.registerUpdatedSession(session);
-          this.editorState.setWorkplan(session);
-          this.stepMenuTrigger().menuData = undefined;
-        },
-        error: async (err: HttpErrorResponse) => await this.snackbarService.handleError(err)
-      });
+      .then(session => {
+        this.sessionService.registerUpdatedSession(session);
+        this.editorState.setWorkplan(session);
+        this.stepMenuTrigger().menuData = undefined;
+      })
+      .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err));
   }
 
   //#region Context Menu Functions

@@ -48,10 +48,9 @@ export class Toolbox {
 
   // ToDo: Add cache for available steps somewhere. They are fetched multiple times and also in the editor component
   getAvailableSteps() {
-    this.workplanEditing.availableSteps().subscribe({
-      next: steps => (this.stepRecipes = steps),
-      error: async (e: HttpErrorResponse) => await this.snackbarService.handleError(e)
-    });
+    this.workplanEditing.availableSteps()
+      .then(steps => (this.stepRecipes = steps))
+      .catch(async (e: HttpErrorResponse) => await this.snackbarService.handleError(e));
   }
 
   protected handleDragStart(stepRecipe: WorkplanStepRecipe, event: DragEvent) {

@@ -74,7 +74,6 @@ export class NodeProperties {
 
     await this.workplanEditingService
       .updateStep({sessionId: this.sessionsService.activeSession()!, nodeId: node.id, body: node})
-      .toAsync()
       .then(updatedNode => {
         if (!this.editorStateService.workplan) {
           return;
@@ -100,7 +99,6 @@ export class NodeProperties {
     }
     this.sessionsService
       .getSessionForWorkplan(this.node()?.subworkplanId ?? 0)
-      .toAsync()
       .then(session => this.sessionsService.activateSession(session.sessionToken!))
       .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err));
   }
