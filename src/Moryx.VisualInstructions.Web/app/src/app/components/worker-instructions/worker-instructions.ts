@@ -188,11 +188,8 @@ export class WorkerInstructions {
         identifier: this.clientIdentifier(),
         body: response
       })
-      .subscribe({
-        next: () => this.clearCurrentViewOf(target),
-        error: async (e: HttpErrorResponse) =>
-          await this.snackbarService.handleError(e)
-      });
+      .then(() => this.clearCurrentViewOf(target))
+      .catch(async (e: HttpErrorResponse) => await this.snackbarService.handleError(e));
   }
 
   clearCurrentViewOf(id: number | undefined) {

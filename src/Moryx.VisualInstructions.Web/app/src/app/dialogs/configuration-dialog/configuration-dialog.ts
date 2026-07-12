@@ -36,11 +36,9 @@ export class ConfigurationDialog implements OnInit {
   protected TranslationConstants = TranslationConstants;
 
   ngOnInit(): void {
-    this.visualInstructionsService.getInstructors().subscribe({
-      next: (result) => this.instructors.set(result.sort((a, b) => a.localeCompare(b))),
-      error: async (e: HttpErrorResponse) =>
-        await this.snackbarService.handleError(e)
-    });
+    this.visualInstructionsService.getInstructors()
+      .then((result) => this.instructors.set(result.sort((a, b) => a.localeCompare(b))))
+      .catch(async (e: HttpErrorResponse) => await this.snackbarService.handleError(e));
   }
 
   protected saveName(name: string) {

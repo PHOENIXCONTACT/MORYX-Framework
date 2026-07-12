@@ -8,12 +8,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { LanguageService } from '@moryx/ngx-web-framework/services';
 import { TranslateService } from '@ngx-translate/core';
+import { firstValueFrom } from 'rxjs';
 import { environment } from '../environments/environment';
 import {
   ConfigurationDialog,
   DialogData,
 } from './dialogs/configuration-dialog/configuration-dialog';
-import './extensions/observable.extensions';
 import { TranslationConstants } from './extensions/translation-constants.extensions';
 import { CookieService } from './services/cookie.service';
 import { InstructionService } from './services/instruction.service';
@@ -103,12 +103,11 @@ export class App implements OnInit {
   }
 
   private async showNoInstructorWarning(): Promise<void> {
-    const snackbarTexts = await this.translateService
+    const snackbarTexts = await firstValueFrom(this.translateService
       .get([
         TranslationConstants.APP.NO_INSTRUCTOR_MESSAGE,
         TranslationConstants.DISMISS,
-      ])
-      .toAsync();
+      ]));
 
     this.snackBar.open(
       snackbarTexts[TranslationConstants.APP.NO_INSTRUCTOR_MESSAGE],
