@@ -4,7 +4,7 @@
 */
 
 import { Component, effect, inject, ChangeDetectionStrategy } from '@angular/core';
-import { lastValueFrom } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { TranslationConstants } from '../extensions/translation-constants.extensions';
 import { SkillType } from '../models/skill-type-model';
 import { getDurationInDays } from '../models/utils';
@@ -55,7 +55,7 @@ export class SkillTypes {
   }
 
   protected async onDeleteClick(skillType: SkillType) {
-    const translations = await lastValueFrom(this.translateService
+    const translations = await firstValueFrom(this.translateService
       .get([
         TranslationConstants.CONFIRMATION_DIALOG.DELETE_SKILL_TYPE_TITLE,
         TranslationConstants.CONFIRMATION_DIALOG.DELETE_SKILL_TYPE_MESSAGE

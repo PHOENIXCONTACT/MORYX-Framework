@@ -9,7 +9,7 @@ import { SkillType } from "../models/skill-type-model";
 import { Router, RouterLink } from "@angular/router";
 import { Entry, EntryValueType, NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
-import { firstValueFrom } from "rxjs";
+
 import { AppStoreService } from "../services/app-store.service";
 
 import { MatTooltipModule } from "@angular/material/tooltip";
@@ -85,11 +85,7 @@ export class SkillTypeDetails {
     }
 
 
-    const resultsAsync = firstValueFrom(
-      this.appStoreService.getSkillType(id)
-    );
-
-    resultsAsync.then((skillType) => {
+    this.appStoreService.getSkillType(id).then((skillType) => {
       const skillData = skillType;
       this.form.patchValue({
         name: skillData.name,
