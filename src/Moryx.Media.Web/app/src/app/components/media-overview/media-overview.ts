@@ -4,7 +4,7 @@
 */
 
 import { Component, effect, inject, OnDestroy, OnInit, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
-import { lastValueFrom } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuTrigger, MatMenu, MatMenuContent, MatMenuItem } from '@angular/material/menu';
 import { Router } from '@angular/router';
@@ -137,7 +137,7 @@ export class MediaOverview implements OnInit, OnDestroy {
   //open dialog in order to check if content should really be deleted
   protected async onDelete(content: ContentDescriptorModel): Promise<void> {
     if (content !== undefined) {
-      const deleteMessage = await lastValueFrom(this.translateService
+      const deleteMessage = await firstValueFrom(this.translateService
         .get(TranslationConstants.MEDIA_OVERVIEW.DELETE_MESSAGE));
       const dialogRef = this.dialog.open(DialogDelete, {
         data: {
@@ -155,13 +155,12 @@ export class MediaOverview implements OnInit, OnDestroy {
   }
 
   //remove content
-  remove(content: ContentDescriptorModel) {
+  async remove(content: ContentDescriptorModel): Promise<void> {
     if (typeof content.id === 'string') {
-      this.mediaService.removeContent(content.id).subscribe(() => {
-        this.contents.update(items => items.filter(c => c.id !== content.id));
-        this.filteredContents.update(items => items.filter(c => c.id !== content.id));
-        this.selectedContent.set(undefined);
-      });
+      await this.mediaService.removeContent(content.id);
+      this.contents.update(items => items.filter(c => c.id !== content.id));
+      this.filteredContents.update(items => items.filter(c => c.id !== content.id));
+      this.selectedContent.set(undefined);
     }
   }
 
