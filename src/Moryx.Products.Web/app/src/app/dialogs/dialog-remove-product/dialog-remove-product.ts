@@ -47,12 +47,9 @@ export class DialogRemoveProduct {
       revisionFilter: RevisionFilter.Specific,
       selector: Selector.Parent,
     };
-    this.productManagementService.getTypes({body: body}).subscribe({
-      next: (references) => {
-        this.productsWhichContainProduct.set(references);
-      },
-      error: async (e: HttpErrorResponse) => await this.snackbarService.handleError(e)
-    });
+    this.productManagementService.getTypes({body: body}).then((references) => {
+      this.productsWhichContainProduct.set(references);
+    }).catch(async (e: HttpErrorResponse) => await this.snackbarService.handleError(e));
   }
 
   protected onClose() {

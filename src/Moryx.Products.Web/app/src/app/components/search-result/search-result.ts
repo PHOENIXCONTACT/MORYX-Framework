@@ -55,8 +55,7 @@ export class SearchResult implements OnInit {
       selector: Selector[Selector.Direct],
     };
     const result = await this.productManagementService
-      .getTypes({body: body})
-      .toAsync();
+      .getTypes({body: body});
     this.searchResults.set(result);
   }
 

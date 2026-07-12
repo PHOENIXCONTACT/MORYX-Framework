@@ -18,7 +18,6 @@ import { MatListModule } from "@angular/material/list";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { MatExpansionModule } from "@angular/material/expansion";
-import { lastValueFrom } from "rxjs";
 
 @Component({
   selector: "app-product-recipes",
@@ -65,7 +64,7 @@ export class ProductRecipes {
   private async createRecipe(name: string, recipeType: string, workplanModel?: WorkplanModel) {
     let recipe: RecipeModel = {};
     try {
-      recipe = await lastValueFrom(this.productManagementService.createRecipe({ recipeType: recipeType }));
+      recipe = await this.productManagementService.createRecipe({ recipeType: recipeType });
     } catch (error) {
       await this.snackbarService.handleError(error as HttpErrorResponse);
       return;
