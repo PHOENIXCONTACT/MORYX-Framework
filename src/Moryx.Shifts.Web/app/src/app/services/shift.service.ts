@@ -4,7 +4,6 @@
 */
 
 import { inject, Injectable, signal } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
 import { ShiftTypeModel } from '../models/shift-type-model';
 import { ShiftInstanceModel } from '../models/shift-instance-model';
 import { ShiftManagementService } from '@api/services';
@@ -26,13 +25,13 @@ export class ShiftService {
   constructor() {
     //fetch shift types
     this.shiftManagement.getShiftTypes()
-      .subscribe((shifts) => {
+      .then((shifts) => {
         const typeModels = shifts.map(shiftTypeToShiftTypeModel);
         this.shiftTypes.set(typeModels);
 
         // //fetch shift instances
         this.shiftManagement.getShifts()
-          .subscribe((instanceModels) => {
+          .then((instanceModels) => {
             const instances = instanceModels.map((x) =>
               shiftToShitInstanceModel(typeModels, x)
             );
@@ -63,8 +62,8 @@ export class ShiftService {
       startTime: from,
       endTime: to,
     };
-    const typeAsync = firstValueFrom(this.shiftManagement.createShiftType({ body: data }));
-    return typeAsync.then(typeResult => shiftTypeToShiftTypeModel(typeResult));
+    return this.shiftManagement.createShiftType({ body: data })
+      .then(typeResult => shiftTypeToShiftTypeModel(typeResult));
   }
 
   public addInstance(shift: ShiftInstanceModel) {
@@ -73,11 +72,8 @@ export class ShiftService {
       typeId: shift.shiftType.id,
     };
 
-    const shiftInstanceAsync = firstValueFrom(this.shiftManagement.createShift({
-      body: data,
-    }));
-
-    return shiftInstanceAsync.then(instance => shiftToShitInstanceModel(this.shiftTypes(), instance));
+    return this.shiftManagement.createShift({ body: data })
+      .then(instance => shiftToShitInstanceModel(this.shiftTypes(), instance));
   }
 
   updateInstance(id: number, shiftInstance: ShiftInstanceModel) {
@@ -91,7 +87,7 @@ export class ShiftService {
       .updateShift({
         body: update,
       })
-      .subscribe((result) => {
+      .then(() => {
         const found = this.shiftInstances().find((x) => x.id === id);
         if (!found) {
           return;
