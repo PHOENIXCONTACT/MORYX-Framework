@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
 import { Component, effect, inject, input, OnInit, signal, untracked, ChangeDetectionStrategy } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { delay, tap } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { LogLevel, OperationLogMessageModel } from '@api/models';
 import { OrderManagementService } from '@api/services';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
@@ -46,30 +46,23 @@ export class LogMessageList implements OnInit {
   }
 
   async ngOnInit() {
-    this.translations = await this.translateService.get([TranslationConstants.OPERATIONS.EMPTY_LOG]).toAsync();
+    this.translations = await firstValueFrom(this.translateService.get([TranslationConstants.OPERATIONS.EMPTY_LOG]));
   }
 
   private fetchMessages(guid: string) {
     this.isLoading.set(true);
     this.orderManagementService
       .getLogs({guid: guid})
-      .pipe(
-        delay(1),
-        tap(messages => {
-          this.notification.set(
-            messages.length > 0 ? '' : this.translations[TranslationConstants.OPERATIONS.EMPTY_LOG]
-          );
-        })
-      )
-      .subscribe({
-        next: (logs: OperationLogMessageModel[]) => {
-          this.logMessages.set(logs.sort((a, b) => this.sortDescending(a.timeStamp!, b.timeStamp!)));
-          this.isLoading.set(false);
-        },
-        error: (err: HttpErrorResponse) => {
-          this.notification.set(err.message);
-          this.isLoading.set(false);
-        }
+      .then((logs: OperationLogMessageModel[]) => {
+        this.notification.set(
+          logs.length > 0 ? '' : this.translations[TranslationConstants.OPERATIONS.EMPTY_LOG]
+        );
+        this.logMessages.set(logs.sort((a, b) => this.sortDescending(a.timeStamp!, b.timeStamp!)));
+        this.isLoading.set(false);
+      })
+      .catch((err: HttpErrorResponse) => {
+        this.notification.set(err.message);
+        this.isLoading.set(false);
       });
   }
 

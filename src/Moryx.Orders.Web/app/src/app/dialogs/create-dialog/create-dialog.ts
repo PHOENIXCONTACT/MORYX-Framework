@@ -31,7 +31,6 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
-import { lastValueFrom } from "rxjs";
 import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
 import { OperationNumberValidations } from "@app/validations/operationNumberValidations";
 import {
@@ -128,7 +127,7 @@ export class CreateDialog {
           revisionFilter: RevisionFilter.All,
         }
     }),
-    loader: ({params}) => lastValueFrom(this.productManagementService.getTypes({body: params.query}))
+    loader: ({params}) => this.productManagementService.getTypes({body: params.query})
   });
   private possibleProducts = computed(() => {
     const error = this.productsLoader.error();
@@ -294,7 +293,6 @@ export class CreateDialog {
       this.isLoading.update((_) => true);
       await this.orderManagementService
         .addOperation({sourceId: "Moryx.Orders.Web", body: operation})
-        .toAsync()
         .catch(() => {
           failed = true;
           this.isLoading.update((_) => false);
@@ -350,14 +348,14 @@ export class CreateDialog {
   }
 
   private async loadRecipes(productIdentifier: string, productRevision: number): Promise<RecipeModel[]> {
-    const assignableRecipes = await lastValueFrom(this.orderManagementService
-      .getAssignableRecipes({identifier: productIdentifier, revision: productRevision}));
+    const assignableRecipes = await this.orderManagementService
+      .getAssignableRecipes({identifier: productIdentifier, revision: productRevision});
 
     return await Promise.all(assignableRecipes.map(async (ar) => await this.loadRecipe(ar.id!)));
   }
 
   private async loadRecipe(id: number): Promise<RecipeModel> {
-    return lastValueFrom(this.productManagementService.getRecipe({id}));
+    return this.productManagementService.getRecipe({id});
   }
 
   private byProductNameAndRevision(a: ProductModel, b: ProductModel): number {
