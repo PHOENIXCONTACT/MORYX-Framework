@@ -110,7 +110,7 @@ export class Sessions implements OnInit, OnDestroy {
           await this.sessionService
             .getSession(token)
             .then((value: WorkplanSessionModel) => newSessions.push(value))
-            .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err))
+            .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err))
       )
     ).then(() => (this.sessions.set(newSessions)));
   }
@@ -193,7 +193,7 @@ export class Sessions implements OnInit, OnDestroy {
           this.router.navigate(['management']);
         }
       })
-      .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err));
+      .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err));
   }
 
   protected activateSession(token: string): void {
@@ -246,13 +246,13 @@ export class Sessions implements OnInit, OnDestroy {
 
     const session = this.activeSession()!;
     this.sessionService.updateSession(session)
-      .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err))
+      .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err))
       .then(_ => this.saveSession(session));
   }
 
   private saveSession(session: WorkplanSessionModel) {
     this.sessionService.saveSession(session)
-      .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err))
+      .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err))
       .then(async session => {
         if (!session) {
           return;
@@ -269,7 +269,7 @@ export class Sessions implements OnInit, OnDestroy {
         this.sessionService.registerUpdatedSession(layoutedSession);
         this.editorStateService.setWorkplan(layoutedSession);
       })
-      .catch(async (e: HttpErrorResponse) => await this.snackbarService.handleError(e));
+      .catch((e: HttpErrorResponse) => this.snackbarService.handleError(e));
   }
 }
 

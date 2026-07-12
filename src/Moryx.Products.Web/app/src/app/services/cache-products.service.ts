@@ -132,7 +132,7 @@ export class CacheProductsService {
           this.productsShownInTheTree.set(products);
         }
       })
-      .catch(async () => await this.showErrorSnackbar());
+      .catch(() => this.showErrorSnackbar());
   }
 
   private async showErrorSnackbar() {

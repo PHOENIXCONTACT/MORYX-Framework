@@ -82,7 +82,7 @@ export class Jobs implements OnInit {
 
     this.orderManagementService.getOperations()
       .then((value) => this.operations.set(value))
-      .catch(async (e: HttpErrorResponse) => await this.snackbarService.handleError(e));
+      .catch((e: HttpErrorResponse) => this.snackbarService.handleError(e));
 
     this.orderManagementEvents.connect(OperationType.Update, (updatedOperation: OperationModel) =>
         this.updateOperations(updatedOperation)
@@ -141,13 +141,13 @@ export class Jobs implements OnInit {
   protected async onComplete(job: JobModel) {
     await this.jobManagementService
       .complete({jobId: job.id!})
-      .catch(async (error) => await this.snackbarService.handleError(error));
+      .catch((error) => this.snackbarService.handleError(error));
   }
 
   protected async onAbort(job: JobModel) {
     await this.jobManagementService
       .abort({jobId: job.id!})
-      .catch(async (error) => await this.snackbarService.handleError(error));
+      .catch((error) => this.snackbarService.handleError(error));
   }
 
   protected getOrderNumber(job: JobModel): string {

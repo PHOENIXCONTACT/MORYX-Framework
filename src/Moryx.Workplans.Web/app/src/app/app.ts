@@ -117,7 +117,7 @@ export class App implements OnInit, OnDestroy {
         this.router.navigate(['session', session.sessionToken]);
         this.sessionService.activateSession(session.sessionToken!);
       })
-      .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err));
+      .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err));
   }
 }
 

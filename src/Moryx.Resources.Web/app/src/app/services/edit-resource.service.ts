@@ -96,12 +96,12 @@ export class EditResourceService {
 
     if (this.editingUnsavedResource) {
       await this.resourceModificationService.save$Response({body: resourceModel})
-        .then(async response => await this.handleSaveResponse(response))
-        .catch(async e => await this.snackbarService.handleError(e));
+        .then(response => this.handleSaveResponse(response))
+        .catch(e => this.snackbarService.handleError(e));
     } else {
       await this.resourceModificationService.update$Response({id: resourceModel.id!, body: resourceModel})
-        .then(async response => await this.handleUpdateResponse(response))
-        .catch(async e => await this.snackbarService.handleError(e));
+        .then(response => this.handleUpdateResponse(response))
+        .catch(e => this.snackbarService.handleError(e));
     }
   }
 

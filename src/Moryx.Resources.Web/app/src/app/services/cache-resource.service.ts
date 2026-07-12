@@ -82,7 +82,7 @@ export class CacheResourceService {
         this.flatTypes = [];
         this.collectflattenedTypes(rootType, this.flatTypes);
       })
-      .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err));
+      .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err));
 
     await this.resourceModificationService
       .getResources({
@@ -96,7 +96,7 @@ export class CacheResourceService {
         },
       })
       .then(resources => this.resources.set(resources))
-      .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err));
+      .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err));
   }
 
   private collectflattenedTypes(root: ResourceTypeModel, flattendTypes: ResourceTypeModel[]) {

@@ -155,7 +155,7 @@ export class App {
           method: result.method?.name,
           body: result.method?.parameters,
         })
-      .catch(async (e: HttpErrorResponse) => await this.snackbarService.handleError(e));
+      .catch((e: HttpErrorResponse) => this.snackbarService.handleError(e));
 
       if (!constructed) {
         return;
@@ -203,7 +203,7 @@ export class App {
       this.modificationService
         .remove$Response({id: actualResource.id})
         .then(async () => this.removeResource(actualResource))
-        .catch(async error => await this.snackbarService.handleError(error));
+        .catch(error => this.snackbarService.handleError(error));
     });
   }
 

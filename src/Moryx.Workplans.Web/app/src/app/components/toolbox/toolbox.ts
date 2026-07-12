@@ -50,7 +50,7 @@ export class Toolbox {
   getAvailableSteps() {
     this.workplanEditing.availableSteps()
       .then(steps => (this.stepRecipes = steps))
-      .catch(async (e: HttpErrorResponse) => await this.snackbarService.handleError(e));
+      .catch((e: HttpErrorResponse) => this.snackbarService.handleError(e));
   }
 
   protected handleDragStart(stepRecipe: WorkplanStepRecipe, event: DragEvent) {

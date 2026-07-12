@@ -49,7 +49,7 @@ export class DialogRemoveProduct {
     };
     this.productManagementService.getTypes({body: body}).then((references) => {
       this.productsWhichContainProduct.set(references);
-    }).catch(async (e: HttpErrorResponse) => await this.snackbarService.handleError(e));
+    }).catch((e: HttpErrorResponse) => this.snackbarService.handleError(e));
   }
 
   protected onClose() {

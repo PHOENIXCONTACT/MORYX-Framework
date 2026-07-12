@@ -188,7 +188,7 @@ export class Operations implements OnInit {
   protected async onBegin(operation: OperationViewModel) {
     const context = await this.orderManagementService
       .getBeginContext({guid: operation.model.identifier!})
-      .catch(async (e: HttpErrorResponse) => await this.snackbarService.handleError(e));
+      .catch((e: HttpErrorResponse) => this.snackbarService.handleError(e));
     const beginDialog = this.dialog.open(BeginDialog, {
       data: <BeginDialogData>{
         context: context,
@@ -205,7 +205,7 @@ export class Operations implements OnInit {
         guid: operation.model.identifier,
         body: beginModel
       })
-      .catch(async (e: HttpErrorResponse) => await this.snackbarService.handleError(e));
+      .catch((e: HttpErrorResponse) => this.snackbarService.handleError(e));
   }
 
   protected onInterrupt(operation: OperationViewModel) {
@@ -252,7 +252,7 @@ export class Operations implements OnInit {
   protected async onAssign(operation: OperationViewModel) {
     await this.orderManagementService
       .reload({guid: operation.model.identifier!})
-      .catch(async () => await this.snackbarService.showError(this.translateService.instant(TranslationConstants.OPERATIONS.REASSIGN_NOT_POSSIBLE)));
+      .catch(() => this.snackbarService.showError(this.translateService.instant(TranslationConstants.OPERATIONS.REASSIGN_NOT_POSSIBLE)));
   }
 
   protected showRecipes(operation: OperationViewModel) {

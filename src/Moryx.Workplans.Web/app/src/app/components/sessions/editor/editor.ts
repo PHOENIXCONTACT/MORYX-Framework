@@ -177,7 +177,7 @@ export class Editor implements OnInit {
   ngOnInit(): void {
     this.workplanEditingService.availableSteps()
       .then(steps => this.availableSteps.set(steps))
-      .catch(async (e: HttpErrorResponse) => await this.snackbarService.handleError(e));
+      .catch((e: HttpErrorResponse) => this.snackbarService.handleError(e));
     this.sessionService.getSession(this.sessionToken)
       .then(workplan => {
         // Todo: remove responsibility, sessionService should handle this
@@ -290,7 +290,7 @@ export class Editor implements OnInit {
 
     this.sessionService.updateSession(this.editorState.workplan)
       .then(session => this.editorState.setWorkplan(session))
-      .catch(async (e: HttpErrorResponse) => await this.snackbarService.handleError(e));
+      .catch((e: HttpErrorResponse) => this.snackbarService.handleError(e));
   }
 
   protected allowDrop(event: DragEvent) {
@@ -329,7 +329,7 @@ export class Editor implements OnInit {
   protected onStepCreated(stepRecipe: WorkplanStepRecipe) {
     this.workplanEditingService.addStep({sessionId: this.sessionToken, body: stepRecipe})
       .then(step => this.onStepCreationSuccessResponse(step))
-      .catch(async (e: HttpErrorResponse) => await this.snackbarService.handleError(e));
+      .catch((e: HttpErrorResponse) => this.snackbarService.handleError(e));
   }
 
   private onStepCreationSuccessResponse(step: WorkplanNodeModel) {
@@ -372,7 +372,7 @@ export class Editor implements OnInit {
         this.sessionService.registerUpdatedSession(session);
         this.editorState.setWorkplan(session);
       })
-      .catch(async (e: HttpErrorResponse) => await this.snackbarService.handleError(e));
+      .catch((e: HttpErrorResponse) => this.snackbarService.handleError(e));
   }
 
   //---
@@ -415,7 +415,7 @@ export class Editor implements OnInit {
         this.workplanPaths.set(this.workplanPaths().filter(p => p !== data));
         this.pathMenuTrigger().menuData = undefined;
       })
-      .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err));
+      .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err));
   }
 
   protected onStepDeleteClick() {
@@ -441,7 +441,7 @@ export class Editor implements OnInit {
         this.editorState.setWorkplan(session);
         this.stepMenuTrigger().menuData = undefined;
       })
-      .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err));
+      .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err));
   }
 
   //#region Context Menu Functions

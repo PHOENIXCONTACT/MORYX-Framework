@@ -189,7 +189,7 @@ export class WorkerInstructions {
         body: response
       })
       .then(() => this.clearCurrentViewOf(target))
-      .catch(async (e: HttpErrorResponse) => await this.snackbarService.handleError(e));
+      .catch((e: HttpErrorResponse) => this.snackbarService.handleError(e));
   }
 
   clearCurrentViewOf(id: number | undefined) {

@@ -92,7 +92,7 @@ export class Management implements OnInit, OnDestroy {
               items.push(value);
               return items;
             }))
-            .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err))
+            .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err))
       )
     );
   }
@@ -167,7 +167,7 @@ export class Management implements OnInit, OnDestroy {
               this.workplanService.deleteWorkplan({id: workplan?.id ?? 0}).then(() => {
                 this.completeTheDeletion(session, workplan, translations);
                 confirmDialog.close();
-              }).catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err));
+              }).catch((err: HttpErrorResponse) => this.snackbarService.handleError(err));
             }
           }
         ]
@@ -182,7 +182,7 @@ export class Management implements OnInit, OnDestroy {
   ) {
     if (session) {
       this.sessionService.closeSession(session.sessionToken!)
-        .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err));
+        .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err));
     }
 
     if (!this.workplans().length) {
@@ -204,14 +204,14 @@ export class Management implements OnInit, OnDestroy {
     this.sessionService
       .getSessionForWorkplan(workplan.id!)
       .then(session => this.openSession(session))
-      .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err));
+      .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err));
   }
 
   protected onDuplicateWorkplan(workplan: WorkplanModel): void {
     this.sessionService
       .getSessionForWorkplan(workplan.id!, true)
       .then(session => this.openSession(session))
-      .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err));
+      .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err));
   }
 
   private openSession(session: WorkplanSessionModel) {

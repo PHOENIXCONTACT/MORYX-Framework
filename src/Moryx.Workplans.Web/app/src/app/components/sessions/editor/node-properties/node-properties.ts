@@ -100,7 +100,7 @@ export class NodeProperties {
     this.sessionsService
       .getSessionForWorkplan(this.node()?.subworkplanId ?? 0)
       .then(session => this.sessionsService.activateSession(session.sessionToken!))
-      .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err));
+      .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err));
   }
 }
 

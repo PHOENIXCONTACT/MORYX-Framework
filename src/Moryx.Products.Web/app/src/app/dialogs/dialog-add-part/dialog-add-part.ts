@@ -68,7 +68,7 @@ export class DialogAddPart {
       // Todo: Make possible parts a resource signal
       this.possibleParts.set(possibleParts);
       this.filteredPossibleParts.set(possibleParts);
-    }).catch(async (e) => await this.snackbarService.handleError(e));
+    }).catch((e) => this.snackbarService.handleError(e));
   }
 
   protected onClose() {
