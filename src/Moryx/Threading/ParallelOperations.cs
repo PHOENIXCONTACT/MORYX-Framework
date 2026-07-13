@@ -5,37 +5,6 @@ using Microsoft.Extensions.Logging;
 
 namespace Moryx.Threading;
 
-/// <summary>
-/// Describes an impossible exception.
-/// </summary>
-public class ImpossibleException : Exception
-{
-    /// <summary>
-    /// Constructor for an impossible exception.
-    /// </summary>
-    public ImpossibleException()
-    {
-    }
-    /// <summary>
-    /// Constructor for an impossible exception.
-    /// </summary>
-    /// <param name="message">The exception message.</param>
-    public ImpossibleException(string message) : base(message)
-    {
-    }
-    /// <summary>
-    /// Constructor for an impossible exception.
-    /// </summary>
-    /// <param name="message">The exception message.</param>
-    /// <param name="inner">Inner exception if existing.</param>
-    public ImpossibleException(string message, Exception inner) : base(message, inner)
-    {
-    }
-}
-
-/// <summary>
-/// Should be moved to toolkit
-/// </summary>
 public class ParallelOperations : IParallelOperations
 {
     /// <summary>
@@ -66,33 +35,29 @@ public class ParallelOperations : IParallelOperations
     }
 
     #region Execute Parallel
-    /// <summary>
-    /// Execute operation on ThreadPool thread
-    /// </summary>
+
+    /// <inheritdoc />
     public void ExecuteParallel(Action operation)
     {
         ExecuteParallel(state => operation(), new object(), false);
     }
 
-    /// <summary>
-    /// Execute operation on ThreadPool thread
-    /// </summary>
+    /// <inheritdoc />
+
     public void ExecuteParallel(Action operation, bool criticalOperation)
     {
         ExecuteParallel(state => operation(), new object(), criticalOperation);
     }
 
-    /// <summary>
-    /// Execute operation on ThreadPool thread
-    /// </summary>
+    /// <inheritdoc />
+
     public void ExecuteParallel<T>(Action<T> operation, T userState) where T : class
     {
         ExecuteParallel(operation, userState, false);
     }
 
-    /// <summary>
-    /// Execute operation on ThreadPool thread
-    /// </summary>
+    /// <inheritdoc />
+
     public void ExecuteParallel<T>(Action<T> operation, T userState, bool criticalOperation) where T : class
     {
         ThreadPool.QueueUserWorkItem(state =>
@@ -110,40 +75,33 @@ public class ParallelOperations : IParallelOperations
     #endregion
 
     #region Execute Periodically
+
     private int _lastTimerId;
     private readonly Dictionary<int, Timer> _runningTimers = new();
 
-    /// <summary>
-    /// Execute non-critical operation periodically but non-stacking
-    /// </summary>
+    /// <inheritdoc />
     public int ScheduleExecution(Action operation, int delayMs, int periodMs)
     {
         return ScheduleExecution(state => operation(), new object(), delayMs, periodMs, false);
     }
 
-    /// <summary>
-    /// Execute operation periodically but non-stacking
-    /// </summary>
+    /// <inheritdoc />
     public int ScheduleExecution(Action operation, int delayMs, int periodMs, bool criticalOperation)
     {
         return ScheduleExecution(state => operation(), new object(), delayMs, periodMs, criticalOperation);
     }
 
-    /// <summary>
-    /// Execute non-critical operation periodically but non-stacking
-    /// </summary>
+    /// <inheritdoc />
     public int ScheduleExecution<T>(Action<T> operation, T userState, int delayMs, int periodMs) where T : class
     {
         return ScheduleExecution(operation, userState, delayMs, periodMs, false);
     }
 
-    /// <summary>
-    /// Execute operation periodically but non-stacking
-    /// </summary>
+    /// <inheritdoc />
     public int ScheduleExecution<T>(Action<T> operation, T userState, int delayMs, int periodMs, bool criticalOperation) where T : class
     {
         // thread safe increment of timer id
-        int id = Interlocked.Increment(ref _lastTimerId);
+        var id = Interlocked.Increment(ref _lastTimerId);
             
         var timer = new Timer(new NonStackingTimerCallback(state =>
         {
@@ -169,10 +127,7 @@ public class ParallelOperations : IParallelOperations
         }
     }
 
-    /// <summary>
-    /// Stop the execution of the timer with this id
-    /// </summary>
-    /// <param name="timerId"></param>
+    /// <inheritdoc />
     public void StopExecution(int timerId)
     {
         lock (_runningTimers)
@@ -274,9 +229,7 @@ public class ParallelOperations : IParallelOperations
         return logger;
     }
 
-    /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-    /// </summary>
+    /// <inheritdoc />
     public void Dispose()
     {
         // Dispose all timers and event decouples
