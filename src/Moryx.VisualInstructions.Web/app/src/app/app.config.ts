@@ -4,49 +4,35 @@
 */
 
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
-import { ApplicationConfig, importProvidersFrom, inject, provideAppInitializer } from "@angular/core";
+import { ApplicationConfig, inject, provideAppInitializer } from "@angular/core";
 import { environment } from "../environments/environment";
-import { ApiModule } from "@api/api.module";
-import { BrowserModule } from "@angular/platform-browser";
-import { MatButtonModule } from "@angular/material/button";
-import { MatCardModule } from "@angular/material/card";
-import { MatDialogModule } from "@angular/material/dialog";
-import { MatDividerModule } from "@angular/material/divider";
-import { MatIconModule, MatIconRegistry } from "@angular/material/icon";
-import { MatListModule } from "@angular/material/list";
-import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import { MatSnackBarModule } from "@angular/material/snack-bar";
-import { SnackbarService } from "@moryx/ngx-web-framework/services";
+import { MatIconRegistry } from "@angular/material/icon";
 import { ApiInterceptor, API_INTERCEPTOR_PROVIDER } from "@moryx/ngx-web-framework/interceptors";
-import { NgxDocViewerModule } from "ngx-doc-viewer";
 import { provideRouter } from "@angular/router";
 import { routes } from "./app.routes";
 import { provideMarkdown } from "ngx-markdown";
 
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
-
+import { provideApiConfiguration } from '@api/api-configuration';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    importProvidersFrom(
-      ApiModule.forRoot({rootUrl: environment.rootUrl}),
-      BrowserModule,
-      MatButtonModule,
-      MatCardModule,
-      MatDialogModule,
-      MatDividerModule,
-      MatIconModule,
-      MatListModule,
-      MatProgressSpinnerModule,
-      MatSnackBarModule,
-      NgxDocViewerModule,
-    ),
+
+    // Configure the API endpoint
+    provideApiConfiguration(environment.rootUrl),
+
+    // Register custom DI interceptors
+    // TODO: Replace by fns, if https://github.com/PHOENIXCONTACT/ngx-moryx-web/pull/48 was released
     ApiInterceptor,
     API_INTERCEPTOR_PROVIDER,
-    SnackbarService,
+
+    // Setup HttpClient
+    // TODO: Remove withInterceptorsFromDi if https://github.com/PHOENIXCONTACT/ngx-moryx-web/pull/48 was released
     provideHttpClient(withInterceptorsFromDi()),
+
+    // Configure translation loader
     provideTranslateService({
       loader: provideTranslateHttpLoader({
         prefix: environment.assets + 'assets/languages/',
@@ -54,7 +40,11 @@ export const appConfig: ApplicationConfig = {
       }),
       fallbackLang: 'en'
     }),
+
+    // Configure markdown
     provideMarkdown(),
+
+    // Additional app initializers
     provideAppInitializer(() => {
       // Use material-symbols as default icon font
       const iconRegistry = inject(MatIconRegistry);

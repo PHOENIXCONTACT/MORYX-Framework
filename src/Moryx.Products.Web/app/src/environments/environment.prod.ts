@@ -10,6 +10,6 @@ const path_base = getPathBase("/Products");
 export const environment = {
   production: true,
   assets: path_base + "/_content/Moryx.Products.Web/",
-  rootUrl: path_base,
+  rootUrl: path_base!,
   ignoreIam: true,
 };

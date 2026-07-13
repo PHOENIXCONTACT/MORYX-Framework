@@ -3,73 +3,35 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { ApplicationConfig, importProvidersFrom, inject, provideAppInitializer } from "@angular/core";
+import { ApplicationConfig, inject, provideAppInitializer } from "@angular/core";
 import { environment } from "../environments/environment";
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from "@angular/common/http";
-import { ApiModule } from "@api/api.module";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MatBadgeModule } from "@angular/material/badge";
-import { MatButtonModule } from "@angular/material/button";
-import { MatButtonToggleModule } from "@angular/material/button-toggle";
-import { MatCardModule } from "@angular/material/card";
-import { MatNativeDateModule } from "@angular/material/core";
-import { MatDatepickerModule } from "@angular/material/datepicker";
-import { MatDialogModule } from "@angular/material/dialog";
-import { MatExpansionModule } from "@angular/material/expansion";
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatIconModule, MatIconRegistry } from "@angular/material/icon";
-import { MatInputModule } from "@angular/material/input";
-import { MatListModule } from "@angular/material/list";
-import { MatMenuModule } from "@angular/material/menu";
-import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import { MatSelectModule } from "@angular/material/select";
-import { MatSidenavModule } from "@angular/material/sidenav";
-import { MatSnackBarModule } from "@angular/material/snack-bar";
-import { MatTableModule } from "@angular/material/table";
-import { MatToolbarModule } from "@angular/material/toolbar";
-import { MatTooltipModule } from "@angular/material/tooltip";
-import { BrowserModule } from "@angular/platform-browser";
-import { AppStoreService } from "./services/app-store.service";
-import { TranslateService } from '@ngx-translate/core';
-import { provideRouter, withComponentInputBinding } from "@angular/router";
+import { MatIconRegistry } from "@angular/material/icon";
+import { provideRouter } from "@angular/router";
 import { routes } from "./app.routes";
 
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+import { provideApiConfiguration } from '@api/api-configuration';
+import { API_INTERCEPTOR_PROVIDER, ApiInterceptor } from '@moryx/ngx-web-framework/interceptors';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideRouter(routes, withComponentInputBinding()),
-    importProvidersFrom(
-      ApiModule.forRoot({ rootUrl: environment.rootUrl }),
-      BrowserModule,
-      BrowserModule,
-      FormsModule,
-      MatButtonModule,
-      MatFormFieldModule,
-      MatInputModule,
-      MatIconModule,
-      MatCardModule,
-      MatListModule,
-      MatSelectModule,
-      MatSnackBarModule,
-      MatProgressSpinnerModule,
-      MatDatepickerModule,
-      MatNativeDateModule,
-      MatButtonToggleModule,
-      MatTableModule,
-      MatDialogModule,
-      MatSidenavModule,
-      MatToolbarModule,
-      MatExpansionModule,
-      MatTooltipModule,
-      MatBadgeModule,
-      MatMenuModule,
-      ReactiveFormsModule,
-    ),
-    AppStoreService,
-    TranslateService,
-    provideHttpClient(withXhr(), withInterceptorsFromDi()),
+    provideRouter(routes),
+
+    // Configure the API endpoint
+    provideApiConfiguration(environment.rootUrl),
+
+    // Register custom DI interceptors
+    // TODO: Replace by fns, if https://github.com/PHOENIXCONTACT/ngx-moryx-web/pull/48 was released
+    ApiInterceptor,
+    API_INTERCEPTOR_PROVIDER,
+
+    // Setup HttpClient
+    // TODO: Remove withInterceptorsFromDi if https://github.com/PHOENIXCONTACT/ngx-moryx-web/pull/48 was released
+    provideHttpClient(withXhr(),withInterceptorsFromDi()), //TODO: check if withXhr is still needed
+
+    // Configure translation loader
     provideTranslateService({
       loader: provideTranslateHttpLoader({
         prefix: environment.assets + 'assets/languages/',
@@ -77,6 +39,8 @@ export const appConfig: ApplicationConfig = {
       }),
       fallbackLang: 'en'
     }),
+
+    // Additional app initializers
     provideAppInitializer(() => {
       // Use material-symbols as default icon font
       const iconRegistry = inject(MatIconRegistry);

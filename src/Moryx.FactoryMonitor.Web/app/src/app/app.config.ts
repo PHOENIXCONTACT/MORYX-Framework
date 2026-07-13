@@ -3,56 +3,39 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { DragDropModule } from '@angular/cdk/drag-drop';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { ApplicationConfig, importProvidersFrom, inject, provideAppInitializer } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatListModule } from '@angular/material/list';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { BrowserModule } from '@angular/platform-browser';
+import { ApplicationConfig, inject, provideAppInitializer } from '@angular/core';
+import { MatIconRegistry } from '@angular/material/icon';
 import { provideRouter } from '@angular/router';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { environment } from '../environments/environment';
-import { ApiModule } from '@api/api.module';
 import { FactoryMonitorService } from './api/services';
 import { routes } from './app.routes';
-import { CellSettingsService } from './services/cell-settings.service';
 import { CellStoreService } from './services/cell-store.service';
-import { ChangeBackgroundService } from './services/change-background.service';
-import { EditMenuService } from './services/edit-menu.service';
 import { FactorySelectionService } from './services/factory-selection.service';
 import { OrderStoreService } from './services/order-store.service';
+import { provideApiConfiguration } from '@api/api-configuration';
+import { API_INTERCEPTOR_PROVIDER, ApiInterceptor } from '@moryx/ngx-web-framework/interceptors';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    importProvidersFrom(
-      ApiModule.forRoot({ rootUrl: environment.rootUrl }),
-      BrowserModule,
-      MatIconModule,
-      MatButtonModule,
-      MatListModule,
-      MatDialogModule,
-      MatInputModule,
-      MatTooltipModule,
-      DragDropModule,
-      FormsModule,
-      ReactiveFormsModule,
-      MatSnackBarModule
-    ),
-    OrderStoreService,
-    CellStoreService,
-    EditMenuService,
-    ChangeBackgroundService,
-    CellSettingsService,
+
+    // Configure the API endpoint
+    provideApiConfiguration(environment.rootUrl),
+
+    // Register custom DI interceptors
+    // TODO: Replace by fns, if https://github.com/PHOENIXCONTACT/ngx-moryx-web/pull/48 was released
+    ApiInterceptor,
+    API_INTERCEPTOR_PROVIDER,
+
+    // Setup HttpClient
+    // TODO: Remove withInterceptorsFromDi if https://github.com/PHOENIXCONTACT/ngx-moryx-web/pull/48 was released
     provideHttpClient(withInterceptorsFromDi()),
+
+    // Configure translation loader
     provideTranslateService({
       loader: provideTranslateHttpLoader({
         prefix: environment.assets + 'assets/languages/',
@@ -60,6 +43,8 @@ export const appConfig: ApplicationConfig = {
       }),
       fallbackLang: 'en'
     }),
+
+    // Additional app initializers
     provideAppInitializer(() => {
       // Use material-symbols as default icon font
       const iconRegistry = inject(MatIconRegistry);

@@ -10,6 +10,6 @@ const path_base = getPathBase("/Processes");
 export const environment = {
   production: true,
   assets: path_base + "/_content/Moryx.ControlSystem.ProcessEngine.Web/",
-  rootUrl: path_base,
+  rootUrl: path_base!,
 };
 

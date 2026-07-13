@@ -10,5 +10,5 @@ const path_base = getPathBase("/Media");
 export const environment = {
   production: true,
   assets: path_base + "/_content/Moryx.Media.Web/",
-  rootUrl: path_base,
+  rootUrl: path_base!,
 };
