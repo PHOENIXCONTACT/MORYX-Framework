@@ -28,13 +28,15 @@ export class EditResourceService {
   private readonly sessionService = inject(SessionService);
   private readonly snackbarService = inject(SnackbarService);
 
-  readonly editing = signal<boolean>(false);
-  readonly activeResource = signal<ResourceModel | undefined>(undefined);
+  private readonly _editing = signal<boolean>(false);
+  readonly editing = this._editing.asReadonly();
+  private readonly _activeResource = signal<ResourceModel | undefined>(undefined);
+  readonly activeResource = this._activeResource.asReadonly();
   public editingUnsavedResource: boolean = false;
   TranslationConstants = TranslationConstants;
 
   public setResource(resource: ResourceModel | undefined) {
-    this.activeResource.set(resource);
+    this._activeResource.set(resource);
   }
 
   /**
@@ -44,13 +46,13 @@ export class EditResourceService {
     if (this.activeResource() && this.activeResource()?.id !== resource.id) {
       throw new Error('Trying to update the active resource with a different resource.');
     }
-    this.activeResource.set(resource);
+    this._activeResource.set(resource);
   }
 
   public resetEditor() {
-    this.editing.set(false);
+    this._editing.set(false);
     this.editingUnsavedResource = false;
-    this.activeResource.set(undefined);
+    this._activeResource.set(undefined);
   }
 
   public stashResource() {
@@ -65,8 +67,8 @@ export class EditResourceService {
 
   public setResourceFromStorage(resourceStorageObject: ResourceStorageObject) {
     this.editingUnsavedResource = resourceStorageObject.details.createNewResource;
-    this.activeResource.set(resourceStorageObject.resource);
-    this.editing.set(true);
+    this._activeResource.set(resourceStorageObject.resource);
+    this._editing.set(true);
   }
 
   public async registerNewResource(constructed: ResourceModel) {
@@ -76,12 +78,12 @@ export class EditResourceService {
       await this.cacheResourceService.loadResources();
     }
 
-    this.activeResource.set(constructed);
-    this.editing.set(true);
+    this._activeResource.set(constructed);
+    this._editing.set(true);
   }
 
   public onEdit() {
-    this.editing.set(true);
+    this._editing.set(true);
   }
 
   public async onSave() {
@@ -107,8 +109,8 @@ export class EditResourceService {
 
   private async handleUpdateResponse(response: StrictHttpResponse<ResourceModel>) {
     await this.cacheResourceService.loadResources();
-    this.activeResource.set(response.body);
-    this.editing.set(false);
+    this._activeResource.set(response.body);
+    this._editing.set(false);
   }
 
   private async handleSaveResponse(response: StrictHttpResponse<ResourceModel>) {
@@ -117,8 +119,8 @@ export class EditResourceService {
     await this.cacheResourceService.loadResources();
     const resourceModel = response.body;
     this.editingUnsavedResource = false;
-    this.editing.set(false);
-    this.activeResource.set(resourceModel);
+    this._editing.set(false);
+    this._activeResource.set(resourceModel);
   }
 
   public async onCancel() {
@@ -127,10 +129,10 @@ export class EditResourceService {
       this.resetEditor();
       return;
     }
-    this.editing.set(false);
+    this._editing.set(false);
     try {
       const resource = await this.resourceModificationService.getDetails({id: resourceId});
-      this.activeResource.set(resource);
+      this._activeResource.set(resource);
     }
     catch (e) {
       await this.snackbarService.handleError(e as HttpErrorResponse);

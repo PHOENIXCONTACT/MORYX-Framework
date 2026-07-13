@@ -17,7 +17,8 @@ export class ChangeBackgroundService {
   private snackbarService = inject(SnackbarService);
   private factorySelectionService = inject(FactorySelectionService);
 
-  public backgroundChanged = signal<string | undefined>(undefined);
+  private readonly _backgroundChanged = signal<string | undefined>(undefined);
+  readonly backgroundChanged = this._backgroundChanged.asReadonly();
   public canSaveBackground = computed(() => !!this.factorySelectionService.factorySelected());
 
   public changeBackground(url: string) {
@@ -38,7 +39,7 @@ export class ChangeBackgroundService {
 
   public updateBackground(url: string | null | undefined) {
     if (!url) {
-      this.backgroundChanged.set(undefined);
+      this._backgroundChanged.set(undefined);
       return;
     }
 
@@ -46,7 +47,7 @@ export class ChangeBackgroundService {
       url = environment.rootUrl + url;
     }
 
-    this.backgroundChanged.set(url);
+    this._backgroundChanged.set(url);
   }
 
   private isAbsoluteUrl(url: string): boolean {

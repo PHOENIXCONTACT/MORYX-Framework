@@ -15,9 +15,12 @@ import { FactoryMonitorService } from '@api/services';
 export class FactorySelectionService {
   private factoryMonitorService = inject(FactoryMonitorService);
 
-  public factorySelected = signal<number | undefined>(undefined);
-  public defaultFactory = signal<FactoryStateModel | undefined>(undefined);
-  public factoryContent = signal<VisualizableItemModel[]>([]);
+  private readonly _factorySelected = signal<number | undefined>(undefined);
+  readonly factorySelected = this._factorySelected.asReadonly();
+  private readonly _defaultFactory = signal<FactoryStateModel | undefined>(undefined);
+  readonly defaultFactory = this._defaultFactory.asReadonly();
+  private readonly _factoryContent = signal<VisualizableItemModel[]>([]);
+  readonly factoryContent = this._factoryContent.asReadonly();
 
   public selectFactory(factoryId: number | undefined) {
     if (!factoryId) {
@@ -27,13 +30,13 @@ export class FactorySelectionService {
     //factory content, items to be displayed
     this.factoryMonitorService.factoryContent({factoryId: factoryId ?? 0})
       .then(items => {
-        this.factoryContent.set(items);
+        this._factoryContent.set(items);
         //manufacturing factory
-        this.factorySelected.set(factoryId);
+        this._factorySelected.set(factoryId);
       });
   }
 
   public initialize(factory: FactoryStateModel) {
-    this.defaultFactory.set(factory);
+    this._defaultFactory.set(factory);
   }
 }

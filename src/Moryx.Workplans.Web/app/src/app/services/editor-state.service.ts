@@ -11,43 +11,49 @@ import { WorkplanNodeModel } from '@api/models';
   providedIn: 'root',
 })
 export class EditorStateService {
-  workplanChanged = signal(0);
-  currentWorkplan = signal<WorkplanSessionModel | undefined>(undefined);
-  selectedNode = signal<number | undefined>(undefined);
-  isEditingProps = signal(false);
-  isEditingStep = signal<WorkplanNodeModel | undefined>(undefined);
-  isCreatingStep = signal<string | undefined>(undefined);
+  private readonly _workplanChanged = signal(0);
+  readonly workplanChanged = this._workplanChanged.asReadonly();
+  private readonly _currentWorkplan = signal<WorkplanSessionModel | undefined>(undefined);
+  readonly currentWorkplan = this._currentWorkplan.asReadonly();
+  private readonly _selectedNode = signal<number | undefined>(undefined);
+  readonly selectedNode = this._selectedNode.asReadonly();
+  private readonly _isEditingProps = signal(false);
+  readonly isEditingProps = this._isEditingProps.asReadonly();
+  private readonly _isEditingStep = signal<WorkplanNodeModel | undefined>(undefined);
+  readonly isEditingStep = this._isEditingStep.asReadonly();
+  private readonly _isCreatingStep = signal<string | undefined>(undefined);
+  readonly isCreatingStep = this._isCreatingStep.asReadonly();
 
   public get workplan() {
     return this.currentWorkplan();
   }
 
   notifyWorkplanChanged() {
-    this.workplanChanged.update(v => v + 1);
+    this._workplanChanged.update(v => v + 1);
   }
 
   setWorkplan(workplan: WorkplanSessionModel) {
-    this.currentWorkplan.set(workplan);
+    this._currentWorkplan.set(workplan);
     this.notifyWorkplanChanged();
   }
 
   onNodeSelected(nodeId: number) {
-    this.selectedNode.set(nodeId);
+    this._selectedNode.set(nodeId);
   }
 
   onNodeDeselected() {
-    this.selectedNode.set(undefined);
+    this._selectedNode.set(undefined);
   }
 
   startEditingProps() {
     this.stopEditingStep();
     this.stopCreatingStep();
-    this.isEditingProps.set(true);
+    this._isEditingProps.set(true);
   }
 
   stopEditingProps() {
     if (this.isEditingProps()) {
-      this.isEditingProps.set(false);
+      this._isEditingProps.set(false);
     }
   }
 
@@ -57,13 +63,13 @@ export class EditorStateService {
     this.stopCreatingStep();
     const node = this.workplan?.nodes?.find(node => node.id === nodeId);
     if (node) {
-      this.isEditingStep.set(node);
+      this._isEditingStep.set(node);
     }
   }
 
   stopEditingStep() {
     if (this.isEditingStep()) {
-      this.isEditingStep.set(undefined);
+      this._isEditingStep.set(undefined);
     }
   }
 
@@ -71,12 +77,12 @@ export class EditorStateService {
     this.stopEditingProps();
     this.stopEditingStep();
     this.stopCreatingStep();
-    this.isCreatingStep.set(type);
+    this._isCreatingStep.set(type);
   }
 
   stopCreatingStep() {
     if (this.isCreatingStep()) {
-      this.isCreatingStep.set(undefined);
+      this._isCreatingStep.set(undefined);
     }
   }
 }

@@ -84,14 +84,14 @@ export class App {
     effect(() => {
       const modules = [...this.webModuleItems(), ...this.externalModuleItems()];
       untracked(() => {
-        this.moduleService.modules.set(modules);
+        this.moduleService.setModules(modules);
       });
     });
 
     effect(() => {
       const cultures = this.supportedCultures();
       untracked(() => {
-        this.cultureService.supportedCultures.set(cultures);
+        this.cultureService.setSupportedCultures(cultures);
       });
     });
 
@@ -99,7 +99,7 @@ export class App {
       const authBaseAddress = this.authBaseAddress();
       untracked(() => {
         this.authService.authBaseAddress = authBaseAddress;
-        this.authService.authConfigured.set(!!authBaseAddress && authBaseAddress.length > 0);
+        this.authService.setAuthConfigured(!!authBaseAddress && authBaseAddress.length > 0);
       });
     });
 

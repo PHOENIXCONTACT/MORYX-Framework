@@ -36,13 +36,18 @@ export class CacheProductsService {
   private snackbarService = inject(SnackbarService);
   private translateService = inject(TranslateService);
 
-  readonly definitions = signal<ProductDefinitionModel[] | undefined>(undefined);
-  readonly productsShownInTheTree = signal<ProductModel[] | undefined>(undefined);
-  readonly importers = signal<ProductImporter[] | undefined>(undefined);
-  readonly recipeDefinitions = signal<RecipeDefinitionModel[] | undefined>(undefined);
-  selected: ProductModel[] | undefined;
-  readonly workplans = signal<WorkplanModel[] | undefined>(undefined);
-  TranslationConstants = TranslationConstants;
+  private readonly _definitions = signal<ProductDefinitionModel[] | undefined>(undefined);
+  readonly definitions = this._definitions.asReadonly();
+  private readonly _productsShownInTheTree = signal<ProductModel[] | undefined>(undefined);
+  readonly productsShownInTheTree = this._productsShownInTheTree.asReadonly();
+  private readonly _importers = signal<ProductImporter[] | undefined>(undefined);
+  readonly importers = this._importers.asReadonly();
+  private readonly _recipeDefinitions = signal<RecipeDefinitionModel[] | undefined>(undefined);
+  readonly recipeDefinitions = this._recipeDefinitions.asReadonly();
+  private readonly _workplans = signal<WorkplanModel[] | undefined>(undefined);
+  readonly workplans = this._workplans.asReadonly();
+
+  protected TranslationConstants = TranslationConstants;
 
   public filterOptions: FilterOptions = {
     name: '',
@@ -55,13 +60,13 @@ export class CacheProductsService {
     this.service.getProductCustomization()
       .then((configuration) => {
         if (configuration.importers !== null) {
-          this.importers.set(configuration.importers);
+          this._importers.set(configuration.importers);
         }
         if (configuration.productTypes !== null) {
-          this.definitions.set(configuration.productTypes);
+          this._definitions.set(configuration.productTypes);
         }
         if (configuration.recipeTypes !== null) {
-          this.recipeDefinitions.set(configuration.recipeTypes);
+          this._recipeDefinitions.set(configuration.recipeTypes);
         }
       })
       .catch(async (e: HttpErrorResponse) => {
@@ -70,7 +75,7 @@ export class CacheProductsService {
 
     this.workplanService.getAllWorkplans()
       .then((workplans) => {
-        this.workplans.set(workplans);
+        this._workplans.set(workplans);
       })
       .catch(async (e: HttpErrorResponse) => {
         await this.snackbarService.handleError(e);
@@ -129,7 +134,7 @@ export class CacheProductsService {
     this.service.getTypes({body: body})
       .then((products) => {
         if (products !== null) {
-          this.productsShownInTheTree.set(products);
+          this._productsShownInTheTree.set(products);
         }
       })
       .catch(() => this.showErrorSnackbar());
@@ -188,7 +193,7 @@ export class CacheProductsService {
             newProductsForTree.push(otherRevision);
           }
         }
-        this.productsShownInTheTree.set(newProductsForTree);
+        this._productsShownInTheTree.set(newProductsForTree);
       })
       .catch(
         async (e: HttpErrorResponse) => await this.snackbarService.handleError(e)

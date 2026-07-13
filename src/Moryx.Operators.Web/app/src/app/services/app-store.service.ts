@@ -32,11 +32,16 @@ export class AppStoreService {
   private skillManagementService = inject(SkillManagementService);
   private snackbarService = inject(SnackbarService);
 
-  readonly workstations = signal<WorkstationViewModel[]>([]);
-  readonly operators = signal<OperatorViewModel[]>([]);
-  readonly skills = signal<OperatorSkill[]>([]);
-  readonly skillTypes = signal<SkillType[]>([]);
-  readonly workstationSelected = signal<number>(0);
+  private readonly _workstations = signal<WorkstationViewModel[]>([]);
+  readonly workstations = this._workstations.asReadonly();
+  private readonly _operators = signal<OperatorViewModel[]>([]);
+  readonly operators = this._operators.asReadonly();
+  private readonly _skills = signal<OperatorSkill[]>([]);
+  readonly skills = this._skills.asReadonly();
+  private readonly _skillTypes = signal<SkillType[]>([]);
+  readonly skillTypes = this._skillTypes.asReadonly();
+  private readonly _workstationSelected = signal<number>(0);
+  readonly workstationSelected = this._workstationSelected.asReadonly();
 
   constructor() {
     this.initialize();
@@ -46,20 +51,20 @@ export class AppStoreService {
     this.skillManagementService.getTypes().then((types) => {
       //types
       const typeModels = types.map(skillTypeModelToModel);
-      this.skillTypes.set(typeModels);
+      this._skillTypes.set(typeModels);
     });
 
     //skill
     this.skillManagementService.getSkills().then((skills) => {
       const skillModels = skills.map(skillToOperatorSkill);
-      this.skills.set(skillModels);
+      this._skills.set(skillModels);
     });
 
     this.operatorManagementService.getResources_1().then((stations) => {
       const stationsModels = stations.map(
         (station) => new WorkstationViewModel(station)
       );
-      this.workstations.set(stationsModels);
+      this._workstations.set(stationsModels);
     });
 
     this.operatorManagementService
@@ -71,7 +76,7 @@ export class AppStoreService {
     const operatorsModels = operators.map(
       (operator) => new OperatorViewModel(operator)
     );
-    this.operators.set(operatorsModels);
+    this._operators.set(operatorsModels);
   }
 
   public getSkillFromRemoteSource() {
@@ -110,7 +115,7 @@ export class AppStoreService {
           operatorResult.assignedResources?.map(
             (x) => <IOperatorAssignable>{ id: x.id, name: x.name }
           );
-        this.operators.set([...this.operators().filter(e => e.data.identifier!= operatorResult.identifier),operator]);
+        this._operators.set([...this.operators().filter(e => e.data.identifier!= operatorResult.identifier),operator]);
       })
       .catch((error) => this.snackbarService.handleError(error));
   }
@@ -133,7 +138,7 @@ export class AppStoreService {
           operatorResult.assignedResources?.map(
             (x) => <IOperatorAssignable>{ id: x.id, name: x.name }
           );
-        this.operators.set([...this.operators().filter(e => e.data.identifier!= operatorResult.identifier),operator]);
+        this._operators.set([...this.operators().filter(e => e.data.identifier!= operatorResult.identifier),operator]);
       });
   }
 
@@ -167,7 +172,7 @@ export class AppStoreService {
       })
       .then((identifier) => {
         const operators = [...this.currentOperatorList(), operator];
-        this.operators.set(operators);
+        this._operators.set(operators);
       })
       .catch((error) => this.snackbarService.handleError(error));
   }
@@ -239,7 +244,7 @@ export class AppStoreService {
         body: data,
       })
       .then((skill) => {
-        this.skills.set([
+        this._skills.set([
           ...this.skills(),
           skillToOperatorSkill(skill),
         ]);
@@ -254,7 +259,7 @@ export class AppStoreService {
         id: skill.id,
       })
       .then(() => {
-        this.skills.set([
+        this._skills.set([
           ...this.skills().filter(x => x.id != skill.id)]);
       })
       // TODO: snack back error
@@ -267,7 +272,7 @@ export class AppStoreService {
         id: skillType.id,
       })
       .then(() => {
-        this.skillTypes.set(
+        this._skillTypes.set(
           this.skillTypes().filter((e) => e.id != skillType.id)
         );
       });
@@ -289,7 +294,7 @@ export class AppStoreService {
       })
       .then((result) => {
         skillType.id = result.id ?? 0;
-        this.skillTypes.set([
+        this._skillTypes.set([
           ...this.skillTypes().filter((x) => x.id != skillType.id),
           skillType,
         ]);
@@ -313,7 +318,7 @@ export class AppStoreService {
         body: skillData,
       })
       .then(() => {
-        this.skillTypes.set([
+        this._skillTypes.set([
           ...this.skillTypes().filter((x) => x.id != type.id),
           type,
         ]);

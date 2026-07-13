@@ -14,7 +14,8 @@ export class JobManagementStreamService {
   private jobManagementService = inject(JobManagementService);
 
   private eventSource?: EventSource;
-  updatedJob = signal<JobModel | undefined>(undefined);
+  private readonly _updatedJob = signal<JobModel | undefined>(undefined);
+  readonly updatedJob = this._updatedJob.asReadonly();
 
   connect() {
     this.eventSource = new EventSource(this.jobManagementService.rootUrl + JobManagementService.ProgressStreamPath);
@@ -26,10 +27,10 @@ export class JobManagementStreamService {
 
   private publishUpdate(job: JobModel): void {
     if (Object.keys(job).length > 0) {
-      this.updatedJob.set(job);
+      this._updatedJob.set(job);
     }
     else {
-      this.updatedJob.set(undefined);
+      this._updatedJob.set(undefined);
     }
   }
 

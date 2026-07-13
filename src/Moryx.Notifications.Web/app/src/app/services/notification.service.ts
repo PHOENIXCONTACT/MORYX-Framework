@@ -18,9 +18,12 @@ export class NotificationService {
   private readonly snackbarService = inject(SnackbarService);
 
   private eventSource?: EventSource;
-  readonly notifications = signal<NotificationModel[]>([]);
-  readonly selection = signal<string | undefined>(undefined);
-  readonly state = signal<ConnectionState>(ConnectionState.Initializing);
+  private readonly _notifications = signal<NotificationModel[]>([]);
+  readonly notifications = this._notifications.asReadonly();
+  private readonly _selection = signal<string | undefined>(undefined);
+  readonly selection = this._selection.asReadonly();
+  private readonly _state = signal<ConnectionState>(ConnectionState.Initializing);
+  readonly state = this._state.asReadonly();
 
   connect() {
     this.eventSource = new EventSource(this.notificationPublisherService.rootUrl + '/api/moryx/notifications/stream');
@@ -33,14 +36,14 @@ export class NotificationService {
     const notifications = data.filter(n => !!n.identifier).sortBySeverity();
 
     if (this.state() != ConnectionState.Connected) {
-      this.state.set(ConnectionState.Connected);
+      this._state.set(ConnectionState.Connected);
     }
-    this.notifications.set(notifications);
+    this._notifications.set(notifications);
     this.checkSelection();
   }
 
   private processError(event: Event): void {
-    this.state.set(ConnectionState.Reconnecting);
+    this._state.set(ConnectionState.Reconnecting);
   }
 
   public select(identifier: string | undefined): void {
@@ -57,7 +60,7 @@ export class NotificationService {
       selected = currentNotifications[0].identifier;
     }
 
-    this.selection.set(selected);
+    this._selection.set(selected);
   }
 
   public get(identifier: string | undefined): NotificationModel | undefined {

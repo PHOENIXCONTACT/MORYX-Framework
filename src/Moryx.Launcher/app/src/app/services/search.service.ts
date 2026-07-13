@@ -14,16 +14,20 @@ export class SearchService {
   private callback: SearchRequestCallback | null = null;
 
   /** Whether the spotlight search overlay is currently open. */
-  isOpen = signal(false);
+  private readonly _isOpen = signal(false);
+  readonly isOpen = this._isOpen.asReadonly();
 
   /** Whether a module has registered a search provider. */
-  hasProvider = signal(false);
+  private readonly _hasProvider = signal(false);
+  readonly hasProvider = this._hasProvider.asReadonly();
 
   /** Set by the module when it wants to disable the search box entirely. */
-  disableSearchBox = signal(false);
+  private readonly _disableSearchBox = signal(false);
+  readonly disableSearchBox = this._disableSearchBox.asReadonly();
 
   /** Current suggestions pushed back by the active module. */
-  suggestions = signal<SearchSuggestion[]>([]);
+  private readonly _suggestions = signal<SearchSuggestion[]>([]);
+  readonly suggestions = this._suggestions.asReadonly();
 
   /**
    * Called by a module (via MoryxLauncherShell.initSearchBar) to register
@@ -31,20 +35,20 @@ export class SearchService {
    */
   register(callback: SearchRequestCallback, disableSearchBox: boolean): void {
     this.callback = callback;
-    this.disableSearchBox.set(disableSearchBox);
-    this.hasProvider.set(true);
-    this.suggestions.set([]);
+    this._disableSearchBox.set(disableSearchBox);
+    this._hasProvider.set(true);
+    this._suggestions.set([]);
   }
 
   /** Opens the spotlight search overlay. */
   open(): void {
     this.clearSuggestions();
-    this.isOpen.set(true);
+    this._isOpen.set(true);
   }
 
   /** Closes the spotlight search overlay and clears suggestions. */
   close(): void {
-    this.isOpen.set(false);
+    this._isOpen.set(false);
     this.clearSuggestions();
   }
 
@@ -63,11 +67,11 @@ export class SearchService {
    * search results back to the shell.
    */
   updateSuggestions(suggestions: SearchSuggestion[]): void {
-    this.suggestions.set(suggestions);
+    this._suggestions.set(suggestions);
   }
 
   /** Clears suggestions, e.g. when the query is emptied. */
   clearSuggestions(): void {
-    this.suggestions.set([]);
+    this._suggestions.set([]);
   }
 }

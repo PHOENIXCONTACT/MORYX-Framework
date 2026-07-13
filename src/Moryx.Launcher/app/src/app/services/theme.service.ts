@@ -17,13 +17,14 @@ export class ThemeService {
   private systemDark = signal(this.systemDarkQuery.matches);
 
   /** The active theme mode (light, dark, system). Persisted. */
-  mode = signal<ThemeMode>(this.getStoredMode());
+  private readonly _mode = signal<ThemeMode>(this.getStoredMode());
+  readonly mode = this._mode.asReadonly();
 
   constructor() {
     this.systemDarkQuery.addEventListener('change', (e) => this.systemDark.set(e.matches));
 
     effect(() => {
-      const mode = this.mode();
+      const mode = this._mode();
       const isDark = mode === 'dark' || (mode === 'system' && this.systemDark());
       document.documentElement.classList.toggle('dark-theme', isDark);
       window.localStorage.setItem(this.storageKey, mode);
@@ -31,7 +32,7 @@ export class ThemeService {
   }
 
   setMode(mode: ThemeMode): void {
-    this.mode.set(mode);
+    this._mode.set(mode);
   }
 
   private getStoredMode(): ThemeMode {

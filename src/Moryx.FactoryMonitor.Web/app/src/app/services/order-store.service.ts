@@ -18,7 +18,8 @@ export class OrderStoreService {
   private readonly factoryStateStreamService = inject(FactoryStateStreamService);
 
   private readonly orders = signal<Order[]>([]);
-  readonly toggledOrder = signal<Order | undefined>(undefined);
+  private readonly _toggledOrder = signal<Order | undefined>(undefined);
+  readonly toggledOrder = this._toggledOrder.asReadonly();
   readonly runningOrders = computed(() =>
     this.orders().filter(o => o.classification === InternalOperationClassification.Running)
   );
@@ -78,7 +79,7 @@ export class OrderStoreService {
 
   public toggleOrder(order: Order) {
     order.isToggled = !order.isToggled;
-    this.toggledOrder.set(order);
+    this._toggledOrder.set(order);
   }
 
   public applyOrderColor(cell: CellModel): CellModel {

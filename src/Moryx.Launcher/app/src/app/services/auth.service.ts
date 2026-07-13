@@ -19,29 +19,37 @@ export class AuthService {
   authBaseAddress: string | undefined = undefined;
 
   /** Whether the server has authentication enabled. */
-  authConfigured = signal<boolean>(false);
+  private readonly _authConfigured = signal<boolean>(false);
+  readonly authConfigured = this._authConfigured.asReadonly();
 
   /** Whether the current user is signed in. */
-  isLoggedIn = signal<boolean>(false);
+  private readonly _isLoggedIn = signal<boolean>(false);
+  readonly isLoggedIn = this._isLoggedIn.asReadonly();
 
   /** Display name of the signed-in user. */
-  userName = signal<string>('');
+  private readonly _userName = signal<string>('');
+  readonly userName = this._userName.asReadonly();
+
+  /** Called by the app root to indicate whether the server has authentication enabled. */
+  setAuthConfigured(value: boolean): void {
+    this._authConfigured.set(value);
+  }
 
   checkSignedIn(): void {
     const user = this.cookieService.get('moryx_user');
     if (!user) {
       return;
     }
-    this.isLoggedIn.set(true);
-    this.userName.set(user);
+    this._isLoggedIn.set(true);
+    this._userName.set(user);
   }
 
   signOut(): void {
     firstValueFrom(this.http.post(this.authBaseAddress + '/api/auth/signOut', {}, {
       withCredentials: true,
     })).then(() => {
-      this.isLoggedIn.set(false);
-      this.userName.set('');
+      this._isLoggedIn.set(false);
+      this._userName.set('');
       window.location.assign('/');
     }).catch((err) => console.log(err));
   }

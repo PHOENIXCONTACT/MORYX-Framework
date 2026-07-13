@@ -27,7 +27,8 @@ export class CacheResourceService {
 
   rootType: ResourceTypeModel | undefined;
   flatTypes: ResourceTypeModel[] | undefined;
-  resources = signal<ResourceModel[] | undefined>(undefined);
+  private readonly _resources = signal<ResourceModel[] | undefined>(undefined);
+  readonly resources = this._resources.asReadonly();
   flatResources = computed<ResourceModel[]>(() => {
     const resources = this.resources();
     const flattened: ResourceModel[] = [];
@@ -61,9 +62,9 @@ export class CacheResourceService {
       );
     if (parent) {
       this.removeChildFromParent(parent, resource);
-      this.resources.set(newResources);
+      this._resources.set(newResources);
     } else {
-      this.resources.set(newResources.filter(r => r.id != resource.id));
+      this._resources.set(newResources.filter(r => r.id != resource.id));
     }
   }
 
@@ -95,7 +96,7 @@ export class CacheResourceService {
           includedReferences: [{name: this.ChildReferenceName}],
         },
       })
-      .then(resources => this.resources.set(resources))
+      .then(resources => this._resources.set(resources))
       .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err));
   }
 

@@ -17,7 +17,13 @@ export class CultureService {
   private readonly cookieName = '.AspNetCore.Culture';
 
   /** Available cultures provided by the server. */
-  supportedCultures = signal<CultureModel[]>([]);
+  private readonly _supportedCultures = signal<CultureModel[]>([]);
+  readonly supportedCultures = this._supportedCultures.asReadonly();
+
+  /** Called by the app root to populate the culture list after loading. */
+  setSupportedCultures(cultures: CultureModel[]): void {
+    this._supportedCultures.set(cultures);
+  }
 
   /** The currently active culture, derived from the ASP.NET culture cookie. */
   currentCulture = computed(() => {
