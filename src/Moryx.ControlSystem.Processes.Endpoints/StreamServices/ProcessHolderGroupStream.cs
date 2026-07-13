@@ -99,7 +99,7 @@ internal class ProcessHolderGroupStream(IResourceManagement resourceManagement)
         }
     }
 
-    private static async IAsyncEnumerable<string> Subscribe([EnumeratorCancellation] CancellationToken token)
+    private static async IAsyncEnumerable<string> Subscribe([EnumeratorCancellation] CancellationToken cancellationToken)
     {
         var channel = Channel.CreateUnbounded<string>();
         var id = Guid.NewGuid();
@@ -107,7 +107,7 @@ internal class ProcessHolderGroupStream(IResourceManagement resourceManagement)
 
         try
         {
-            await foreach (var data in channel.Reader.ReadAllAsync(token))
+            await foreach (var data in channel.Reader.ReadAllAsync(cancellationToken))
             {
                 yield return data;
             }

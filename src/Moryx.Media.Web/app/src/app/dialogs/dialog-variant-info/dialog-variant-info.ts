@@ -14,7 +14,6 @@ import {
 } from '@angular/material/dialog';
 import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
-import { MatLine } from '@angular/material/core';
 import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
 import { MatButton } from '@angular/material/button';
 import { DecimalPipe } from '@angular/common';
@@ -27,7 +26,6 @@ import { DecimalPipe } from '@angular/common';
   imports: [
     MatDialogTitle,
     MatDialogContent,
-    MatLine,
     CdkCopyToClipboard,
     MatDialogActions,
     MatButton,
@@ -38,9 +36,9 @@ import { DecimalPipe } from '@angular/common';
 })
 export class DialogVariantInfo {
   private dialogRef = inject(MatDialogRef<DialogVariantInfo>);
-  data = inject<VariantInfoDialogData>(MAT_DIALOG_DATA);
+  protected data = inject<VariantInfoDialogData>(MAT_DIALOG_DATA);
 
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
   constructor() {
   }

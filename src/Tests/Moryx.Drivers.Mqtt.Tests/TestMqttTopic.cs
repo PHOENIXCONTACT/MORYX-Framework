@@ -153,7 +153,7 @@ public class TestMqttTopic
 
     [CancelAfter(100)]
     [TestCaseSource(nameof(ParsingExamples))]
-    public async Task TestParsing((string identifier, string topic, MessageForPlaceholderMessages message) example, CancellationToken token)
+    public async Task TestParsing((string identifier, string topic, MessageForPlaceholderMessages message) example, CancellationToken cancellationToken)
     {
         // Arrange
         var driver = new MqttDriver

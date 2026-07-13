@@ -18,7 +18,6 @@ export enum OperatorStatus {
     NotQualified
 }
 
-export function instanceOfOperator(object: any): object is OperatorModel {
-    const result = 'status' in object;
-    return result;
+export function instanceOfOperator(object: object): object is OperatorModel {
+    return 'status' in object;
 }

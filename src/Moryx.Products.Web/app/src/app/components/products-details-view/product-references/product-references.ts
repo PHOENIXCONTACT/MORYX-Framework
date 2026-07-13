@@ -29,6 +29,6 @@ import { toSignal } from '@angular/core/rxjs-interop';
 ]
 })
 export class ProductReferences {
-  references = toSignal(inject(EditProductsService).references$, { initialValue: [] });
-  TranslationConstants = TranslationConstants;
+  protected references = toSignal(inject(EditProductsService).references$, { initialValue: [] });
+  protected TranslationConstants = TranslationConstants;
 }

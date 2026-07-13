@@ -58,7 +58,7 @@
         <mat-expansion-panel-header>
           <mat-panel-description class="step-category">
             <span class="step-category-header">{{ TranslationConstants.TOOLBOX.SUB_HEADER | translate }}</span>
-            <mat-icon class="material-icons-outlined">account_tree</mat-icon>
+            <mat-icon>account_tree</mat-icon>
           </mat-panel-description>
         </mat-expansion-panel-header>
 
@@ -73,7 +73,6 @@
                 stepRecipe.name ?? (stepRecipe.type | slice: (stepRecipe.type?.lastIndexOf('.') ?? -1) + 1)
               }}</mat-card-subtitle>
               <mat-icon
-                class="material-icons-outlined"
                 [inline]="true"
                 role="complementary"
                 aria-hidden="false"

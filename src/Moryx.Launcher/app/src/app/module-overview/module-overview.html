@@ -1,0 +1,14 @@
+<div class="module-grid">
+  @for (module of userModules(); track module.route) {
+    <a class="module-card" [href]="resolveHref(module)">
+      <div class="module-header">
+        <span class="material-symbols-outlined module-icon">{{ module.icon }}</span>
+        <div class="module-info">
+          <p class="module-title">{{ module.title }}</p>
+          <p class="module-route">{{ module.route }}</p>
+        </div>
+      </div>
+      <p class="module-description">{{ module.description }}</p>
+    </a>
+  }
+</div>

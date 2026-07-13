@@ -57,12 +57,12 @@ export class EditMenu implements OnInit {
       state: EditMenuState.EditingBackground,
     },
   ];
-  editingEnabled = signal(false);
-  buttons = signal<any[]>([]);
-  activeState = signal<EditMenuState>(EditMenuState.Closed);
-  backgroundState: EditMenuState = EditMenuState.EditingBackground;
-  TranslationConstants = TranslationConstants;
-  canGoBack = signal(false);
+  protected editingEnabled = signal(false);
+  protected buttons = signal<{ icon: string; state: EditMenuState }[]>([]);
+  protected activeState = signal<EditMenuState>(EditMenuState.Closed);
+  protected backgroundState: EditMenuState = EditMenuState.EditingBackground;
+  protected TranslationConstants = TranslationConstants;
+  protected canGoBack = signal(false);
   goBackToFactory!: number;
   navigationItem!: FactoryModel;
 
@@ -99,7 +99,7 @@ export class EditMenu implements OnInit {
     });
   }
 
-  onToggleEditingMode() {
+  protected onToggleEditingMode() {
     this.editingEnabled.update(value => !value);
     if (this.editingEnabled()) {
       this.showMenu();
@@ -108,7 +108,7 @@ export class EditMenu implements OnInit {
     }
   }
 
-  goBack() {
+  protected goBack() {
     this.router.navigate(['/factory', this.goBackToFactory]).then(() => {
       this.cellStoreService.selectCell(undefined);
       this.factorySelectionService.selectFactory(this.goBackToFactory);
@@ -124,7 +124,7 @@ export class EditMenu implements OnInit {
     this.editMenuService.setActiveState(EditMenuState.Closed);
   }
 
-  onClickMenuButton(state: EditMenuState) {
+  protected onClickMenuButton(state: EditMenuState) {
     switch (state) {
       case EditMenuState.EditingCells:
         this.editMenuService.setActiveState(EditMenuState.EditingCells);

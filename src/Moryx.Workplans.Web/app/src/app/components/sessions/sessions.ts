@@ -54,11 +54,11 @@ export class Sessions implements OnInit, OnDestroy {
   private translateService = inject(TranslateService);
   private editorStateService = inject(EditorStateService);
 
-  sessions = signal<WorkplanSessionModel[]>([]);
-  activeSession = signal<WorkplanSessionModel | undefined>(undefined);
+  protected sessions = signal<WorkplanSessionModel[]>([]);
+  protected activeSession = signal<WorkplanSessionModel | undefined>(undefined);
 
   private subscriptions: SubscriptionLike[] = [];
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
   async ngOnInit(): Promise<void> {
     const availableSessionsSubscription = this.sessionService.availableSessions$.subscribe(
@@ -84,7 +84,9 @@ export class Sessions implements OnInit, OnDestroy {
   }
 
   onSessionUpdated(updated: WorkplanSessionModel) {
-    if (this.activeSession()?.sessionToken === updated.sessionToken) this.activeSession.update(_ => updated);
+    if (this.activeSession()?.sessionToken === updated.sessionToken) {
+      this.activeSession.update(_ => updated);
+    }
 
     this.sessions.update(_ => this.sessions().filter(s => s.sessionToken !== updated.sessionToken));
     this.sessions.update(items => {
@@ -110,7 +112,9 @@ export class Sessions implements OnInit, OnDestroy {
   private async onActiveSessionChanged(token: string | undefined) {
     const result = token ? await this.sessionService.getSession(token).toAsync() : undefined;
     this.activeSession.update(_ => result);
-    if (this.activeSession()) this.router.navigate(['session', this.activeSession()?.sessionToken]);
+    if (this.activeSession()) {
+      this.router.navigate(['session', this.activeSession()?.sessionToken]);
+    }
   }
 
   ngOnDestroy(): void {
@@ -131,14 +135,18 @@ export class Sessions implements OnInit, OnDestroy {
   }
 
   private onSearch(request: SearchRequest) {
-    if (!this.sessions().length) return;
+    if (!this.sessions().length) {
+      return;
+    }
 
     const urlWorkplans = 'Workplans/';
     const urlSession = 'session/';
     const searchterm = request.term.toLowerCase();
     let sessions = this.sessions().filter(s => s.name?.toLowerCase().includes(searchterm));
 
-    if (!sessions) sessions = [];
+    if (!sessions) {
+      sessions = [];
+    }
 
     if (request.submitted) {
       this.searchBarService.clearSuggestions();
@@ -155,8 +163,10 @@ export class Sessions implements OnInit, OnDestroy {
       });
     } else {
       const searchSuggestions = [] as SearchSuggestion[];
-      for (let session of sessions) {
-        if (!session.sessionToken || !session.name) continue;
+      for (const session of sessions) {
+        if (!session.sessionToken || !session.name) {
+          continue;
+        }
 
         const url = urlWorkplans + urlSession + session.sessionToken;
         searchSuggestions.push({text: session.name, url: url});
@@ -175,21 +185,27 @@ export class Sessions implements OnInit, OnDestroy {
         } else if (this.sessions().length > 1) {
           this.activateSession(this.sessions()[1].sessionToken!);
           this.router.navigate(['session', this.sessions()[1].sessionToken]);
-        } else this.router.navigate(['management']);
+        } else {
+          this.router.navigate(['management']);
+        }
       },
       error: async (err: HttpErrorResponse) => await this.snackbarService.handleError(err)
     });
   }
 
-  activateSession(token: string): void {
+  protected activateSession(token: string): void {
     this.sessionService.activateSession(token);
   }
 
-  async onCloseSession(sessionToken: string | undefined) {
-    if (!sessionToken) return;
+  protected async onCloseSession(sessionToken: string | undefined) {
+    if (!sessionToken) {
+      return;
+    }
 
     const sessionIndex = this.sessions().findIndex(s => s.sessionToken === sessionToken);
-    if (sessionIndex < 0) return;
+    if (sessionIndex < 0) {
+      return;
+    }
 
     const translations = await this.getTranslations();
 
@@ -216,12 +232,14 @@ export class Sessions implements OnInit, OnDestroy {
     });
   }
 
-  isSessionActive(token: string): boolean {
+  protected isSessionActive(token: string): boolean {
     return this.activeSession()?.sessionToken === token;
   }
 
-  saveWorkplan() {
-    if (!this.activeSession()) return;
+  protected saveWorkplan() {
+    if (!this.activeSession()) {
+      return;
+    }
 
     const session = this.activeSession()!;
     this.sessionService.updateSession(session).toAsync()
@@ -233,15 +251,17 @@ export class Sessions implements OnInit, OnDestroy {
     this.sessionService.saveSession(session).toAsync()
       .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err))
       .then(async session => {
-        if (!session) return;
+        if (!session) {
+          return;
+        }
         this.editorStateService.setWorkplan(session);
         const translations = await this.getTranslations();
         this.snackbarService.showSuccess(translations[TranslationConstants.EDITOR.SNACK_BAR.SUCCESS]);
       });
   }
 
-  autoLayout() {
-    this.workplanEditingService.autoLayout({sessionId: this.activeSession()?.sessionToken!}).subscribe({
+  protected autoLayout() {
+    this.workplanEditingService.autoLayout({sessionId: this.activeSession()?.sessionToken ?? ''}).subscribe({
       next: layoutedSession => {
         this.sessionService.registerUpdatedSession(layoutedSession);
         this.editorStateService.setWorkplan(layoutedSession);

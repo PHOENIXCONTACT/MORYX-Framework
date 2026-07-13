@@ -2,6 +2,10 @@
 
 Defines the types and API for resources, that display visual instructions to users. For more information on how to use visual instructions in your own activities, take a look [here](visual-instructions.md).
 
+## Provided Endpoint
+
+This module provides a REST API for managing visual instructions. See [Visual Instructions Endpoint](endpoint.md) for details on available operations and permissions.
+
 ## Content-Types
 
 - Text: The Content consists of text that may be displayed without further modifications.

@@ -1,9 +1,9 @@
 @let notification = currentNotification();
-@let title = notification?.title || '\u00A0';
+@let title = notification?.title || '';
 
 @if (notification !== undefined) {
   <a class="outerborder"
-    [href]="url()">
+     [href]="url()">
 
     <div class="content">
       <mat-icon class="icon">

@@ -1,0 +1,25 @@
+:host {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  overflow: hidden;
+}
+
+.main-area {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.right-region {
+  display: flex;
+  flex-direction: column;
+  min-width: 200px;
+  position: relative;
+  z-index: 1;
+  border-left: 1px solid var(--mat-sys-outline-variant);
+  box-shadow: -1px 0 2px 0 color-mix(in srgb, var(--mat-sys-shadow) 6%, transparent),
+              -1px 0 1px -1px color-mix(in srgb, var(--mat-sys-shadow) 6%, transparent);
+}

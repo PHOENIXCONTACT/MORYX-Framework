@@ -64,7 +64,8 @@
   "DOCUMENTS": {
     "DOCUMENTS_OF": "Documenti di",
     "EMPTY_STATE_HEADER": "Nessun documento selezionato",
-    "EMPTY_STATE_TEXT": "Fare clic su uno qualsiasi dei documenti dall'elenco a sinistra per visualizzarne il contenuto."
+    "EMPTY_STATE_TEXT": "Fare clic su uno qualsiasi dei documenti dall'elenco a sinistra per visualizzarne il contenuto.",
+    "IMAGE_ALT": "Documento dell'operazione"
   },
   "REPORT_DIALOG": {
     "REPORT_TITLE": "Report Operazione",

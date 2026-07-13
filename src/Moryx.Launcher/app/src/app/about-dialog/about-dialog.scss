@@ -1,0 +1,49 @@
+.section-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--mat-sys-on-surface-variant);
+  margin: 16px 0 4px;
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+dl {
+  margin: 0;
+}
+
+.entry {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+dt {
+  font-weight: 600;
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 0.85rem;
+}
+
+dd {
+  margin: 0;
+  font-size: 0.85rem;
+  word-break: break-word;
+}
+
+kbd {
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.8rem;
+  color: var(--mat-sys-on-surface-variant);
+  background: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
+}

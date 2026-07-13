@@ -8,7 +8,7 @@
   --color-Fatal: #{$fatal};
 
   --severity-background-color: var(--color-Success);
-  --severity-foreground-color: white;
+  --severity-foreground-color: var(--mat-sys-on-error);
 }
 
 .outerborder {
@@ -23,6 +23,8 @@
   align-items: center;
   overflow: visible;
   background: var(--severity-background-color);
+  color: var(--severity-foreground-color);
+  text-decoration: none;
 }
 
 .content {

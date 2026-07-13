@@ -56,12 +56,15 @@ export class CacheProductsService {
   loadConfiguration() {
     this.service.getProductCustomization().subscribe({
       next: (configuration) => {
-        if (configuration.importers !== null)
+        if (configuration.importers !== null) {
           this.importers.next(configuration.importers);
-        if (configuration.productTypes !== null)
+        }
+        if (configuration.productTypes !== null) {
           this.definitions.next(configuration.productTypes);
-        if (configuration.recipeTypes !== null)
+        }
+        if (configuration.recipeTypes !== null) {
           this.recipeDefinitions.next(configuration.recipeTypes);
+        }
       },
       error: async (e: HttpErrorResponse) => {
         await this.snackbarService.handleError(e);
@@ -129,9 +132,11 @@ export class CacheProductsService {
 
     this.service.getTypes({body: body}).subscribe({
       next: (products) => {
-        if (products !== null) this.productsShownInTheTree.next(products);
+        if (products !== null) {
+          this.productsShownInTheTree.next(products);
+        }
       },
-      error: async (err) => await this.showErrorSnackbar(),
+      error: async () => await this.showErrorSnackbar(),
     });
   }
 
@@ -156,7 +161,9 @@ export class CacheProductsService {
   }
 
   async deleteProduct(product: ProductModel) {
-    if (!product.id) return;
+    if (!product.id) {
+      return;
+    }
 
     let success: boolean = false;
     await this.service
@@ -166,7 +173,9 @@ export class CacheProductsService {
       .catch(
         async (e: HttpErrorResponse) => await this.snackbarService.handleError(e)
       );
-    if (!success) return;
+    if (!success) {
+      return;
+    }
 
     let newProductsForTree = this.productsShownInTheTree.getValue() ?? [];
     //Check if an older revision exists and, if yes, show that one

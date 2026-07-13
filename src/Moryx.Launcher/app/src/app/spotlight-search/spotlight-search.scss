@@ -1,0 +1,140 @@
+@use "@moryx/ngx-web-framework/styles/variables" as *;
+
+:host {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: color-mix(in srgb, var(--mat-sys-scrim) 45%, transparent);
+  backdrop-filter: blur(4px);
+  pointer-events: all;
+}
+
+.panel {
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(640px, 92vw);
+  background: var(--mat-sys-surface);
+  border-radius: var(--mat-sys-corner-medium);
+  border: 1px solid var(--mat-sys-outline-variant);
+  box-shadow: var(--mat-sys-elevation-3);
+  overflow: hidden;
+  pointer-events: all;
+}
+
+// ── Search row ──
+
+.search-row {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+}
+
+.search-icon {
+  color: var(--mat-sys-on-surface-variant);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  font-size: 28px;
+  font-variation-settings: 'FILL' 1;
+}
+
+.search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font: var(--mat-sys-title-large);
+  color: var(--mat-sys-on-surface);
+  background: transparent;
+  min-width: 0;
+
+  &::placeholder {
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  &:disabled {
+    color: var(--mat-sys-on-surface-variant);
+    cursor: not-allowed;
+  }
+}
+
+// ── Results list ──
+
+.results {
+  list-style: none;
+  margin: 0;
+  padding: 8px;
+  max-height: 360px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.result-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  color: var(--mat-sys-on-surface);
+
+  &.selected {
+    background: rgba($primary, 0.3);
+    color: $primary;
+
+    .result-icon {
+      color: $primary;
+    }
+
+    .result-arrow {
+      color: $primary;
+    }
+  }
+}
+
+.result-icon,
+.result-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
+
+.result-icon {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.result-text {
+  flex: 1;
+  font: var(--mat-sys-label-large);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.result-arrow {
+  color: var(--mat-sys-outline);
+}
+
+// ── Empty state ──
+
+.no-results {
+  padding: 20px 16px;
+  text-align: center;
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-body-medium);
+}

@@ -64,7 +64,8 @@
   "DOCUMENTS": {
     "DOCUMENTS_OF": "Documents of",
     "EMPTY_STATE_HEADER": "No document selected",
-    "EMPTY_STATE_TEXT": "Click on one of the document from the list on the left to display its content."
+    "EMPTY_STATE_TEXT": "Click on one of the document from the list on the left to display its content.",
+    "IMAGE_ALT": "Operation document"
   },
   "REPORT_DIALOG": {
     "REPORT_TITLE": "Report Operation",

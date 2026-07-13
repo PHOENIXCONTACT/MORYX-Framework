@@ -1,0 +1,45 @@
+@use "@moryx/ngx-web-framework/styles/variables" as *;
+
+// Only the panel wrapper class is added by CDK outside the component template — ::ng-deep required here
+::ng-deep .module-grid-panel .mat-mdc-menu-content {
+  padding: 0 !important;
+}
+
+.module-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 12px;
+}
+
+.module-grid-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 12px 8px;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-align: center;
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: color-mix(in srgb, var(--mat-sys-on-surface) 5%, transparent);
+  }
+
+  &.active {
+    border-color: $primary;
+    color: $primary;
+  }
+
+  mat-icon, .material-icons {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+  }
+}

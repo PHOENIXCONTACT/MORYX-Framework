@@ -28,12 +28,12 @@ import { TranslationConstants } from '@app/extensions/translation-constants.exte
   ]
 })
 export class ConfigurationDialog implements OnInit {
-  data = inject<DialogData>(MAT_DIALOG_DATA);
+  protected data = inject<DialogData>(MAT_DIALOG_DATA);
   private visualInstructionsService = inject(VisualInstructionsService);
   private snackbarService = inject(SnackbarService);
 
-  instructors = signal<string[]|undefined>(undefined);
-  TranslationConstants = TranslationConstants;
+  protected instructors = signal<string[]|undefined>(undefined);
+  protected TranslationConstants = TranslationConstants;
 
   ngOnInit(): void {
     this.visualInstructionsService.getInstructors().subscribe({
@@ -43,7 +43,7 @@ export class ConfigurationDialog implements OnInit {
     });
   }
 
-  saveName(name: string) {
+  protected saveName(name: string) {
     this.data.instructorName = name;
   }
 }

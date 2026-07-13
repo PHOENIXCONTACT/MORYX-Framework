@@ -52,19 +52,19 @@ export class ProductsImporter {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
 
-  possibleImporters = toSignal(this.cacheService.importers$, { initialValue: [] });
-  currentImporterName = toSignal(this.route.paramMap.pipe(map((pm) => pm.get("importer"))), {
+  protected possibleImporters = toSignal(this.cacheService.importers$, { initialValue: [] });
+  protected currentImporterName = toSignal(this.route.paramMap.pipe(map((pm) => pm.get("importer"))), {
     initialValue: this.route.snapshot.paramMap.get("importer"),
   });
-  selectedImporter = computed(() => {
+  protected selectedImporter = computed(() => {
     const name = this.currentImporterName();
     const importers = this.possibleImporters() ?? [];
     return importers.find((i) => i.name === name);
   });
-  importerProperties = signal<Entry>(<Entry>{value: {type: EntryValueType.Exception}});
-  showProgressBar = signal(false);
+  protected importerProperties = signal<Entry>(<Entry>{value: {type: EntryValueType.Exception}});
+  protected showProgressBar = signal(false);
 
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
   Permissions = Permissions;
 
   constructor() {
@@ -78,7 +78,7 @@ export class ProductsImporter {
     });
   }
 
-  selectImporter(importer: ProductImporter) {
+  protected selectImporter(importer: ProductImporter) {
     this.router.navigate(['import', importer.name]);
   }
 
@@ -88,7 +88,7 @@ export class ProductsImporter {
     }
   }
 
-  async import() {
+  protected async import() {
     this.showProgressBar.set(true);
     const importer = this.selectedImporter();
     if (!importer?.name) {
@@ -100,7 +100,7 @@ export class ProductsImporter {
     this.router.navigate([``]);
   }
 
-  cancelImport() {
+  protected cancelImport() {
     this.router.navigate([``]);
   }
 }

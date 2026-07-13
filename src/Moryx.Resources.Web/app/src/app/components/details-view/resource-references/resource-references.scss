@@ -46,10 +46,48 @@
   align-items: center;
   justify-content: center;
 }
-.references-description{
-  width: auto;
+
+.card-layout {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+  gap: 12px;
+  padding-inline-end: 12px;
+  box-sizing: border-box;
+}
+
+.image-section {
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.content-section {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.resource-name {
+  display: block;
+  margin: 0;
+  width: 100%;
+  min-width: 0%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  height: 100%;
+}
+
+.resource-meta {
+  margin: 0;
+  width: 100%;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
 }

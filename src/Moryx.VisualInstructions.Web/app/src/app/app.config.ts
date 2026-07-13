@@ -4,7 +4,7 @@
 */
 
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
-import { ApplicationConfig, importProvidersFrom } from "@angular/core";
+import { ApplicationConfig, importProvidersFrom, inject, provideAppInitializer } from "@angular/core";
 import { environment } from "../environments/environment";
 import { ApiModule } from "@api/api.module";
 import { BrowserModule } from "@angular/platform-browser";
@@ -12,11 +12,10 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
 import { MatDialogModule } from "@angular/material/dialog";
 import { MatDividerModule } from "@angular/material/divider";
-import { MatIconModule } from "@angular/material/icon";
+import { MatIconModule, MatIconRegistry } from "@angular/material/icon";
 import { MatListModule } from "@angular/material/list";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
-import { provideAnimationsAsync } from "@angular/platform-browser/animations/async";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
 import { ApiInterceptor, API_INTERCEPTOR_PROVIDER } from "@moryx/ngx-web-framework/interceptors";
 import { NgxDocViewerModule } from "ngx-doc-viewer";
@@ -56,7 +55,11 @@ export const appConfig: ApplicationConfig = {
       fallbackLang: 'en'
     }),
     provideMarkdown(),
-    provideAnimationsAsync(),
+    provideAppInitializer(() => {
+      // Use material-symbols as default icon font
+      const iconRegistry = inject(MatIconRegistry);
+      iconRegistry.setDefaultFontSetClass('material-symbols-outlined');
+    }),
   ],
 };
 

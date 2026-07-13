@@ -19,6 +19,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 @Component({
   selector: 'app-skill-types',
@@ -31,7 +32,8 @@ import { MatButtonModule } from '@angular/material/button';
     RouterLink,
     TranslatePipe,
     MatTableModule,
-    MatButtonModule
+    MatButtonModule,
+    MatToolbarModule
   ]
 })
 export class SkillTypes {
@@ -39,13 +41,13 @@ export class SkillTypes {
   private appStoreService = inject(AppStoreService);
   private translateService = inject(TranslateService);
 
-  skillTypes = signal<SkillType[]>([]);
-  skills = signal<OperatorSkill[]>([]);
+  protected skillTypes = signal<SkillType[]>([]);
+  protected skills = signal<OperatorSkill[]>([]);
 
-  getDurationInDays = getDurationInDays;
-  dataSource!: MatTableDataSource<SkillType>;
-  TranslationConstants = TranslationConstants;
-  displayedColumns: string[] = ['name', 'duration', 'trainedOperators', 'actions'];
+  protected getDurationInDays = getDurationInDays;
+  protected dataSource!: MatTableDataSource<SkillType>;
+  protected TranslationConstants = TranslationConstants;
+  protected displayedColumns: string[] = ['name', 'duration', 'trainedOperators', 'actions'];
 
   constructor() {
     this.appStoreService
@@ -59,7 +61,7 @@ export class SkillTypes {
       .subscribe(skills => this.skills.update(_ => skills));
   }
 
-  async onDeleteClick(skillType: SkillType) {
+  protected async onDeleteClick(skillType: SkillType) {
     const translations = await lastValueFrom(this.translateService
       .get([
         TranslationConstants.CONFIRMATION_DIALOG.DELETE_SKILL_TYPE_TITLE,
@@ -75,13 +77,15 @@ export class SkillTypes {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result.dialogResult === 'NO') return;
+      if (result.dialogResult === 'NO') {
+        return;
+      }
 
       this.appStoreService.deleteSkillType(skillType);
     });
   }
 
-  operatorWithSkillCount(typeId: number) {
+  protected operatorWithSkillCount(typeId: number) {
     return this.skills().filter(x => x.typeId === typeId).length;
   }
 

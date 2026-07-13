@@ -54,17 +54,17 @@ export class JobViewModel {
     }
 
     if (this.model.setupJob && this.model.setupJob.steps) {
-      let completed =
+      const completed =
         this.model.setupJob.steps === undefined
           ? 0
           : this.model.setupJob.steps!.filter((s) => s.state === 'Completed')
             .length;
-      let running =
+      const running =
         this.model.setupJob.steps === undefined
           ? 0
           : this.model.setupJob.steps!.filter((s) => s.state === 'Running')
             .length;
-      let amount =
+      const amount =
         this.model.setupJob.steps === undefined
           ? 0
           : this.model.setupJob.steps!.length;

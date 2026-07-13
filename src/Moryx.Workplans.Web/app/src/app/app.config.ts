@@ -5,14 +5,14 @@
 
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { ApplicationConfig, importProvidersFrom } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, inject, provideAppInitializer } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
+import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
@@ -25,7 +25,6 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule } from '@angular/platform-browser';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { ApiInterceptor, API_INTERCEPTOR_PROVIDER } from '@moryx/ngx-web-framework/interceptors';
 import { environment } from '../environments/environment';
 import { ApiModule } from '@api/api.module';
@@ -77,7 +76,11 @@ export const appConfig: ApplicationConfig = {
       }),
       fallbackLang: 'en'
     }),
-    provideAnimationsAsync(),
+    provideAppInitializer(() => {
+      // Use material-symbols as default icon font
+      const iconRegistry = inject(MatIconRegistry);
+      iconRegistry.setDefaultFontSetClass('material-symbols-outlined');
+    }),
   ],
 };
 

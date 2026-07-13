@@ -15,18 +15,18 @@ import { Directive, output } from '@angular/core';
   }
 })
 export class FileDragAndDropDirective {
-  fileDropped = output<{ target: { files: FileList } }>();
+  readonly fileDropped = output<{ target: { files: FileList } }>();
   fileover = false;
 
   //Drag over listener
-  onDragOver(event: any) {
+  onDragOver(event: DragEvent) {
     event.preventDefault();
     event.stopPropagation();
     this.fileover = true;
   }
 
   //Drag leave listener
-  onDragLeave(event: any) {
+  onDragLeave(event: DragEvent) {
     event.preventDefault();
     event.stopPropagation();
     this.fileover = false;
@@ -37,7 +37,7 @@ export class FileDragAndDropDirective {
     event.preventDefault();
     event.stopPropagation();
     this.fileover = false;
-    let files = event.dataTransfer?.files;
+    const files = event.dataTransfer?.files;
     if (files) {
       this.fileDropped.emit({ target: { files } });
     }

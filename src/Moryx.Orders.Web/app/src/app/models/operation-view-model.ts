@@ -25,11 +25,13 @@ export class OperationViewModel {
 
   private updateDeliveryThreshold(): void {
     if (this.model.totalAmount) {
-      if (this.model.overDeliveryAmount)
+      if (this.model.overDeliveryAmount) {
         this.overDelivery = Math.round(this.model.overDeliveryAmount / this.model.totalAmount) * 100;
+      }
 
-      if (this.model.underDeliveryAmount)
+      if (this.model.underDeliveryAmount) {
         this.underDelivery = Math.round(this.model.underDeliveryAmount / this.model.totalAmount) * 100;
+      }
     }
   }
 

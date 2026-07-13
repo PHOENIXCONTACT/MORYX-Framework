@@ -93,7 +93,7 @@ public class NotificationPublisherController : ControllerBase
 
         return;
 
-        async IAsyncEnumerable<SseItem<string>> Subscribe([EnumeratorCancellation] CancellationToken token)
+        async IAsyncEnumerable<SseItem<string>> Subscribe([EnumeratorCancellation] CancellationToken cancelToken)
         {
             var channel = Channel.CreateUnbounded<SseItem<string>>();
             var id = Guid.NewGuid();
@@ -106,7 +106,7 @@ public class NotificationPublisherController : ControllerBase
 
             try
             {
-                await foreach (var data in channel.Reader.ReadAllAsync(token))
+                await foreach (var data in channel.Reader.ReadAllAsync(cancelToken))
                 {
                     yield return data;
                 }

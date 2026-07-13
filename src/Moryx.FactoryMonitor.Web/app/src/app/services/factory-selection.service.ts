@@ -25,7 +25,9 @@ export class FactorySelectionService {
 
   public selectFactory(factoryId: number|undefined){
 
-    if(!factoryId) return;
+    if(!factoryId) {
+      return;
+    }
 
     //factory content, items to be displayed
     this.factoryMonitorService.factoryContent({factoryId: factoryId ?? 0})

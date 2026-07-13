@@ -46,14 +46,14 @@ export class ResourceMethods {
 
   private editResourceService = inject(EditResourceService);
 
-  public methods = signal<MethodEntry[] | undefined | null>([]);
+  protected methods = signal<MethodEntry[] | undefined | null>([]);
   private resourceId?: number;
 
-  selectedMethod = signal<MethodEntry | undefined>(undefined);
-  methodResult = signal<Entry | undefined>(undefined);
-  resultView = signal(false);
+  protected selectedMethod = signal<MethodEntry | undefined>(undefined);
+  protected methodResult = signal<Entry | undefined>(undefined);
+  protected resultView = signal(false);
 
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
   constructor() {
     effect(() => {
@@ -69,7 +69,7 @@ export class ResourceMethods {
     });
   }
 
-  onMethodSelected(method: MethodEntry) {
+  protected onMethodSelected(method: MethodEntry) {
     this.selectedMethod.set(method);
     const newUrl = this.getUrl();
     this.resultView.set(false);
@@ -85,14 +85,14 @@ export class ResourceMethods {
     return newUrl;
   }
 
-  public onInvoke(method: MethodEntry) {
+  protected onInvoke(method: MethodEntry) {
     if (!method.name) {
       return;
     }
 
     let param = {};
     if (method.parameters?.subEntries && method.parameters.subEntries.length > 0) {
-      for (let p of method.parameters.subEntries) {
+      for (const p of method.parameters.subEntries) {
         if (!p.value) {
           return;
         }
@@ -147,14 +147,15 @@ export class ResourceMethods {
       });
   }
 
-  onChangeToParameters(method: MethodEntry) {
+  protected onChangeToParameters(method: MethodEntry) {
     this.resultView.set(false);
     this.snackBar.dismiss();
     //clear the entry parameter values for boolean types
     if (method.parameters?.subEntries?.length) {
-      for (let p of method.parameters.subEntries) {
-        if (p.value?.type === EntryValueType.Boolean)
+      for (const p of method.parameters.subEntries) {
+        if (p.value?.type === EntryValueType.Boolean) {
           p.value.current = 'false';
+        }
       }
     }
   }

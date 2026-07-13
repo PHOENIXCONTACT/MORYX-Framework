@@ -93,7 +93,9 @@ export class ShiftService {
       })
       .subscribe((result) => {
         const found = this.shiftInstances.value.find((x) => x.id === id);
-        if (!found) return;
+        if (!found) {
+          return;
+        }
         found.startDate = shiftInstance.startDate;
         found.endDate = shiftInstance.endDate;
       });

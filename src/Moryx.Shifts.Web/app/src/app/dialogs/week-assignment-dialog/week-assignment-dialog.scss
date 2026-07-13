@@ -1,9 +1,5 @@
-@use "@moryx/ngx-web-framework/styles/variables" as *; 
+@use "../dialog-styles";
 
-.not-qualified-operator {
-    color: $warning;
-}
-
-.not-allowed-operator {
-    color: $danger;
+app-week-day-toggle-button {
+  margin: 8px 0;
 }

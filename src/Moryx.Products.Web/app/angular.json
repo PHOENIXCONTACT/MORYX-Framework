@@ -20,7 +20,7 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "outputPath":{
+            "outputPath": {
               "base": "../wwwroot",
               "browser": ""
             },
@@ -28,19 +28,28 @@
             "polyfills": [],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": ["src/favicon.ico", "src/assets"],
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
             "styles": [
-              "@fontsource/roboto/300.css",
-              "@fontsource/roboto/400.css",
-              "@fontsource/roboto/500.css",
-              "material-icons/iconfont/material-icons.css",
+              "@fontsource/roboto/latin-300.css",
+              "@fontsource/roboto/latin-400.css",
+              "@fontsource/roboto/latin-500.css",
+              "@fontsource/roboto/latin-700.css",
+              "@fontsource/roboto/latin-ext-300.css",
+              "@fontsource/roboto/latin-ext-400.css",
+              "@fontsource/roboto/latin-ext-500.css",
+              "@fontsource/roboto/latin-ext-700.css",
               "material-symbols/outlined.css",
               "node_modules/@moryx/ngx-web-framework/styles/theme.scss",
               "src/styles.scss"
             ],
             "scripts": [],
             "stylePreprocessorOptions": {
-              "includePaths": ["node_modules"]
+              "includePaths": [
+                "node_modules"
+              ]
             },
             "browser": "src/main.ts"
           },
@@ -100,6 +109,15 @@
         },
         "test": {
           "builder": "@angular/build:unit-test"
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
+          }
         }
       }
     }

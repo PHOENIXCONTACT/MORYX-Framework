@@ -32,18 +32,16 @@ export class MediaFile implements OnInit {
   private mediaService = inject(MediaService);
   private snackbarService = inject(SnackbarService);
 
-  TranslationConstants = TranslationConstants;
-  name = model.required<string>()
-  amount = model.required<string>();
-  content = model.required<ContentDescriptorModel>();
-  selected = model.required<boolean>();
-  loaded = signal(false);
-  path = signal<string | null | ArrayBuffer>('');
+  protected TranslationConstants = TranslationConstants;
+  readonly name = model.required<string>()
+  readonly amount = model.required<string>();
+  readonly content = model.required<ContentDescriptorModel>();
+  readonly selected = model.required<boolean>();
+  protected loaded = signal(false);
+  protected path = signal<string | null | ArrayBuffer>('');
 
-  show = output<ContentDescriptorModel>();
-  delete = output<ContentDescriptorModel>();
-  img: any;
-
+  readonly show = output<ContentDescriptorModel>();
+  readonly delete = output<ContentDescriptorModel>();
   ngOnInit(): void {
     this.showFile();
   }
@@ -72,10 +70,10 @@ export class MediaFile implements OnInit {
           .subscribe({
             next: (data) => {
               if (data !== null) {
-                let downloadedFile = new Blob([data], {type: data.type});
+                const downloadedFile = new Blob([data], {type: data.type});
                 const reader = new FileReader();
                 reader.readAsDataURL(downloadedFile); //FileStream response from .NET core backend
-                reader.onload = (_event) => {
+                reader.onload = (event) => {
                   this.path.update(_ => reader.result) //url declared earlier
                 };
                 this.loaded.update(_ => true);
@@ -90,11 +88,12 @@ export class MediaFile implements OnInit {
     }
   }
 
-  onClick(event: MouseEvent) {
-    if ((<HTMLElement>event.target).nodeName === 'MAT-ICON')
+  protected onClick(event: MouseEvent) {
+    if ((<HTMLElement>event.target).nodeName === 'MAT-ICON') {
       this.delete.emit(this.content());
-    else
+    } else {
       this.show.emit(this.content());
+    }
   }
 }
 

@@ -13,17 +13,15 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moryx.Configuration;
 using Moryx.Identity;
+using Moryx.Launcher.Models;
 using Moryx.Modules;
 using Moryx.Tools;
 using Moryx.Web;
 
 namespace Moryx.Launcher;
-//TODO: make it internal in next major
-/// <inheritdoc />
-public class Navigation : INavigation
-{
-    private const string NotificationsBarName = "NotificationsBar";
 
+internal class Navigation : INavigation
+{
     private static ILogger _logger;
     private static PageLoader _pageLoader;
     private static EndpointDataSource _endpointsDataSource;
@@ -144,7 +142,7 @@ public class Navigation : INavigation
         descriptorModuleTuples.AddRange(externalModuleTuples);
 
         // Sort by module item sort indices (and title if sort index is not set)
-        var index = _launcherConfig.ModuleSortIndices.Select(i => i.SortIndex).Max();
+        var index = _launcherConfig.ModuleSortIndices.Select(i => i.SortIndex).DefaultIfEmpty(0).Max();
         foreach (var descriptorAndModule in descriptorModuleTuples.OrderBy(t => t.ModuleItem.Title))
         {
             var module  = descriptorAndModule.ModuleItem;

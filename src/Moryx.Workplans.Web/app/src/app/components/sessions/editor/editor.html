@@ -39,26 +39,28 @@
               <div cdkDrag (mousedown)="onRegisterClickStart()" (mouseup)="onRegisterClickEnd()">
                 <div
                   class="workplan-canvas"
-                  [ngStyle]="getCanvasStyling()"
+                  [style.height]="size * 2 + 'px'"
+                  [style.width]="size * 2 + 'px'"
+                  [style.top]="canvasPosition.top + 'px'"
+                  [style.left]="canvasPosition.left + 'px'"
+                  [style.transform]="'scale(' + canvasScale + ')'"
+                  [style.background-size]="stepSize + 'px ' + stepSize + 'px'"
                   (wheel)="scaleCanvas($event)"
                   (dragover)="allowDrop($event)"
                   (drop)="recipeDropped($event)"
-                  [style]="{ 'background-size': '' + stepSize + 'px ' + stepSize + 'px' }"
                   cdkDropList>
                   @for (node of editorState.workplan?.nodes; track node) {
                     <mat-card
                       class="workplan-node"
-                  [ngStyle]="{
-                    top: positionOffset(node.positionTop) + 'px',
-                    left: positionOffset(node.positionLeft) + 'px',
-                    height: nodeHeight + 'px',
-                    width: nodeWidth + 'px'
-                  }"
+                  [style.top]="positionOffset(node.positionTop) + 'px'"
+                  [style.left]="positionOffset(node.positionLeft) + 'px'"
+                  [style.height]="nodeHeight + 'px'"
+                  [style.width]="nodeWidth + 'px'"
                       (contextmenu)="openStepContextMenu($event, node)"
                       (press)="openStepPressMenu($event, node)"
                       (click)="onClickStep(node)"
                       (tap)="onClickStep(node)"
-                      [ngClass]="{ 'selected-node': node.id === selectedNode() }"
+                      [class.selected-node]="node.id === selectedNode()"
                       (cdkDragStarted)="startDragging($event)"
                       (cdkDragEnded)="endDragging($event, node)"
                       [cdkDragFreeDragPosition]="dragPosition()"
@@ -69,7 +71,7 @@
                       <div class="connectors inputs">
                         @for (input of node.inputs; track input) {
                           <div
-                            [ngClass]="{ 'selected-node-connector': node.id === selectedNode() }"
+                            [class.selected-node-connector]="node.id === selectedNode()"
                             id="in_{{ node.id }}-{{ input.index }}"
                             [matTooltip]="input.name ?? ''"
                             matTooltipPosition="above"
@@ -87,7 +89,7 @@
                         @for (output of node.outputs; track output) {
                           <div
                             id="out_{{ node.id }}-{{ output.index }}"
-                            [ngClass]="{ 'selected-node-connector': node.id === selectedNode() }"
+                            [class.selected-node-connector]="node.id === selectedNode()"
                             [matTooltip]="output.name ?? ''"
                             matTooltipHideDelay="100"
                             [cdkDragData]="[node, output]"
@@ -100,10 +102,8 @@
                   @if (isCreatingStep()) {
                     <mat-card
                       class="workplan-node selected-node"
-                  [ngStyle]="{
-                    top: positionOffset(newStepPosition()?.top) + 'px',
-                    left: positionOffset(newStepPosition()?.left) + 'px'
-                  }">
+                  [style.top]="positionOffset(newStepPosition()?.top) + 'px'"
+                  [style.left]="positionOffset(newStepPosition()?.left) + 'px'">
                       <div class="node-label">
                         <span>{{ TranslationConstants.EDITOR.CREATING | translate }}</span>
                       </div>
@@ -114,17 +114,15 @@
                       @for (segment of path.segments; track segment) {
                         <span
                           class="segment"
-                    [ngStyle]="{
-                      top: segment.top + 'px',
-                      left: segment.left + 'px',
-                      width: segment.width + 'px',
-                      height: segment.height + 'px'
-                    }">
+                    [style.top]="segment.top + 'px'"
+                    [style.left]="segment.left + 'px'"
+                    [style.width]="segment.width + 'px'"
+                    [style.height]="segment.height + 'px'">
                           <div
                             (click)="openPathContextMenu($event, path)"
                             (tap)="openPathTapMenu($event, path)"
                             class="path-menu-area"
-                          [ngStyle]="getPathMenuAreaStyles(segment)"></div>
+                          [style]="getPathMenuAreaStyles(segment)"></div>
                         </span>
                       }
                     </div>

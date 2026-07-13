@@ -52,12 +52,12 @@ export class OrderStoreService {
     }
 
     const orders = this._orders.getValue();
-    let indexToUpdate = orders.findIndex(o => o.operationNumber === order.operationNumber && o.orderNumber === order.orderNumber);
+    const indexToUpdate = orders.findIndex(o => o.operationNumber === order.operationNumber && o.orderNumber === order.orderNumber);
     if(indexToUpdate === -1) {
       orders.push(order);
     } else {
 
-      let orderToUpdate = orders[indexToUpdate];
+      const orderToUpdate = orders[indexToUpdate];
 
       if (order.classification) {
         orderToUpdate.classification = order.classification;

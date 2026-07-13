@@ -19,13 +19,13 @@ import { CellStoreService } from '@app/services/cell-store.service';
   imports: []
 })
 export class TrafficLight implements OnInit {
-  currentState = signal<CellState | undefined | null>(undefined);
-  currentStateString = signal<string | undefined>(undefined);
+  protected currentState = signal<CellState | undefined | null>(undefined);
+  protected currentStateString = signal<string | undefined>(undefined);
   private cellStoreService = inject(CellStoreService);
   private translateService = inject(TranslateService);
   private id: number | undefined;
-  CellState = CellState;
-  TranslationConstants = TranslationConstants;
+  protected CellState = CellState;
+  protected TranslationConstants = TranslationConstants;
 
   ngOnInit(): void {
     this.cellStoreService.cellSelected$.subscribe({
@@ -47,7 +47,9 @@ export class TrafficLight implements OnInit {
   }
 
   private async updateState(newCellParameters: CellModel | undefined): Promise<void> {
-    if (newCellParameters?.id != this.id) return;
+    if (newCellParameters?.id != this.id) {
+      return;
+    }
 
     this.currentStateString.set(await this.getStringState(newCellParameters?.state ?? CellState.Idle));
     this.currentState.set(newCellParameters?.state ?? CellState.Idle);

@@ -7,9 +7,22 @@
         (opened)="onReferenceChanged(ref)"
         [expanded]="selectedReferenceType()?.name === ref.name"
         >
-        <mat-expansion-panel-header>
-          <mat-panel-title> {{ ref.displayName }} </mat-panel-title>
-          <mat-panel-description class="references-description"> {{ ref.description }} </mat-panel-description>
+        <mat-expansion-panel-header collapsedHeight="56px" expandedHeight="56px">
+          <div class="card-layout">
+            <div class="image-section">
+              <mat-icon>
+                {{ ref.role === ResourceReferenceRole.Target ? 'line_end_circle':'line_start_circle' }}
+              </mat-icon>
+            </div>
+            <div class="content-section">
+              <mat-panel-title class="resource-name">
+                {{ ref.displayName }}
+              </mat-panel-title>
+              <mat-panel-description class="resource-meta">
+                {{ getMetaText(ref) }}
+              </mat-panel-description>
+            </div>
+          </div>
         </mat-expansion-panel-header>
         @if (selectedReferenceType()?.isCollection) {
           <table mat-table #table [dataSource]="selectedReference()?.targets ?? []">

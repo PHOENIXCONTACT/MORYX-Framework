@@ -23,10 +23,10 @@ import { toSignal } from '@angular/core/rxjs-interop';
   styleUrl: './factory-board.scss'
 })
 export class FactoryBoard implements OnInit {
-  elemRef = inject(ElementRef);
+  protected elemRef = inject(ElementRef);
   private factorySelectionService = inject(FactorySelectionService);
   private activatedRoute = inject(ActivatedRoute);
-  factoryContent = toSignal(this.factorySelectionService.factoryContent$);
+  protected factoryContent = toSignal(this.factorySelectionService.factoryContent$);
   factoryId !: number | undefined;
 
   ngOnInit(): void {
@@ -40,15 +40,20 @@ export class FactoryBoard implements OnInit {
     //use the default factory when no factory id provided in the url
     // Solution: Use Route Resolver to prepare data before component actually is loaded
     this.factorySelectionService.defaultFactory$.subscribe(item => {
-      if (this.factoryId != undefined && this.factoryId > 0) return;
-      if (!item) return;
+      if (this.factoryId != undefined && this.factoryId > 0) {
+        return;
+      }
+      if (!item) {
+        return;
+      }
 
       this.factorySelectionService.selectFactory(item.id);
     });
 
 
-    if (this.factoryId != undefined && this.factoryId > 0)
+    if (this.factoryId != undefined && this.factoryId > 0) {
       //select a new factory based on the id in the url
       this.factorySelectionService.selectFactory(this.factoryId);
+    }
   }
 }
