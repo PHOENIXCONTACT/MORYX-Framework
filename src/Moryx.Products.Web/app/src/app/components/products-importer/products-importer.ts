@@ -65,7 +65,7 @@ export class ProductsImporter {
   protected showProgressBar = signal(false);
 
   protected TranslationConstants = TranslationConstants;
-  Permissions = Permissions;
+  protected Permissions = Permissions;
 
   constructor() {
     effect(() => {
@@ -82,7 +82,7 @@ export class ProductsImporter {
     this.router.navigate(['import', importer.name]);
   }
 
-  onImporterChanged(importer: ProductImporter) {
+  private onImporterChanged(importer: ProductImporter) {
     if (importer.parameters !== undefined) {
       this.importerProperties.set(structuredClone(importer.parameters!));
     }

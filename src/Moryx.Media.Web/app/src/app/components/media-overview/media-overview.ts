@@ -75,7 +75,7 @@ export class MediaOverview implements OnInit, OnDestroy {
     });
   }
 
-  onSearch(result: SearchRequest) {
+  private onSearch(result: SearchRequest) {
     const urlBase = 'Media/details/';
     const contents = this.contents().filter((c) =>
       c.name?.toLowerCase()?.includes(result.term.toLowerCase())
@@ -107,7 +107,7 @@ export class MediaOverview implements OnInit, OnDestroy {
     }
   }
 
-  onOpenMenuOnTouch(event: { pointers: PointerEvent[] }, content: ContentDescriptorModel) {
+  protected onOpenMenuOnTouch(event: { pointers: PointerEvent[] }, content: ContentDescriptorModel) {
     this.trigger().menuData = {content: content};
     this.menuTopLeftPosition.x = event.pointers[0].clientX + 'px';
     this.menuTopLeftPosition.y = event.pointers[0].clientY + 'px';
@@ -155,7 +155,7 @@ export class MediaOverview implements OnInit, OnDestroy {
   }
 
   //remove content
-  async remove(content: ContentDescriptorModel): Promise<void> {
+  private async remove(content: ContentDescriptorModel): Promise<void> {
     if (typeof content.id === 'string') {
       await this.mediaService.removeContent(content.id);
       this.contents.update(items => items.filter(c => c.id !== content.id));

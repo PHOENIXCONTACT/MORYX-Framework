@@ -32,16 +32,16 @@ export class ProductsDetailsView {
   private editProductsService = inject(EditProductsService);
   private activatedRoute = inject(ActivatedRoute);
 
-  isEditMode = this.editProductsService.editing;
+  protected isEditMode = this.editProductsService.editing;
   protected currentProduct = this.editProductsService.currentProduct;
   protected activeLink = signal<Tabs>(Tabs.Unknown);
 
   protected Tabs = Tabs;
   protected TranslationConstants = TranslationConstants;
-  regexParts: RegExp = /(details\/\d*\/parts)/;
-  regexRecipes: RegExp = /(details\/\d*\/recipes)/;
-  regexReferences: RegExp = /(details\/\d*\/references)/;
-  regexProperties: RegExp = /(details\/\d*\/properties)/;
+  private regexParts: RegExp = /(details\/\d*\/parts)/;
+  private regexRecipes: RegExp = /(details\/\d*\/recipes)/;
+  private regexReferences: RegExp = /(details\/\d*\/references)/;
+  private regexProperties: RegExp = /(details\/\d*\/properties)/;
 
   constructor() {
     this.router.events.subscribe((val) => {
@@ -94,7 +94,7 @@ export class ProductsDetailsView {
     this.router.navigate([url]);
   }
 
-  onCurrentProductChangeFromHeader(product: ProductModel | undefined) {
+  protected onCurrentProductChangeFromHeader(product: ProductModel | undefined) {
     if (this.isEditMode() && product) {
       this.editProductsService.updateCurrentProduct(product);
     }

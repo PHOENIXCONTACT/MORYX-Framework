@@ -34,7 +34,7 @@ export class Toolbox {
   private snackbarService = inject(SnackbarService);
   private sessionService = inject(SessionsService);
 
-  stepRecipes: WorkplanStepRecipe[] = [];
+  protected stepRecipes: WorkplanStepRecipe[] = [];
   protected TranslationConstants = TranslationConstants;
 
   constructor() {
@@ -47,7 +47,7 @@ export class Toolbox {
   }
 
   // ToDo: Add cache for available steps somewhere. They are fetched multiple times and also in the editor component
-  getAvailableSteps() {
+  private getAvailableSteps() {
     this.workplanEditing.availableSteps()
       .then(steps => (this.stepRecipes = steps))
       .catch((e: HttpErrorResponse) => this.snackbarService.handleError(e));

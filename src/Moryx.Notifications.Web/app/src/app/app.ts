@@ -48,7 +48,6 @@ export class App implements OnInit, OnDestroy {
   protected notificationsToolbarImage = signal(
     environment.assets + "assets/notifications_toolbar.jpg");
 
-  title = "Moryx.Notifications.Web";
   protected TranslationConstants = TranslationConstants;
 
   constructor() {

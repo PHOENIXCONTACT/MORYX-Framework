@@ -104,7 +104,7 @@ export class ProcessHolders implements OnInit {
   }
 
 
-  updateTree(group: ProcessHolderGroup) {
+  private updateTree(group: ProcessHolderGroup) {
     const node = ConvertToNode(group);
     this.dataSource.update((nodes) => {
       const foundNode = nodes.find((x) => x.data.id == group.id);
@@ -122,7 +122,7 @@ export class ProcessHolders implements OnInit {
     });
   }
 
-  buildTree(groups: ProcessHolderGroup[]) {
+  private buildTree(groups: ProcessHolderGroup[]) {
     const nodes: ProcessHolderNode[] = [];
     for (const group of groups) {
       const node = ConvertToNode(group);

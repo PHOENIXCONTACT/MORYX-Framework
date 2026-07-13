@@ -119,7 +119,7 @@ export class App implements OnInit {
     );
   }
 
-  disconnectEvents(): void {
+  protected disconnectEvents(): void {
     this.instructionService.disconnect();
   }
 }

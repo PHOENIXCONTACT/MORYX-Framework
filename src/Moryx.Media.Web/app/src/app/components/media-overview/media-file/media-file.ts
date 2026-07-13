@@ -46,7 +46,7 @@ export class MediaFile implements OnInit {
   }
 
   //Shows preview if media is an image. If not, the default picture will be shown
-  async showFile(): Promise<void> {
+  private async showFile(): Promise<void> {
     const content = this.content();
     if (
       content.master !== undefined &&

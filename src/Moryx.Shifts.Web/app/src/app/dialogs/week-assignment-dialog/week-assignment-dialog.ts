@@ -111,7 +111,7 @@ export class WeekAssignmentDialog {
     }
   }
 
-  refreshOperators(resourceId: number) {
+  private refreshOperators(resourceId: number) {
     //skilled operators
     this.appStore
       .getOperatorsBasedOnResource(resourceId)
@@ -135,7 +135,7 @@ export class WeekAssignmentDialog {
       });
   }
 
-  refreshResources(operatorId: string) {
+  private refreshResources(operatorId: string) {
     // resources that the operator has skill for
     this.appStore
       .getResourcesBasedOnOperator(operatorId)

@@ -33,8 +33,10 @@ export class StepCreator {
 
   private activatedRoute = inject(ActivatedRoute);
   private queryParamMap = toSignal(this.activatedRoute.queryParamMap);
-  recipeType = computed(() => this.queryParamMap()?.get('type') ?? undefined);
-  protected stepRecipe = computed(() => structuredClone(this.availableSteps().find(s => s.type == this.recipeType())));
+  protected stepRecipe = computed(() => {
+    const type = this.queryParamMap()?.get('type');
+    return structuredClone(this.availableSteps().find(s => s.type == type));
+  });
   protected readonly TranslationConstants = TranslationConstants;
 
   protected onCreate(): void {

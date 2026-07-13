@@ -70,7 +70,7 @@ export class WorkstationOperators {
     });
   }
 
-  expandPreviousCard(stations: WorkstationViewModel[]) {
+  private expandPreviousCard(stations: WorkstationViewModel[]) {
     //make sure expand the previously expanded card if exist in the URL
 
     // ie : /?stationId=2
@@ -114,7 +114,7 @@ export class WorkstationOperators {
       );
   }
 
-  updateUrlParam(stationId: number | null) {
+  private updateUrlParam(stationId: number | null) {
     const queryParams: Params = {stationId: stationId};
 
     this.router.navigate([], {

@@ -48,7 +48,7 @@ export class DialogAddVariant {
     });
   }
 
-  onNoClick(): void {
+  protected onNoClick(): void {
     this.dialogRef.close();
   }
 

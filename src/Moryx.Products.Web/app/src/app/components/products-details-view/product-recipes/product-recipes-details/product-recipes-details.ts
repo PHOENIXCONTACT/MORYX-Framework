@@ -27,10 +27,10 @@ export class ProductRecipesDetails {
   private cacheService = inject(CacheProductsService);
 
   protected isEditMode = this.editProductsService.editing;
-  currentProduct = this.editProductsService.currentProduct;
+  protected currentProduct = this.editProductsService.currentProduct;
   protected currentRecipe = linkedSignal(this.editProductsService.currentRecipe);
-  recipeDefinitions = this.cacheService.recipeDefinitions;
-  TranslationConstants = TranslationConstants;
+  protected recipeDefinitions = this.cacheService.recipeDefinitions;
+  protected TranslationConstants = TranslationConstants;
 
   protected updateRecipe(properties: Entry | undefined) {
     if (!properties) {

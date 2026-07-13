@@ -50,6 +50,17 @@ import { NgxDocViewerModule } from 'ngx-doc-viewer';
   ]
 })
 export class VariantOverview implements OnInit, OnDestroy {
+  private dialog = inject(MatDialog);
+  private activatedRoute = inject(ActivatedRoute);
+  private mediaService = inject(MediaService);
+  private snackbarService = inject(SnackbarService);
+  private translateService = inject(TranslateService);
+
+  private downloadPictureUrl: string | null | ArrayBuffer = '';
+  private timeoutHandler: ReturnType<typeof setTimeout> | undefined;
+  private pdfObjectUrl?: string;
+  private previewObjectUrls = new Map<string, string>();
+
   protected mediaImage = signal(environment.assets + "assets/media-toolbar.webp");
   protected content = signal<ContentDescriptorModel | undefined>(undefined);
   protected selectedVariant = signal<VariantDescriptor | undefined>(undefined);
@@ -61,22 +72,10 @@ export class VariantOverview implements OnInit, OnDestroy {
   protected bigPictureIsPdf = signal(false);
   protected defaultPictureUrl = signal(environment.assets + 'assets/no_preview.jpg');
 
-  private dialog = inject(MatDialog);
-  private activatedRoute = inject(ActivatedRoute);
-  private mediaService = inject(MediaService);
-  private snackbarService = inject(SnackbarService);
-  private translateService = inject(TranslateService);
 
-  downloadPictureUrl: string | null | ArrayBuffer = '';
   protected TranslationConstants = TranslationConstants;
   protected menuTopLeftPosition = signal<{ x: string, y: string }>({x: '0', y: '0'});
-  timeoutHandler: ReturnType<typeof setTimeout> | undefined;
-  readonly trigger = viewChild.required(MatMenuTrigger);
-  private pdfObjectUrl?: string;
-  private previewObjectUrls = new Map<string, string>();
-
-  constructor() {
-  }
+  protected readonly trigger = viewChild.required(MatMenuTrigger);
 
   ngOnInit(): void {
     const id = this.activatedRoute.snapshot.paramMap.get('id');
@@ -133,7 +132,7 @@ export class VariantOverview implements OnInit, OnDestroy {
     }, 500);
   }
 
-  loadPreviews(): void {
+  private loadPreviews(): void {
     this.previewObjectUrls.forEach((u) => URL.revokeObjectURL(u));
     this.previewObjectUrls.clear();
 
@@ -155,7 +154,7 @@ export class VariantOverview implements OnInit, OnDestroy {
     }
   }
 
-  addPreview(variantName: string, mimeType: string, contentId: string) {
+  private addPreview(variantName: string, mimeType: string, contentId: string) {
     if (mimeType.includes('image')) {
       this.mediaService.getPicture(variantName, contentId, true).then((data) => {
         if (data !== null && data !== undefined) {
@@ -182,7 +181,7 @@ export class VariantOverview implements OnInit, OnDestroy {
     });
   }
 
-  onSelect(variant: VariantDescriptor) {
+  protected onSelect(variant: VariantDescriptor) {
     if (this.pdfObjectUrl) {
       URL.revokeObjectURL(this.pdfObjectUrl);
       this.pdfObjectUrl = undefined;
@@ -196,7 +195,7 @@ export class VariantOverview implements OnInit, OnDestroy {
     }
   }
 
-  loadPicture(variant: VariantDescriptor) {
+  private loadPicture(variant: VariantDescriptor) {
     const content = this.content();
     if (
       content !== undefined &&
@@ -313,7 +312,7 @@ export class VariantOverview implements OnInit, OnDestroy {
     }
   }
 
-  interpolateUrl = (string: string, values: Record<string, string | null | undefined>) =>
+  private interpolateUrl = (string: string, values: Record<string, string | null | undefined>) =>
     string.replace(/{(.*?)}/g, (match, offset) => values[offset] ?? '');
 
   protected onInfo(variant: VariantDescriptor): void {
@@ -383,7 +382,7 @@ export class VariantOverview implements OnInit, OnDestroy {
     }
   }
 
-  remove(variant: VariantDescriptor) {
+  private remove(variant: VariantDescriptor) {
     const content = this.content();
     if (
       content !== undefined &&

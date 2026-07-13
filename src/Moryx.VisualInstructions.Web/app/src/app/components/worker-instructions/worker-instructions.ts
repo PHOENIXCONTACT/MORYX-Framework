@@ -192,13 +192,13 @@ export class WorkerInstructions {
       .catch((e: HttpErrorResponse) => this.snackbarService.handleError(e));
   }
 
-  clearCurrentViewOf(id: number | undefined) {
+  private clearCurrentViewOf(id: number | undefined) {
     if (this.displayedInstruction()?.id === id) {
       this.clearCurrentView();
     }
   }
 
-  clearCurrentView() {
+  private clearCurrentView() {
     this.displayedInstruction.set(undefined);
     this.mediaItems.set([]);
     this.mediaItemsContent.set([]);

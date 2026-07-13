@@ -15,7 +15,6 @@ import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { FactorySelectionService } from '@app/services/factory-selection.service';
 import { FactoryMonitorService } from '@api/services';
 import { ChangeBackgroundService } from '@app/services/change-background.service';
-import { FactoryModel } from '@api/models/factory-model';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
@@ -59,8 +58,7 @@ export class EditMenu {
   protected backgroundState: EditMenuState = EditMenuState.EditingBackground;
   protected TranslationConstants = TranslationConstants;
   protected canGoBack = signal(false);
-  goBackToFactory!: number;
-  navigationItem!: FactoryModel;
+  private goBackToFactory!: number;
 
   constructor() {
     this.translateService.addLangs([
@@ -78,7 +76,6 @@ export class EditMenu {
       }
 
       this.factoryMonitorService.getNavigation({ factoryId: factory }).then(navigation => {
-        this.navigationItem = navigation;
         this.backgroundService.updateBackground(navigation.backgroundURL);
 
         if (!navigation.parentId) {
@@ -108,11 +105,11 @@ export class EditMenu {
     });
   }
 
-  showMenu() {
+  private showMenu() {
     this.buttons.set(this.menuButtons);
   }
 
-  hideMenu() {
+  private hideMenu() {
     this.buttons.set([]);
     this.editMenuService.setActiveState(EditMenuState.Closed);
   }

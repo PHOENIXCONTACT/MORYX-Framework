@@ -33,8 +33,8 @@ import { MatButtonModule } from '@angular/material/button';
 ]
 })
 export class ShiftInstanceDialog {
-  public data = inject<ShiftInstanceModel>(MAT_DIALOG_DATA);
-  public dialogRef = inject(MatDialogRef<ShiftInstanceDialog>);
+  protected data = inject<ShiftInstanceModel>(MAT_DIALOG_DATA);
+  private dialogRef = inject(MatDialogRef<ShiftInstanceDialog>);
 
   protected form = new FormGroup({
     startDate: new FormControl<Date>(new Date()),

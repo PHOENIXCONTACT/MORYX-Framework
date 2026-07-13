@@ -70,7 +70,7 @@ export class SkillTypeDetails {
     });
   }
 
-  initialize(id: number) {
+  private initialize(id: number) {
 
     if (id <= 0) {
       this.appStoreService.getSkillTypePrototype().then((prototype) => {

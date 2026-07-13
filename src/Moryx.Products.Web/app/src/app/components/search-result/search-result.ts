@@ -43,7 +43,7 @@ export class SearchResult implements OnInit {
     return '';
   }
 
-  async onQueryParam(queryParam: ParamMap) {
+  private async onQueryParam(queryParam: ParamMap) {
     const searchString = queryParam.get('q');
     if (searchString) {
       this.searchString.set(`*${searchString}*`);

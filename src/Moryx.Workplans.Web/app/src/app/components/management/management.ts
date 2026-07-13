@@ -126,7 +126,7 @@ export class Management implements OnInit, OnDestroy {
     this.searchBarService.unsubscribe();
   }
 
-  async getTranslations(): Promise<{ [key: string]: string }> {
+  private async getTranslations(): Promise<{ [key: string]: string }> {
     return await firstValueFrom(this.translateService
       .get([
         TranslationConstants.MANAGEMENT.CONFRIM_DIALOG.MESSAGE_FIRST_PART,
