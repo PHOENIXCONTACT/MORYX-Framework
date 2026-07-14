@@ -4,7 +4,7 @@
 */
 
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
 
@@ -16,11 +16,11 @@ export class AuthService {
   private cookieService = inject(CookieService);
   private http = inject(HttpClient);
 
-  authBaseAddress: string | undefined = undefined;
+  private readonly _authBaseAddress = signal<string | undefined>(undefined);
+  readonly authBaseAddress = this._authBaseAddress.asReadonly();
 
   /** Whether the server has authentication enabled. */
-  private readonly _authConfigured = signal<boolean>(false);
-  readonly authConfigured = this._authConfigured.asReadonly();
+  readonly authConfigured = computed(() => !!this._authBaseAddress());
 
   /** Whether the current user is signed in. */
   private readonly _isLoggedIn = signal<boolean>(false);
@@ -30,9 +30,9 @@ export class AuthService {
   private readonly _userName = signal<string>('');
   readonly userName = this._userName.asReadonly();
 
-  /** Called by the app root to indicate whether the server has authentication enabled. */
-  setAuthConfigured(value: boolean): void {
-    this._authConfigured.set(value);
+  /** Called by the app root to configure the authentication base address. */
+  setAuthBaseAddress(url: string | undefined): void {
+    this._authBaseAddress.set(url);
   }
 
   checkSignedIn(): void {
@@ -45,7 +45,7 @@ export class AuthService {
   }
 
   signOut(): void {
-    firstValueFrom(this.http.post(this.authBaseAddress + '/api/auth/signOut', {}, {
+    firstValueFrom(this.http.post(this._authBaseAddress() + '/api/auth/signOut', {}, {
       withCredentials: true,
     })).then(() => {
       this._isLoggedIn.set(false);

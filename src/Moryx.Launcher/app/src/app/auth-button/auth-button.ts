@@ -29,7 +29,7 @@ export class AuthButton implements OnInit {
   }
 
   protected signIn() {
-    window.location.assign(`${this.authService.authBaseAddress}/login?returnUrl=${location.href}`);
+    window.location.assign(`${this.authService.authBaseAddress()}/login?returnUrl=${location.href}`);
   }
 
   protected async signOut() {

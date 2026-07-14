@@ -98,8 +98,7 @@ export class App {
     effect(() => {
       const authBaseAddress = this.authBaseAddress();
       untracked(() => {
-        this.authService.authBaseAddress = authBaseAddress;
-        this.authService.setAuthConfigured(!!authBaseAddress && authBaseAddress.length > 0);
+        this.authService.setAuthBaseAddress(authBaseAddress);
       });
     });
 
