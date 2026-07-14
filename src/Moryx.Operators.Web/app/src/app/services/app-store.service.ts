@@ -248,10 +248,7 @@ export class AppStoreService {
       })
       .subscribe({
         next: (skill) => {
-          this.skills.set([
-            ...this.skills(),
-            skillToOperatorSkill(skill),
-          ]);
+          this.skills.update(current => [...current, skillToOperatorSkill(skill)]);
         },
         // TODO: snack back error
         error: (e) => console.log(e),
@@ -265,8 +262,7 @@ export class AppStoreService {
       })
       .subscribe({
         next: (result) => {
-          this.skills.set([
-            ...this.skills().filter(x => x.id != skill.id)]);
+          this.skills.update(current => current.filter(x => x.id != skill.id));
         },
         // TODO: snack back error
         error: (e) => console.log(e),
@@ -302,10 +298,7 @@ export class AppStoreService {
 
     return addAsync.then((result) => {
       skillType.id = result.id ?? 0;
-      this.skillTypes.set([
-        ...this.skillTypes().filter((x) => x.id != skillType.id),
-        skillType,
-      ]);
+      this.skillTypes.update(current => [...current.filter(x => x.id != skillType.id), skillType]);
       return Promise.resolve(result);
     });
   }
@@ -326,10 +319,7 @@ export class AppStoreService {
         body: skillData,
       })
       .subscribe(() => {
-        this.skillTypes.set([
-          ...this.skillTypes().filter((x) => x.id != type.id),
-          type,
-        ]);
+        this.skillTypes.update(current => [...current.filter(x => x.id != type.id), type]);
       });
   }
 
