@@ -2,6 +2,9 @@ name: SBOM Evaluation
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - feature/SBOM-evaluation
 
 jobs:
   test:
