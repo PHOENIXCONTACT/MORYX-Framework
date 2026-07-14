@@ -16,6 +16,9 @@ export class AuthService {
   private cookieService = inject(CookieService);
   private http = inject(HttpClient);
 
+  /** Set by the server in MoryxIdentityDefaults. */
+  private readonly cookieName = 'moryx_user';
+
   private readonly _authBaseAddress = signal<string | undefined>(undefined);
   readonly authBaseAddress = this._authBaseAddress.asReadonly();
 
@@ -36,7 +39,7 @@ export class AuthService {
   }
 
   checkSignedIn(): void {
-    const user = this.cookieService.get('moryx_user');
+    const user = this.cookieService.get(this.cookieName);
     if (!user) {
       return;
     }
