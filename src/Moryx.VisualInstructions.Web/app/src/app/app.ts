@@ -10,19 +10,13 @@ import { LanguageService } from '@moryx/ngx-web-framework/services';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../environments/environment';
-import {
-  ConfigurationDialog,
-  DialogData,
-} from './dialogs/configuration-dialog/configuration-dialog';
+import { ConfigurationDialog, DialogData } from './dialogs/configuration-dialog/configuration-dialog';
 import { TranslationConstants } from './extensions/translation-constants.extensions';
 import { CookieService } from './services/cookie.service';
 import { InstructionService } from './services/instruction.service';
-
 import { WorkerInstructions } from './components/worker-instructions/worker-instructions';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-
-const COOKIE_NAME = 'moryx-client-identifier';
 
 @Component({
   selector: 'app-root',
@@ -50,10 +44,14 @@ export class App implements OnInit {
   protected environment = environment;
   protected clientIdentifier: string = '';
 
+  private readonly cookieName = 'moryx-client-identifier';
+  private readonly cookieLifetimeDays = 365;
+
   constructor() {
-    const cookie = this.cookieService.getCookie(COOKIE_NAME);
+    const cookie = this.cookieService.getCookie(this.cookieName);
     if (cookie) {
       this.clientIdentifier = cookie;
+      this.cookieService.setCookie(this.cookieName, cookie, this.cookieLifetimeDays);
     } else {
       this.openConfigDialog();
     }
@@ -96,7 +94,7 @@ export class App implements OnInit {
 
   private updateInstructor(result: DialogData): void {
     this.clientIdentifier = result.instructorName;
-    this.cookieService.setCookie(COOKIE_NAME, result.instructorName, 365);
+    this.cookieService.setCookie(this.cookieName, result.instructorName, this.cookieLifetimeDays);
 
     this.instructionService.disconnect();
     this.instructionService.connect();
