@@ -28,12 +28,11 @@ jobs:
 
       - name: Create output directory
         run: mkdir -p sboms
-
+        
       - name: Generate frontend SBOMs
         shell: bash
         run: |
-
-          while IFS= read -r lockfile
+          find . -name package-lock.json | while read lockfile
           do
             dir=$(dirname "$lockfile")
             project=$(basename "$(dirname "$dir"))
@@ -43,22 +42,19 @@ jobs:
             echo "Directory: $dir"
             echo "======================================="
 
-            (
-              cd "$dir"
+            cd "$dir"
 
-              echo "Installing dependencies..."
-              npm ci
+            echo "Installing dependencies..."
+            npm ci
 
-              echo "Generating SBOM..."
-              cyclonedx-npm \
-                --output-file "/tmp/${project}.json"
-            )
+            echo "Generating SBOM..."
+            cyclonedx-npm --output-file "/tmp/${project}.json"
 
-            cp "/tmp/${project}.json" \
-               "sboms/${project}-bom.json"
+            cd "$GITHUB_WORKSPACE"
 
-          done < <(find . -name package-lock.json)
-
+            cp "/tmp/${project}.json" "sboms/${project}-bom.json"
+          done
+          
       - name: Show generated SBOMs
         run: |
           ls -lah sboms
