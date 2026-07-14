@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, effect, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, computed, effect, inject, signal, untracked, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
@@ -40,27 +40,22 @@ export class DialogCreateRecipe {
   private cacheService = inject(CacheProductsService);
 
   protected result = signal<CreateRecipeDialogResult>({} as CreateRecipeDialogResult);
-  protected possibleRecipes = signal<RecipeDefinitionModel[]>([]);
-  protected possibleWorkplans = signal<WorkplanModel[]>([]);
+  protected possibleRecipes = computed(() => this.cacheService.recipeDefinitions() ?? []);
+  protected possibleWorkplans = computed(() => this.cacheService.workplans() ?? []);
   protected hasWorkplans = signal<boolean>(false);
 
   protected TranslationConstants = TranslationConstants;
 
   constructor() {
     effect(() => {
-      const recipeDefintions = this.cacheService.recipeDefinitions();
-      this.possibleRecipes.set(recipeDefintions ?? []);
-      if (this.possibleRecipes().length > 0) {
-        this.result.update(e => {
-          e.selectedRecipe = this.possibleRecipes()[0]
-          return e;
-        });
-        this.hasWorkplans.set(this.result()?.selectedRecipe?.hasWorkplans !== undefined);
-      }
-    });
-
-    effect(() => {
-      this.possibleWorkplans.set(this.cacheService.workplans() ?? []);
+      const recipes = this.possibleRecipes();
+      untracked(() => {
+        // Pre-select the first recipe when definitions become available
+        if (recipes.length > 0) {
+          this.result.update(e => ({ ...e, selectedRecipe: recipes[0] }));
+          this.hasWorkplans.set(recipes[0]?.hasWorkplans !== undefined);
+        }
+      });
     });
   }
 
