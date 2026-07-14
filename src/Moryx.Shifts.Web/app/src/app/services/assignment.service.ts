@@ -113,14 +113,14 @@ export class AssignmentService {
       id: id
     }).subscribe({
       next: success => {
-        this.assignments.set(this.assignments().filter(x => x.id != id));
+        this.assignments.update(current => current.filter(x => x.id != id));
       },
       error: e => console.log(e)
     })
   }
 
   addAssignmentsToList(assignments: AssignmentCardModel[]) {
-    this.assignments.set([...this.assignments(), ...assignments]);
+    this.assignments.update(current => [...current, ...assignments]);
   }
 }
 

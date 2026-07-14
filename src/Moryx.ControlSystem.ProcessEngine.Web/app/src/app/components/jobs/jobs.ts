@@ -101,7 +101,7 @@ export class Jobs implements OnInit {
     if (!existingJob) {
       this.jobCollection().push(new JobViewModel(updatedJob));
     } else if (updatedJob.state === "Completed") {
-      this.jobCollection.set(this.jobCollection().filter((jVm) => jVm !== existingJob));
+      this.jobCollection.update(current => current.filter((jVm) => jVm !== existingJob));
     } else {
       existingJob.updateModel(updatedJob);
 

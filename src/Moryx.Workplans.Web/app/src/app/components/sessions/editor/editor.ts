@@ -421,7 +421,7 @@ export class Editor implements OnInit {
         next: session => {
           this.sessionService.registerUpdatedSession(session);
           this.editorState.setWorkplan(session);
-          this.workplanPaths.set(this.workplanPaths().filter(p => p !== data));
+          this.workplanPaths.update(current => current.filter(p => p !== data));
           this.pathMenuTrigger().menuData = undefined;
         },
         error: async (err: HttpErrorResponse) => await this.snackbarService.handleError(err)

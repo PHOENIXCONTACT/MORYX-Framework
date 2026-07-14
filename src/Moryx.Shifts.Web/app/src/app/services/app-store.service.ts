@@ -214,21 +214,18 @@ export class AppStoreService {
 
   selectOperator(operator: OperatorModel) {
     if (!this.operatorsSelectedForFilter().some((x) => operator.id === x.id)) {
-      this.operatorsSelectedForFilter.set([...this.operatorsSelectedForFilter(), operator]);
+      this.operatorsSelectedForFilter.update(current => [...current, operator]);
     } else {
-      this.operatorsSelectedForFilter.set(
-        this.operatorsSelectedForFilter().filter((x) => x.id != operator.id)
-      );
+      this.operatorsSelectedForFilter.update(current => current.filter((x) => x.id != operator.id));
     }
   }
 
   selectResource(resource: AttendableResourceModel) {
     if (!this.resourcesSelectedForFilter().some((x) => resource.id === x.id)) {
-      this.resourcesSelectedForFilter.set([...this.resourcesSelectedForFilter(), resource]);
+      this.resourcesSelectedForFilter.update(current => [...current, resource]);
     } else {
-      this.resourcesSelectedForFilter.set(
-        this.resourcesSelectedForFilter().filter((x) => x.id != resource.id)
-      );
+      this.resourcesSelectedForFilter.update(current =>
+        current.filter((x) => x.id != resource.id));
     }
   }
 

@@ -113,7 +113,7 @@ export class AppStoreService {
                 operatorResult.assignedResources?.map(
                   (x) => <IOperatorAssignable>{ id: x.id, name: x.name }
                 );
-              this.operators.set([...this.operators().filter(e => e.data.identifier!= operatorResult.identifier),operator]);
+              this.operators.update(current => [...current.filter(e => e.data.identifier != operatorResult.identifier), operator]);
             });
         },
         error: (error) => this.snackbarService.handleError(error),
@@ -140,7 +140,7 @@ export class AppStoreService {
               operatorResult.assignedResources?.map(
                 (x) => <IOperatorAssignable>{ id: x.id, name: x.name }
               );
-            this.operators.set([...this.operators().filter(e => e.data.identifier!= operatorResult.identifier),operator]);
+            this.operators.update(current => [...current.filter(e => e.data.identifier != operatorResult.identifier), operator]);
           });
       });
   }
@@ -279,9 +279,7 @@ export class AppStoreService {
         id: skillType.id,
       })
       .subscribe(() => {
-        this.skillTypes.set(
-          this.skillTypes().filter((e) => e.id != skillType.id)
-        );
+        this.skillTypes.update(current => current.filter((e) => e.id != skillType.id));
       });
   }
 
