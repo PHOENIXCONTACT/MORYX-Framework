@@ -43,11 +43,11 @@ export class ShiftService {
   }
 
   public addToInstanceList(instance: ShiftInstanceModel) {
-    this._shiftInstances.set([...this._shiftInstances(), instance]);
+    this._shiftInstances.update(current => [...current, instance]);
   }
 
   public addToTypeList(type: ShiftTypeModel) {
-    this._shiftTypes.set([...this._shiftTypes(), type]);
+    this._shiftTypes.update(current => [...current, type]);
   }
 
   public addType(shift: ShiftTypeModel) {

@@ -43,7 +43,8 @@ export class EditResourceService {
    * Updates the active resource, e.g. with new property values, pushing the @param resource on the subject.
    */
   public updateActiveResource(resource: ResourceModel) {
-    if (this.activeResource() && this.activeResource()?.id !== resource.id) {
+    const current = this.activeResource();
+    if (current && current.id !== resource.id) {
       throw new Error('Trying to update the active resource with a different resource.');
     }
     this._activeResource.set(resource);
@@ -56,11 +57,12 @@ export class EditResourceService {
   }
 
   public stashResource() {
-    if (!this.activeResource()) {
+    const resource = this.activeResource();
+    if (!resource) {
       return;
     }
 
-    this.sessionService.setWipResource(this.activeResource()!, <ResourceStorageDetails>{
+    this.sessionService.setWipResource(resource, <ResourceStorageDetails>{
       createNewResource: this.editingUnsavedResource,
     });
   }

@@ -22,7 +22,7 @@ export class ChangeBackgroundService {
   public canSaveBackground = computed(() => !!this.factorySelectionService.factorySelected());
 
   public changeBackground(url: string) {
-    if (!url || !this.factorySelectionService.factorySelected) {
+    if (!url || !this.factorySelectionService.factorySelected()) {
       return;
     }
 

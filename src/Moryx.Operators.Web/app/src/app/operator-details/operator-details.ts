@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, effect, inject, input, signal, untracked, ChangeDetectionStrategy } from "@angular/core";
+import { Component, computed, effect, inject, input, signal, untracked, ChangeDetectionStrategy } from "@angular/core";
 import { RouterLink } from "@angular/router";
 import { TranslationConstants } from "../extensions/translation-constants.extensions";
 import { OperatorSkill } from "../models/operator-skill-model";
@@ -15,7 +15,6 @@ import { ConfirmationDialog } from "../dialogs/confirmation-dialog/confirmation-
 import { OperatorViewModel } from "../models/operator-view-model";
 import { AssignableOperator } from "@api/models/assignable-operator";
 import { skillToOperatorSkill, skillTypeToModel } from "../models/model-converter";
-import { SkillTypeModel } from "@api/models/skill-type-model";
 import { firstValueFrom } from "rxjs";
 import { AppStoreService } from "../services/app-store.service";
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -63,8 +62,8 @@ export class OperatorDetails {
     pseudonym: '',
     signedIn: false
   });
-  private skillTypes = signal<SkillTypeModel[]>([]);
-  private operatorViewModel = signal<OperatorViewModel | undefined>(undefined);
+  skillTypes = computed(() => this.appStoreService.skillTypes().map(skillTypeToModel));
+  operatorViewModel = signal<OperatorViewModel | undefined>(undefined);
 
   protected TranslationConstants = TranslationConstants;
   protected dateToString = dateToString;
@@ -98,8 +97,6 @@ export class OperatorDetails {
 
 
     this.loadSkills();
-
-    this.skillTypes.set(this.appStoreService.skillTypes().map(skillTypeToModel));
   }
 
   private loadSkills() {

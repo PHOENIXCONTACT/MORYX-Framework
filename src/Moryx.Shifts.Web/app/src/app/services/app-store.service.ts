@@ -222,21 +222,17 @@ export class AppStoreService {
 
   selectOperator(operator: OperatorModel) {
     if (!this._operatorsSelectedForFilter().some((x) => operator.id === x.id)) {
-      this._operatorsSelectedForFilter.set([...this._operatorsSelectedForFilter(), operator]);
+      this._operatorsSelectedForFilter.update(current => [...current, operator]);
     } else {
-      this._operatorsSelectedForFilter.set(
-        this._operatorsSelectedForFilter().filter((x) => x.id != operator.id)
-      );
+      this._operatorsSelectedForFilter.update(current => current.filter((x) => x.id != operator.id));
     }
   }
 
   selectResource(resource: AttendableResourceModel) {
     if (!this._resourcesSelectedForFilter().some((x) => resource.id === x.id)) {
-      this._resourcesSelectedForFilter.set([...this._resourcesSelectedForFilter(), resource]);
+      this._resourcesSelectedForFilter.update(current => [...current, resource]);
     } else {
-      this._resourcesSelectedForFilter.set(
-        this._resourcesSelectedForFilter().filter((x) => x.id != resource.id)
-      );
+      this._resourcesSelectedForFilter.update(current => current.filter((x) => x.id != resource.id));
     }
   }
 
