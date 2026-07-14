@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, computed, effect, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, computed, effect, inject, signal, untracked, ChangeDetectionStrategy } from '@angular/core';
 import { WorkstationViewModel } from '../models/workstation-view-model';
 import { WorkstationTogglingState } from './WorkstationTogglingState';
 import { MatDialog } from '@angular/material/dialog';
@@ -46,7 +46,7 @@ export class WorkstationOperators {
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
 
-  protected workstations = signal<WorkstationViewModel[]>([]);
+  protected workstations = this.appStoreService.workstations;
   protected workstationTogglingState = signal<WorkstationTogglingState | undefined>(undefined);
   protected operatorsSkills = this.appStoreService.skills;
   protected skillTypes = computed(() => this.appStoreService.skillTypes().map(skillTypeToModel));
@@ -61,11 +61,13 @@ export class WorkstationOperators {
   protected TranslationConstants = TranslationConstants;
 
   constructor() {
+    // Restore expanded card from URL on first load
     effect(() => {
-      const stations = this.appStoreService.workstations();
-      this.workstations.set(stations);
+      const stations = this.workstations();
       if (stations.length) {
-        this.expandPreviousCard(this.workstations());
+        untracked(() => {
+          this.expandPreviousCard(stations)
+        });
       }
     });
   }
