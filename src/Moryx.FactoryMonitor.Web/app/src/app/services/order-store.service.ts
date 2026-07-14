@@ -19,6 +19,8 @@ export class OrderStoreService {
 
   private readonly orders = signal<Order[]>([]);
   readonly toggledOrder = signal<Order | undefined>(undefined);
+
+  // TODO: Add custom `equal` fn when OrderManagement facade fires order-started event before order-changed-to-running event
   readonly runningOrders = computed(() =>
     this.orders().filter(o => o.classification === InternalOperationClassification.Running)
   );
