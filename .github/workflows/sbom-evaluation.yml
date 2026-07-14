@@ -2,31 +2,58 @@ name: SBOM Evaluation
 
 on:
   workflow_dispatch:
+
   push:
     branches:
       - feature/SBOM-evaluation
 
 jobs:
-  test:
+  frontend-sbom:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 10.0.x
-
       - uses: actions/setup-node@v4
         with:
           node-version: 24
 
-      - run: npm install -g @cyclonedx/cyclonedx-npm
+      - name: Install CycloneDX NPM
+        run: npm install -g @cyclonedx/cyclonedx-npm
 
-      - run: dotnet tool install --global CycloneDX.Cli
+      - name: Verify installation
+        run: cyclonedx-npm --version
 
-      - run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+      - name: Create output directory
+        run: mkdir sboms
 
-      - run: cyclonedx --help
+      - name: Generate SBOMs for all UI projects
+        shell: bash
+        run: |
+          while IFS= read -r lockfile
+          do
+            dir=$(dirname "$lockfile")
+            project=$(basename "$(dirname "$dir")")
 
-      - run: cyclonedx-npm --version
+            echo "Generating SBOM for $project"
+
+            (
+              cd "$dir"
+
+              cyclonedx-npm \
+                --output-file "/tmp/${project}.json"
+            )
+
+            cp "/tmp/${project}.json" \
+              "sboms/${project}-bom.json"
+
+          done < <(find . -name package-lock.json)
+
+      - name: Show generated files
+        run: ls -lah sboms
+
+      - name: Upload frontend SBOMs
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-sboms
+          path: sboms/*.json
