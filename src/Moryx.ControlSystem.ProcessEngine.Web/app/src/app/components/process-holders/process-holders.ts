@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, effect, inject, OnInit, signal, viewChild, ChangeDetectionStrategy, DestroyRef } from "@angular/core";
+import { Component, effect, inject, OnInit, signal, untracked, viewChild, ChangeDetectionStrategy, DestroyRef } from "@angular/core";
 
 import { MatTree, MatTreeModule } from "@angular/material/tree";
 import { MatIconModule } from "@angular/material/icon";
@@ -75,9 +75,11 @@ export class ProcessHolders implements OnInit {
 
     effect(() => {
       const group = this._processHolderStreamService.updatedProcessHolderGroups();
-      if (group) {
-        this.updateTree(ConvertToProcessHolderGroup(group));
-      }
+      untracked(() => {
+        if (group) {
+          this.updateTree(ConvertToProcessHolderGroup(group));
+        }
+      });
     });
   }
 
