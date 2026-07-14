@@ -271,8 +271,11 @@ export class EditProductsService {
       throw new Error("Invalid State: Tried to update recipe with id " + recipe.id + " but it was not found in current product");
     }
     this.recipe.set(recipe);
-    currentProduct.recipes![recipeIndex] = recipe;
-    this.currentProduct.set({...currentProduct, recipes: [...currentProduct.recipes!]});
+    this.currentProduct.update(product => {
+      const recipes = [...product!.recipes!];
+      recipes[recipeIndex] = recipe;
+      return {...product!, recipes};
+    });
   }
 
   removeRecipe(recipe: RecipeModel) {

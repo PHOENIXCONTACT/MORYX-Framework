@@ -53,8 +53,9 @@ export class NodeProperties {
       // Awaiting this results in a race condition,
       // this.node needs to be set before the observable provides the next value
       untracked(() => {
-        if (this.node()) {
-          this.updateNode(this.node()!);
+        const currentNode = this.node();
+        if (currentNode) {
+          this.updateNode(currentNode);
         }
 
         this.node.set(step);
@@ -64,7 +65,8 @@ export class NodeProperties {
   }
 
   async updateNode(node: WorkplanNodeModel) {
-    if (!this.sessionsService.activeSession() || !node.id || !this.editorStateService.workplan) {
+    const activeSession = this.sessionsService.activeSession();
+    if (!activeSession || !node.id || !this.editorStateService.workplan) {
       return;
     }
 
@@ -73,7 +75,7 @@ export class NodeProperties {
     }
 
     await this.workplanEditingService
-      .updateStep({sessionId: this.sessionsService.activeSession()!, nodeId: node.id, body: node})
+      .updateStep({sessionId: activeSession, nodeId: node.id, body: node})
       .then(updatedNode => {
         if (!this.editorStateService.workplan) {
           return;
@@ -94,11 +96,12 @@ export class NodeProperties {
   }
 
   protected onNavigateClick() {
-    if (!this.node()?.subworkplanId) {
+    const subworkplanId = this.node()?.subworkplanId;
+    if (!subworkplanId) {
       return;
     }
     this.sessionsService
-      .getSessionForWorkplan(this.node()?.subworkplanId ?? 0)
+      .getSessionForWorkplan(subworkplanId)
       .then(session => this.sessionsService.activateSession(session.sessionToken!))
       .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err));
   }

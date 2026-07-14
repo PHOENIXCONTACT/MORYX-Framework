@@ -95,7 +95,7 @@ export class Sessions implements OnInit, OnDestroy {
       this.activeSession.set(updated);
     }
 
-    this.sessions.set(this.sessions().filter(s => s.sessionToken !== updated.sessionToken));
+    this.sessions.update(current => current.filter(s => s.sessionToken !== updated.sessionToken));
     this.sessions.update(items => {
       items.push(updated);
       return items;

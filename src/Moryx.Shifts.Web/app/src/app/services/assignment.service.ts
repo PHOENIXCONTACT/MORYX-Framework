@@ -109,12 +109,12 @@ export class AssignmentService {
     this.shiftAssignmentService.deleteShiftAssignement({
       id: id
     }).then(() => {
-      this.assignments.set(this.assignments().filter(x => x.id != id));
+      this.assignments.update(current => current.filter(x => x.id != id));
     }).catch(e => console.log(e));
   }
 
   addAssignmentsToList(assignments: AssignmentCardModel[]) {
-    this.assignments.set([...this.assignments(), ...assignments]);
+    this.assignments.update(current => [...current, ...assignments]);
   }
 }
 

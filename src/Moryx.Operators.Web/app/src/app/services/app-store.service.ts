@@ -110,7 +110,7 @@ export class AppStoreService {
           operatorResult.assignedResources?.map(
             (x) => <IOperatorAssignable>{ id: x.id, name: x.name }
           );
-        this.operators.set([...this.operators().filter(e => e.data.identifier!= operatorResult.identifier),operator]);
+        this.operators.update(current => [...current.filter(e => e.data.identifier != operatorResult.identifier), operator]);
       })
       .catch((error) => this.snackbarService.handleError(error));
   }
@@ -133,7 +133,7 @@ export class AppStoreService {
           operatorResult.assignedResources?.map(
             (x) => <IOperatorAssignable>{ id: x.id, name: x.name }
           );
-        this.operators.set([...this.operators().filter(e => e.data.identifier!= operatorResult.identifier),operator]);
+        this.operators.update(current => [...current.filter(e => e.data.identifier != operatorResult.identifier), operator]);
       });
   }
 
@@ -239,10 +239,7 @@ export class AppStoreService {
         body: data,
       })
       .then((skill) => {
-        this.skills.set([
-          ...this.skills(),
-          skillToOperatorSkill(skill),
-        ]);
+        this.skills.update(current => [...current, skillToOperatorSkill(skill)]);
       })
       // TODO: snack back error
       .catch((e) => console.log(e));
@@ -254,8 +251,7 @@ export class AppStoreService {
         id: skill.id,
       })
       .then(() => {
-        this.skills.set([
-          ...this.skills().filter(x => x.id != skill.id)]);
+        this.skills.update(current => current.filter(x => x.id != skill.id));
       })
       // TODO: snack back error
       .catch((e) => console.log(e));
@@ -267,9 +263,7 @@ export class AppStoreService {
         id: skillType.id,
       })
       .then(() => {
-        this.skillTypes.set(
-          this.skillTypes().filter((e) => e.id != skillType.id)
-        );
+        this.skillTypes.update(current => current.filter((e) => e.id != skillType.id));
       });
   }
 
@@ -289,10 +283,7 @@ export class AppStoreService {
       })
       .then((result) => {
         skillType.id = result.id ?? 0;
-        this.skillTypes.set([
-          ...this.skillTypes().filter((x) => x.id != skillType.id),
-          skillType,
-        ]);
+        this.skillTypes.update(current => [...current.filter(x => x.id != skillType.id), skillType]);
         return Promise.resolve(result);
       });
   }
@@ -313,10 +304,7 @@ export class AppStoreService {
         body: skillData,
       })
       .then(() => {
-        this.skillTypes.set([
-          ...this.skillTypes().filter((x) => x.id != type.id),
-          type,
-        ]);
+        this.skillTypes.update(current => [...current.filter(x => x.id != type.id), type]);
       });
   }
 
