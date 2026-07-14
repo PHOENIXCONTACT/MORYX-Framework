@@ -3,8 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { inject, Injectable } from "@angular/core";
-import { BehaviorSubject, firstValueFrom, lastValueFrom } from "rxjs";
+import { inject, Injectable, signal } from "@angular/core";
+import { firstValueFrom, lastValueFrom } from "rxjs";
 import { WorkstationViewModel } from "../models/workstation-view-model";
 import { OperatorViewModel } from "../models/operator-view-model";
 import {
@@ -33,17 +33,11 @@ export class AppStoreService {
   private skillManagementService = inject(SkillManagementService);
   private snackbarService = inject(SnackbarService);
 
-  private _workstations = new BehaviorSubject<WorkstationViewModel[]>([]);
-  private _operators = new BehaviorSubject<OperatorViewModel[]>([]);
-  private _skills = new BehaviorSubject<OperatorSkill[]>([]);
-  private _skillTypes = new BehaviorSubject<SkillType[]>([]);
-  private _workstationSelected = new BehaviorSubject<number>(0);
-
-  public workstations$ = this._workstations.asObservable();
-  public operators$ = this._operators.asObservable();
-  public skills$ = this._skills.asObservable();
-  public skillTypes$ = this._skillTypes.asObservable();
-  public workstationSelected$ = this._workstationSelected.asObservable();
+  readonly workstations = signal<WorkstationViewModel[]>([]);
+  readonly operators = signal<OperatorViewModel[]>([]);
+  readonly skills = signal<OperatorSkill[]>([]);
+  readonly skillTypes = signal<SkillType[]>([]);
+  readonly workstationSelected = signal<number>(0);
 
   constructor() {
     this.initialize();
@@ -53,20 +47,20 @@ export class AppStoreService {
     this.skillManagementService.getTypes().subscribe((types) => {
       //types
       const typeModels = types.map(skillTypeModelToModel);
-      this._skillTypes.next(typeModels);
+      this.skillTypes.set(typeModels);
     });
 
     //skill
     this.skillManagementService.getSkills().subscribe((skills) => {
       const skillModels = skills.map(skillToOperatorSkill);
-      this._skills.next(skillModels);
+      this.skills.set(skillModels);
     });
 
     this.operatorManagementService.getResources_1().subscribe((stations) => {
       const stationsModels = stations.map(
         (station) => new WorkstationViewModel(station)
       );
-      this._workstations.next(stationsModels);
+      this.workstations.set(stationsModels);
     });
 
     this.operatorManagementService
@@ -75,13 +69,10 @@ export class AppStoreService {
   }
   //#region Operator
   private mapOperatorsToModel(operators: AssignableOperator[]) {
-    this.skills$.subscribe((skills) => {
-      const operatorsModels = operators.map(
-        (operator) => new OperatorViewModel(operator)
-      );
-
-      this._operators.next(operatorsModels);
-    });
+    const operatorsModels = operators.map(
+      (operator) => new OperatorViewModel(operator)
+    );
+    this.operators.set(operatorsModels);
   }
 
   public getSkillFromRemoteSource() {
@@ -112,8 +103,7 @@ export class AppStoreService {
               identifier: operator.data.identifier ?? "",
             })
             .subscribe((operatorResult) => {
-              const assignedResource = this._workstations
-                .getValue()
+              const assignedResource = this.workstations()
                 .find((x) => x.data.id === workstation.data.id);
               if (!assignedResource) {
                 return;
@@ -123,7 +113,7 @@ export class AppStoreService {
                 operatorResult.assignedResources?.map(
                   (x) => <IOperatorAssignable>{ id: x.id, name: x.name }
                 );
-              this._operators.next([...this._operators.getValue().filter(e => e.data.identifier!= operatorResult.identifier),operator]);
+              this.operators.update(current => [...current.filter(e => e.data.identifier != operatorResult.identifier), operator]);
             });
         },
         error: (error) => this.snackbarService.handleError(error),
@@ -150,19 +140,18 @@ export class AppStoreService {
               operatorResult.assignedResources?.map(
                 (x) => <IOperatorAssignable>{ id: x.id, name: x.name }
               );
-            this._operators.next([...this._operators.getValue().filter(e => e.data.identifier!= operatorResult.identifier),operator]);
+            this.operators.update(current => [...current.filter(e => e.data.identifier != operatorResult.identifier), operator]);
           });
       });
   }
 
   public getWorkstationById(workstationId: number) {
-    return this._workstations
-      .getValue()
+    return this.workstations()
       .find((x) => x.data.id === workstationId);
   }
 
   private currentOperatorList() {
-    return this._operators.getValue();
+    return this.operators();
   }
 
   public deleteOperator(operator: OperatorViewModel) {
@@ -186,7 +175,7 @@ export class AppStoreService {
       }))
       .then((identifier) => {
         const operators = [...this.currentOperatorList(), operator];
-        this._operators.next(operators);
+        this.operators.set(operators);
       })
       .catch((error) => this.snackbarService.handleError(error));
   }
@@ -259,10 +248,7 @@ export class AppStoreService {
       })
       .subscribe({
         next: (skill) => {
-          this._skills.next([
-            ...this._skills.getValue(),
-            skillToOperatorSkill(skill),
-          ]);
+          this.skills.update(current => [...current, skillToOperatorSkill(skill)]);
         },
         // TODO: snack back error
         error: (e) => console.log(e),
@@ -276,8 +262,7 @@ export class AppStoreService {
       })
       .subscribe({
         next: (result) => {
-          this._skills.next([
-            ...this._skills.getValue().filter(x => x.id != skill.id)]);
+          this.skills.update(current => current.filter(x => x.id != skill.id));
         },
         // TODO: snack back error
         error: (e) => console.log(e),
@@ -289,10 +274,8 @@ export class AppStoreService {
       .deleteType({
         id: skillType.id,
       })
-      .subscribe((result) => {
-        this._skillTypes.next(
-          this._skillTypes.getValue().filter((e) => e.id != skillType.id)
-        );
+      .subscribe(() => {
+        this.skillTypes.update(current => current.filter((e) => e.id != skillType.id));
       });
   }
 
@@ -315,10 +298,7 @@ export class AppStoreService {
 
     return addAsync.then((result) => {
       skillType.id = result.id ?? 0;
-      this._skillTypes.next([
-        ...this._skillTypes.getValue().filter((x) => x.id != skillType.id),
-        skillType,
-      ]);
+      this.skillTypes.update(current => [...current.filter(x => x.id != skillType.id), skillType]);
       return Promise.resolve(result);
     });
   }
@@ -338,11 +318,8 @@ export class AppStoreService {
       .update_1({
         body: skillData,
       })
-      .subscribe((result) => {
-        this._skillTypes.next([
-          ...this._skillTypes.getValue().filter((x) => x.id != type.id),
-          type,
-        ]);
+      .subscribe(() => {
+        this.skillTypes.update(current => [...current.filter(x => x.id != type.id), type]);
       });
   }
 

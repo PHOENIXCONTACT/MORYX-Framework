@@ -178,9 +178,15 @@ export class CreateDialog {
   ]);
 
   constructor() {
-    effect(() => this.processLoading());
-    effect(() => this.productFormControl.setValue(this.selectedProduct()));
-    effect(() => this.recipeFormControl.setValue(this.selectedRecipe()));
+    effect(() => {
+      this.processLoading();
+    });
+    effect(() => {
+      this.productFormControl.setValue(this.selectedProduct());
+    });
+    effect(() => {
+      this.recipeFormControl.setValue(this.selectedRecipe());
+    });
   }
 
   private processLoading(): void {

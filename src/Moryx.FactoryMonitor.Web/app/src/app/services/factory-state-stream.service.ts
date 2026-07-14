@@ -3,8 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { inject, Injectable } from '@angular/core';
-import { ReplaySubject } from 'rxjs';
+import { inject, Injectable, signal } from '@angular/core';
 import { ActivityChangedModel } from '@api/models/activity-changed-model';
 import { CellStateChangedModel } from '@api/models/cell-state-changed-model';
 import { ResourceChangedModel } from '@api/models/resource-changed-model';
@@ -28,9 +27,8 @@ export class FactoryStateStreamService {
 
   private eventSource?: EventSource;
 
-  // ToDo: Only make observable public
-  updatedCell: ReplaySubject<CellModel> = new ReplaySubject<CellModel>();
-  updatedOrder: ReplaySubject<Order> = new ReplaySubject<Order>();
+  readonly updatedCell = signal<CellModel | undefined>(undefined);
+  readonly updatedOrder = signal<Order | undefined>(undefined);
 
   connect() {
     this.eventSource = new EventSource(this.factoryMonitorService.rootUrl + FactoryMonitorService.FactoryStatesStreamPath);
@@ -59,31 +57,31 @@ export class FactoryStateStreamService {
   private transformResourceEvent(event: MessageEvent<string>) {
     const resourceChangedModel = <ResourceChangedModel>JSON.parse(event.data);
     const cell = Converter.resourceChangedModelToCell(resourceChangedModel);
-    this.updatedCell.next(cell);
+    this.updatedCell.set(cell);
   }
 
   private transformActivityChangedEvent(event: MessageEvent<string>) {
     const activityChangedModel = <ActivityChangedModel>JSON.parse(event.data);
     const cell = Converter.activityChangedModelToCell(activityChangedModel);
-    this.updatedCell.next(cell);
+    this.updatedCell.set(cell);
   }
 
   private transformCellStateChangedEvent(event: MessageEvent<string>) {
     const cellStateChangedModel = <CellStateChangedModel>JSON.parse(event.data);
     const cell = Converter.cellStateChangedModelToCell(cellStateChangedModel);
-    this.updatedCell.next(cell);
+    this.updatedCell.set(cell);
   }
 
   private transformOrderChangedEvent(event: MessageEvent<string>) {
     const orderChangedModel = <OrderChangedModel>JSON.parse(event.data);
     const order = Converter.orderChangedModelToOrder(orderChangedModel);
-    this.updatedOrder.next(order);
+    this.updatedOrder.set(order);
   }
 
   private transformOrderEvent(event: MessageEvent<string>) {
     const orderModel = <OrderModel>JSON.parse(event.data);
     const order = Converter.orderModelToOrder(orderModel);
-    this.updatedOrder.next(order);
+    this.updatedOrder.set(order);
   }
 
   disconnect() {

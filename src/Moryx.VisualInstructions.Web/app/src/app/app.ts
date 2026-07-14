@@ -69,7 +69,7 @@ export class App implements OnInit {
   }
 
   ngOnInit(): void {
-     this.instructionService.connect();
+    this.instructionService.connect();
   }
 
   protected openConfigDialog(): void {

@@ -3,10 +3,9 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { InstructionItemModel, InstructionModel } from '../api/models';
 import { VisualInstructionsService } from '../api/services';
-import { BehaviorSubject } from 'rxjs';
 import { DisplayedMediaContent } from '../components/media-contents/displayed-media-content';
 import { HttpErrorResponse, HttpClient, HttpRequest, HttpEvent, HttpEventType } from '@angular/common/http';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -24,14 +23,13 @@ export class InstructionService {
 
   private eventSource?: EventSource;
 
-  private _instructions = new BehaviorSubject<InstructionModel[]>([]);
-  public instructions$ = this._instructions.asObservable();
+  public instructions = signal<InstructionModel[]>([]);
 
   public connect() {
     this.eventSource = new EventSource(this.visualInstructionsService.rootUrl + '/api/moryx/instructions/stream', {withCredentials: !environment.production});
     this.eventSource.onmessage = event => {
       const instructions = JSON.parse(event.data);
-      this._instructions.next(instructions);
+      this.instructions.set(instructions);
     };
   }
 
@@ -73,7 +71,7 @@ export class InstructionService {
   }
 
   disconnect() {
-    this._instructions.next([]);
+    this.instructions.set([]);
 
     if (this.eventSource) {
       this.eventSource.close();

@@ -4,7 +4,6 @@
 */
 
 import { Component, effect, inject, signal, untracked, ChangeDetectionStrategy } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { MatTable, MatTableModule } from '@angular/material/table';
 import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
@@ -45,7 +44,7 @@ export class ResourceReferences {
   references: ResourceReferenceModel[] | null | undefined;
   protected selectedTarget: ResourceModel | undefined;
 
-  protected isEditMode = toSignal(this.editResourceService.edit$, { initialValue: false });
+  protected isEditMode = this.editResourceService.editing;
   protected referenceTypes = signal<ReferenceTypeModel[] | null | undefined>(undefined);
   protected selectedReferenceType = signal<ReferenceTypeModel | undefined>(undefined);
   protected selectedReference = signal<ResourceReferenceModel | undefined>(undefined);
@@ -65,7 +64,9 @@ export class ResourceReferences {
       if (!resource) {
         return;
       }
-      untracked(() => this.loadReferences(resource));
+      untracked(() => {
+        this.loadReferences(resource);
+      });
     });
   }
 
@@ -153,7 +154,7 @@ export class ResourceReferences {
   getPossibleResources(): ResourceModel[] {
     let possibleResources = [] as ResourceModel[];
     const supportedTypes = this.getAllSupportedTypes(this.selectedReferenceType()?.supportedTypes);
-    this.cacheResourceService.flatResources.getValue()?.forEach(r => {
+    this.cacheResourceService.flatResources()?.forEach(r => {
       if (supportedTypes.find(t => r.type === t) && this.resource?.id != r.id) {
         possibleResources.push(r);
       }

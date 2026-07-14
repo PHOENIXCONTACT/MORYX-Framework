@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnDestroy, OnInit, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, effect, inject, OnDestroy, OnInit, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuTrigger, MatMenu, MatMenuContent, MatMenuItem } from '@angular/material/menu';
@@ -53,6 +53,12 @@ export class MediaOverview implements OnInit, OnDestroy {
   protected menuTopLeftPosition = {x: '0', y: '0'};
 
   constructor() {
+    effect(() => {
+      const data = this.mediaService.contents();
+      this.contents.set(data);
+      this.filteredContents.set(data);
+      this.isLoading.set(false);
+    });
   }
 
   ngOnDestroy(): void {
@@ -60,22 +66,6 @@ export class MediaOverview implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.mediaService.contents.subscribe({
-      next: (data) => {
-        this.contents.update(_ => data);
-        this.filteredContents.update(_ => data);
-        this.isLoading.update(_ => false);
-      },
-      error: async (err) => {
-        const translations = await lastValueFrom(this.translateService
-          .get([TranslationConstants.MEDIA_OVERVIEW.FAILED_LOADING]));
-        this.snackbarService.showError(
-          translations[TranslationConstants.MEDIA_OVERVIEW.FAILED_LOADING]
-        );
-        this.isLoading.update(_ => false);
-      },
-    });
-
     this.mediaService.loadContents();
 
     this.searchBarService.subscribe({
@@ -96,7 +86,7 @@ export class MediaOverview implements OnInit, OnDestroy {
 
     if (result.submitted) {
       this.searchBarService.clearSuggestions();
-      this.filteredContents.update(_ => contents);
+      this.filteredContents.set(contents);
       this.searchBarService.subscribe({
         next: (newRequest: SearchRequest) => {
           this.onSearch(newRequest);
@@ -112,7 +102,7 @@ export class MediaOverview implements OnInit, OnDestroy {
         const url = urlBase + content.id;
         searchSuggestions.push({text: content.name, url: url});
       }
-      this.filteredContents.update(_ => contents);
+      this.filteredContents.set(contents);
       this.searchBarService.provideSuggestions(searchSuggestions);
     }
   }
@@ -125,7 +115,7 @@ export class MediaOverview implements OnInit, OnDestroy {
   }
 
   protected onSelectMedia(content: ContentDescriptorModel) {
-    this.selectedContent.update(_ => content.id);
+    this.selectedContent.set(content.id);
     this.router.navigate(['/details/', content.id]);
   }
 
@@ -170,7 +160,7 @@ export class MediaOverview implements OnInit, OnDestroy {
       this.mediaService.removeContent(content.id).subscribe(() => {
         this.contents.update(items => items.filter(c => c.id !== content.id));
         this.filteredContents.update(items => items.filter(c => c.id !== content.id));
-        this.selectedContent.update(_ => undefined);
+        this.selectedContent.set(undefined);
       });
     }
   }

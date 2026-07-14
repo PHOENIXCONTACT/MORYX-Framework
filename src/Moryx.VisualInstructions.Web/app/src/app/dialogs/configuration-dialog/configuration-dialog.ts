@@ -37,7 +37,7 @@ export class ConfigurationDialog implements OnInit {
 
   ngOnInit(): void {
     this.visualInstructionsService.getInstructors().subscribe({
-      next: (result) => this.instructors.update(_ => result.sort((a, b) => a.localeCompare(b))),
+      next: (result) => this.instructors.set(result.sort((a, b) => a.localeCompare(b))),
       error: async (e: HttpErrorResponse) =>
         await this.snackbarService.handleError(e)
     });

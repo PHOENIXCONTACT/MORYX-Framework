@@ -39,7 +39,9 @@ export class LogMessageList implements OnInit {
   constructor() {
     effect(() => {
       const guid = this.guid();
-      untracked(() => this.fetchMessages(guid));
+      untracked(() => {
+        this.fetchMessages(guid);
+      });
     });
   }
 
@@ -48,25 +50,25 @@ export class LogMessageList implements OnInit {
   }
 
   private fetchMessages(guid: string) {
-    this.isLoading.update(_ => true);
+    this.isLoading.set(true);
     this.orderManagementService
       .getLogs({guid: guid})
       .pipe(
         delay(1),
         tap(messages => {
-          this.notification.update(_ =>
+          this.notification.set(
             messages.length > 0 ? '' : this.translations[TranslationConstants.OPERATIONS.EMPTY_LOG]
           );
         })
       )
       .subscribe({
         next: (logs: OperationLogMessageModel[]) => {
-          this.logMessages.update(_ => logs.sort((a, b) => this.sortDescending(a.timeStamp!, b.timeStamp!)));
-          this.isLoading.update(_ => false);
+          this.logMessages.set(logs.sort((a, b) => this.sortDescending(a.timeStamp!, b.timeStamp!)));
+          this.isLoading.set(false);
         },
         error: (err: HttpErrorResponse) => {
-          this.notification.update(_ => err.message);
-          this.isLoading.update(_ => false);
+          this.notification.set(err.message);
+          this.isLoading.set(false);
         }
       });
   }

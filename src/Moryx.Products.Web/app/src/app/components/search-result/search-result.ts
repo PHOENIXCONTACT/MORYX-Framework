@@ -46,7 +46,7 @@ export class SearchResult implements OnInit {
   async onQueryParam(queryParam: ParamMap) {
     const searchString = queryParam.get('q');
     if (searchString) {
-      this.searchString.update(_ => `*${searchString}*`);
+      this.searchString.set(`*${searchString}*`);
     }
     const body = {
       includeDeleted: false,
@@ -57,7 +57,7 @@ export class SearchResult implements OnInit {
     const result = await this.productManagementService
       .getTypes({body: body})
       .toAsync();
-    this.searchResults.update(_ => result);
+    this.searchResults.set(result);
   }
 
   protected createProductNameWithIdentity(product: ProductModel | undefined): string {

@@ -67,8 +67,8 @@ export class DialogAddPart {
         }
 
         // Todo: Make possible parts a resource signal
-        this.possibleParts.update(_ => possibleParts);
-        this.filteredPossibleParts.update(_ => possibleParts);
+        this.possibleParts.set(possibleParts);
+        this.filteredPossibleParts.set(possibleParts);
       },
       error: async (e) => await this.snackbarService.handleError(e)
     });
@@ -79,11 +79,11 @@ export class DialogAddPart {
   }
 
   protected onSelectPart(part: ProductModel) {
-    this.selectedPart.update(_ => part);
+    this.selectedPart.set(part);
   }
 
   protected onSearchTextChanged() {
-    this.filteredPossibleParts.update(_ => this.possibleParts().filter((part) =>
+    this.filteredPossibleParts.set(this.possibleParts().filter((part) =>
       this.partContainsSearchText(part)
     ));
   }

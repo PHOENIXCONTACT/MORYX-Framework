@@ -3,11 +3,10 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, computed, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { OperatorModel, instanceOfOperator } from './models/operator-model';
 import { CalendarDate, CalendarState } from './models/calendar-state';
-import { AssignmentCardModel } from './models/assignment-card-model';
 import { MatDialog } from '@angular/material/dialog';
 import { ShiftCardModel } from './models/shift-card-model';
 import AssignmentData from './models/assignment-data';
@@ -30,7 +29,6 @@ import { ShiftInstanceDialog } from './dialogs/shift-instance-dialog/shift-insta
 import { AppStoreService } from './services/app-store.service';
 import { FilterButtonType, ShiftElementTab, ViewType } from './models/types';
 import {
-  OrderModel,
   getOrderHoursForTheDay,
   getOrderOfTheDayBasedOnOperatorHours,
   getOrdersBasedOnOperatorHours,
@@ -83,32 +81,38 @@ import { OrderItem } from './order-item/order-item';
     TranslatePipe
   ]
 })
-export class App implements OnInit {
+export class App {
   private dialog = inject(MatDialog);
   private appStore = inject(AppStoreService);
   private translateService = inject(TranslateService);
   private snackbarService = inject(SnackbarService);
   private languageService = inject(LanguageService);
 
-  protected isOperatorFilterPanelOpened = signal(false);
-  protected isResourceFilterPanelOpened = signal(false);
-  protected operators = signal<OperatorModel[]>([]);
-  protected resources = signal<AttendableResourceModel[]>([]);
-  protected shifts = signal<ShiftCardModel[]>([]);
-  protected operatorsSelectedForFilter = signal<OperatorModel[]>([]);
-  protected resourcesSelectedForFilter = signal<AttendableResourceModel[]>([]);
+  protected isOperatorFilterPanelOpened = this.appStore.isOperatorFilterPanelOpened;
+  protected isResourceFilterPanelOpened = this.appStore.isResourceFilterPanelOpened;
+  protected operators = this.appStore.operators;
+  protected resources = this.appStore.resources;
+  protected shifts = this.appStore.shifts;
+  protected operatorsSelectedForFilter = this.appStore.operatorsSelectedForFilter;
+  protected resourcesSelectedForFilter = this.appStore.resourcesSelectedForFilter;
   protected droppableElementSearchString = signal<string | undefined>(undefined);
   protected searchOperatorInCalendarString = signal<string | undefined>(undefined);
   protected searchResourceInCalendarString = signal<string | undefined>(undefined);
-  protected shiftTypes = signal<ShiftTypeModel[]>([]);
-  protected shiftInstances = signal<ShiftInstanceModel[]>([]);
-  protected assignments = signal<AssignmentCardModel[]>([]);
-  protected orders = signal<OrderModel[]>([]);
-  protected currentView = signal<ViewType>('Assignments');
+  protected shiftTypes = this.appStore.shiftTypes;
+  protected shiftInstances = this.appStore.shiftInstances;
+  protected orders = this.appStore.orders;
+  protected currentView = this.appStore.currentView;
   protected drawerIsOpened = signal(false);
   protected selectedShiftElementTab = signal<ShiftElementTab>('Locations');
-  protected isDraggingItem = signal(false);
+  protected isDraggingItem = this.appStore.isDraggingItem;
   protected calendarState = signal<CalendarState | undefined>(undefined);
+  protected assignments = computed(() => {
+    const instances = this.appStore.shiftInstances();
+    return this.appStore.assignments().map(x => {
+      addCalendarDaysToAssignment(x, instances.find(e => e.id === x.shiftInstanceId));
+      return x;
+    });
+  });
   protected filteredAssignments = computed(() => {
     const result = this.operatorsSelectedForFilter().length
       ? this.assignments().filter((a) =>
@@ -149,70 +153,7 @@ export class App implements OnInit {
     ]);
     this.translateService.setFallbackLang('en');
     this.translateService.use(this.languageService.getFallbackLang());
-  }
-
-  ngOnInit(): void {
     this.calendarState.set(new CalendarState(this.translateService));
-
-    //subscribe to store events (only source of truth)
-    this.appStore.isOperatorFilterPanelOpened$.subscribe(
-      value => this.isOperatorFilterPanelOpened.set(value)
-    );
-    this.appStore.isResourceFilterPanelOpened$.subscribe(
-      value => this.isResourceFilterPanelOpened.set(value)
-    );
-    this.appStore.operators$.subscribe(
-      values => this.operators.set(values)
-    );
-    this.appStore.resources$.subscribe(
-      values => this.resources.set(values)
-    );
-    this.appStore.shifts$.subscribe(
-      values => this.shifts.set(values)
-    );
-    this.appStore.shiftTypes$.subscribe(
-      values => this.shiftTypes.set(values)
-    );
-    this.appStore.orders$.subscribe(orders => this.orders.set(orders));
-
-    this.appStore.operatorsSelectedForFilter$
-      .subscribe(selected => this.operatorsSelectedForFilter.set(selected));
-    this.appStore.resourcesSelectedForFilter$
-      .subscribe(selected => this.resourcesSelectedForFilter.set(selected));
-
-
-    //get the assignments
-    this.appStore.assignments$.subscribe(
-      assignmentsReceived => this.assignments.set(assignmentsReceived)
-    );
-
-    this.appStore.shiftInstances$.subscribe(
-      instances => {
-        this.shiftInstances.set(instances);
-
-        //get the assignments
-        this.appStore.assignments$.subscribe(
-          assignmentsReceived => {
-            this.assignments.set(assignmentsReceived.map(x => {
-              addCalendarDaysToAssignment(x, instances.find(e => e.id === x.shiftInstanceId));
-              return x
-            }))
-          }
-        );
-
-      }
-    );
-
-    this.appStore.isDraggingItem$.subscribe(
-      values => this.isDraggingItem.set(values)
-    );
-
-    this.appStore.currentView$.subscribe(value =>
-      this.currentView.set(value)
-    );
-    this.appStore.orders$.subscribe(value =>
-      this.orders.set(value)
-    );
   }
 
 
@@ -441,37 +382,35 @@ export class App implements OnInit {
   }
 
   protected copyShiftAndAssignment() {
-    this.appStore.getCopyOfAssignmentAndShiftForPeriod(this.calendarState()!.startDate, this.calendarState()!.endDate, this.calendarState()!)
-      .then(assignmentsAndShift => {
-        if (!assignmentsAndShift.shiftInstances.length) {
-          this.translateService
-            .get([
-              TranslationConstants.APP_COMPONENT.NO_SHIFT_TO_COPY,
-            ]).subscribe(translations => {
-            this.snackbarService.showError(translations[TranslationConstants.APP_COMPONENT.NO_SHIFT_TO_COPY]);
-          });
+    const assignmentsAndShift = this.appStore.getCopyOfAssignmentAndShiftForPeriod(this.calendarState()!.startDate, this.calendarState()!.endDate, this.calendarState()!);
+    if (!assignmentsAndShift.shiftInstances.length) {
+      this.translateService
+        .get([
+          TranslationConstants.APP_COMPONENT.NO_SHIFT_TO_COPY,
+        ]).subscribe(translations => {
+        this.snackbarService.showError(translations[TranslationConstants.APP_COMPONENT.NO_SHIFT_TO_COPY]);
+      });
+      return;
+    }
+    const dialogResult = this.dialog.open(CopyShiftAndAssignment, {
+      data: assignmentsAndShift
+    });
+
+    dialogResult
+      .afterClosed()
+      .subscribe((shiftAndAssignmentsCopy: CopyShiftAndAssignmentData) => {
+        if (!shiftAndAssignmentsCopy?.shiftInstances.length) {
           return;
         }
-        const dialogResult = this.dialog.open(CopyShiftAndAssignment, {
-          data: assignmentsAndShift
+
+        this.appStore.createNewAssignmentAndShift(shiftAndAssignmentsCopy).then(() => {
+          this.translateService
+            .get([
+              TranslationConstants.APP_COMPONENT.SHIFT_TO_COPIED,
+            ]).subscribe(translations => {
+            this.snackbarService.showSuccess(translations[TranslationConstants.APP_COMPONENT.SHIFT_TO_COPIED])
+          })
         });
-
-        dialogResult
-          .afterClosed()
-          .subscribe((shiftAndAssignmentsCopy: CopyShiftAndAssignmentData) => {
-            if (!shiftAndAssignmentsCopy?.shiftInstances.length) {
-              return;
-            }
-
-            this.appStore.createNewAssignmentAndShift(shiftAndAssignmentsCopy).then(() => {
-              this.translateService
-                .get([
-                  TranslationConstants.APP_COMPONENT.SHIFT_TO_COPIED,
-                ]).subscribe(translations => {
-                this.snackbarService.showSuccess(translations[TranslationConstants.APP_COMPONENT.SHIFT_TO_COPIED])
-              })
-            });
-          });
       });
   }
 

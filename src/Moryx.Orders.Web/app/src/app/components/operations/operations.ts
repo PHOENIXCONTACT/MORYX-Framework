@@ -38,7 +38,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { FilterService } from '@app/services/filter.service';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { OperationsFilter } from './operations-filter/operations-filter';
 import { MultiProgressBar } from '@app/multi-progress-bar/multi-progress-bar';
 
@@ -94,7 +93,7 @@ export class Operations implements OnInit {
   protected mobileQuery: MediaQueryList;
   private searchTerm = signal<string>('');
   protected readonly drawer = viewChild.required<MatDrawer>('drawer');
-  protected hideCompleted = toSignal(this.filterService.hideCompleted$, { initialValue: true });
+  protected hideCompleted = this.filterService.hideCompleted;
 
   constructor() {
     this.mobileQuery = this.mediaMatcher.matchMedia('(max-width: 1279px)');

@@ -4,7 +4,7 @@
 */
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, effect, inject, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
@@ -17,7 +17,6 @@ import '../../extensions/array.extensions';
 import '../../extensions/observable.extensions';
 import { SessionsService } from '@app/services/sessions.service';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
-import { Subscription } from 'rxjs';
 
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
@@ -50,7 +49,6 @@ export class Management implements OnInit, OnDestroy {
   private translateService = inject(TranslateService);
 
   protected TranslationConstants = TranslationConstants;
-  private availableSessionsSubscription?: Subscription;
   protected readonly displayedColumns: string[] = ['name', 'state', 'version', 'actions'];
 
   protected workplans = signal<WorkplanModel[]>([]);
@@ -60,22 +58,23 @@ export class Management implements OnInit, OnDestroy {
   protected dataSource!: MatTableDataSource<WorkplanModel>;
 
   constructor() {
+    effect(() => {
+      const tokens = this.sessionService.availableSessions();
+      this.onSessionsChanged(tokens);
+    });
   }
 
   ngOnInit(): void {
-    this.availableSessionsSubscription = this.sessionService.availableSessions$.subscribe(
-      async tokens => await this.onSessionsChanged(tokens)
-    );
-    this.isLoading.update(_ => true);
+    this.isLoading.set(true);
     this.workplanService.getAllWorkplans().subscribe({
       next: workplans => {
-        this.workplans.update(_ => workplans);
+        this.workplans.set(workplans);
         this.dataSource = new MatTableDataSource<WorkplanModel>(this.workplans());
-        this.isLoading.update(_ => false);
+        this.isLoading.set(false);
       },
       error: async (e: HttpErrorResponse) => {
         await this.snackbarService.handleError(e);
-        this.isLoading.update(_ => false);
+        this.isLoading.set(false);
       }
     });
 
@@ -85,7 +84,7 @@ export class Management implements OnInit, OnDestroy {
   }
 
   private async onSessionsChanged(tokens: string[]): Promise<void> {
-    this.sessions.update(_ => []);
+    this.sessions.set([]);
     await Promise.all(
       tokens.map(
         async token =>
@@ -128,7 +127,6 @@ export class Management implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.searchBarService.unsubscribe();
-    this.availableSessionsSubscription?.unsubscribe();
   }
 
   async getTranslations(): Promise<{ [key: string]: string }> {

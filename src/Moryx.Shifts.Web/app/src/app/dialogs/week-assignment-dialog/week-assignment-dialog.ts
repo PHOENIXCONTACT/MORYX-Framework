@@ -3,10 +3,10 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import AssignmentData from '../../models/assignment-data';
-import { OperatorModel, OperatorStatus } from '@app/models/operator-model';
+import { OperatorStatus } from '@app/models/operator-model';
 import {
   FormControl,
   FormGroup,
@@ -25,11 +25,8 @@ import {
 import { CalendarDate } from '@app/models/calendar-state';
 import moment from 'moment';
 import { AppStoreService } from '@app/services/app-store.service';
-import { AttendableResourceModel } from '@app/api/models/attendable-resource-model';
 import { MatSelectModule } from '@angular/material/select';
-import { firstValueFrom } from 'rxjs';
 import { TranslationConstants } from '@app/translation-constants';
-import { ShiftInstanceModel } from '@app/models/shift-instance-model';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -58,14 +55,14 @@ import { WeekDayToggleButton } from '@app/week-day-toggle-button/week-day-toggle
     WeekDayToggleButton
   ]
 })
-export class WeekAssignmentDialog implements OnInit {
+export class WeekAssignmentDialog {
   private dialogRef = inject(MatDialogRef<WeekAssignmentDialog>);
   private appStore = inject(AppStoreService);
   protected data = inject<AssignmentData>(MAT_DIALOG_DATA);
 
-  protected operators = signal<OperatorModel[]>([]);
-  protected resources = signal<AttendableResourceModel[]>([]);
-  protected shiftInstances = signal<ShiftInstanceModel[]>([]);
+  protected operators = signal(this.appStore.operators());
+  protected resources = signal(this.appStore.resources());
+  protected shiftInstances = this.appStore.shiftInstances;
   protected shiftNumberOfdays = signal(0);
 
   protected available = OperatorStatus.Available;
@@ -94,18 +91,12 @@ export class WeekAssignmentDialog implements OnInit {
       priority: this.data.priority ?? 0
     });
 
-    this.appStore.operators$.subscribe(
-      (operators) => (this.operators.set(operators))
-    );
-
     if (this.isResourceSet()) {
-      this.appStore.resources$.subscribe((resources) => {
-        this.resources.set(resources.filter((x) => x.id === this.data.resource?.id));
-        this.form.controls.resourceId.disable();
-        if (this.data.resource?.id) {
-          this.refreshOperators(this.data.resource?.id);
-        }
-      });
+      this.resources.set(this.appStore.resources().filter((x) => x.id === this.data.resource?.id));
+      this.form.controls.resourceId.disable();
+      if (this.data.resource?.id) {
+        this.refreshOperators(this.data.resource?.id);
+      }
     } else {
       this.operators.update(items => items.filter((x) => x.id === this.data.operator?.id));
       this.form.controls.operatorId.disable();
@@ -114,15 +105,10 @@ export class WeekAssignmentDialog implements OnInit {
       }
     }
 
-    const shiftInstancesAsync = firstValueFrom(this.appStore.shiftInstances$);
-    shiftInstancesAsync.then((instances) => {
-      this.shiftInstances.set(instances);
-      const foundCurrentShift = instances.find((x) => x.id === this.data.shift.id);
-      if (!foundCurrentShift) {
-        return;
-      }
+    const foundCurrentShift = this.shiftInstances().find((x) => x.id === this.data.shift.id);
+    if (foundCurrentShift) {
       this.shiftNumberOfdays.set(foundCurrentShift.shiftType.duration);
-    });
+    }
   }
 
   refreshOperators(resourceId: number) {
@@ -161,12 +147,6 @@ export class WeekAssignmentDialog implements OnInit {
       this.data.shift.startDate,
       this.shiftNumberOfdays()
     );
-  }
-
-  ngOnInit(): void {
-    this.appStore.resources$.subscribe((resources) => {
-      this.resources.set(resources);
-    });
   }
 
   protected submit() {

@@ -3,15 +3,13 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, computed, inject, signal, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, computed, effect, inject, signal, untracked, ChangeDetectionStrategy } from '@angular/core';
 import { WorkstationViewModel } from '../models/workstation-view-model';
 import { WorkstationTogglingState } from './WorkstationTogglingState';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Params, Router, RouterLink } from '@angular/router';
 import { AddOperatorDialog } from '../dialogs/add-operator/add-operator';
 import { TranslationConstants } from '../extensions/translation-constants.extensions';
-import { OperatorSkill } from '../models/operator-skill-model';
-import { SkillTypeModel } from '@api/models/skill-type-model';
 import { skillTypeToModel } from '../models/model-converter';
 import { OperatorViewModel } from '../models/operator-view-model';
 import { AppStoreService } from '../services/app-store.service';
@@ -42,16 +40,16 @@ import { MatCardModule } from '@angular/material/card';
     RouterLink
   ]
 })
-export class WorkstationOperators implements OnInit {
+export class WorkstationOperators {
   private appStoreService = inject(AppStoreService);
   private dialog = inject(MatDialog);
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
 
-  protected workstations = signal<WorkstationViewModel[]>([]);
+  protected workstations = this.appStoreService.workstations;
   protected workstationTogglingState = signal<WorkstationTogglingState | undefined>(undefined);
-  protected operatorsSkills = signal<OperatorSkill[]>([]);
-  protected skillTypes = signal<SkillTypeModel[]>([]);
+  protected operatorsSkills = this.appStoreService.skills;
+  protected skillTypes = computed(() => this.appStoreService.skillTypes().map(skillTypeToModel));
   protected isCardExpanded = computed(() => {
     if (!this.workstationTogglingState()) {
       return false;
@@ -62,16 +60,16 @@ export class WorkstationOperators implements OnInit {
 
   protected TranslationConstants = TranslationConstants;
 
-  ngOnInit(): void {
-    this.appStoreService.workstations$.subscribe((stations) => {
-      this.workstations.update(_ => stations);
+  constructor() {
+    // Restore expanded card from URL on first load
+    effect(() => {
+      const stations = this.workstations();
       if (stations.length) {
-        this.expandPreviousCard(this.workstations());
+        untracked(() => {
+          this.expandPreviousCard(stations)
+        });
       }
     });
-
-    this.appStoreService.skills$.subscribe(skills => this.operatorsSkills.update(_ => skills));
-    this.appStoreService.skillTypes$.subscribe(types => this.skillTypes.update(_ => types.map(skillTypeToModel)));
   }
 
   expandPreviousCard(stations: WorkstationViewModel[]) {
@@ -91,14 +89,14 @@ export class WorkstationOperators implements OnInit {
     }
 
     //expand this workstation card
-    this.workstationTogglingState.update(_ => <WorkstationTogglingState>{
+    this.workstationTogglingState.set(<WorkstationTogglingState>{
       station,
       isExpanded: true
     });
   }
 
   protected toggleWorkstationCard(station: WorkstationViewModel | undefined) {
-    this.workstationTogglingState.update(_ => <WorkstationTogglingState>{
+    this.workstationTogglingState.set(<WorkstationTogglingState>{
       station,
       isExpanded: !this.workstationTogglingState()?.isExpanded
     });

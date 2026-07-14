@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, effect, inject, input, signal, untracked, ChangeDetectionStrategy } from "@angular/core";
+import { Component, computed, effect, inject, input, signal, untracked, ChangeDetectionStrategy } from "@angular/core";
 import { RouterLink } from "@angular/router";
 import { TranslationConstants } from "../extensions/translation-constants.extensions";
 import { OperatorSkillView } from "../models/type";
@@ -16,7 +16,6 @@ import { ConfirmationDialog } from "../dialogs/confirmation-dialog/confirmation-
 import { OperatorViewModel } from "../models/operator-view-model";
 import { AssignableOperator } from "@api/models/assignable-operator";
 import { skillToOperatorSkill, skillTypeToModel } from "../models/model-converter";
-import { SkillTypeModel } from "@api/models/skill-type-model";
 import { lastValueFrom } from "rxjs";
 import { AppStoreService } from "../services/app-store.service";
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -65,7 +64,7 @@ export class OperatorDetails {
     signedIn: false
   });
   skillView = signal<OperatorSkillView>('Current');
-  skillTypes = signal<SkillTypeModel[]>([]);
+  skillTypes = computed(() => this.appStoreService.skillTypes().map(skillTypeToModel));
   operatorViewModel = signal<OperatorViewModel | undefined>(undefined);
 
   protected TranslationConstants = TranslationConstants;
@@ -78,8 +77,10 @@ export class OperatorDetails {
   constructor() {
     effect(() => {
       const id = this.id();
-      untracked(() => this.initialize(id))
-    })
+      untracked(() => {
+        this.initialize(id);
+      });
+    });
   }
 
   initialize(id: string) {
@@ -94,16 +95,12 @@ export class OperatorDetails {
         return;
       }
 
-      this.operatorViewModel.update(_ => result);
-      this.operator.update(_ => result.data);
+      this.operatorViewModel.set(result);
+      this.operator.set(result.data);
     });
 
 
     this.loadSkills();
-
-    this.appStoreService
-      .skillTypes$
-      .subscribe(types => this.skillTypes.update(_ => types.map(skillTypeToModel)));
   }
 
   loadSkills() {
@@ -115,18 +112,18 @@ export class OperatorDetails {
   }
 
   protected onStopEditing() {
-    this.operator.update(_ => this.appStoreService.cancelEditing(this.operator()));
-    this.editMode.update(_ => false);
+    this.operator.set(this.appStoreService.cancelEditing(this.operator()));
+    this.editMode.set(false);
   }
 
   protected onStartEditing() {
-    this.editMode.update(_ => true);
+    this.editMode.set(true);
   }
 
   protected async onSave() {
     await this.appStoreService.updateOperator(this.operator())
       .then(() => {
-        this.editMode.update(_ => false);
+        this.editMode.set(false);
       });
   }
 

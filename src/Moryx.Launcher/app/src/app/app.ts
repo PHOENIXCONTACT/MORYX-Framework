@@ -83,12 +83,16 @@ export class App {
 
     effect(() => {
       const modules = [...this.webModuleItems(), ...this.externalModuleItems()];
-      untracked(() => this.moduleService.modules.set(modules));
+      untracked(() => {
+        this.moduleService.modules.set(modules);
+      });
     });
 
     effect(() => {
       const cultures = this.supportedCultures();
-      untracked(() => this.cultureService.supportedCultures.set(cultures));
+      untracked(() => {
+        this.cultureService.supportedCultures.set(cultures);
+      });
     });
 
     effect(() => {

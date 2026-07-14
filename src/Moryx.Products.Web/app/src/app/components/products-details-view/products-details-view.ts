@@ -4,7 +4,6 @@
 */
 
 import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationCancel, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
@@ -33,8 +32,8 @@ export class ProductsDetailsView {
   private editProductsService = inject(EditProductsService);
   private activatedRoute = inject(ActivatedRoute);
 
-  isEditMode = toSignal(this.editProductsService.edit$, { initialValue: false });
-  protected currentProduct = toSignal(this.editProductsService.currentProduct$);
+  isEditMode = this.editProductsService.editing;
+  protected currentProduct = this.editProductsService.currentProduct;
   protected activeLink = signal<Tabs>(Tabs.Unknown);
 
   protected Tabs = Tabs;
@@ -49,13 +48,13 @@ export class ProductsDetailsView {
       if (val instanceof NavigationEnd || val instanceof NavigationCancel) {
         const url = this.router.url;
         if (this.regexProperties.test(url)) {
-          this.activeLink.update(_ => Tabs.Properties);
+          this.activeLink.set(Tabs.Properties);
         } else if (this.regexParts.test(url)) {
-          this.activeLink.update(_ => Tabs.Parts);
+          this.activeLink.set(Tabs.Parts);
         } else if (this.regexRecipes.test(url)) {
-          this.activeLink.update(_ => Tabs.Recipes);
+          this.activeLink.set(Tabs.Recipes);
         } else if (this.regexReferences.test(url)) {
-          this.activeLink.update(_ => Tabs.References);
+          this.activeLink.set(Tabs.References);
         }
       }
     });

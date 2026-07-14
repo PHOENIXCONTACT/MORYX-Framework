@@ -43,7 +43,7 @@ export class DialogShowRevisions implements OnInit {
   protected TranslationConstants = TranslationConstants;
 
   constructor() {
-    this.product.update(_ => this.data);
+    this.product.set(this.data);
   }
 
   ngOnInit(): void {
@@ -54,7 +54,7 @@ export class DialogShowRevisions implements OnInit {
     this.managementService.getTypes({body: body}).subscribe({
       next: (products) => {
         if (products !== null) {
-          this.revisions.update(_ => products);
+          this.revisions.set(products);
         }
       },
       error: async (e: HttpErrorResponse) =>

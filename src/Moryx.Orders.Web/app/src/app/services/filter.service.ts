@@ -1,23 +1,17 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Injectable, signal } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FilterService {
   private readonly hideCompletedStorageKey = 'operations-hide-completed';
-  private readonly hideCompletedSubject = new BehaviorSubject<boolean>(this.loadHideCompleted());
 
-  readonly hideCompleted$ = this.hideCompletedSubject.asObservable();
-
-  get hideCompleted(): boolean {
-    return this.hideCompletedSubject.value;
-  }
+  readonly hideCompleted = signal(this.loadHideCompleted());
 
   toggleHideCompleted(): void {
-    const newValue = !this.hideCompletedSubject.value;
+    const newValue = !this.hideCompleted();
     window.localStorage.setItem(this.hideCompletedStorageKey, newValue.toString());
-    this.hideCompletedSubject.next(newValue);
+    this.hideCompleted.set(newValue);
   }
 
   private loadHideCompleted(): boolean {

@@ -3,8 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { inject, Injectable, signal } from '@angular/core';
 import { JobManagementService } from '@api/services';
 import { JobModel } from '@api/models/job-model';
 
@@ -15,7 +14,7 @@ export class JobManagementStreamService {
   private jobManagementService = inject(JobManagementService);
 
   private eventSource?: EventSource;
-  updatedJob: BehaviorSubject<JobModel | undefined> = new BehaviorSubject<JobModel | undefined>(undefined);
+  updatedJob = signal<JobModel | undefined>(undefined);
 
   connect() {
     this.eventSource = new EventSource(this.jobManagementService.rootUrl + JobManagementService.ProgressStreamPath);
@@ -27,10 +26,10 @@ export class JobManagementStreamService {
 
   private publishUpdate(job: JobModel): void {
     if (Object.keys(job).length > 0) {
-      this.updatedJob.next(job);
+      this.updatedJob.set(job);
     }
     else {
-      this.updatedJob.next(undefined);
+      this.updatedJob.set(undefined);
     }
   }
 
@@ -41,4 +40,3 @@ export class JobManagementStreamService {
     }
   }
 }
-

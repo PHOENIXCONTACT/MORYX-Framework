@@ -3,8 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { inject, Injectable, signal } from '@angular/core';
 import { FactoryStateModel } from '@api/models/factory-state-model';
 import { VisualizableItemModel } from '@api/models/visualizable-item-model';
 import { FactoryMonitorService } from '@api/services';
@@ -14,32 +13,27 @@ import { FactoryMonitorService } from '@api/services';
   providedIn: 'root'
 })
 export class FactorySelectionService {
-  private _selectedFactory = new BehaviorSubject<number|undefined>(undefined);
-  private _defaultFactory = new BehaviorSubject<FactoryStateModel|undefined>(undefined);
-  private _selectedFactoryContent = new BehaviorSubject<VisualizableItemModel[]>([]);
-
   private factoryMonitorService = inject(FactoryMonitorService);
-  public factorySelected$ = this._selectedFactory.asObservable();
-  public defaultFactory$ = this._defaultFactory.asObservable();
-  public factoryContent$ = this._selectedFactoryContent.asObservable();
 
-  public selectFactory(factoryId: number|undefined){
+  public factorySelected = signal<number | undefined>(undefined);
+  public defaultFactory = signal<FactoryStateModel | undefined>(undefined);
+  public factoryContent = signal<VisualizableItemModel[]>([]);
 
-    if(!factoryId) {
+  public selectFactory(factoryId: number | undefined) {
+    if (!factoryId) {
       return;
     }
 
     //factory content, items to be displayed
     this.factoryMonitorService.factoryContent({factoryId: factoryId ?? 0})
       .subscribe(items => {
-        this._selectedFactoryContent.next(items);
+        this.factoryContent.set(items);
         //manufacturing factory
-        this._selectedFactory.next(factoryId);
+        this.factorySelected.set(factoryId);
       });
   }
 
-  public initialize(factory: FactoryStateModel){
-    this._defaultFactory.next(factory);
+  public initialize(factory: FactoryStateModel) {
+    this.defaultFactory.set(factory);
   }
 }
-

@@ -39,7 +39,7 @@ export class DialogRemoveProduct {
   protected TranslationConstants = TranslationConstants;
 
   constructor() {
-    this.productToBeRemoved.update(_ => this.data);
+    this.productToBeRemoved.set(this.data);
     const body = <ProductQuery>{
       includeDeleted: false,
       identifier: this.productToBeRemoved()?.identifier,
@@ -49,7 +49,7 @@ export class DialogRemoveProduct {
     };
     this.productManagementService.getTypes({body: body}).subscribe({
       next: (references) => {
-        this.productsWhichContainProduct.update(_ => references);
+        this.productsWhichContainProduct.set(references);
       },
       error: async (e: HttpErrorResponse) => await this.snackbarService.handleError(e)
     });

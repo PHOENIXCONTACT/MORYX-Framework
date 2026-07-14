@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, effect, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ChangeBackgroundDialog } from '@app/dialogs/change-background-dialog/change-background-dialog';
@@ -33,7 +33,7 @@ import { MatIconModule } from '@angular/material/icon';
     TranslatePipe
 ]
 })
-export class EditMenu implements OnInit {
+export class EditMenu {
   private editMenuService = inject(EditMenuService);
   private matDialog = inject(MatDialog);
   private translateService = inject(TranslateService);
@@ -48,10 +48,6 @@ export class EditMenu implements OnInit {
       icon: 'open_with',
       state: EditMenuState.EditingCells,
     },
-    /*{
-      icon: 'route',
-      state: EditMenuState.EditingRoutes,
-    },*/
     {
       icon: 'wallpaper',
       state: EditMenuState.EditingBackground,
@@ -73,29 +69,26 @@ export class EditMenu implements OnInit {
       TranslationConstants.LANGUAGES.IT,
     ]);
     this.translateService.setFallbackLang('en');
-  }
 
-  ngOnInit(): void {
-    this.factorySelectionService.factorySelected$.subscribe({
-      next: factory => {
-        if (!factory) {
+    effect(() => {
+      const factory = this.factorySelectionService.factorySelected();
+      if (!factory) {
+        this.canGoBack.set(false);
+        return;
+      }
+
+      this.factoryMonitorService.getNavigation({ factoryId: factory }).subscribe(navigation => {
+        this.navigationItem = navigation;
+        this.backgroundService.updateBackground(navigation.backgroundURL);
+
+        if (!navigation.parentId) {
           this.canGoBack.set(false);
           return;
         }
 
-        this.factoryMonitorService.getNavigation({ factoryId: factory }).subscribe(navigation => {
-          this.navigationItem = navigation;
-          this.backgroundService.updateBackground(navigation.backgroundURL);
-
-          if (!navigation.parentId) {
-            this.canGoBack.set(false);
-            return;
-          }
-
-          this.canGoBack.set(true);
-          this.goBackToFactory = navigation.parentId ?? 0;
-        });
-      }
+        this.canGoBack.set(true);
+        this.goBackToFactory = navigation.parentId ?? 0;
+      });
     });
   }
 

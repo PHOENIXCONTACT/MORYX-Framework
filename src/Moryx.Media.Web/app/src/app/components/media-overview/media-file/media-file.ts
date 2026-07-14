@@ -74,16 +74,16 @@ export class MediaFile implements OnInit {
                 const reader = new FileReader();
                 reader.readAsDataURL(downloadedFile); //FileStream response from .NET core backend
                 reader.onload = (event) => {
-                  this.path.update(_ => reader.result) //url declared earlier
+                  this.path.set(reader.result) //url declared earlier
                 };
-                this.loaded.update(_ => true);
+                this.loaded.set(true);
               }
             },
             error: error => this.snackbarService.handleError(error)
           });
       } else {
-        this.path.update(_ => environment.assets + 'assets/no_preview.jpg');
-        this.loaded.update(_ => true);
+        this.path.set(environment.assets + 'assets/no_preview.jpg');
+        this.loaded.set(true);
       }
     }
   }

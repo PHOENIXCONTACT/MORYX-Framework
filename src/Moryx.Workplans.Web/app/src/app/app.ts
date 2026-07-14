@@ -49,7 +49,6 @@ export class App implements OnInit, OnDestroy {
   protected navigatedUrl = signal('');
   protected changeViewTooltip = signal('');
 
-  private activeSession: string | undefined;
   private subscriptions: Subscription[] = [];
 
   protected TranslationConstants = TranslationConstants;
@@ -75,27 +74,25 @@ export class App implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subscriptions.push(this.sessionService.activeSession$.subscribe(as => (this.activeSession = as)));
-
     const routerSubscription = this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(async (e: NavigationEnd) => {
         const translations = await this.getTranslations();
-        this.navigatedUrl.update(_ => e.url);
+        this.navigatedUrl.set(e.url);
         if (this.navigatedUrl() !== '/management') {
-          this.changeViewTooltip.update(_ => translations[TranslationConstants.APP.OPEN_WORKPLAN_MANAGEMENT]);
-          this.changeViewDisabled.update(_ => false);
+          this.changeViewTooltip.set(translations[TranslationConstants.APP.OPEN_WORKPLAN_MANAGEMENT]);
+          this.changeViewDisabled.set(false);
           return;
         }
 
-        if (this.activeSession) {
-          this.changeViewTooltip.update(_ => translations[TranslationConstants.APP.OPEN_WORKPLAN_SESSIONS]);
-          this.changeViewDisabled.update(_ => false);
+        if (this.sessionService.activeSession()) {
+          this.changeViewTooltip.set(translations[TranslationConstants.APP.OPEN_WORKPLAN_SESSIONS]);
+          this.changeViewDisabled.set(false);
           return;
         }
 
-        this.changeViewTooltip.update(_ => translations[TranslationConstants.APP.NO_SESSION_IS_OPEN]);
-        this.changeViewDisabled.update(_ => true);
+        this.changeViewTooltip.set(translations[TranslationConstants.APP.NO_SESSION_IS_OPEN]);
+        this.changeViewDisabled.set(true);
       });
 
     this.subscriptions.push(routerSubscription);
@@ -105,8 +102,8 @@ export class App implements OnInit, OnDestroy {
     if (this.navigatedUrl() !== '/management') {
       this.router.navigate(['/management']);
     }
-    else if (this.activeSession) {
-      this.router.navigate(['session', this.activeSession]);
+    else if (this.sessionService.activeSession()) {
+      this.router.navigate(['session', this.sessionService.activeSession()]);
     }
   }
 
