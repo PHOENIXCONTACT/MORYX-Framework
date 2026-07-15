@@ -290,7 +290,8 @@ public class ResourceModificationController : ControllerBase
     [Authorize(Policy = ResourcePermissions.CanDelete)]
     public async Task<ActionResult> Remove(long id)
     {
-        if (_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == id) is null)
+        var existing = _resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == id);
+        if (!existing.Any())
         {
             return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ResourceNotFoundException_ById_Message, id) });
         }
