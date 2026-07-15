@@ -18,7 +18,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 22
 
       - name: Install CycloneDX NPM
         run: npm install -g @cyclonedx/cyclonedx-npm
@@ -26,18 +26,15 @@ jobs:
       - name: Verify installation
         run: cyclonedx-npm --version
 
-      - name: Create output directory
-        run: mkdir -p sboms
-
       - name: Generate frontend SBOMs
         shell: bash
         run: |
           mkdir -p sboms
 
-          for lockfile in $(find . -name package-lock.json)
+          find . -name package-lock.json -print0 | while IFS= read -r -d '' lockfile
           do
             dir=$(dirname "$lockfile")
-            project=$(basename "$(dirname "$dir"))
+            project=$(basename "$dir")
 
             echo "Processing $project"
 
@@ -45,19 +42,22 @@ jobs:
 
             npm ci
 
-            cyclonedx-npm --output-file "${RUNNER_TEMP}/${project}.json"
+            cyclonedx-npm \
+              --output-format JSON \
+              --output-file "${RUNNER_TEMP}/${project}.json"
 
             popd
 
-            cp "${RUNNER_TEMP}/${project}.json" "sboms/${project}-bom.json"
+            cp "${RUNNER_TEMP}/${project}.json" \
+              "sboms/${project}-bom.json"
           done
-          
+
       - name: Show generated SBOMs
-        run: |
-          ls -lah sboms
+        run: ls -lah sboms
 
       - name: Upload frontend SBOMs
         uses: actions/upload-artifact@v4
         with:
           name: frontend-sboms
           path: sboms/*.json
+          if-no-files-found: warn
