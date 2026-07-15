@@ -3,9 +3,9 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, computed, effect, inject, OnInit, signal, untracked, ChangeDetectionStrategy, DestroyRef } from "@angular/core";
+import { Component, computed, effect, inject, OnInit, signal, untracked, viewChild, ChangeDetectionStrategy, DestroyRef } from "@angular/core";
 
-import { MatTreeModule } from "@angular/material/tree";
+import { MatTree, MatTreeModule } from "@angular/material/tree";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
@@ -57,6 +57,8 @@ export class ProcessHolders implements OnInit {
   private snackbarService = inject(SnackbarService);
   private translateService = inject(TranslateService);
 
+  private readonly tree = viewChild<MatTree<ProcessHolderNode, ProcessHolderNode>>("tree");
+
   protected processHolderGroups = signal<ProcessHolderGroup[]>([]);
   protected loading = signal(false);
   protected filterText = signal("");
@@ -88,6 +90,7 @@ export class ProcessHolders implements OnInit {
       untracked(() => {
         if (group) {
           const converted = ConvertToProcessHolderGroup(group);
+          const expandedIds = this.getExpandedNodeIds();
 
           // Replace existing group or append new one
           this.processHolderGroups.update(current => {
@@ -97,6 +100,17 @@ export class ProcessHolders implements OnInit {
             }
             return [...current, converted];
           });
+
+          this.expandNodesByIds(expandedIds);
+        }
+      });
+    });
+
+    effect(() => {
+      const filter = this.filterText();
+      untracked(() => {
+        if (filter.length) {
+          this.expandAllNodes();
         }
       });
     });
@@ -146,6 +160,39 @@ export class ProcessHolders implements OnInit {
 
   protected disconnectEvents() {
     this.processHolderStreamService.disconnect();
+  }
+
+  private getExpandedNodeIds(): Set<number> {
+    const ids = new Set<number>();
+    const tree = this.tree();
+    if (tree) {
+      for (const node of this.dataSource()) {
+        if (tree.isExpanded(node)) {
+          ids.add(node.data.id);
+        }
+      }
+    }
+    return ids;
+  }
+
+  private expandNodesByIds(ids: Set<number>) {
+    const tree = this.tree();
+    if (tree) {
+      for (const node of this.dataSource()) {
+        if (ids.has(node.data.id)) {
+          tree.expand(node);
+        }
+      }
+    }
+  }
+
+  private expandAllNodes() {
+    const tree = this.tree();
+    if (tree) {
+      for (const node of this.dataSource()) {
+        tree.expand(node);
+      }
+    }
   }
 
   private matchesFilter(group: ProcessHolderGroup, filter: string): boolean {
