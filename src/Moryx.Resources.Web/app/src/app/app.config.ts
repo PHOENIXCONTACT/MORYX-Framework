@@ -4,10 +4,10 @@
 */
 
 import { ApplicationConfig, provideEnvironmentInitializer } from "@angular/core";
-import { MatIconRegistry } from '@angular/material/icon';
 import { provideAppInitializer, inject } from '@angular/core';
-import { ApiInterceptor, API_INTERCEPTOR_PROVIDER } from '@moryx/ngx-web-framework/interceptors';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideMoryxMaterialDefaults } from '@moryx/ngx-web-framework/material';
+import { languageInterceptor, apiErrorInterceptor } from '@moryx/ngx-web-framework/interceptors';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { environment } from "../environments/environment";
 import { CacheResourceService } from "./services/cache-resource.service";
 import { SearchService } from "./services/search.service";
@@ -25,14 +25,10 @@ export const appConfig: ApplicationConfig = {
     // Configure the API endpoint
     provideApiConfiguration(environment.rootUrl),
 
-    // Register custom DI interceptors
-    // TODO: Replace by fns, if https://github.com/PHOENIXCONTACT/ngx-moryx-web/pull/48 was released
-    ApiInterceptor,
-    API_INTERCEPTOR_PROVIDER,
-
-    // Setup HttpClient
-    // TODO: Remove withInterceptorsFromDi if https://github.com/PHOENIXCONTACT/ngx-moryx-web/pull/48 was released
-    provideHttpClient(withInterceptorsFromDi()),
+    // Setup HttpClient with functional interceptors
+    provideHttpClient(
+      withInterceptors([languageInterceptor, apiErrorInterceptor])
+    ),
 
     // Configure translation loader
     provideTranslateService({
@@ -43,19 +39,14 @@ export const appConfig: ApplicationConfig = {
       fallbackLang: 'en'
     }),
 
+    // Provides angular material defaults
+    provideMoryxMaterialDefaults(),
+
     // Additional app initializers
     provideEnvironmentInitializer(() => inject(SearchService)),
-    provideAppInitializer(() => {
-      const initializerFn = (
-        (resourceCache: CacheResourceService) => async () =>
-          await resourceCache.loadResources()
-      )(inject(CacheResourceService));
-      return initializerFn();
-    }),
-    provideAppInitializer(() => {
-      // Use material-symbols as default icon font
-      const iconRegistry = inject(MatIconRegistry);
-      iconRegistry.setDefaultFontSetClass('material-symbols-outlined');
+    provideAppInitializer(async () => {
+      const cacheResourceService = inject(CacheResourceService)
+      await cacheResourceService.loadResources()
     }),
   ]
 }

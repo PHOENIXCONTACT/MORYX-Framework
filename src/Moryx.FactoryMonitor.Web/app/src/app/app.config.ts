@@ -3,9 +3,9 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { ApplicationConfig, inject, provideAppInitializer } from '@angular/core';
-import { MatIconRegistry } from '@angular/material/icon';
+import { provideMoryxMaterialDefaults } from '@moryx/ngx-web-framework/material';
 import { provideRouter } from '@angular/router';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -17,7 +17,7 @@ import { CellStoreService } from './services/cell-store.service';
 import { FactorySelectionService } from './services/factory-selection.service';
 import { OrderStoreService } from './services/order-store.service';
 import { provideApiConfiguration } from '@api/api-configuration';
-import { API_INTERCEPTOR_PROVIDER, ApiInterceptor } from '@moryx/ngx-web-framework/interceptors';
+import { languageInterceptor, apiErrorInterceptor } from '@moryx/ngx-web-framework/interceptors';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -26,14 +26,10 @@ export const appConfig: ApplicationConfig = {
     // Configure the API endpoint
     provideApiConfiguration(environment.rootUrl),
 
-    // Register custom DI interceptors
-    // TODO: Replace by fns, if https://github.com/PHOENIXCONTACT/ngx-moryx-web/pull/48 was released
-    ApiInterceptor,
-    API_INTERCEPTOR_PROVIDER,
-
-    // Setup HttpClient
-    // TODO: Remove withInterceptorsFromDi if https://github.com/PHOENIXCONTACT/ngx-moryx-web/pull/48 was released
-    provideHttpClient(withInterceptorsFromDi()),
+    // Setup HttpClient with functional interceptors
+    provideHttpClient(
+      withInterceptors([languageInterceptor, apiErrorInterceptor])
+    ),
 
     // Configure translation loader
     provideTranslateService({
@@ -44,12 +40,10 @@ export const appConfig: ApplicationConfig = {
       fallbackLang: 'en'
     }),
 
+    // Provides angular material defaults
+    provideMoryxMaterialDefaults(),
+
     // Additional app initializers
-    provideAppInitializer(() => {
-      // Use material-symbols as default icon font
-      const iconRegistry = inject(MatIconRegistry);
-      iconRegistry.setDefaultFontSetClass('material-symbols-outlined');
-    }),
     provideAppInitializer(async () => {
       const api = inject(FactoryMonitorService);
       const orderStore = inject(OrderStoreService);
@@ -64,6 +58,6 @@ export const appConfig: ApplicationConfig = {
       cellStore.initialize(initialState);
 
       factorySelectionService.initialize(initialState);
-    }),
+    })
   ]
 };
