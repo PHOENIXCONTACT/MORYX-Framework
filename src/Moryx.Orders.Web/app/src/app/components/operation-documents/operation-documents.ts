@@ -69,20 +69,17 @@ export class OperationDocuments implements OnInit {
       const identifier = params['identifier'];
       await this.orderManagementService
         .getOperation({guid: identifier})
-        .toAsync()
         .then(value => (this.operation.set(value)))
         .catch(
           async (e: HttpErrorResponse) =>
             await this.snackbarService.handleError(e)
         );
-      this.orderManagementService.getDocuments({guid: identifier}).subscribe({
-        next: data => {
-          this.documents.set(data);
-          this.isLoading.set(false);
-        },
-        error: async (e: HttpErrorResponse) =>
-          await this.snackbarService.handleError(e)
-      });
+      this.orderManagementService.getDocuments({guid: identifier}).then(data => {
+        this.documents.set(data);
+        this.isLoading.set(false);
+      }).catch(async (e: HttpErrorResponse) =>
+        await this.snackbarService.handleError(e)
+      );
     });
   }
 
@@ -94,24 +91,23 @@ export class OperationDocuments implements OnInit {
         guid: this.operation().identifier!,
         identifier: this.selectedDocument()?.identifier ?? ''
       })
-      .subscribe({
-        next: data => {
-          if (data !== null && document.contentType) {
-            const downloadedFile = new Blob([data], {
-              type: document.contentType
-            });
-            this.url.set(URL.createObjectURL(downloadedFile));
-            const reader = new FileReader();
-            reader.readAsDataURL(downloadedFile);
-            reader.onload = () => {
-              this.path.set(reader.result);
-            };
-            this.isLoading.set(false);
-          }
-        },
-        error: async (e: HttpErrorResponse) =>
-          await this.snackbarService.handleError(e)
-      });
+      .then(data => {
+        if (data !== null && document.contentType) {
+          const downloadedFile = new Blob([data], {
+            type: document.contentType
+          });
+          this.url.set(URL.createObjectURL(downloadedFile));
+          const reader = new FileReader();
+          reader.readAsDataURL(downloadedFile);
+          reader.onload = () => {
+            this.path.set(reader.result);
+          };
+          this.isLoading.set(false);
+        }
+      })
+      .catch(async (e: HttpErrorResponse) =>
+        await this.snackbarService.handleError(e)
+      );
   }
 }
 

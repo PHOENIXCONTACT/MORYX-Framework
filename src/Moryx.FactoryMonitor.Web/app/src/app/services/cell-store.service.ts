@@ -6,7 +6,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { effect, inject, Injectable, signal } from '@angular/core';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
-import { lastValueFrom } from 'rxjs';
+
 import { VisualizableItemModel } from '@api/models';
 import { CellLocationModel } from '@api/models/cell-location-model';
 import { FactoryStateModel } from '@api/models/factory-state-model';
@@ -85,7 +85,7 @@ export class CellStoreService {
 
   public async moveItem(item: VisualizableItemModel, update: CellLocationModel) {
     try {
-      const location = await lastValueFrom(this.factoryMonitorService.moveCell({ body: update }));
+      const location = await this.factoryMonitorService.moveCell({ body: update });
       this.updateCell(<CellModel>{ id: item.id, location: location });
     } catch (error) {
       this.snackbarService.handleError(error as HttpErrorResponse);

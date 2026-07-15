@@ -9,7 +9,7 @@ import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { ReferenceValue, ResourceModel, ResourceTypeModel } from '../api/models';
 import { ResourceModificationService } from '../api/services';
 import { TranslationConstants } from '../extensions/translation-constants.extensions';
-import '../extensions/observable.extensions';
+
 
 /**
  * This service handles the set of existing resources and resource types
@@ -77,13 +77,12 @@ export class CacheResourceService {
   async loadResources() {
     await this.resourceModificationService
       .getTypeTree()
-      .toAsync()
       .then(rootType => {
         this.rootType = rootType;
         this.flatTypes = [];
         this.collectflattenedTypes(rootType, this.flatTypes);
       })
-      .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err));
+      .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err));
 
     await this.resourceModificationService
       .getResources({
@@ -96,9 +95,8 @@ export class CacheResourceService {
           includedReferences: [{name: this.ChildReferenceName}],
         },
       })
-      .toAsync()
       .then(resources => this.resources.set(resources))
-      .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err));
+      .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err));
   }
 
   private collectflattenedTypes(root: ResourceTypeModel, flattendTypes: ResourceTypeModel[]) {

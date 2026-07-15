@@ -26,7 +26,7 @@ export class FactorySelectionService {
 
     //factory content, items to be displayed
     this.factoryMonitorService.factoryContent({factoryId: factoryId ?? 0})
-      .subscribe(items => {
+      .then(items => {
         this.factoryContent.set(items);
         //manufacturing factory
         this.factorySelected.set(factoryId);

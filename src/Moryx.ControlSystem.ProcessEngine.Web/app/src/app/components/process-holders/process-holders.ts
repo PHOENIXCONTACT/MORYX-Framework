@@ -19,6 +19,7 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
+import { firstValueFrom } from "rxjs";
 import { ProcessEngineService } from "@api/services";
 import { ProcessHolderGroup } from "@app/models/process-holder-group-model";
 import ProcessHolderNode from "../../models/process-holder-node";
@@ -86,26 +87,22 @@ export class ProcessHolders implements OnInit {
   ngOnInit(): void {
     this.loading.set(true);
     this._processHolderStreamService.connect();
-    this._processService.getGroups().subscribe({
-      next: (response: ProcessHolderGroupModelArrayApiResponse) => {
-        console.log(response);
-        this.processHolderGroups.set(response.data?.map((x) => ConvertToProcessHolderGroup(x)) ?? []);
-        this.buildTree(this.processHolderGroups());
-        this.loading.set(false);
-      },
-      error: (e: HttpErrorResponse) => {
-        this.loading.set(false);
-        this.processHolderGroups.set([]);
-        this.buildTree([]);
-        this._snackbarService.handleError(e);
-      },
+    this._processService.getGroups().then((response: ProcessHolderGroupModelArrayApiResponse) => {
+      console.log(response);
+      this.processHolderGroups.set(response.data?.map((x) => ConvertToProcessHolderGroup(x)) ?? []);
+      this.buildTree(this.processHolderGroups());
+      this.loading.set(false);
+    }).catch((e: HttpErrorResponse) => {
+      this.loading.set(false);
+      this.processHolderGroups.set([]);
+      this.buildTree([]);
+      this._snackbarService.handleError(e);
     });
   }
 
   private async getTranslations(): Promise<{ [key: string]: string }> {
-    return await this._translate
-      .get([TranslationConstants.PROCESS_HOLDER_GROUPS.OPERATION_SUCCEEDED])
-      .toAsync();
+    return await firstValueFrom(this._translate
+      .get([TranslationConstants.PROCESS_HOLDER_GROUPS.OPERATION_SUCCEEDED]));
   }
 
 
@@ -141,10 +138,8 @@ export class ProcessHolders implements OnInit {
       .resetGroup({
         id,
       })
-      .subscribe({
-        next: () => this.getTranslations().then(values => this._snackbarService.showSuccess(values[TranslationConstants.PROCESS_HOLDER_GROUPS.OPERATION_SUCCEEDED])),
-        error: (e: HttpErrorResponse) => this._snackbarService.handleError(e),
-      });
+      .then(() => this.getTranslations().then(values => this._snackbarService.showSuccess(values[TranslationConstants.PROCESS_HOLDER_GROUPS.OPERATION_SUCCEEDED])))
+      .catch((e: HttpErrorResponse) => this._snackbarService.handleError(e));
   }
 
   protected resetPosition(id: number) {
@@ -152,10 +147,8 @@ export class ProcessHolders implements OnInit {
       .resetPosition({
         id,
       })
-      .subscribe({
-        next: () => this.getTranslations().then(values => this._snackbarService.showSuccess(values[TranslationConstants.PROCESS_HOLDER_GROUPS.OPERATION_SUCCEEDED])),
-        error: (e: HttpErrorResponse) => this._snackbarService.handleError(e),
-      });
+      .then(() => this.getTranslations().then(values => this._snackbarService.showSuccess(values[TranslationConstants.PROCESS_HOLDER_GROUPS.OPERATION_SUCCEEDED])))
+      .catch((e: HttpErrorResponse) => this._snackbarService.handleError(e));
   }
 
   protected clear() {

@@ -8,8 +8,7 @@
 
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 
 import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
@@ -76,9 +75,9 @@ export class FactoryMonitorService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  initialFactoryState$Plain$Response(params?: InitialFactoryState$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<FactoryStateModel>> {
+  initialFactoryState$Plain$Response(params?: InitialFactoryState$Plain$Params, context?: HttpContext): Promise<StrictHttpResponse<FactoryStateModel>> {
     const obs = initialFactoryState$Plain(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -87,11 +86,9 @@ export class FactoryMonitorService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  initialFactoryState$Plain(params?: InitialFactoryState$Plain$Params, context?: HttpContext): Observable<FactoryStateModel> {
+  initialFactoryState$Plain(params?: InitialFactoryState$Plain$Params, context?: HttpContext): Promise<FactoryStateModel> {
     const resp = this.initialFactoryState$Plain$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<FactoryStateModel>): FactoryStateModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<FactoryStateModel>): FactoryStateModel => r.body);
   }
 
   /**
@@ -100,9 +97,9 @@ export class FactoryMonitorService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  initialFactoryState$Response(params?: InitialFactoryState$Params, context?: HttpContext): Observable<StrictHttpResponse<FactoryStateModel>> {
+  initialFactoryState$Response(params?: InitialFactoryState$Params, context?: HttpContext): Promise<StrictHttpResponse<FactoryStateModel>> {
     const obs = initialFactoryState(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -111,11 +108,9 @@ export class FactoryMonitorService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  initialFactoryState(params?: InitialFactoryState$Params, context?: HttpContext): Observable<FactoryStateModel> {
+  initialFactoryState(params?: InitialFactoryState$Params, context?: HttpContext): Promise<FactoryStateModel> {
     const resp = this.initialFactoryState$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<FactoryStateModel>): FactoryStateModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<FactoryStateModel>): FactoryStateModel => r.body);
   }
 
   /** Path part for operation `allCells()` */
@@ -127,9 +122,9 @@ export class FactoryMonitorService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  allCells$Plain$Response(params?: AllCells$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<VisualizableItemModel>>> {
+  allCells$Plain$Response(params?: AllCells$Plain$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<VisualizableItemModel>>> {
     const obs = allCells$Plain(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -138,11 +133,9 @@ export class FactoryMonitorService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  allCells$Plain(params?: AllCells$Plain$Params, context?: HttpContext): Observable<Array<VisualizableItemModel>> {
+  allCells$Plain(params?: AllCells$Plain$Params, context?: HttpContext): Promise<Array<VisualizableItemModel>> {
     const resp = this.allCells$Plain$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<VisualizableItemModel>>): Array<VisualizableItemModel> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<VisualizableItemModel>>): Array<VisualizableItemModel> => r.body);
   }
 
   /**
@@ -151,9 +144,9 @@ export class FactoryMonitorService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  allCells$Response(params?: AllCells$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<VisualizableItemModel>>> {
+  allCells$Response(params?: AllCells$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<VisualizableItemModel>>> {
     const obs = allCells(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -162,11 +155,9 @@ export class FactoryMonitorService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  allCells(params?: AllCells$Params, context?: HttpContext): Observable<Array<VisualizableItemModel>> {
+  allCells(params?: AllCells$Params, context?: HttpContext): Promise<Array<VisualizableItemModel>> {
     const resp = this.allCells$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<VisualizableItemModel>>): Array<VisualizableItemModel> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<VisualizableItemModel>>): Array<VisualizableItemModel> => r.body);
   }
 
   /** Path part for operation `factoryContent()` */
@@ -178,9 +169,9 @@ export class FactoryMonitorService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  factoryContent$Plain$Response(params: FactoryContent$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<VisualizableItemModel>>> {
+  factoryContent$Plain$Response(params: FactoryContent$Plain$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<VisualizableItemModel>>> {
     const obs = factoryContent$Plain(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -189,11 +180,9 @@ export class FactoryMonitorService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  factoryContent$Plain(params: FactoryContent$Plain$Params, context?: HttpContext): Observable<Array<VisualizableItemModel>> {
+  factoryContent$Plain(params: FactoryContent$Plain$Params, context?: HttpContext): Promise<Array<VisualizableItemModel>> {
     const resp = this.factoryContent$Plain$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<VisualizableItemModel>>): Array<VisualizableItemModel> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<VisualizableItemModel>>): Array<VisualizableItemModel> => r.body);
   }
 
   /**
@@ -202,9 +191,9 @@ export class FactoryMonitorService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  factoryContent$Response(params: FactoryContent$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<VisualizableItemModel>>> {
+  factoryContent$Response(params: FactoryContent$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<VisualizableItemModel>>> {
     const obs = factoryContent(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -213,11 +202,9 @@ export class FactoryMonitorService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  factoryContent(params: FactoryContent$Params, context?: HttpContext): Observable<Array<VisualizableItemModel>> {
+  factoryContent(params: FactoryContent$Params, context?: HttpContext): Promise<Array<VisualizableItemModel>> {
     const resp = this.factoryContent$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<VisualizableItemModel>>): Array<VisualizableItemModel> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<VisualizableItemModel>>): Array<VisualizableItemModel> => r.body);
   }
 
   /** Path part for operation `getNavigation()` */
@@ -229,9 +216,9 @@ export class FactoryMonitorService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getNavigation$Plain$Response(params: GetNavigation$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<FactoryModel>> {
+  getNavigation$Plain$Response(params: GetNavigation$Plain$Params, context?: HttpContext): Promise<StrictHttpResponse<FactoryModel>> {
     const obs = getNavigation$Plain(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -240,11 +227,9 @@ export class FactoryMonitorService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getNavigation$Plain(params: GetNavigation$Plain$Params, context?: HttpContext): Observable<FactoryModel> {
+  getNavigation$Plain(params: GetNavigation$Plain$Params, context?: HttpContext): Promise<FactoryModel> {
     const resp = this.getNavigation$Plain$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<FactoryModel>): FactoryModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<FactoryModel>): FactoryModel => r.body);
   }
 
   /**
@@ -253,9 +238,9 @@ export class FactoryMonitorService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getNavigation$Response(params: GetNavigation$Params, context?: HttpContext): Observable<StrictHttpResponse<FactoryModel>> {
+  getNavigation$Response(params: GetNavigation$Params, context?: HttpContext): Promise<StrictHttpResponse<FactoryModel>> {
     const obs = getNavigation(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -264,11 +249,9 @@ export class FactoryMonitorService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getNavigation(params: GetNavigation$Params, context?: HttpContext): Observable<FactoryModel> {
+  getNavigation(params: GetNavigation$Params, context?: HttpContext): Promise<FactoryModel> {
     const resp = this.getNavigation$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<FactoryModel>): FactoryModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<FactoryModel>): FactoryModel => r.body);
   }
 
   /** Path part for operation `factoryStatesStream()` */
@@ -280,9 +263,9 @@ export class FactoryMonitorService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  factoryStatesStream$Plain$Response(params?: FactoryStatesStream$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<OrderChangedModel>> {
+  factoryStatesStream$Plain$Response(params?: FactoryStatesStream$Plain$Params, context?: HttpContext): Promise<StrictHttpResponse<OrderChangedModel>> {
     const obs = factoryStatesStream$Plain(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -291,11 +274,9 @@ export class FactoryMonitorService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  factoryStatesStream$Plain(params?: FactoryStatesStream$Plain$Params, context?: HttpContext): Observable<OrderChangedModel> {
+  factoryStatesStream$Plain(params?: FactoryStatesStream$Plain$Params, context?: HttpContext): Promise<OrderChangedModel> {
     const resp = this.factoryStatesStream$Plain$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<OrderChangedModel>): OrderChangedModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<OrderChangedModel>): OrderChangedModel => r.body);
   }
 
   /**
@@ -304,9 +285,9 @@ export class FactoryMonitorService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  factoryStatesStream$Response(params?: FactoryStatesStream$Params, context?: HttpContext): Observable<StrictHttpResponse<OrderChangedModel>> {
+  factoryStatesStream$Response(params?: FactoryStatesStream$Params, context?: HttpContext): Promise<StrictHttpResponse<OrderChangedModel>> {
     const obs = factoryStatesStream(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -315,11 +296,9 @@ export class FactoryMonitorService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  factoryStatesStream(params?: FactoryStatesStream$Params, context?: HttpContext): Observable<OrderChangedModel> {
+  factoryStatesStream(params?: FactoryStatesStream$Params, context?: HttpContext): Promise<OrderChangedModel> {
     const resp = this.factoryStatesStream$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<OrderChangedModel>): OrderChangedModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<OrderChangedModel>): OrderChangedModel => r.body);
   }
 
   /** Path part for operation `moveCell()` */
@@ -331,9 +310,9 @@ export class FactoryMonitorService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  moveCell$Plain$Response(params?: MoveCell$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<CellLocationModel>> {
+  moveCell$Plain$Response(params?: MoveCell$Plain$Params, context?: HttpContext): Promise<StrictHttpResponse<CellLocationModel>> {
     const obs = moveCell$Plain(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -342,11 +321,9 @@ export class FactoryMonitorService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  moveCell$Plain(params?: MoveCell$Plain$Params, context?: HttpContext): Observable<CellLocationModel> {
+  moveCell$Plain(params?: MoveCell$Plain$Params, context?: HttpContext): Promise<CellLocationModel> {
     const resp = this.moveCell$Plain$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<CellLocationModel>): CellLocationModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<CellLocationModel>): CellLocationModel => r.body);
   }
 
   /**
@@ -355,9 +332,9 @@ export class FactoryMonitorService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  moveCell$Response(params?: MoveCell$Params, context?: HttpContext): Observable<StrictHttpResponse<CellLocationModel>> {
+  moveCell$Response(params?: MoveCell$Params, context?: HttpContext): Promise<StrictHttpResponse<CellLocationModel>> {
     const obs = moveCell(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -366,11 +343,9 @@ export class FactoryMonitorService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  moveCell(params?: MoveCell$Params, context?: HttpContext): Observable<CellLocationModel> {
+  moveCell(params?: MoveCell$Params, context?: HttpContext): Promise<CellLocationModel> {
     const resp = this.moveCell$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<CellLocationModel>): CellLocationModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<CellLocationModel>): CellLocationModel => r.body);
   }
 
   /** Path part for operation `changeBackground()` */
@@ -382,9 +357,9 @@ export class FactoryMonitorService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  changeBackground$Response(params?: ChangeBackground$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  changeBackground$Response(params?: ChangeBackground$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = changeBackground(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -393,11 +368,9 @@ export class FactoryMonitorService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  changeBackground(params?: ChangeBackground$Params, context?: HttpContext): Observable<void> {
+  changeBackground(params?: ChangeBackground$Params, context?: HttpContext): Promise<void> {
     const resp = this.changeBackground$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
   /** Path part for operation `getCellPropertiesSettings()` */
@@ -409,11 +382,11 @@ export class FactoryMonitorService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getCellPropertiesSettings$Plain$Response(params: GetCellPropertiesSettings$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+  getCellPropertiesSettings$Plain$Response(params: GetCellPropertiesSettings$Plain$Params, context?: HttpContext): Promise<StrictHttpResponse<{
 [key: string]: CellPropertySettings;
 }>> {
     const obs = getCellPropertiesSettings$Plain(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -422,17 +395,15 @@ export class FactoryMonitorService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getCellPropertiesSettings$Plain(params: GetCellPropertiesSettings$Plain$Params, context?: HttpContext): Observable<{
+  getCellPropertiesSettings$Plain(params: GetCellPropertiesSettings$Plain$Params, context?: HttpContext): Promise<{
 [key: string]: CellPropertySettings;
 }> {
     const resp = this.getCellPropertiesSettings$Plain$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<{
+    return resp.then((r: StrictHttpResponse<{
 [key: string]: CellPropertySettings;
 }>): {
 [key: string]: CellPropertySettings;
-} => r.body)
-    );
+} => r.body);
   }
 
   /**
@@ -441,11 +412,11 @@ export class FactoryMonitorService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getCellPropertiesSettings$Response(params: GetCellPropertiesSettings$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+  getCellPropertiesSettings$Response(params: GetCellPropertiesSettings$Params, context?: HttpContext): Promise<StrictHttpResponse<{
 [key: string]: CellPropertySettings;
 }>> {
     const obs = getCellPropertiesSettings(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -454,17 +425,15 @@ export class FactoryMonitorService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getCellPropertiesSettings(params: GetCellPropertiesSettings$Params, context?: HttpContext): Observable<{
+  getCellPropertiesSettings(params: GetCellPropertiesSettings$Params, context?: HttpContext): Promise<{
 [key: string]: CellPropertySettings;
 }> {
     const resp = this.getCellPropertiesSettings$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<{
+    return resp.then((r: StrictHttpResponse<{
 [key: string]: CellPropertySettings;
 }>): {
 [key: string]: CellPropertySettings;
-} => r.body)
-    );
+} => r.body);
   }
 
   /** Path part for operation `traceRoute()` */
@@ -476,9 +445,9 @@ export class FactoryMonitorService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  traceRoute$Response(params?: TraceRoute$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  traceRoute$Response(params?: TraceRoute$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = traceRoute(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -487,11 +456,9 @@ export class FactoryMonitorService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  traceRoute(params?: TraceRoute$Params, context?: HttpContext): Observable<void> {
+  traceRoute(params?: TraceRoute$Params, context?: HttpContext): Promise<void> {
     const resp = this.traceRoute$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
   /** Path part for operation `cellSettings()` */
@@ -503,9 +470,9 @@ export class FactoryMonitorService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  cellSettings$Response(params: CellSettings$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  cellSettings$Response(params: CellSettings$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = cellSettings(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -514,11 +481,9 @@ export class FactoryMonitorService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  cellSettings(params: CellSettings$Params, context?: HttpContext): Observable<void> {
+  cellSettings(params: CellSettings$Params, context?: HttpContext): Promise<void> {
     const resp = this.cellSettings$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
   /** Path part for operation `getRoutes()` */
@@ -530,9 +495,9 @@ export class FactoryMonitorService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getRoutes$Plain$Response(params?: GetRoutes$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<TransportRouteModel>>> {
+  getRoutes$Plain$Response(params?: GetRoutes$Plain$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<TransportRouteModel>>> {
     const obs = getRoutes$Plain(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -541,11 +506,9 @@ export class FactoryMonitorService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getRoutes$Plain(params?: GetRoutes$Plain$Params, context?: HttpContext): Observable<Array<TransportRouteModel>> {
+  getRoutes$Plain(params?: GetRoutes$Plain$Params, context?: HttpContext): Promise<Array<TransportRouteModel>> {
     const resp = this.getRoutes$Plain$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<TransportRouteModel>>): Array<TransportRouteModel> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<TransportRouteModel>>): Array<TransportRouteModel> => r.body);
   }
 
   /**
@@ -554,9 +517,9 @@ export class FactoryMonitorService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getRoutes$Response(params?: GetRoutes$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<TransportRouteModel>>> {
+  getRoutes$Response(params?: GetRoutes$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<TransportRouteModel>>> {
     const obs = getRoutes(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -565,11 +528,9 @@ export class FactoryMonitorService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getRoutes(params?: GetRoutes$Params, context?: HttpContext): Observable<Array<TransportRouteModel>> {
+  getRoutes(params?: GetRoutes$Params, context?: HttpContext): Promise<Array<TransportRouteModel>> {
     const resp = this.getRoutes$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<TransportRouteModel>>): Array<TransportRouteModel> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<TransportRouteModel>>): Array<TransportRouteModel> => r.body);
   }
 
 }

@@ -46,7 +46,7 @@ export class Operators {
   loadOperatorsByResource() {
     this.appStoreService
       .getOperatorsByResourceId(this.workstation()?.data.id ?? 0)
-      .subscribe(
+      .then(
         (skilledOperators: ExtendedOperatorModel[]) =>
           (this.operators.set(skilledOperators.map(
               (operator) =>

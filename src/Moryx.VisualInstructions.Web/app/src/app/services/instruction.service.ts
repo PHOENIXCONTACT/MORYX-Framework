@@ -11,6 +11,7 @@ import { HttpErrorResponse, HttpClient, HttpRequest, HttpEvent, HttpEventType } 
 import { DomSanitizer } from '@angular/platform-browser';
 import { environment } from '../../environments/environment';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -38,12 +39,12 @@ export class InstructionService {
   }
 
   async requestMediaContentAsync(mediaItem: InstructionItemModel): Promise<DisplayedMediaContent> {
-    return await this.httpClient.request<Blob>(
+    return await firstValueFrom(this.httpClient.request<Blob>(
       new HttpRequest('GET', mediaItem.content ?? environment.assets + 'assets/moryx_transparent_colored.png', null, {
         reportProgress: true,
         responseType: 'blob',
       })
-    ).toAsync()
+    ))
       .then((response) => {
         return this.convertBlobResponse(response);
       })

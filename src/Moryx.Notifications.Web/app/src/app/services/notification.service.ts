@@ -69,9 +69,8 @@ export class NotificationService {
       return;
     }
 
-    this.notificationPublisherService.acknowledge$Response({guid: identifier}).subscribe({
-      error: async (e: HttpErrorResponse) => await this.snackbarService.handleError(e),
-    });
+    this.notificationPublisherService.acknowledge$Response({guid: identifier})
+      .catch((e: HttpErrorResponse) => this.snackbarService.handleError(e));
   }
 
   private checkSelection(): void {

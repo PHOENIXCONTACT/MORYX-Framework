@@ -30,12 +30,10 @@ export class ChangeBackgroundService {
         resourceId: this.factorySelectionService.factorySelected(),
         url: url
       })
-      .subscribe({
-        next: () => {
-          this.updateBackground(url);
-        },
-        error: () => this.snackbarService.showError('An error occured while saving the background URL')
-      });
+      .then(() => {
+        this.updateBackground(url);
+      })
+      .catch(() => this.snackbarService.showError('An error occured while saving the background URL'));
   }
 
   public updateBackground(url: string | null | undefined) {

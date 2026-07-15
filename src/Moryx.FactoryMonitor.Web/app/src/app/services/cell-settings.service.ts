@@ -24,17 +24,15 @@ export class CellSettingsService {
         id: cellId,
         body: cellSettings
       })
-      .subscribe({
-        next: _ => {
-          const cell = <CellModel>{
-            id: cellId,
-            iconName: cellSettings.icon,
-            image: cellSettings.image
-          }
-          this.cellStoreService.updateCell(cell);
-        },
-        error: err => this.snackbarService.handleError(err)
-      });
+      .then(() => {
+        const cell = <CellModel>{
+          id: cellId,
+          iconName: cellSettings.icon,
+          image: cellSettings.image
+        }
+        this.cellStoreService.updateCell(cell);
+      })
+      .catch(err => this.snackbarService.handleError(err));
   }
 }
 

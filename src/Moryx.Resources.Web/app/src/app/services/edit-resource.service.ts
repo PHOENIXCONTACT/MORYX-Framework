@@ -4,7 +4,7 @@
 */
 
 import { inject, Injectable, signal } from '@angular/core';
-import { lastValueFrom } from 'rxjs';
+
 import { ResourceModel } from '../api/models';
 import { ResourceModificationService } from '../api/services';
 import { StrictHttpResponse } from '@api/strict-http-response';
@@ -97,13 +97,13 @@ export class EditResourceService {
     }
 
     if (this.editingUnsavedResource) {
-      await lastValueFrom(this.resourceModificationService.save$Response({body: resourceModel}))
-        .then(async response => await this.handleSaveResponse(response))
-        .catch(async e => await this.snackbarService.handleError(e));
+      await this.resourceModificationService.save$Response({body: resourceModel})
+        .then(response => this.handleSaveResponse(response))
+        .catch(e => this.snackbarService.handleError(e));
     } else {
-      await lastValueFrom(this.resourceModificationService.update$Response({id: resourceModel.id!, body: resourceModel}))
-        .then(async response => await this.handleUpdateResponse(response))
-        .catch(async e => await this.snackbarService.handleError(e));
+      await this.resourceModificationService.update$Response({id: resourceModel.id!, body: resourceModel})
+        .then(response => this.handleUpdateResponse(response))
+        .catch(e => this.snackbarService.handleError(e));
     }
   }
 
@@ -131,7 +131,7 @@ export class EditResourceService {
     }
     this.editing.set(false);
     try {
-      const resource = await lastValueFrom(this.resourceModificationService.getDetails({id: resourceId}));
+      const resource = await this.resourceModificationService.getDetails({id: resourceId});
       this.activeResource.set(resource);
     }
     catch (e) {

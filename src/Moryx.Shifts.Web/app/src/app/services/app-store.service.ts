@@ -5,7 +5,6 @@
 
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { CalendarDate, CalendarState } from '../models/calendar-state';
-import { firstValueFrom, forkJoin } from 'rxjs';
 import { OperatorModel } from '../models/operator-model';
 import { ShiftTypeModel } from '../models/shift-type-model';
 import { ShiftInstanceModel } from '../models/shift-instance-model';
@@ -58,7 +57,7 @@ export class AppStoreService {
   assignments = this.assignmentService.assignments;
 
   constructor() {
-    this.orderManagementService.getOperations().subscribe((operations) => {
+    this.orderManagementService.getOperations().then((operations) => {
       const orderModels = operations.map(
         (x) =>
           <OrderModel>{
@@ -72,10 +71,10 @@ export class AppStoreService {
     });
 
     //fetch resources and operator elements from the API in parallel
-    forkJoin([
+    Promise.all([
       this.operatorManagementService.getResources_1(),
       this.operatorManagementService.getAll(),
-    ]).subscribe((results) => {
+    ]).then((results) => {
       const resources = results[0];
       const operators = results[1];
 
@@ -87,7 +86,7 @@ export class AppStoreService {
 
       this.shiftAssignmentService
         .getShiftAssignements()
-        .subscribe((results) => {
+        .then((results) => {
           this.assignmentService.setAssignments(
             results.map((x) =>
               assignmentToAssignmentCardModel(
@@ -275,19 +274,12 @@ export class AppStoreService {
   }
 
   getOperatorsBasedOnResource(resourceId: number): Promise<Array<OperatorModel>> {
-    const operatorsAsync = firstValueFrom(
-      this.operatorManagementService.getOperatorsByResource({resourceId})
-    );
-    return operatorsAsync.then((operators) =>
-      operators.map(extendedAssignableOPeratorToOperatorModel)
-    );
+    return this.operatorManagementService.getOperatorsByResource({resourceId})
+      .then((operators) => operators.map(extendedAssignableOPeratorToOperatorModel));
   }
 
   getResourcesBasedOnOperator(operatorId: string): Promise<Array<AttendableResourceModel>> {
-    const resourcesAsync = firstValueFrom(
-      this.operatorManagementService.getResources({operatorIdentifier: operatorId})
-    );
-    return resourcesAsync.then((resources) => resources);
+    return this.operatorManagementService.getResources({operatorIdentifier: operatorId});
   }
 }
 

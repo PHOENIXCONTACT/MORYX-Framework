@@ -7,6 +7,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, effect, inject, OnDestroy, OnInit, signal, untracked, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, RouterOutlet } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 import { SnackbarService, SearchBarService, SearchRequest, SearchSuggestion } from '@moryx/ngx-web-framework/services';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { WorkplanSessionModel } from '@api/models';
@@ -108,15 +109,14 @@ export class Sessions implements OnInit, OnDestroy {
         async token =>
           await this.sessionService
             .getSession(token)
-            .toAsync()
             .then((value: WorkplanSessionModel) => newSessions.push(value))
-            .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err))
+            .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err))
       )
     ).then(() => (this.sessions.set(newSessions)));
   }
 
   private async onActiveSessionChanged(token: string | undefined) {
-    const result = token ? await this.sessionService.getSession(token).toAsync() : undefined;
+    const result = token ? await this.sessionService.getSession(token) : undefined;
     this.activeSession.set(result);
     if (this.activeSession()) {
       this.router.navigate(['session', this.activeSession()?.sessionToken]);
@@ -128,15 +128,14 @@ export class Sessions implements OnInit, OnDestroy {
   }
 
   async getTranslations(): Promise<{ [key: string]: string }> {
-    return await this.translateService
+    return await firstValueFrom(this.translateService
       .get([
         TranslationConstants.SESSIONS.CONFIRM_DIALOG.CONFIRM,
         TranslationConstants.SESSIONS.CONFIRM_DIALOG.MESSAGE,
         TranslationConstants.SESSIONS.CONFIRM_DIALOG.TITLE,
         TranslationConstants.SESSIONS.CONFIRM_DIALOG.CANCEL,
         TranslationConstants.EDITOR.SNACK_BAR.SUCCESS
-      ])
-      .toAsync();
+      ]));
   }
 
   private onSearch(request: SearchRequest) {
@@ -182,8 +181,8 @@ export class Sessions implements OnInit, OnDestroy {
   }
 
   closeSession(sessionToken: string, sessionIndex: number) {
-    this.sessionService.closeSession(sessionToken).subscribe({
-      next: () => {
+    this.sessionService.closeSession(sessionToken)
+      .then(() => {
         if (sessionIndex > 0) {
           this.activateSession(this.sessions()[sessionIndex - 1].sessionToken!);
           this.router.navigate(['session', this.sessions()[sessionIndex - 1].sessionToken]);
@@ -193,9 +192,8 @@ export class Sessions implements OnInit, OnDestroy {
         } else {
           this.router.navigate(['management']);
         }
-      },
-      error: async (err: HttpErrorResponse) => await this.snackbarService.handleError(err)
-    });
+      })
+      .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err));
   }
 
   protected activateSession(token: string): void {
@@ -247,14 +245,14 @@ export class Sessions implements OnInit, OnDestroy {
     }
 
     const session = this.activeSession()!;
-    this.sessionService.updateSession(session).toAsync()
-      .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err))
+    this.sessionService.updateSession(session)
+      .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err))
       .then(_ => this.saveSession(session));
   }
 
   private saveSession(session: WorkplanSessionModel) {
-    this.sessionService.saveSession(session).toAsync()
-      .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err))
+    this.sessionService.saveSession(session)
+      .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err))
       .then(async session => {
         if (!session) {
           return;
@@ -266,13 +264,12 @@ export class Sessions implements OnInit, OnDestroy {
   }
 
   protected autoLayout() {
-    this.workplanEditingService.autoLayout({sessionId: this.activeSession()?.sessionToken ?? ''}).subscribe({
-      next: layoutedSession => {
+    this.workplanEditingService.autoLayout({sessionId: this.activeSession()?.sessionToken ?? ''})
+      .then(layoutedSession => {
         this.sessionService.registerUpdatedSession(layoutedSession);
         this.editorStateService.setWorkplan(layoutedSession);
-      },
-      error: async (e: HttpErrorResponse) => await this.snackbarService.handleError(e)
-    });
+      })
+      .catch((e: HttpErrorResponse) => this.snackbarService.handleError(e));
   }
 }
 

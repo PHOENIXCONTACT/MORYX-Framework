@@ -9,7 +9,7 @@ import { computed, inject, Injectable, linkedSignal, signal } from "@angular/cor
 import { Router } from "@angular/router";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
 import { PrototypeToEntryConverter } from "@moryx/ngx-web-framework/entry-editor";
-import { lastValueFrom } from "rxjs";
+
 import { PartConnector, PartModel, ProductModel, RecipeModel } from "../api/models";
 import { ProductManagementService } from "@api/services/product-management.service";
 import { TranslationConstants } from "../extensions/translation-constants.extensions";
@@ -171,9 +171,9 @@ export class EditProductsService {
 
     let updated: ProductModel = {};
     try {
-      await lastValueFrom(this.productManagementService.updateType({id: productModel.id, body: productModel}));
+      await this.productManagementService.updateType({id: productModel.id, body: productModel});
       this.cacheProductsService.loadProductsForTree();
-      updated = await lastValueFrom(this.productManagementService.getTypeById({id: productModel.id}));
+      updated = await this.productManagementService.getTypeById({id: productModel.id});
     } catch (error) {
       await this.snackbarService.handleError(error as HttpErrorResponse);
       return;
@@ -201,7 +201,7 @@ export class EditProductsService {
     );
 
     try {
-      const product = await lastValueFrom(this.productManagementService.duplicate({id: id, body: `"${identifier}"`}));
+      const product = await this.productManagementService.duplicate({id: id, body: `"${identifier}"`});
       this.cacheProductsService.loadProductsForTree();
       this.router.navigate(['details', product.id]);
     } catch (error) {

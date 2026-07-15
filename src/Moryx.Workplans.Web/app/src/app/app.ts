@@ -7,7 +7,7 @@ import { Component, inject, OnDestroy, OnInit, signal, ChangeDetectionStrategy }
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { LanguageService, SnackbarService } from '@moryx/ngx-web-framework/services';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { filter, Subscription } from 'rxjs';
+import { filter, firstValueFrom, Subscription } from 'rxjs';
 import { environment } from '../environments/environment';
 import { TranslationConstants } from './extensions/translation-constants.extensions';
 import { SessionsService } from './services/sessions.service';
@@ -64,13 +64,12 @@ export class App implements OnInit, OnDestroy {
   }
 
   async getTranslations(): Promise<{ [key: string]: string }> {
-    return await this.translateService
+    return await firstValueFrom(this.translateService
       .get([
         TranslationConstants.APP.OPEN_WORKPLAN_MANAGEMENT,
         TranslationConstants.APP.OPEN_WORKPLAN_SESSIONS,
         TranslationConstants.APP.NO_SESSION_IS_OPEN,
-      ])
-      .toAsync();
+      ]));
   }
 
   ngOnInit(): void {
@@ -114,12 +113,11 @@ export class App implements OnInit, OnDestroy {
   protected onAdd() {
     this.sessionService
       .getSessionForWorkplan(0)
-      .toAsync()
       .then(session => {
         this.router.navigate(['session', session.sessionToken]);
         this.sessionService.activateSession(session.sessionToken!);
       })
-      .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err));
+      .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err));
   }
 }
 

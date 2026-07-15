@@ -16,7 +16,7 @@ import { ConfirmationDialog } from "../dialogs/confirmation-dialog/confirmation-
 import { OperatorViewModel } from "../models/operator-view-model";
 import { AssignableOperator } from "@api/models/assignable-operator";
 import { skillToOperatorSkill, skillTypeToModel } from "../models/model-converter";
-import { lastValueFrom } from "rxjs";
+import { firstValueFrom } from "rxjs";
 import { AppStoreService } from "../services/app-store.service";
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
@@ -105,7 +105,7 @@ export class OperatorDetails {
 
   loadSkills() {
     this.appStoreService.getSkillFromRemoteSource()
-      .subscribe(skills => {
+      .then(skills => {
         const skillModels = skills.filter(e => e.operatorIdentifier === this.operator().identifier).map(skillToOperatorSkill);
         this.dataSource = new MatTableDataSource(skillModels);
       });
@@ -152,7 +152,7 @@ export class OperatorDetails {
 
 
   protected async onDeleteSkillClick(skill: OperatorSkill) {
-    const translations = await lastValueFrom(this.translateService
+    const translations = await firstValueFrom(this.translateService
       .get([
         TranslationConstants.CONFIRMATION_DIALOG.DELETE_SKILL_TITLE,
         TranslationConstants.CONFIRMATION_DIALOG.DELETE_SKILL_MESSAGE

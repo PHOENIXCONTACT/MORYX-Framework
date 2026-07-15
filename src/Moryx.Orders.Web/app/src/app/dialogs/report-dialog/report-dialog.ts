@@ -6,7 +6,6 @@
 import { Component, computed, inject, OnInit, signal, ChangeDetectionStrategy } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from "@angular/material/dialog";
 import { TranslatePipe } from "@ngx-translate/core";
-import { Observable } from "rxjs";
 import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
 import { OperationViewModel } from "@app/models/operation-view-model";
 import { ConfirmationType, ReportModel, ReportContext } from '@api/models';
@@ -75,8 +74,7 @@ export class ReportDialog implements OnInit {
   async ngOnInit() {
     this.isLoading.set(true);
     const result = await this.data
-      .onGetContext(this.data.operation.model.identifier!)
-      .toAsync();
+      .onGetContext(this.data.operation.model.identifier!);
     this.reportContext.set(result);
     this.success.set(this.reportContext()?.unreportedSuccess ?? 0);
     this.scrap.set(this.reportContext()?.unreportedFailure ?? 0);
@@ -105,7 +103,6 @@ export class ReportDialog implements OnInit {
 
     await this.data
       .onSubmit(this.data.operation.model.identifier!, report)
-      .toAsync()
       .catch(() => {
         failed = true;
         this.isLoading.set(false);
@@ -118,7 +115,7 @@ export class ReportDialog implements OnInit {
 
 export interface ReportDialogData {
   operation: OperationViewModel;
-  onSubmit: (guid: string, body: ReportModel) => Observable<void>;
-  onGetContext: (guid: string) => Observable<ReportContext>;
+  onSubmit: (guid: string, body: ReportModel) => Promise<void>;
+  onGetContext: (guid: string) => Promise<ReportContext>;
 }
 

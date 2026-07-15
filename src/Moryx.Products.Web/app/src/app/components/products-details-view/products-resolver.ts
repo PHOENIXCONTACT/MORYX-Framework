@@ -5,7 +5,7 @@
 
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, RedirectCommand, ResolveFn, Router } from '@angular/router';
-import { lastValueFrom } from 'rxjs';
+
 import { EditProductsService } from '@app/services/edit-products.service';
 import { ProductModel } from '../../api/models';
 import { ProductManagementService } from '@app/api/services';
@@ -37,7 +37,7 @@ export const ProductResolver: ResolveFn<ProductModel> = async (route: ActivatedR
   }
 
   try {
-    const product = await lastValueFrom(apiService.getTypeById({ id: id }));
+    const product = await apiService.getTypeById({ id: id });
     editService.setProduct(product);
     return product;
   }

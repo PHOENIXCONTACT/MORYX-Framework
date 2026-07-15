@@ -21,7 +21,6 @@ import './extensions/array.extensions';
 import { TranslationConstants } from './extensions/translation-constants.extensions';
 import { CacheResourceService } from './services/cache-resource.service';
 import { EditResourceService } from './services/edit-resource.service';
-import { lastValueFrom } from 'rxjs';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -150,13 +149,13 @@ export class App {
       if (!result) {
         return;
       }
-      const constructed = await lastValueFrom(this.modificationService
+      const constructed = await this.modificationService
         .constructWithParameters({
           type: result.name,
           method: result.method?.name,
           body: result.method?.parameters,
-        }))
-      .catch(async (e: HttpErrorResponse) => await this.snackbarService.handleError(e));
+        })
+      .catch((e: HttpErrorResponse) => this.snackbarService.handleError(e));
 
       if (!constructed) {
         return;
@@ -203,9 +202,8 @@ export class App {
       const actualResource = resourceToBeDeleted;
       this.modificationService
         .remove$Response({id: actualResource.id})
-        .toAsync()
         .then(async () => this.removeResource(actualResource))
-        .catch(async error => await this.snackbarService.handleError(error));
+        .catch(error => this.snackbarService.handleError(error));
     });
   }
 

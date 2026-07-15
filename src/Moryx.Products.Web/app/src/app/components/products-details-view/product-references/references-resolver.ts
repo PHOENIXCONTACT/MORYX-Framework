@@ -5,7 +5,7 @@
 
 import { inject } from '@angular/core';
 import { RedirectCommand, ResolveFn, Router } from '@angular/router';
-import { lastValueFrom } from 'rxjs';
+
 import { ProductManagementService } from '@api/services';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -39,7 +39,7 @@ export const ReferencesResolver: ResolveFn<ProductModel[]> = async () => {
   };
 
   try {
-    const references = await lastValueFrom(apiService.getTypes({body: body}));
+    const references = await apiService.getTypes({body: body});
     editService.setReferences(references);
     return references;
   }

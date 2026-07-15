@@ -77,7 +77,7 @@ export class EditMenu {
         return;
       }
 
-      this.factoryMonitorService.getNavigation({ factoryId: factory }).subscribe(navigation => {
+      this.factoryMonitorService.getNavigation({ factoryId: factory }).then(navigation => {
         this.navigationItem = navigation;
         this.backgroundService.updateBackground(navigation.backgroundURL);
 

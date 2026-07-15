@@ -7,7 +7,7 @@ import { Component, inject, OnDestroy, OnInit, signal, viewChild, ChangeDetectio
 import { VariantDescriptor } from '@api/models';
 import { ContentDescriptorModel } from '@api/models/content-descriptor-model';
 import { HttpErrorResponse } from '@angular/common/http';
-import { lastValueFrom } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuTrigger, MatMenuModule } from '@angular/material/menu';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -87,7 +87,7 @@ export class VariantOverview implements OnInit, OnDestroy {
       if (this.content() !== undefined) {
         this.loadPreviews();
       } else {
-        this.mediaService.loadContent(id).subscribe((x) => {
+        this.mediaService.loadContent(id).then((x) => {
           this.content.set(x);
           if (this.content() !== undefined) {
             this.loadPreviews();
@@ -157,21 +157,19 @@ export class VariantOverview implements OnInit, OnDestroy {
 
   addPreview(variantName: string, mimeType: string, contentId: string) {
     if (mimeType.includes('image')) {
-      this.mediaService
-        .getPicture(variantName, contentId, true)
-        .subscribe((data) => {
-          if (data !== null) {
-            const blob = new Blob([data], {type: data.type});
-            const old = this.previewObjectUrls.get(variantName);
-            if (old) {
-              URL.revokeObjectURL(old);
-            }
-
-            const url = URL.createObjectURL(blob);
-            this.previewObjectUrls.set(variantName, url);
-            this.setMapItem(variantName, url);
+      this.mediaService.getPicture(variantName, contentId, true).then((data) => {
+        if (data !== null && data !== undefined) {
+          const blob = new Blob([data], {type: data.type});
+          const old = this.previewObjectUrls.get(variantName);
+          if (old) {
+            URL.revokeObjectURL(old);
           }
-        });
+
+          const url = URL.createObjectURL(blob);
+          this.previewObjectUrls.set(variantName, url);
+          this.setMapItem(variantName, url);
+        }
+      });
     } else {
       this.setMapItem(variantName, this.defaultPictureUrl());
     }
@@ -206,44 +204,42 @@ export class VariantOverview implements OnInit, OnDestroy {
       typeof variant.name === 'string' &&
       typeof content.id === 'string'
     ) {
-      this.mediaService
-        .getPicture(variant.name, content.id, false)
-        .subscribe((data) => {
-          if (data !== null) {
-            const bigPicture = new Blob([data], {type: data.type});
-            const reader = new FileReader();
-            reader.readAsDataURL(bigPicture);
-            reader.onload = (event) => {
-              this.downloadPictureUrl = reader.result;
-              if (
-                typeof variant.mimeType === 'string' &&
-                variant.mimeType.includes('image')
-              ) {
-                this.bigPictureUrl.set(this.downloadPictureUrl);
-              } else if (
-                typeof variant.mimeType === 'string' &&
-                variant.mimeType.includes('application/pdf')
-              ) {
-                if (this.pdfObjectUrl) {
-                  URL.revokeObjectURL(this.pdfObjectUrl);
-                }
-                this.pdfObjectUrl = URL.createObjectURL(bigPicture);
-                this.pdfUrl.update((_) => this.pdfObjectUrl);
-              } else {
-                this.bigPictureUrl.set(this.defaultPictureUrl());
+      this.mediaService.getPicture(variant.name, content.id, false).then((data) => {
+        if (data !== null && data !== undefined) {
+          const bigPicture = new Blob([data], {type: data.type});
+          const reader = new FileReader();
+          reader.readAsDataURL(bigPicture);
+          reader.onload = () => {
+            this.downloadPictureUrl = reader.result;
+            if (
+              typeof variant.mimeType === 'string' &&
+              variant.mimeType.includes('image')
+            ) {
+              this.bigPictureUrl.set(this.downloadPictureUrl);
+            } else if (
+              typeof variant.mimeType === 'string' &&
+              variant.mimeType.includes('application/pdf')
+            ) {
+              if (this.pdfObjectUrl) {
+                URL.revokeObjectURL(this.pdfObjectUrl);
               }
-              if (
-                typeof variant.mimeType === 'string' &&
-                variant.mimeType.includes('application/pdf')
-              ) {
-                this.bigPictureIsPdf.set(true);
-              } else {
-                this.bigPictureIsPdf.set(false);
-              }
-              this.bigPictureLoadingState.set(2);
-            };
-          }
-        });
+              this.pdfObjectUrl = URL.createObjectURL(bigPicture);
+              this.pdfUrl.update((_) => this.pdfObjectUrl);
+            } else {
+              this.bigPictureUrl.set(this.defaultPictureUrl());
+            }
+            if (
+              typeof variant.mimeType === 'string' &&
+              variant.mimeType.includes('application/pdf')
+            ) {
+              this.bigPictureIsPdf.set(true);
+            } else {
+              this.bigPictureIsPdf.set(false);
+            }
+            this.bigPictureLoadingState.set(2);
+          };
+        }
+      });
     }
   }
 
@@ -277,31 +273,22 @@ export class VariantOverview implements OnInit, OnDestroy {
           return e.name == resultData.variantName;
         }) !== undefined
       ) {
-        const alreadExistsMessage = await lastValueFrom(this.translateService
+        const alreadExistsMessage = await firstValueFrom(this.translateService
           .get(TranslationConstants.VARIANT_OVERVIEW.ALREADY_EXISTS_MESSAGE));
         this.snackbarService.showError(alreadExistsMessage);
       } else {
-        this.mediaService
-          .uploadVariant(id, resultData.variantName, resultData.file)
-          .subscribe({
-            next: (data) => {
-              this.mediaService.loadContent(id).subscribe((x) => {
-                if (x !== undefined) {
-                  //waits 0.8s to give the server time to create the preview
-                  this.mediaService.wait(800).then(() => {
-                    this.addPreview(
-                      resultData.variantName,
-                      resultData.file.type,
-                      id
-                    );
-                    this.content.set(x);
-                  });
-                }
-              });
-            },
-            error: async (e: HttpErrorResponse) =>
-              await this.snackbarService.handleError(e),
-          });
+        try {
+          await this.mediaService.uploadVariant(id, resultData.variantName, resultData.file);
+          const x = await this.mediaService.loadContent(id);
+          if (x !== undefined) {
+            //waits 0.8s to give the server time to create the preview
+            await this.mediaService.wait(800);
+            this.addPreview(resultData.variantName, resultData.file.type, id);
+            this.content.set(x);
+          }
+        } catch (e) {
+          await this.snackbarService.handleError(e as HttpErrorResponse);
+        }
       }
     }
   }
@@ -358,7 +345,7 @@ export class VariantOverview implements OnInit, OnDestroy {
       typeof selectedVariant.name === 'string' &&
       selectedVariant.name?.localeCompare('master') !== 0
     ) {
-      const deleteMessage = await lastValueFrom(this.translateService
+      const deleteMessage = await firstValueFrom(this.translateService
         .get(TranslationConstants.VARIANT_OVERVIEW.DELETE_MESSAGE));
       const dialogRef = this.dialog.open(DialogDelete, {
         data: {
@@ -367,7 +354,7 @@ export class VariantOverview implements OnInit, OnDestroy {
         },
       });
 
-      dialogRef.afterClosed().subscribe((result) => {
+      dialogRef.afterClosed().subscribe(async (result) => {
         if (result === true) {
           if (
             selectedVariant !== undefined &&
@@ -375,28 +362,21 @@ export class VariantOverview implements OnInit, OnDestroy {
             typeof content.id === 'string' &&
             typeof selectedVariant.name === 'string'
           ) {
-            this.mediaService
-              .removeVariant(content.id, selectedVariant.name)
-              .subscribe((response) => {
-                if (
-                  selectedVariant !== undefined &&
-                  typeof selectedVariant.name === 'string'
-                ) {
-                  this.remove(selectedVariant);
-                  this.previews.update(map => {
-                    map.delete(selectedVariant.name!);
-                    return map;
-                  });
-                  this.bigPictureUrl.update((_) => "");
-                  this.bigPictureLoadingState.update((_) => 0);
-
-                  if (this.pdfObjectUrl) {
-                    URL.revokeObjectURL(this.pdfObjectUrl);
-                    this.pdfObjectUrl = undefined;
-                    this.pdfUrl.update((_) => undefined);
-                  }
-                }
+            await this.mediaService.removeVariant(content.id, selectedVariant.name);
+            if (selectedVariant !== undefined && typeof selectedVariant.name === 'string') {
+              this.remove(selectedVariant);
+              this.previews.update(map => {
+                map.delete(selectedVariant.name!);
+                return map;
               });
+              this.bigPictureUrl.update((_) => "");
+              this.bigPictureLoadingState.update((_) => 0);
+              if (this.pdfObjectUrl) {
+                URL.revokeObjectURL(this.pdfObjectUrl);
+                this.pdfObjectUrl = undefined;
+                this.pdfUrl.update((_) => undefined);
+              }
+            }
           }
         }
       });

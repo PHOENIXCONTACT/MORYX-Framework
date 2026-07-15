@@ -26,7 +26,6 @@ export class OperatorsService {
     let operators = [] as AssignableOperator[];
     await this.operators
       .getAll$Response()
-      .toAsync()
       .then(o => (operators = o.body))
       .catch(() => (this._available = false));
     return operators;
@@ -37,7 +36,7 @@ export class OperatorsService {
       return;
     }
 
-    return await this.operators.add({body: {identifier: identifier} as OperatorModel}).toAsync();
+    return await this.operators.add({body: {identifier: identifier} as OperatorModel});
   }
 }
 

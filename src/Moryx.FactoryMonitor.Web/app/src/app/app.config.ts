@@ -18,7 +18,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
-import { firstValueFrom } from 'rxjs';
+
 import { environment } from '../environments/environment';
 import { ApiModule } from '@api/api.module';
 import { FactoryMonitorService } from './api/services';
@@ -72,7 +72,7 @@ export const appConfig: ApplicationConfig = {
       const factorySelectionService = inject(FactorySelectionService);
 
       // ToDo: Error Handling
-      const initialState = await firstValueFrom(api.initialFactoryState());
+      const initialState = await api.initialFactoryState();
 
       orderStore.initialize(initialState);
 

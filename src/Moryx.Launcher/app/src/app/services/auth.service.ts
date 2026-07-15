@@ -5,6 +5,7 @@
 
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
@@ -36,15 +37,12 @@ export class AuthService {
   }
 
   signOut(): void {
-    this.http.post(this.authBaseAddress + '/api/auth/signOut', {}, {
+    firstValueFrom(this.http.post(this.authBaseAddress + '/api/auth/signOut', {}, {
       withCredentials: true,
-    }).subscribe({
-      next: () => {
-        this.isLoggedIn.set(false);
-        this.userName.set('');
-        window.location.assign('/');
-      },
-      error: (err) => console.log(err),
-    });
+    })).then(() => {
+      this.isLoggedIn.set(false);
+      this.userName.set('');
+      window.location.assign('/');
+    }).catch((err) => console.log(err));
   }
 }

@@ -51,15 +51,12 @@ export class DialogShowRevisions implements OnInit {
       identifier: this.product()?.identifier,
       revisionFilter: RevisionFilter.All,
     };
-    this.managementService.getTypes({body: body}).subscribe({
-      next: (products) => {
-        if (products !== null) {
-          this.revisions.set(products);
-        }
-      },
-      error: async (e: HttpErrorResponse) =>
-        await this.snackbarService.handleError(e)
-    });
+    this.managementService.getTypes({body: body}).then((products) => {
+      if (products !== null) {
+        this.revisions.set(products);
+      }
+    }).catch(async (e: HttpErrorResponse) =>
+      await this.snackbarService.handleError(e));
   }
 
   protected onClose() {

@@ -42,7 +42,6 @@ export class InterruptDialog {
 
     await this.data
       .onSubmit(this.data.operation.model.identifier!, undefined)
-      .toAsync()
       .catch(() => {
         failed = true;
         this.isLoading.set(false);

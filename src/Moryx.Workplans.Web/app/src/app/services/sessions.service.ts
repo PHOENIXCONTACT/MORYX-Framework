@@ -4,12 +4,10 @@
 */
 
 import { inject, Injectable, signal } from '@angular/core';
-import { catchError, from, Observable, tap, throwError } from 'rxjs';
 import { WorkplanSessionModel } from '@api/models';
 import { WorkplanEditingService } from '@api/services';
 import { PrototypeToEntryConverter } from '@moryx/ngx-web-framework/entry-editor';
 import { BrowserStorageService } from './browser-storage.service';
-import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -25,31 +23,29 @@ export class SessionsService {
   );
   readonly sessionUpdated = signal<WorkplanSessionModel | undefined>(undefined);
 
-  getSession(sessionToken: string): Observable<WorkplanSessionModel> {
+  async getSession(sessionToken: string): Promise<WorkplanSessionModel> {
     const cachedModel = this.cachedSessionModels.get(sessionToken);
     if (cachedModel) {
-      return from([cachedModel]);
+      return cachedModel;
     }
 
-    return this.workplanEditing.openSession({ sessionId: sessionToken }).pipe(
-      tap(session => this.processOpenedSession(session)),
-      catchError((error: HttpErrorResponse): Observable<WorkplanSessionModel> => throwError(() => error))
-    );
+    const session = await this.workplanEditing.openSession({ sessionId: sessionToken });
+    this.processOpenedSession(session);
+    return session;
   }
 
-  getSessionForWorkplan(workplanId: number, duplicate: boolean = false): Observable<WorkplanSessionModel> {
+  async getSessionForWorkplan(workplanId: number, duplicate: boolean = false): Promise<WorkplanSessionModel> {
     let cachedModel = undefined;
     for (const cs of this.cachedSessionModels.values()) {if (cs.workplanId === workplanId) {
       cachedModel = cs;}
     }
     if (cachedModel) {
-      return from([cachedModel]);
+      return cachedModel;
     }
 
-    return this.workplanEditing.editWorkplan({ body: { workplanId: workplanId, duplicate: duplicate } }).pipe(
-      tap(session => this.processOpenedSession(session)),
-      catchError((error: HttpErrorResponse): Observable<WorkplanSessionModel> => throwError(() => error))
-    );
+    const session = await this.workplanEditing.editWorkplan({ body: { workplanId: workplanId, duplicate: duplicate } });
+    this.processOpenedSession(session);
+    return session;
   }
 
   private processOpenedSession(session: WorkplanSessionModel): void {
@@ -72,24 +68,22 @@ export class SessionsService {
     this.cachedSessionModels.set(session.sessionToken!, session);
   }
 
-  saveSession(session: WorkplanSessionModel): Observable<WorkplanSessionModel> {
+  async saveSession(session: WorkplanSessionModel): Promise<WorkplanSessionModel> {
     session.nodes?.forEach(n => {
       if (n?.properties) {
         PrototypeToEntryConverter.convertToEntry(n?.properties);
       }
     });
 
-    return this.workplanEditing.saveSession({ sessionId: session.sessionToken!, body: session }).pipe(
-      tap(session => this.registerUpdatedSession(session)),
-      catchError((error: HttpErrorResponse): Observable<WorkplanSessionModel> => throwError(() => error))
-    );
+    const saved = await this.workplanEditing.saveSession({ sessionId: session.sessionToken!, body: session });
+    this.registerUpdatedSession(saved);
+    return saved;
   }
 
-  updateSession(session: WorkplanSessionModel): Observable<WorkplanSessionModel> {
-    return this.workplanEditing.updateSession({ sessionId: session.sessionToken!, body: session }).pipe(
-      tap(session => this.registerUpdatedSession(session)),
-      catchError((error: HttpErrorResponse): Observable<WorkplanSessionModel> => throwError(() => error))
-    );
+  async updateSession(session: WorkplanSessionModel): Promise<WorkplanSessionModel> {
+    const updated = await this.workplanEditing.updateSession({ sessionId: session.sessionToken!, body: session });
+    this.registerUpdatedSession(updated);
+    return updated;
   }
 
   registerUpdatedSession(session: WorkplanSessionModel) {
@@ -100,7 +94,7 @@ export class SessionsService {
 
   async activateSession(sessionToken: string){
     if (!this.availableSessions().any(t => t === sessionToken)) {
-      await this.getSession(sessionToken).toAsync();
+      await this.getSession(sessionToken);
     }
 
     this.browserStorage.setActiveSession(sessionToken);
@@ -112,11 +106,9 @@ export class SessionsService {
     this.activeSession.set(undefined);
   }
 
-  closeSession(sessionToken: string): Observable<void> {
-    return this.workplanEditing.closeSession({ sessionId: sessionToken }).pipe(
-      tap(() => this.processSessionClosed(sessionToken)),
-      catchError((error: HttpErrorResponse): Observable<void> => throwError(() => error))
-    );
+  async closeSession(sessionToken: string): Promise<void> {
+    await this.workplanEditing.closeSession({ sessionId: sessionToken });
+    this.processSessionClosed(sessionToken);
   }
 
   private processSessionClosed(sessionToken: string): void {

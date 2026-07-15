@@ -7,7 +7,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { Entry } from '@moryx/ngx-web-framework/entry-editor';
-import { lastValueFrom } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import {
   ProductDefinitionModel,
   ProductImporter,
@@ -21,7 +21,6 @@ import {
 import { ProductManagementService } from '@api/services/product-management.service';
 import { FilterOptions } from '../models/FilterOptions';
 import { WorkplanService } from '@api/services/workplan.service';
-import '../extensions/observable.extensions';
 import { TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from '../extensions/translation-constants.extensions';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -53,8 +52,8 @@ export class CacheProductsService {
   } as FilterOptions;
 
   loadConfiguration() {
-    this.service.getProductCustomization().subscribe({
-      next: (configuration) => {
+    this.service.getProductCustomization()
+      .then((configuration) => {
         if (configuration.importers !== null) {
           this.importers.set(configuration.importers);
         }
@@ -64,20 +63,18 @@ export class CacheProductsService {
         if (configuration.recipeTypes !== null) {
           this.recipeDefinitions.set(configuration.recipeTypes);
         }
-      },
-      error: async (e: HttpErrorResponse) => {
+      })
+      .catch(async (e: HttpErrorResponse) => {
         await this.snackbarService.handleError(e);
-      },
-    });
+      });
 
-    this.workplanService.getAllWorkplans().subscribe({
-      next: (workplans) => {
+    this.workplanService.getAllWorkplans()
+      .then((workplans) => {
         this.workplans.set(workplans);
-      },
-      error: async (e: HttpErrorResponse) => {
+      })
+      .catch(async (e: HttpErrorResponse) => {
         await this.snackbarService.handleError(e);
-      },
-    });
+      });
   }
 
   // ToDo Make async
@@ -129,23 +126,21 @@ export class CacheProductsService {
       };
     }
 
-    this.service.getTypes({body: body}).subscribe({
-      next: (products) => {
+    this.service.getTypes({body: body})
+      .then((products) => {
         if (products !== null) {
           this.productsShownInTheTree.set(products);
         }
-      },
-      error: async () => await this.showErrorSnackbar(),
-    });
+      })
+      .catch(() => this.showErrorSnackbar());
   }
 
   private async showErrorSnackbar() {
-    const translations = await this.translateService
+    const translations = await firstValueFrom(this.translateService
       .get([
         TranslationConstants.APP.FAILED_LOADING,
         TranslationConstants.DISMISS,
-      ])
-      .toAsync();
+      ]));
     await this.snackbarService.showError(
       translations[TranslationConstants.APP.FAILED_LOADING]
     );
@@ -167,7 +162,6 @@ export class CacheProductsService {
     let success: boolean = false;
     await this.service
       .deleteType({id: product.id})
-      .toAsync()
       .then((res) => (success = res))
       .catch(
         async (e: HttpErrorResponse) => await this.snackbarService.handleError(e)
@@ -186,7 +180,6 @@ export class CacheProductsService {
 
     await this.service
       .getTypes({body: body})
-      .toAsync()
       .then((results) => {
         if (results && results[0]) {
           const existingRevision = newProductsForTree.find(p => p.id === results[0].id);
@@ -216,7 +209,7 @@ export class CacheProductsService {
     } as Import$Params;
 
     try {
-      await lastValueFrom(this.service.import(body));
+      await this.service.import(body);
       this.loadProductsForTree();
     } catch (error) {
       await this.snackbarService.handleError(error as HttpErrorResponse);

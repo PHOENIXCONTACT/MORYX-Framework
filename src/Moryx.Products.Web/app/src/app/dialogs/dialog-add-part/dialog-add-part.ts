@@ -58,20 +58,17 @@ export class DialogAddPart {
       selector: Selector.Direct,
       typeName: this.data.type,
     } as ProductQuery;
-    this.productManagementService.getTypes({body: body}).subscribe({
-      next: (products) => {
-        let possibleParts = products;
-        const currentParts = this.data.parts;
-        if (currentParts?.length && !this.data.isCollection) {
-          possibleParts = possibleParts.filter((p) => currentParts[0]?.id !== p.id);
-        }
+    this.productManagementService.getTypes({body: body}).then((products) => {
+      let possibleParts = products;
+      const currentParts = this.data.parts;
+      if (currentParts?.length && !this.data.isCollection) {
+        possibleParts = possibleParts.filter((p) => currentParts[0]?.id !== p.id);
+      }
 
-        // Todo: Make possible parts a resource signal
-        this.possibleParts.set(possibleParts);
-        this.filteredPossibleParts.set(possibleParts);
-      },
-      error: async (e) => await this.snackbarService.handleError(e)
-    });
+      // Todo: Make possible parts a resource signal
+      this.possibleParts.set(possibleParts);
+      this.filteredPossibleParts.set(possibleParts);
+    }).catch((e) => this.snackbarService.handleError(e));
   }
 
   protected onClose() {

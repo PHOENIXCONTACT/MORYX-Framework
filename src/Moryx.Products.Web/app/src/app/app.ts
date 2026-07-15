@@ -27,6 +27,7 @@ import {
   SearchSuggestion,
 } from "@moryx/ngx-web-framework/services";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
+import { firstValueFrom } from "rxjs";
 import { environment } from "../environments/environment";
 import {
   ProductDefinitionModel,
@@ -135,9 +136,8 @@ export class App implements OnInit, OnDestroy {
   }
 
   private async getTranslations(): Promise<{ [key: string]: string }> {
-    return await this.translateService
-      .get([TranslationConstants.APP.SNACK_BAR])
-      .toAsync();
+    return await firstValueFrom(this.translateService
+      .get([TranslationConstants.APP.SNACK_BAR]));
   }
 
   ngOnDestroy(): void {
