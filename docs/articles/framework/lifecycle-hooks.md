@@ -100,9 +100,7 @@ public class MyCustomHook : ILifecycleHook
 
 ### Module-aware hooks
 
-If your hook depends on the lifecycle of a specific MORYX module, you can use the following base classes:
-
-- `ModuleLifecycleHookBase`
+If your hook depends on the lifecycle of a specific MORYX module, you can use the `ModuleLifecycleHookBase` base class
 
 This abstraction:
 
