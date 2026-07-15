@@ -44,6 +44,7 @@ jobs:
 
             cyclonedx-npm \
               --output-format JSON \
+              --ignore-npm-errors \
               --output-file "${RUNNER_TEMP}/${project}.json"
 
             popd
@@ -61,3 +62,4 @@ jobs:
           name: frontend-sboms
           path: sboms/*.json
           if-no-files-found: warn
+
