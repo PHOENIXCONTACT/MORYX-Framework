@@ -91,3 +91,28 @@
   text-overflow: ellipsis;
   display: block;
 }
+
+.resource-option {
+  min-height: 64px;
+}
+
+.resource-option-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+}
+
+.resource-option-name {
+  white-space: nowrap;
+  overflow: hidden;
+  line-height: 24px;
+}
+
+.resource-option-type {
+  font: var(--mat-sys-body-medium);
+  color: var(--mat-sys-on-surface-variant);
+  white-space: nowrap;
+  line-height: 20px;
+  text-overflow: ellipsis;
+}

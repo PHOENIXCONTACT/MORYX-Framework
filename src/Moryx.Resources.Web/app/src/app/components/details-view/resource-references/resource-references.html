@@ -85,8 +85,15 @@
                   (selectionChange)="addTarget(table)"
                   >
                   @for (pr of possibleResources(); track pr) {
-                    <mat-option [value]="pr">
-                      {{ "#" + pr.id + " " + pr.name }}
+                    <mat-option [value]="pr" class="resource-option">
+                      <div class="resource-option-content">
+                        <span class="resource-option-name">
+                          #{{ pr.id }} {{ pr.name ?? 'null' }}
+                        </span>
+                        <span class="resource-option-type">
+                          {{ pr.type }}
+                        </span>
+                      </div>
                     </mat-option>
                   }
                 </mat-select>
