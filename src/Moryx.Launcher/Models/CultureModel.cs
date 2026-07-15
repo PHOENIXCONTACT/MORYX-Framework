@@ -3,7 +3,7 @@
 
 namespace Moryx.Launcher; // TODO: move to ns *.Models in the next major
 
-public class CultureModel
+internal class CultureModel
 {
     public string Name { get; set; }
 
