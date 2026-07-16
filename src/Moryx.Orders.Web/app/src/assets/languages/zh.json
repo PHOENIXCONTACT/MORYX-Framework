@@ -117,10 +117,11 @@
     "OVERDELIVERY": "超交",
     "UNDERDELIVERY": "欠交",
     "PARTIAL_AMOUNT": "部分数量",
-    "BEGIN": "开始",
-    "OPERATOR_SELECTION_LABEL": "操作",
-    "OPERATOR_SELECTION_PLACEHOLDER": "(可选） 请选择您的助手",
-    "OPERATOR_SELECTION_NOT_SUPPORTED": "不允许更改存储空间"
+    "BEGIN": "开始"
+  },
+  "OPERATOR_SELECTOR": {
+    "OPERATOR_SELECTOR_LABEL": "操作",
+    "OPERATOR_SELECTOR_PLACEHOLDER": "(可选） 请选择您的助手"
   },
   "CHANGE_AMOUNT_DIALOG": {
     "TITLE": "更新当前目标金额",

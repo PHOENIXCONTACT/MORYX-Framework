@@ -117,10 +117,11 @@
     "OVERDELIVERY": "Prodotte",
     "UNDERDELIVERY": "Non prodotte",
     "PARTIAL_AMOUNT": "Quantità parziale",
-    "BEGIN": "INIZIA",
-    "OPERATOR_SELECTION_LABEL": "Operatore",
-    "OPERATOR_SELECTION_PLACEHOLDER": "(Facoltativo) Selezionare un operatore",
-    "OPERATOR_SELECTION_NOT_SUPPORTED": "Selezione dell'operatore non supportata"
+    "BEGIN": "INIZIA"
+  },
+  "OPERATOR_SELECTOR": {
+    "OPERATOR_SELECTOR_LABEL": "Operatore",
+    "OPERATOR_SELECTOR_PLACEHOLDER": "(Facoltativo) Selezionare un operatore"
   },
   "CHANGE_AMOUNT_DIALOG": {
     "TITLE": "Aggiornare l'importo target corrente",
