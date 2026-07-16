@@ -28,6 +28,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MultiProgressBar } from "@app/multi-progress-bar/multi-progress-bar";
 import { OperatorSelector } from '@app/components/operator-selector/operator-selector';
+import { DialogContext } from "@app/components/dialog-context/dialog-context";
 
 @Component({
   selector: 'app-begin-dialog',
@@ -50,7 +51,8 @@ import { OperatorSelector } from '@app/components/operator-selector/operator-sel
     MatCardModule,
     MatAutocompleteModule,
     MultiProgressBar,
-    OperatorSelector
+    OperatorSelector,
+    DialogContext
   ]
 })
 export class BeginDialog {

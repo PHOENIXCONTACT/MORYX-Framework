@@ -20,6 +20,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatInputModule } from "@angular/material/input";
 import { MatIconModule } from "@angular/material/icon";
 import { OperatorSelector } from "@app/components/operator-selector/operator-selector";
+import { DialogContext } from "@app/components/dialog-context/dialog-context";
 
 @Component({
   selector: "app-report-dialog",
@@ -40,8 +41,9 @@ import { OperatorSelector } from "@app/components/operator-selector/operator-sel
     MatInputModule,
     MatRadioGroup,
     MatIconModule,
-    OperatorSelector
-]
+    OperatorSelector,
+    DialogContext
+  ]
 })
 export class ReportDialog implements OnInit {
   protected reportContext = signal<ReportContext | undefined>(undefined);

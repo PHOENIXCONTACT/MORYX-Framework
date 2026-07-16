@@ -71,8 +71,6 @@
     "REPORT_TITLE": "Report Operazione",
     "REPORT": "REPORT",
     "OPERATION": "Operazione",
-    "ORDER": "Ordine",
-    "PRODUCT": "Prodotto",
     "AMOUNT": "Quantità",
     "OVERDELIVERY": "Prodotte",
     "UNDERDELIVERY": "Non prodotte",
@@ -108,8 +106,6 @@
   },
   "BEGIN_DIALOG": {
     "TITLE": "Inizia la Produzione",
-    "ORDER": "Ordine",
-    "PRODUCT": "Prodotto",
     "TOTAL_AMOUNT": "Quantità totale",
     "SUCCESS": "Successo",
     "SCRAP": "Fallite",
@@ -127,6 +123,10 @@
     "TITLE": "Aggiornare l'importo target corrente",
     "UPDATE_AMOUNT": "IMPORTO AGGIORNATO",
     "CANNOT_REDUCE_TARGET_AMOUNT": "L'importo target non può essere ulteriormente ridotto"
+  },
+  "DIALOG_CONTEXT": {
+    "ORDER": "Ordine",
+    "PRODUCT": "Prodotto"
   },
   "DISMISS": "RIFIUTARE",
   "CANCEL": "CANCELLA",
