@@ -26,12 +26,15 @@ export class EditProductsService {
   private cacheProductsService = inject(CacheProductsService);
   private snackbarService = inject(SnackbarService);
 
-  readonly editing = signal<boolean>(false);
+  private readonly _editing = signal<boolean>(false);
+  readonly editing = this._editing.asReadonly();
 
-  readonly currentProduct = signal<ProductModel | undefined>(undefined);
+  private readonly _currentProduct = signal<ProductModel | undefined>(undefined);
+  readonly currentProduct = this._currentProduct.asReadonly();
   readonly currentProductId = computed(() => this.currentProduct()?.id);
 
-  readonly references = signal<ProductModel[] | undefined>(undefined);
+  private readonly _references = signal<ProductModel[] | undefined>(undefined);
+  readonly references = this._references.asReadonly();
 
   private recipe = linkedSignal<ProductModel | undefined, RecipeModel | undefined>({
     source: this.currentProduct,
@@ -72,15 +75,15 @@ export class EditProductsService {
     this.currentRecipeNumber = productStorageObject.details.currentRecipeNumber;
     this.maximumAlreadySavedPartId = productStorageObject.details.maximumAlreadySavedPartId;
     this.maximumAlreadySavedRecipeId = productStorageObject.details.maximumAlreadySavedRecipeId;
-    this.currentProduct.set(productStorageObject.product);
+    this._currentProduct.set(productStorageObject.product);
     this.recipe.set(productStorageObject.product.recipes?.find(r => r.id === productStorageObject.details.currentRecipeNumber));
 
-    this.editing.set(true);
+    this._editing.set(true);
   }
 
   setProduct(product: ProductModel | undefined) {
-    this.currentProduct.set(product);
-    this.references.set(undefined);
+    this._currentProduct.set(product);
+    this._references.set(undefined);
   }
 
   updateCurrentProduct(product: ProductModel) {
@@ -91,16 +94,16 @@ export class EditProductsService {
     if (current?.id !== product.id) {
       throw new Error("Tried to update product with id " + product.id + " but current product has id " + current?.id);
     }
-    this.currentProduct.set(product);
+    this._currentProduct.set(product);
   }
 
   resetProduct() {
-    this.currentProduct.set(undefined);
-    this.references.set(undefined);
+    this._currentProduct.set(undefined);
+    this._references.set(undefined);
   }
 
   setReferences(references: ProductModel[] | undefined) {
-    this.references.set(references);
+    this._references.set(references);
   }
 
   onEdit() {
@@ -132,7 +135,7 @@ export class EditProductsService {
       this.maximumAlreadySavedPartId = this.currentPartId;
     }
 
-    this.editing.set(true);
+    this._editing.set(true);
   }
 
   async onSave() {
@@ -179,12 +182,12 @@ export class EditProductsService {
       return;
     }
 
-    this.currentProduct.set(updated);
-    this.editing.set(false);
+    this._currentProduct.set(updated);
+    this._editing.set(false);
   }
 
   async onCancel() {
-    this.editing.set(false);
+    this._editing.set(false);
     const to = this.router.url;
     await this.router.navigate(['/cancel'], { queryParams: { to: encodeURIComponent(to) }, replaceUrl: true, });
   }
@@ -247,7 +250,7 @@ export class EditProductsService {
       throw new Error("Invalid State: No current product set");
     }
     currentProduct.recipes!.push(recipe);
-    this.currentProduct.set({...currentProduct, recipes: [...currentProduct.recipes!]});
+    this._currentProduct.set({...currentProduct, recipes: [...currentProduct.recipes!]});
   }
 
   setRecipe(recipe: RecipeModel | undefined) {
@@ -271,7 +274,7 @@ export class EditProductsService {
       throw new Error("Invalid State: Tried to update recipe with id " + recipe.id + " but it was not found in current product");
     }
     this.recipe.set(recipe);
-    this.currentProduct.update(product => {
+    this._currentProduct.update(product => {
       const recipes = [...product!.recipes!];
       recipes[recipeIndex] = recipe;
       return {...product!, recipes};
@@ -286,7 +289,7 @@ export class EditProductsService {
     currentProduct.recipes = currentProduct.recipes.filter(
       (r) => r.id !== recipe.id
     );
-    this.currentProduct.set(currentProduct);
+    this._currentProduct.set(currentProduct);
   }
 
   setPartConnector(partConnector: PartConnector | undefined) {
@@ -318,7 +321,7 @@ export class EditProductsService {
     }
 
     const updatedConnectors = product.parts?.map(c => c.name === connector.name ? {...connector} : c) ?? [];
-    this.currentProduct.set({...product, parts: updatedConnectors});
+    this._currentProduct.set({...product, parts: updatedConnectors});
     return newPart;
   }
 
@@ -343,7 +346,7 @@ export class EditProductsService {
       connector.parts = [] as PartModel[];
     }
     const updatedConnectors = product.parts?.map(c => c.name === connector.name ? {...connector} : c) ?? [];
-    this.currentProduct.set({...product, parts: updatedConnectors});
+    this._currentProduct.set({...product, parts: updatedConnectors});
   }
 }
 

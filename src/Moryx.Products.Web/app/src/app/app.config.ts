@@ -5,27 +5,8 @@
 
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { ApplicationConfig, importProvidersFrom, inject, provideAppInitializer } from "@angular/core";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MatButtonModule } from "@angular/material/button";
-import { MatCardModule } from "@angular/material/card";
-import { MatCheckboxModule } from "@angular/material/checkbox";
-import { MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS } from "@angular/material/dialog";
-import { MatExpansionModule } from "@angular/material/expansion";
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatIconModule, MatIconRegistry } from "@angular/material/icon";
-import { MatInputModule } from "@angular/material/input";
-import { MatListModule } from "@angular/material/list";
-import { MatMenuModule } from "@angular/material/menu";
-import { MatProgressBarModule } from "@angular/material/progress-bar";
-import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import { MatSelectModule } from "@angular/material/select";
-import { MatSidenavModule } from "@angular/material/sidenav";
-import { MatSnackBarModule } from "@angular/material/snack-bar";
-import { MatTableModule } from "@angular/material/table";
-import { MatTabsModule } from "@angular/material/tabs";
-import { MatToolbarModule } from "@angular/material/toolbar";
-import { MatTooltipModule } from "@angular/material/tooltip";
-import { MatTreeModule } from "@angular/material/tree";
+import { MAT_DIALOG_DEFAULT_OPTIONS } from "@angular/material/dialog";
+import { MatIconRegistry } from "@angular/material/icon";
 import { BrowserModule } from "@angular/platform-browser";
 import { ApiInterceptor, API_INTERCEPTOR_PROVIDER } from "@moryx/ngx-web-framework/interceptors";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
@@ -36,41 +17,25 @@ import { routes } from "./app.routes";
 
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+import { provideApiConfiguration } from '@api/api-configuration';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes, withComponentInputBinding(), withRouterConfig({paramsInheritanceStrategy: 'always'})),
-    importProvidersFrom(
-      BrowserModule,
-      FormsModule,
-      MatTreeModule,
-      MatButtonModule,
-      MatFormFieldModule,
-      MatInputModule,
-      MatCardModule,
-      MatListModule,
-      MatTabsModule,
-      MatIconModule,
-      MatTableModule,
-      MatProgressSpinnerModule,
-      MatDialogModule,
-      MatSelectModule,
-      MatCheckboxModule,
-      MatExpansionModule,
-      MatSnackBarModule,
-      MatToolbarModule,
-      MatSidenavModule,
-      MatMenuModule,
-      ApiModule.forRoot({rootUrl: environment.rootUrl}),
-      MatProgressBarModule,
-      MatSnackBarModule,
-      MatTooltipModule,
-      ReactiveFormsModule
-    ),
+
+    // Configure the API endpoint
+    provideApiConfiguration(environment.rootUrl),
+
+    // Register custom DI interceptors
+    // TODO: Replace by fns, if https://github.com/PHOENIXCONTACT/ngx-moryx-web/pull/48 was released
     ApiInterceptor,
     API_INTERCEPTOR_PROVIDER,
-    SnackbarService,
+
+    // Setup HttpClient
+    // TODO: Remove withInterceptorsFromDi if https://github.com/PHOENIXCONTACT/ngx-moryx-web/pull/48 was released
     provideHttpClient(withInterceptorsFromDi()),
+
+    // Configure translation loader
     provideTranslateService({
       loader: provideTranslateHttpLoader({
         prefix: environment.assets + 'assets/languages/',
@@ -78,6 +43,8 @@ export const appConfig: ApplicationConfig = {
       }),
       fallbackLang: 'en'
     }),
+
+    // Configure mat-dialog defaults
     {
       provide: MAT_DIALOG_DEFAULT_OPTIONS,
       useValue: {
@@ -85,6 +52,8 @@ export const appConfig: ApplicationConfig = {
         maxHeight: '90vh'
       }
     },
+
+    // Additional app initializers
     provideAppInitializer(() => {
       // Use material-symbols as default icon font
       const iconRegistry = inject(MatIconRegistry);

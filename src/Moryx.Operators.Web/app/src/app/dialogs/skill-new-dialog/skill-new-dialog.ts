@@ -16,6 +16,7 @@ import { AppStoreService } from '@app/services/app-store.service';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 @Component({
   selector: 'app-skill-new-dialog',
@@ -32,7 +33,10 @@ import { MatInputModule } from '@angular/material/input';
     TranslatePipe,
     MatButtonModule,
     MatInputModule
-  ]
+  ],
+  providers: [
+    provideNativeDateAdapter()
+  ],
 })
 export class SkillNewDialog {
   protected data = inject<OperatorSkill>(MAT_DIALOG_DATA);

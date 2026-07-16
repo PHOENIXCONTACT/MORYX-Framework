@@ -85,7 +85,7 @@ export class DialogAddPart {
     ));
   }
 
-  partContainsSearchText(part: ProductModel): boolean {
+  private partContainsSearchText(part: ProductModel): boolean {
     const name = this.editProductsService.createProductNameWithIdentity(part);
     const indexSearchText = name
       .toLowerCase()

@@ -18,7 +18,8 @@ export class OrderStoreService {
   private readonly factoryStateStreamService = inject(FactoryStateStreamService);
 
   private readonly orders = signal<Order[]>([]);
-  readonly toggledOrder = signal<Order | undefined>(undefined);
+  private readonly _toggledOrder = signal<Order | undefined>(undefined);
+  readonly toggledOrder = this._toggledOrder.asReadonly();
 
   // TODO: Add custom `equal` fn when OrderManagement facade fires order-started event before order-changed-to-running event
   readonly runningOrders = computed(() =>
@@ -80,7 +81,7 @@ export class OrderStoreService {
 
   public toggleOrder(order: Order) {
     order.isToggled = !order.isToggled;
-    this.toggledOrder.set(order);
+    this._toggledOrder.set(order);
   }
 
   public applyOrderColor(cell: CellModel): CellModel {

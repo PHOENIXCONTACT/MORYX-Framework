@@ -17,13 +17,14 @@ export class MediaService {
   private mediaServerService = inject(MediaServerService);
   private snackbarService = inject(SnackbarService);
 
-  readonly contents = signal<ContentDescriptorModel[]>([]);
-  TranslationConstants = TranslationConstants;
+  private readonly _contents = signal<ContentDescriptorModel[]>([]);
+  readonly contents = this._contents.asReadonly();
+  protected TranslationConstants = TranslationConstants;
 
   async loadContents(): Promise<void> {
     try {
       const response = await this.mediaServerService.getAll();
-      this.contents.set(response);
+      this._contents.set(response);
     } catch (error) {
       this.handleError<ContentDescriptorModel[]>('Retrieving Contents')(error as HttpErrorResponse);
     }
@@ -66,7 +67,7 @@ export class MediaService {
       if (content) {
         // Delay until server generate the preview
         await this.wait(1000);
-        this.contents.update(items => [...items, content]);
+        this._contents.update(items => [...items, content]);
       }
     } catch (err) {
       await this.snackbarService.handleError(err as HttpErrorResponse);

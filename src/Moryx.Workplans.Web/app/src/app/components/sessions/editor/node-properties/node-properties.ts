@@ -64,7 +64,7 @@ export class NodeProperties {
     });
   }
 
-  async updateNode(node: WorkplanNodeModel) {
+  private async updateNode(node: WorkplanNodeModel) {
     const activeSession = this.sessionsService.activeSession();
     if (!activeSession || !node.id || !this.editorStateService.workplan) {
       return;

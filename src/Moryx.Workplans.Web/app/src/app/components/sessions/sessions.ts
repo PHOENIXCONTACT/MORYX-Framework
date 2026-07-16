@@ -90,7 +90,7 @@ export class Sessions implements OnInit, OnDestroy {
     });
   }
 
-  onSessionUpdated(updated: WorkplanSessionModel) {
+  private onSessionUpdated(updated: WorkplanSessionModel) {
     if (this.activeSession()?.sessionToken === updated.sessionToken) {
       this.activeSession.set(updated);
     }
@@ -127,7 +127,7 @@ export class Sessions implements OnInit, OnDestroy {
     this.searchBarService.unsubscribe();
   }
 
-  async getTranslations(): Promise<{ [key: string]: string }> {
+  private async getTranslations(): Promise<{ [key: string]: string }> {
     return await firstValueFrom(this.translateService
       .get([
         TranslationConstants.SESSIONS.CONFIRM_DIALOG.CONFIRM,
@@ -180,7 +180,7 @@ export class Sessions implements OnInit, OnDestroy {
     }
   }
 
-  closeSession(sessionToken: string, sessionIndex: number) {
+  private closeSession(sessionToken: string, sessionIndex: number) {
     this.sessionService.closeSession(sessionToken)
       .then(() => {
         if (sessionIndex > 0) {

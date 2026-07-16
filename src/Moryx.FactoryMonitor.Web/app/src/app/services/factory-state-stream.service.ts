@@ -27,8 +27,10 @@ export class FactoryStateStreamService {
 
   private eventSource?: EventSource;
 
-  readonly updatedCell = signal<CellModel | undefined>(undefined);
-  readonly updatedOrder = signal<Order | undefined>(undefined);
+  private readonly _updatedCell = signal<CellModel | undefined>(undefined);
+  readonly updatedCell = this._updatedCell.asReadonly();
+  private readonly _updatedOrder = signal<Order | undefined>(undefined);
+  readonly updatedOrder = this._updatedOrder.asReadonly();
 
   connect() {
     this.eventSource = new EventSource(this.factoryMonitorService.rootUrl + FactoryMonitorService.FactoryStatesStreamPath);
@@ -57,31 +59,31 @@ export class FactoryStateStreamService {
   private transformResourceEvent(event: MessageEvent<string>) {
     const resourceChangedModel = <ResourceChangedModel>JSON.parse(event.data);
     const cell = Converter.resourceChangedModelToCell(resourceChangedModel);
-    this.updatedCell.set(cell);
+    this._updatedCell.set(cell);
   }
 
   private transformActivityChangedEvent(event: MessageEvent<string>) {
     const activityChangedModel = <ActivityChangedModel>JSON.parse(event.data);
     const cell = Converter.activityChangedModelToCell(activityChangedModel);
-    this.updatedCell.set(cell);
+    this._updatedCell.set(cell);
   }
 
   private transformCellStateChangedEvent(event: MessageEvent<string>) {
     const cellStateChangedModel = <CellStateChangedModel>JSON.parse(event.data);
     const cell = Converter.cellStateChangedModelToCell(cellStateChangedModel);
-    this.updatedCell.set(cell);
+    this._updatedCell.set(cell);
   }
 
   private transformOrderChangedEvent(event: MessageEvent<string>) {
     const orderChangedModel = <OrderChangedModel>JSON.parse(event.data);
     const order = Converter.orderChangedModelToOrder(orderChangedModel);
-    this.updatedOrder.set(order);
+    this._updatedOrder.set(order);
   }
 
   private transformOrderEvent(event: MessageEvent<string>) {
     const orderModel = <OrderModel>JSON.parse(event.data);
     const order = Converter.orderModelToOrder(orderModel);
-    this.updatedOrder.set(order);
+    this._updatedOrder.set(order);
   }
 
   disconnect() {

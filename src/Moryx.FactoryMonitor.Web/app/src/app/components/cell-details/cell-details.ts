@@ -37,7 +37,7 @@ export class CellDetails {
   protected cellDetails = this.cellStoreService.cellSelected;
   protected TranslationConstants = TranslationConstants;
 
-  openCellImageDialog() {
+  protected openCellImageDialog() {
     this.matDialog.open(CellImageDialog, {
       data: {
         cellId: this.cellDetails()?.id,

@@ -6,7 +6,6 @@
 import { Component, computed, effect, inject, input, signal, untracked, ChangeDetectionStrategy } from "@angular/core";
 import { RouterLink } from "@angular/router";
 import { TranslationConstants } from "../extensions/translation-constants.extensions";
-import { OperatorSkillView } from "../models/type";
 import { OperatorSkill } from "../models/operator-skill-model";
 import { dateToString } from "../models/utils";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
@@ -63,15 +62,12 @@ export class OperatorDetails {
     pseudonym: '',
     signedIn: false
   });
-  skillView = signal<OperatorSkillView>('Current');
   skillTypes = computed(() => this.appStoreService.skillTypes().map(skillTypeToModel));
   operatorViewModel = signal<OperatorViewModel | undefined>(undefined);
 
   protected TranslationConstants = TranslationConstants;
   protected dateToString = dateToString;
   protected dataSource!: MatTableDataSource<OperatorSkill>;
-  skillToOperatorSkill = skillToOperatorSkill;
-  skillTypeToModel = skillTypeToModel;
   protected displayedColumns: string[] = ['type', 'obtainedOn', 'expiresOn', 'actions'];
 
   constructor() {
@@ -83,7 +79,7 @@ export class OperatorDetails {
     });
   }
 
-  initialize(id: string) {
+  private initialize(id: string) {
     const identifier = id;
     if (!identifier) {
       return;
@@ -103,7 +99,7 @@ export class OperatorDetails {
     this.loadSkills();
   }
 
-  loadSkills() {
+  private loadSkills() {
     this.appStoreService.getSkillFromRemoteSource()
       .then(skills => {
         const skillModels = skills.filter(e => e.operatorIdentifier === this.operator().identifier).map(skillToOperatorSkill);

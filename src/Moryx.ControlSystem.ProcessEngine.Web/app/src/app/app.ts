@@ -3,7 +3,6 @@ import { TranslationConstants } from "./extensions/translation-constants.extensi
 import { TranslateService } from "@ngx-translate/core";
 import { LanguageService } from "@moryx/ngx-web-framework/services";
 import {
-  Router,
   RouterLink,
   RouterLinkActive,
   RouterOutlet,
@@ -22,9 +21,6 @@ import { MatIconModule } from "@angular/material/icon";
 export class App {
   private translateService = inject(TranslateService);
   private languageService = inject(LanguageService);
-  private router = inject(Router);
-
-  title = "Moryx.ControlSystem.ProcessEngine.Web";
 
   constructor() {
     this.translateService.addLangs([

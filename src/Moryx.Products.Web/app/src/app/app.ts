@@ -93,18 +93,17 @@ export class App implements OnInit, OnDestroy {
 
   protected isEditMode = this.editService.editing;
   protected selected = this.editService.currentProduct;
-  products = signal<ProductModel[]>([]);
-  productDefinitions = signal<ProductDefinitionModel[]>([]);
+  protected products = signal<ProductModel[]>([]);
+  protected productDefinitions = signal<ProductDefinitionModel[]>([]);
   protected hierarchic = signal(false);
   protected revisionOptions = signal<string[]>(Object.keys(RevisionFilter));
   protected selectorOptions = signal<string[]>(Object.keys(Selector));
-  importers = this.cacheService.importers;
+  protected importers = this.cacheService.importers;
   protected menuTopLeftPosition = signal<{ x: string, y: string }>({x: '0', y: '0'});
   protected readonly trigger = viewChild.required(MatMenuTrigger);
 
   protected TranslationConstants = TranslationConstants;
 
-  title = "Moryx.Products.Web";
   protected productsToolbarImage: string =
     environment.assets + "assets/products_toolbar.jpg";
 
@@ -158,7 +157,7 @@ export class App implements OnInit, OnDestroy {
     });
   }
 
-  onSearch(result: SearchRequest) {
+  private onSearch(result: SearchRequest) {
     if (!this.products().length) {
       return;
     }
@@ -204,7 +203,7 @@ export class App implements OnInit, OnDestroy {
 
   protected treeData = signal<ProductNode[]>([]);
 
-  createDatasource(hierarchic: boolean) {
+  private createDatasource(hierarchic: boolean) {
     if (this.productDefinitions().length === 0) {
       return;
     }

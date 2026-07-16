@@ -17,11 +17,14 @@ export class SessionsService {
   private browserStorage = inject(BrowserStorageService);
   private cachedSessionModels = new Map<string, WorkplanSessionModel>();
 
-  readonly activeSession = signal<string | undefined>(this.browserStorage.getActiveSession());
-  readonly availableSessions = signal<string[]>(
+  private readonly _activeSession = signal<string | undefined>(this.browserStorage.getActiveSession());
+  readonly activeSession = this._activeSession.asReadonly();
+  private readonly _availableSessions = signal<string[]>(
     this.browserStorage.getStorageSessions().map(sso => sso.sessionToken)
   );
-  readonly sessionUpdated = signal<WorkplanSessionModel | undefined>(undefined);
+  readonly availableSessions = this._availableSessions.asReadonly();
+  private readonly _sessionUpdated = signal<WorkplanSessionModel | undefined>(undefined);
+  readonly sessionUpdated = this._sessionUpdated.asReadonly();
 
   async getSession(sessionToken: string): Promise<WorkplanSessionModel> {
     const cachedModel = this.cachedSessionModels.get(sessionToken);
@@ -59,7 +62,7 @@ export class SessionsService {
   private addNewSession(session: WorkplanSessionModel) {
     this.browserStorage.addSession(session);
 
-    this.availableSessions.update(sessions => [...sessions, session.sessionToken!]);
+    this._availableSessions.update(sessions => [...sessions, session.sessionToken!]);
 
     this.addSessionToCache(session);
   }
@@ -89,7 +92,7 @@ export class SessionsService {
   registerUpdatedSession(session: WorkplanSessionModel) {
     this.cachedSessionModels.set(session.sessionToken!, session);
     this.browserStorage.updateSession(session);
-    this.sessionUpdated.set(session);
+    this._sessionUpdated.set(session);
   }
 
   async activateSession(sessionToken: string){
@@ -98,12 +101,12 @@ export class SessionsService {
     }
 
     this.browserStorage.setActiveSession(sessionToken);
-    this.activeSession.set(sessionToken);
+    this._activeSession.set(sessionToken);
   }
 
   deactivateSession() {
     this.browserStorage.removeActiveSession();
-    this.activeSession.set(undefined);
+    this._activeSession.set(undefined);
   }
 
   async closeSession(sessionToken: string): Promise<void> {
@@ -115,14 +118,14 @@ export class SessionsService {
     this.browserStorage.closeSession(sessionToken);
     this.cachedSessionModels.delete(sessionToken);
 
-    this.availableSessions.update(sessions => sessions.filter(st => st != sessionToken));
+    this._availableSessions.update(sessions => sessions.filter(st => st != sessionToken));
 
     if (this.activeSession() != sessionToken) {
       return;
     }
 
     this.browserStorage.removeActiveSession();
-    this.activeSession.set(undefined);
+    this._activeSession.set(undefined);
   }
 }
 

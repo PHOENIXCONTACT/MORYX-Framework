@@ -12,11 +12,19 @@ import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { environment } from '../environments/environment';
 
 import { LocationPersistenceService } from './services/location-persistence.service';
+import { provideApiConfiguration } from '@api/api-configuration';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
+
+    // Configure the API endpoint
+    provideApiConfiguration(environment.rootUrl),
+
+    // Setup HttpClient
     provideHttpClient(),
+
+    // Configure translation loader
     provideTranslateService({
       loader: provideTranslateHttpLoader({
         prefix: environment.assets + 'assets/languages/',
@@ -24,6 +32,8 @@ export const appConfig: ApplicationConfig = {
       }),
       fallbackLang: 'en'
     }),
+
+    // Additional app initializers
     provideAppInitializer(() => {
       const iconRegistry = inject(MatIconRegistry);
       iconRegistry.setDefaultFontSetClass('material-symbols-outlined');

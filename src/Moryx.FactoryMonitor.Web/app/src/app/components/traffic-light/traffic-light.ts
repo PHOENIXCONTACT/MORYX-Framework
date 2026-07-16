@@ -42,7 +42,7 @@ export class TrafficLight {
     });
   }
 
-  async getTranslations(): Promise<{ [key: string]: string }> {
+  private async getTranslations(): Promise<{ [key: string]: string }> {
     return await firstValueFrom(this.translateService
       .get([
         TranslationConstants.CELL_DETAILS.IDLE_STATE,
@@ -60,7 +60,7 @@ export class TrafficLight {
     this.currentState.set(newCellParameters?.state ?? CellState.Idle);
   }
 
-  public async getStringState(state: CellState) {
+  private async getStringState(state: CellState) {
     const translations = await this.getTranslations();
 
     switch (state) {

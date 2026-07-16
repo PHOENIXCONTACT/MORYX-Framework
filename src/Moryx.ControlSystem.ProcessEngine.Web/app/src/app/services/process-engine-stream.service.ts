@@ -16,8 +16,10 @@ export class ProcessEngineStreamService {
   private processEventSource?: EventSource;
   private activitiesEventSource?: EventSource;
 
-  updatedProcess = signal<JobProcessModel | undefined>(undefined);
-  updatedActivity = signal<ProcessActivityModel | undefined>(undefined);
+  private readonly _updatedProcess = signal<JobProcessModel | undefined>(undefined);
+  readonly updatedProcess = this._updatedProcess.asReadonly();
+  private readonly _updatedActivity = signal<ProcessActivityModel | undefined>(undefined);
+  readonly updatedActivity = this._updatedActivity.asReadonly();
 
   connect() {
     this.publishActivityUpdates();
@@ -28,7 +30,7 @@ export class ProcessEngineStreamService {
     this.processEventSource = new EventSource(this.processEngineService.rootUrl + ProcessEngineService.ProcessUpdatesStreamPath);
     this.processEventSource.onmessage = event => {
       const process = JSON.parse(event.data);
-      this.updatedProcess.set(process);
+      this._updatedProcess.set(process);
     };
   }
 
@@ -36,7 +38,7 @@ export class ProcessEngineStreamService {
     this.activitiesEventSource = new EventSource(this.processEngineService.rootUrl + ProcessEngineService.ActivitiesUpdatesStreamPath);
     this.activitiesEventSource.onmessage = event => {
       const activity = JSON.parse(event.data);
-      this.updatedActivity.set(activity);
+      this._updatedActivity.set(activity);
     };
   }
 

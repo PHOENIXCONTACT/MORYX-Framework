@@ -52,7 +52,7 @@ export class DialogAddResource implements OnInit {
     this.types.update(() => this.cache.flatTypes?.filter(t => t.creatable).sort((a, b) => this.byName(a, b)));
   }
 
-  byName(a: ResourceTypeModel, b: ResourceTypeModel): number {
+  private byName(a: ResourceTypeModel, b: ResourceTypeModel): number {
     return (a.displayName ?? a.name)?.localeCompare(b.displayName ?? b.name ?? '') ?? -1;
   }
 

@@ -3,66 +3,35 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { ClipboardModule } from "@angular/cdk/clipboard";
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from "@angular/common/http";
-import { ApplicationConfig, importProvidersFrom, inject, provideAppInitializer } from "@angular/core";
-import { FormsModule } from "@angular/forms";
-import { MatBadgeModule } from "@angular/material/badge";
-import { MatButtonModule } from "@angular/material/button";
-import { MatCardModule } from "@angular/material/card";
-import { MatDialogModule } from "@angular/material/dialog";
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatGridListModule } from "@angular/material/grid-list";
-import { MatIconModule, MatIconRegistry } from "@angular/material/icon";
-import { MatInputModule } from "@angular/material/input";
-import { MatListModule } from "@angular/material/list";
-import { MatMenuModule } from "@angular/material/menu";
-import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import { MatSidenavModule } from "@angular/material/sidenav";
-import { MatSnackBarModule } from "@angular/material/snack-bar";
-import { MatToolbarModule } from "@angular/material/toolbar";
-import { MatTooltipModule } from "@angular/material/tooltip";
-import { BrowserModule } from "@angular/platform-browser";
+import { ApplicationConfig, inject, provideAppInitializer } from "@angular/core";
+import { MatIconRegistry } from "@angular/material/icon";
 import { provideRouter } from "@angular/router";
 import { ApiInterceptor, API_INTERCEPTOR_PROVIDER } from "@moryx/ngx-web-framework/interceptors";
-import { SnackbarService } from "@moryx/ngx-web-framework/services";
-import { NgxDocViewerModule } from "ngx-doc-viewer";
 import { environment } from "../environments/environment";
-import { ApiModule } from "@api/api.module";
 import { routes } from "./app.routes";
 
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+import { provideApiConfiguration } from '@api/api-configuration';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    importProvidersFrom(
-      BrowserModule,
-      MatBadgeModule,
-      MatCardModule,
-      MatButtonModule,
-      MatGridListModule,
-      MatProgressSpinnerModule,
-      MatDialogModule,
-      MatListModule,
-      MatIconModule,
-      MatTooltipModule,
-      MatFormFieldModule,
-      MatInputModule,
-      FormsModule,
-      MatSnackBarModule,
-      MatMenuModule,
-      MatSidenavModule,
-      MatToolbarModule,
-      NgxDocViewerModule,
-      ClipboardModule,
-      ApiModule.forRoot({rootUrl: environment.rootUrl})
-    ),
+
+    // Configure the API endpoint
+    provideApiConfiguration(environment.rootUrl),
+
+    // Register custom DI interceptors
+    // TODO: Replace by fns, if https://github.com/PHOENIXCONTACT/ngx-moryx-web/pull/48 was released
     ApiInterceptor,
     API_INTERCEPTOR_PROVIDER,
-    SnackbarService,
-    provideHttpClient(withXhr(), withInterceptorsFromDi()),
+
+    // Setup HttpClient
+    // TODO: Remove withInterceptorsFromDi if https://github.com/PHOENIXCONTACT/ngx-moryx-web/pull/48 was released
+    provideHttpClient(withXhr(),withInterceptorsFromDi()), //TODO: check if withXhr is still needed
+
+    // Configure translation loader
     provideTranslateService({
       loader: provideTranslateHttpLoader({
         prefix: environment.assets + 'assets/languages/',
@@ -70,6 +39,8 @@ export const appConfig: ApplicationConfig = {
       }),
       fallbackLang: 'en'
     }),
+
+    // Additional app initializers
     provideAppInitializer(() => {
       // Use material-symbols as default icon font
       const iconRegistry = inject(MatIconRegistry);

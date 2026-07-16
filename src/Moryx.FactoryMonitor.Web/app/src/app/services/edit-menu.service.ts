@@ -11,9 +11,10 @@ import { EditMenuState } from './EditMenutState';
 })
 export class EditMenuService {
 
-  public activeState = signal(EditMenuState.Closed);
+  private readonly _activeState = signal(EditMenuState.Closed);
+  readonly activeState = this._activeState.asReadonly();
 
   public setActiveState(state: EditMenuState) {
-    this.activeState.set(state);
+    this._activeState.set(state);
   }
 }

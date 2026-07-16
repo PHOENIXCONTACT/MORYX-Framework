@@ -228,7 +228,7 @@ export class CreateDialog {
     this.clearOperation();
   }
 
-  deleteOperation(operation: OperationCreationContextModel): void {
+  protected deleteOperation(operation: OperationCreationContextModel): void {
     const index = this.operations().indexOf(operation);
     this.operations.update((items) => {
       items.splice(index, 1);
@@ -239,7 +239,7 @@ export class CreateDialog {
     }
   }
 
-  addValidationToOperationNumber() {
+  private addValidationToOperationNumber() {
     if (
       this.operationNumberFormControl.hasValidator(
         OperationNumberValidations.isOperationNumberNotValid
@@ -256,7 +256,7 @@ export class CreateDialog {
     });
   }
 
-  fullClear(): void {
+  protected fullClear(): void {
     this.orderNumber.set("");
     this.clearOperation();
     this.operations.set([]);
@@ -283,7 +283,7 @@ export class CreateDialog {
     this.operationNumberFormControl.reset('');
   }
 
-  async create(): Promise<void> {
+  private async create(): Promise<void> {
     let failed = false;
     for (const operation of this.operations()) {
       operation.plannedStart = new Date().toJSON();
@@ -303,15 +303,17 @@ export class CreateDialog {
     }
   }
 
-  onPrimaryClick = async () => {
+  protected async onPrimaryClick(): Promise<void> {
     await this.performAction(this.primaryAction());
-  };
+  }
 
-  onSelectAction = (a: Action) => {
+  protected onSelectAction(a: Action): void {
     this.primaryAction.set(a);
-  };
+  }
 
-  isSelected = (a: Action) => this.primaryAction() === a;
+  protected isSelected(a: Action): boolean {
+    return this.primaryAction() === a;
+  }
 
   private async performAction(a: Action): Promise<void> {
     const canAdd = this.canAddOperation();
@@ -329,7 +331,7 @@ export class CreateDialog {
     }
   }
 
-  filterProduct(): void {
+  protected filterProduct(): void {
     const filterValue = this.productInput().nativeElement.value.toLowerCase();
     const filtered = this.possibleProducts().filter(p => this.productToString(p).toLowerCase().includes(filterValue));
     this.filteredProducts.set(filtered);
@@ -338,7 +340,7 @@ export class CreateDialog {
     }
   }
 
-  filterRecipe(): void {
+  protected filterRecipe(): void {
     const filterValue = this.recipeInput()?.nativeElement.value.toLowerCase();
     const filtered = this.possibleRecipes().filter(r => this.recipeToString(r).toLowerCase().includes(filterValue));
     this.filteredRecipes.set(filtered);
@@ -371,11 +373,11 @@ export class CreateDialog {
     return (b.revision ?? 0) - (a.revision ?? 0);
   }
 
-  productToString(value: ProductModel) {
+  protected productToString(value: ProductModel) {
     return value ? `${value.identifier}-${String(value.revision).padStart(2, '0')} ${value.name}` : '';
   }
 
-  recipeToString(value: RecipeModel) {
+  protected recipeToString(value: RecipeModel) {
     return value ? `\[${value.type}\] ${value.name}` : '';
   }
 }

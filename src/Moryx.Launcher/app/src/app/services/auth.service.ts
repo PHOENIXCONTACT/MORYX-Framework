@@ -4,7 +4,7 @@
 */
 
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
 
@@ -16,32 +16,43 @@ export class AuthService {
   private cookieService = inject(CookieService);
   private http = inject(HttpClient);
 
-  authBaseAddress: string | undefined = undefined;
+  /** Set by the server in MoryxIdentityDefaults. */
+  private readonly cookieName = 'moryx_user';
+
+  private readonly _authBaseAddress = signal<string | undefined>(undefined);
+  readonly authBaseAddress = this._authBaseAddress.asReadonly();
 
   /** Whether the server has authentication enabled. */
-  authConfigured = signal<boolean>(false);
+  readonly authConfigured = computed(() => !!this._authBaseAddress());
 
   /** Whether the current user is signed in. */
-  isLoggedIn = signal<boolean>(false);
+  private readonly _isLoggedIn = signal<boolean>(false);
+  readonly isLoggedIn = this._isLoggedIn.asReadonly();
 
   /** Display name of the signed-in user. */
-  userName = signal<string>('');
+  private readonly _userName = signal<string>('');
+  readonly userName = this._userName.asReadonly();
+
+  /** Called by the app root to configure the authentication base address. */
+  setAuthBaseAddress(url: string | undefined): void {
+    this._authBaseAddress.set(url);
+  }
 
   checkSignedIn(): void {
-    const user = this.cookieService.get('moryx_user');
+    const user = this.cookieService.get(this.cookieName);
     if (!user) {
       return;
     }
-    this.isLoggedIn.set(true);
-    this.userName.set(user);
+    this._isLoggedIn.set(true);
+    this._userName.set(user);
   }
 
   signOut(): void {
-    firstValueFrom(this.http.post(this.authBaseAddress + '/api/auth/signOut', {}, {
+    firstValueFrom(this.http.post(this._authBaseAddress() + '/api/auth/signOut', {}, {
       withCredentials: true,
     })).then(() => {
-      this.isLoggedIn.set(false);
-      this.userName.set('');
+      this._isLoggedIn.set(false);
+      this._userName.set('');
       window.location.assign('/');
     }).catch((err) => console.log(err));
   }

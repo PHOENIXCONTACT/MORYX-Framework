@@ -74,7 +74,6 @@ export class App {
   protected readonly resourceToolbarImage = environment.assets + 'assets/resource-toolbar.jpg';
 
   protected resources = computed(() => this.cacheResourceService.resources() ?? []);
-  protected resourcesFlat = this.cacheResourceService.flatResources;
   protected selected = signal<ResourceModel | undefined>(undefined);
   protected TranslationConstants = TranslationConstants;
 
@@ -185,7 +184,7 @@ export class App {
       return;
     }
 
-    const resource = this.resourcesFlat()?.find(r => r.id === resourceId);
+    const resource = this.cacheResourceService.flatResources()?.find(r => r.id === resourceId);
     if (!resource) {
       return;
     }

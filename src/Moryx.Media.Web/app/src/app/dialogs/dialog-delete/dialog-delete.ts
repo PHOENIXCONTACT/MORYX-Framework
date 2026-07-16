@@ -39,7 +39,7 @@ export class DialogDelete {
   constructor() {
   }
 
-  onNoClick(): void {
+  protected onNoClick(): void {
     this.dialogRef.close();
   }
 }

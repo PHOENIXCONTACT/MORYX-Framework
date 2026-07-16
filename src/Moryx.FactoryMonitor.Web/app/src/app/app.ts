@@ -10,8 +10,6 @@ import { ChangeBackgroundService } from './services/change-background.service';
 import { LanguageService } from '@moryx/ngx-web-framework/services';
 import { TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from './extensions/translation-constants.extensions';
-import { CellStoreService } from './services/cell-store.service';
-import CellModel from './models/cellModel';
 import { EditMenu } from './components/edit-menu/edit-menu';
 import { OrdersContainer } from './components/orders-container/orders-container';
 import { CellDetails } from './components/cell-details/cell-details';
@@ -39,7 +37,6 @@ export class App implements OnInit {
   private factoryStateStreamService = inject(FactoryStateStreamService);
   private languageService = inject(LanguageService);
   private translateService = inject(TranslateService);
-  private cellStoreService = inject(CellStoreService);
   private destroyRef = inject(DestroyRef);
 
   protected backgroundImage = computed(() => {
@@ -63,12 +60,7 @@ export class App implements OnInit {
     this.factoryStateStreamService.connect();
   }
 
-  getCell(cellId: number): CellModel {
-    const output = this.cellStoreService.getCell(cellId) ?? <CellModel>{};
-    return output;
-  }
-
-  disconnectEvents(): void {
+  protected disconnectEvents(): void {
     this.factoryStateStreamService.disconnect();
   }
 }

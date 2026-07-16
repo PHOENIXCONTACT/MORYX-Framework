@@ -143,7 +143,7 @@ export class Editor implements OnInit {
     }
   }
 
-  processInitialRoute() {
+  private processInitialRoute() {
     const routeSnapshotParams = this.activatedRoute.snapshot.paramMap;
     this.sessionToken = String(routeSnapshotParams.get('token'));
 
@@ -377,7 +377,7 @@ export class Editor implements OnInit {
 
   //---
 
-  scheduleRenderPaths() {
+  private scheduleRenderPaths() {
     setTimeout(() => this.renderPaths(), 50);
   }
 
@@ -430,7 +430,7 @@ export class Editor implements OnInit {
     this.deleteStep(data);
   }
 
-  deleteStep(data: WorkplanNodeModel) {
+  private deleteStep(data: WorkplanNodeModel) {
     this.workplanEditingService
       .removeNode({
         sessionId: this.sessionToken,

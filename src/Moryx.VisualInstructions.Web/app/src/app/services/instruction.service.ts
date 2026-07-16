@@ -24,13 +24,14 @@ export class InstructionService {
 
   private eventSource?: EventSource;
 
-  public instructions = signal<InstructionModel[]>([]);
+  private readonly _instructions = signal<InstructionModel[]>([]);
+  readonly instructions = this._instructions.asReadonly();
 
   public connect() {
     this.eventSource = new EventSource(this.visualInstructionsService.rootUrl + '/api/moryx/instructions/stream', {withCredentials: !environment.production});
     this.eventSource.onmessage = event => {
       const instructions = JSON.parse(event.data);
-      this.instructions.set(instructions);
+      this._instructions.set(instructions);
     };
   }
 
@@ -72,7 +73,7 @@ export class InstructionService {
   }
 
   disconnect() {
-    this.instructions.set([]);
+    this._instructions.set([]);
 
     if (this.eventSource) {
       this.eventSource.close();

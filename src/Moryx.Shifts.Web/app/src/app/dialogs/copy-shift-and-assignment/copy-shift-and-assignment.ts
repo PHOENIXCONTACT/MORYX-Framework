@@ -9,7 +9,7 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import AssignmentData from '@app/models/assignment-data';
 import { CalendarState } from '@app/models/calendar-state';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import  moment from 'moment';
+import moment from 'moment';
 import { TranslationConstants } from '@app/translation-constants';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -19,6 +19,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { WeekDayToggleButton } from '@app/week-day-toggle-button/week-day-toggle-button';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 @Component({
   selector: 'app-copy-shift-and-assignment',
@@ -35,7 +36,10 @@ import { MatInputModule } from '@angular/material/input';
     MatButtonModule,
     TranslatePipe,
     MatDialogModule
-]
+  ],
+  providers: [
+    provideNativeDateAdapter()
+  ],
 })
 export class CopyShiftAndAssignment {
   private data = inject<CopyShiftAndAssignmentData>(MAT_DIALOG_DATA);
@@ -43,31 +47,30 @@ export class CopyShiftAndAssignment {
   private translate = inject(TranslateService);
 
   protected calendarState = signal(new CalendarState(this.translate));
-  protected formData = signal<CopyShiftAndAssignmentData>({... this.data});
+  protected formData = signal<CopyShiftAndAssignmentData>({...this.data});
 
   protected TranslationConstants = TranslationConstants;
 
   protected onStartDateChanged(shiftInstance: ShiftInstanceModel) {
     const now = moment(shiftInstance.startDate);
-    const endDate = now.add(shiftInstance.shiftType.duration-1, 'days').toDate();
+    const endDate = now.add(shiftInstance.shiftType.duration - 1, 'days').toDate();
     shiftInstance.endDate = endDate;
   }
 
-  protected deleteItem(shiftInstance: ShiftInstanceModel){
+  protected deleteItem(shiftInstance: ShiftInstanceModel) {
     this.formData.update(form => {
       form!.shiftInstances = form!.shiftInstances.filter(x => x !== shiftInstance);
       return form;
     })
   }
 
-  protected save(){
+  protected save() {
     this.dialogRef.close(this.formData());
   }
 
-  protected cancel(){
+  protected cancel() {
     this.dialogRef.close(undefined);
   }
-
 }
 
 export interface CopyShiftAndAssignmentData {

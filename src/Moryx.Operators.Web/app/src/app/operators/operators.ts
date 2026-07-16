@@ -43,7 +43,7 @@ export class Operators {
     });
   }
 
-  loadOperatorsByResource() {
+  private loadOperatorsByResource() {
     this.appStoreService
       .getOperatorsByResourceId(this.workstation()?.data.id ?? 0)
       .then(

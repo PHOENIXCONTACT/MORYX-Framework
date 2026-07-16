@@ -19,15 +19,17 @@ import { shiftToShitInstanceModel, shiftTypeToShiftTypeModel } from '../models/m
 })
 export class ShiftService {
   private shiftManagement = inject(ShiftManagementService);
-  public shiftTypes = signal<ShiftTypeModel[]>([]);
-  public shiftInstances = signal<ShiftInstanceModel[]>([]);
+  private readonly _shiftTypes = signal<ShiftTypeModel[]>([]);
+  readonly shiftTypes = this._shiftTypes.asReadonly();
+  private readonly _shiftInstances = signal<ShiftInstanceModel[]>([]);
+  readonly shiftInstances = this._shiftInstances.asReadonly();
 
   constructor() {
     //fetch shift types
     this.shiftManagement.getShiftTypes()
       .then((shifts) => {
         const typeModels = shifts.map(shiftTypeToShiftTypeModel);
-        this.shiftTypes.set(typeModels);
+        this._shiftTypes.set(typeModels);
 
         // //fetch shift instances
         this.shiftManagement.getShifts()
@@ -35,17 +37,17 @@ export class ShiftService {
             const instances = instanceModels.map((x) =>
               shiftToShitInstanceModel(typeModels, x)
             );
-            this.shiftInstances.set(instances);
+            this._shiftInstances.set(instances);
           });
       });
   }
 
   public addToInstanceList(instance: ShiftInstanceModel) {
-    this.shiftInstances.update(current => [...current, instance]);
+    this._shiftInstances.update(current => [...current, instance]);
   }
 
   public addToTypeList(type: ShiftTypeModel) {
-    this.shiftTypes.update(current => [...current, type]);
+    this._shiftTypes.update(current => [...current, type]);
   }
 
   public addType(shift: ShiftTypeModel) {

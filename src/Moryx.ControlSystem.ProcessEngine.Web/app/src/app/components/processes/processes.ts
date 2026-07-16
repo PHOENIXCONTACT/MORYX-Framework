@@ -98,7 +98,7 @@ export class Processes implements OnInit {
         await this.snackbarService.handleError(e));
   }
 
-  onProcessUpdated(updatedProcess: JobProcessModel | undefined) {
+  private onProcessUpdated(updatedProcess: JobProcessModel | undefined) {
     if (updatedProcess !== undefined) {
       // Extract job id
       // TODO: Extend model
@@ -132,7 +132,7 @@ export class Processes implements OnInit {
     }
   }
 
-  onActivityUpdated(updatedActivity: ProcessActivityModel | undefined) {
+  private onActivityUpdated(updatedActivity: ProcessActivityModel | undefined) {
     if (!updatedActivity) {
       return;
     }

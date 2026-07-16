@@ -41,15 +41,24 @@ export class AppStoreService {
   private operatorManagementService = inject(OperatorManagementService);
   private orderManagementService = inject(OrderManagementService);
 
-  isOperatorFilterPanelOpened = signal(false);
-  isResourceFilterPanelOpened = signal(false);
-  isDraggingItem = signal(false);
-  operatorsSelectedForFilter = signal<OperatorModel[]>([]);
-  resourcesSelectedForFilter = signal<AttendableResourceModel[]>([]);
-  currentView = signal<ViewType>('Assignments');
-  orders = signal<OrderModel[]>([]);
-  operators = signal<OperatorModel[]>([]);
-  resources = signal<AttendableResourceModel[]>([]);
+  private readonly _isOperatorFilterPanelOpened = signal(false);
+  readonly isOperatorFilterPanelOpened = this._isOperatorFilterPanelOpened.asReadonly();
+  private readonly _isResourceFilterPanelOpened = signal(false);
+  readonly isResourceFilterPanelOpened = this._isResourceFilterPanelOpened.asReadonly();
+  private readonly _isDraggingItem = signal(false);
+  readonly isDraggingItem = this._isDraggingItem.asReadonly();
+  private readonly _operatorsSelectedForFilter = signal<OperatorModel[]>([]);
+  readonly operatorsSelectedForFilter = this._operatorsSelectedForFilter.asReadonly();
+  private readonly _resourcesSelectedForFilter = signal<AttendableResourceModel[]>([]);
+  readonly resourcesSelectedForFilter = this._resourcesSelectedForFilter.asReadonly();
+  private readonly _currentView = signal<ViewType>('Assignments');
+  readonly currentView = this._currentView.asReadonly();
+  private readonly _orders = signal<OrderModel[]>([]);
+  readonly orders = this._orders.asReadonly();
+  private readonly _operators = signal<OperatorModel[]>([]);
+  readonly operators = this._operators.asReadonly();
+  private readonly _resources = signal<AttendableResourceModel[]>([]);
+  readonly resources = this._resources.asReadonly();
 
   shifts = computed(() => this.shiftService.shiftInstances().map(shiftInstanceToShiftCardModel));
   shiftTypes = this.shiftService.shiftTypes;
@@ -67,7 +76,7 @@ export class AppStoreService {
             date: x.plannedStart ? moment(x.plannedStart) : new Date(),
           }
       );
-      this.orders.set(orderModels);
+      this._orders.set(orderModels);
     });
 
     //fetch resources and operator elements from the API in parallel
@@ -79,10 +88,10 @@ export class AppStoreService {
       const operators = results[1];
 
       const resourcesModels = resources;
-      this.resources.set(resourcesModels);
+      this._resources.set(resourcesModels);
 
       const operatorModels = operators.map(assignableOperatorToOperatorModel);
-      this.operators.set(operatorModels);
+      this._operators.set(operatorModels);
 
       this.shiftAssignmentService
         .getShiftAssignements()
@@ -101,17 +110,17 @@ export class AppStoreService {
   }
 
   operatorFilterButtonClicked() {
-    this.isOperatorFilterPanelOpened.set(!this.isOperatorFilterPanelOpened());
-    this.isResourceFilterPanelOpened.set(false);
+    this._isOperatorFilterPanelOpened.set(!this._isOperatorFilterPanelOpened());
+    this._isResourceFilterPanelOpened.set(false);
   }
 
   resourceFilterButtonClicked() {
-    this.isResourceFilterPanelOpened.set(!this.isResourceFilterPanelOpened());
-    this.isOperatorFilterPanelOpened.set(false);
+    this._isResourceFilterPanelOpened.set(!this._isResourceFilterPanelOpened());
+    this._isOperatorFilterPanelOpened.set(false);
   }
 
   dragItemFromShiftElementDrawer(dragging: boolean) {
-    this.isDraggingItem.set(dragging);
+    this._isDraggingItem.set(dragging);
   }
 
   async navigateToNextWeek(calendarState: CalendarState, format: string) {
@@ -212,19 +221,18 @@ export class AppStoreService {
   }
 
   selectOperator(operator: OperatorModel) {
-    if (!this.operatorsSelectedForFilter().some((x) => operator.id === x.id)) {
-      this.operatorsSelectedForFilter.update(current => [...current, operator]);
+    if (!this._operatorsSelectedForFilter().some((x) => operator.id === x.id)) {
+      this._operatorsSelectedForFilter.update(current => [...current, operator]);
     } else {
-      this.operatorsSelectedForFilter.update(current => current.filter((x) => x.id != operator.id));
+      this._operatorsSelectedForFilter.update(current => current.filter((x) => x.id != operator.id));
     }
   }
 
   selectResource(resource: AttendableResourceModel) {
-    if (!this.resourcesSelectedForFilter().some((x) => resource.id === x.id)) {
-      this.resourcesSelectedForFilter.update(current => [...current, resource]);
+    if (!this._resourcesSelectedForFilter().some((x) => resource.id === x.id)) {
+      this._resourcesSelectedForFilter.update(current => [...current, resource]);
     } else {
-      this.resourcesSelectedForFilter.update(current =>
-        current.filter((x) => x.id != resource.id));
+      this._resourcesSelectedForFilter.update(current => current.filter((x) => x.id != resource.id));
     }
   }
 
@@ -262,7 +270,7 @@ export class AppStoreService {
   }
 
   changeView(view: ViewType) {
-    this.currentView.set(view);
+    this._currentView.set(view);
   }
 
   deleteAssignment(id: number) {

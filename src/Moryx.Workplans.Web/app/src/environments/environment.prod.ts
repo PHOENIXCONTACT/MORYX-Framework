@@ -10,6 +10,6 @@ const path_base = getPathBase("/Workplans");
 export const environment = {
   production: true,
   assets: path_base + "/_content/Moryx.Workplans.Web/",
-  rootUrl: path_base,
+  rootUrl: path_base!,
 };
 

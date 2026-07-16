@@ -19,14 +19,15 @@ import { ShiftAssignementCreationContextModel } from '@api/models/shift-assignem
 export class AssignmentService {
   private shiftAssignmentService = inject(ShiftManagementService);
 
-  public assignments = signal<AssignmentCardModel[]>([]);
+  private readonly _assignments = signal<AssignmentCardModel[]>([]);
+  readonly assignments = this._assignments.asReadonly();
 
   constructor() {
 
   }
 
   public setAssignments(values: AssignmentCardModel[]) {
-    this.assignments.set(values);
+    this._assignments.set(values);
   }
 
   public addNewAssignment(assignment: AssignmentData) {
@@ -109,12 +110,12 @@ export class AssignmentService {
     this.shiftAssignmentService.deleteShiftAssignement({
       id: id
     }).then(() => {
-      this.assignments.update(current => current.filter(x => x.id != id));
+      this._assignments.update(current => current.filter(x => x.id != id));
     }).catch(e => console.log(e));
   }
 
   addAssignmentsToList(assignments: AssignmentCardModel[]) {
-    this.assignments.update(current => [...current, ...assignments]);
+    this._assignments.update(current => [...current, ...assignments]);
   }
 }
 

@@ -25,8 +25,10 @@ export class CellStoreService {
   private readonly factoryMonitorService = inject(FactoryMonitorService);
   private readonly snackbarService = inject(SnackbarService);
 
-  readonly cellSelected = signal<CellModel | undefined>(undefined);
-  readonly cellUpdated = signal<CellModel | undefined>(undefined);
+  private readonly _cellSelected = signal<CellModel | undefined>(undefined);
+  readonly cellSelected = this._cellSelected.asReadonly();
+  private readonly _cellUpdated = signal<CellModel | undefined>(undefined);
+  readonly cellUpdated = this._cellUpdated.asReadonly();
   private _cells : CellModel[] = [];
 
   constructor() {
@@ -75,12 +77,12 @@ export class CellStoreService {
   public selectCell(id: number | undefined) {
     const current = this.cellSelected();
     if (current && current.id === id || !id) {
-      this.cellSelected.set(undefined);
+      this._cellSelected.set(undefined);
       return;
     }
 
     const selectedCell = this._cells.find(c => c.id === id);
-    this.cellSelected.set(selectedCell);
+    this._cellSelected.set(selectedCell);
   }
 
   public async moveItem(item: VisualizableItemModel, update: CellLocationModel) {
@@ -147,7 +149,7 @@ export class CellStoreService {
     }
 
     this._cells[indexToUpdate] = cellToUpdate;
-    this.cellUpdated.set(cellToUpdate);
+    this._cellUpdated.set(cellToUpdate);
   }
 }
 

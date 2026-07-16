@@ -63,7 +63,7 @@ export class App implements OnInit, OnDestroy {
     this.translateService.use(this.languageService.getFallbackLang());
   }
 
-  async getTranslations(): Promise<{ [key: string]: string }> {
+  private async getTranslations(): Promise<{ [key: string]: string }> {
     return await firstValueFrom(this.translateService
       .get([
         TranslationConstants.APP.OPEN_WORKPLAN_MANAGEMENT,

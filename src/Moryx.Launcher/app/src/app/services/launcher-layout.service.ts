@@ -14,22 +14,38 @@ export class LauncherLayoutService {
   private readonly stateName = 'LauncherState'; // TODO: Rename to LauncherLayout in the next major
 
   /** The active layout mode (full, operator, fullscreen). Persisted. */
-  layout = signal<LauncherLayout>(this.getLayout());
+  private readonly _layout = signal<LauncherLayout>(this.getLayout());
+  readonly layout = this._layout.asReadonly();
 
   /** Whether the side navigation is collapsed. Persisted. */
-  navCollapsed = signal<boolean>(this.getStoredState()?.navCollapsed ?? false);
+  private readonly _navCollapsed = signal<boolean>(this.getStoredState()?.navCollapsed ?? false);
+  readonly navCollapsed = this._navCollapsed.asReadonly();
 
   /** Whether a top region slot has content projected. Set by layout components. */
-  topRegionAvailable = signal(false);
+  private readonly _topRegionAvailable = signal(false);
+  readonly topRegionAvailable = this._topRegionAvailable.asReadonly();
 
   /** Whether the user has enabled the top region. Persisted. */
-  topRegionEnabled = signal<boolean>(this.getStoredState()?.topRegionEnabled ?? true);
+  private readonly _topRegionEnabled = signal<boolean>(this.getStoredState()?.topRegionEnabled ?? true);
+  readonly topRegionEnabled = this._topRegionEnabled.asReadonly();
 
   /** Whether a right region slot has content projected. Set by layout components. */
-  rightRegionAvailable = signal(false);
+  private readonly _rightRegionAvailable = signal(false);
+  readonly rightRegionAvailable = this._rightRegionAvailable.asReadonly();
 
   /** Whether the user has enabled the right region. Persisted. */
-  rightRegionEnabled = signal<boolean>(this.getStoredState()?.rightRegionEnabled ?? true);
+  private readonly _rightRegionEnabled = signal<boolean>(this.getStoredState()?.rightRegionEnabled ?? true);
+  readonly rightRegionEnabled = this._rightRegionEnabled.asReadonly();
+
+  /** Called by layout components when a top region slot gains or loses projected content. */
+  setTopRegionAvailable(value: boolean): void {
+    this._topRegionAvailable.set(value);
+  }
+
+  /** Called by layout components when a right region slot gains or loses projected content. */
+  setRightRegionAvailable(value: boolean): void {
+    this._rightRegionAvailable.set(value);
+  }
 
   public getLayout(): LauncherLayout {
     const storedState = this.getStoredState();
@@ -50,22 +66,22 @@ export class LauncherLayoutService {
       fullscreen: layout === LauncherLayout.Fullscreen,
       operatorMode: layout === LauncherLayout.Operator,
     });
-    this.layout.set(layout);
+    this._layout.set(layout);
   }
 
   public updateNavCollapsed(collapsed: boolean): void {
     this.persistState({navCollapsed: collapsed});
-    this.navCollapsed.set(collapsed);
+    this._navCollapsed.set(collapsed);
   }
 
   public updateTopRegionEnabled(enabled: boolean): void {
     this.persistState({topRegionEnabled: enabled});
-    this.topRegionEnabled.set(enabled);
+    this._topRegionEnabled.set(enabled);
   }
 
   public updateRightRegionEnabled(enabled: boolean): void {
     this.persistState({rightRegionEnabled: enabled});
-    this.rightRegionEnabled.set(enabled);
+    this._rightRegionEnabled.set(enabled);
   }
 
   private persistState(changes: Partial<LauncherState>): void {

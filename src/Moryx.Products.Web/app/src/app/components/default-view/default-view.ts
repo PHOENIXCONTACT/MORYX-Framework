@@ -25,13 +25,13 @@ export class DefaultView implements OnInit {
 
   private router = inject(Router);
   private translateService = inject(TranslateService);
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
   ngOnInit(): void {
     this.getHeaderAndMessage();
   }
 
-  getHeaderAndMessage() {
+  private getHeaderAndMessage() {
     this.translateService
       .get([
         TranslationConstants.APP.EMPTY_STATE_HEADER,

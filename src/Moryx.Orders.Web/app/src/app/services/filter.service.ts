@@ -6,12 +6,13 @@ import { Injectable, signal } from '@angular/core';
 export class FilterService {
   private readonly hideCompletedStorageKey = 'operations-hide-completed';
 
-  readonly hideCompleted = signal(this.loadHideCompleted());
+  private readonly _hideCompleted = signal(this.loadHideCompleted());
+  readonly hideCompleted = this._hideCompleted.asReadonly();
 
   toggleHideCompleted(): void {
     const newValue = !this.hideCompleted();
     window.localStorage.setItem(this.hideCompletedStorageKey, newValue.toString());
-    this.hideCompleted.set(newValue);
+    this._hideCompleted.set(newValue);
   }
 
   private loadHideCompleted(): boolean {
