@@ -9,7 +9,7 @@ namespace Moryx.Orders.Management;
 /// <summary>
 /// Configuration for the <see cref="OrdersLifecycleHook"/> defining which operations to create on startup
 /// </summary>
-[ProvidedConfig("LifeCycleHooks:Orders")]
+[ProvidedConfig("LifecycleHooks:Orders")]
 public sealed class OrdersLifecycleHookConfig : ConfigBase
 {
     /// <summary>
