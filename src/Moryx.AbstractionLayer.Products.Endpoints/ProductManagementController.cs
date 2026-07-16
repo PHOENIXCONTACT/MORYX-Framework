@@ -1,13 +1,14 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Globalization;
+using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Tools;
 using Moryx.Serialization;
-using System.Net;
-using Microsoft.AspNetCore.Authorization;
 using Moryx.AbstractionLayer.Products.Endpoints.Models;
 using Moryx.AbstractionLayer.Products.Endpoints.Properties;
 using Moryx.AspNetCore;
@@ -149,7 +150,7 @@ public class ProductManagementController : ControllerBase
         var identityArray = WebUtility.HtmlEncode(identity).Split('-');
         if (identityArray.Length != 2)
             return BadRequest($"Identity has wrong format. Must be identifier-revision");
-        var productIdentity = new ProductIdentity(identityArray[0], Convert.ToInt16(identityArray[1]));
+        var productIdentity = new ProductIdentity(identityArray[0], Convert.ToInt16(identityArray[1], CultureInfo.InvariantCulture));
         var productType = await _productManagement.LoadTypeAsync(productIdentity);
         if (productType == null)
             return NotFound(new MoryxExceptionResponse { Title = Strings.ProductManagementController_TypeNotFound });
@@ -240,7 +241,7 @@ public class ProductManagementController : ControllerBase
         var identityArray = WebUtility.HtmlEncode(newIdentity).Split('-');
         if (identityArray.Length != 2)
             return BadRequest($"Identity has wrong format. Must be identifier-revision");
-        var identity = new ProductIdentity(identityArray[0], Convert.ToInt16(identityArray[1]));
+        var identity = new ProductIdentity(identityArray[0], Convert.ToInt16(identityArray[1], CultureInfo.InvariantCulture));
         ProductType newProductType;
         try
         {
@@ -286,8 +287,8 @@ public class ProductManagementController : ControllerBase
             return BadRequest($"Id was 0");
         var productInstance = await _productManagement.LoadInstanceAsync(id);
         if (productInstance == null)
-            return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ProductManagementController_InstanceNotFound, id) });
-        return _productConverter.ConvertProductInstance(productInstance);
+            return NotFound(new MoryxExceptionResponse { Title = string.Format(CultureInfo.CurrentCulture, Strings.ProductManagementController_InstanceNotFound, id) });
+        return ProductConverter.ConvertProductInstance(productInstance);
     }
 
     [HttpGet]
@@ -298,7 +299,7 @@ public class ProductManagementController : ControllerBase
         var instances = await _productManagement.LoadInstancesAsync(ids);
         var modelList = new List<ProductInstanceModel>();
         foreach (var instance in instances)
-            modelList.Add(_productConverter.ConvertProductInstance(instance));
+            modelList.Add(ProductConverter.ConvertProductInstance(instance));
         return modelList.ToArray();
     }
 
@@ -314,7 +315,7 @@ public class ProductManagementController : ControllerBase
         if (productType == null)
             return BadRequest($"Product type not found");
         var instance = await _productManagement.CreateInstanceAsync(productType, save);
-        return _productConverter.ConvertProductInstance(instance);
+        return ProductConverter.ConvertProductInstance(instance);
     }
 
     [HttpPut]
@@ -329,9 +330,9 @@ public class ProductManagementController : ControllerBase
         var type = ReflectionTool.GetPublicClasses<ProductType>(t => t.Name == instanceModel.Type)
             .FirstOrDefault();
         if (type == null)
-            return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ProductManagementController_InstanceNotFound, "null") });
+            return NotFound(new MoryxExceptionResponse { Title = string.Format(CultureInfo.CurrentCulture, Strings.ProductManagementController_InstanceNotFound, "null") });
         var productType = (ProductType)Activator.CreateInstance(type);
-        var productInstance = _productConverter.ConvertProductInstanceBack(instanceModel, productType);
+        var productInstance = ProductConverter.ConvertProductInstanceBack(instanceModel, productType);
         await _productManagement.SaveInstanceAsync(productInstance);
         return Ok();
     }
@@ -350,7 +351,7 @@ public class ProductManagementController : ControllerBase
             return BadRequest($"Id was 0");
         var recipe = await _productManagement.LoadRecipeAsync(id);
         if (recipe == null)
-            return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ProductManagementController_RecipeNotFound, id) });
+            return NotFound(new MoryxExceptionResponse { Title = string.Format(CultureInfo.CurrentCulture, Strings.ProductManagementController_RecipeNotFound, id) });
         return _productConverter.ConvertRecipe(recipe);
     }
 
@@ -367,7 +368,7 @@ public class ProductManagementController : ControllerBase
         var type = ReflectionTool.GetPublicClasses<IProductRecipe>(t => t.Name == recipe.Type)
             .FirstOrDefault();
         if (type == null)
-            return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ProductManagementController_RecipeNotFound, "null") });
+            return NotFound(new MoryxExceptionResponse { Title = string.Format(CultureInfo.CurrentCulture, Strings.ProductManagementController_RecipeNotFound, "null") });
         var productRecipe = (IProductRecipe)Activator.CreateInstance(type);
         return await _productManagement.SaveRecipeAsync(await _productConverter.ConvertRecipeBack(recipe, productRecipe, null));
     }

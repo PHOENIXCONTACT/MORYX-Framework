@@ -35,14 +35,14 @@ internal sealed class ModelToResourceConverter
     {
         // Break recursion if we converted this instance already
         // Try to load by real id first
-        if (cache.TryGetValue(model.Id, out var value))
+        if (cache.TryGetValue(model.Id, out var cachedResource))
         {
-            return value;
+            return cachedResource;
         }
         // Otherwise by reference id
-        if (model.Id == 0 && cache.TryGetValue(model.ReferenceId, out var referencedValue))
+        if (model.Id == 0 && cache.TryGetValue(model.ReferenceId, out var referencedResource))
         {
-            return referencedValue;
+            return referencedResource;
         }
 
         // Only fetch resource object if it was not given

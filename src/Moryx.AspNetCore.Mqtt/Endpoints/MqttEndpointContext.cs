@@ -79,9 +79,9 @@ public class MqttEndpointContext(MqttApplicationMessage request, RouteValueDicti
     public T? FromParameterValues<T>(string parameterName)
         where T : notnull
     {
-        ParameterValues.TryGetValue(parameterName, out var value);
-        return value == null
+        ParameterValues.TryGetValue(parameterName, out var parameterValue);
+        return parameterValue == null
             ? default
-            : (T?)Convert.ChangeType(value, typeof(T), System.Globalization.CultureInfo.InvariantCulture);
+            : (T?)Convert.ChangeType(parameterValue, typeof(T), System.Globalization.CultureInfo.InvariantCulture);
     }
 }

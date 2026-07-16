@@ -50,6 +50,7 @@ public class FunctionResult<TResult>
     /// <inheritdoc/>
     public override string ToString()
     {
+        // TODO: Add invariant culture for MORYX 12
         return Success
             ? Result?.ToString() ?? "null"
             : Error!.ToString();

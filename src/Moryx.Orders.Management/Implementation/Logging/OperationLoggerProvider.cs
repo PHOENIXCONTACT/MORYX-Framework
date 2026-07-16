@@ -26,8 +26,8 @@ internal class OperationLoggerProvider : IOperationLoggerProvider
     public IOperationLogger GetLogger(IOperationData operationData)
     {
         IOperationLogger operationLogger;
-        if (_logger.ContainsKey(operationData))
-            operationLogger = _logger[operationData];
+        if (_logger.TryGetValue(operationData, out var existingLogger))
+            operationLogger = existingLogger;
         else
         {
             operationLogger = new OperationLogger(Logger, operationData);

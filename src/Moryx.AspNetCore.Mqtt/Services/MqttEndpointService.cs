@@ -78,7 +78,7 @@ internal sealed class MqttEndpointService(IManagedMqttClient client, MqttRouteBu
             }
             catch (Exception ex)
             {
-                logger.LogError("The given RootTopic '{topic}' from your connection config is invalid.", userOptions.Connection.RootTopic, ex);
+                logger.LogError(ex, "The given RootTopic '{topic}' from your connection config is invalid.", userOptions.Connection.RootTopic);
             }
         }
         _routeTable = new MqttRouteTable([.. routes]);
