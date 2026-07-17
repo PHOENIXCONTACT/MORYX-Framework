@@ -3,8 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { Injectable, signal } from '@angular/core';
 import { WorkplanSessionModel } from '@api/models/workplan-session-model';
 import { WorkplanNodeModel } from '@api/models';
 
@@ -12,50 +11,49 @@ import { WorkplanNodeModel } from '@api/models';
   providedIn: 'root',
 })
 export class EditorStateService {
-  private workplansChangedSource = new Subject<boolean>();
-  private _currentWorkplan = new BehaviorSubject<WorkplanSessionModel | undefined>(undefined);
-  private _selectedNode = new BehaviorSubject<number | undefined>(undefined);
-  private isEditingProps = new BehaviorSubject<boolean>(false);
-  private isEditingStep = new BehaviorSubject<WorkplanNodeModel | undefined>(undefined);
-  private isCreatingStep = new BehaviorSubject<string | undefined>(undefined);
-
-  workplanChangedSubject$ = this.workplansChangedSource.asObservable();
-  currentWorkplan$ = this._currentWorkplan.asObservable();
-  selectedNode$ = this._selectedNode.asObservable();
-  isEditingProps$ = this.isEditingProps.asObservable();
-  isEditingStep$ = this.isEditingStep.asObservable();
-  isCreatingStep$ = this.isCreatingStep.asObservable();
+  private readonly _workplanChanged = signal(0);
+  readonly workplanChanged = this._workplanChanged.asReadonly();
+  private readonly _currentWorkplan = signal<WorkplanSessionModel | undefined>(undefined);
+  readonly currentWorkplan = this._currentWorkplan.asReadonly();
+  private readonly _selectedNode = signal<number | undefined>(undefined);
+  readonly selectedNode = this._selectedNode.asReadonly();
+  private readonly _isEditingProps = signal(false);
+  readonly isEditingProps = this._isEditingProps.asReadonly();
+  private readonly _isEditingStep = signal<WorkplanNodeModel | undefined>(undefined);
+  readonly isEditingStep = this._isEditingStep.asReadonly();
+  private readonly _isCreatingStep = signal<string | undefined>(undefined);
+  readonly isCreatingStep = this._isCreatingStep.asReadonly();
 
   public get workplan() {
-    return this._currentWorkplan.value;
+    return this.currentWorkplan();
   }
 
-  workplanChanged() {
-    this.workplansChangedSource.next(true);
+  notifyWorkplanChanged() {
+    this._workplanChanged.update(v => v + 1);
   }
 
   setWorkplan(workplan: WorkplanSessionModel) {
-    this._currentWorkplan.next(workplan);
-    this.workplanChanged();
+    this._currentWorkplan.set(workplan);
+    this.notifyWorkplanChanged();
   }
 
   onNodeSelected(nodeId: number) {
-    this._selectedNode.next(nodeId);
+    this._selectedNode.set(nodeId);
   }
 
   onNodeDeselected() {
-    this._selectedNode.next(undefined);
+    this._selectedNode.set(undefined);
   }
 
   startEditingProps() {
     this.stopEditingStep();
     this.stopCreatingStep();
-    this.isEditingProps.next(true);
+    this._isEditingProps.set(true);
   }
 
   stopEditingProps() {
-    if (this.isEditingProps.value) {
-      this.isEditingProps.next(false);
+    if (this.isEditingProps()) {
+      this._isEditingProps.set(false);
     }
   }
 
@@ -65,13 +63,13 @@ export class EditorStateService {
     this.stopCreatingStep();
     const node = this.workplan?.nodes?.find(node => node.id === nodeId);
     if (node) {
-      this.isEditingStep.next(node);
+      this._isEditingStep.set(node);
     }
   }
 
   stopEditingStep() {
-    if (this.isEditingStep.value) {
-      this.isEditingStep.next(undefined);
+    if (this.isEditingStep()) {
+      this._isEditingStep.set(undefined);
     }
   }
 
@@ -79,13 +77,12 @@ export class EditorStateService {
     this.stopEditingProps();
     this.stopEditingStep();
     this.stopCreatingStep();
-    this.isCreatingStep.next(type);
+    this._isCreatingStep.set(type);
   }
 
   stopCreatingStep() {
-    if (this.isCreatingStep.value) {
-      this.isCreatingStep.next(undefined);
+    if (this.isCreatingStep()) {
+      this._isCreatingStep.set(undefined);
     }
   }
 }
-

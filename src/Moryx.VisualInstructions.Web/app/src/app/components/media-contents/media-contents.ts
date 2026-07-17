@@ -34,26 +34,26 @@ export class MediaContents {
     effect(() => {
       const contentData = this.displayedContents();
       untracked(() => {
-        this.medias.update(_ => contentData);
-        this.selectedContent.update(_ => contentData[0]);
+        this.medias.set(contentData);
+        this.selectedContent.set(contentData[0]);
       })
     })
   }
 
   protected onSelect(selected: DisplayedMediaContent): void {
-    this.selectedContent.update(_ => selected);
+    this.selectedContent.set(selected);
   }
 
   protected onNext() {
     const currentIndex = this.medias().findIndex(c => c.url === this.selectedContent()?.url);
     const nextIndex = (1 + currentIndex) % this.medias().length;
-    this.selectedContent.update(_ => this.medias()[nextIndex]);
+    this.selectedContent.set(this.medias()[nextIndex]);
   }
 
   protected onPrevious() {
     const currentIndex = this.medias().findIndex(c => c.url === this.selectedContent()?.url);
     const previousIndex = (this.medias().length - 1 + currentIndex) % this.medias().length;
-    this.selectedContent.update(_ => this.medias()[previousIndex]);
+    this.selectedContent.set(this.medias()[previousIndex]);
   }
 
   protected getSafeUrl(url: string): SafeResourceUrl {

@@ -3,11 +3,11 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { Entry } from '@moryx/ngx-web-framework/entry-editor';
-import { BehaviorSubject, lastValueFrom } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import {
   ProductDefinitionModel,
   ProductImporter,
@@ -17,15 +17,14 @@ import {
   RevisionFilter,
   Selector,
   ProductQuery,
-} from '../api/models';
+} from '@api/models';
 import { ProductManagementService } from '@api/services/product-management.service';
 import { FilterOptions } from '../models/FilterOptions';
 import { WorkplanService } from '@api/services/workplan.service';
-import '../extensions/observable.extensions';
 import { TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from '../extensions/translation-constants.extensions';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Import$Params } from '../api/functions';
+import { Import$Params } from '@api/functions';
 
 @Injectable({
   providedIn: 'root',
@@ -37,14 +36,18 @@ export class CacheProductsService {
   private snackbarService = inject(SnackbarService);
   private translateService = inject(TranslateService);
 
-  definitions: BehaviorSubject<ProductDefinitionModel[] | undefined> = new BehaviorSubject<ProductDefinitionModel[] | undefined>(undefined);
-  productsShownInTheTree: BehaviorSubject<ProductModel[] | undefined> = new BehaviorSubject<ProductModel[] | undefined>(undefined);
-  private importers: BehaviorSubject<ProductImporter[] | undefined> = new BehaviorSubject<ProductImporter[] | undefined>(undefined);
-  importers$ = this.importers.asObservable();
-  recipeDefinitions: BehaviorSubject<RecipeDefinitionModel[] | undefined> = new BehaviorSubject<RecipeDefinitionModel[] | undefined>(undefined);
-  selected: ProductModel[] | undefined;
-  workplans: BehaviorSubject<WorkplanModel[] | undefined> = new BehaviorSubject<WorkplanModel[] | undefined>(undefined);
-  TranslationConstants = TranslationConstants;
+  private readonly _definitions = signal<ProductDefinitionModel[] | undefined>(undefined);
+  readonly definitions = this._definitions.asReadonly();
+  private readonly _productsShownInTheTree = signal<ProductModel[] | undefined>(undefined);
+  readonly productsShownInTheTree = this._productsShownInTheTree.asReadonly();
+  private readonly _importers = signal<ProductImporter[] | undefined>(undefined);
+  readonly importers = this._importers.asReadonly();
+  private readonly _recipeDefinitions = signal<RecipeDefinitionModel[] | undefined>(undefined);
+  readonly recipeDefinitions = this._recipeDefinitions.asReadonly();
+  private readonly _workplans = signal<WorkplanModel[] | undefined>(undefined);
+  readonly workplans = this._workplans.asReadonly();
+
+  protected TranslationConstants = TranslationConstants;
 
   public filterOptions: FilterOptions = {
     name: '',
@@ -54,31 +57,29 @@ export class CacheProductsService {
   } as FilterOptions;
 
   loadConfiguration() {
-    this.service.getProductCustomization().subscribe({
-      next: (configuration) => {
+    this.service.getProductCustomization()
+      .then((configuration) => {
         if (configuration.importers !== null) {
-          this.importers.next(configuration.importers);
+          this._importers.set(configuration.importers);
         }
         if (configuration.productTypes !== null) {
-          this.definitions.next(configuration.productTypes);
+          this._definitions.set(configuration.productTypes);
         }
         if (configuration.recipeTypes !== null) {
-          this.recipeDefinitions.next(configuration.recipeTypes);
+          this._recipeDefinitions.set(configuration.recipeTypes);
         }
-      },
-      error: async (e: HttpErrorResponse) => {
+      })
+      .catch(async (e: HttpErrorResponse) => {
         await this.snackbarService.handleError(e);
-      },
-    });
+      });
 
-    this.workplanService.getAllWorkplans().subscribe({
-      next: (workplans) => {
-        this.workplans.next(workplans);
-      },
-      error: async (e: HttpErrorResponse) => {
+    this.workplanService.getAllWorkplans()
+      .then((workplans) => {
+        this._workplans.set(workplans);
+      })
+      .catch(async (e: HttpErrorResponse) => {
         await this.snackbarService.handleError(e);
-      },
-    });
+      });
   }
 
   // ToDo Make async
@@ -130,23 +131,21 @@ export class CacheProductsService {
       };
     }
 
-    this.service.getTypes({body: body}).subscribe({
-      next: (products) => {
+    this.service.getTypes({body: body})
+      .then((products) => {
         if (products !== null) {
-          this.productsShownInTheTree.next(products);
+          this._productsShownInTheTree.set(products);
         }
-      },
-      error: async () => await this.showErrorSnackbar(),
-    });
+      })
+      .catch(() => this.showErrorSnackbar());
   }
 
   private async showErrorSnackbar() {
-    const translations = await this.translateService
+    const translations = await firstValueFrom(this.translateService
       .get([
         TranslationConstants.APP.FAILED_LOADING,
         TranslationConstants.DISMISS,
-      ])
-      .toAsync();
+      ]));
     await this.snackbarService.showError(
       translations[TranslationConstants.APP.FAILED_LOADING]
     );
@@ -168,7 +167,6 @@ export class CacheProductsService {
     let success: boolean = false;
     await this.service
       .deleteType({id: product.id})
-      .toAsync()
       .then((res) => (success = res))
       .catch(
         async (e: HttpErrorResponse) => await this.snackbarService.handleError(e)
@@ -177,7 +175,7 @@ export class CacheProductsService {
       return;
     }
 
-    let newProductsForTree = this.productsShownInTheTree.getValue() ?? [];
+    let newProductsForTree = this.productsShownInTheTree() ?? [];
     //Check if an older revision exists and, if yes, show that one
     newProductsForTree = newProductsForTree.filter((r) => r.id != product.id);
     const body = {
@@ -187,7 +185,6 @@ export class CacheProductsService {
 
     await this.service
       .getTypes({body: body})
-      .toAsync()
       .then((results) => {
         if (results && results[0]) {
           const existingRevision = newProductsForTree.find(p => p.id === results[0].id);
@@ -196,7 +193,7 @@ export class CacheProductsService {
             newProductsForTree.push(otherRevision);
           }
         }
-        this.productsShownInTheTree.next(newProductsForTree);
+        this._productsShownInTheTree.set(newProductsForTree);
       })
       .catch(
         async (e: HttpErrorResponse) => await this.snackbarService.handleError(e)
@@ -217,8 +214,8 @@ export class CacheProductsService {
     } as Import$Params;
 
     try {
-      await lastValueFrom(this.service.import(body));
-      await this.loadProductsForTree();
+      await this.service.import(body);
+      this.loadProductsForTree();
     } catch (error) {
       await this.snackbarService.handleError(error as HttpErrorResponse);
     }

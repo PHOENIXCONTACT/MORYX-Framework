@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Globalization;
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Processes;
@@ -36,6 +37,6 @@ public class BenchmarkParameters : VisualInstructionParameters, IActivityTimeout
     {
         var parameters = (BenchmarkParameters)instance;
         parameters.Step = Step;
-        parameters.Instructions = [string.Format(Instructions[0].Content, Step).AsInstruction()];
+        parameters.Instructions = [string.Format(CultureInfo.CurrentCulture, Instructions[0].Content, Step).AsInstruction()];
     }
 }

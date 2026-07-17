@@ -38,8 +38,8 @@ internal static class WorkplanInstanceFactory
     private static IPlace GetPlace(IConnector connector, IDictionary<long, IPlace> cache)
     {
         IPlace instance;
-        if (cache.ContainsKey(connector.Id))
-            instance = cache[connector.Id];
+        if (cache.TryGetValue(connector.Id, out var connectorsPlace))
+            instance = connectorsPlace;
         else
         {
             instance = connector.CreateInstance();

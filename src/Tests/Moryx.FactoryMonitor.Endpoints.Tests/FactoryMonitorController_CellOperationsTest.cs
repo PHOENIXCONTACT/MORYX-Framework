@@ -1,16 +1,17 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System;
+using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Moryx.AbstractionLayer.Resources;
-using Moryx.Factory;
-using NUnit.Framework;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Moryx.AspNetCore;
+using Moryx.Factory;
 using Moryx.FactoryMonitor.Endpoints.Models;
+using NUnit.Framework;
 
 namespace Moryx.FactoryMonitor.Endpoints.Tests;
 
@@ -21,7 +22,7 @@ public class FactoryMonitorController_CellOperationsTest : BaseTest
     public void GetCellPropertiesSettings_Should_Return_Properties_With_Entry_Attribute()
     {
         // Arange
-        string identifier = _assemblyCell.Id.ToString();
+        string identifier = _assemblyCell.Id.ToString(CultureInfo.InvariantCulture);
         _assemblyCell.Temperature = 157;
         //Act
         var endPointResult = _factoryMonitor.GetCellPropertiesSettings(identifier);
@@ -29,7 +30,7 @@ public class FactoryMonitorController_CellOperationsTest : BaseTest
         //Assert
         Assert.That(endPointResult.Value.Keys.Contains(nameof(_assemblyCell.Temperature)));
         var valuePair = endPointResult.Value.FirstOrDefault(pair => pair.Key == nameof(_assemblyCell.Temperature));
-        Assert.That(Equals(valuePair.Value.CurrentValue, _assemblyCell.Temperature.ToString()));
+        Assert.That(Equals(valuePair.Value.CurrentValue, _assemblyCell.Temperature.ToString(CultureInfo.InvariantCulture)));
     }
 
     [Test]

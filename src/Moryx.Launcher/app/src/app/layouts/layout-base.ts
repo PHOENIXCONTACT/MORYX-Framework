@@ -19,11 +19,11 @@ export abstract class LayoutBase {
 
   protected onTopRegionSlotChange(event: Event): void {
     const slot = event.target as HTMLSlotElement;
-    this.launcherLayoutService.topRegionAvailable.set(slot.assignedNodes().length > 0);
+    this.launcherLayoutService.setTopRegionAvailable(slot.assignedNodes().length > 0);
   }
 
   protected onRightRegionSlotChange(event: Event): void {
     const slot = event.target as HTMLSlotElement;
-    this.launcherLayoutService.rightRegionAvailable.set(slot.assignedNodes().length > 0);
+    this.launcherLayoutService.setRightRegionAvailable(slot.assignedNodes().length > 0);
   }
 }

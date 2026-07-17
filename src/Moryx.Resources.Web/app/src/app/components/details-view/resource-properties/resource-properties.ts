@@ -4,7 +4,6 @@
 */
 
 import { Component, inject, linkedSignal, ChangeDetectionStrategy } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { EditResourceService } from '@app/services/edit-resource.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Entry, NavigableEntryEditor } from '@moryx/ngx-web-framework/entry-editor';
@@ -20,7 +19,7 @@ export class ResourceProperties {
 
   private editResourceService = inject(EditResourceService);
 
-  protected isEditMode = toSignal(this.editResourceService.edit$, { initialValue: false });
+  protected isEditMode = this.editResourceService.editing;
   protected properties = linkedSignal(() => this.editResourceService.activeResource()?.properties);
 
   protected propertiesChanged(properties: Entry): void {

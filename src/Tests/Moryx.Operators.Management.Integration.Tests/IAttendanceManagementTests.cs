@@ -241,7 +241,7 @@ internal class IAttendanceManagementTests : TestsBase
         });
     }
 
-    private void AssertSignInEventEquals(SignInStatusChangedArgs? received, SignInStatusChangedArgs expected)
+    private static void AssertSignInEventEquals(SignInStatusChangedArgs? received, SignInStatusChangedArgs expected)
     {
         using var _ = Assert.EnterMultipleScope();
         Assert.That(received, Is.Not.Null);

@@ -228,7 +228,7 @@ public class SortableCollection<T> : ISortableCollection<T> where T : class, ISo
     {
         var itemIndex = _items.IndexOf(item);
         if (itemIndex < 0)
-            throw new ArgumentException("Item was not found in underlying collection.", "item");
+            throw new ArgumentException("Item was not found in underlying collection.", nameof(item));
         return itemIndex;
     }
 

@@ -268,7 +268,7 @@ public class StorageTriggerTest : ProcessTestsBase
         public IIdentity Identity { get; set; }
     }
 
-    private ProcessData PrepareProcessData(ProcessTypes processType, long instanceId = 1)
+    private static ProcessData PrepareProcessData(ProcessTypes processType, long instanceId = 1)
     {
         Process process;
         var recipe = new ProductRecipe
@@ -324,7 +324,7 @@ public class StorageTriggerTest : ProcessTestsBase
         };
     }
 
-    private ActivityData CreateActivityData(InstanceModificationType modification, long processId, IIdentity instanceIdentity = null)
+    private static ActivityData CreateActivityData(InstanceModificationType modification, long processId, IIdentity instanceIdentity = null)
     {
         var activity = new DummyActivity
         {

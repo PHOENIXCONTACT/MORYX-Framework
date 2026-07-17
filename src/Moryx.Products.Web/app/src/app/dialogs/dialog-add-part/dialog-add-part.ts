@@ -58,20 +58,17 @@ export class DialogAddPart {
       selector: Selector.Direct,
       typeName: this.data.type,
     } as ProductQuery;
-    this.productManagementService.getTypes({body: body}).subscribe({
-      next: (products) => {
-        let possibleParts = products;
-        const currentParts = this.data.parts;
-        if (currentParts?.length && !this.data.isCollection) {
-          possibleParts = possibleParts.filter((p) => currentParts[0]?.id !== p.id);
-        }
+    this.productManagementService.getTypes({body: body}).then((products) => {
+      let possibleParts = products;
+      const currentParts = this.data.parts;
+      if (currentParts?.length && !this.data.isCollection) {
+        possibleParts = possibleParts.filter((p) => currentParts[0]?.id !== p.id);
+      }
 
-        // Todo: Make possible parts a resource signal
-        this.possibleParts.update(_ => possibleParts);
-        this.filteredPossibleParts.update(_ => possibleParts);
-      },
-      error: async (e) => await this.snackbarService.handleError(e)
-    });
+      // Todo: Make possible parts a resource signal
+      this.possibleParts.set(possibleParts);
+      this.filteredPossibleParts.set(possibleParts);
+    }).catch((e) => this.snackbarService.handleError(e));
   }
 
   protected onClose() {
@@ -79,16 +76,16 @@ export class DialogAddPart {
   }
 
   protected onSelectPart(part: ProductModel) {
-    this.selectedPart.update(_ => part);
+    this.selectedPart.set(part);
   }
 
   protected onSearchTextChanged() {
-    this.filteredPossibleParts.update(_ => this.possibleParts().filter((part) =>
+    this.filteredPossibleParts.set(this.possibleParts().filter((part) =>
       this.partContainsSearchText(part)
     ));
   }
 
-  partContainsSearchText(part: ProductModel): boolean {
+  private partContainsSearchText(part: ProductModel): boolean {
     const name = this.editProductsService.createProductNameWithIdentity(part);
     const indexSearchText = name
       .toLowerCase()

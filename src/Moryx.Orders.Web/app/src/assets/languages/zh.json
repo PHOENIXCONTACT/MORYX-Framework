@@ -71,8 +71,6 @@
     "REPORT_TITLE": "报告操作",
     "REPORT": "报告",
     "OPERATION": "操作",
-    "ORDER": "订单",
-    "PRODUCT": "产品",
     "AMOUNT": "数量",
     "OVERDELIVERY": "超交",
     "UNDERDELIVERY": "欠交",
@@ -108,8 +106,6 @@
   },
   "BEGIN_DIALOG": {
     "TITLE": "开始生产",
-    "ORDER": "订单",
-    "PRODUCT": "产品",
     "TOTAL_AMOUNT": "总数量",
     "SUCCESS": "成功",
     "SCRAP": "废品",
@@ -117,15 +113,20 @@
     "OVERDELIVERY": "超交",
     "UNDERDELIVERY": "欠交",
     "PARTIAL_AMOUNT": "部分数量",
-    "BEGIN": "开始",
-    "OPERATOR_SELECTION_LABEL": "操作",
-    "OPERATOR_SELECTION_PLACEHOLDER": "(可选） 请选择您的助手",
-    "OPERATOR_SELECTION_NOT_SUPPORTED": "不允许更改存储空间"
+    "BEGIN": "开始"
+  },
+  "OPERATOR_SELECTOR": {
+    "OPERATOR_SELECTOR_LABEL": "操作",
+    "OPERATOR_SELECTOR_PLACEHOLDER": "(可选） 请选择您的助手"
   },
   "CHANGE_AMOUNT_DIALOG": {
     "TITLE": "更新当前目标金额",
     "UPDATE_AMOUNT": "更新金额",
     "CANNOT_REDUCE_TARGET_AMOUNT": "目标金额不得进一步减少"
+  },
+  "DIALOG_CONTEXT": {
+    "ORDER": "订单",
+    "PRODUCT": "产品"
   },
   "DISMISS": "关闭",
   "CANCEL": "取消",

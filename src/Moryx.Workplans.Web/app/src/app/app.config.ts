@@ -3,72 +3,31 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { DragDropModule } from '@angular/cdk/drag-drop';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { ApplicationConfig, importProvidersFrom, inject, provideAppInitializer } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatListModule } from '@angular/material/list';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSelectModule } from '@angular/material/select';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatTableModule } from '@angular/material/table';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { BrowserModule } from '@angular/platform-browser';
-import { ApiInterceptor, API_INTERCEPTOR_PROVIDER } from '@moryx/ngx-web-framework/interceptors';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { ApplicationConfig } from '@angular/core';
+import { provideMoryxMaterialDefaults } from '@moryx/ngx-web-framework/material';
+import { languageInterceptor, apiErrorInterceptor } from '@moryx/ngx-web-framework/interceptors';
 import { environment } from '../environments/environment';
-import { ApiModule } from '@api/api.module';
-import { BrowserStorageService } from './services/browser-storage.service';
-import { EditorStateService } from './services/editor-state.service';
-import { SessionsService } from './services/sessions.service';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+import { provideApiConfiguration } from '@api/api-configuration';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    importProvidersFrom(
-      BrowserModule,
-      ApiModule.forRoot({ rootUrl: environment.rootUrl }),
-      DragDropModule,
-      MatListModule,
-      MatButtonModule,
-      MatTabsModule,
-      MatCardModule,
-      MatIconModule,
-      MatExpansionModule,
-      MatDialogModule,
-      MatTooltipModule,
-      MatSnackBarModule,
-      MatToolbarModule,
-      MatSidenavModule,
-      FormsModule,
-      MatInputModule,
-      MatProgressSpinnerModule,
-      MatFormFieldModule,
-      MatSelectModule,
-      MatMenuModule,
-      MatTableModule
+
+    // Configure the API endpoint
+    provideApiConfiguration(environment.rootUrl),
+
+    // Setup HttpClient with functional interceptors
+    provideHttpClient(
+      withInterceptors([languageInterceptor, apiErrorInterceptor])
     ),
-    BrowserStorageService,
-    SessionsService,
-    EditorStateService,
-    ApiInterceptor,
-    API_INTERCEPTOR_PROVIDER,
-    provideHttpClient(withInterceptorsFromDi()),
+
+    // Configure translation loader
     provideTranslateService({
       loader: provideTranslateHttpLoader({
         prefix: environment.assets + 'assets/languages/',
@@ -76,11 +35,9 @@ export const appConfig: ApplicationConfig = {
       }),
       fallbackLang: 'en'
     }),
-    provideAppInitializer(() => {
-      // Use material-symbols as default icon font
-      const iconRegistry = inject(MatIconRegistry);
-      iconRegistry.setDefaultFontSetClass('material-symbols-outlined');
-    }),
+
+    // Provides angular material defaults
+    provideMoryxMaterialDefaults()
   ],
 };
 

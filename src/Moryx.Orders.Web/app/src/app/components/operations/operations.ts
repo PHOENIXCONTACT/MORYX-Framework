@@ -12,7 +12,7 @@ import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
 import { SearchBarService, SearchRequest } from '@moryx/ngx-web-framework/services';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { OperationService } from '@app/services/operation.service';
 import { OrderManagementService } from '@api/services/order-management.service';
@@ -21,7 +21,6 @@ import { CreateDialog } from '@app/dialogs/create-dialog/create-dialog';
 import { ReportDialog, ReportDialogData } from '@app/dialogs/report-dialog/report-dialog';
 import { InterruptDialog } from '@app/dialogs/interrupt-dialog/interrupt-dialog';
 import { InterruptDialogData } from '@app/dialogs/interrupt-dialog/interrupt-dialog-data';
-import '../../extensions/observable.extensions';
 import { OperationViewModel } from '@app/models/operation-view-model';
 import { OperationModel, ReportModel, OperationStateClassification, ReportContext, LogLevel } from '@api/models';
 import { MediaMatcher } from '@angular/cdk/layout';
@@ -38,7 +37,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { FilterService } from '@app/services/filter.service';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { OperationsFilter } from './operations-filter/operations-filter';
 import { MultiProgressBar } from '@app/multi-progress-bar/multi-progress-bar';
 
@@ -94,7 +92,7 @@ export class Operations implements OnInit {
   protected mobileQuery: MediaQueryList;
   private searchTerm = signal<string>('');
   protected readonly drawer = viewChild.required<MatDrawer>('drawer');
-  protected hideCompleted = toSignal(this.filterService.hideCompleted$, { initialValue: true });
+  protected hideCompleted = this.filterService.hideCompleted;
 
   constructor() {
     this.mobileQuery = this.mediaMatcher.matchMedia('(max-width: 1279px)');
@@ -107,20 +105,17 @@ export class Operations implements OnInit {
 
   ngOnInit() {
     // Get all the operations
-    this.orderManagementService.getOperations().subscribe({
-      next: (operationResponse: OperationModel[]) => {
-        this.operations.set(operationResponse
-          .map(model => {
-            const viewModel = new OperationViewModel(model);
-            this.subscribeForMessagesCount(viewModel);
-            return viewModel;
-          }))
-        this.isLoading.set(false);
-      },
-      error: async (err: HttpErrorResponse) => {
-        await this.snackbarService.handleError(err);
-        this.isLoading.set(false);
-      }
+    this.orderManagementService.getOperations().then((operationResponse: OperationModel[]) => {
+      this.operations.set(operationResponse
+        .map(model => {
+          const viewModel = new OperationViewModel(model);
+          this.subscribeForMessagesCount(viewModel);
+          return viewModel;
+        }))
+      this.isLoading.set(false);
+    }).catch(async (err: HttpErrorResponse) => {
+      await this.snackbarService.handleError(err);
+      this.isLoading.set(false);
     });
 
     // Register events
@@ -193,15 +188,14 @@ export class Operations implements OnInit {
   protected async onBegin(operation: OperationViewModel) {
     const context = await this.orderManagementService
       .getBeginContext({guid: operation.model.identifier!})
-      .toAsync()
-      .catch(async (e: HttpErrorResponse) => await this.snackbarService.handleError(e));
+      .catch((e: HttpErrorResponse) => this.snackbarService.handleError(e));
     const beginDialog = this.dialog.open(BeginDialog, {
       data: <BeginDialogData>{
         context: context,
         operation: operation,
       }
     });
-    const beginModel = await beginDialog.afterClosed().toAsync();
+    const beginModel = await firstValueFrom(beginDialog.afterClosed());
     if (!beginModel || !operation.model.identifier) {
       return;
     }
@@ -211,9 +205,7 @@ export class Operations implements OnInit {
         guid: operation.model.identifier,
         body: beginModel
       })
-      .subscribe({
-        error: async (e: HttpErrorResponse) => await this.snackbarService.handleError(e)
-      });
+      .catch((e: HttpErrorResponse) => this.snackbarService.handleError(e));
   }
 
   protected onInterrupt(operation: OperationViewModel) {
@@ -225,7 +217,7 @@ export class Operations implements OnInit {
     });
   }
 
-  private submitInterruption(guid: string): Observable<void> {
+  private submitInterruption(guid: string): Promise<void> {
     return this.orderManagementService.interruptOperation({
       guid: guid
     });
@@ -242,11 +234,11 @@ export class Operations implements OnInit {
     });
   }
 
-  private getReportContext(guid: string): Observable<ReportContext> {
+  private getReportContext(guid: string): Promise<ReportContext> {
     return this.orderManagementService.getReportContext({guid: guid});
   }
 
-  private submitReport(guid: string, body: ReportModel): Observable<void> {
+  private submitReport(guid: string, body: ReportModel): Promise<void> {
     return this.orderManagementService.reportOperation({
       guid: guid,
       body: body
@@ -260,8 +252,7 @@ export class Operations implements OnInit {
   protected async onAssign(operation: OperationViewModel) {
     await this.orderManagementService
       .reload({guid: operation.model.identifier!})
-      .toAsync()
-      .catch(async () => await this.snackbarService.showError(this.translateService.instant(TranslationConstants.OPERATIONS.REASSIGN_NOT_POSSIBLE)));
+      .catch(() => this.snackbarService.showError(this.translateService.instant(TranslationConstants.OPERATIONS.REASSIGN_NOT_POSSIBLE)));
   }
 
   protected showRecipes(operation: OperationViewModel) {
@@ -301,7 +292,7 @@ export class Operations implements OnInit {
   }
 
   subscribeForMessagesCount(operation: OperationViewModel) {
-    this.orderManagementService.getLogs({guid: operation.model.identifier!}).subscribe(
+    this.orderManagementService.getLogs({guid: operation.model.identifier!}).then(
       messages =>
         (operation.errorMessagesCount = messages.filter(
           m => m.logLevel === LogLevel.Error || m.logLevel == LogLevel.Critical

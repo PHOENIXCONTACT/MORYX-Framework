@@ -10,8 +10,6 @@ namespace Moryx.ProcessData.Adapter.ResourceManagement;
 [Plugin(LifeCycle.Singleton)]
 internal class ResourceManagementAdapter : IPlugin
 {
-    private const string MeasurementPrefix = "resources_";
-
     private readonly ICollection<IProcessDataPublisher> _resources = new List<IProcessDataPublisher>();
 
     #region Dependencies

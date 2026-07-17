@@ -48,14 +48,11 @@ export class DialogAddResource implements OnInit {
   private dialogRef = inject(MatDialogRef<DialogAddResource>);
   private cache = inject(CacheResourceService);
 
-  constructor() {
-  }
-
   ngOnInit(): void {
     this.types.update(() => this.cache.flatTypes?.filter(t => t.creatable).sort((a, b) => this.byName(a, b)));
   }
 
-  byName(a: ResourceTypeModel, b: ResourceTypeModel): number {
+  private byName(a: ResourceTypeModel, b: ResourceTypeModel): number {
     return (a.displayName ?? a.name)?.localeCompare(b.displayName ?? b.name ?? '') ?? -1;
   }
 

@@ -78,9 +78,9 @@ public class ConfigManager : IConfigManager, IEmptyPropertyProvider
 
         lock (ConfigCache)
         {
-            if (ConfigCache.TryGetValue(name, out var value) && value.GetType().Equals(configType))
+            if (ConfigCache.TryGetValue(name, out var config) && config.GetType().Equals(configType))
             {
-                return value;
+                return config;
             }
 
             ConfigCache[name] = TryGetFromDirectory(configType, name);
@@ -103,9 +103,9 @@ public class ConfigManager : IConfigManager, IEmptyPropertyProvider
 
         lock (ConfigCache)
         {
-            if (liveUpdate && ConfigCache.TryGetValue(name, out var value) && typeof(IUpdatableConfig).IsAssignableFrom(configType))
+            if (liveUpdate && ConfigCache.TryGetValue(name, out var config) && typeof(IUpdatableConfig).IsAssignableFrom(configType))
             {
-                _liveUpdater.UpdateLive(configType, value, configuration);
+                _liveUpdater.UpdateLive(configType, config, configuration);
             }
             else
             {
@@ -122,7 +122,7 @@ public class ConfigManager : IConfigManager, IEmptyPropertyProvider
     /// </summary>
     public void SaveSharedConfigs(object partialConfig, bool liveUpdate)
     {
-        foreach (var sharedConfig in _sharedProvider.IncludedSharedConfigs(partialConfig))
+        foreach (var sharedConfig in SharedConfigProvider.IncludedSharedConfigs(partialConfig))
         {
             SaveConfiguration(sharedConfig, sharedConfig.GetType().FullName, liveUpdate);
         }

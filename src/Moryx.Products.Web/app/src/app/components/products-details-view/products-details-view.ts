@@ -4,7 +4,6 @@
 */
 
 import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationCancel, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
@@ -33,29 +32,29 @@ export class ProductsDetailsView {
   private editProductsService = inject(EditProductsService);
   private activatedRoute = inject(ActivatedRoute);
 
-  isEditMode = toSignal(this.editProductsService.edit$, { initialValue: false });
-  protected currentProduct = toSignal(this.editProductsService.currentProduct$);
+  protected isEditMode = this.editProductsService.editing;
+  protected currentProduct = this.editProductsService.currentProduct;
   protected activeLink = signal<Tabs>(Tabs.Unknown);
 
   protected Tabs = Tabs;
   protected TranslationConstants = TranslationConstants;
-  regexParts: RegExp = /(details\/\d*\/parts)/;
-  regexRecipes: RegExp = /(details\/\d*\/recipes)/;
-  regexReferences: RegExp = /(details\/\d*\/references)/;
-  regexProperties: RegExp = /(details\/\d*\/properties)/;
+  private regexParts: RegExp = /(details\/\d*\/parts)/;
+  private regexRecipes: RegExp = /(details\/\d*\/recipes)/;
+  private regexReferences: RegExp = /(details\/\d*\/references)/;
+  private regexProperties: RegExp = /(details\/\d*\/properties)/;
 
   constructor() {
     this.router.events.subscribe((val) => {
       if (val instanceof NavigationEnd || val instanceof NavigationCancel) {
         const url = this.router.url;
         if (this.regexProperties.test(url)) {
-          this.activeLink.update(_ => Tabs.Properties);
+          this.activeLink.set(Tabs.Properties);
         } else if (this.regexParts.test(url)) {
-          this.activeLink.update(_ => Tabs.Parts);
+          this.activeLink.set(Tabs.Parts);
         } else if (this.regexRecipes.test(url)) {
-          this.activeLink.update(_ => Tabs.Recipes);
+          this.activeLink.set(Tabs.Recipes);
         } else if (this.regexReferences.test(url)) {
-          this.activeLink.update(_ => Tabs.References);
+          this.activeLink.set(Tabs.References);
         }
       }
     });
@@ -95,7 +94,7 @@ export class ProductsDetailsView {
     this.router.navigate([url]);
   }
 
-  onCurrentProductChangeFromHeader(product: ProductModel | undefined) {
+  protected onCurrentProductChangeFromHeader(product: ProductModel | undefined) {
     if (this.isEditMode() && product) {
       this.editProductsService.updateCurrentProduct(product);
     }

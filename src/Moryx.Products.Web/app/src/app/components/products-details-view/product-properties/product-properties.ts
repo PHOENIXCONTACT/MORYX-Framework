@@ -3,11 +3,9 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, ChangeDetectionStrategy } from "@angular/core";
-import { toSignal } from "@angular/core/rxjs-interop";
+import { Component, computed, inject, ChangeDetectionStrategy } from "@angular/core";
 import { NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
 import { EditProductsService } from "@app/services/edit-products.service";
-import { map } from 'rxjs';
 
 @Component({
   selector: "app-product-properties",
@@ -19,6 +17,6 @@ import { map } from 'rxjs';
 export class ProductProperties {
   private editProductsService = inject(EditProductsService);
 
-  protected isEditMode = toSignal(this.editProductsService.edit$, { initialValue: false });
-  protected properties = toSignal(this.editProductsService.currentProduct$.pipe(map(product => product?.properties)));
+  protected isEditMode = this.editProductsService.editing;
+  protected properties = computed(() => this.editProductsService.currentProduct()?.properties);
 }

@@ -4,7 +4,6 @@
 */
 
 import { Component, effect, inject, linkedSignal, signal, untracked, ChangeDetectionStrategy } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { Event, NavigationCancel, NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
@@ -24,7 +23,7 @@ export class DetailsView {
   private router = inject(Router);
   private editResourceService = inject(EditResourceService);
 
-  protected isEditMode = toSignal(this.editResourceService.edit$, { initialValue: false });
+  protected isEditMode = this.editResourceService.editing;
   protected activeLink = signal<number | undefined>(undefined);
   protected activeResource = linkedSignal(() => this.editResourceService.activeResource());
 
@@ -42,7 +41,9 @@ export class DetailsView {
       if (this.oldResourceId === resource.id) {
         return;
       }
-      untracked(() => this.onNewResource(resource));
+      untracked(() => {
+        this.onNewResource(resource);
+      });
     });
   }
 

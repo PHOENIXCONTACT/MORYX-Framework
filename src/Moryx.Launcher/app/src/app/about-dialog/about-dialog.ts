@@ -3,15 +3,12 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, computed, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { timer } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { TranslatePipe } from '@ngx-translate/core';
 import { CommonService } from '@api/services/common.service';
+import { ApplicationInformationResponse, HostInformationResponse, ServerTimeResponse } from '@api/models';
 import { CultureService } from '../services/culture.service';
 import { ShortcutService } from '../services/shortcut.service';
 import { TranslationConstants } from '../translation-constants';
@@ -22,26 +19,33 @@ import { TranslationConstants } from '../translation-constants';
   templateUrl: './about-dialog.html',
   styleUrl: './about-dialog.scss',
 })
-export class AboutDialog {
+export class AboutDialog implements OnInit {
   private commonService = inject(CommonService);
   private cultureService = inject(CultureService);
   private shortcutService = inject(ShortcutService);
+  private destroyRef = inject(DestroyRef);
 
   protected TranslationConstants = TranslationConstants;
   protected isMac = navigator.platform.toUpperCase().includes('MAC');
 
   protected shortcuts = this.shortcutService.getShortcutInfos();
 
-  private applicationInfo = toSignal(this.commonService.getApplicationInfo()
-    .pipe(catchError(() => of(null))));
+  private applicationInfo = signal<ApplicationInformationResponse | null>(null);
+  private hostInfo = signal<HostInformationResponse | null>(null);
+  private rawServerTime = signal<ServerTimeResponse | null>(null);
 
-  private hostInfo = toSignal(this.commonService.getHostInfo()
-    .pipe(catchError(() => of(null))));
+  ngOnInit() {
+    this.commonService.getApplicationInfo().then(v => this.applicationInfo.set(v)).catch(() => {});
+    this.commonService.getHostInfo().then(v => this.hostInfo.set(v)).catch(() => {});
 
-  private rawServerTime = toSignal(timer(0, 1000)
-    .pipe(switchMap(() =>
-      this.commonService.getServerTime().pipe(catchError(() => of(null))))
-    ));
+    this.fetchServerTime();
+    const interval = setInterval(() => this.fetchServerTime(), 1000);
+    this.destroyRef.onDestroy(() => clearInterval(interval));
+  }
+
+  private fetchServerTime() {
+    this.commonService.getServerTime().then(v => this.rawServerTime.set(v)).catch(() => {});
+  }
 
   protected serverTime = computed(() => {
     const rawServerTime = this.rawServerTime()?.serverTime;

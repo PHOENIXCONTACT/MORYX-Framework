@@ -13,7 +13,13 @@ import { ModuleCategory } from '../models/module-category';
 /** Holds the registered modules and provides filtered/sorted views and active-route detection. */
 export class ModuleService {
   /** All registered modules loaded from the server. */
-  modules = signal<ModuleItem[]>([]);
+  private readonly _modules = signal<ModuleItem[]>([]);
+  readonly modules = this._modules.asReadonly();
+
+  /** Called by the app root to populate the module list after loading. */
+  setModules(items: ModuleItem[]): void {
+    this._modules.set(items);
+  }
 
   /** User-category modules, sorted by sortIndex. */
   userModules = computed(() =>

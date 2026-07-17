@@ -71,8 +71,6 @@
     "REPORT_TITLE": "Vorgang rückmelden",
     "REPORT": "RÜCKMELDEN",
     "OPERATION": "Vorgang",
-    "ORDER": "Auftrag",
-    "PRODUCT": "Produkt",
     "AMOUNT": "Menge",
     "OVERDELIVERY": "Überlieferung",
     "UNDERDELIVERY": "Unterlieferung",
@@ -108,8 +106,6 @@
   },
   "BEGIN_DIALOG": {
     "TITLE": "Beginnen Sie mit der Produktion",
-    "ORDER": "Auftrag",
-    "PRODUCT": "Produkt",
     "TOTAL_AMOUNT": "Auftragsmenge",
     "SUCCESS": "Gutmenge",
     "SCRAP": "Ausschuss",
@@ -117,15 +113,20 @@
     "OVERDELIVERY": "Überlieferung",
     "UNDERDELIVERY": "Unterlieferung",
     "PARTIAL_AMOUNT": "Zielmenge",
-    "BEGIN": "BEGINNEN",
-    "OPERATOR_SELECTION_LABEL": "Bediener",
-    "OPERATOR_SELECTION_PLACEHOLDER": "(Optional) Wählen Sie einen Bediener",
-    "OPERATOR_SELECTION_NOT_SUPPORTED": "Bedienerauswahl wird nicht untersützt"
+    "BEGIN": "BEGINNEN"
+  },
+  "OPERATOR_SELECTOR": {
+    "OPERATOR_SELECTOR_LABEL": "Bediener",
+    "OPERATOR_SELECTOR_PLACEHOLDER": "(Optional) Wählen Sie einen Bediener"
   },
   "CHANGE_AMOUNT_DIALOG": {
     "TITLE": "Ändern Sie die aktuelle Zielmenge",
     "UPDATE_AMOUNT": "MENGE ÄNDERN",
     "CANNOT_REDUCE_TARGET_AMOUNT": "Die Zielmenge kann nicht weiter reduziert werden"
+  },
+  "DIALOG_CONTEXT": {
+    "ORDER": "Auftrag",
+    "PRODUCT": "Produkt"
   },
   "DISMISS": "OKAY",
   "CANCEL": "ABBRECHEN",

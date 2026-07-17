@@ -39,12 +39,12 @@ public sealed class UnitOfWork<TContext> : IUnitOfWork<TContext> where TContext 
 
     private IRepository GetRepository(Type api)
     {
-        if (!_repositories.ContainsKey(api))
+        if (!_repositories.TryGetValue(api, out var repo))
         {
             throw new NotSupportedException($"Api {api} was not found.");
         }
 
-        var instance = _repositories[api]();
+        var instance = repo();
         instance.Initialize(this, DbContext);
 
         return instance;

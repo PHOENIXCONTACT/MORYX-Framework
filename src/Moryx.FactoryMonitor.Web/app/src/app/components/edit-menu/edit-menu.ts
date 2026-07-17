@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, effect, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ChangeBackgroundDialog } from '@app/dialogs/change-background-dialog/change-background-dialog';
@@ -15,7 +15,6 @@ import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { FactorySelectionService } from '@app/services/factory-selection.service';
 import { FactoryMonitorService } from '@api/services';
 import { ChangeBackgroundService } from '@app/services/change-background.service';
-import { FactoryModel } from '@api/models/factory-model';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
@@ -33,7 +32,7 @@ import { MatIconModule } from '@angular/material/icon';
     TranslatePipe
 ]
 })
-export class EditMenu implements OnInit {
+export class EditMenu {
   private editMenuService = inject(EditMenuService);
   private matDialog = inject(MatDialog);
   private translateService = inject(TranslateService);
@@ -48,10 +47,6 @@ export class EditMenu implements OnInit {
       icon: 'open_with',
       state: EditMenuState.EditingCells,
     },
-    /*{
-      icon: 'route',
-      state: EditMenuState.EditingRoutes,
-    },*/
     {
       icon: 'wallpaper',
       state: EditMenuState.EditingBackground,
@@ -63,8 +58,7 @@ export class EditMenu implements OnInit {
   protected backgroundState: EditMenuState = EditMenuState.EditingBackground;
   protected TranslationConstants = TranslationConstants;
   protected canGoBack = signal(false);
-  goBackToFactory!: number;
-  navigationItem!: FactoryModel;
+  private goBackToFactory!: number;
 
   constructor() {
     this.translateService.addLangs([
@@ -73,29 +67,25 @@ export class EditMenu implements OnInit {
       TranslationConstants.LANGUAGES.IT,
     ]);
     this.translateService.setFallbackLang('en');
-  }
 
-  ngOnInit(): void {
-    this.factorySelectionService.factorySelected$.subscribe({
-      next: factory => {
-        if (!factory) {
+    effect(() => {
+      const factory = this.factorySelectionService.factorySelected();
+      if (!factory) {
+        this.canGoBack.set(false);
+        return;
+      }
+
+      this.factoryMonitorService.getNavigation({ factoryId: factory }).then(navigation => {
+        this.backgroundService.updateBackground(navigation.backgroundURL);
+
+        if (!navigation.parentId) {
           this.canGoBack.set(false);
           return;
         }
 
-        this.factoryMonitorService.getNavigation({ factoryId: factory }).subscribe(navigation => {
-          this.navigationItem = navigation;
-          this.backgroundService.updateBackground(navigation.backgroundURL);
-
-          if (!navigation.parentId) {
-            this.canGoBack.set(false);
-            return;
-          }
-
-          this.canGoBack.set(true);
-          this.goBackToFactory = navigation.parentId ?? 0;
-        });
-      }
+        this.canGoBack.set(true);
+        this.goBackToFactory = navigation.parentId ?? 0;
+      });
     });
   }
 
@@ -115,11 +105,11 @@ export class EditMenu implements OnInit {
     });
   }
 
-  showMenu() {
+  private showMenu() {
     this.buttons.set(this.menuButtons);
   }
 
-  hideMenu() {
+  private hideMenu() {
     this.buttons.set([]);
     this.editMenuService.setActiveState(EditMenuState.Closed);
   }

@@ -100,12 +100,12 @@ internal class VisualInstructionsController : IVisualInstructionsController
         var instructions = new List<ActiveInstruction>();
 
         // Load instructions from sources
-        if (_instructionSources.ContainsKey(identifier))
-            instructions.AddRange(_instructionSources[identifier].Instructions);
+        if (_instructionSources.TryGetValue(identifier, out var source))
+            instructions.AddRange(source.Instructions);
 
         // Include external instructions
-        if (_facadeInstructions.ContainsKey(identifier))
-            instructions.AddRange(_facadeInstructions[identifier]);
+        if (_facadeInstructions.TryGetValue(identifier, out var instruction))
+            instructions.AddRange(instruction);
 
         return instructions;
     }
@@ -124,21 +124,21 @@ internal class VisualInstructionsController : IVisualInstructionsController
 
     public void ClearInstruction(string identifier, ActiveInstruction instruction)
     {
-        if (_facadeInstructions.ContainsKey(identifier))
-            _facadeInstructions[identifier].Remove(instruction);
+        if (_facadeInstructions.TryGetValue(identifier, out var facadeInstruction))
+            facadeInstruction.Remove(instruction);
 
         InstructionCleared(this, new InstructionEventArgs(identifier, instruction));
     }
 
     public void CompleteInstruction(string identifier, ActiveInstructionResponse response)
     {
-        if (_facadeInstructions.ContainsKey(identifier))
+        if (_facadeInstructions.TryGetValue(identifier, out var instruction))
         {
-            _facadeInstructions[identifier].RemoveAll(i => i.Id == response.Id);
+            instruction.RemoveAll(i => i.Id == response.Id);
         }
-        else if (_instructionSources.ContainsKey(identifier) && _instructionSources[identifier].Instructions.Any(a => a.Id == response.Id))
+        else if (_instructionSources.TryGetValue(identifier, out var source) && source.Instructions.Any(a => a.Id == response.Id))
         {
-            _instructionSources[identifier].Completed(response);
+            source.Completed(response);
         }
 
         InstructionCleared(this, new InstructionEventArgs(identifier, new ActiveInstruction { Id = response.Id }));

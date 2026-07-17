@@ -15,7 +15,6 @@ import { MatOptionModule } from "@angular/material/core";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatSelectModule } from "@angular/material/select";
-import { toSignal } from "@angular/core/rxjs-interop";
 
 @Component({
   selector: "app-products-details-header",
@@ -36,8 +35,8 @@ import { toSignal } from "@angular/core/rxjs-interop";
 export class ProductsDetailsHeader {
   private editService = inject(EditProductsService);
 
-  protected currentProduct = toSignal(this.editService.currentProduct$);
-  protected editMode = toSignal(this.editService.edit$, { initialValue: false });
+  protected currentProduct = this.editService.currentProduct;
+  protected editMode = this.editService.editing;
   protected identifier = linkedSignal(() => {
     const current = this.currentProduct();
     if (!current) {

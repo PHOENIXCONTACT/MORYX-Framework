@@ -21,7 +21,7 @@
     <PackageVersion Include="WireMock.Net" Version="1.16.0" />
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
 
-	  <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="$(dotnetVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="$(dotnetVersion)" />
     <PackageVersion Include="Microsoft.Extensions.Logging" Version="$(dotnetVersion)" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="$(dotnetVersion)" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="$(dotnetVersion)" />
@@ -47,7 +47,7 @@
     <PackageVersion Include="Microsoft.Identity.Web" Version="4.0.0" />
     <PackageVersion Include="Microsoft.Identity.Web.DownstreamApi" Version="4.0.0" />
 
-	  <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
 
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="8.1.4" />

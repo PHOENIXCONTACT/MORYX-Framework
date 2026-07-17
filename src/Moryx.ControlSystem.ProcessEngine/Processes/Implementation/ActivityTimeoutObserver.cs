@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Concurrent;
+using System.Globalization;
 using Moryx.Container;
 using Moryx.ControlSystem.Activities;
 using Moryx.ControlSystem.ProcessEngine.Properties;
@@ -92,7 +93,7 @@ internal sealed class ActivityTimeoutObserver : IActivityPoolListener, INotifica
 
         var timeoutParameters = (IActivityTimeoutParameters)activityData.Activity.Parameters;
         var notification = new Notification(Strings.ActivityTimeoutObserver_ActivityTimeout_Title,
-            string.Format(Strings.ActivityTimeoutObserver_ActivityTimeout_Message, activityName,
+            string.Format(CultureInfo.CurrentCulture, Strings.ActivityTimeoutObserver_ActivityTimeout_Message, activityName,
                 timeoutParameters.Timeout), ModuleConfig.ActivityTimeoutSeverity, true);
 
         NotificationAdapter.Publish(this, notification, activityData);
@@ -107,10 +108,10 @@ internal sealed class ActivityTimeoutObserver : IActivityPoolListener, INotifica
     {
         NotificationAdapter.AcknowledgeAll(this, activityData);
 
-        if (!_runningTimers.ContainsKey(activityData))
+        if (!_runningTimers.TryGetValue(activityData, out var timer))
             return;
 
-        ParallelOperations.StopExecution(_runningTimers[activityData]);
+        ParallelOperations.StopExecution(timer);
         _runningTimers.Remove(activityData);
     }
 }

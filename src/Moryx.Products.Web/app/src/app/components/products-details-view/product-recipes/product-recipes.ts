@@ -4,8 +4,7 @@
 */
 
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, inject, linkedSignal, ChangeDetectionStrategy } from "@angular/core";
-import { toSignal } from "@angular/core/rxjs-interop";
+import { Component, computed, inject, linkedSignal, ChangeDetectionStrategy } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { Router, RouterOutlet } from "@angular/router";
 import { SnackbarService, } from "@moryx/ngx-web-framework/services";
@@ -19,7 +18,6 @@ import { MatListModule } from "@angular/material/list";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { MatExpansionModule } from "@angular/material/expansion";
-import { lastValueFrom, map } from "rxjs";
 
 @Component({
   selector: "app-product-recipes",
@@ -42,8 +40,8 @@ export class ProductRecipes {
   private productManagementService = inject(ProductManagementService);
   private snackbarService = inject(SnackbarService);
 
-  protected isEditMode = toSignal(this.editProductsService.edit$, { initialValue: false });
-  protected recipes = toSignal(this.editProductsService.currentProduct$.pipe(map(p => p?.recipes ?? []) ), { initialValue: [] });
+  protected isEditMode = this.editProductsService.editing;
+  protected recipes = computed(() => this.editProductsService.currentProduct()?.recipes ?? []);
   protected selectedRecipe = linkedSignal(this.editProductsService.currentRecipe);
   protected TranslationConstants = TranslationConstants;
 
@@ -66,7 +64,7 @@ export class ProductRecipes {
   private async createRecipe(name: string, recipeType: string, workplanModel?: WorkplanModel) {
     let recipe: RecipeModel = {};
     try {
-      recipe = await lastValueFrom(this.productManagementService.createRecipe({ recipeType: recipeType }));
+      recipe = await this.productManagementService.createRecipe({ recipeType: recipeType });
     } catch (error) {
       await this.snackbarService.handleError(error as HttpErrorResponse);
       return;
