@@ -36,9 +36,8 @@
     "REFERENCES_TAB_TITLE": "Referenzen",
     "METHODS_TAB_TITLE": "Methoden",
     "REFERENCES": {
-      "LINK": "Link",
       "LINKED_RESOURCE": "Referenzierte Ressource",
-      "REFERENCE_PLACEHOLDER": "Wähle eine der verfügbaren Resourcen, um sie als Referenz hinzuzufügen",
+      "PLACEHOLDER": "Wähle eine der verfügbaren Resourcen, um sie als Referenz hinzuzufügen",
       "NO_TARGET": "Keine Referenz ausgewählt"
     },
     "METHODS": {

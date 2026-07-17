@@ -35,7 +35,6 @@
     "REFERENCES_TAB_TITLE": "引用",
     "METHODS_TAB_TITLE": "方法",
     "REFERENCES": {
-      "LINK": "链接",
       "LINKED_RESOURCE": "链接的资源",
       "PLACEHOLDER": "选择可用资源，将其添加为参考资料",
       "NO_TARGET": "未选择目标"
