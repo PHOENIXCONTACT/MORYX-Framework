@@ -132,4 +132,16 @@
   <data name="WORKPLAN_NOT_FOUND" xml:space="preserve">
     <value>Piano di lavoro non trovato per l'id: {0}</value>
   </data>
+  <data name="BatchIdentity_Name" xml:space="preserve">
+    <value>Identità del lotto</value>
+  </data>
+  <data name="BatchIdentity_Description" xml:space="preserve">
+    <value>Identità utilizzata per identificare un lotto di materiale o di prodotto.</value>
+  </data>
+  <data name="BatchIdentity_Identifier_Name" xml:space="preserve">
+    <value>Identificativo del lotto</value>
+  </data>
+  <data name="BatchIdentity_Identifier_Description" xml:space="preserve">
+    <value>Identificativo univoco del lotto.</value>
+  </data>
 </root>

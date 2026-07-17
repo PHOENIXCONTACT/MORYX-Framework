@@ -1,17 +1,17 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!--
-    Microsoft ResX Schema
-
+  <!-- 
+    Microsoft ResX Schema 
+    
     Version 2.0
-
-    The primary goals of this format is to allow a simple XML format
-    that is mostly human readable. The generation and parsing of the
-    various data types are done through the TypeConverter classes
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
     associated with the data types.
-
+    
     Example:
-
+    
     ... ado.net/XML headers & schema ...
     <resheader name="resmimetype">text/microsoft-resx</resheader>
     <resheader name="version">2.0</resheader>
@@ -26,36 +26,36 @@
         <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
         <comment>This is a comment</comment>
     </data>
-
-    There are any number of "resheader" rows that contain simple
+                
+    There are any number of "resheader" rows that contain simple 
     name/value pairs.
-
-    Each data row contains a name, and value. The row also contains a
-    type or mimetype. Type corresponds to a .NET class that support
-    text/value conversion through the TypeConverter architecture.
-    Classes that don't support this are serialized and stored with the
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
     mimetype set.
-
-    The mimetype is used for serialized objects, and tells the
-    ResXResourceReader how to depersist the object. This is currently not
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
     extensible. For a given mimetype the value must be set accordingly:
-
-    Note - application/x-microsoft.net.object.binary.base64 is the format
-    that the ResXResourceWriter will generate, however the reader can
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
     read any of the formats listed below.
-
+    
     mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with
+    value   : The object must be serialized with 
             : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
-
+    
     mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with
+    value   : The object must be serialized with 
             : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
             : and then encoded with base64 encoding.
 
     mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array
+    value   : The object must be serialized into a byte array 
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
@@ -117,46 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="IdentityConflictException_IdentityConflictMessage" xml:space="preserve">
-    <value>The identity has conflicts with existing products and revisions!</value>
-  </data>
-  <data name="IdentityConflictException_InvalidTemplateMessage" xml:space="preserve">
-    <value>The identity can not be used for duplicates of the template!</value>
-  </data>
-  <data name="ProxyDetachedException_Message" xml:space="preserve">
-    <value>The proxy was detached and can no longer be used!</value>
-  </data>
-  <data name="RecipeNotFoundException_Message" xml:space="preserve">
-    <value>Recipe with id '{0}' not found!</value>
-  </data>
-  <data name="ProductNotFoundException_Message" xml:space="preserve">
-    <value>Product not found for id: {0}</value>
-  </data>
-  <data name="SegmentsNotSupportedException_Message" xml:space="preserve">
-    <value>The driver does not support segments</value>
-  </data>
-  <data name="ResourceNotFoundException_ByCapabilities_Message" xml:space="preserve">
-    <value>No resource found providing capabilities or too many matches: {0}</value>
-  </data>
-  <data name="ResourceNotFoundException_ById_Message" xml:space="preserve">
-    <value>No resource found with id: {0}</value>
-  </data>
-  <data name="Resource_Parent" xml:space="preserve">
-    <value>Parent</value>
-  </data>
-  <data name="Children" xml:space="preserve">
-    <value>Children</value>
-  </data>
   <data name="BatchIdentity_Name" xml:space="preserve">
-    <value>Batch Identity</value>
+    <value>批次标识</value>
   </data>
   <data name="BatchIdentity_Description" xml:space="preserve">
-    <value>Identity used to identify a material or product batch.</value>
+    <value>用于标识物料批次或产品批次的标识。</value>
   </data>
   <data name="BatchIdentity_Identifier_Name" xml:space="preserve">
-    <value>Batch Identifier</value>
+    <value>批次标识符</value>
   </data>
   <data name="BatchIdentity_Identifier_Description" xml:space="preserve">
-    <value>Unique identifier of the batch.</value>
+    <value>批次的唯一标识符。</value>
   </data>
 </root>
