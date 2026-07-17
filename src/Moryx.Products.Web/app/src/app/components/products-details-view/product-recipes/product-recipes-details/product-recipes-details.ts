@@ -4,7 +4,6 @@
 */
 
 import { Component, inject, linkedSignal, ChangeDetectionStrategy } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { CacheProductsService } from '@app/services/cache-products.service';
 import { EditProductsService } from '@app/services/edit-products.service';
@@ -18,8 +17,7 @@ import { ProductRecipesDetailsHeader } from './product-recipes-details-header/pr
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ProductRecipesDetailsHeader,
-    NavigableEntryEditor,
-    TranslatePipe
+    NavigableEntryEditor
   ]
 })
 export class ProductRecipesDetails {

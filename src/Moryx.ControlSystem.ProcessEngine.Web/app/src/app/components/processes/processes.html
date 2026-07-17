@@ -74,19 +74,16 @@
             {{ selectedActivity()?.tracing?.text }}
           </div>
         </div>
-        @if (
-          selectedActivity()?.tracing &&
-          selectedActivity()?.tracing?.properties &&
-          selectedActivity()?.tracing?.properties?.subEntries &&
-          selectedActivity()?.tracing?.properties?.subEntries!.length > 0
-        ) {
-          <div class="processes-activity-tracing-details">
-            <navigable-entry-editor
-              [entry]="selectedActivity()?.tracing?.properties!"
-              [disabled]="true"
-              queryParam="tracingProperties">
-            </navigable-entry-editor>
-          </div>
+        @if (selectedActivity()?.tracing?.properties; as properties) {
+          @if (properties.subEntries && properties.subEntries.length > 0) {
+            <div class="processes-activity-tracing-details">
+              <navigable-entry-editor
+                [entry]="properties"
+                [disabled]="true"
+                queryParam="tracingProperties">
+              </navigable-entry-editor>
+            </div>
+          }
         }
       </div>
     </div>
