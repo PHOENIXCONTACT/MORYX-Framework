@@ -11,6 +11,7 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { TranslatePipe } from "@ngx-translate/core";
 import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
 import { InterruptDialogData } from "./interrupt-dialog-data";
+import { DialogContext } from "@app/components/dialog-context/dialog-context";
 
 @Component({
   selector: "app-interrupt-dialog",
@@ -22,7 +23,8 @@ import { InterruptDialogData } from "./interrupt-dialog-data";
     MatDialogModule,
     TranslatePipe,
     MatProgressBarModule,
-    MatButtonModule
+    MatButtonModule,
+    DialogContext
   ]
 })
 export class InterruptDialog {
