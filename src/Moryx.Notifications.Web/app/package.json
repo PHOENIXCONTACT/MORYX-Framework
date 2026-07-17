@@ -42,7 +42,7 @@
     "eslint": "^10.6.0",
     "jsdom": "^29.1.1",
     "ng-openapi-gen": "^1.0.5",
-    "typescript": "~6.0.3",
+    "typescript": "~7.0.2",
     "typescript-eslint": "^8.62.1",
     "vitest": "^4.1.9"
   }
