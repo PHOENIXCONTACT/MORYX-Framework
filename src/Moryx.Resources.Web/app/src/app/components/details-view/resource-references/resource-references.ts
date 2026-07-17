@@ -188,26 +188,15 @@ export class ResourceReferences {
     return supportedSubTypes;
   }
 
-  private truncateDescription(description: string): string {
-    const maxLength = 35;
-    return description.length > maxLength
-      ? `${description.substring(0, maxLength)}...`
-      : description;
-  }
-
-  protected getMetaText(referenceType: ReferenceTypeModel): string {
+  protected getTargetNames(referenceType: ReferenceTypeModel): string {
     const reference = this.editResourceService.activeResource()?.references?.find(
       r => r.name === referenceType.name
     );
-    const description = referenceType.description?.trim() ?? '';
-    const resourceText = reference?.targets
+    const names = reference?.targets
       ?.map(target => target.name)
       .filter(Boolean)
-      .join(', ') ?? '';
-    if (description && resourceText) {
-      return `${this.truncateDescription(description)} • ${resourceText}`;
-    }
-    return description || resourceText;
+      .join(', ');
+    return names ? `: ${names}` : '';
   }
 
 }
