@@ -29,17 +29,17 @@ public interface IMaterialContainer : IResource, IIdentifiableObject
     /// Denotes the container's content, subclasses are intended to enrich this with stronger
     /// typing (e.g., linking to a <c>ProductType</c>).
     /// </summary>
-    string? Material { get; set; }
+    string? Material { get; }
 
     /// <summary>
     /// Current filling level / amount of material held by this container.
     /// </summary>
-    decimal Quantity { get; set; }
+    double Quantity { get; }
 
     /// <summary>
     /// Optional unit of <see cref="Quantity"/> (e.g. "kg", "pcs").
     /// </summary>
-    string? Unit { get; set; }
+    string? Unit { get; }
 
     /// <summary>
     /// Current lifecycle state classification of the container.
@@ -47,14 +47,15 @@ public interface IMaterialContainer : IResource, IIdentifiableObject
     StateClassification State { get; }
 
     /// <summary>
-    /// Raised when <see cref="Material"/> changes.
+    /// Applies a material update to this container and raises <see cref="MaterialUpdated"/> when a value changes.
     /// </summary>
-    event EventHandler<MaterialChangedEventArgs>? MaterialChanged;
+    /// <param name="update">Update describing the material properties to change.</param>
+    void UpdateMaterial(MaterialUpdate update);
 
     /// <summary>
-    /// Raised when <see cref="Quantity"/> changes.
+    /// Raised when <see cref="Material"/> and/or <see cref="Quantity"/> changes.
     /// </summary>
-    event EventHandler<FillingLevelChangedEventArgs>? FillingLevelChanged;
+    event EventHandler<MaterialUpdatedEventArgs>? MaterialUpdated;
 
     /// <summary>
     /// Raised when <see cref="StateClassification"/> changes.

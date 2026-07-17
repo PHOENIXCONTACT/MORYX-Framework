@@ -3,7 +3,7 @@
 
 namespace Moryx.Material.States;
 
-internal class DeregisteredState(MaterialContainer context, StateMachines.StateBase.StateMap stateMap) :
+internal sealed class DeregisteredState(MaterialContainer context, StateMachines.StateBase.StateMap stateMap) :
     MaterialContainerState(context, stateMap)
 {
     public override StateClassification Classification => StateClassification.Deregistered;

@@ -7,7 +7,7 @@ using System.Runtime.Serialization;
 namespace Moryx.Material.States;
 
 /// <summary>
-/// State information of a "virtual" container created for a material request.
+/// State information of a virtual container created for a material request.
 /// </summary>
 [DataContract]
 public class RequestedStateInformation : StateInformation
@@ -16,7 +16,7 @@ public class RequestedStateInformation : StateInformation
     /// Optional identifier of the underlying request.
     /// </summary>
     [DataMember]
-    [Display(Name = "Request ID", Description = "A unique Identifier of the material request.")]
+    [Display(Name = "Request ID", Description = "Unique identifier of the material request.")]
     public string? RequestId { get; set; }
 
     /// <summary>
@@ -24,7 +24,7 @@ public class RequestedStateInformation : StateInformation
     /// </summary>
     [DataMember]
     [Display(Name = "Expected Arrival", Description = "Expected arrival date and time of the requested material (optional).")]
-    public DateTime? ExpectedArrival { get; set; }
+    public DateTimeOffset? ExpectedArrival { get; set; }
 
     /// <summary>
     /// Indicates whether material related to this request was already (partially) announced or registered.

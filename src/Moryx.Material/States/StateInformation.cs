@@ -27,5 +27,5 @@ public abstract class StateInformation
     /// </summary>
     [DataMember]
     [Display(Name = "Entered At", Description = "UTC timestamp when the container entered this state.")]
-    public DateTime EnteredAt { get; protected internal set; } = DateTime.UtcNow;
+    public DateTimeOffset EnteredAt { get; protected internal set; } = DateTimeOffset.UtcNow;
 }
