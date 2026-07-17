@@ -75,12 +75,12 @@
             <div class="reference-targets-actions">
               <mat-form-field class="reference-targets-selector" appearance="outline">
                 <mat-label>{{
-                  TranslationConstants.DETAILS.REFS.LINKED_RESOURCE | translate
+                  TranslationConstants.DETAILS.REFERENCES.LINKED_RESOURCE | translate
                 }}</mat-label>
                 <mat-select
                   [(value)]="selectedTarget"
             placeholder="{{
-              TranslationConstants.DETAILS.REFS.PLACEHOLDER | translate
+              TranslationConstants.DETAILS.REFERENCES.PLACEHOLDER | translate
             }}"
                   (selectionChange)="addTarget(table)"
                   >
@@ -105,19 +105,19 @@
           <div class="single-reference-targets-selector">
             <mat-form-field class="reference-targets-selector" appearance="outline">
               <mat-label>{{
-                TranslationConstants.DETAILS.REFS.LINKED_RESOURCE | translate
+                TranslationConstants.DETAILS.REFERENCES.LINKED_RESOURCE | translate
               }}</mat-label>
               <mat-select
                 [disabled]="!isEditMode()"
                 [(value)]="selectedTarget"
             placeholder="{{
-              TranslationConstants.DETAILS.REFS.PLACEHOLDER | translate
+              TranslationConstants.DETAILS.REFERENCES.PLACEHOLDER | translate
             }}"
                 [compareWith]="compareWith"
                 (selectionChange)="setTarget()"
                 >
                 <mat-option [value]="undefined">
-                  {{ TranslationConstants.DETAILS.REFS.NO_TARGET | translate }}
+                  {{ TranslationConstants.DETAILS.REFERENCES.NO_TARGET | translate }}
                 </mat-option>
                 @for (pr of possibleResources(); track pr) {
                   <mat-option [value]="pr">
