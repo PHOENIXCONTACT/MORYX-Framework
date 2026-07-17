@@ -3,11 +3,11 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { provideHttpClient, withInterceptorsFromDi, withXhr } from "@angular/common/http";
-import { ApplicationConfig, inject, provideAppInitializer } from "@angular/core";
-import { MatIconRegistry } from "@angular/material/icon";
+import { provideHttpClient, withInterceptors } from "@angular/common/http";
+import { ApplicationConfig } from "@angular/core";
+import { provideMoryxMaterialDefaults } from "@moryx/ngx-web-framework/material";
 import { provideRouter } from "@angular/router";
-import { ApiInterceptor, API_INTERCEPTOR_PROVIDER } from "@moryx/ngx-web-framework/interceptors";
+import { languageInterceptor, apiErrorInterceptor } from "@moryx/ngx-web-framework/interceptors";
 import { environment } from "../environments/environment";
 import { routes } from "./app.routes";
 
@@ -22,14 +22,10 @@ export const appConfig: ApplicationConfig = {
     // Configure the API endpoint
     provideApiConfiguration(environment.rootUrl),
 
-    // Register custom DI interceptors
-    // TODO: Replace by fns, if https://github.com/PHOENIXCONTACT/ngx-moryx-web/pull/48 was released
-    ApiInterceptor,
-    API_INTERCEPTOR_PROVIDER,
-
-    // Setup HttpClient
-    // TODO: Remove withInterceptorsFromDi if https://github.com/PHOENIXCONTACT/ngx-moryx-web/pull/48 was released
-    provideHttpClient(withXhr(),withInterceptorsFromDi()), //TODO: check if withXhr is still needed
+    // Setup HttpClient with functional interceptors
+    provideHttpClient(
+      withInterceptors([languageInterceptor, apiErrorInterceptor])
+    ),
 
     // Configure translation loader
     provideTranslateService({
@@ -40,11 +36,7 @@ export const appConfig: ApplicationConfig = {
       fallbackLang: 'en'
     }),
 
-    // Additional app initializers
-    provideAppInitializer(() => {
-      // Use material-symbols as default icon font
-      const iconRegistry = inject(MatIconRegistry);
-      iconRegistry.setDefaultFontSetClass('material-symbols-outlined');
-    }),
+    // Provides angular material defaults
+    provideMoryxMaterialDefaults(),
   ]
 }

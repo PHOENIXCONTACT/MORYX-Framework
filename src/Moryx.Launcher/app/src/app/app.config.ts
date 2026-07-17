@@ -5,7 +5,7 @@
 
 import { provideHttpClient } from '@angular/common/http';
 import { ApplicationConfig, inject, provideAppInitializer, provideBrowserGlobalErrorListeners } from '@angular/core';
-import { MatIconRegistry } from '@angular/material/icon';
+import { provideMoryxMaterialDefaults } from '@moryx/ngx-web-framework/material';
 
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -33,13 +33,13 @@ export const appConfig: ApplicationConfig = {
       fallbackLang: 'en'
     }),
 
+    // Provides angular material defaults
+    provideMoryxMaterialDefaults(),
+
     // Additional app initializers
     provideAppInitializer(() => {
-      const iconRegistry = inject(MatIconRegistry);
-      iconRegistry.setDefaultFontSetClass('material-symbols-outlined');
-
       // Ensure instantiation of LocationPersistenceService to register the location change listener
       inject(LocationPersistenceService);
-    }),
+    })
   ]
 };

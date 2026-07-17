@@ -5,7 +5,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.Serialization;
-using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Benchmarking;
@@ -21,6 +20,7 @@ namespace Moryx.Resources.Benchmarking;
 
 [ResourceRegistration]
 [DisplayName("Benchmark Resource")]
+[Description("Resource to benchmark the MORYX framework. It can be used to test the process engine, the visual instructions and the notification system.")]
 public class BenchmarkResource : Cell, IBenchmarkResource, INotificationSender
 {
     #region Config
@@ -29,12 +29,14 @@ public class BenchmarkResource : Cell, IBenchmarkResource, INotificationSender
     /// Flag that processes shall be confirmed manually
     /// </summary>
     [DataMember, EntrySerialize]
+    [Description("If set, the resource will wait for a manual confirmation of the process. If not set, the process will be completed automatically.")]
     public bool ManualProcessConfirmation { get; set; }
 
     /// <summary>
     /// Additional configured visual instructions for this resource
     /// </summary>
     [DataMember, EntrySerialize]
+    [Description("Additional visual instructions to display")]
     public VisualInstruction[] Instructions { get; set; }
 
     #endregion
@@ -52,6 +54,7 @@ public class BenchmarkResource : Cell, IBenchmarkResource, INotificationSender
     /// Additional configured possible results for the visual instructions for this resource
     /// </summary>
     [DataMember, EntrySerialize]
+    [Description("Additional possible results for the visual instructions")]
     public InstructionResult[] PossibleResults { get; set; }
 
     #endregion
@@ -171,6 +174,7 @@ public class BenchmarkResource : Cell, IBenchmarkResource, INotificationSender
     }
 
     [EntrySerialize]
+    [Description("Publish a notification with the given title, message and severity")]
     public void PublishNotification(string title, string message, Severity severity, bool isAcknowledgable)
     {
         var notification = new Notification(title, message, severity, isAcknowledgable);
@@ -188,6 +192,7 @@ public class BenchmarkResource : Cell, IBenchmarkResource, INotificationSender
                                            "| Pressure | 1013 | hPa |\n" +
                                            "| Humidity | 60 | % |\n";
     [EntrySerialize]
+    [Description("Publish a notification with a markdown message")]
     public void PublishMarkdownNotification()
     {
         var notification = new Notification("Markdown Notification", MarkdownMessage, Severity.Info, false);
@@ -195,6 +200,7 @@ public class BenchmarkResource : Cell, IBenchmarkResource, INotificationSender
     }
 
     [EntrySerialize]
+    [Description("Display a visual instruction with a markdown message")]
     public void PublishMarkdownInstruction()
     {
         VisualInstructor.Display(new ActiveInstruction
@@ -208,21 +214,23 @@ public class BenchmarkResource : Cell, IBenchmarkResource, INotificationSender
     }
 
     [EntrySerialize]
-    public void CreateAssemblyInstruction()
+    [Description("Execute a visual instruction with configured instructions and possible results")]
+    public void ExecuteVisualInstruction()
     {
         _instructionId = VisualInstructor.Execute(new ActiveInstruction { Title = Name, Instructions = Instructions, Results = PossibleResults, },
             response => { });
     }
 
     [EntrySerialize]
-    public void ClearAssemblyInstruction()
+    [Description("Clear the visual instruction with the last executed instruction id")]
+    public void ClearVisualInstruction()
     {
         VisualInstructor.Clear(_instructionId);
     }
 
     [EntrySerialize]
     [DisplayName("Acknowledge last notification")]
-    public void AcknowledgeLast()
+    public void AcknowledgeLastNotification()
     {
         var notifications = NotificationAdapter.GetPublished(this);
         if (notifications.Any())
@@ -231,7 +239,7 @@ public class BenchmarkResource : Cell, IBenchmarkResource, INotificationSender
 
     [EntrySerialize]
     [DisplayName("Acknowledge all notifications")]
-    public void AcknowledgeAll()
+    public void AcknowledgeAllNotifications()
     {
         NotificationAdapter.AcknowledgeAll(this);
     }
@@ -239,11 +247,6 @@ public class BenchmarkResource : Cell, IBenchmarkResource, INotificationSender
     void INotificationSender.Acknowledge(Notification notification, object tag)
     {
         NotificationAdapter.Acknowledge(this, notification);
-    }
-
-    public void Completed(long id, string result)
-    {
-        throw new NotImplementedException();
     }
 
     string INotificationSender.Identifier => Id.ToString(CultureInfo.InvariantCulture);
