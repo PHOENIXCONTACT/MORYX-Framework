@@ -4,11 +4,9 @@
 namespace Moryx.Material.Events;
 
 /// <summary>
-/// Event args for events related to a single <see cref="IMaterialContainer"/>.
+/// Event arguments for events related to a single <see cref="IMaterialContainer"/>.
 /// </summary>
-/// <remarks>
-/// Creates a new instance.
-/// </remarks>
+/// <param name="container">Container associated with the event.</param>
 public class MaterialContainerEventArgs(IMaterialContainer container) : EventArgs
 {
     /// <summary>

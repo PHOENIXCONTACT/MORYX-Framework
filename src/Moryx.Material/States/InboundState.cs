@@ -3,24 +3,25 @@
 
 namespace Moryx.Material.States;
 
-internal class InboundState(MaterialContainer context, StateMachines.StateBase.StateMap stateMap) :
+internal sealed class InboundState(MaterialContainer context, StateMachines.StateBase.StateMap stateMap) :
     MaterialContainerState(context, stateMap)
 {
     public override StateClassification Classification => StateClassification.Inbound;
 
     public override void Advance(StateInformation info)
     {
-        switch (Context.StateInformation)
+        switch (info)
         {
             case AvailableStateInformation:
                 NextState(StateAvailable);
-                return;
+                break;
             case DeregisteredStateInformation:
                 NextState(StateDeregistered);
-                return;
+                break;
             default:
                 InvalidState();
                 return;
         }
+        Context.StateInformation = info;
     }
 }

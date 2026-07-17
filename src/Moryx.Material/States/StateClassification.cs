@@ -10,7 +10,7 @@ namespace Moryx.Material.States;
 public enum StateClassification
 {
     /// <summary>
-    /// 
+    /// Container state has not yet been initialized by the lifecycle state machine.
     /// </summary>
     Uninitialized = 0,
 

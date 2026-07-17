@@ -3,7 +3,7 @@
 
 namespace Moryx.Material.States;
 
-internal class RequestedState(MaterialContainer context, StateMachines.StateBase.StateMap stateMap) :
+internal sealed class RequestedState(MaterialContainer context, StateMachines.StateBase.StateMap stateMap) :
     MaterialContainerState(context, stateMap)
 {
     public override StateClassification Classification => StateClassification.Requested;
@@ -14,16 +14,17 @@ internal class RequestedState(MaterialContainer context, StateMachines.StateBase
         {
             case InboundStateInformation:
                 NextState(StateInbound);
-                return;
+                break;
             case AvailableStateInformation:
                 NextState(StateAvailable);
-                return;
+                break;
             case DeregisteredStateInformation:
                 NextState(StateDeregistered);
-                return;
+                break;
             default:
                 InvalidState();
                 return;
         }
+        Context.StateInformation = info;
     }
 }

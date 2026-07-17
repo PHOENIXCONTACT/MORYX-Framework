@@ -3,7 +3,7 @@
 
 namespace Moryx.Material.States;
 
-internal class UninitializedState(MaterialContainer context, StateMachines.StateBase.StateMap stateMap) :
+internal sealed class UninitializedState(MaterialContainer context, StateMachines.StateBase.StateMap stateMap) :
     MaterialContainerState(context, stateMap)
 {
     public override StateClassification Classification => StateClassification.Uninitialized;
@@ -15,7 +15,8 @@ internal class UninitializedState(MaterialContainer context, StateMachines.State
 
     public override void Advance(StateInformation? info)
     {
-        switch (Context.StateInformation)
+        Context.StateInformation = info;
+        switch (info)
         {
             case RequestedStateInformation:
                 NextState(StateRequested);

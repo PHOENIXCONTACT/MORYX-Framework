@@ -3,7 +3,7 @@
 
 namespace Moryx.Material.States;
 
-internal class OutboundState(MaterialContainer context, StateMachines.StateBase.StateMap stateMap)
+internal sealed class OutboundState(MaterialContainer context, StateMachines.StateBase.StateMap stateMap)
       : MaterialContainerState(context, stateMap)
 {
     public override StateClassification Classification => StateClassification.Outbound;
@@ -13,10 +13,11 @@ internal class OutboundState(MaterialContainer context, StateMachines.StateBase.
         if (info is DeregisteredStateInformation)
         {
             NextState(StateDeregistered);
+            Context.StateInformation = info;
         }
         else
         {
-            InvalidStateAsync();
+            InvalidState();
         }
     }
 }

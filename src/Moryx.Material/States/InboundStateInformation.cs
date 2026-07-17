@@ -16,7 +16,7 @@ public class InboundStateInformation : StateInformation
     /// Optional identifier of the announcement.
     /// </summary>
     [DataMember]
-    [Display(Name = "Announcement ID", Description = "Unique Identifier of the material announcement (optional).")]
+    [Display(Name = "Announcement ID", Description = "Unique identifier of the material announcement (optional).")]
     public string? AnnouncementId { get; set; }
 
     /// <summary>
@@ -24,7 +24,7 @@ public class InboundStateInformation : StateInformation
     /// </summary>
     [DataMember]
     [Display(Name = "Expected Arrival", Description = "Expected arrival date and time of the inbound material (optional).")]
-    public DateTime? ExpectedArrival { get; set; }
+    public DateTimeOffset? ExpectedArrival { get; set; }
 
     /// <summary>
     /// Indicates whether material related to this announcement was already (partially) registered.
@@ -37,7 +37,7 @@ public class InboundStateInformation : StateInformation
     /// Optional cross-reference to <see cref="RequestedStateInformation.RequestId"/>.
     /// </summary>
     [DataMember]
-    [Display(Name = "Request Reference", Description = "Unique Identifier of the related material request, if any (optional).")]
+    [Display(Name = "Request Reference", Description = "Unique identifier of the related material request, if any (optional).")]
     public string? RequestReference { get; set; }
 
     /// <inheritdoc />
