@@ -12,15 +12,15 @@ internal class ComponentOrchestration : IAsyncPlugin
 {
     #region Dependencies
 
-    public IContainerPool ContainerPool { get; set; } = null!;
+    public IContainerPool ContainerPool { get; set; }
 
-    public ILineageEventStorage LineageStorage { get; set; } = null!;
+    public ILineageEventStorage LineageStorage { get; set; }
 
-    public IContainerStateHandler StateHandler { get; set; } = null!;
+    public IMaterialFlowHandler StateHandler { get; set; }
 
-    public IFulfillmentMatcher FulfillmentMatcher { get; set; } = null!;
+    public IFulfillmentMatcher FulfillmentMatcher { get; set; }
 
-    public ModuleConfig Config { get; set; } = null!;
+    public ModuleConfig Config { get; set; }
 
     #endregion
 

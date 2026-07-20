@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Moryx.Material\Moryx.Material.csproj" />
+    <ProjectReference Include="..\..\Moryx.Material.Management\Moryx.Material.Management.csproj" />
     <ProjectReference Include="..\..\Moryx.Resources.Management\Moryx.Resources.Management.csproj" />
     <ProjectReference Include="..\..\Moryx.TestTools.IntegrationTest\Moryx.TestTools.IntegrationTest.csproj" />
     <ProjectReference Include="..\..\Moryx.TestTools.UnitTest\Moryx.TestTools.UnitTest.csproj" />

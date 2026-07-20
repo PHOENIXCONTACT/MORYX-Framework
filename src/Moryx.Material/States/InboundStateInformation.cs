@@ -45,9 +45,15 @@ public class InboundStateInformation : StateInformation
     {
         var details = new List<string>();
         if (!string.IsNullOrWhiteSpace(AnnouncementId))
+        {
             details.Add($"Announcement {AnnouncementId}");
+        }
+
         if (ExpectedArrival.HasValue)
+        {
             details.Add($"ETA {ExpectedArrival:yyyy-MM-dd HH:mm}");
+        }
+
         return details.Count > 0 ? $"Inbound ({string.Join(", ", details)})" : "Inbound";
     }
 }

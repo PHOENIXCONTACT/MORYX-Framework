@@ -10,7 +10,7 @@ internal sealed class RequestedState(MaterialContainer context, StateMachines.St
 
     public override void Advance(StateInformation info)
     {
-        switch (Context.StateInformation)
+        switch (info)
         {
             case InboundStateInformation:
                 NextState(StateInbound);

@@ -38,9 +38,15 @@ public class RequestedStateInformation : StateInformation
     {
         var details = new List<string>();
         if (!string.IsNullOrWhiteSpace(RequestId))
+        {
             details.Add($"Request {RequestId}");
+        }
+
         if (ExpectedArrival.HasValue)
+        {
             details.Add($"ETA {ExpectedArrival:yyyy-MM-dd HH:mm}");
+        }
+
         return details.Count > 0 ? $"Requested ({string.Join(", ", details)})" : "Requested";
     }
 }

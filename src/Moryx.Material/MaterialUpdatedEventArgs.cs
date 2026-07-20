@@ -1,14 +1,12 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Material.Events;
+namespace Moryx.Material;
 
 /// <summary>
 /// Event arguments for updates to the material content of an <see cref="IMaterialContainer"/>.
 /// </summary>
-/// <param name="container">Container whose material content was updated.</param>
-public class MaterialUpdatedEventArgs(IMaterialContainer container) :
-    MaterialContainerEventArgs(container)
+public class MaterialUpdatedEventArgs
 {
     /// <summary>
     /// Describes which material properties changed.
