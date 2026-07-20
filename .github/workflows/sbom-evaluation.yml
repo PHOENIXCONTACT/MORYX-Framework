@@ -33,10 +33,17 @@ jobs:
         run: |
           npm install -g @cyclonedx/cyclonedx-npm
 
+      - name: Install CycloneDX CLI
+        run: |
+          curl -L https://github.com/CycloneDX/cyclonedx-cli/releases/latest/download/cyclonedx-linux-x64 -o cyclonedx
+          chmod +x cyclonedx
+          sudo mv cyclonedx /usr/local/bin/cyclonedx
+
       - name: Verify installations
         run: |
           dotnet-CycloneDX --version
           cyclonedx-npm --version
+          cyclonedx --version
 
       - name: Restore solution
         run: |
@@ -129,6 +136,27 @@ jobs:
       - name: Show generated SBOMs
         run: |
           find sboms -type f
+
+      - name: Validate SBOMs
+        shell: bash
+        run: |
+          sbom_count=0
+
+          find sboms -type f -name "*.json" -print0 | while IFS= read -r -d '' sbom
+          do
+            sbom_count=$((sbom_count + 1))
+            echo "Validating $sbom"
+
+            cyclonedx validate \
+              --input-file "$sbom" \
+              --input-format json \
+              --fail-on-errors
+          done
+
+          if [ "$sbom_count" -eq 0 ]; then
+            echo "No SBOM files found for validation"
+            exit 1
+          fi
 
       - name: Upload SBOMs
         uses: actions/upload-artifact@v4
