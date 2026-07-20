@@ -82,30 +82,48 @@ jobs:
               -fn "bom-dotnet.json"
 
             #
-            # npm SBOM (optional)
+            # npm SBOMs (optional)
             #
-            if [ -f "$project_dir/package.json" ]; then
-              echo "Found package.json for $project_name"
+            find "$project_dir" \
+              -path "*/bin" -prune -o \
+              -path "*/obj" -prune -o \
+              -path "*/node_modules" -prune -o \
+              -path "*/.git" -prune -o \
+              -name "package.json" -print0 | while IFS= read -r -d '' package_json
+            do
+              npm_dir=$(dirname "$package_json")
+              echo "Found package.json for $project_name in $npm_dir"
 
-              if [ ! -f "$project_dir/package-lock.json" ]; then
-                echo "Skipping npm SBOM for $project_name because package-lock.json is missing"
+              if [ ! -f "$npm_dir/package-lock.json" ]; then
+                echo "Skipping npm SBOM for $project_name because package-lock.json is missing in $npm_dir"
                 continue
               fi
 
-              pushd "$project_dir"
+              npm_relative_dir=${npm_dir#"$project_dir"}
+              npm_relative_dir=${npm_relative_dir#/}
+
+              if [ -z "$npm_relative_dir" ]; then
+                npm_bom_name="bom-npm.json"
+              else
+                npm_bom_suffix=${npm_relative_dir//\//-}
+                npm_bom_suffix=${npm_bom_suffix//[^[:alnum:]._-]/-}
+                npm_bom_name="bom-npm-$npm_bom_suffix.json"
+              fi
+
+              pushd "$npm_dir"
 
               npm ci
 
               cyclonedx-npm \
                 --output-format JSON \
                 --ignore-npm-errors \
-                --output-file "$(pwd)/bom-npm.json"
+                --output-file "$(pwd)/$npm_bom_name"
 
               popd
 
-              mv "$project_dir/bom-npm.json" \
-                 "$output_dir/bom-npm.json"
-            fi
+              mv "$npm_dir/$npm_bom_name" \
+                 "$output_dir/$npm_bom_name"
+            done
           done
 
       - name: Show generated SBOMs
