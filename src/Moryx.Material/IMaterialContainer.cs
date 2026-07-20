@@ -3,7 +3,6 @@
 
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Resources;
-using Moryx.Material.Events;
 using Moryx.Material.States;
 
 namespace Moryx.Material;
@@ -47,10 +46,22 @@ public interface IMaterialContainer : IResource, IIdentifiableObject
     StateClassification State { get; }
 
     /// <summary>
+    /// Information object for the current lifecycle state of the container.
+    /// </summary>
+    StateInformation? StateInformation { get; }
+
+    /// <summary>
     /// Applies a material update to this container and raises <see cref="MaterialUpdated"/> when a value changes.
     /// </summary>
     /// <param name="update">Update describing the material properties to change.</param>
     void UpdateMaterial(MaterialUpdate update);
+
+    /// <summary>
+    /// Applies a lifecycle state transition to this container.
+    /// </summary>
+    /// <param name="stateInformation">State information describing the target lifecycle state.</param>
+    /// <exception cref="InvalidOperationException">Throws if the intended target state cannot be reached from the current state</exception>
+    void TransitionTo(StateInformation stateInformation);
 
     /// <summary>
     /// Raised when <see cref="Material"/> and/or <see cref="Quantity"/> changes.

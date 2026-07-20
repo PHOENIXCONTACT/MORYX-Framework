@@ -3,23 +3,17 @@
 
 using Moryx.Material.Lineage;
 
-namespace Moryx.Material;
+namespace Moryx.Material.Facade;
 
 /// <summary>
-/// Event args raised when a lineage event has been recorded.
+/// Event arguments raised when a lineage event has been recorded.
 /// </summary>
-public class LineageRecordedEventArgs : EventArgs
+/// <param name="container">Container associated with the recorded lineage event.</param>
+/// <param name="lineageEvent">Recorded lineage event.</param>
+public class LineageRecordedEventArgs(IMaterialContainer container, ILineageEvent lineageEvent) : MaterialContainerEventArgs(container)
 {
     /// <summary>
     /// The recorded lineage event.
     /// </summary>
-    public ILineageEvent Event { get; }
-
-    /// <summary>
-    /// Creates a new instance.
-    /// </summary>
-    public LineageRecordedEventArgs(ILineageEvent lineageEvent)
-    {
-        Event = lineageEvent;
-    }
+    public ILineageEvent Event { get; } = lineageEvent;
 }

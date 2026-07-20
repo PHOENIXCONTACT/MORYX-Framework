@@ -20,7 +20,7 @@ public class TestContainerHost : Resource
     /// Should create a <see cref="BasicMaterialContainer"/> in <see cref="States.StateClassification.Available"/>
     /// using the resource constructor for material registration.
     /// </summary>
-    public async Task<MaterialContainer> RegisterMaterialAsync(string material, decimal quantity, string? unit, CancellationToken cancellationToken = default)
+    public async Task<MaterialContainer> RegisterMaterialAsync(string material, double quantity, string? unit, CancellationToken cancellationToken = default)
     {
         var container = Graph.Instantiate<BasicMaterialContainer>().Configure(c => c.With(
             material: material,
