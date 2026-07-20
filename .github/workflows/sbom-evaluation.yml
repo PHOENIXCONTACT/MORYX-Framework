@@ -1,4 +1,4 @@
-name: SBOM Evaluation
+name: Generate Product SBOMs
 
 on:
   workflow_dispatch:
@@ -8,58 +8,113 @@ on:
       - feature/SBOM-evaluation
 
 jobs:
-  frontend-sbom:
+  generate-sboms:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 22
 
-      - name: Install CycloneDX NPM
-        run: npm install -g @cyclonedx/cyclonedx-npm
+      - name: Install CycloneDX .NET
+        run: |
+          dotnet tool install --global CycloneDX
 
-      - name: Verify installation
-        run: cyclonedx-npm --version
+      - name: Install CycloneDX npm
+        run: |
+          npm install -g @cyclonedx/cyclonedx-npm
 
-      - name: Generate frontend SBOMs
+      - name: Verify installations
+        run: |
+          dotnet-CycloneDX --version
+          cyclonedx-npm --version
+
+      - name: Restore solution
+        run: |
+          dotnet restore
+
+      - name: Generate SBOMs
         shell: bash
         run: |
           mkdir -p sboms
 
-          find . -name package-lock.json -print0 | while IFS= read -r -d '' lockfile
+          find . \
+            -path "*/bin" -prune -o \
+            -path "*/obj" -prune -o \
+            -path "*/node_modules" -prune -o \
+            -path "*/.git" -prune -o \
+            -name "*.csproj" -print0 | while IFS= read -r -d '' project
           do
-            dir=$(dirname "$lockfile")
-            project=$(basename "$dir")
+            echo ""
+            echo "Checking project: $project"
 
-            echo "Processing $project"
+            is_packable=$(dotnet msbuild "$project" -getProperty:IsPackable 2>/dev/null | tail -n 1 | tr '[:upper:]' '[:lower:]')
 
-            pushd "$dir"
+            if [ "$is_packable" != "true" ]; then
+              echo "Skipping non-packable project"
+              continue
+            fi
 
-            npm ci
+            project_dir=$(dirname "$project")
+            project_name=$(basename "$project" .csproj)
 
-            cyclonedx-npm \
-              --output-format JSON \
-              --ignore-npm-errors \
-              --output-file "${RUNNER_TEMP}/${project}.json"
+            echo "Generating SBOMs for $project_name"
 
-            popd
+            output_dir="sboms/$project_name"
+            mkdir -p "$output_dir"
 
-            cp "${RUNNER_TEMP}/${project}.json" \
-              "sboms/${project}-bom.json"
+            #
+            # .NET SBOM
+            #
+            dotnet-CycloneDX "$project" \
+              -F Json \
+              -ipr \
+              -o "$output_dir" \
+              -fn "bom-dotnet.json"
+
+            #
+            # npm SBOM (optional)
+            #
+            if [ -f "$project_dir/package.json" ]; then
+              echo "Found package.json for $project_name"
+
+              if [ ! -f "$project_dir/package-lock.json" ]; then
+                echo "Skipping npm SBOM for $project_name because package-lock.json is missing"
+                continue
+              fi
+
+              pushd "$project_dir"
+
+              npm ci
+
+              cyclonedx-npm \
+                --output-format JSON \
+                --ignore-npm-errors \
+                --output-file "$(pwd)/bom-npm.json"
+
+              popd
+
+              mv "$project_dir/bom-npm.json" \
+                 "$output_dir/bom-npm.json"
+            fi
           done
 
       - name: Show generated SBOMs
-        run: ls -lah sboms
+        run: |
+          find sboms -type f
 
-      - name: Upload frontend SBOMs
+      - name: Upload SBOMs
         uses: actions/upload-artifact@v4
         with:
-          name: frontend-sboms
-          path: sboms/*.json
+          name: product-sboms
+          path: sboms/
           if-no-files-found: warn
-
