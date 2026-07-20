@@ -1,13 +1,13 @@
 <h2 mat-dialog-title>
   {{
     operation.model.classification !== OperationStateClassification.Running &&
-    operation.model.classification !== OperationStateClassification.Interrupting
+    operation.model.classification !== OperationStateClassification.IsAmountReached
       ? (TranslationConstants.BEGIN_DIALOG.TITLE | translate)
       : (TranslationConstants.CHANGE_AMOUNT_DIALOG.TITLE | translate)
   }}
 </h2>
 
-<mat-dialog-content>
+<mat-dialog-content class="dialog-container">
   @if (restrictions.length) {
     <div class="restrictions">
       @for (restriction of restrictions; track restriction) {
@@ -30,23 +30,8 @@
     </div>
   }
 
-  <div class="dialog-context">
-    <p class="dialog-context-item">
-      <span class="info-label">{{ TranslationConstants.REPORT_DIALOG.ORDER | translate }}</span>
-      <span class="info-value">
-        {{ operation.model.order }} - {{ operation.model.number }}
-      </span>
-    </p>
-    <p class="dialog-context-item">
-      <span class="info-label">{{ TranslationConstants.REPORT_DIALOG.PRODUCT | translate }}</span>
-      <span class="info-value">
-        {{ this.operation.model.productIdentifier }}-{{
-          this.operation.model.productRevision | number : '2.0'
-        }}
-        {{ this.operation.model.productName }}
-      </span>
-    </p>
-  </div>
+  <app-dialog-context [operationModel]="operation.model"></app-dialog-context>
+
   <mat-grid-list cols="3" rowHeight="50px">
     <mat-grid-tile>
       <div class="content-data-entry">
@@ -143,29 +128,11 @@
     }
   </mat-form-field>
 
-  @if (providesOperatorSelection) {
-    <mat-form-field appearance="outline" class="operator-selection">
-      <mat-label>
-        {{ TranslationConstants.BEGIN_DIALOG.OPERATOR_SELECTION_LABEL | translate }}
-      </mat-label>
-      <input type="text" placeholder="{{
-        TranslationConstants.BEGIN_DIALOG.OPERATOR_SELECTION_PLACEHOLDER
-          | translate
-      }}" aria-label="Operator" matInput [formControl]="operatorFormControl" [matAutocomplete]="auto"/>
-      <mat-autocomplete #auto="matAutocomplete">
-        @for (operator of filteredOperators | async; track operator) {
-          <mat-option [value]="operator.identifier">{{ operator.pseudonym ?? "-" }} ({{ operator.identifier }})
-          </mat-option>
-        }
-      </mat-autocomplete>
-      @if (operatorFormControl.hasError('failed')) {
-        <mat-error>{{
-            operatorFormControl.getError("failed")
-          }}
-        </mat-error>
-      }
-    </mat-form-field>
-  }
+  <app-operator-selector class="operator-selector"
+    [isEnabled]="canBegin"
+    [(selectedOperatorId)]="selectedOperatorId"
+    (creatingOperatorFailed)="creatingOperatorFailed.set($event)">
+  </app-operator-selector>
 </mat-dialog-content>
 
 <div mat-dialog-actions align="end">
@@ -175,7 +142,7 @@
   <button mat-flat-button (click)="closeDialog()" color="primary">
     {{
       operation.model.classification !== OperationStateClassification.Running &&
-      operation.model.classification !== OperationStateClassification.Interrupting
+      operation.model.classification !== OperationStateClassification.IsAmountReached
         ? (TranslationConstants.BEGIN_DIALOG.BEGIN | translate)
         : (TranslationConstants.CHANGE_AMOUNT_DIALOG.UPDATE_AMOUNT | translate)
     }}

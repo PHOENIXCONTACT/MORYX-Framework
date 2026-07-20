@@ -5,7 +5,7 @@
 
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, RedirectCommand, ResolveFn, Router } from '@angular/router';
-import { lastValueFrom } from 'rxjs';
+
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SessionService } from '@app/services/session.service';
@@ -50,7 +50,7 @@ export const DetailsViewResolver: ResolveFn<ResourceModel> = async (route: Activ
 
   // Otherwise, we need to retrieve the resource details from the API
   try {
-    const resource = await lastValueFrom(apiService.getDetails({id: id}));
+    const resource = await apiService.getDetails({id: id});
     editService.setResource(resource);
     return resource;
   } catch (error) {

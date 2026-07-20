@@ -43,7 +43,7 @@ export class DialogVariantInfo {
   constructor() {
   }
 
-  onNoClick(): void {
+  protected onNoClick(): void {
     this.dialogRef.close();
   }
 }

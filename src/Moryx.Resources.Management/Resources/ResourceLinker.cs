@@ -96,7 +96,7 @@ internal class ResourceLinker : IResourceLinker
         return context.EntityCache.Keys.Where(i => i.Id == 0).ToList();
     }
 
-    private async Task SaveReferences(ReferenceSaverContext context, Resource instance, Dictionary<Resource, ResourceEntity> dict = null)
+    private static async Task SaveReferences(ReferenceSaverContext context, Resource instance, Dictionary<Resource, ResourceEntity> dict = null)
     {
         var entity = await GetOrCreateEntity(context, instance);
         dict?.Add(instance, entity);

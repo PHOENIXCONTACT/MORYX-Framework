@@ -8,7 +8,6 @@ import { ContentDescriptorModel } from '@api/models';
 import { MediaService } from '@app/services/media-service/media.service';
 import { environment } from '../../../../environments/environment';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
-import { retry } from 'rxjs';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
@@ -47,7 +46,7 @@ export class MediaFile implements OnInit {
   }
 
   //Shows preview if media is an image. If not, the default picture will be shown
-  showFile() {
+  private async showFile(): Promise<void> {
     const content = this.content();
     if (
       content.master !== undefined &&
@@ -58,32 +57,23 @@ export class MediaFile implements OnInit {
         content.master.mimeType.includes('image') &&
         typeof content.master.name === 'string'
       ) {
-        this.mediaService
-          .getPicture(content.master.name, content.id, true)
-          .pipe(
-            retry({
-              count: 3,
-              delay: 1000,
-              resetOnSuccess: true
-            })
-          )
-          .subscribe({
-            next: (data) => {
-              if (data !== null) {
-                const downloadedFile = new Blob([data], {type: data.type});
-                const reader = new FileReader();
-                reader.readAsDataURL(downloadedFile); //FileStream response from .NET core backend
-                reader.onload = (event) => {
-                  this.path.update(_ => reader.result) //url declared earlier
-                };
-                this.loaded.update(_ => true);
-              }
-            },
-            error: error => this.snackbarService.handleError(error)
-          });
+        try {
+          const data = await this.mediaService.getPicture(content.master.name, content.id, true);
+          if (data !== null && data !== undefined) {
+            const downloadedFile = new Blob([data], {type: data.type});
+            const reader = new FileReader();
+            reader.readAsDataURL(downloadedFile); //FileStream response from .NET core backend
+            reader.onload = () => {
+              this.path.set(reader.result); //url declared earlier
+            };
+            this.loaded.set(true);
+          }
+        } catch (error) {
+          this.snackbarService.handleError(error as any);
+        }
       } else {
-        this.path.update(_ => environment.assets + 'assets/no_preview.jpg');
-        this.loaded.update(_ => true);
+        this.path.set(environment.assets + 'assets/no_preview.jpg');
+        this.loaded.set(true);
       }
     }
   }

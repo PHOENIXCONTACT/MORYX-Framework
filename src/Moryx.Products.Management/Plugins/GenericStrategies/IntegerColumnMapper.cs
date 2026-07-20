@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Globalization;
 using System.Reflection;
 using Moryx.Container;
 using Moryx.Tools;
@@ -54,12 +55,12 @@ internal class IntegerColumnMapper : ColumnMapper<long>
 
     private long ReadEnum(object value)
     {
-        var underlyingValue = Convert.ChangeType(value, _enumType);
-        return (long)Convert.ChangeType(underlyingValue, TypeCode.Int64);
+        var underlyingValue = Convert.ChangeType(value, _enumType, CultureInfo.InvariantCulture);
+        return (long)Convert.ChangeType(underlyingValue, TypeCode.Int64, CultureInfo.InvariantCulture);
     }
     private object WriteEnum(long value)
     {
-        var underlyingValue = Convert.ChangeType(value, _enumType);
+        var underlyingValue = Convert.ChangeType(value, _enumType, CultureInfo.InvariantCulture);
         return Enum.ToObject(Property.PropertyType, underlyingValue);
     }
 }

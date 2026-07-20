@@ -882,10 +882,10 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
         foreach (var partGroup in partGroups)
         {
             var linkStrategy = _typeInformation[productType.ProductTypeName()].PartLinksInformation[partGroup.Key.Name].Strategy;
-            if (linkStrategy.PartCreation == PartSourceStrategy.FromPartLink && partEntityGroups.ContainsKey(partGroup.Key.Name))
+            if (linkStrategy.PartCreation == PartSourceStrategy.FromPartLink && partEntityGroups.TryGetValue(partGroup.Key.Name, out var partEntityGroup))
             {
                 // Update all parts that are also present as entities
-                foreach (var partEntity in partEntityGroups[partGroup.Key.Name])
+                foreach (var partEntity in partEntityGroup)
                 {
                     if (!partGroup.Value.Any())
                     {

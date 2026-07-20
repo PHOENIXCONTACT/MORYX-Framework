@@ -3,8 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { inject, Injectable, signal } from '@angular/core';
 import { AssignmentCardModel } from '../models/assignment-card-model';
 import AssignmentData from '../models/assignment-data';
 import { ShiftManagementService } from '@api/services';
@@ -20,14 +19,15 @@ import { ShiftAssignementCreationContextModel } from '@api/models/shift-assignem
 export class AssignmentService {
   private shiftAssignmentService = inject(ShiftManagementService);
 
-  public assignments = new BehaviorSubject<AssignmentCardModel[]>([]);
+  private readonly _assignments = signal<AssignmentCardModel[]>([]);
+  readonly assignments = this._assignments.asReadonly();
 
   constructor() {
 
   }
 
   public setAssignments(values: AssignmentCardModel[]) {
-    this.assignments.next(values);
+    this._assignments.set(values);
   }
 
   public addNewAssignment(assignment: AssignmentData) {
@@ -50,11 +50,9 @@ export class AssignmentService {
       assignedDays: calendarDatesToFlagEnumString(assignment.days, assignment.shift.startDate, assignment.shift.endDate)
     }
 
-    const assignmentAsync = firstValueFrom(this.shiftAssignmentService.createShiftAssignement({
+    return this.shiftAssignmentService.createShiftAssignement({
       body: data
-    }));
-
-    return assignmentAsync.then(createdAssignment => {
+    }).then(createdAssignment => {
       newAssignment.id = createdAssignment.id ?? 0;
       newAssignment.assignedDays = data.assignedDays ?? '';
       return newAssignment;
@@ -62,7 +60,7 @@ export class AssignmentService {
   }
 
   public updateAssignment(assignmentId: number, update: AssignmentData) {
-    const foundAssignment = this.assignments.value.find(
+    const foundAssignment = this.assignments().find(
       (x: AssignmentCardModel) => x.id == assignmentId
     );
 
@@ -89,9 +87,9 @@ export class AssignmentService {
 
       this.shiftAssignmentService.updateShiftAssignement({
         body: data
-      }).subscribe(createdAssignment => {
-        // this.assignments.next([
-        //   ...this.assignments.value.filter((x) => x.id != assignmentId),
+      }).then(() => {
+        // this.assignments.set([
+        //   ...this.assignments().filter((x) => x.id != assignmentId),
         //   updated,
         // ]);
         if (update.operator) {
@@ -111,16 +109,13 @@ export class AssignmentService {
   delete(id: number) {
     this.shiftAssignmentService.deleteShiftAssignement({
       id: id
-    }).subscribe({
-      next: succes => {
-        this.assignments.next(this.assignments.value.filter(x => x.id != id));
-      },
-      error: e => console.log(e)
-    })
+    }).then(() => {
+      this._assignments.update(current => current.filter(x => x.id != id));
+    }).catch(e => console.log(e));
   }
 
   addAssignmentsToList(assignments: AssignmentCardModel[]) {
-    this.assignments.next([...this.assignments.value, ...assignments]);
+    this._assignments.update(current => [...current, ...assignments]);
   }
 }
 

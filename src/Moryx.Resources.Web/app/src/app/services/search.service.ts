@@ -3,7 +3,6 @@ import { CacheResourceService } from './cache-resource.service';
 import { ResourceModel } from '../api/models';
 import { SearchBarService, SearchRequest, SearchSuggestion } from '@moryx/ngx-web-framework/services';
 import { EditResourceService } from './edit-resource.service';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -15,12 +14,9 @@ export class SearchService {
   private searchBarService = inject(SearchBarService);
   private router = inject(Router);
 
-  private blockedByEditing = toSignal(this.editService.edit$);
-  private resources = toSignal(this.cacheService.flatResources);
-
   constructor() {
     effect(() => {
-      const blocked = this.blockedByEditing();
+      const blocked = this.editService.editing();
       untracked(() => {
         if (!blocked) {
           this.hookupSubscription();  
@@ -59,7 +55,7 @@ export class SearchService {
    * description case-insensitive. The results are sorted by name.
    */
   private getMatchingResources(searchTerm: string): ResourceModel[] {
-    const resources = this.resources();
+    const resources = this.cacheService.flatResources();
     if (!resources)  {
       return [];
     }
@@ -97,7 +93,7 @@ export class SearchService {
   }
 
   private selectResource(id: number) {
-    if (this.blockedByEditing() || this.editService.activeResource()?.id === id) {
+    if (this.editService.editing() || this.editService.activeResource()?.id === id) {
       return;
     }
     this.router.navigate([`/details/${id}`]);

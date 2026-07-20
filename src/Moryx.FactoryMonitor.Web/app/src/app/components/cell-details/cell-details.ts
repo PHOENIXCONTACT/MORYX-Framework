@@ -3,14 +3,13 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CellImageDialog } from '@app/dialogs/cell-image-dialog/cell-image-dialog';
 import { CellStoreService } from '@app/services/cell-store.service';
 import { CellSettingsModel } from '@api/models/cell-settings-model';
 import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
-import CellModel from '@app/models/cellModel';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -31,20 +30,14 @@ import { DetailsItem } from '../details-item/details-item';
     MatIconModule
   ]
 })
-export class CellDetails implements OnInit {
+export class CellDetails {
   private matDialog = inject(MatDialog);
   private cellStoreService = inject(CellStoreService);
 
-  protected cellDetails = signal<CellModel | undefined>(undefined);
+  protected cellDetails = this.cellStoreService.cellSelected;
   protected TranslationConstants = TranslationConstants;
 
-  ngOnInit(): void {
-    this.cellStoreService.cellSelected$.subscribe({
-      next: result => this.cellDetails.set(result)
-    });
-  }
-
-  openCellImageDialog() {
+  protected openCellImageDialog() {
     this.matDialog.open(CellImageDialog, {
       data: {
         cellId: this.cellDetails()?.id,

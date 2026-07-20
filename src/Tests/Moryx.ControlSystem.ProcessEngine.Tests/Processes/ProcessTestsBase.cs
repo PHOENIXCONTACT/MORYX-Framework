@@ -160,7 +160,7 @@ public class ProcessTestsBase
     /// <summary>
     /// Create a certain process in the database
     /// </summary>
-    internal void CreateProcessInDb(ProcessStorage storage, IUnitOfWork uow, ProcessData processData, string tokenJson)
+    internal static void CreateProcessInDb(ProcessStorage storage, IUnitOfWork uow, ProcessData processData, string tokenJson)
     {
         var taskId = DummyRecipe.BuildRecipe().Workplan.Steps.First(s => s is MountTask).Id;
 

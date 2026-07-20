@@ -2,10 +2,10 @@ import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/cor
 import { ActivatedRoute, Router } from '@angular/router';
 
 /**
- * Component used for resetting the application state on cancellation of the product editing. 
- * It reads the 'to' query parameter for the target route to navigate to. 
+ * Component used for resetting the application state on cancellation of the product editing.
+ * It reads the 'to' query parameter for the target route to navigate to.
  * Resetting happens through the route resolvers, the route still functions as the single point of truth.
- * 
+ *
  * This solution for cancelling the editing is rather heavy weighted, as it requires a full route navigation;
  * Other considered solutions included
  * - Resetting the state by reloading the product in the edit service
@@ -28,11 +28,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class CancellationComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-  
+
   ngOnInit(): void {
-    const raw = this.route.snapshot.queryParamMap.get('to'); 
-    const to = raw ? decodeURIComponent(raw) : '/'; 
-    const tree = this.router.parseUrl(to); 
-    this.router.navigateByUrl(tree, { replaceUrl: true });
+    const raw = this.route.snapshot.queryParamMap.get('to');
+    const to = raw ? decodeURIComponent(raw) : '/';
+    const tree = this.router.parseUrl(to);
+    this.router.navigateByUrl(tree, {replaceUrl: true});
   }
 }

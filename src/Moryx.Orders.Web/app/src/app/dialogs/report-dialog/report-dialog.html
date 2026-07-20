@@ -2,24 +2,8 @@
   {{ TranslationConstants.REPORT_DIALOG.REPORT_TITLE | translate }}
 </h2>
 
-<mat-dialog-content>
-  <div class="dialog-context">
-    <p class="dialog-context-item">
-      <span class="info-label">{{ TranslationConstants.REPORT_DIALOG.ORDER | translate }}</span>
-      <span class="info-value">
-        {{ data.operation.model.order }} - {{ data.operation.model.number }}
-      </span>
-    </p>
-    <p class="dialog-context-item">
-      <span class="info-label">{{ TranslationConstants.REPORT_DIALOG.PRODUCT | translate }}</span>
-      <span class="info-value">
-        {{ this.data.operation.model.productIdentifier }}-{{
-          this.data.operation.model.productRevision | number : '2.0'
-        }}
-        {{ this.data.operation.model.productName }}
-      </span>
-    </p>
-  </div>
+<mat-dialog-content class="dialog-container">
+  <app-dialog-context [operationModel]="data.operation.model"></app-dialog-context>
 
   <div class="report-dialog-amounts-row">
     <div class="amounts-data-entry">
@@ -64,8 +48,8 @@
     <textarea matInput [(ngModel)]="comment" [disabled]="isLoading()"></textarea>
   </mat-form-field>
 
-  <h3 class="intermediate-header">{{ TranslationConstants.REPORT_DIALOG.CONFIRMATION | translate }}</h3>
-  <mat-radio-group aria-label="Select an report option" [(ngModel)]="confirmationType">
+  <h3 class="radio-group-header">{{ TranslationConstants.REPORT_DIALOG.CONFIRMATION | translate }}</h3>
+  <mat-radio-group class="radio-group" aria-label="Select an report option" [(ngModel)]="confirmationType">
     <mat-radio-button [disabled]="!reportContext()?.canPartial || isLoading()" value="partial">
       {{ TranslationConstants.REPORT_DIALOG.PARTIAL | translate }}
     </mat-radio-button>
@@ -73,6 +57,12 @@
       {{ TranslationConstants.REPORT_DIALOG.FINAL | translate }}
     </mat-radio-button>
   </mat-radio-group>
+
+  <app-operator-selector class="operator-selector"
+    [isEnabled]="canReport()"
+    [(selectedOperatorId)]="selectedOperatorId"
+    (creatingOperatorFailed)="creatingOperatorFailed.set($event)">
+  </app-operator-selector>
 
   @for (restriction of reportContext()?.restrictions; track restriction) {
     <mat-list>

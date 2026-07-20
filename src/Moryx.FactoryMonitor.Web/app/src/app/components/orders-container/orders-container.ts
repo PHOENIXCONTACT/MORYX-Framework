@@ -7,7 +7,6 @@ import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { OrderStoreService } from '@app/services/order-store.service';
 import { CommonModule } from '@angular/common';
-import { toSignal } from '@angular/core/rxjs-interop';
 import Order from '@app/models/order';
 
 @Component({
@@ -20,7 +19,7 @@ import Order from '@app/models/order';
 export class OrdersContainer {
   protected TranslationConstants = TranslationConstants;
   private orderStoreService = inject(OrderStoreService);
-  protected runningOrders = toSignal(this.orderStoreService.runningOrders$);
+  protected runningOrders = this.orderStoreService.runningOrders;
 
   protected toggleOrder(order: Order) {
     this.orderStoreService.toggleOrder(order);

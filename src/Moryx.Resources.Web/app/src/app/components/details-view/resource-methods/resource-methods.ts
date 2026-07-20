@@ -130,21 +130,19 @@ export class ResourceMethods {
 
     this.resourceModificationService
       .invokeMethod(param as { id: number; method: string; body?: Entry | undefined })
-      .subscribe({
-        next: (result) => {
-          const resultEntry = result
-            ? ({
-              subEntries: [result] as Entry[],
-              identifier: 'root',
-              value: {type: EntryValueType.Class} as EntryValue,
-            } as Entry)
-            : undefined;
-          this.methodResult.set(resultEntry)
-          this.resultView.set(true);
-        },
-        error: async (e: HttpErrorResponse) =>
-          await this.snackbarService.handleError(e),
-      });
+      .then((result) => {
+        const resultEntry = result
+          ? ({
+            subEntries: [result] as Entry[],
+            identifier: 'root',
+            value: {type: EntryValueType.Class} as EntryValue,
+          } as Entry)
+          : undefined;
+        this.methodResult.set(resultEntry)
+        this.resultView.set(true);
+      })
+      .catch(async (e: HttpErrorResponse) =>
+        await this.snackbarService.handleError(e));
   }
 
   protected onChangeToParameters(method: MethodEntry) {

@@ -4,9 +4,6 @@
 */
 
 import { Component, inject, linkedSignal, ChangeDetectionStrategy } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { TranslatePipe } from '@ngx-translate/core';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { EditProductsService } from '@app/services/edit-products.service';
 
 import { NavigableEntryEditor } from '@moryx/ngx-web-framework/entry-editor';
@@ -19,8 +16,7 @@ import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     EmptyState,
-    NavigableEntryEditor,
-    TranslatePipe
+    NavigableEntryEditor
   ]
 })
 export class ProductPartsDetailsComponent {
@@ -28,12 +24,6 @@ export class ProductPartsDetailsComponent {
 
   protected partConnector = linkedSignal(this.editProductsService.currentPartConnector);
   protected productPart = linkedSignal(this.editProductsService.currentPart);
-  protected isEditMode = toSignal(this.editProductsService.edit$, { initialValue: false });
-
-  TranslationConstants = TranslationConstants;
-
-  createProductIdentity(identifier: string | undefined | null, revision: number | undefined): string {
-    return this.editProductsService.createProductIdentity(identifier, revision);
-  }
+  protected isEditMode = this.editProductsService.editing;
 }
 

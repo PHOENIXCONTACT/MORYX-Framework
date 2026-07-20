@@ -22,7 +22,7 @@ internal class ResourceToModelConverter
     /// <summary>
     /// Internal ref id sequence
     /// </summary>
-    private long _refId = 0;
+    private long _refId;
 
     /// <summary>
     /// Resource cache to avoid redundant conversions AND make use of WCFs "IsReference" feature
@@ -160,12 +160,11 @@ internal class ResourceToModelConverter
     private static ICollection<Type> MergeTypeConstraints(PropertyInfo property, Type targetType, IDictionary<string, List<Type>> referenceOverrides)
     {
         // If there are no overrides the only limitation is the target type
-        if (!referenceOverrides.ContainsKey(property.Name))
+        if (!referenceOverrides.TryGetValue(property.Name, out var myOverrides))
             return [targetType];
 
         // Otherwise find all types that limit the reference type without redundancies. This means eliminating all types
         // represented by another type
-        var myOverrides = referenceOverrides[property.Name];
         return myOverrides.Concat([targetType])
             .Where(type => !myOverrides.Any(over => over != type && type.IsAssignableFrom(over))).ToList();
     }
@@ -185,8 +184,8 @@ internal class ResourceToModelConverter
     {
         var resType = node.ResourceType;
 
-        if (TypeCache.ContainsKey(node.Name))
-            return TypeCache[node.Name];
+        if (TypeCache.TryGetValue(node.Name, out var cachedType))
+            return cachedType;
 
         // Remove generic arguments from type name
         var typeModel = new ResourceTypeModel

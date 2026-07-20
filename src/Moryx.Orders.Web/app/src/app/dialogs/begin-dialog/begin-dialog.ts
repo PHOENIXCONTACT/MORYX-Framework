@@ -3,21 +3,19 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, computed, inject, OnInit, signal, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, computed, inject, signal, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { TranslatePipe } from '@ngx-translate/core';
 import {
   BeginModel,
   BeginContext,
-  AssignableOperator,
   RestrictionDescription,
   OperationStateClassification
 } from '@api/models';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { OperationViewModel } from '@app/models/operation-view-model';
-import { FormControl, FormsModule, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { OperatorsService } from '@app/services/operators.service';
-import { map, Observable, startWith } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
@@ -29,6 +27,8 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MultiProgressBar } from "@app/multi-progress-bar/multi-progress-bar";
+import { OperatorSelector } from '@app/components/operator-selector/operator-selector';
+import { DialogContext } from "@app/components/dialog-context/dialog-context";
 
 @Component({
   selector: 'app-begin-dialog',
@@ -50,10 +50,12 @@ import { MultiProgressBar } from "@app/multi-progress-bar/multi-progress-bar";
     MatIconModule,
     MatCardModule,
     MatAutocompleteModule,
-    MultiProgressBar
+    MultiProgressBar,
+    OperatorSelector,
+    DialogContext
   ]
 })
-export class BeginDialog implements OnInit {
+export class BeginDialog {
   // Class properties for context values
   protected canBegin: boolean;
   protected canReduce: boolean;
@@ -100,10 +102,8 @@ export class BeginDialog implements OnInit {
   protected TranslationConstants = TranslationConstants;
   protected OperationStateClassification = OperationStateClassification;
 
-  protected providesOperatorSelection: boolean = false;
-  protected operatorFormControl = new FormControl('');
-  operators: AssignableOperator[] = [];
-  protected filteredOperators!: Observable<AssignableOperator[]>;
+  protected selectedOperatorId = signal<string|null>(null);
+  protected creatingOperatorFailed = signal<boolean>(false);
 
   private dialog = inject(MatDialogRef<BeginDialog, BeginModel | undefined>);
   private data = inject<BeginDialogData>(MAT_DIALOG_DATA);
@@ -126,23 +126,7 @@ export class BeginDialog implements OnInit {
       value: this.currentPartialAmount,
       disabled: !this.canBegin && !this.canReduce
     });
-    this.targetAmountControl.valueChanges.subscribe(value => this.newTargetAmount.update(_ => value));
-  }
-
-  ngOnInit(): void {
-    this.filteredOperators = this.operatorFormControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this.filter(value || ''))
-    );
-
-    this.operatorService.getOperators().then(o => {
-      this.providesOperatorSelection = this.operatorService.available;
-      this.operators = o;
-    });
-
-    if (!this.canBegin) {
-      this.operatorFormControl.disable();
-    }
+    this.targetAmountControl.valueChanges.subscribe(value => this.newTargetAmount.set(value));
   }
 
   protected limitTargetAmount() {
@@ -159,34 +143,13 @@ export class BeginDialog implements OnInit {
     this.targetAmountControl.setValue(this.targetAmountControl.value + change);
   }
 
-  private filter(value: string): AssignableOperator[] {
-    const filterValue = value.toLowerCase();
-    return this.operators.filter(
-      o => o.pseudonym?.toLowerCase().includes(filterValue) || o.identifier?.toLocaleLowerCase().includes(filterValue)
-    );
-  }
-
   protected closeDialog() {
-    const operatorIdentifier = this.operatorFormControl.value?.trim();
-    if (!operatorIdentifier) {
-      this.dialog.close({amount: this.newPartialAmount()});
+    if (this.creatingOperatorFailed()) {
       return;
     }
 
-    const selectedOperator = this.operators.find(o => o.identifier === operatorIdentifier);
-    if (selectedOperator) {
-      this.dialog.close({amount: this.newPartialAmount(), userId: selectedOperator.identifier});
-      return;
-    }
-
-    this.operatorService
-      .addOperator(operatorIdentifier)
-      .then(o => this.dialog.close({amount: this.newPartialAmount(), userId: operatorIdentifier}))
-      .catch(e =>
-        this.operatorFormControl.setErrors({
-          failed: e.error ?? 'An unknown error occured',
-        } as ValidationErrors)
-      );
+    const operatorIdentifier = this.selectedOperatorId();
+    this.dialog.close({amount: this.newPartialAmount(), userId: operatorIdentifier});
   }
 }
 

@@ -1,7 +1,7 @@
 <h2 mat-dialog-title>{{ TranslationConstants.COPY_SHIFT_AND_ASSIGNMENT.TITLE | translate }}</h2>
 <mat-dialog-content>
   <mat-accordion>
-    @for (shiftData of formData()?.shiftInstances; track $index) {
+    @for (shiftData of formData().shiftInstances; track $index) {
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title>{{ shiftData.shiftType.name }}</mat-panel-title>
@@ -21,7 +21,7 @@
         </mat-form-field>
 
         <app-week-day-toggle-button
-          [days]="calendarState()?.viewDatesStartingFrom(shiftData.startDate, shiftData.shiftType.duration)!"
+          [days]="calendarState().viewDatesStartingFrom(shiftData.startDate, shiftData.shiftType.duration)"
           [startDate]="shiftData.startDate" [endDate]="shiftData.endDate"
           [calendarState]="calendarState()!" [shiftNumberOfDay]="shiftData.shiftType.duration"
           [readOnly]="true"/>

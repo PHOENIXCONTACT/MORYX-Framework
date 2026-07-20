@@ -8,11 +8,13 @@
 
 export enum InternalOperationClassification {
   Initial = 'Initial',
+  Assigning = 'Assigning',
+  Failed = 'Failed',
+  Aborted = 'Aborted',
   Ready = 'Ready',
   Running = 'Running',
   Interrupting = 'Interrupting',
   Interrupted = 'Interrupted',
   Completed = 'Completed',
-  Aborted = 'Aborted',
   AmountReached = 'AmountReached'
 }

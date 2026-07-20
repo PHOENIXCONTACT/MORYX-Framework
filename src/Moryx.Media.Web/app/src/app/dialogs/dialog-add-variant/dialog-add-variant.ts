@@ -48,20 +48,20 @@ export class DialogAddVariant {
     });
   }
 
-  onNoClick(): void {
+  protected onNoClick(): void {
     this.dialogRef.close();
   }
 
   protected onFileSelected(event: Event) {
     const file: File = (event.target as HTMLInputElement).files![0];
-    this.selectedFileLoaded.update(_ => false);
+    this.selectedFileLoaded.set(false);
     if (file) {
-      this.fileName.update(_ => file.name);
+      this.fileName.set(file.name);
       this.resultData.update(item => {
         item.file = file;
         return item;
       })
-      this.selectedFileLoaded.update(_ => true);
+      this.selectedFileLoaded.set(true);
     }
   }
 }

@@ -10,7 +10,7 @@
   <a mat-tab-link [active]="link === Tabs.Properties" (click)="routeTo(Tabs.Properties)">{{
     TranslationConstants.SHARED.PROPERTIES | translate }}</a>
   }
-  @if (product?.parts && product?.parts?.length) {
+  @if (product?.parts?.length) {
   <a mat-tab-link [active]="link === Tabs.Parts" (click)="routeTo(Tabs.Parts)">{{
     TranslationConstants.DETAILS.PARTS | translate }}</a>
   }

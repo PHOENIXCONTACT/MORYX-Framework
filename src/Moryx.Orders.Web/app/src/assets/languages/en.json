@@ -71,8 +71,6 @@
     "REPORT_TITLE": "Report Operation",
     "REPORT": "REPORT",
     "OPERATION": "Operation",
-    "ORDER": "Order",
-    "PRODUCT": "Product",
     "AMOUNT": "Amount",
     "OVERDELIVERY": "Overdelivery",
     "UNDERDELIVERY": "Underdelivery",
@@ -108,8 +106,6 @@
   },
   "BEGIN_DIALOG": {
     "TITLE": "Begin the Production",
-    "ORDER": "Order",
-    "PRODUCT": "Product",
     "TOTAL_AMOUNT": "Total Amount",
     "SUCCESS": "Success",
     "SCRAP": "Scrap",
@@ -117,15 +113,20 @@
     "OVERDELIVERY": "Overdelivery",
     "UNDERDELIVERY": "Underdelivery",
     "PARTIAL_AMOUNT": "Target Amount",
-    "BEGIN": "BEGIN",
-    "OPERATOR_SELECTION_LABEL": "Operator",
-    "OPERATOR_SELECTION_PLACEHOLDER": "(Optional) Select an operator",
-    "OPERATOR_SELECTION_NOT_SUPPORTED": "Operator selection not supported"
+    "BEGIN": "BEGIN"
+  },
+  "OPERATOR_SELECTOR": {
+    "OPERATOR_SELECTOR_LABEL": "Operator",
+    "OPERATOR_SELECTOR_PLACEHOLDER": "(Optional) Select an operator"
   },
   "CHANGE_AMOUNT_DIALOG": {
     "TITLE": "Update the current target amount",
     "UPDATE_AMOUNT": "UPDATE AMOUNT",
     "CANNOT_REDUCE_TARGET_AMOUNT": "The target amount cannot be further reduced"
+  },
+  "DIALOG_CONTEXT": {
+    "ORDER": "Order",
+    "PRODUCT": "Product"
   },
   "DISMISS": "DISMISS",
   "CANCEL": "CANCEL",

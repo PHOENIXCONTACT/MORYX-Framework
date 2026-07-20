@@ -8,8 +8,7 @@
 
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 
 import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
@@ -62,9 +61,9 @@ export class ShiftManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getShifts$Response(params?: GetShifts$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ShiftModel>>> {
+  getShifts$Response(params?: GetShifts$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<ShiftModel>>> {
     const obs = getShifts(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -73,11 +72,9 @@ export class ShiftManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getShifts(params?: GetShifts$Params, context?: HttpContext): Observable<Array<ShiftModel>> {
+  getShifts(params?: GetShifts$Params, context?: HttpContext): Promise<Array<ShiftModel>> {
     const resp = this.getShifts$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<ShiftModel>>): Array<ShiftModel> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<ShiftModel>>): Array<ShiftModel> => r.body);
   }
 
   /** Path part for operation `updateShift()` */
@@ -89,9 +86,9 @@ export class ShiftManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  updateShift$Response(params?: UpdateShift$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  updateShift$Response(params?: UpdateShift$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = updateShift(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -100,11 +97,9 @@ export class ShiftManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  updateShift(params?: UpdateShift$Params, context?: HttpContext): Observable<void> {
+  updateShift(params?: UpdateShift$Params, context?: HttpContext): Promise<void> {
     const resp = this.updateShift$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
   /** Path part for operation `createShift()` */
@@ -116,9 +111,9 @@ export class ShiftManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  createShift$Response(params?: CreateShift$Params, context?: HttpContext): Observable<StrictHttpResponse<ShiftModel>> {
+  createShift$Response(params?: CreateShift$Params, context?: HttpContext): Promise<StrictHttpResponse<ShiftModel>> {
     const obs = createShift(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -127,11 +122,9 @@ export class ShiftManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  createShift(params?: CreateShift$Params, context?: HttpContext): Observable<ShiftModel> {
+  createShift(params?: CreateShift$Params, context?: HttpContext): Promise<ShiftModel> {
     const resp = this.createShift$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<ShiftModel>): ShiftModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<ShiftModel>): ShiftModel => r.body);
   }
 
   /** Path part for operation `getShifts_1()` */
@@ -143,9 +136,9 @@ export class ShiftManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getShifts_1$Response(params?: GetShifts_1$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ShiftModel>>> {
+  getShifts_1$Response(params?: GetShifts_1$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<ShiftModel>>> {
     const obs = getShifts_1(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -154,11 +147,9 @@ export class ShiftManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getShifts_1(params?: GetShifts_1$Params, context?: HttpContext): Observable<Array<ShiftModel>> {
+  getShifts_1(params?: GetShifts_1$Params, context?: HttpContext): Promise<Array<ShiftModel>> {
     const resp = this.getShifts_1$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<ShiftModel>>): Array<ShiftModel> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<ShiftModel>>): Array<ShiftModel> => r.body);
   }
 
   /** Path part for operation `deleteShift()` */
@@ -170,9 +161,9 @@ export class ShiftManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  deleteShift$Response(params: DeleteShift$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  deleteShift$Response(params: DeleteShift$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = deleteShift(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -181,11 +172,9 @@ export class ShiftManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  deleteShift(params: DeleteShift$Params, context?: HttpContext): Observable<void> {
+  deleteShift(params: DeleteShift$Params, context?: HttpContext): Promise<void> {
     const resp = this.deleteShift$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
   /** Path part for operation `getShiftTypes()` */
@@ -197,9 +186,9 @@ export class ShiftManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getShiftTypes$Response(params?: GetShiftTypes$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ShiftTypeModel>>> {
+  getShiftTypes$Response(params?: GetShiftTypes$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<ShiftTypeModel>>> {
     const obs = getShiftTypes(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -208,11 +197,9 @@ export class ShiftManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getShiftTypes(params?: GetShiftTypes$Params, context?: HttpContext): Observable<Array<ShiftTypeModel>> {
+  getShiftTypes(params?: GetShiftTypes$Params, context?: HttpContext): Promise<Array<ShiftTypeModel>> {
     const resp = this.getShiftTypes$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<ShiftTypeModel>>): Array<ShiftTypeModel> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<ShiftTypeModel>>): Array<ShiftTypeModel> => r.body);
   }
 
   /** Path part for operation `updateShiftType()` */
@@ -224,9 +211,9 @@ export class ShiftManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  updateShiftType$Response(params?: UpdateShiftType$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  updateShiftType$Response(params?: UpdateShiftType$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = updateShiftType(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -235,11 +222,9 @@ export class ShiftManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  updateShiftType(params?: UpdateShiftType$Params, context?: HttpContext): Observable<void> {
+  updateShiftType(params?: UpdateShiftType$Params, context?: HttpContext): Promise<void> {
     const resp = this.updateShiftType$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
   /** Path part for operation `createShiftType()` */
@@ -251,9 +236,9 @@ export class ShiftManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  createShiftType$Response(params?: CreateShiftType$Params, context?: HttpContext): Observable<StrictHttpResponse<ShiftTypeModel>> {
+  createShiftType$Response(params?: CreateShiftType$Params, context?: HttpContext): Promise<StrictHttpResponse<ShiftTypeModel>> {
     const obs = createShiftType(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -262,11 +247,9 @@ export class ShiftManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  createShiftType(params?: CreateShiftType$Params, context?: HttpContext): Observable<ShiftTypeModel> {
+  createShiftType(params?: CreateShiftType$Params, context?: HttpContext): Promise<ShiftTypeModel> {
     const resp = this.createShiftType$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<ShiftTypeModel>): ShiftTypeModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<ShiftTypeModel>): ShiftTypeModel => r.body);
   }
 
   /** Path part for operation `deleteShiftType()` */
@@ -278,9 +261,9 @@ export class ShiftManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  deleteShiftType$Response(params: DeleteShiftType$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  deleteShiftType$Response(params: DeleteShiftType$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = deleteShiftType(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -289,11 +272,9 @@ export class ShiftManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  deleteShiftType(params: DeleteShiftType$Params, context?: HttpContext): Observable<void> {
+  deleteShiftType(params: DeleteShiftType$Params, context?: HttpContext): Promise<void> {
     const resp = this.deleteShiftType$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
   /** Path part for operation `getShiftAssignements()` */
@@ -305,9 +286,9 @@ export class ShiftManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getShiftAssignements$Response(params?: GetShiftAssignements$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ShiftAssignementModel>>> {
+  getShiftAssignements$Response(params?: GetShiftAssignements$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<ShiftAssignementModel>>> {
     const obs = getShiftAssignements(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -316,11 +297,9 @@ export class ShiftManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getShiftAssignements(params?: GetShiftAssignements$Params, context?: HttpContext): Observable<Array<ShiftAssignementModel>> {
+  getShiftAssignements(params?: GetShiftAssignements$Params, context?: HttpContext): Promise<Array<ShiftAssignementModel>> {
     const resp = this.getShiftAssignements$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<ShiftAssignementModel>>): Array<ShiftAssignementModel> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<ShiftAssignementModel>>): Array<ShiftAssignementModel> => r.body);
   }
 
   /** Path part for operation `updateShiftAssignement()` */
@@ -332,9 +311,9 @@ export class ShiftManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  updateShiftAssignement$Response(params?: UpdateShiftAssignement$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  updateShiftAssignement$Response(params?: UpdateShiftAssignement$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = updateShiftAssignement(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -343,11 +322,9 @@ export class ShiftManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  updateShiftAssignement(params?: UpdateShiftAssignement$Params, context?: HttpContext): Observable<void> {
+  updateShiftAssignement(params?: UpdateShiftAssignement$Params, context?: HttpContext): Promise<void> {
     const resp = this.updateShiftAssignement$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
   /** Path part for operation `createShiftAssignement()` */
@@ -359,9 +336,9 @@ export class ShiftManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  createShiftAssignement$Response(params?: CreateShiftAssignement$Params, context?: HttpContext): Observable<StrictHttpResponse<ShiftAssignementModel>> {
+  createShiftAssignement$Response(params?: CreateShiftAssignement$Params, context?: HttpContext): Promise<StrictHttpResponse<ShiftAssignementModel>> {
     const obs = createShiftAssignement(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -370,11 +347,9 @@ export class ShiftManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  createShiftAssignement(params?: CreateShiftAssignement$Params, context?: HttpContext): Observable<ShiftAssignementModel> {
+  createShiftAssignement(params?: CreateShiftAssignement$Params, context?: HttpContext): Promise<ShiftAssignementModel> {
     const resp = this.createShiftAssignement$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<ShiftAssignementModel>): ShiftAssignementModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<ShiftAssignementModel>): ShiftAssignementModel => r.body);
   }
 
   /** Path part for operation `getShiftAssignements_1()` */
@@ -386,9 +361,9 @@ export class ShiftManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getShiftAssignements_1$Response(params?: GetShiftAssignements_1$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ShiftAssignementModel>>> {
+  getShiftAssignements_1$Response(params?: GetShiftAssignements_1$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<ShiftAssignementModel>>> {
     const obs = getShiftAssignements_1(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -397,11 +372,9 @@ export class ShiftManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getShiftAssignements_1(params?: GetShiftAssignements_1$Params, context?: HttpContext): Observable<Array<ShiftAssignementModel>> {
+  getShiftAssignements_1(params?: GetShiftAssignements_1$Params, context?: HttpContext): Promise<Array<ShiftAssignementModel>> {
     const resp = this.getShiftAssignements_1$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<ShiftAssignementModel>>): Array<ShiftAssignementModel> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<ShiftAssignementModel>>): Array<ShiftAssignementModel> => r.body);
   }
 
   /** Path part for operation `deleteShiftAssignement()` */
@@ -413,9 +386,9 @@ export class ShiftManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  deleteShiftAssignement$Response(params: DeleteShiftAssignement$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  deleteShiftAssignement$Response(params: DeleteShiftAssignement$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = deleteShiftAssignement(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -424,11 +397,9 @@ export class ShiftManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  deleteShiftAssignement(params: DeleteShiftAssignement$Params, context?: HttpContext): Observable<void> {
+  deleteShiftAssignement(params: DeleteShiftAssignement$Params, context?: HttpContext): Promise<void> {
     const resp = this.deleteShiftAssignement$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
 }

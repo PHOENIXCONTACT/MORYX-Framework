@@ -4,7 +4,7 @@
 */
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject, OnDestroy, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, effect, inject, signal, untracked, ChangeDetectionStrategy } from '@angular/core';
 import { Entry, NavigableEntryEditor, PrototypeToEntryConverter } from '@moryx/ngx-web-framework/entry-editor';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -13,7 +13,6 @@ import { WorkplanEditingService } from '@api/services';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { SessionsService } from '@app/services/sessions.service';
 import { EditorStateService } from '@app/services/editor-state.service';
-import { Subscription } from 'rxjs';
 
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
@@ -36,7 +35,7 @@ import { MatInputModule } from '@angular/material/input';
     MatInputModule
   ]
 })
-export class NodeProperties implements OnDestroy {
+export class NodeProperties {
   private sessionsService = inject(SessionsService);
   private workplanEditingService = inject(WorkplanEditingService);
   private snackbarService = inject(SnackbarService);
@@ -48,27 +47,26 @@ export class NodeProperties implements OnDestroy {
   protected readonly workplanNodeClassification = WorkplanNodeClassification;
   protected readonly TranslationConstants = TranslationConstants;
 
-  private subscriptions: Subscription[] = [];
-  private activeSession: string | undefined;
-
   constructor() {
-    this.subscriptions.push(this.sessionsService.activeSession$.subscribe(s => (this.activeSession = s)));
-    this.subscriptions.push(
-      this.editorStateService.isEditingStep$.subscribe(async step => {
-        // Awaiting this results in a race condition,
-        // this.node needs to be set before the observable provides the next value
-        if (this.node()) {
-          this.updateNode(this.node()!);
+    effect(() => {
+      const step = this.editorStateService.isEditingStep();
+      // Awaiting this results in a race condition,
+      // this.node needs to be set before the observable provides the next value
+      untracked(() => {
+        const currentNode = this.node();
+        if (currentNode) {
+          this.updateNode(currentNode);
         }
 
-        this.node.update(_ => step);
-        this.properties.update(_ => step?.properties?.subEntries?.find(p => p.identifier === 'Parameters'));
-      })
-    );
+        this.node.set(step);
+        this.properties.set(step?.properties?.subEntries?.find(p => p.identifier === 'Parameters'));
+      });
+    });
   }
 
-  async updateNode(node: WorkplanNodeModel) {
-    if (!this.activeSession || !node.id || !this.editorStateService.workplan) {
+  private async updateNode(node: WorkplanNodeModel) {
+    const activeSession = this.sessionsService.activeSession();
+    if (!activeSession || !node.id || !this.editorStateService.workplan) {
       return;
     }
 
@@ -77,8 +75,7 @@ export class NodeProperties implements OnDestroy {
     }
 
     await this.workplanEditingService
-      .updateStep({sessionId: this.activeSession, nodeId: node.id, body: node})
-      .toAsync()
+      .updateStep({sessionId: activeSession, nodeId: node.id, body: node})
       .then(updatedNode => {
         if (!this.editorStateService.workplan) {
           return;
@@ -90,27 +87,23 @@ export class NodeProperties implements OnDestroy {
         this.editorStateService.workplan.nodes = newNodes;
         this.editorStateService.workplan.nodes?.push(updatedNode);
         this.sessionsService.registerUpdatedSession(this.editorStateService.workplan);
-        this.editorStateService.workplanChanged();
+        this.editorStateService.notifyWorkplanChanged();
       })
       .catch(async (e: HttpErrorResponse) => {
         await this.snackbarService.handleError(e);
-        this.node.update(_ => node);
+        this.node.set(node);
       });
   }
 
-  async ngOnDestroy(): Promise<void> {
-    this.subscriptions.forEach(s => s.unsubscribe());
-  }
-
   protected onNavigateClick() {
-    if (!this.node()?.subworkplanId) {
+    const subworkplanId = this.node()?.subworkplanId;
+    if (!subworkplanId) {
       return;
     }
     this.sessionsService
-      .getSessionForWorkplan(this.node()?.subworkplanId ?? 0)
-      .toAsync()
+      .getSessionForWorkplan(subworkplanId)
       .then(session => this.sessionsService.activateSession(session.sessionToken!))
-      .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err));
+      .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err));
   }
 }
 

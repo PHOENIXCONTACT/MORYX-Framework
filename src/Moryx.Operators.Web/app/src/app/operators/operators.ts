@@ -3,13 +3,13 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, input, OnInit, signal, ChangeDetectionStrategy } from "@angular/core";
+import { Component, effect, inject, input, signal, ChangeDetectionStrategy } from "@angular/core";
 import { OperatorViewModel } from "../models/operator-view-model";
 import { TranslationConstants } from "../extensions/translation-constants.extensions";
 import { WorkstationViewModel } from "../models/workstation-view-model";
-import { ExtendedOperatorModel } from "../api/models/extended-operator-model";
-import { AssignableOperator } from "../api/models/assignable-operator";
-import { IOperatorAssignable } from "../api/models/i-operator-assignable";
+import { ExtendedOperatorModel } from "@api/models/extended-operator-model";
+import { AssignableOperator } from "@api/models/assignable-operator";
+import { IOperatorAssignable } from "@api/models/i-operator-assignable";
 import { AppStoreService } from "../services/app-store.service";
 import { OperatorCard } from "../operator-card/operator-card";
 
@@ -27,7 +27,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     TranslatePipe
   ]
 })
-export class Operators implements OnInit {
+export class Operators {
 
   readonly workstation = input.required<WorkstationViewModel>();
   readonly mainContainerStyle = input.required<string>();
@@ -36,21 +36,19 @@ export class Operators implements OnInit {
   private appStoreService = inject(AppStoreService);
   protected TranslationConstants = TranslationConstants;
 
-  ngOnInit(): void {
-    //load operators
-
-    this.loadOperatorsByResource();
-    this.appStoreService.operators$.subscribe((updatedOperators) =>
-      this.loadOperatorsByResource()
-    );
+  constructor() {
+    effect(() => {
+      this.appStoreService.operators();
+      this.loadOperatorsByResource();
+    });
   }
 
-  loadOperatorsByResource() {
+  private loadOperatorsByResource() {
     this.appStoreService
       .getOperatorsByResourceId(this.workstation()?.data.id ?? 0)
-      .subscribe(
+      .then(
         (skilledOperators: ExtendedOperatorModel[]) =>
-          (this.operators.update(_ => skilledOperators.map(
+          (this.operators.set(skilledOperators.map(
               (operator) =>
                 new OperatorViewModel(<AssignableOperator>{
                   identifier: operator.identifier,

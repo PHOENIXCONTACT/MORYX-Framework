@@ -3,15 +3,15 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { InstructionItemModel, InstructionModel } from '../api/models';
 import { VisualInstructionsService } from '../api/services';
-import { BehaviorSubject } from 'rxjs';
 import { DisplayedMediaContent } from '../components/media-contents/displayed-media-content';
 import { HttpErrorResponse, HttpClient, HttpRequest, HttpEvent, HttpEventType } from '@angular/common/http';
 import { DomSanitizer } from '@angular/platform-browser';
 import { environment } from '../../environments/environment';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -24,14 +24,14 @@ export class InstructionService {
 
   private eventSource?: EventSource;
 
-  private _instructions = new BehaviorSubject<InstructionModel[]>([]);
-  public instructions$ = this._instructions.asObservable();
+  private readonly _instructions = signal<InstructionModel[]>([]);
+  readonly instructions = this._instructions.asReadonly();
 
   public connect() {
     this.eventSource = new EventSource(this.visualInstructionsService.rootUrl + '/api/moryx/instructions/stream', {withCredentials: !environment.production});
     this.eventSource.onmessage = event => {
       const instructions = JSON.parse(event.data);
-      this._instructions.next(instructions);
+      this._instructions.set(instructions);
     };
   }
 
@@ -40,12 +40,12 @@ export class InstructionService {
   }
 
   async requestMediaContentAsync(mediaItem: InstructionItemModel): Promise<DisplayedMediaContent> {
-    return await this.httpClient.request<Blob>(
+    return await firstValueFrom(this.httpClient.request<Blob>(
       new HttpRequest('GET', mediaItem.content ?? environment.assets + 'assets/moryx_transparent_colored.png', null, {
         reportProgress: true,
         responseType: 'blob',
       })
-    ).toAsync()
+    ))
       .then((response) => {
         return this.convertBlobResponse(response);
       })
@@ -73,7 +73,7 @@ export class InstructionService {
   }
 
   disconnect() {
-    this._instructions.next([]);
+    this._instructions.set([]);
 
     if (this.eventSource) {
       this.eventSource.close();

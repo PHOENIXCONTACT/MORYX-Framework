@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Globalization;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Operators.Attendances;
 using Moryx.Operators.Exceptions;
@@ -49,7 +50,7 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
         ArgumentNullException.ThrowIfNull(@operator);
         if (string.IsNullOrEmpty(@operator.Identifier))
         {
-            throw new ArgumentException(string.Format(Strings.OperatorManagementFacade_NotNullExceptionMessage, nameof(Operator.Identifier)));
+            throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Strings.OperatorManagementFacade_NotNullExceptionMessage, nameof(Operator.Identifier)));
         }
 
         if (Operators.Any(o => o.Identifier == @operator.Identifier))
@@ -69,12 +70,12 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
     {
         if (string.IsNullOrEmpty(identifier))
         {
-            throw new ArgumentException(string.Format(Strings.OperatorManagementFacade_NotNullExceptionMessage, nameof(Operator.Identifier)));
+            throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Strings.OperatorManagementFacade_NotNullExceptionMessage, nameof(Operator.Identifier)));
         }
 
         if (!Operators.Any(o => o.Identifier == identifier))
         {
-            throw new ArgumentException(string.Format(Strings.OperatorManagementFacade_ReferenceNotFoundExceptionMessage, nameof(Operator), identifier));
+            throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Strings.OperatorManagementFacade_ReferenceNotFoundExceptionMessage, nameof(Operator), identifier));
         }
 
         return identifier;
@@ -84,7 +85,7 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
         => OperatorManager.Update(VerifiedKnown(@operator));
 
     private Operator VerifiedKnown(Operator @operator) => Operators.Any(o => o.Identifier == @operator.Identifier) ? @operator :
-            throw new ArgumentException(string.Format(Strings.OperatorManagementFacade_ReferenceNotFoundExceptionMessage, nameof(Operator), @operator.Identifier));
+            throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Strings.OperatorManagementFacade_ReferenceNotFoundExceptionMessage, nameof(Operator), @operator.Identifier));
 
     public event EventHandler<OperatorChangedEventArgs>? OperatorChanged;
 
@@ -120,7 +121,7 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
 
     private OperatorData VerifiedExisting(AssignableOperator @operator)
         => OperatorManager.Operators.SingleOrDefault(o => o.Identifier == @operator.Identifier) ??
-            throw new ArgumentException(string.Format(Strings.OperatorManagementFacade_ReferenceNotFoundExceptionMessage, nameof(Operator), @operator.Identifier));
+            throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Strings.OperatorManagementFacade_ReferenceNotFoundExceptionMessage, nameof(Operator), @operator.Identifier));
 
     public void SignOut(AssignableOperator @operator, IOperatorAssignable resource)
     {
@@ -187,7 +188,7 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
     private SkillCreationContext Verified(SkillCreationContext context)
     {
         context.Type = SkillTypes.SingleOrDefault(t => t.Id == context.Type?.Id) ??
-            throw new ArgumentException(string.Format(Strings.OperatorManagementFacade_ReferenceNotFoundExceptionMessage, nameof(SkillType), context.Type.Id));
+            throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Strings.OperatorManagementFacade_ReferenceNotFoundExceptionMessage, nameof(SkillType), context.Type.Id));
         return context;
     }
 
@@ -198,7 +199,7 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
     }
 
     private Skill VerifiedSkill(long id) => SkillManager.Skills.SingleOrDefault(s => s.Id == id) ??
-            throw new ArgumentException(string.Format(Strings.OperatorManagementFacade_ReferenceNotFoundExceptionMessage, nameof(Skill), id));
+            throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Strings.OperatorManagementFacade_ReferenceNotFoundExceptionMessage, nameof(Skill), id));
 
     public SkillType CreateSkillType(SkillTypeCreationContext context)
     {
@@ -218,7 +219,7 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
     {
         if (SkillTypes.SingleOrDefault(t => t.Id == type.Id) is null)
         {
-            throw new ArgumentException(string.Format(Strings.OperatorManagementFacade_ReferenceNotFoundExceptionMessage, nameof(SkillType), type.Id));
+            throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Strings.OperatorManagementFacade_ReferenceNotFoundExceptionMessage, nameof(SkillType), type.Id));
         }
 
         return type;
@@ -231,7 +232,7 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
     }
 
     private SkillType VerifiedType(long id) => SkillManager.SkillTypes.SingleOrDefault(t => t.Id == id) ??
-            throw new ArgumentException(string.Format(Strings.OperatorManagementFacade_ReferenceNotFoundExceptionMessage, nameof(SkillType), id));
+            throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Strings.OperatorManagementFacade_ReferenceNotFoundExceptionMessage, nameof(SkillType), id));
 
     public event EventHandler<SkillChangedEventArgs>? SkillChanged;
 
@@ -270,7 +271,7 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
 
     private OperatorData VerifiedExisting(User user)
         => OperatorManager.Operators.SingleOrDefault(o => o.Identifier == user.Identifier) ??
-            throw new ArgumentException(string.Format(Strings.OperatorManagementFacade_ReferenceNotFoundExceptionMessage, nameof(Operator), user.Identifier));
+            throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Strings.OperatorManagementFacade_ReferenceNotFoundExceptionMessage, nameof(Operator), user.Identifier));
 
     /// <inheritdoc/>
     public void SignOut(User user)

@@ -43,7 +43,7 @@ export class DialogShowRevisions implements OnInit {
   protected TranslationConstants = TranslationConstants;
 
   constructor() {
-    this.product.update(_ => this.data);
+    this.product.set(this.data);
   }
 
   ngOnInit(): void {
@@ -51,15 +51,12 @@ export class DialogShowRevisions implements OnInit {
       identifier: this.product()?.identifier,
       revisionFilter: RevisionFilter.All,
     };
-    this.managementService.getTypes({body: body}).subscribe({
-      next: (products) => {
-        if (products !== null) {
-          this.revisions.update(_ => products);
-        }
-      },
-      error: async (e: HttpErrorResponse) =>
-        await this.snackbarService.handleError(e)
-    });
+    this.managementService.getTypes({body: body}).then((products) => {
+      if (products !== null) {
+        this.revisions.set(products);
+      }
+    }).catch(async (e: HttpErrorResponse) =>
+      await this.snackbarService.handleError(e));
   }
 
   protected onClose() {

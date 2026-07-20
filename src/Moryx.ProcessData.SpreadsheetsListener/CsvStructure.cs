@@ -26,7 +26,7 @@ internal class CsvStructure
     private readonly CsvConfiguration _csvConfig = new(CultureInfo.InvariantCulture);
     private readonly IModuleLogger _logger;
 
-    private int _writtenRows = 0;
+    private int _writtenRows;
     private readonly int _maxNumOfRows;
 
     private FileStream _fileStream;
@@ -58,8 +58,8 @@ internal class CsvStructure
         lock (_headerLock)
             tempHeader = _header.ToList();
 
-        var addHeadings = header.Except(tempHeader);
-        if (addHeadings.Count() > 0)
+        var addHeadings = header.Except(tempHeader).ToArray();
+        if (addHeadings.Length != 0)
         {
             lock (_headerLock)
                 _header.AddRange(addHeadings);

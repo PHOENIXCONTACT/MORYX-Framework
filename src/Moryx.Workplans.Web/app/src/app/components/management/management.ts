@@ -4,20 +4,20 @@
 */
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, effect, inject, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { SnackbarService, SearchBarService, SearchRequest } from '@moryx/ngx-web-framework/services';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { firstValueFrom } from 'rxjs';
 import { WorkplanModel, WorkplanSessionModel } from '@api/models';
 import { WorkplanService } from '@api/services';
 import { ConfirmDialogButton, ConfirmDialog, ConfirmDialogData } from '@app/dialogs/dialog-confirm/dialog-confirm';
 import '../../extensions/array.extensions';
-import '../../extensions/observable.extensions';
+
 import { SessionsService } from '@app/services/sessions.service';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
-import { Subscription } from 'rxjs';
 
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
@@ -50,7 +50,6 @@ export class Management implements OnInit, OnDestroy {
   private translateService = inject(TranslateService);
 
   protected TranslationConstants = TranslationConstants;
-  private availableSessionsSubscription?: Subscription;
   protected readonly displayedColumns: string[] = ['name', 'state', 'version', 'actions'];
 
   protected workplans = signal<WorkplanModel[]>([]);
@@ -60,23 +59,21 @@ export class Management implements OnInit, OnDestroy {
   protected dataSource!: MatTableDataSource<WorkplanModel>;
 
   constructor() {
+    effect(() => {
+      const tokens = this.sessionService.availableSessions();
+      this.onSessionsChanged(tokens);
+    });
   }
 
   ngOnInit(): void {
-    this.availableSessionsSubscription = this.sessionService.availableSessions$.subscribe(
-      async tokens => await this.onSessionsChanged(tokens)
-    );
-    this.isLoading.update(_ => true);
-    this.workplanService.getAllWorkplans().subscribe({
-      next: workplans => {
-        this.workplans.update(_ => workplans);
-        this.dataSource = new MatTableDataSource<WorkplanModel>(this.workplans());
-        this.isLoading.update(_ => false);
-      },
-      error: async (e: HttpErrorResponse) => {
-        await this.snackbarService.handleError(e);
-        this.isLoading.update(_ => false);
-      }
+    this.isLoading.set(true);
+    this.workplanService.getAllWorkplans().then(workplans => {
+      this.workplans.set(workplans);
+      this.dataSource = new MatTableDataSource<WorkplanModel>(this.workplans());
+      this.isLoading.set(false);
+    }).catch(async (e: HttpErrorResponse) => {
+      await this.snackbarService.handleError(e);
+      this.isLoading.set(false);
     });
 
     this.searchBarService.subscribe({
@@ -85,18 +82,17 @@ export class Management implements OnInit, OnDestroy {
   }
 
   private async onSessionsChanged(tokens: string[]): Promise<void> {
-    this.sessions.update(_ => []);
+    this.sessions.set([]);
     await Promise.all(
       tokens.map(
         async token =>
           await this.sessionService
             .getSession(token)
-            .toAsync()
             .then((value: WorkplanSessionModel) => this.sessions.update(items => {
               items.push(value);
               return items;
             }))
-            .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err))
+            .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err))
       )
     );
   }
@@ -128,11 +124,10 @@ export class Management implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.searchBarService.unsubscribe();
-    this.availableSessionsSubscription?.unsubscribe();
   }
 
-  async getTranslations(): Promise<{ [key: string]: string }> {
-    return await this.translateService
+  private async getTranslations(): Promise<{ [key: string]: string }> {
+    return await firstValueFrom(this.translateService
       .get([
         TranslationConstants.MANAGEMENT.CONFRIM_DIALOG.MESSAGE_FIRST_PART,
         TranslationConstants.MANAGEMENT.CONFRIM_DIALOG.MESSAGE_SECOND_PART,
@@ -141,8 +136,7 @@ export class Management implements OnInit, OnDestroy {
         TranslationConstants.MANAGEMENT.CONFRIM_DIALOG.CANCEL,
         TranslationConstants.MANAGEMENT.SNACK_BAR.SUCCESS_FIRST_PART,
         TranslationConstants.MANAGEMENT.SNACK_BAR.SUCCESS_SECOND_PART
-      ])
-      .toAsync();
+      ]));
   }
 
   protected onDeleteWorkplan(workplan: WorkplanModel) {
@@ -170,13 +164,10 @@ export class Management implements OnInit, OnDestroy {
           <ConfirmDialogButton>{
             text: 'Ok', // ToDo: internationalize
             action: () => {
-              this.workplanService.deleteWorkplan({id: workplan?.id ?? 0}).subscribe({
-                next: () => {
-                  this.completeTheDeletion(session, workplan, translations);
-                  confirmDialog.close();
-                },
-                error: async (err: HttpErrorResponse) => await this.snackbarService.handleError(err)
-              });
+              this.workplanService.deleteWorkplan({id: workplan?.id ?? 0}).then(() => {
+                this.completeTheDeletion(session, workplan, translations);
+                confirmDialog.close();
+              }).catch((err: HttpErrorResponse) => this.snackbarService.handleError(err));
             }
           }
         ]
@@ -190,9 +181,8 @@ export class Management implements OnInit, OnDestroy {
     translations: { [key: string]: string }
   ) {
     if (session) {
-      this.sessionService.closeSession(session.sessionToken!).subscribe({
-        error: async (err: HttpErrorResponse) => await this.snackbarService.handleError(err)
-      });
+      this.sessionService.closeSession(session.sessionToken!)
+        .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err));
     }
 
     if (!this.workplans().length) {
@@ -213,17 +203,15 @@ export class Management implements OnInit, OnDestroy {
   protected onOpenSession(workplan: WorkplanModel) {
     this.sessionService
       .getSessionForWorkplan(workplan.id!)
-      .toAsync()
       .then(session => this.openSession(session))
-      .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err));
+      .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err));
   }
 
   protected onDuplicateWorkplan(workplan: WorkplanModel): void {
     this.sessionService
       .getSessionForWorkplan(workplan.id!, true)
-      .toAsync()
       .then(session => this.openSession(session))
-      .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err));
+      .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err));
   }
 
   private openSession(session: WorkplanSessionModel) {

@@ -90,7 +90,6 @@ export class OperationRecipes implements OnInit {
       this.identifier = params["identifier"];
       await this.workplanService
         .getAllWorkplans()
-        .toAsync()
         .then((value) => this.possibleWorkplans.update((_) => value))
         .catch(
           async (e: HttpErrorResponse) =>
@@ -110,7 +109,6 @@ export class OperationRecipes implements OnInit {
   private async loadRecipes(): Promise<void> {
     await this.orderManagementService
       .getOperation({guid: this.identifier})
-      .toAsync()
       .then((value) => this.operation.update((_) => value))
       .catch(
         async (e: HttpErrorResponse) => await this.snackbarService.handleError(e)
@@ -119,7 +117,6 @@ export class OperationRecipes implements OnInit {
     for (const recipeId of this.operation().recipeIds!) {
       await this.productManagementService
         .getRecipe({id: recipeId})
-        .toAsync()
         .then(async (value) => {
           this.recipes.update((items) => {
             items.push(value);
@@ -146,7 +143,7 @@ export class OperationRecipes implements OnInit {
     }
     await this.workplanService
       .getWorkplan({id: recipe.workplanModel?.id})
-      .subscribe((value) => {
+      .then((value) => {
         this.possibleWorkplans.update((items) => {
           items.push(value);
           return items;
@@ -175,7 +172,6 @@ export class OperationRecipes implements OnInit {
         id: this.selectedRecipe()!.id!,
         body: this.selectedRecipe()
       })
-      .toAsync()
       .catch(
         async (e: HttpErrorResponse) => await this.snackbarService.handleError(e)
       );

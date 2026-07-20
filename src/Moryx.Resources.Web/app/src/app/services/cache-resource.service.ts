@@ -4,13 +4,12 @@
 */
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
-import { BehaviorSubject } from 'rxjs';
 import { ReferenceValue, ResourceModel, ResourceTypeModel } from '../api/models';
 import { ResourceModificationService } from '../api/services';
 import { TranslationConstants } from '../extensions/translation-constants.extensions';
-import '../extensions/observable.extensions';
+
 
 /**
  * This service handles the set of existing resources and resource types
@@ -28,23 +27,16 @@ export class CacheResourceService {
 
   rootType: ResourceTypeModel | undefined;
   flatTypes: ResourceTypeModel[] | undefined;
-  resources: BehaviorSubject<ResourceModel[] | undefined> = new BehaviorSubject<ResourceModel[] | undefined>(undefined);
-  flatResources: BehaviorSubject<ResourceModel[] | undefined> = new BehaviorSubject<ResourceModel[] | undefined>(
-    undefined
-  );
-
-  constructor() {
-    this.resources.subscribe(resources => this.pushFlattenedResources(resources));
-  }
-
-  private pushFlattenedResources(resources: ResourceModel[] | undefined) {
-    const flattendResources = [] as ResourceModel[];
+  private readonly _resources = signal<ResourceModel[] | undefined>(undefined);
+  readonly resources = this._resources.asReadonly();
+  flatResources = computed<ResourceModel[]>(() => {
+    const resources = this.resources();
+    const flattened: ResourceModel[] = [];
     if (resources) {
-      resources.forEach(r => this.collectflattenedResources(r, flattendResources));
+      resources.forEach(r => this.collectflattenedResources(r, flattened));
     }
-
-    this.flatResources.next(flattendResources);
-  }
+    return flattened;
+  });
 
   private collectflattenedResources(root: ResourceModel, flattendResources: ResourceModel[]) {
     if (flattendResources?.find(r => r.id === root.id)) {
@@ -57,23 +49,22 @@ export class CacheResourceService {
   }
 
   removeResource(resource: ResourceModel) {
-    const newResources = this.resources.getValue() ?? [];
+    const newResources = this.resources() ?? [];
 
     //Handle children's references
     const childReferences = resource.references?.find(r => r.name === this.ChildReferenceName)?.targets;
     childReferences?.forEach(c => newResources.push(c));
 
     //Handle parent's reference
-    const parent = this.flatResources
-      .getValue()
+    const parent = this.flatResources()
       ?.find(p =>
         p.references?.find(r => r.name === this.ChildReferenceName)?.targets?.find(r => r.id === resource.id)
       );
     if (parent) {
       this.removeChildFromParent(parent, resource);
-      this.resources.next(newResources);
+      this._resources.set(newResources);
     } else {
-      this.resources.next(newResources.filter(r => r.id != resource.id));
+      this._resources.set(newResources.filter(r => r.id != resource.id));
     }
   }
 
@@ -87,13 +78,12 @@ export class CacheResourceService {
   async loadResources() {
     await this.resourceModificationService
       .getTypeTree()
-      .toAsync()
       .then(rootType => {
         this.rootType = rootType;
         this.flatTypes = [];
         this.collectflattenedTypes(rootType, this.flatTypes);
       })
-      .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err));
+      .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err));
 
     await this.resourceModificationService
       .getResources({
@@ -106,9 +96,8 @@ export class CacheResourceService {
           includedReferences: [{name: this.ChildReferenceName}],
         },
       })
-      .toAsync()
-      .then(resources => this.resources.next(resources))
-      .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err));
+      .then(resources => this._resources.set(resources))
+      .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err));
   }
 
   private collectflattenedTypes(root: ResourceTypeModel, flattendTypes: ResourceTypeModel[]) {

@@ -58,7 +58,7 @@ class SpreadsheetsListenerTest
         {
             Measurement measurement = new Measurement(measurementName);
             measurement.Add(new DataField("A", i));
-            measurement.Add(new DataTag("B", i.ToString()));
+            measurement.Add(new DataTag("B", i.ToString(CultureInfo.InvariantCulture)));
 
             _spreadsheetsListener.MeasurementAdded(measurement);
         }
@@ -95,7 +95,7 @@ class SpreadsheetsListenerTest
         for (int i = 0; i < numOfMeasurements; i++)
         {
             var df = new DataField("A", i);
-            var dt = new DataTag("B", i.ToString());
+            var dt = new DataTag("B", i.ToString(CultureInfo.InvariantCulture));
 
             Measurement firstMeasurement = new Measurement(firstMeasurementName);
             firstMeasurement.Add(df);
@@ -142,7 +142,7 @@ class SpreadsheetsListenerTest
         {
             Measurement measurement = new Measurement(measurementName);
             measurement.Add(new DataField("B", i));
-            measurement.Add(new DataTag("D", i.ToString()));
+            measurement.Add(new DataTag("D", i.ToString(CultureInfo.InvariantCulture)));
             ogMeasurements.Add(measurement);
             _spreadsheetsListener.MeasurementAdded(measurement);
         }
@@ -161,7 +161,7 @@ class SpreadsheetsListenerTest
 
         Measurement measurementWithNewKeys = new Measurement(measurementName);
         measurementWithNewKeys.Add(new DataField("A", numOfMeasurements));
-        measurementWithNewKeys.Add(new DataTag("C", numOfMeasurements.ToString()));
+        measurementWithNewKeys.Add(new DataTag("C", numOfMeasurements.ToString(CultureInfo.InvariantCulture)));
 
         _spreadsheetsListener.MeasurementAdded(measurementWithNewKeys);
         _spreadsheetsListener.Stop();
@@ -179,7 +179,7 @@ class SpreadsheetsListenerTest
             .GetRange(ogHeader.Count - 2, 4)
             .SequenceEqual(new List<string>()
                 {
-                    "","", numOfMeasurements.ToString(), numOfMeasurements.ToString()
+                    "","", numOfMeasurements.ToString(CultureInfo.InvariantCulture), numOfMeasurements.ToString(CultureInfo.InvariantCulture)
                 }
             );
         Assert.That(lastRowValid, "Measurement with new keys was not written properly to file");

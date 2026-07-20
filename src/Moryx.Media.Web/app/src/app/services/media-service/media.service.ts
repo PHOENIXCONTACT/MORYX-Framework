@@ -4,9 +4,8 @@
 */
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
-import { BehaviorSubject, catchError, Observable, of } from 'rxjs';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { ContentDescriptorModel, VariantDescriptor } from '@api/models';
 import { MediaServerService } from '@api/services';
@@ -18,114 +17,102 @@ export class MediaService {
   private mediaServerService = inject(MediaServerService);
   private snackbarService = inject(SnackbarService);
 
-  contents: BehaviorSubject<ContentDescriptorModel[]> = new BehaviorSubject<ContentDescriptorModel[]>([] as ContentDescriptorModel[]);
-  TranslationConstants = TranslationConstants;
+  private readonly _contents = signal<ContentDescriptorModel[]>([]);
+  readonly contents = this._contents.asReadonly();
+  protected TranslationConstants = TranslationConstants;
 
-  loadContents(): void {
-    this.mediaServerService
-      .getAll()
-      .pipe(
-        catchError(
-          this.handleError<ContentDescriptorModel[]>('Retrieving Contents', [])
-        )
-      )
-      .subscribe((response) => {
-        this.contents.next(response);
-      });
+  async loadContents(): Promise<void> {
+    try {
+      const response = await this.mediaServerService.getAll();
+      this._contents.set(response);
+    } catch (error) {
+      this.handleError<ContentDescriptorModel[]>('Retrieving Contents')(error as HttpErrorResponse);
+    }
   }
 
-  loadContent(id: string): Observable<ContentDescriptorModel> {
-    return this.mediaServerService
-      .get({guid: id})
-      .pipe(
-        catchError(
-          this.handleError<ContentDescriptorModel>('Retrieving Contents')
-        )
-      );
+  async loadContent(id: string): Promise<ContentDescriptorModel | undefined> {
+    try {
+      return await this.mediaServerService.get({guid: id});
+    } catch (error) {
+      this.handleError<ContentDescriptorModel>('Retrieving Contents')(error as HttpErrorResponse);
+      return undefined;
+    }
   }
 
   getContent(id: string): ContentDescriptorModel | undefined {
-    const contentValues = this.contents.getValue();
+    const contentValues = this.contents();
     return contentValues.find((c) => c.id === id);
   }
 
-  removeContent(id: string): Observable<void> {
-    return this.mediaServerService
-      .removeContent({guid: id})
-      .pipe(catchError(this.handleError<void>('Removing content')));
+  async removeContent(id: string): Promise<void> {
+    try {
+      await this.mediaServerService.removeContent({guid: id});
+    } catch (error) {
+      this.handleError<void>('Removing content')(error as HttpErrorResponse);
+    }
   }
 
-  removeVariant(id: string, variantName: string): Observable<void> {
-    return this.mediaServerService
-      .removeVariant({guid: id, variantName: variantName})
-      .pipe(catchError(this.handleError<void>('Removing variant')));
+  async removeVariant(id: string, variantName: string): Promise<void> {
+    try {
+      await this.mediaServerService.removeVariant({guid: id, variantName: variantName});
+    } catch (error) {
+      this.handleError<void>('Removing variant')(error as HttpErrorResponse);
+    }
   }
 
-  uploadContent(file: File): void {
-    this.mediaServerService.addMaster({body: {formFile: file}}).subscribe({
-      next: (data) => {
-        this.loadContent(data).subscribe({
-          next: (x) => {
-            if (x !== undefined) {
-              // Delay until server generate the preview
-              this.wait(1000).then(() => {
-                this.contents.next([...this.contents.value, x]);
-              });
-            }
-          },
-        });
-      },
-      error: async (err: HttpErrorResponse) => {
-        await this.snackbarService.handleError(err);
-      },
-    });
+  async uploadContent(file: File): Promise<void> {
+    try {
+      const data = await this.mediaServerService.addMaster({body: {formFile: file}});
+      const content = await this.loadContent(data);
+      if (content) {
+        // Delay until server generate the preview
+        await this.wait(1000);
+        this._contents.update(items => [...items, content]);
+      }
+    } catch (err) {
+      await this.snackbarService.handleError(err as HttpErrorResponse);
+    }
   }
 
-  uploadVariant(
-    id: string,
-    variantName: string,
-    file: File
-  ): Observable<string> {
-    return this.mediaServerService
-      .addVariant({
+  async uploadVariant(id: string, variantName: string, file: File): Promise<string | undefined> {
+    try {
+      return await this.mediaServerService.addVariant({
         contentId: id,
         variantName: variantName,
         body: {formFile: file},
-      })
-      .pipe(
-        catchError(this.handleError<string>('Upload variant', {} as string))
-      );
+      });
+    } catch (error) {
+      this.handleError<string>('Upload variant')(error as HttpErrorResponse);
+      return undefined;
+    }
   }
 
-  getPicture(
-    variantName: string,
-    contentGuid: string,
-    preview: boolean
-  ): Observable<Blob> {
-    return this.mediaServerService
-      .getVariantStream$Json({
+  async getPicture(variantName: string, contentGuid: string, preview: boolean): Promise<Blob | undefined> {
+    try {
+      return await this.mediaServerService.getVariantStream$Json({
         guid: contentGuid,
         variantName: variantName,
         preview: preview,
-      })
+      });
+    } catch (error) {
+      this.handleError<Blob>('Retrieving picture')(error as HttpErrorResponse);
+      return undefined;
+    }
   }
 
-  getVariant(
-    variantName: string,
-    contentGuid: string
-  ): Observable<VariantDescriptor> {
-    return this.mediaServerService
-      .getVariant({guid: contentGuid, variantName: variantName})
-      .pipe(
-        catchError(this.handleError<VariantDescriptor>('Retrieving variant'))
-      );
+  async getVariant(variantName: string, contentGuid: string): Promise<VariantDescriptor | undefined> {
+    try {
+      return await this.mediaServerService.getVariant({guid: contentGuid, variantName: variantName});
+    } catch (error) {
+      this.handleError<VariantDescriptor>('Retrieving variant')(error as HttpErrorResponse);
+      return undefined;
+    }
   }
 
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: HttpErrorResponse): Observable<T> => {
+  private handleError<T>(operation = 'operation') {
+    return (error: HttpErrorResponse): void => {
       console.error(error);
       this.snackbarService.handleError(error);
-      return of(result as T);
     };
   }
 

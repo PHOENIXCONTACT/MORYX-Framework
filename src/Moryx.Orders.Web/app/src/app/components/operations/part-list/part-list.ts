@@ -31,15 +31,12 @@ export class PartList implements OnInit {
 
   ngOnInit(): void {
     this.isLoading.set(true);
-    this.orderManagementService.getProductParts({guid: this.guid()}).subscribe({
-      next: value => {
-        this.parts.set(value);
-        this.isLoading.set(false);
-      },
-      error: async (e: HttpErrorResponse) => {
-        await this.snackbarService.handleError(e);
-        this.isLoading.set(false);
-      }
+    this.orderManagementService.getProductParts({guid: this.guid()}).then(value => {
+      this.parts.set(value);
+      this.isLoading.set(false);
+    }).catch(async (e: HttpErrorResponse) => {
+      await this.snackbarService.handleError(e);
+      this.isLoading.set(false);
     });
   }
 }

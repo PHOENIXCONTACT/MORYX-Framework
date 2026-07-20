@@ -3,9 +3,9 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, effect, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { lastValueFrom } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { CellState } from '@api/models/cell-state';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import CellModel from '@app/models/cellModel';
@@ -18,7 +18,7 @@ import { CellStoreService } from '@app/services/cell-store.service';
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: []
 })
-export class TrafficLight implements OnInit {
+export class TrafficLight {
   protected currentState = signal<CellState | undefined | null>(undefined);
   protected currentStateString = signal<string | undefined>(undefined);
   private cellStoreService = inject(CellStoreService);
@@ -27,18 +27,23 @@ export class TrafficLight implements OnInit {
   protected CellState = CellState;
   protected TranslationConstants = TranslationConstants;
 
-  ngOnInit(): void {
-    this.cellStoreService.cellSelected$.subscribe({
-      next: c => {
-        this.id = c?.id;
+  constructor() {
+    effect(() => {
+      const c = this.cellStoreService.cellSelected();
+      this.id = c?.id;
+      this.updateState(c);
+    });
+
+    effect(() => {
+      const c = this.cellStoreService.cellUpdated();
+      if (c) {
         this.updateState(c);
       }
     });
-    this.cellStoreService.cellUpdated$.subscribe(async c => await this.updateState(c));
   }
 
-  async getTranslations(): Promise<{ [key: string]: string }> {
-    return await lastValueFrom(this.translateService
+  private async getTranslations(): Promise<{ [key: string]: string }> {
+    return await firstValueFrom(this.translateService
       .get([
         TranslationConstants.CELL_DETAILS.IDLE_STATE,
         TranslationConstants.CELL_DETAILS.RUNNING_STATE,
@@ -55,7 +60,7 @@ export class TrafficLight implements OnInit {
     this.currentState.set(newCellParameters?.state ?? CellState.Idle);
   }
 
-  public async getStringState(state: CellState) {
+  private async getStringState(state: CellState) {
     const translations = await this.getTranslations();
 
     switch (state) {

@@ -3,10 +3,10 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, input, OnDestroy, OnInit, output, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, computed, inject, input, output, ChangeDetectionStrategy } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
 import { WorkplanStepRecipe } from '@api/models';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 
@@ -26,27 +26,18 @@ import { MatButtonModule } from '@angular/material/button';
     MatButtonModule
   ]
 })
-export class StepCreator implements OnInit, OnDestroy {
+export class StepCreator {
   readonly availableSteps = input.required<WorkplanStepRecipe[]>();
   //TODO: remove this and change stepRecipe to type of model.required<..>() in future refactoring of the UI
   readonly created = output<WorkplanStepRecipe>();
-  protected stepRecipe = signal<WorkplanStepRecipe | undefined>(undefined);
-  recipeType = signal<string | undefined>(undefined);
 
   private activatedRoute = inject(ActivatedRoute);
-  sub?: Subscription;
+  private queryParamMap = toSignal(this.activatedRoute.queryParamMap);
+  protected stepRecipe = computed(() => {
+    const type = this.queryParamMap()?.get('type');
+    return structuredClone(this.availableSteps().find(s => s.type == type));
+  });
   protected readonly TranslationConstants = TranslationConstants;
-
-  ngOnInit(): void {
-    this.sub = this.activatedRoute.queryParamMap.subscribe(m => {
-      this.recipeType.update(_ => m.get('type') ?? undefined);
-      this.stepRecipe.update(_ => structuredClone(this.availableSteps().find(s => s.type == this.recipeType())));
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.sub?.unsubscribe();
-  }
 
   protected onCreate(): void {
     this.created.emit(this.stepRecipe()!);

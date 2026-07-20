@@ -12,7 +12,6 @@ import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
-import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-product-references',
@@ -29,6 +28,8 @@ import { toSignal } from '@angular/core/rxjs-interop';
 ]
 })
 export class ProductReferences {
-  protected references = toSignal(inject(EditProductsService).references$, { initialValue: [] });
+  private editProductsService = inject(EditProductsService);
+
+  protected references = this.editProductsService.references;
   protected TranslationConstants = TranslationConstants;
 }

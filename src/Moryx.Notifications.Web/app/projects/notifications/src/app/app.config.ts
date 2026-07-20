@@ -3,45 +3,32 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient, withInterceptors } from "@angular/common/http";
 import { provideRouter } from "@angular/router";
 import { environment } from "../environments/environment";
 import { routes } from "./app.routes";
-import { ApplicationConfig, importProvidersFrom, inject, provideAppInitializer } from "@angular/core";
-import { BrowserModule } from "@angular/platform-browser";
-import { MatButtonModule } from "@angular/material/button";
-import { MatCardModule } from "@angular/material/card";
-import { MatIconModule, MatIconRegistry } from "@angular/material/icon";
-import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import { MatSidenavModule } from "@angular/material/sidenav";
-import { MatSnackBarModule } from "@angular/material/snack-bar";
-import { MatToolbarModule } from "@angular/material/toolbar";
-import { ApiInterceptor, API_INTERCEPTOR_PROVIDER } from "@moryx/ngx-web-framework/interceptors";
-import { SnackbarService } from "@moryx/ngx-web-framework/services";
-import { ApiModule } from "@api/api.module";
-import { provideMarkdown } from "ngx-markdown";
+import { ApplicationConfig } from "@angular/core";
+import { provideMoryxMaterialDefaults } from "@moryx/ngx-web-framework/material";
+import { languageInterceptor, apiErrorInterceptor } from "@moryx/ngx-web-framework/interceptors";
 
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+import { provideApiConfiguration } from '@api/api-configuration';
+import { provideMarkdown } from "ngx-markdown";
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    importProvidersFrom([
-      BrowserModule,
-      MatProgressSpinnerModule,
-      MatIconModule,
-      MatButtonModule,
-      MatCardModule,
-      MatToolbarModule,
-      MatSidenavModule,
-      MatSnackBarModule,
-      ApiModule.forRoot({rootUrl: environment.rootUrl}),
-    ]),
-    ApiInterceptor,
-    API_INTERCEPTOR_PROVIDER,
-    SnackbarService,
-    provideHttpClient(withInterceptorsFromDi()),
+
+    // Configure the API endpoint
+    provideApiConfiguration(environment.rootUrl),
+
+    // Setup HttpClient with functional interceptors
+    provideHttpClient(
+      withInterceptors([languageInterceptor, apiErrorInterceptor])
+    ),
+
+    // Configure translation loader
     provideTranslateService({
       loader: provideTranslateHttpLoader({
         prefix: environment.assets + 'assets/languages/',
@@ -49,12 +36,12 @@ export const appConfig: ApplicationConfig = {
       }),
       fallbackLang: 'en'
     }),
+
+    // Configure markdown
     provideMarkdown(),
-    provideAppInitializer(() => {
-      // Use material-symbols as default icon font
-      const iconRegistry = inject(MatIconRegistry);
-      iconRegistry.setDefaultFontSetClass('material-symbols-outlined');
-    }),
+
+    // Provides angular material defaults
+    provideMoryxMaterialDefaults()
   ],
 };
 

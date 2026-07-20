@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
 import { Component, effect, inject, input, OnInit, signal, untracked, ChangeDetectionStrategy } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { delay, tap } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { LogLevel, OperationLogMessageModel } from '@api/models';
 import { OrderManagementService } from '@api/services';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
@@ -39,35 +39,30 @@ export class LogMessageList implements OnInit {
   constructor() {
     effect(() => {
       const guid = this.guid();
-      untracked(() => this.fetchMessages(guid));
+      untracked(() => {
+        this.fetchMessages(guid);
+      });
     });
   }
 
   async ngOnInit() {
-    this.translations = await this.translateService.get([TranslationConstants.OPERATIONS.EMPTY_LOG]).toAsync();
+    this.translations = await firstValueFrom(this.translateService.get([TranslationConstants.OPERATIONS.EMPTY_LOG]));
   }
 
   private fetchMessages(guid: string) {
-    this.isLoading.update(_ => true);
+    this.isLoading.set(true);
     this.orderManagementService
       .getLogs({guid: guid})
-      .pipe(
-        delay(1),
-        tap(messages => {
-          this.notification.update(_ =>
-            messages.length > 0 ? '' : this.translations[TranslationConstants.OPERATIONS.EMPTY_LOG]
-          );
-        })
-      )
-      .subscribe({
-        next: (logs: OperationLogMessageModel[]) => {
-          this.logMessages.update(_ => logs.sort((a, b) => this.sortDescending(a.timeStamp!, b.timeStamp!)));
-          this.isLoading.update(_ => false);
-        },
-        error: (err: HttpErrorResponse) => {
-          this.notification.update(_ => err.message);
-          this.isLoading.update(_ => false);
-        }
+      .then((logs: OperationLogMessageModel[]) => {
+        this.notification.set(
+          logs.length > 0 ? '' : this.translations[TranslationConstants.OPERATIONS.EMPTY_LOG]
+        );
+        this.logMessages.set(logs.sort((a, b) => this.sortDescending(a.timeStamp!, b.timeStamp!)));
+        this.isLoading.set(false);
+      })
+      .catch((err: HttpErrorResponse) => {
+        this.notification.set(err.message);
+        this.isLoading.set(false);
       });
   }
 
