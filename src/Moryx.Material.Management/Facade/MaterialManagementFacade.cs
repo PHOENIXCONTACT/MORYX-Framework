@@ -219,6 +219,7 @@ internal class MaterialManagementFacade : FacadeBase, IMaterialManagement
         }, cancellationToken);
     }
 
+    // TODO: Should this method take the container object in the pre advice?
     public async Task<IMaterialContainer> PreAdviceMaterialAsync(MaterialPreAdvice preAdvice, CancellationToken cancellationToken = default)
     {
         ValidateHealthState();
