@@ -1,6 +1,5 @@
 .full-width {
   width: 100%;
-  margin-bottom: 8px;
 }
 
 .suffix-icon {
@@ -12,7 +11,7 @@
 }
 
 .intermediate-header {
-  margin-top: -12px;
+  margin-top: 0px;
 }
 
 .dialog-container {
@@ -21,6 +20,8 @@
     flex-direction: column;
 }
 
-.operator-selector {
-    align-self: stretch;
+.dialog-context {
+    margin-bottom: 18px;
 }
+
+

@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnInit, ChangeDetectionStrategy, DestroyRef, model, effect, input, output } from "@angular/core";
+import { Component, inject, OnInit, ChangeDetectionStrategy, DestroyRef, model, effect, input, output, signal } from "@angular/core";
 import { TranslatePipe } from "@ngx-translate/core";
 import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
 import { AssignableOperator } from "@api/models";
@@ -42,7 +42,7 @@ export class OperatorSelector implements OnInit {
   public selectedOperatorId = model<string|null>(null);
   public creatingOperatorFailed = output<boolean>();
 
-  protected providesOperatorSelection: boolean = false;
+  protected providesOperatorSelection = signal<boolean>(false);
   protected operatorFormControl = new FormControl('');
   protected operators: AssignableOperator[] = [];
   protected filteredOperators!: Observable<AssignableOperator[]>;
@@ -73,7 +73,7 @@ export class OperatorSelector implements OnInit {
         );
 
     this.operatorService.getOperators().then(o => {
-      this.providesOperatorSelection = this.operatorService.available;
+      this.providesOperatorSelection.set(this.operatorService.available);
       this.operators = o;
     });
 
