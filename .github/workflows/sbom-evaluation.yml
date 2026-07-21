@@ -172,6 +172,37 @@ jobs:
               --output-file "$product_dir/bom-product.json"
           done
 
+      - name: Merge all product SBOMs
+        shell: bash
+        run: |
+          mapfile -d '' product_boms < <(
+            find sboms \
+              -mindepth 2 \
+              -maxdepth 2 \
+              -type f \
+              -name "bom-product.json" \
+              -print0
+          )
+
+          if [ "${#product_boms[@]}" -eq 0 ]; then
+            echo "No product SBOMs found for global merge"
+            exit 1
+          fi
+
+          if [ "${#product_boms[@]}" -eq 1 ]; then
+            echo "Only one product SBOM found, copying it as sboms/bom-all-products.json"
+            cp "${product_boms[0]}" "sboms/bom-all-products.json"
+            exit 0
+          fi
+
+          echo "Merging ${#product_boms[@]} product SBOMs into sboms/bom-all-products.json"
+
+          cyclonedx merge \
+            --input-files "${product_boms[@]}" \
+            --input-format json \
+            --output-format json \
+            --output-file "sboms/bom-all-products.json"
+
       - name: Show generated SBOMs
         run: |
           find sboms -type f
