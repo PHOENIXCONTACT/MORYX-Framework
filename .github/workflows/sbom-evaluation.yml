@@ -138,6 +138,13 @@ jobs:
       - name: Merge product SBOMs
         shell: bash
         run: |
+          product_version=$(tr -d '[:space:]' < VERSION)
+
+          if [ -z "$product_version" ]; then
+            echo "VERSION file is empty"
+            exit 1
+          fi
+
           find sboms -mindepth 1 -maxdepth 1 -type d -print0 | while IFS= read -r -d '' product_dir
           do
             product_name=$(basename "$product_dir")
@@ -169,12 +176,22 @@ jobs:
               --input-files "${bom_files[@]}" \
               --input-format json \
               --output-format json \
-              --output-file "$product_dir/bom-product.json"
+              --output-file "$product_dir/bom-product.json" \
+              --hierarchical \
+              --name "$product_name" \
+              --version "$product_version"
           done
 
       - name: Merge all product SBOMs
         shell: bash
         run: |
+          product_version=$(tr -d '[:space:]' < VERSION)
+
+          if [ -z "$product_version" ]; then
+            echo "VERSION file is empty"
+            exit 1
+          fi
+
           mapfile -d '' product_boms < <(
             find sboms \
               -mindepth 2 \
@@ -201,7 +218,10 @@ jobs:
             --input-files "${product_boms[@]}" \
             --input-format json \
             --output-format json \
-            --output-file "sboms/bom-all-products.json"
+            --output-file "sboms/bom-all-products.json" \
+            --hierarchical \
+            --name "MORYX" \
+            --version "$product_version"
 
       - name: Show generated SBOMs
         run: |
