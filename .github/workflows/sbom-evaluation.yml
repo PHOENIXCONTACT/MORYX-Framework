@@ -37,7 +37,9 @@ jobs:
         run: |
           curl -L https://github.com/CycloneDX/cyclonedx-cli/releases/latest/download/cyclonedx-linux-x64 -o cyclonedx
           chmod +x cyclonedx
-          sudo mv cyclonedx /usr/local/bin/cyclonedx
+          mkdir -p "$HOME/.local/bin"
+          mv cyclonedx "$HOME/.local/bin/cyclonedx"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
 
       - name: Verify installations
         run: |
@@ -140,23 +142,31 @@ jobs:
       - name: Validate SBOMs
         shell: bash
         run: |
-          sbom_count=0
+          mapfile -d '' sbom_files < <(find sboms -type f -name "*.json" -print0)
 
-          find sboms -type f -name "*.json" -print0 | while IFS= read -r -d '' sbom
-          do
-            sbom_count=$((sbom_count + 1))
+          if [ "${#sbom_files[@]}" -eq 0 ]; then
+            echo "No SBOM files found for validation"
+            exit 1
+          fi
+
+          echo "Found ${#sbom_files[@]} SBOM files for validation"
+
+          for sbom in "${sbom_files[@]}"; do
             echo "Validating $sbom"
+
+            spec_version=$(jq -r '.specVersion // empty' "$sbom")
+
+            if [ -z "$spec_version" ]; then
+              echo "Missing CycloneDX specVersion in $sbom"
+              exit 1
+            fi
 
             cyclonedx validate \
               --input-file "$sbom" \
               --input-format json \
+              --input-version "v${spec_version//./_}" \
               --fail-on-errors
           done
-
-          if [ "$sbom_count" -eq 0 ]; then
-            echo "No SBOM files found for validation"
-            exit 1
-          fi
 
       - name: Upload SBOMs
         uses: actions/upload-artifact@v4
