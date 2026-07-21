@@ -135,6 +135,43 @@ jobs:
             done
           done
 
+      - name: Merge product SBOMs
+        shell: bash
+        run: |
+          find sboms -mindepth 1 -maxdepth 1 -type d -print0 | while IFS= read -r -d '' product_dir
+          do
+            product_name=$(basename "$product_dir")
+            echo "Merging SBOMs for $product_name"
+
+            mapfile -d '' bom_files < <(
+              find "$product_dir" \
+                -maxdepth 1 \
+                -type f \
+                -name "bom-*.json" \
+                ! -name "bom-product.json" \
+                -print0
+            )
+
+            if [ "${#bom_files[@]}" -eq 0 ]; then
+              echo "No SBOM files found for $product_name"
+              continue
+            fi
+
+            if [ "${#bom_files[@]}" -eq 1 ]; then
+              echo "Only one SBOM found for $product_name, copying it as bom-product.json"
+              cp "${bom_files[0]}" "$product_dir/bom-product.json"
+              continue
+            fi
+
+            echo "Merging ${#bom_files[@]} SBOM files for $product_name into bom-product.json"
+
+            cyclonedx merge \
+              --input-files "${bom_files[@]}" \
+              --input-format json \
+              --output-format json \
+              --output-file "$product_dir/bom-product.json"
+          done
+
       - name: Show generated SBOMs
         run: |
           find sboms -type f
