@@ -8,6 +8,7 @@ using Moryx.Material.States;
 namespace Moryx.Material;
 
 // ToDo: Should IIdentifiableObject be part of the interface or only the base class?
+// ToDo: Should we split the interface into IMaterialContainer and IStatefulMaterialContainer, putting state information and transition method into the latter?
 /// <summary>
 /// Resource interface for material containers. A material container is the digital twin
 /// of any physical container holding material in a cyber-physical system.

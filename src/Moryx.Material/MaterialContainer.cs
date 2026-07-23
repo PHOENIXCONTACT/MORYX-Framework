@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Resources;
+using Moryx.Factory;
 using Moryx.Material.States;
 using Moryx.Serialization;
 using Moryx.StateMachines;
@@ -19,6 +20,7 @@ namespace Moryx.Material;
 /// Application engineers may extend this class to add custom properties and behavior.
 /// </remarks>
 [DataContract]
+[EntryVisualization("", "inbox")]
 public abstract class MaterialContainer : Resource, IMaterialContainer, IStateContext
 {
     #region IMaterialContainer
