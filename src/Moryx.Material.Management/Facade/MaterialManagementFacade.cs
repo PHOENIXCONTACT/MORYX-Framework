@@ -212,7 +212,7 @@ internal class MaterialManagementFacade : FacadeBase, IMaterialManagement
         ValidateHealthState();
         ArgumentNullException.ThrowIfNull(preAdvice);
         var container = Pool.Get(preAdvice.ContainerId) ??
-            throw new InvalidOperationException("Material container for pre-advice could not be found.");
+            throw new KeyNotFoundException("Material container for pre-advice could not be found.");
         cancellationToken.ThrowIfCancellationRequested();
 
         return await MaterialFlowHandler.PreAdviceMaterialAsync(container, preAdvice.DepartureReason);
