@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { inject, Injectable, signal } from '@angular/core';
+import { effect, inject, Injectable, signal } from '@angular/core';
 import { InstructionItemModel, InstructionModel } from '../api/models';
 import { VisualInstructionsService } from '../api/services';
 import { DisplayedMediaContent } from '../components/media-contents/displayed-media-content';
@@ -25,6 +25,7 @@ export class InstructionService {
   private eventSource?: EventSource;
 
   private readonly _instructions = signal<InstructionModel[]>([]);
+  readonly connected = signal<boolean>(false);
   readonly instructions = this._instructions.asReadonly();
 
   public connect() {
@@ -32,7 +33,18 @@ export class InstructionService {
     this.eventSource.onmessage = event => {
       const instructions = JSON.parse(event.data);
       this._instructions.set(instructions);
+      if(!this.connected()){
+        this.connected.set(true);
+      }
     };
+      this.eventSource.onerror = event => {
+      // const instructions = JSON.parse(event.data);
+      //this._instructions.set(instructions);
+      if(this.connected()){
+        this.connected.set(false);
+      }
+    };
+
   }
 
   async requestMediaContentsAsync(mediaItems: InstructionItemModel[]): Promise<DisplayedMediaContent[]> {
@@ -78,6 +90,7 @@ export class InstructionService {
     if (this.eventSource) {
       this.eventSource.close();
       this.eventSource = undefined;
+      this.connected.set(false);
     }
   }
 }

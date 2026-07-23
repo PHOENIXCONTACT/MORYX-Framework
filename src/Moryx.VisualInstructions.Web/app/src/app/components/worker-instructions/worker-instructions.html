@@ -1,4 +1,9 @@
-@if (displayedInstruction()) {
+@if (!connected()) {
+  <div class="instructions-loading">
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </div>
+}
+@else if (displayedInstruction()) {
   <div class="scaling" (swipeleft)="onSwipeLeft()"
     (swiperight)="onSwipeRight()">
     <mat-card class="container">
