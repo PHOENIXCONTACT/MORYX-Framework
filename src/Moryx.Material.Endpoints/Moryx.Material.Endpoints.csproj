@@ -36,4 +36,8 @@
     </Compile>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="C:\Repositories\00 Products\MORYX-Framework\.build\\moryx-logo.png" Link="Model\moryx-logo.png" />
+  </ItemGroup>
+
 </Project>

@@ -1,14 +1,11 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
-using System.Linq;
 using Moryx.AbstractionLayer.Resources;
-using Moryx.Material;
 using Moryx.Material.States;
 using Moryx.Tools;
 
-namespace Moryx.Material.Endpoints;
+namespace Moryx.Material.Endpoints.Model;
 
 internal static class Converter
 {
@@ -23,13 +20,17 @@ internal static class Converter
     public static ContainerHostModel? ToModel(this IResource? resource)
     {
         if (resource is null)
+        {
             return null;
+        }
 
+        var type = resource.GetType();
         return new ContainerHostModel
         {
             Id = resource.Id,
             Name = resource.Name,
-            Description = resource.Description
+            TypeName = type.GetDisplayName(),
+            TypeDescription = type.GetDescription()
         };
     }
 
