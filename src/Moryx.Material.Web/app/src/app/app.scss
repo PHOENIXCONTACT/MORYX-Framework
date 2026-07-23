@@ -1,0 +1,111 @@
+@use "@moryx/ngx-web-framework/styles/variables" as *;
+@use '@angular/material' as mat;
+
+:host {
+    background-color: $mat-background;
+
+}
+
+:host ::ng-deep .mat-mdc-tab-link-container {
+    border-bottom: none !important;
+}
+
+.overview {
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.main-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.topbar-container {
+    background: $mat-background-light;
+    box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 5px 2px 8px;
+    flex-wrap: wrap-reverse;
+    gap: 15px;
+}
+
+.topbar-filter-section {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+
+    @media (max-width: 530px) {
+        flex-wrap: wrap;
+    }
+}
+
+.topbar-view-section {
+    display: flex;
+    padding: 10px 0px 0px 0px;
+}
+
+.topbar-view-content {
+    display: block;
+}
+
+.no-line {
+    border-bottom: none !important;
+}
+
+.main-content-area {
+    padding: 15px;
+}
+
+.sidenav-container {
+    background: $mat-background-light;
+    box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sidenav-toolbar-buttons {
+    display: flex;
+    flex-direction: column;
+    padding: 12px 0;
+    gap: 12px;
+}
+
+.sidenav-toolbar-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 12px;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+
+    .material-symbols-outlined {
+        font-size: 24px;
+        width: 56px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 16px;
+        transition: background-color 0.2s;
+    }
+
+    .label {
+        font-size: 12px;
+        text-align: center;
+        color: rgba(0, 0, 0, 0.87);
+    }
+
+    &:hover .material-symbols-outlined {
+        background-color: rgba(0, 0, 0, 0.08);
+    }
+
+    &:active .material-symbols-outlined {
+        background-color: rgba(0, 0, 0, 0.12);
+    }
+}

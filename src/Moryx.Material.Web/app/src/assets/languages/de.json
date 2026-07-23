@@ -1,0 +1,5 @@
+{
+    "DISMISS": "VERWERFEN",
+    "DEFAULT_MESSAGE": "Auf dem Server ist etwas schief gelaufen.",
+    "SERVER_NOT_REACHABLE": "Der Server ist nicht erreichbar, bitte überprüfe deine Netzwerkverbindung oder Proxy-Einstellungen."
+}

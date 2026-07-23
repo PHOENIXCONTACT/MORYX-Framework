@@ -1,0 +1,46 @@
+<div class="overview">
+    <main class="main-container">
+        <section class="topbar-container">
+            <section class="topbar-filter-section">
+                <mat-form-field floatLabel="always" class="full-width" appearance="outline">
+                    <mat-label>Orders</mat-label>
+                    <mat-select (valueChange)="selectedOrders.set($event)" value="" multiple placeholder="Filter by order">
+                        <mat-option value="order1">Order 1000</mat-option>
+                        <mat-option value="order2">Order 1001</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field floatLabel="always" class="full-width" appearance="outline">
+                    <mat-label>Products</mat-label>
+                    <mat-select [(value)]="selectedProducts" multiple placeholder="Filter by products">
+                        @for (product of products(); track $index)
+                        {
+                        <mat-option [value]="product">{{product}}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+            </section>
+            <section class="topbar-view-section">
+                <nav mat-tab-nav-bar [tabPanel]="tabPanel">
+                    <a mat-tab-link routerLink="cards" [active]="view() === views.cards">Card</a>
+                    <a mat-tab-link routerLink="summary" [active]="view() === views.summary">Summary</a>
+                    <a mat-tab-link routerLink="history" [active]="view() === views.history">History</a>
+                </nav>
+            </section>
+        </section>
+        <section class="main-content-area">
+            <mat-tab-nav-panel #tabPanel>
+                <router-outlet />
+            </mat-tab-nav-panel>
+        </section>
+    </main>
+    <aside class="sidenav-container">
+        <div class="sidenav-toolbar-buttons">
+            <div class="side-container-item">
+                <a class="sidenav-toolbar-item" (click)="onAdd()">
+                    <span class="material-symbols-outlined">add</span>
+                    <div class="label">Create</div>
+                </a>
+            </div>
+        </div>
+    </aside>
+</div>

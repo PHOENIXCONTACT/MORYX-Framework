@@ -1,0 +1,5 @@
+@for (container of containers(); track $index)
+{
+<app-card [icon]="container.icon" [title]="container.resource +' - '+ container.type"
+    [instanceCount]="container.instanceCount+'x '+ container.type" [links]="container.links" />
+}
