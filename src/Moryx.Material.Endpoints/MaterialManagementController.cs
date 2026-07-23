@@ -11,13 +11,14 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Moryx.Material.Endpoints.Model;
 using Moryx.Material.Facade;
-using Moryx.Runtime.Modules;
 using Moryx.Tools;
 
 namespace Moryx.Material.Endpoints;
 
 // ToDo: Add problemdetails to endpoint errors
+// ToDo: Add server sent event stream fix
 /// <summary>
 /// Definition of a REST API on the <see cref="IMaterialManagement"/> facade.
 /// </summary>
