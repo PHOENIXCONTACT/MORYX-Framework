@@ -19,7 +19,7 @@
     "CREATE": "CREATE",
     "ADD": "Add resource",
     "ADD_CHILD": "Add child resource",
-    "RELOAD:": "Reload",
+    "RELOAD": "Reload",
     "NEXT": "Next"
   },
   "ADD_RESOURCE_DIALOG": {
@@ -32,16 +32,15 @@
     "EMPTY_STATE_TEXT": "Select a Resource from the list or add a new one by clicking the plus sign."
   },
   "DETAILS": {
-    "PROPERTIES": "Properties",
-    "REFERENCES": "References",
-    "METHODS": "Methods",
-    "REFS": {
-      "LINK": "Link",
+    "PROPERTIES_TAB_TITLE": "Properties",
+    "REFERENCES_TAB_TITLE": "References",
+    "METHODS_TAB_TITLE": "Methods",
+    "REFERENCES": {
       "LINKED_RESOURCE": "Linked Resource",
       "PLACEHOLDER": "Select an available resource to add it as a reference",
       "NO_TARGET": "No Target Selected"
     },
-    "METS": {
+    "METHODS": {
       "WAS_INVOKED": "The method was invoked",
       "INVOKE": "INVOKE",
       "REPEAT": "REPEAT",

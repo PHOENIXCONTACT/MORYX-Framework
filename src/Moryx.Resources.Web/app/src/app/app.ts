@@ -18,7 +18,7 @@ import { ResourceModificationService } from './api/services';
 import { DialogAddResource } from './dialogs/dialog-add-resource/dialog-add-resource';
 import { ResourceConstructionParameters } from './models/ResourceConstructionParameters';
 import './extensions/array.extensions';
-import { TranslationConstants } from './extensions/translation-constants.extensions';
+import { TranslationConstants } from './extensions/translation-constants';
 import { CacheResourceService } from './services/cache-resource.service';
 import { EditResourceService } from './services/edit-resource.service';
 import { MatSidenavModule } from '@angular/material/sidenav';
