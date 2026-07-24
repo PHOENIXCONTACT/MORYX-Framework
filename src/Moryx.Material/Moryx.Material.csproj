@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj" />
+    <ProjectReference Include="..\Moryx.Factory\Moryx.Factory.csproj" />
   </ItemGroup>
 
 </Project>

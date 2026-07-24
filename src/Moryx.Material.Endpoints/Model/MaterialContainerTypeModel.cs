@@ -8,4 +8,5 @@ public class MaterialContainerTypeModel
     public string FullName { get; set; }
     public string DisplayName { get; set; }
     public string Description { get; set; }
+    public string Icon { get; set; }
 }

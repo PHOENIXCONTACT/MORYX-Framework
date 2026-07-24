@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Resources;
+using Moryx.Factory;
 using Moryx.Material.States;
 using Moryx.Tools;
 
@@ -15,6 +16,7 @@ internal static class Converter
         FullName = type.FullName ?? "",
         DisplayName = type.GetDisplayName(),
         Description = type.GetDescription(),
+        Icon = type.GetCustomAttribute<EntryVisualizationAttribute>(true)?.Icon ?? ""
     };
 
     public static ContainerHostModel? ToModel(this IResource? resource)
