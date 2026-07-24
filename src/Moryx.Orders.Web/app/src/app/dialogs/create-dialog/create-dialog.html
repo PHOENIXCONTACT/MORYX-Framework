@@ -15,7 +15,7 @@
       />
   </mat-form-field>
 
-  <h3 class="intermediate-header">
+  <h3 class="top-spaced">
     {{ TranslationConstants.CREATE_DIALOG.OPERATION_DETAILS | translate }}
   </h3>
   <!-- Operation Number -->
@@ -43,7 +43,7 @@
   </mat-form-field>
   
   <!-- Product Selection -->
-  <mat-form-field appearance="outline" class="full-width">
+  <mat-form-field appearance="outline" class="full-width top-spaced">
     <mat-label>{{ TranslationConstants.CREATE_DIALOG.PRODUCT | translate }}</mat-label>
     <input 
       #productInput
@@ -75,7 +75,7 @@
   </mat-form-field>
 
   <!-- Recipe Selection -->
-  <mat-form-field appearance="outline" class="full-width">
+  <mat-form-field appearance="outline" class="full-width top-spaced">
     <mat-label>{{ TranslationConstants.CREATE_DIALOG.RECIPE | translate }}</mat-label>
     <input 
       #recipeInput
@@ -103,13 +103,13 @@
     </mat-autocomplete>
   </mat-form-field>
 
-  <mat-form-field appearance="outline" class="full-width">
+  <mat-form-field appearance="outline" class="full-width top-spaced">
     <mat-label>{{ TranslationConstants.CREATE_DIALOG.AMOUNT | translate }}</mat-label>
     <input type="number" matInput [(ngModel)]="amount" [disabled]="isLoading()"/>
   </mat-form-field>
 
   @if(operations().length > 0) {
-    <h3 class="intermediate-header">
+    <h3 class="top-spaced">
       {{ TranslationConstants.CREATE_DIALOG.ADDED_OPERATIONS | translate }} 
       ({{ operations().length }})
     </h3>

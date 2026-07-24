@@ -128,11 +128,8 @@
     }
   </mat-form-field>
 
-  <app-operator-selector class="full-width"
-    [isEnabled]="canBegin"
-    [(selectedOperatorId)]="selectedOperatorId"
-    (creatingOperatorFailed)="creatingOperatorFailed.set($event)">
-  </app-operator-selector>
+  <app-operator-selector class="full-width top-spaced" [isEnabled]="canBegin"
+    [(selectedOperatorId)]="selectedOperatorId" (creatingOperatorFailed)="creatingOperatorFailed.set($event)"/>
 </mat-dialog-content>
 
 <div mat-dialog-actions align="end">

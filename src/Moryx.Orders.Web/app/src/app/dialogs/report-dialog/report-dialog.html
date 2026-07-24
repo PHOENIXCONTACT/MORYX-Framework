@@ -43,16 +43,13 @@
     </mat-form-field>
   </div>
 
-  <mat-form-field appearance="outline" class="full-width">
+  <mat-form-field appearance="outline" class="full-width top-spaced">
     <mat-label>{{ TranslationConstants.REPORT_DIALOG.COMMENT | translate }}</mat-label>
     <textarea matInput [(ngModel)]="comment" [disabled]="isLoading()"></textarea>
   </mat-form-field>
 
-  <app-operator-selector class="full-width"
-    [isEnabled]="canReport()"
-    [(selectedOperatorId)]="selectedOperatorId"
-    (creatingOperatorFailed)="creatingOperatorFailed.set($event)">
-  </app-operator-selector>
+  <app-operator-selector class="full-width top-spaced" [isEnabled]="canReport()"
+    [(selectedOperatorId)]="selectedOperatorId" (creatingOperatorFailed)="creatingOperatorFailed.set($event)"/>
 
   <h3 class="radio-group-header">{{ TranslationConstants.REPORT_DIALOG.CONFIRMATION | translate }}</h3>
   <mat-radio-group class="radio-group" aria-label="Select an report option" [(ngModel)]="confirmationType">
