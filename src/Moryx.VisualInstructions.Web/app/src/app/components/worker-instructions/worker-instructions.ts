@@ -68,7 +68,7 @@ export class WorkerInstructions {
   protected displayedInstruction = signal<InstructionModel | undefined>(undefined);
   protected mediaItemsContent = signal<DisplayedMediaContent[]>([]);
   protected textItems = signal<InstructionItemModel[]>([]);
-  readonly connected = this.instructionService.connected.asReadonly();
+  protected readonly connected = this.instructionService.connected;
 
   protected InstructionType = InstructionType;
   protected InstructionContentType = InstructionContentType;

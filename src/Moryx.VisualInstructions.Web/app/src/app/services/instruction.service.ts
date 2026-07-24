@@ -25,24 +25,20 @@ export class InstructionService {
   private eventSource?: EventSource;
 
   private readonly _instructions = signal<InstructionModel[]>([]);
-  readonly connected = signal<boolean>(false);
   readonly instructions = this._instructions.asReadonly();
+  
+  private readonly _connected = signal<boolean>(false);
+  readonly connected = this._connected.asReadonly();
 
   public connect() {
     this.eventSource = new EventSource(this.visualInstructionsService.rootUrl + '/api/moryx/instructions/stream', {withCredentials: !environment.production});
     this.eventSource.onmessage = event => {
       const instructions = JSON.parse(event.data);
       this._instructions.set(instructions);
-      if(!this.connected()){
-        this.connected.set(true);
-      }
+      this._connected.set(true);
     };
-      this.eventSource.onerror = event => {
-      // const instructions = JSON.parse(event.data);
-      //this._instructions.set(instructions);
-      if(this.connected()){
-        this.connected.set(false);
-      }
+    this.eventSource.onerror = event => {
+      this._connected.set(false);
     };
 
   }
@@ -90,7 +86,7 @@ export class InstructionService {
     if (this.eventSource) {
       this.eventSource.close();
       this.eventSource = undefined;
-      this.connected.set(false);
+      this._connected.set(false);
     }
   }
 }
