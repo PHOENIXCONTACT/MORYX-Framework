@@ -4,10 +4,8 @@
 */
 
 import { CdkDragEnd, DragDropModule } from '@angular/cdk/drag-drop';
-import { Component, computed, ElementRef, inject, input, linkedSignal, OnDestroy, OnInit, viewChild, ChangeDetectionStrategy } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { Component, computed, effect, ElementRef, inject, input, linkedSignal, untracked, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
-import { Subscription } from 'rxjs';
 import { VisualizableItemModel } from '@api/models';
 import { createUpdatedLocation } from '@app/extensions/locations';
 import CellModel from '@app/models/cellModel';
@@ -27,18 +25,37 @@ import { CellState } from '@api/models/cell-state';
     DragDropModule
   ]
 })
-export class Cell implements OnInit, OnDestroy {
+export class Cell {
   private cellStoreService = inject(CellStoreService);
   private orderStoreService = inject(OrderStoreService);
   private editMenuService = inject(EditMenuService);
 
-  private subscriptions = new Subscription();
+  constructor() {
+    // React to updates to the cell data
+    effect(() => {
+      const c = this.cellStoreService.cellUpdated();
+      untracked(() => {
+        if (!c || c.id !== this.currentCell()?.id) {
+          return;
+        }
+        this.currentCell.set({... c});
+      });
+    });
+
+    // React to toggling of an order
+    effect(() => {
+      const o = this.orderStoreService.toggledOrder();
+      if (!o || this.currentOrder()?.orderNumber !== o.orderNumber || this.currentOrder()?.operationNumber !== o.operationNumber) {
+        return;
+      }
+      this.currentOrderIsToggled.set(o.isToggled);
+    });
+  }
 
   readonly cellElement = viewChild.required<ElementRef<HTMLElement>>('cell');
   readonly container = input.required<ElementRef<HTMLElement>>();
   readonly parameters = input.required<VisualizableItemModel>();
-  protected isEditMode = computed(() => this.editMenuState() === EditMenuState.EditingCells);
-  private editMenuState = toSignal(this.editMenuService.activeState$);
+  protected isEditMode = computed(() => this.editMenuService.activeState() === EditMenuState.EditingCells);
   protected currentCell = linkedSignal<CellModel>(() => this.cellStoreService.getCell(this.parameters().id!));
   private currentOrder = computed(() => this.orderStoreService.getOrder(this.currentCell()));
   private currentOrderIsToggled = linkedSignal(() => !!this.currentOrder()?.isToggled);
@@ -71,32 +88,9 @@ export class Cell implements OnInit, OnDestroy {
     return '#585858';
   });
 
-  ngOnInit(): void {
-    // React to toggling of an order
-    this.subscriptions.add(this.orderStoreService.toggledOrder$.subscribe(o => {
-      if (this.currentOrder()?.orderNumber !== o.orderNumber || this.currentOrder()?.operationNumber !== o.operationNumber) {
-        return;
-      }
-      this.currentOrderIsToggled.set(o.isToggled);
-    }));
-
-    // React to updates to the cell data
-    this.subscriptions.add(this.cellStoreService.cellUpdated$.subscribe(c => {
-      if (c.id !== this.currentCell()?.id) {
-        return;
-      }
-
-      this.currentCell.set({... c});
-    }));
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
-  }
-
   protected onCellClicked() {
     //Do not show details menu if the edit button is not closed
-    if (this.editMenuState() != EditMenuState.Closed) {
+    if (this.editMenuService.activeState() != EditMenuState.Closed) {
       return;
     }
     this.cellStoreService.selectCell(this.currentCell().id!);

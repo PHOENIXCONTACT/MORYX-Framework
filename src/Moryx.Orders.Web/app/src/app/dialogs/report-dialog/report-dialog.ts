@@ -6,7 +6,6 @@
 import { Component, computed, inject, OnInit, signal, ChangeDetectionStrategy } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from "@angular/material/dialog";
 import { TranslatePipe } from "@ngx-translate/core";
-import { Observable } from "rxjs";
 import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
 import { OperationViewModel } from "@app/models/operation-view-model";
 import { ConfirmationType, ReportModel, ReportContext } from '@api/models';
@@ -20,6 +19,8 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatButtonModule } from "@angular/material/button";
 import { MatInputModule } from "@angular/material/input";
 import { MatIconModule } from "@angular/material/icon";
+import { OperatorSelector } from "@app/components/operator-selector/operator-selector";
+import { DialogContext } from "@app/components/dialog-context/dialog-context";
 
 @Component({
   selector: "app-report-dialog",
@@ -39,7 +40,9 @@ import { MatIconModule } from "@angular/material/icon";
     MatButtonModule,
     MatInputModule,
     MatRadioGroup,
-    MatIconModule
+    MatIconModule,
+    OperatorSelector,
+    DialogContext
   ]
 })
 export class ReportDialog implements OnInit {
@@ -51,6 +54,9 @@ export class ReportDialog implements OnInit {
   protected confirmationType = signal<"partial" | "final">("partial");
   protected estimatedSuccess = computed(() => this.success() + (this.reportContext()?.reportedSuccess ?? 0));
   protected estimatedFailure = computed(() => this.scrap() + (this.reportContext()?.reportedFailure ?? 0));
+  protected selectedOperatorId = signal<string|null>(null);
+  protected creatingOperatorFailed = signal<boolean>(false);
+
   protected canReport = computed(() => {
     if (this.success() < 0 || this.scrap() < 0) {
       return false;
@@ -73,24 +79,28 @@ export class ReportDialog implements OnInit {
   protected data = inject<ReportDialogData>(MAT_DIALOG_DATA);
 
   async ngOnInit() {
-    this.isLoading.update(_=> true);
+    this.isLoading.set(true);
     const result = await this.data
-      .onGetContext(this.data.operation.model.identifier!)
-      .toAsync();
-    this.reportContext.update(_=> result);
-    this.success.update(_=> this.reportContext()?.unreportedSuccess ?? 0);
-    this.scrap.update(_=> this.reportContext()?.unreportedFailure ?? 0);
-    this.isLoading.update(_=> false);
+      .onGetContext(this.data.operation.model.identifier!);
+    this.reportContext.set(result);
+    this.success.set(this.reportContext()?.unreportedSuccess ?? 0);
+    this.scrap.set(this.reportContext()?.unreportedFailure ?? 0);
+    this.isLoading.set(false);
     if (this.reportContext()?.canPartial) {
-      this.confirmationType.update(_=> "partial");
+      this.confirmationType.set("partial");
     }
     else {
-      this.confirmationType.update(_=> "final");
+      this.confirmationType.set("final");
     }
   }
 
+
   protected async submit(): Promise<void> {
-    this.isLoading.update(_=> true);
+    if (this.creatingOperatorFailed()) {
+      return;
+    }
+
+    this.isLoading.set(true);
 
     const report = <ReportModel>{
       successCount: this.success(),
@@ -100,15 +110,16 @@ export class ReportDialog implements OnInit {
         this.confirmationType() === "partial"
           ? ConfirmationType.Partial
           : ConfirmationType.Final,
+      userIdentifier: this.selectedOperatorId()
     };
+
     let failed = false;
 
     await this.data
       .onSubmit(this.data.operation.model.identifier!, report)
-      .toAsync()
       .catch(() => {
         failed = true;
-        this.isLoading.update(_=> false);
+        this.isLoading.set(false);
       });
     if (!failed) {
       this.dialog.close();
@@ -118,7 +129,7 @@ export class ReportDialog implements OnInit {
 
 export interface ReportDialogData {
   operation: OperationViewModel;
-  onSubmit: (guid: string, body: ReportModel) => Observable<void>;
-  onGetContext: (guid: string) => Observable<ReportContext>;
+  onSubmit: (guid: string, body: ReportModel) => Promise<void>;
+  onGetContext: (guid: string) => Promise<ReportContext>;
 }
 

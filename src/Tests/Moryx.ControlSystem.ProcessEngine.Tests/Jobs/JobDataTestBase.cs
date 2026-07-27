@@ -183,7 +183,7 @@ public class JobDataTestBase
     /// <summary>
     /// Executes the transition by the given enum value
     /// </summary>
-    internal void ExecuteTransition(Transition transition, IJobData jobData)
+    internal static void ExecuteTransition(Transition transition, IJobData jobData)
     {
         switch (transition)
         {

@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, effect, inject, input, model, signal, untracked, ChangeDetectionStrategy } from '@angular/core';
+import { Component, effect, inject, input, model, untracked, ChangeDetectionStrategy } from '@angular/core';
 import { AssignmentCardModel } from '../models/assignment-card-model';
 import { MatDialog } from '@angular/material/dialog';
 import { ShiftCardModel } from '../models/shift-card-model';
@@ -40,17 +40,13 @@ export class Assignment {
   readonly calendarState = input.required<CalendarState>();
   readonly calendarDate = input.required<CalendarDate>();
   readonly shift = input.required<ShiftCardModel>();
-  protected assignments = signal<AssignmentCardModel[]>([]);
+  protected assignments = this.appStore.assignments;
 
   protected TranslationConstants = TranslationConstants;
   protected notQualified = OperatorStatus.NotQualified;
   protected qualified = OperatorStatus.Available;
 
   constructor() {
-    this.appStore.assignments$.subscribe(
-      values => this.assignments.set(values)
-    );
-
     effect(() => {
       const assignmentValue = this.assignment();
       untracked(() => {

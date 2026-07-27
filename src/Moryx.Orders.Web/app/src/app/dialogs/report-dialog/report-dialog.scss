@@ -3,7 +3,7 @@
 .report-dialog-amounts-row {
     display: flex;
     width: 100%;
-    margin-bottom: 8px;
+    margin-bottom: 16px;
 }
 
 .amounts-data-entry {
@@ -11,7 +11,12 @@
     font-size: 16px;
 }
 
-mat-form-field {
+.radio-group-header {
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+.radio-group {
     margin-bottom: 8px;
 }
 

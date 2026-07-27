@@ -1,53 +1,9 @@
-.dialog-context {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-  margin-bottom: 18px;
-}
-
-@media (max-width: 560px) {
-  .dialog-context {
-    grid-template-columns: 1fr;
-  }
-}
-
-.dialog-context-item {
-  margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  padding: 10px 12px;
-  background: var(--mat-sys-surface-container-low);
-  border: 1px solid var(--mat-sys-outline-variant);
-  border-left: 2px solid var(--mat-sys-primary);
-  border-radius: 4px;
-  min-width: 0;
-}
-
-.dialog-context-item .info-label {
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--mat-sys-on-surface-variant);
-  white-space: nowrap;
-  flex: 0 0 auto;
-}
-
-.dialog-context-item .info-value {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--mat-sys-on-surface);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  flex: 1 1 auto;
-}
-
 .full-width {
   width: 100%;
-  margin-bottom: 8px;
+}
+
+.top-spaced {
+  margin-top: 8px;
 }
 
 .suffix-icon {
@@ -59,5 +15,17 @@
 }
 
 .intermediate-header {
-  margin-top: -12px;
+  margin-top: 0px;
 }
+
+.dialog-container {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+}
+
+.dialog-context {
+    margin-bottom: 16px;
+}
+
+

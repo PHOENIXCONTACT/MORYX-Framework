@@ -64,54 +64,50 @@ export class OperationDocuments implements OnInit {
   private snackbarService = inject(SnackbarService);
 
   async ngOnInit(): Promise<void> {
-    this.isLoading.update(_ => true);
+    this.isLoading.set(true);
     this.activatedRoute.params.subscribe(async params => {
       const identifier = params['identifier'];
       await this.orderManagementService
         .getOperation({guid: identifier})
-        .toAsync()
-        .then(value => (this.operation.update(_ => value)))
+        .then(value => (this.operation.set(value)))
         .catch(
           async (e: HttpErrorResponse) =>
             await this.snackbarService.handleError(e)
         );
-      this.orderManagementService.getDocuments({guid: identifier}).subscribe({
-        next: data => {
-          this.documents.update(_ => data);
-          this.isLoading.update(_ => false);
-        },
-        error: async (e: HttpErrorResponse) =>
-          await this.snackbarService.handleError(e)
-      });
+      this.orderManagementService.getDocuments({guid: identifier}).then(data => {
+        this.documents.set(data);
+        this.isLoading.set(false);
+      }).catch(async (e: HttpErrorResponse) =>
+        await this.snackbarService.handleError(e)
+      );
     });
   }
 
   protected async onSelect(document: DocumentModel) {
-    this.isLoading.update(_ => true);
-    this.selectedDocument.update(_ => document);
+    this.isLoading.set(true);
+    this.selectedDocument.set(document);
     this.orderManagementService
       .getDocumentStream({
         guid: this.operation().identifier!,
         identifier: this.selectedDocument()?.identifier ?? ''
       })
-      .subscribe({
-        next: data => {
-          if (data !== null && document.contentType) {
-            const downloadedFile = new Blob([data], {
-              type: document.contentType
-            });
-            this.url.update(_ => URL.createObjectURL(downloadedFile));
-            const reader = new FileReader();
-            reader.readAsDataURL(downloadedFile);
-            reader.onload = () => {
-              this.path.update(_ => reader.result);
-            };
-            this.isLoading.update(_ => false);
-          }
-        },
-        error: async (e: HttpErrorResponse) =>
-          await this.snackbarService.handleError(e)
-      });
+      .then(data => {
+        if (data !== null && document.contentType) {
+          const downloadedFile = new Blob([data], {
+            type: document.contentType
+          });
+          this.url.set(URL.createObjectURL(downloadedFile));
+          const reader = new FileReader();
+          reader.readAsDataURL(downloadedFile);
+          reader.onload = () => {
+            this.path.set(reader.result);
+          };
+          this.isLoading.set(false);
+        }
+      })
+      .catch(async (e: HttpErrorResponse) =>
+        await this.snackbarService.handleError(e)
+      );
   }
 }
 

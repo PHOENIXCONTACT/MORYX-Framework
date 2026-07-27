@@ -8,8 +8,7 @@
 
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 
 import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
@@ -40,9 +39,9 @@ export class CommonService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getServerTime$Response(params?: GetServerTime$Params, context?: HttpContext): Observable<StrictHttpResponse<ServerTimeResponse>> {
+  getServerTime$Response(params?: GetServerTime$Params, context?: HttpContext): Promise<StrictHttpResponse<ServerTimeResponse>> {
     const obs = getServerTime(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -51,11 +50,9 @@ export class CommonService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getServerTime(params?: GetServerTime$Params, context?: HttpContext): Observable<ServerTimeResponse> {
+  getServerTime(params?: GetServerTime$Params, context?: HttpContext): Promise<ServerTimeResponse> {
     const resp = this.getServerTime$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<ServerTimeResponse>): ServerTimeResponse => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<ServerTimeResponse>): ServerTimeResponse => r.body);
   }
 
   /** Path part for operation `getApplicationInfo()` */
@@ -67,9 +64,9 @@ export class CommonService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getApplicationInfo$Response(params?: GetApplicationInfo$Params, context?: HttpContext): Observable<StrictHttpResponse<ApplicationInformationResponse>> {
+  getApplicationInfo$Response(params?: GetApplicationInfo$Params, context?: HttpContext): Promise<StrictHttpResponse<ApplicationInformationResponse>> {
     const obs = getApplicationInfo(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -78,11 +75,9 @@ export class CommonService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getApplicationInfo(params?: GetApplicationInfo$Params, context?: HttpContext): Observable<ApplicationInformationResponse> {
+  getApplicationInfo(params?: GetApplicationInfo$Params, context?: HttpContext): Promise<ApplicationInformationResponse> {
     const resp = this.getApplicationInfo$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<ApplicationInformationResponse>): ApplicationInformationResponse => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<ApplicationInformationResponse>): ApplicationInformationResponse => r.body);
   }
 
   /** Path part for operation `getHostInfo()` */
@@ -94,9 +89,9 @@ export class CommonService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getHostInfo$Response(params?: GetHostInfo$Params, context?: HttpContext): Observable<StrictHttpResponse<HostInformationResponse>> {
+  getHostInfo$Response(params?: GetHostInfo$Params, context?: HttpContext): Promise<StrictHttpResponse<HostInformationResponse>> {
     const obs = getHostInfo(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -105,11 +100,9 @@ export class CommonService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getHostInfo(params?: GetHostInfo$Params, context?: HttpContext): Observable<HostInformationResponse> {
+  getHostInfo(params?: GetHostInfo$Params, context?: HttpContext): Promise<HostInformationResponse> {
     const resp = this.getHostInfo$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<HostInformationResponse>): HostInformationResponse => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<HostInformationResponse>): HostInformationResponse => r.body);
   }
 
 }

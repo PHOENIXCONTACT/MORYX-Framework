@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Diagnostics;
+using System.Globalization;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;
 using Moryx.ControlSystem.ProcessEngine.Model;
@@ -119,7 +120,7 @@ internal sealed class SetupJobData : JobDataBase, ISetupJobData, INotificationSe
     internal void NotifyAboutBlockedRetry()
     {
         var notification = new Notification(Strings.SetupJobData_RetryFailedNotification_Title,
-            string.Format(Strings.SetupJobData_RetryFailedNotification_Message, Recipe.Name), Severity.Error, true);
+            string.Format(CultureInfo.CurrentCulture, Strings.SetupJobData_RetryFailedNotification_Message, Recipe.Name), Severity.Error, true);
 
         NotificationAdapter?.Publish(this, notification);
     }

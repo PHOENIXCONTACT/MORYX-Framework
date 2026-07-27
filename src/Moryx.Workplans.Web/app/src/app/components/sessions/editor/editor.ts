@@ -5,7 +5,7 @@
 
 import { CdkDragDrop, CdkDragEnd, CdkDragStart, DragDropModule, DragRef, Point } from '@angular/cdk/drag-drop';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject, OnInit, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, signal, untracked, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatDrawer, MatDrawerMode, MatSidenavModule } from '@angular/material/sidenav';
 import { ActivatedRoute, ActivatedRouteSnapshot, ParamMap, Params, Router } from '@angular/router';
@@ -64,17 +64,25 @@ enum EditQueries {
 export class Editor implements OnInit {
   readonly pathMenuTrigger = viewChild.required<MatMenuTrigger>('pathMenuTrigger');
   readonly stepMenuTrigger = viewChild.required<MatMenuTrigger>('stepMenuTrigger');
+
+  private activatedRoute = inject(ActivatedRoute);
+  private router = inject(Router);
+  private workplanEditingService = inject(WorkplanEditingService);
+  private sessionService = inject(SessionsService);
+  private snackbarService = inject(SnackbarService);
+  protected editorState = inject(EditorStateService);
+
   protected availableSteps = signal<WorkplanStepRecipe[]>([]);
   protected inputIds = signal<string[]>([]);
   protected workplanPaths = signal<NodeConnectionPath[]>([]);
-  protected isCreatingStep = signal(false);
-  protected isEditingStep = signal(false);
-  protected isEditingProps = signal(false);
   protected newStepPosition = signal<Position | undefined>(undefined);
-  protected selectedNode = signal<number | undefined>(undefined);
+  protected selectedNode = this.editorState.selectedNode;
+  protected isEditingProps = computed(() => this.editorState.isEditingProps());
+  protected isEditingStep = computed(() => !!this.editorState.isEditingStep());
+  protected isCreatingStep = computed(() => !!this.editorState.isCreatingStep());
+  protected drawerIsOpen = computed(() => this.isEditingProps() || this.isEditingStep() || this.isCreatingStep());
+  protected drawerMode = computed<MatDrawerMode>(() => this.isCreatingStep() ? 'over' : 'side');
   protected isLoading = signal(true);
-  protected drawerIsOpen = signal(false);
-  protected drawerMode = signal<MatDrawerMode>('side');
   protected dragPosition = signal<{ x: number; y: number }>({x: 0, y: 0});
 
   protected readonly size = 5000;
@@ -91,19 +99,11 @@ export class Editor implements OnInit {
   private sessionToken!: string;
   private stepMove: boolean = false;
 
-
   protected canvasPosition: Position = new Position(-this.size, -this.size);
   protected canvasScale: number = 1.0;
   protected cursorOffset = {x: 0, y: 0};
   protected menuX: string = '0';
   protected menuY: string = '0';
-
-  private activatedRoute = inject(ActivatedRoute);
-  private router = inject(Router);
-  private workplanEditingService = inject(WorkplanEditingService);
-  private sessionService = inject(SessionsService);
-  private snackbarService = inject(SnackbarService);
-  protected editorState = inject(EditorStateService);
 
   protected TranslationConstants = TranslationConstants;
 
@@ -121,24 +121,13 @@ export class Editor implements OnInit {
       return future.paramMap.get('token') === curr.paramMap.get('token');
     };
 
-    // React to changes in the state of the editor
-    this.editorState.workplanChangedSubject$.subscribe(() => {
-      this.scheduleRenderPaths();
-      this.gatherInputIds();
-    });
-    this.editorState.selectedNode$.subscribe(nodeId => (this.selectedNode.update(_ => nodeId)));
-    this.editorState.isEditingProps$.subscribe(b => {
-      this.drawerIsOpen.update(_ => b);
-      this.isEditingProps.update(_ => b);
-    });
-    this.editorState.isEditingStep$.subscribe(stepId => {
-      this.drawerIsOpen.update(_ => !!stepId);
-      this.isEditingStep.update(_ => !!stepId);
-    });
-    this.editorState.isCreatingStep$.subscribe(type => {
-      this.drawerIsOpen.update(_ => !!type);
-      this.drawerMode.update(_ => !!type ? 'over' : 'side');
-      this.isCreatingStep.update(_ => !!type);
+    // React to workplan changes
+    effect(() => {
+      this.editorState.workplanChanged();
+      untracked(() => {
+        this.scheduleRenderPaths();
+        this.gatherInputIds();
+      });
     });
 
     // Configure initial state of the editor from route
@@ -148,13 +137,13 @@ export class Editor implements OnInit {
   private gatherInputIds() {
     const ids = this.editorState.workplan?.nodes!.flatMap(n => n.inputs!.map(i => 'in_' + n.id + '-' + i.index));
     if (ids) {
-      this.inputIds.update(_ => ids);
+      this.inputIds.set(ids);
     } else {
-      this.inputIds.update(_ => []);
+      this.inputIds.set([]);
     }
   }
 
-  processInitialRoute() {
+  private processInitialRoute() {
     const routeSnapshotParams = this.activatedRoute.snapshot.paramMap;
     this.sessionToken = String(routeSnapshotParams.get('token'));
 
@@ -186,25 +175,21 @@ export class Editor implements OnInit {
   }
 
   ngOnInit(): void {
-    this.workplanEditingService.availableSteps().subscribe({
-      next: steps => (this.availableSteps.update(_ => steps)),
-      error: async (e: HttpErrorResponse) => await this.snackbarService.handleError(e)
-    });
-    this.sessionService.getSession(this.sessionToken).subscribe({
-      next: workplan => {
+    this.workplanEditingService.availableSteps()
+      .then(steps => this.availableSteps.set(steps))
+      .catch((e: HttpErrorResponse) => this.snackbarService.handleError(e));
+    this.sessionService.getSession(this.sessionToken)
+      .then(workplan => {
         // Todo: remove responsibility, sessionService should handle this
         this.editorState.setWorkplan(workplan);
-      },
-      error: async (e: HttpErrorResponse) => {
+        this.isLoading.set(false);
+      })
+      .catch(async (e: HttpErrorResponse) => {
         await this.snackbarService.handleError(e);
         this.sessionService.deactivateSession();
         this.router.navigate(['session', 'management']);
-        this.isLoading.update(_ => false);
-      },
-      complete: () => {
-        this.isLoading.update(_ => false);
-      }
-    });
+        this.isLoading.set(false);
+      });
   }
 
   protected onToggleDrawer(): void {
@@ -301,14 +286,11 @@ export class Editor implements OnInit {
     node.positionLeft = (node.positionLeft ?? 0) + Math.ceil(event.distance.x / this.canvasScale);
     node.positionTop = (node.positionTop ?? 0) + Math.ceil(event.distance.y / this.canvasScale);
     // Reset drag position as the position is now changed on the node
-    this.dragPosition.update(_ => {
-      return {x: 0, y: 0};
-    });
+    this.dragPosition.set({x: 0, y: 0});
 
-    this.sessionService.updateSession(this.editorState.workplan).subscribe({
-      next: session => this.editorState.setWorkplan(session),
-      error: async (e: HttpErrorResponse) => await this.snackbarService.handleError(e)
-    });
+    this.sessionService.updateSession(this.editorState.workplan)
+      .then(session => this.editorState.setWorkplan(session))
+      .catch((e: HttpErrorResponse) => this.snackbarService.handleError(e));
   }
 
   protected allowDrop(event: DragEvent) {
@@ -329,7 +311,7 @@ export class Editor implements OnInit {
       return;
     }
 
-    this.newStepPosition.update(_ => new Position(event.offsetX - this.size, event.offsetY - this.size));
+    this.newStepPosition.set(new Position(event.offsetX - this.size, event.offsetY - this.size));
     stepRecipe.positionLeft = this.newStepPosition()?.left;
     stepRecipe.positionTop = this.newStepPosition()?.top;
 
@@ -345,10 +327,9 @@ export class Editor implements OnInit {
   //#endregion
 
   protected onStepCreated(stepRecipe: WorkplanStepRecipe) {
-    this.workplanEditingService.addStep({sessionId: this.sessionToken, body: stepRecipe}).subscribe({
-      next: step => this.onStepCreationSuccessResponse(step),
-      error: async (e: HttpErrorResponse) => await this.snackbarService.handleError(e)
-    });
+    this.workplanEditingService.addStep({sessionId: this.sessionToken, body: stepRecipe})
+      .then(step => this.onStepCreationSuccessResponse(step))
+      .catch((e: HttpErrorResponse) => this.snackbarService.handleError(e));
   }
 
   private onStepCreationSuccessResponse(step: WorkplanNodeModel) {
@@ -362,7 +343,7 @@ export class Editor implements OnInit {
     this.updateQuery({edit: EditQueries.Node, selected: step.id, type: null});
     this.editorState.startEditingStep(step.id!);
     this.editorState.onNodeSelected(step.id!);
-    this.editorState.workplanChanged();
+    this.editorState.notifyWorkplanChanged();
   }
 
   protected onClickStep(node: WorkplanNodeModel) {
@@ -387,18 +368,16 @@ export class Editor implements OnInit {
         targetIndex: input.index ?? 0,
         body: {nodeId: sourceNode.id, index: draggedConnector.index}
       })
-      .subscribe({
-        next: session => {
-          this.sessionService.registerUpdatedSession(session);
-          this.editorState.setWorkplan(session);
-        },
-        error: async (e: HttpErrorResponse) => await this.snackbarService.handleError(e)
-      });
+      .then(session => {
+        this.sessionService.registerUpdatedSession(session);
+        this.editorState.setWorkplan(session);
+      })
+      .catch((e: HttpErrorResponse) => this.snackbarService.handleError(e));
   }
 
   //---
 
-  scheduleRenderPaths() {
+  private scheduleRenderPaths() {
     setTimeout(() => this.renderPaths(), 50);
   }
 
@@ -414,7 +393,7 @@ export class Editor implements OnInit {
         });
       });
     }) ?? [];
-    this.workplanPaths.update(_ => result);
+    this.workplanPaths.set(result);
   }
 
   protected onPathDeleteClick() {
@@ -430,15 +409,13 @@ export class Editor implements OnInit {
         targetIndex: data?.endInput.index ?? 0,
         body: {nodeId: data?.startNode.id, index: data?.startInput.index}
       })
-      .subscribe({
-        next: session => {
-          this.sessionService.registerUpdatedSession(session);
-          this.editorState.setWorkplan(session);
-          this.workplanPaths.update(_ => this.workplanPaths().filter(p => p !== data));
-          this.pathMenuTrigger().menuData = undefined;
-        },
-        error: async (err: HttpErrorResponse) => await this.snackbarService.handleError(err)
-      });
+      .then(session => {
+        this.sessionService.registerUpdatedSession(session);
+        this.editorState.setWorkplan(session);
+        this.workplanPaths.update(current => current.filter(p => p !== data));
+        this.pathMenuTrigger().menuData = undefined;
+      })
+      .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err));
   }
 
   protected onStepDeleteClick() {
@@ -453,20 +430,18 @@ export class Editor implements OnInit {
     this.deleteStep(data);
   }
 
-  deleteStep(data: WorkplanNodeModel) {
+  private deleteStep(data: WorkplanNodeModel) {
     this.workplanEditingService
       .removeNode({
         sessionId: this.sessionToken,
         nodeId: data.id ?? 0
       })
-      .subscribe({
-        next: session => {
-          this.sessionService.registerUpdatedSession(session);
-          this.editorState.setWorkplan(session);
-          this.stepMenuTrigger().menuData = undefined;
-        },
-        error: async (err: HttpErrorResponse) => await this.snackbarService.handleError(err)
-      });
+      .then(session => {
+        this.sessionService.registerUpdatedSession(session);
+        this.editorState.setWorkplan(session);
+        this.stepMenuTrigger().menuData = undefined;
+      })
+      .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err));
   }
 
   //#region Context Menu Functions

@@ -8,7 +8,7 @@
           mat-tab-link
           [active]="activeLink() === 1"
           [routerLink]="['/details/', resource.id, 'properties']"
-          >{{ TranslationConstants.DETAILS.PROPERTIES | translate }}</a
+          >{{ TranslationConstants.DETAILS.PROPERTIES_TAB_TITLE | translate }}</a
           >
       }
       @if (resource.references !== undefined) {
@@ -16,7 +16,7 @@
           mat-tab-link
           [active]="activeLink() === 2"
           [routerLink]="['/details/', resource.id, 'references']"
-          >{{ TranslationConstants.DETAILS.REFERENCES | translate }}</a
+          >{{ TranslationConstants.DETAILS.REFERENCES_TAB_TITLE | translate }}</a
           >
       }
       @if (resource.methods && resource.methods.length > 0) {
@@ -24,7 +24,7 @@
           mat-tab-link
           [active]="activeLink() === 3"
           [routerLink]="['/details/', resource.id, 'methods']"
-          >{{ TranslationConstants.DETAILS.METHODS | translate }}</a
+          >{{ TranslationConstants.DETAILS.METHODS_TAB_TITLE | translate }}</a
           >
         }
     </nav>

@@ -4,7 +4,7 @@
 */
 
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, inject, OnInit, signal, ChangeDetectorRef, ChangeDetectionStrategy, DestroyRef } from "@angular/core";
+import { Component, effect, inject, OnInit, signal, untracked, ChangeDetectorRef, ChangeDetectionStrategy, DestroyRef } from "@angular/core";
 import { JobManagementService, OrderManagementService } from "@api/services";
 import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
 import { JobViewModel } from "@app/models/job-view-model";
@@ -12,7 +12,6 @@ import { OperationType } from "@app/models/operation-models";
 import { JobManagementStreamService } from "@app/services/job-management-stream.service";
 import { OrderManagementStreamService } from "@app/services/order-management-stream.service";
 import { environment } from "../../../environments/environment";
-import "../../extensions/observable.extensions";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
 import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
 
@@ -65,7 +64,14 @@ export class Jobs implements OnInit {
   protected TranslationConstants = TranslationConstants;
 
   constructor() {
-      this.destroyRef.onDestroy(() => this.disconnectEvents());
+    this.destroyRef.onDestroy(() => this.disconnectEvents());
+
+    effect(() => {
+      const updatedJob = this.jobManagementEvents.updatedJob();
+      untracked(() => {
+        this.updateJobs(updatedJob);
+      });
+    });
   }
 
   ngOnInit(): void {
@@ -74,15 +80,9 @@ export class Jobs implements OnInit {
     this.jobManagementEvents.connect();
     this.processEngineEvents.connect();
 
-    this.jobManagementEvents.updatedJob.subscribe((updatedJob) =>
-      this.updateJobs(updatedJob)
-    );
-
-    this.orderManagementService.getOperations().subscribe({
-      next: (value) => this.operations.update(_ => value),
-      error: async (e: HttpErrorResponse) =>
-        await this.snackbarService.handleError(e)
-    });
+    this.orderManagementService.getOperations()
+      .then((value) => this.operations.set(value))
+      .catch((e: HttpErrorResponse) => this.snackbarService.handleError(e));
 
     this.orderManagementEvents.connect(OperationType.Update, (updatedOperation: OperationModel) =>
         this.updateOperations(updatedOperation)
@@ -98,7 +98,7 @@ export class Jobs implements OnInit {
     if (!existingJob) {
       this.jobCollection().push(new JobViewModel(updatedJob));
     } else if (updatedJob.state === "Completed") {
-      this.jobCollection.update(_ => this.jobCollection().filter((jVm) => jVm !== existingJob));
+      this.jobCollection.update(current => current.filter((jVm) => jVm !== existingJob));
     } else {
       existingJob.updateModel(updatedJob);
 
@@ -129,30 +129,25 @@ export class Jobs implements OnInit {
   }
 
   private fetchJobs() {
-    this.jobManagementService.getAll().subscribe({
-      next: (data) => {
-        this.jobCollection.update(_ => data.map((model) => new JobViewModel(model)));
-        this.isLoading.update(_ => false);
-      },
-      error: async (err: HttpErrorResponse) => {
-        await this.snackbarService.handleError(err);
-        this.isLoading.update(_ => false);
-      }
+    this.jobManagementService.getAll().then((data) => {
+      this.jobCollection.set(data.map((model) => new JobViewModel(model)));
+      this.isLoading.set(false);
+    }).catch(async (err: HttpErrorResponse) => {
+      await this.snackbarService.handleError(err);
+      this.isLoading.set(false);
     });
   }
 
   protected async onComplete(job: JobModel) {
     await this.jobManagementService
       .complete({jobId: job.id!})
-      .toAsync()
-      .catch(async (error) => await this.snackbarService.handleError(error));
+      .catch((error) => this.snackbarService.handleError(error));
   }
 
   protected async onAbort(job: JobModel) {
     await this.jobManagementService
       .abort({jobId: job.id!})
-      .toAsync()
-      .catch(async (error) => await this.snackbarService.handleError(error));
+      .catch((error) => this.snackbarService.handleError(error));
   }
 
   protected getOrderNumber(job: JobModel): string {

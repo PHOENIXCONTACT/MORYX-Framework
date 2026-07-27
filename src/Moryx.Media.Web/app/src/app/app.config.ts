@@ -3,66 +3,31 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { ClipboardModule } from "@angular/cdk/clipboard";
-import { provideHttpClient, withInterceptorsFromDi, withXhr } from "@angular/common/http";
-import { ApplicationConfig, importProvidersFrom, inject, provideAppInitializer } from "@angular/core";
-import { FormsModule } from "@angular/forms";
-import { MatBadgeModule } from "@angular/material/badge";
-import { MatButtonModule } from "@angular/material/button";
-import { MatCardModule } from "@angular/material/card";
-import { MatDialogModule } from "@angular/material/dialog";
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatGridListModule } from "@angular/material/grid-list";
-import { MatIconModule, MatIconRegistry } from "@angular/material/icon";
-import { MatInputModule } from "@angular/material/input";
-import { MatListModule } from "@angular/material/list";
-import { MatMenuModule } from "@angular/material/menu";
-import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import { MatSidenavModule } from "@angular/material/sidenav";
-import { MatSnackBarModule } from "@angular/material/snack-bar";
-import { MatToolbarModule } from "@angular/material/toolbar";
-import { MatTooltipModule } from "@angular/material/tooltip";
-import { BrowserModule } from "@angular/platform-browser";
+import { provideHttpClient, withInterceptors } from "@angular/common/http";
+import { ApplicationConfig } from "@angular/core";
+import { provideMoryxMaterialDefaults } from "@moryx/ngx-web-framework/material";
 import { provideRouter } from "@angular/router";
-import { ApiInterceptor, API_INTERCEPTOR_PROVIDER } from "@moryx/ngx-web-framework/interceptors";
-import { SnackbarService } from "@moryx/ngx-web-framework/services";
-import { NgxDocViewerModule } from "ngx-doc-viewer";
+import { languageInterceptor, apiErrorInterceptor } from "@moryx/ngx-web-framework/interceptors";
 import { environment } from "../environments/environment";
-import { ApiModule } from "@api/api.module";
 import { routes } from "./app.routes";
 
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+import { provideApiConfiguration } from '@api/api-configuration';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    importProvidersFrom(
-      BrowserModule,
-      MatBadgeModule,
-      MatCardModule,
-      MatButtonModule,
-      MatGridListModule,
-      MatProgressSpinnerModule,
-      MatDialogModule,
-      MatListModule,
-      MatIconModule,
-      MatTooltipModule,
-      MatFormFieldModule,
-      MatInputModule,
-      FormsModule,
-      MatSnackBarModule,
-      MatMenuModule,
-      MatSidenavModule,
-      MatToolbarModule,
-      NgxDocViewerModule,
-      ClipboardModule,
-      ApiModule.forRoot({rootUrl: environment.rootUrl})
+
+    // Configure the API endpoint
+    provideApiConfiguration(environment.rootUrl),
+
+    // Setup HttpClient with functional interceptors
+    provideHttpClient(
+      withInterceptors([languageInterceptor, apiErrorInterceptor])
     ),
-    ApiInterceptor,
-    API_INTERCEPTOR_PROVIDER,
-    SnackbarService,
-    provideHttpClient(withXhr(), withInterceptorsFromDi()),
+
+    // Configure translation loader
     provideTranslateService({
       loader: provideTranslateHttpLoader({
         prefix: environment.assets + 'assets/languages/',
@@ -70,10 +35,8 @@ export const appConfig: ApplicationConfig = {
       }),
       fallbackLang: 'en'
     }),
-    provideAppInitializer(() => {
-      // Use material-symbols as default icon font
-      const iconRegistry = inject(MatIconRegistry);
-      iconRegistry.setDefaultFontSetClass('material-symbols-outlined');
-    }),
+
+    // Provides angular material defaults
+    provideMoryxMaterialDefaults(),
   ]
 }

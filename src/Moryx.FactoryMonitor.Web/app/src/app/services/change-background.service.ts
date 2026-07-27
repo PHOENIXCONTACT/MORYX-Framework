@@ -3,13 +3,11 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { computed, inject, Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { FactoryMonitorService } from '@api/services';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { FactorySelectionService } from './factory-selection.service';
 import { environment } from '../../environments/environment';
-import { toSignal } from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root'
@@ -17,33 +15,31 @@ import { toSignal } from '@angular/core/rxjs-interop';
 export class ChangeBackgroundService {
   private factoryMonitorService = inject(FactoryMonitorService);
   private snackbarService = inject(SnackbarService);
+  private factorySelectionService = inject(FactorySelectionService);
 
-  private _factory = toSignal(inject(FactorySelectionService).factorySelected$);
-  private _backgroundChanged = new BehaviorSubject<string|undefined>(undefined);
-  public backgroundChanged$ = this._backgroundChanged.asObservable();
-  public canSaveBackground = computed(() => !!this._factory());
+  private readonly _backgroundChanged = signal<string | undefined>(undefined);
+  readonly backgroundChanged = this._backgroundChanged.asReadonly();
+  public canSaveBackground = computed(() => !!this.factorySelectionService.factorySelected());
 
   public changeBackground(url: string) {
-    if (!url || !this._factory) {
+    if (!url || !this.factorySelectionService.factorySelected()) {
       return;
     }
 
     this.factoryMonitorService
       .changeBackground({
-        resourceId: this._factory(),
+        resourceId: this.factorySelectionService.factorySelected(),
         url: url
       })
-      .subscribe({
-        next: () => {
-          this.updateBackground(url);
-        },
-        error: () => this.snackbarService.showError('An error occured while saving the background URL')
-      });
+      .then(() => {
+        this.updateBackground(url);
+      })
+      .catch(() => this.snackbarService.showError('An error occured while saving the background URL'));
   }
 
   public updateBackground(url: string | null | undefined) {
     if (!url) {
-      this._backgroundChanged.next(undefined);
+      this._backgroundChanged.set(undefined);
       return;
     }
 
@@ -51,7 +47,7 @@ export class ChangeBackgroundService {
       url = environment.rootUrl + url;
     }
 
-    this._backgroundChanged.next(url);
+    this._backgroundChanged.set(url);
   }
 
   private isAbsoluteUrl(url: string): boolean {

@@ -159,7 +159,7 @@
       ></div>
 
       <app-resource-tree
-        [resources]="resources"
+        [resources]="resources()"
         [selected]="selected()"
         (nodeSelected)="selectResource($event)"
         (nodeContextMenu)="openContextMenuByClicking($event.event, $event.id)"

@@ -17,6 +17,6 @@ public class FaultyConfig
   }},
   ""ConfigState"": ""Generated""
 }}";
-        return string.Format(content, ModifiedValues.Text, ModifiedValues.Decimal.ToString(CultureInfo.InvariantCulture));
+        return string.Format(CultureInfo.InvariantCulture, content, ModifiedValues.Text, ModifiedValues.Decimal.ToString(CultureInfo.InvariantCulture));
     }
 }

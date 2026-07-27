@@ -28,6 +28,8 @@ export type { SignIn$Params as SignIn$Params } from './fn/operator-management/si
 export { signIn as signIn } from './fn/operator-management/sign-in';
 export type { SignOut$Params as SignOut$Params } from './fn/operator-management/sign-out';
 export { signOut as signOut } from './fn/operator-management/sign-out';
+export type { Stream$Params as Stream$Params } from './fn/operator-management/stream';
+export { stream as stream } from './fn/operator-management/stream';
 export type { GetTypes$Params as GetTypes$Params } from './fn/skill-management/get-types';
 export { getTypes as getTypes } from './fn/skill-management/get-types';
 export type { Update_1$Params as Update_1$Params } from './fn/skill-management/update-1';

@@ -4,8 +4,6 @@
 */
 
 import { Component, inject, linkedSignal, ChangeDetectionStrategy } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { CacheProductsService } from '@app/services/cache-products.service';
 import { EditProductsService } from '@app/services/edit-products.service';
@@ -19,19 +17,18 @@ import { ProductRecipesDetailsHeader } from './product-recipes-details-header/pr
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ProductRecipesDetailsHeader,
-    NavigableEntryEditor,
-    TranslatePipe
+    NavigableEntryEditor
   ]
 })
 export class ProductRecipesDetails {
   private editProductsService = inject(EditProductsService);
   private cacheService = inject(CacheProductsService);
 
-  protected isEditMode = toSignal(this.editProductsService.edit$, { initialValue: false });
-  currentProduct = toSignal(this.editProductsService.currentProduct$);
+  protected isEditMode = this.editProductsService.editing;
+  protected currentProduct = this.editProductsService.currentProduct;
   protected currentRecipe = linkedSignal(this.editProductsService.currentRecipe);
-  recipeDefinitions = toSignal(this.cacheService.recipeDefinitions, { initialValue: [] });
-  TranslationConstants = TranslationConstants;
+  protected recipeDefinitions = this.cacheService.recipeDefinitions;
+  protected TranslationConstants = TranslationConstants;
 
   protected updateRecipe(properties: Entry | undefined) {
     if (!properties) {

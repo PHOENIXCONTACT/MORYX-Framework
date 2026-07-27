@@ -49,7 +49,7 @@ public class TcpListenerConnection : IBinaryConnection, IStateContext
     /// <summary>
     /// Static TCP server
     /// </summary>
-    private TcpServer Server => TcpServer.Instance;
+    private static TcpServer Server => TcpServer.Instance;
 
     /// <summary>
     /// Port this is instance is listening on

@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Globalization;
 using System.Text.RegularExpressions;
 using Moryx.AbstractionLayer.Identity;
 
@@ -43,7 +44,7 @@ public class ProductIdentity : IIdentity
         if (!rx.IsMatch(identityString))
             throw new FormatException("identityString should consist of <identity>-<revision> instead of " + identityString);
         var groups = rx.Match(identityString).Groups;
-        return new ProductIdentity(groups["identifier"].Value, Convert.ToInt16(groups["revision"].Value));
+        return new ProductIdentity(groups["identifier"].Value, Convert.ToInt16(groups["revision"].Value, CultureInfo.InvariantCulture));
     }
 
     /// <summary>

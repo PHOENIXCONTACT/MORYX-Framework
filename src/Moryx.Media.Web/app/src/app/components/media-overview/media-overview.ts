@@ -3,8 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnDestroy, OnInit, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
-import { lastValueFrom } from 'rxjs';
+import { Component, effect, inject, OnDestroy, OnInit, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuTrigger, MatMenu, MatMenuContent, MatMenuItem } from '@angular/material/menu';
 import { Router } from '@angular/router';
@@ -53,6 +53,12 @@ export class MediaOverview implements OnInit, OnDestroy {
   protected menuTopLeftPosition = {x: '0', y: '0'};
 
   constructor() {
+    effect(() => {
+      const data = this.mediaService.contents();
+      this.contents.set(data);
+      this.filteredContents.set(data);
+      this.isLoading.set(false);
+    });
   }
 
   ngOnDestroy(): void {
@@ -60,22 +66,6 @@ export class MediaOverview implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.mediaService.contents.subscribe({
-      next: (data) => {
-        this.contents.update(_ => data);
-        this.filteredContents.update(_ => data);
-        this.isLoading.update(_ => false);
-      },
-      error: async (err) => {
-        const translations = await lastValueFrom(this.translateService
-          .get([TranslationConstants.MEDIA_OVERVIEW.FAILED_LOADING]));
-        this.snackbarService.showError(
-          translations[TranslationConstants.MEDIA_OVERVIEW.FAILED_LOADING]
-        );
-        this.isLoading.update(_ => false);
-      },
-    });
-
     this.mediaService.loadContents();
 
     this.searchBarService.subscribe({
@@ -85,7 +75,7 @@ export class MediaOverview implements OnInit, OnDestroy {
     });
   }
 
-  onSearch(result: SearchRequest) {
+  private onSearch(result: SearchRequest) {
     const urlBase = 'Media/details/';
     const contents = this.contents().filter((c) =>
       c.name?.toLowerCase()?.includes(result.term.toLowerCase())
@@ -96,7 +86,7 @@ export class MediaOverview implements OnInit, OnDestroy {
 
     if (result.submitted) {
       this.searchBarService.clearSuggestions();
-      this.filteredContents.update(_ => contents);
+      this.filteredContents.set(contents);
       this.searchBarService.subscribe({
         next: (newRequest: SearchRequest) => {
           this.onSearch(newRequest);
@@ -112,12 +102,12 @@ export class MediaOverview implements OnInit, OnDestroy {
         const url = urlBase + content.id;
         searchSuggestions.push({text: content.name, url: url});
       }
-      this.filteredContents.update(_ => contents);
+      this.filteredContents.set(contents);
       this.searchBarService.provideSuggestions(searchSuggestions);
     }
   }
 
-  onOpenMenuOnTouch(event: { pointers: PointerEvent[] }, content: ContentDescriptorModel) {
+  protected onOpenMenuOnTouch(event: { pointers: PointerEvent[] }, content: ContentDescriptorModel) {
     this.trigger().menuData = {content: content};
     this.menuTopLeftPosition.x = event.pointers[0].clientX + 'px';
     this.menuTopLeftPosition.y = event.pointers[0].clientY + 'px';
@@ -125,7 +115,7 @@ export class MediaOverview implements OnInit, OnDestroy {
   }
 
   protected onSelectMedia(content: ContentDescriptorModel) {
-    this.selectedContent.update(_ => content.id);
+    this.selectedContent.set(content.id);
     this.router.navigate(['/details/', content.id]);
   }
 
@@ -147,7 +137,7 @@ export class MediaOverview implements OnInit, OnDestroy {
   //open dialog in order to check if content should really be deleted
   protected async onDelete(content: ContentDescriptorModel): Promise<void> {
     if (content !== undefined) {
-      const deleteMessage = await lastValueFrom(this.translateService
+      const deleteMessage = await firstValueFrom(this.translateService
         .get(TranslationConstants.MEDIA_OVERVIEW.DELETE_MESSAGE));
       const dialogRef = this.dialog.open(DialogDelete, {
         data: {
@@ -165,13 +155,12 @@ export class MediaOverview implements OnInit, OnDestroy {
   }
 
   //remove content
-  remove(content: ContentDescriptorModel) {
+  private async remove(content: ContentDescriptorModel): Promise<void> {
     if (typeof content.id === 'string') {
-      this.mediaService.removeContent(content.id).subscribe(() => {
-        this.contents.update(items => items.filter(c => c.id !== content.id));
-        this.filteredContents.update(items => items.filter(c => c.id !== content.id));
-        this.selectedContent.update(_ => undefined);
-      });
+      await this.mediaService.removeContent(content.id);
+      this.contents.update(items => items.filter(c => c.id !== content.id));
+      this.filteredContents.update(items => items.filter(c => c.id !== content.id));
+      this.selectedContent.set(undefined);
     }
   }
 

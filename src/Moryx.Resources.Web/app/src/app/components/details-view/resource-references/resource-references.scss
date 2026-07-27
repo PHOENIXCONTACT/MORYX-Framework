@@ -1,22 +1,4 @@
-@use '@angular/material' as mat;
-:host {
-  display: flex;
-  width: 100%;
-  max-width: 60em;
-  height: 100%;
-  overflow: hidden;
-  justify-content: center;
-}
-
-.references {
-  flex: 1 1;
-  justify-self: center;
-  padding: 8px;
-  overflow: auto;
-  @include mat.expansion-overrides((
-    container-background-color: var(--mat-sys-surface-container-lowest),
-  ));
-}
+@use '../expansion-panel';
 
 .mat-column-delete {
   width: 32px;
@@ -66,28 +48,31 @@
   align-items: center;
 }
 
-.content-section {
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
+.reference-targets {
+  font-weight: var(--mat-sys-body-large-weight);
 }
 
-.resource-name {
-  display: block;
-  margin: 0;
-  width: 100%;
-  min-width: 0%;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.resource-option {
+  min-height: 64px;
 }
 
-.resource-meta {
-  margin: 0;
+.resource-option-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   width: 100%;
-  min-width: 0;
+}
+
+.resource-option-name {
   white-space: nowrap;
   overflow: hidden;
+  line-height: 24px;
+}
+
+.resource-option-type {
+  font: var(--mat-sys-body-medium);
+  color: var(--mat-sys-on-surface-variant);
+  white-space: nowrap;
+  line-height: 20px;
   text-overflow: ellipsis;
-  display: block;
 }

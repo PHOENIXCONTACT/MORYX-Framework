@@ -1,6 +1,6 @@
 @if (referenceTypes()) {
   <mat-accordion
-    class="references"
+    class="panel-accordion"
     >
     @for (ref of referenceTypes(); track ref) {
       <mat-expansion-panel
@@ -14,12 +14,12 @@
                 {{ ref.role === ResourceReferenceRole.Target ? 'line_end_circle':'line_start_circle' }}
               </mat-icon>
             </div>
-            <div class="content-section">
-              <mat-panel-title class="resource-name">
-                {{ ref.displayName }}
+            <div class="panel-header">
+              <mat-panel-title class="panel-title">
+                {{ ref.displayName }}<span class="reference-targets">{{ getTargetNames(ref) }}</span>
               </mat-panel-title>
-              <mat-panel-description class="resource-meta">
-                {{ getMetaText(ref) }}
+              <mat-panel-description class="panel-description">
+                {{ ref.description }}
               </mat-panel-description>
             </div>
           </div>
@@ -75,18 +75,25 @@
             <div class="reference-targets-actions">
               <mat-form-field class="reference-targets-selector" appearance="outline">
                 <mat-label>{{
-                  TranslationConstants.DETAILS.REFS.LINKED_RESOURCE | translate
+                  TranslationConstants.DETAILS.REFERENCES.LINKED_RESOURCE | translate
                 }}</mat-label>
                 <mat-select
                   [(value)]="selectedTarget"
             placeholder="{{
-              TranslationConstants.DETAILS.REFS.PLACEHOLDER | translate
+              TranslationConstants.DETAILS.REFERENCES.PLACEHOLDER | translate
             }}"
                   (selectionChange)="addTarget(table)"
                   >
                   @for (pr of possibleResources(); track pr) {
-                    <mat-option [value]="pr">
-                      {{ "#" + pr.id + " " + pr.name }}
+                    <mat-option [value]="pr" class="resource-option">
+                      <div class="resource-option-content">
+                        <span class="resource-option-name">
+                          #{{ pr.id }} {{ pr.name ?? 'null' }}
+                        </span>
+                        <span class="resource-option-type">
+                          {{ pr.type }}
+                        </span>
+                      </div>
                     </mat-option>
                   }
                 </mat-select>
@@ -98,19 +105,19 @@
           <div class="single-reference-targets-selector">
             <mat-form-field class="reference-targets-selector" appearance="outline">
               <mat-label>{{
-                TranslationConstants.DETAILS.REFS.LINKED_RESOURCE | translate
+                TranslationConstants.DETAILS.REFERENCES.LINKED_RESOURCE | translate
               }}</mat-label>
               <mat-select
                 [disabled]="!isEditMode()"
                 [(value)]="selectedTarget"
             placeholder="{{
-              TranslationConstants.DETAILS.REFS.PLACEHOLDER | translate
+              TranslationConstants.DETAILS.REFERENCES.PLACEHOLDER | translate
             }}"
                 [compareWith]="compareWith"
                 (selectionChange)="setTarget()"
                 >
                 <mat-option [value]="undefined">
-                  {{ TranslationConstants.DETAILS.REFS.NO_TARGET | translate }}
+                  {{ TranslationConstants.DETAILS.REFERENCES.NO_TARGET | translate }}
                 </mat-option>
                 @for (pr of possibleResources(); track pr) {
                   <mat-option [value]="pr">

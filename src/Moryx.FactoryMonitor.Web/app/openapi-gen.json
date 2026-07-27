@@ -13,5 +13,5 @@
   "apiService": "",
   "enumStyle": "pascal",
   "enumArray": false,
-  "promises": false
+  "promises": true
 }

@@ -3,56 +3,35 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { DragDropModule } from '@angular/cdk/drag-drop';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { ApplicationConfig, importProvidersFrom, inject, provideAppInitializer } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatListModule } from '@angular/material/list';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { BrowserModule } from '@angular/platform-browser';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { ApplicationConfig, inject, provideAppInitializer } from '@angular/core';
+import { provideMoryxMaterialDefaults } from '@moryx/ngx-web-framework/material';
 import { provideRouter } from '@angular/router';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
-import { firstValueFrom } from 'rxjs';
+
 import { environment } from '../environments/environment';
-import { ApiModule } from '@api/api.module';
 import { FactoryMonitorService } from './api/services';
 import { routes } from './app.routes';
-import { CellSettingsService } from './services/cell-settings.service';
 import { CellStoreService } from './services/cell-store.service';
-import { ChangeBackgroundService } from './services/change-background.service';
-import { EditMenuService } from './services/edit-menu.service';
 import { FactorySelectionService } from './services/factory-selection.service';
 import { OrderStoreService } from './services/order-store.service';
+import { provideApiConfiguration } from '@api/api-configuration';
+import { languageInterceptor, apiErrorInterceptor } from '@moryx/ngx-web-framework/interceptors';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    importProvidersFrom(
-      ApiModule.forRoot({ rootUrl: environment.rootUrl }),
-      BrowserModule,
-      MatIconModule,
-      MatButtonModule,
-      MatListModule,
-      MatDialogModule,
-      MatInputModule,
-      MatTooltipModule,
-      DragDropModule,
-      FormsModule,
-      ReactiveFormsModule,
-      MatSnackBarModule
+
+    // Configure the API endpoint
+    provideApiConfiguration(environment.rootUrl),
+
+    // Setup HttpClient with functional interceptors
+    provideHttpClient(
+      withInterceptors([languageInterceptor, apiErrorInterceptor])
     ),
-    OrderStoreService,
-    CellStoreService,
-    EditMenuService,
-    ChangeBackgroundService,
-    CellSettingsService,
-    provideHttpClient(withInterceptorsFromDi()),
+
+    // Configure translation loader
     provideTranslateService({
       loader: provideTranslateHttpLoader({
         prefix: environment.assets + 'assets/languages/',
@@ -60,11 +39,11 @@ export const appConfig: ApplicationConfig = {
       }),
       fallbackLang: 'en'
     }),
-    provideAppInitializer(() => {
-      // Use material-symbols as default icon font
-      const iconRegistry = inject(MatIconRegistry);
-      iconRegistry.setDefaultFontSetClass('material-symbols-outlined');
-    }),
+
+    // Provides angular material defaults
+    provideMoryxMaterialDefaults(),
+
+    // Additional app initializers
     provideAppInitializer(async () => {
       const api = inject(FactoryMonitorService);
       const orderStore = inject(OrderStoreService);
@@ -72,13 +51,13 @@ export const appConfig: ApplicationConfig = {
       const factorySelectionService = inject(FactorySelectionService);
 
       // ToDo: Error Handling
-      const initialState = await firstValueFrom(api.initialFactoryState());
+      const initialState = await api.initialFactoryState();
 
       orderStore.initialize(initialState);
 
       cellStore.initialize(initialState);
 
       factorySelectionService.initialize(initialState);
-    }),
+    })
   ]
 };

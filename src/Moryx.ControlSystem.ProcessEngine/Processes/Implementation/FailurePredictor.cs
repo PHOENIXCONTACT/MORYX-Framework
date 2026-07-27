@@ -82,23 +82,22 @@ internal class FailurePredictor : IFailurePredictor, IDisposable
             return;
 
         var recipe = (IWorkplanRecipe)processData.Recipe;
-        if (!_predictorCache.ContainsKey(recipe.Id))
+        if (!_predictorCache.TryGetValue(recipe.Id, out var cachedPredictor))
         {
             var predictor = WorkplanInstance.PathPrediction(recipe.Workplan);
             predictor.PathPrediction += OnPathPrediction;
-            _predictorCache[recipe.Id] = predictor;
+            cachedPredictor = predictor;
+            _predictorCache[recipe.Id] = cachedPredictor;
         }
 
-        _predictorCache[recipe.Id].Monitor(processData.Engine);
+        cachedPredictor.Monitor(processData.Engine);
     }
 
     private void CleanUp(ProcessData process)
     {
         var recipe = process.Recipe;
-        if (!_predictorCache.ContainsKey(recipe.Id) || !_predictorCache[recipe.Id].Remove(process.Engine) || _predictorCache[recipe.Id].MonitoredEngines > 0)
+        if (!_predictorCache.TryGetValue(recipe.Id, out var predictor) || !predictor.Remove(process.Engine) || predictor.MonitoredEngines > 0)
             return;
-
-        var predictor = _predictorCache[recipe.Id];
         predictor.Dispose();
         _predictorCache.Remove(recipe.Id);
     }

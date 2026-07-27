@@ -105,9 +105,9 @@ internal class MicrosoftExtensionsConfigProvider : IValueProvider, IContextAware
         string key;
         if (prop is null) // can currently only occur when config is enumerable
         {
-            if (dict.TryGetValue(ValueProviderExecutor.IndexKey, out var value) && value is int v)
+            if (dict.TryGetValue(ValueProviderExecutor.IndexKey, out var index) && index is int i)
             {
-                key = v.ToString(CultureInfo.InvariantCulture);
+                key = i.ToString(CultureInfo.InvariantCulture);
             }
             else
             {

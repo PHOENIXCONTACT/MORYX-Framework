@@ -2,24 +2,8 @@
   {{ TranslationConstants.REPORT_DIALOG.REPORT_TITLE | translate }}
 </h2>
 
-<mat-dialog-content>
-  <div class="dialog-context">
-    <p class="dialog-context-item">
-      <span class="info-label">{{ TranslationConstants.REPORT_DIALOG.ORDER | translate }}</span>
-      <span class="info-value">
-        {{ data.operation.model.order }} - {{ data.operation.model.number }}
-      </span>
-    </p>
-    <p class="dialog-context-item">
-      <span class="info-label">{{ TranslationConstants.REPORT_DIALOG.PRODUCT | translate }}</span>
-      <span class="info-value">
-        {{ this.data.operation.model.productIdentifier }}-{{
-          this.data.operation.model.productRevision | number : '2.0'
-        }}
-        {{ this.data.operation.model.productName }}
-      </span>
-    </p>
-  </div>
+<mat-dialog-content class="dialog-container">
+  <app-dialog-context class="full-width dialog-context" [operationModel]="data.operation.model"></app-dialog-context>
 
   <div class="report-dialog-amounts-row">
     <div class="amounts-data-entry">
@@ -59,13 +43,16 @@
     </mat-form-field>
   </div>
 
-  <mat-form-field appearance="outline" class="full-width">
+  <mat-form-field appearance="outline" class="full-width top-spaced">
     <mat-label>{{ TranslationConstants.REPORT_DIALOG.COMMENT | translate }}</mat-label>
     <textarea matInput [(ngModel)]="comment" [disabled]="isLoading()"></textarea>
   </mat-form-field>
 
-  <h3 class="intermediate-header">{{ TranslationConstants.REPORT_DIALOG.CONFIRMATION | translate }}</h3>
-  <mat-radio-group aria-label="Select an report option" [(ngModel)]="confirmationType">
+  <app-operator-selector class="full-width top-spaced" [isEnabled]="canReport()"
+    [(selectedOperatorId)]="selectedOperatorId" (creatingOperatorFailed)="creatingOperatorFailed.set($event)"/>
+
+  <h3 class="radio-group-header">{{ TranslationConstants.REPORT_DIALOG.CONFIRMATION | translate }}</h3>
+  <mat-radio-group class="radio-group" aria-label="Select an report option" [(ngModel)]="confirmationType">
     <mat-radio-button [disabled]="!reportContext()?.canPartial || isLoading()" value="partial">
       {{ TranslationConstants.REPORT_DIALOG.PARTIAL | translate }}
     </mat-radio-button>

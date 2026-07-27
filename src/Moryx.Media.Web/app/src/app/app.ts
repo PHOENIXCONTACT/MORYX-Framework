@@ -22,9 +22,7 @@ export class App implements OnInit {
   private languageService = inject(LanguageService);
   private translateService = inject(TranslateService);
 
-  title = 'Moryx.Media.Web';
-
-  TranslationConstants = TranslationConstants;
+  protected TranslationConstants = TranslationConstants;
 
   constructor() {
     this.translateService.addLangs([

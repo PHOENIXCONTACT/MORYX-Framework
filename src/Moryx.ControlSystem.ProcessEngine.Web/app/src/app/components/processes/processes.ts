@@ -9,11 +9,12 @@ import {
   ChangeDetectorRef,
   Component,
   computed,
+  effect,
   inject,
   input,
-  OnDestroy,
   OnInit,
   signal,
+  untracked,
   ChangeDetectionStrategy
 } from "@angular/core";
 import { MatListModule } from "@angular/material/list";
@@ -21,7 +22,6 @@ import { MatSlideToggleChange, MatSlideToggleModule } from "@angular/material/sl
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
 import { NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
 import { TranslatePipe } from "@ngx-translate/core";
-import { Subscription } from "rxjs";
 import { JobProcessModel } from "@api/models/job-process-model";
 import { ProcessActivityModel } from "@api/models/process-activity-model";
 import { ProcessEngineService } from "@api/services";
@@ -47,7 +47,7 @@ import { ProcessEngineStreamService } from "@app/services/process-engine-stream.
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./processes.scss"]
 })
-export class Processes implements OnInit, OnDestroy {
+export class Processes implements OnInit {
   private processEngineService = inject(ProcessEngineService);
   private processEngineEvents = inject(ProcessEngineStreamService);
   private snackbarService = inject(SnackbarService);
@@ -66,8 +66,20 @@ export class Processes implements OnInit, OnDestroy {
 
   protected TranslationConstants = TranslationConstants;
 
-  private processSubscription!: Subscription;
-  private activitySubscription!: Subscription;
+  constructor() {
+    effect(() => {
+      const process = this.processEngineEvents.updatedProcess();
+      untracked(() => {
+        this.onProcessUpdated(process);
+      });
+    });
+    effect(() => {
+      const activity = this.processEngineEvents.updatedActivity();
+      untracked(() => {
+        this.onActivityUpdated(activity);
+      });
+    });
+  }
 
   ngOnInit(): void {
     this.processEngineService
@@ -75,37 +87,18 @@ export class Processes implements OnInit, OnDestroy {
         jobId: this.job().model.id,
         allProcesses: this.showAll()
       })
-      .subscribe({
-        next: (data) => {
-          this.processes.update((_) => data);
-          const firstProcess = this.processes().find(() => true);
-          if (firstProcess) {
-            this.onSelectProcess(firstProcess);
-          }
-        },
-        error: async (e: HttpErrorResponse) =>
-          await this.snackbarService.handleError(e)
-      });
-
-
-
-    this.processSubscription =
-      this.processEngineEvents.updatedProcess.subscribe((p) =>
-        this.onProcessUpdated(p)
-      );
-
-    this.activitySubscription =
-      this.processEngineEvents.updatedActivity.subscribe((a) =>
-        this.onActivityUpdated(a)
-      );
+      .then((data) => {
+        this.processes.update((_) => data);
+        const firstProcess = this.processes().find(() => true);
+        if (firstProcess) {
+          this.onSelectProcess(firstProcess);
+        }
+      })
+      .catch(async (e: HttpErrorResponse) =>
+        await this.snackbarService.handleError(e));
   }
 
-  ngOnDestroy(): void {
-    this.processSubscription.unsubscribe();
-    this.activitySubscription.unsubscribe();
-  }
-
-  onProcessUpdated(updatedProcess: JobProcessModel | undefined) {
+  private onProcessUpdated(updatedProcess: JobProcessModel | undefined) {
     if (updatedProcess !== undefined) {
       // Extract job id
       // TODO: Extend model
@@ -139,7 +132,7 @@ export class Processes implements OnInit, OnDestroy {
     }
   }
 
-  onActivityUpdated(updatedActivity: ProcessActivityModel | undefined) {
+  private onActivityUpdated(updatedActivity: ProcessActivityModel | undefined) {
     if (!updatedActivity) {
       return;
     }
@@ -193,11 +186,9 @@ export class Processes implements OnInit, OnDestroy {
         jobId: this.job().model.id,
         allProcesses: this.showAll()
       })
-      .subscribe({
-        next: (data) => this.updateData(data),
-        error: async (e: HttpErrorResponse) =>
-          await this.snackbarService.handleError(e)
-      });
+      .then((data) => this.updateData(data))
+      .catch(async (e: HttpErrorResponse) =>
+        await this.snackbarService.handleError(e));
   }
 
   private updateData(data: JobProcessModel[]) {

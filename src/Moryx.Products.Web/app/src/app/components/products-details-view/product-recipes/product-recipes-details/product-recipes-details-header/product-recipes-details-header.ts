@@ -23,7 +23,6 @@ import { MatInput, MatInputModule } from "@angular/material/input";
 import { MatOptionModule } from "@angular/material/core";
 import { MatSelectModule } from "@angular/material/select";
 import { EditProductsService } from "@app/services/edit-products.service";
-import { toSignal } from "@angular/core/rxjs-interop";
 import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
 import { RestrictKeywordValidatorDirective } from "./restrict-keyword-validator.directive";
 
@@ -48,7 +47,7 @@ export class ProductRecipesDetailsHeader {
   private cacheService = inject(CacheProductsService);
   private editProductsService = inject(EditProductsService);
 
-  protected isEditMode = toSignal(this.editProductsService.edit$, {initialValue: false});
+  protected isEditMode = this.editProductsService.editing;
   protected currentRecipe = linkedSignal(this.editProductsService.currentRecipe);
 
   protected hasWorkplans = computed(() => {
@@ -57,7 +56,7 @@ export class ProductRecipesDetailsHeader {
     }
     return true;
   });
-  protected possibleWorkplans = toSignal(this.cacheService.workplans, {initialValue: []});
+  protected possibleWorkplans = this.cacheService.workplans;
   protected recipeClassifications = signal(Object.keys(RecipeClassificationModel));
 
   protected recipeControl = new UntypedFormControl({

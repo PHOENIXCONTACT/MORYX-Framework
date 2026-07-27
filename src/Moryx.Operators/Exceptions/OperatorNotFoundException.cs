@@ -1,6 +1,7 @@
-﻿// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Globalization;
 using Moryx.Operators.Properties;
 
 namespace Moryx.Operators.Exceptions;
@@ -22,7 +23,7 @@ public class OperatorNotFoundException : Exception
     /// Creates an exception that includes the operators ID in the exception message
     /// </summary>
     /// <param name="operatorIdentifier">Operator's ID</param>
-    public OperatorNotFoundException(string operatorIdentifier) : base(string.Format(Strings.OperatorNotFoundException_Message, operatorIdentifier))
+    public OperatorNotFoundException(string operatorIdentifier) : base(string.Format(CultureInfo.CurrentCulture, Strings.OperatorNotFoundException_Message, operatorIdentifier))
     {
     }
 }

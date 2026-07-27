@@ -4,9 +4,9 @@
 */
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { effect, inject, Injectable, signal } from '@angular/core';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
-import { BehaviorSubject, lastValueFrom, ReplaySubject } from 'rxjs';
+
 import { VisualizableItemModel } from '@api/models';
 import { CellLocationModel } from '@api/models/cell-location-model';
 import { FactoryStateModel } from '@api/models/factory-state-model';
@@ -25,12 +25,20 @@ export class CellStoreService {
   private readonly factoryMonitorService = inject(FactoryMonitorService);
   private readonly snackbarService = inject(SnackbarService);
 
-  private readonly _cellSelected = new BehaviorSubject<CellModel | undefined>(undefined);
-  private readonly _cellUpdated = new ReplaySubject<CellModel>();
+  private readonly _cellSelected = signal<CellModel | undefined>(undefined);
+  readonly cellSelected = this._cellSelected.asReadonly();
+  private readonly _cellUpdated = signal<CellModel | undefined>(undefined);
+  readonly cellUpdated = this._cellUpdated.asReadonly();
   private _cells : CellModel[] = [];
 
-  public readonly cellSelected$ = this._cellSelected.asObservable();
-  public readonly cellUpdated$ = this._cellUpdated.asObservable();
+  constructor() {
+    effect(() => {
+      const cell = this.factoryStateStreamService.updatedCell();
+      if (cell) {
+        this.updateCell(cell);
+      }
+    });
+  }
 
   public initialize(factoryState: FactoryStateModel) {
     const cells: { [id: string]: CellModel; } = {};
@@ -64,24 +72,22 @@ export class CellStoreService {
     // Set initial cells
     this._cells = Object.values(cells);
 
-    // Subscribe to changes after initialization
-    this.factoryStateStreamService.updatedCell.subscribe(cell => this.updateCell(cell));
   }
 
   public selectCell(id: number | undefined) {
-    const current = this._cellSelected.getValue();
+    const current = this.cellSelected();
     if (current && current.id === id || !id) {
-      this._cellSelected.next(undefined);
+      this._cellSelected.set(undefined);
       return;
     }
 
     const selectedCell = this._cells.find(c => c.id === id);
-    this._cellSelected.next(selectedCell);
+    this._cellSelected.set(selectedCell);
   }
 
   public async moveItem(item: VisualizableItemModel, update: CellLocationModel) {
     try {
-      const location = await lastValueFrom(this.factoryMonitorService.moveCell({ body: update }));
+      const location = await this.factoryMonitorService.moveCell({ body: update });
       this.updateCell(<CellModel>{ id: item.id, location: location });
     } catch (error) {
       this.snackbarService.handleError(error as HttpErrorResponse);
@@ -143,7 +149,7 @@ export class CellStoreService {
     }
 
     this._cells[indexToUpdate] = cellToUpdate;
-    this._cellUpdated.next(cellToUpdate);
+    this._cellUpdated.set(cellToUpdate);
   }
 }
 

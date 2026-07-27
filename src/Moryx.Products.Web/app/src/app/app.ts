@@ -5,14 +5,15 @@
 
 import {
   Component,
+  effect,
   inject,
   OnDestroy,
   OnInit,
   signal,
+  untracked,
   viewChild,
   ChangeDetectionStrategy
 } from "@angular/core";
-import { toSignal } from "@angular/core/rxjs-interop";
 import { MatDialog } from "@angular/material/dialog";
 import { MatMenuModule, MatMenuTrigger } from "@angular/material/menu";
 import { MatDrawer, MatSidenavModule } from "@angular/material/sidenav";
@@ -26,6 +27,7 @@ import {
   SearchSuggestion,
 } from "@moryx/ngx-web-framework/services";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
+import { firstValueFrom } from "rxjs";
 import { environment } from "../environments/environment";
 import {
   ProductDefinitionModel,
@@ -89,20 +91,19 @@ export class App implements OnInit, OnDestroy {
   private languageService = inject(LanguageService);
   private translateService = inject(TranslateService);
 
-  protected isEditMode = toSignal(this.editService.edit$, { initialValue: false });
-  protected selected = toSignal(this.editService.currentProduct$);
-  products = signal<ProductModel[]>([]);
-  productDefinitions = signal<ProductDefinitionModel[]>([]);
+  protected isEditMode = this.editService.editing;
+  protected selected = this.editService.currentProduct;
+  protected products = signal<ProductModel[]>([]);
+  protected productDefinitions = signal<ProductDefinitionModel[]>([]);
   protected hierarchic = signal(false);
   protected revisionOptions = signal<string[]>(Object.keys(RevisionFilter));
   protected selectorOptions = signal<string[]>(Object.keys(Selector));
-  importers = toSignal(this.cacheService.importers$, { initialValue: [] });
+  protected importers = this.cacheService.importers;
   protected menuTopLeftPosition = signal<{ x: string, y: string }>({x: '0', y: '0'});
   protected readonly trigger = viewChild.required(MatMenuTrigger);
 
   protected TranslationConstants = TranslationConstants;
 
-  title = "Moryx.Products.Web";
   protected productsToolbarImage: string =
     environment.assets + "assets/products_toolbar.jpg";
 
@@ -115,12 +116,27 @@ export class App implements OnInit, OnDestroy {
     ]);
     this.translateService.setFallbackLang("en");
     this.translateService.use(this.languageService.getFallbackLang());
+
+    effect(() => {
+      const products = this.cacheService.productsShownInTheTree() ?? [];
+      untracked(() => {
+        this.products.set(products);
+        this.createDatasource(this.hierarchic());
+      });
+    });
+
+    effect(() => {
+      const definitions = this.cacheService.definitions() ?? [];
+      untracked(() => {
+        this.productDefinitions.set(definitions);
+        this.createDatasource(this.hierarchic());
+      });
+    });
   }
 
   private async getTranslations(): Promise<{ [key: string]: string }> {
-    return await this.translateService
-      .get([TranslationConstants.APP.SNACK_BAR])
-      .toAsync();
+    return await firstValueFrom(this.translateService
+      .get([TranslationConstants.APP.SNACK_BAR]));
   }
 
   ngOnDestroy(): void {
@@ -129,16 +145,6 @@ export class App implements OnInit, OnDestroy {
 
   async ngOnInit() {
     this.hierarchic.set(this.sessionService.getProductTreeHierarchy());
-
-    this.cacheService.productsShownInTheTree.subscribe((products) => {
-      this.products.set(products ?? []);
-      this.createDatasource(this.hierarchic());
-    });
-
-    this.cacheService.definitions.subscribe((definitions) => {
-      this.productDefinitions.set(definitions ?? []);
-      this.createDatasource(this.hierarchic());
-    });
 
     // ToDo: MOve to route resolver for base path
     this.cacheService.loadConfiguration();
@@ -151,7 +157,7 @@ export class App implements OnInit, OnDestroy {
     });
   }
 
-  onSearch(result: SearchRequest) {
+  private onSearch(result: SearchRequest) {
     if (!this.products().length) {
       return;
     }
@@ -197,7 +203,7 @@ export class App implements OnInit, OnDestroy {
 
   protected treeData = signal<ProductNode[]>([]);
 
-  createDatasource(hierarchic: boolean) {
+  private createDatasource(hierarchic: boolean) {
     if (this.productDefinitions().length === 0) {
       return;
     }
@@ -316,9 +322,7 @@ export class App implements OnInit, OnDestroy {
 
   private open(x: number, y: number, productId: number) {
     this.trigger().menuData = {id: productId};
-    this.menuTopLeftPosition.update(_ => {
-      return {x: `${x}px`, y: `${y}px`}
-    });
+    this.menuTopLeftPosition.set({x: `${x}px`, y: `${y}px`});
     this.trigger().openMenu();
   }
 

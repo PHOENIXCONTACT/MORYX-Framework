@@ -31,16 +31,15 @@
     "EMPTY_STATE_TEXT": "从列表中选择一个资源，或通过点击加号图标添加一个新资源。"
   },
   "DETAILS": {
-    "PROPERTIES": "属性",
-    "REFERENCES": "引用",
-    "METHODS": "方法",
-    "REFS": {
-      "LINK": "链接",
+    "PROPERTIES_TAB_TITLE": "属性",
+    "REFERENCES_TAB_TITLE": "引用",
+    "METHODS_TAB_TITLE": "方法",
+    "REFERENCES": {
       "LINKED_RESOURCE": "链接的资源",
       "PLACEHOLDER": "选择可用资源，将其添加为参考资料",
       "NO_TARGET": "未选择目标"
     },
-    "METS": {
+    "METHODS": {
       "WAS_INVOKED": "该方法已被调用",
       "INVOKE": "调用",
       "REPEAT": "重复",

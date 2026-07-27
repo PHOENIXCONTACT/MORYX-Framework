@@ -3,15 +3,14 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
-import { lastValueFrom } from 'rxjs';
+import { Component, effect, inject, ChangeDetectionStrategy } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import { TranslationConstants } from '../extensions/translation-constants.extensions';
 import { SkillType } from '../models/skill-type-model';
 import { getDurationInDays } from '../models/utils';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialog } from '../dialogs/confirmation-dialog/confirmation-dialog';
-import { OperatorSkill } from '../models/operator-skill-model';
 import { AppStoreService } from '../services/app-store.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
@@ -41,8 +40,8 @@ export class SkillTypes {
   private appStoreService = inject(AppStoreService);
   private translateService = inject(TranslateService);
 
-  protected skillTypes = signal<SkillType[]>([]);
-  protected skills = signal<OperatorSkill[]>([]);
+  protected skillTypes = this.appStoreService.skillTypes;
+  protected skills = this.appStoreService.skills;
 
   protected getDurationInDays = getDurationInDays;
   protected dataSource!: MatTableDataSource<SkillType>;
@@ -50,19 +49,13 @@ export class SkillTypes {
   protected displayedColumns: string[] = ['name', 'duration', 'trainedOperators', 'actions'];
 
   constructor() {
-    this.appStoreService
-      .skillTypes$.subscribe(results => {
-      this.skillTypes.update(_ => results);
-      this.dataSource = new MatTableDataSource(results)
+    effect(() => {
+      this.dataSource = new MatTableDataSource(this.skillTypes());
     });
-
-    this.appStoreService
-      .skills$
-      .subscribe(skills => this.skills.update(_ => skills));
   }
 
   protected async onDeleteClick(skillType: SkillType) {
-    const translations = await lastValueFrom(this.translateService
+    const translations = await firstValueFrom(this.translateService
       .get([
         TranslationConstants.CONFIRMATION_DIALOG.DELETE_SKILL_TYPE_TITLE,
         TranslationConstants.CONFIRMATION_DIALOG.DELETE_SKILL_TYPE_MESSAGE
