@@ -205,7 +205,7 @@ internal class MaterialManagementFacade : FacadeBase, IMaterialManagement
             {
                 ContainerId = match.Id,
                 Material = match.Material,
-                Quantity = match.Quantity
+                Quantity = (decimal)match.Quantity
             }, cancellationToken);
             return;
         }
@@ -215,7 +215,7 @@ internal class MaterialManagementFacade : FacadeBase, IMaterialManagement
         {
             ContainerId = container.Id,
             Material = container.Material,
-            Quantity = container.Quantity
+            Quantity = (decimal)container.Quantity
         }, cancellationToken);
     }
 

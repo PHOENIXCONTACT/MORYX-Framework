@@ -10,6 +10,6 @@
 export const environment = {
     production: false,
     assets: "/",
-    rootUrl: 'https://localhost:7000',
+    rootUrl: 'https://localhost:5000',
     ignoreIam: true,
   };

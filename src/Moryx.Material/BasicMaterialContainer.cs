@@ -10,6 +10,6 @@ namespace Moryx.Material;
 /// Application engineers may register this resource type directly without subclassing.
 /// </summary>
 [Display(Name = "Basic Material Container", Description = "Default container resource holding a single material with a quantity.")]
-public class BasicMaterialContainer : MaterialContainer
+public class BasicMaterialContainer : MaterialContainer, IMaterialContainer
 {
 }

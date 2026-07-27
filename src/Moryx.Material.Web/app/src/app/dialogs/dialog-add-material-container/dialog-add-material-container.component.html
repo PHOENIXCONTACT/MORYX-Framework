@@ -18,7 +18,7 @@
           >
           @for (type of types(); track type) {
             <mat-list-option [value]="type" lines="{{ type.description ? 3 : 1 }}">
-              <span matListItemTitle>{{ type.displayName ?? type.name }}</span>
+              <span matListItemTitle>{{ type.displayName }}</span>
               <span>{{ type.description }}</span>
             </mat-list-option>
           }

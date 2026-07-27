@@ -35,11 +35,13 @@ import { routes } from "./app.routes";
 
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+import { ApiModule } from "./api/api.module";
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes, withComponentInputBinding()),
     importProvidersFrom(
+      ApiModule.forRoot({ rootUrl: environment.rootUrl }),
       BrowserModule,
       BrowserModule,
       FormsModule,

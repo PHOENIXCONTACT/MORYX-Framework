@@ -28,8 +28,8 @@ internal class InMemoryLineageEventStorage : ILineageEventStorage
         var lineage = new StateTransitionLineageEvent
         {
             ContainerId = e.Container.Id,
-            FromClassification = e.PreviousStateInformation,
-            ToClassification = e.NewStateInformation
+           // FromClassification = e.PreviousStateInformation,
+           // ToClassification = e.NewStateInformation
         };
 
         // Fire and forget lineage recording

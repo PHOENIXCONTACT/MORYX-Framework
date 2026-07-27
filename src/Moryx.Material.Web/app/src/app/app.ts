@@ -18,6 +18,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DialogAddMaterialContainerComponent } from './dialogs/dialog-add-material-container/dialog-add-material-container.component';
 import { MaterialFlowService } from './services/material-flow.service';
+import { MaterialManagementService } from './api/services';
 
 @Component({
     selector: 'app-root',
@@ -37,9 +38,10 @@ import { MaterialFlowService } from './services/material-flow.service';
 export class App {
     private route = inject(Router);
     private routeEvent = toSignal(this.route.events.pipe(filter(x => x && x.type === EventType.NavigationEnd)));
-    private filterEvents = inject(MaterialFlowService);
     private dialog = inject(MatDialog);
     private materialFlow = inject(MaterialFlowService);
+    private materialApi = inject(MaterialManagementService);
+    private containersSource =toSignal(this.materialApi.getAll_2());
 
     view = computed(() => {
         const event = this.routeEvent();
@@ -66,7 +68,7 @@ export class App {
     }
 
     products() {
-        return this.materialFlow.containers.map(x => x.type);
+        return this.containersSource()?.map(x => x.material) ?? [];
     }
 
     onAdd() {
