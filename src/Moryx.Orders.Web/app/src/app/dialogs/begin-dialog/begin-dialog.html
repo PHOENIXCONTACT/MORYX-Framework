@@ -30,7 +30,7 @@
     </div>
   }
 
-  <app-dialog-context [operationModel]="operation.model"></app-dialog-context>
+  <app-dialog-context class="full-width dialog-context" [operationModel]="operation.model"></app-dialog-context>
 
   <mat-grid-list cols="3" rowHeight="50px">
     <mat-grid-tile>
@@ -128,11 +128,8 @@
     }
   </mat-form-field>
 
-  <app-operator-selector class="operator-selector"
-    [isEnabled]="canBegin"
-    [(selectedOperatorId)]="selectedOperatorId"
-    (creatingOperatorFailed)="creatingOperatorFailed.set($event)">
-  </app-operator-selector>
+  <app-operator-selector class="full-width top-spaced" [isEnabled]="canBegin"
+    [(selectedOperatorId)]="selectedOperatorId" (creatingOperatorFailed)="creatingOperatorFailed.set($event)"/>
 </mat-dialog-content>
 
 <div mat-dialog-actions align="end">
