@@ -4,13 +4,22 @@
 */
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectorRef, Component, inject, OnInit, signal, viewChild, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  inject,
+  OnInit,
+  signal,
+  viewChild,
+  computed
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
-import { SnackbarService } from '@moryx/ngx-web-framework/services';
+import { SearchBarService, SearchRequest, SnackbarService } from '@moryx/ngx-web-framework/services';
 import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
-import { SearchBarService, SearchRequest } from '@moryx/ngx-web-framework/services';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
@@ -22,7 +31,7 @@ import { ReportDialog, ReportDialogData } from '@app/dialogs/report-dialog/repor
 import { InterruptDialog } from '@app/dialogs/interrupt-dialog/interrupt-dialog';
 import { InterruptDialogData } from '@app/dialogs/interrupt-dialog/interrupt-dialog-data';
 import { OperationViewModel } from '@app/models/operation-view-model';
-import { OperationModel, ReportModel, OperationStateClassification, ReportContext, LogLevel } from '@api/models';
+import { LogLevel, OperationModel, OperationStateClassification, ReportContext, ReportModel } from '@api/models';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { DrawerContent } from './drawer-content';
 import { CommonModule } from '@angular/common';
@@ -83,6 +92,10 @@ export class Operations implements OnInit {
   private destroyRef = inject(DestroyRef);
 
   protected operations = signal<OperationViewModel[]>([]);
+  protected filteredOperations = computed(() =>
+    this.filteringOperations(this.operations())
+  );
+
   protected DrawerContent = DrawerContent;
   protected drawerContent = signal<DrawerContent>(DrawerContent.None);
   protected selectedOperation = signal<OperationModel | undefined>(undefined);
@@ -168,7 +181,7 @@ export class Operations implements OnInit {
 
     return operations
       .filter(o =>
-        (!searchTerm || o.model.order?.includes(searchTerm)) &&
+        (!searchTerm || this.isMatch(o, searchTerm)) &&
         (o.model.classification !== OperationStateClassification.Completed || !hideCompleted)
       )
       .sort((a, b) => {
@@ -183,6 +196,16 @@ export class Operations implements OnInit {
         const startB = b.model.plannedStart ?? '';
         return startA.localeCompare(startB);
       });
+  }
+
+  private isMatch(operation: OperationViewModel, searchTerm: string) : boolean {
+    const result = (operation.model.order?.includes(searchTerm) ||
+      operation.model.number?.includes(searchTerm) ||
+      operation.model.productIdentifier?.includes(searchTerm) ||
+      operation.model.productName?.includes(searchTerm) ||
+      operation.model.stateDisplayName?.includes(searchTerm)) ?? false;
+
+    return result;
   }
 
   protected async onBegin(operation: OperationViewModel) {
