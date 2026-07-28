@@ -8,6 +8,7 @@ using Moryx.Material.Lineage;
 using Moryx.Material.Management.Components;
 using Moryx.Material.States;
 using Moryx.Runtime.Modules;
+using Moryx.Tools;
 
 namespace Moryx.Material.Management;
 
@@ -58,9 +59,24 @@ internal class MaterialManagementFacade : FacadeBase, IMaterialManagement
     public IReadOnlyList<Type> GetContainerTypes()
     {
         ValidateHealthState();
+
+        var supportingTypeNodes = ResourceTypes.SupportedTypes(typeof(IMaterialContainer));
+        var supportingTypes = new List<Type>();
+        supportingTypeNodes.ForEach(tn => ExtractAllSupportedTypes(tn, supportingTypes));
         // TODO: Add configurable filter to hide basic types, e.g. from Moryx.Material
-        return ResourceTypes.SupportedTypes(typeof(IMaterialContainer)).Where(t => t.Creatable)
-            .Select(t => t.ResourceType).ToArray();
+        return supportingTypes;
+    }
+
+    private static void ExtractAllSupportedTypes(IResourceTypeNode typeNode, List<Type> supportingTypes)
+    {
+        // Add non-abstract type
+        if (typeNode.Creatable)
+        {
+            supportingTypes.Add(typeNode.ResourceType);
+        }
+
+        // Add derived types which will all also be supported types
+        typeNode.DerivedTypes.ForEach(dt => ExtractAllSupportedTypes(dt, supportingTypes));
     }
 
     public IReadOnlyList<IMaterialContainer> GetContainers()
@@ -95,7 +111,7 @@ internal class MaterialManagementFacade : FacadeBase, IMaterialManagement
         ArgumentNullException.ThrowIfNull(request);
         if (!GetContainerTypes().Contains(targetContainerType))
         {
-            throw new InvalidOperationException($"{targetContainerType.Name} is not a valid type of material container. " +
+            throw new InvalidOperationException($"{targetContainerType.Name} is not a valid typeNode of material container. " +
                 "Check that the necessary packages are known to the assembly and the module configuration for enabled container types.");
         }
         cancellationToken.ThrowIfCancellationRequested();
