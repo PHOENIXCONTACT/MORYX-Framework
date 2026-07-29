@@ -9,11 +9,11 @@ using Moryx.Container;
 namespace Moryx.Resources.Management;
 
 /// <summary>
-/// Class that can construct a new <see cref="ResourceProxy{TTarget}"/> for a given
+/// Class that can construct a new <see cref="ResourceProxyOld{TTarget}"/> for a given
 /// resource type
 /// </summary>
 [Component(LifeCycle.Singleton)]
-internal class ResourceProxyBuilder
+internal class ResourceProxyBuilderOld
 {
     /// <summary>
     /// Name of the assembly that contains the dynamic resource proxies
@@ -71,7 +71,7 @@ internal class ResourceProxyBuilder
             return proxyType;
 
         // Create a type based on ResourceProxy and implement all interfaces
-        var baseType = typeof(ResourceProxy<>).MakeGenericType(resourceType);
+        var baseType = typeof(ResourceProxyOld<>).MakeGenericType(resourceType);
         var typeBuilder = ModuleBuilder.DefineType(proxyName, TypeAttributes.Public, baseType);
 
         // Define a constructor
@@ -84,7 +84,7 @@ internal class ResourceProxyBuilder
         }
 
         // Target field for property and method forwarding
-        const string propertyName = nameof(ResourceProxy<Resource>.Target);
+        const string propertyName = nameof(ResourceProxyOld<Resource>.Target);
         var targetProperty = baseType.GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly);
 
         var bindingFlags = BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public;
@@ -203,23 +203,23 @@ internal class ResourceProxyBuilder
         if (typeof(IResource).IsAssignableFrom(targetType))
         {
             elementType = targetType;
-            methodName = nameof(ResourceProxy.Extract);
+            methodName = nameof(ResourceProxyOld.Extract);
         }
         else
         {
             elementType = targetType.IsArray
                 ? targetType.GetElementType()
                 : targetType.GetGenericArguments()[0];
-            methodName = nameof(ResourceProxy.ExtractMany);
+            methodName = nameof(ResourceProxyOld.ExtractMany);
         }
 
-        var methodInfo = typeof(ResourceProxy).GetMethod(methodName, BindingFlags.Static | BindingFlags.NonPublic);
+        var methodInfo = typeof(ResourceProxyOld).GetMethod(methodName, BindingFlags.Static | BindingFlags.NonPublic);
         methodInfo = methodInfo.MakeGenericMethod(elementType);
         generator.Emit(OpCodes.Call, methodInfo);
     }
 
     /// <summary>
-    /// Define a method on the proxy that forwards the call the target 
+    /// Define a method on the proxy that forwards the call the target
     /// </summary>
     private static void DefineMethod(TypeBuilder typeBuilder, Type baseType, MethodInfo targetGetter, MethodInfo method)
     {
@@ -284,21 +284,21 @@ internal class ResourceProxyBuilder
         if (typeof(IResource).IsAssignableFrom(propertyType))
         {
             elementType = propertyType;
-            methodName = nameof(ResourceProxy.Convert);
+            methodName = nameof(ResourceProxyOld.Convert);
         }
         else
         {
             elementType = propertyType.IsArray
                 ? propertyType.GetElementType()
                 : propertyType.GetGenericArguments()[0];
-            methodName = nameof(ResourceProxy.ConvertMany);
+            methodName = nameof(ResourceProxyOld.ConvertMany);
         }
         var methodInfo = baseType.GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic);
         return methodInfo.MakeGenericMethod(elementType);
     }
 
     /// <summary>
-    /// Define an event and the corresponding handler method. This includes defining the field, the event and the 
+    /// Define an event and the corresponding handler method. This includes defining the field, the event and the
     /// add_ and remove_ methods. Finally we also add a method used as a listener for the Target event and raise method
     /// for this event.
     /// This code was inspired by: https://stackoverflow.com/questions/13619527/how-do-i-use-the-eventbuilder-to-create-an-event
@@ -383,16 +383,16 @@ internal class ResourceProxyBuilder
     }
 
     /// <summary>
-    /// Override <see cref="ResourceProxy.Attach"/> and register event handlers
+    /// Override <see cref="ResourceProxyOld.Attach"/> and register event handlers
     /// </summary>
     private static void OverrideAttach(TypeBuilder typeBuilder, Type baseType, MethodInfo targetGetter, Type targetType, Dictionary<EventInfo, MethodBuilder> eventHandlers)
     {
         var methodAttributes = MethodAttributes.Public | MethodAttributes.Final | MethodAttributes.Virtual | MethodAttributes.HideBySig;
-        var methodBuilder = typeBuilder.DefineMethod(nameof(ResourceProxy.Attach), methodAttributes, typeof(void), Type.EmptyTypes);
+        var methodBuilder = typeBuilder.DefineMethod(nameof(ResourceProxyOld.Attach), methodAttributes, typeof(void), Type.EmptyTypes);
 
         var generator = methodBuilder.GetILGenerator();
         generator.Emit(OpCodes.Ldarg_0); // Load 'this'
-        var baseAttach = baseType.GetMethod(nameof(ResourceProxy.Attach));
+        var baseAttach = baseType.GetMethod(nameof(ResourceProxyOld.Attach));
         generator.Emit(OpCodes.Call, baseAttach); // Non-virtual call on base.Attach()
         // Link event handler for each event on the target object
         foreach (var eventHandler in eventHandlers)
@@ -415,12 +415,12 @@ internal class ResourceProxyBuilder
     }
 
     /// <summary>
-    /// Override <see cref="ResourceProxy.Detach"/> and unregister event handlers
+    /// Override <see cref="ResourceProxyOld.Detach"/> and unregister event handlers
     /// </summary>
     private static void OverrideDetach(TypeBuilder typeBuilder, Type baseType, MethodInfo targetGetter, Type targetType, Dictionary<EventInfo, MethodBuilder> eventHandlers)
     {
         var methodAttributes = MethodAttributes.Public | MethodAttributes.Final | MethodAttributes.Virtual | MethodAttributes.HideBySig;
-        var methodBuilder = typeBuilder.DefineMethod(nameof(ResourceProxy.Detach), methodAttributes, typeof(void), Type.EmptyTypes);
+        var methodBuilder = typeBuilder.DefineMethod(nameof(ResourceProxyOld.Detach), methodAttributes, typeof(void), Type.EmptyTypes);
 
         var generator = methodBuilder.GetILGenerator();
         // Unregister event handler for each event on the target object
@@ -442,7 +442,7 @@ internal class ResourceProxyBuilder
 
         // Call base.Detach()
         generator.Emit(OpCodes.Ldarg_0); // Load 'this'
-        var baseAttach = baseType.GetMethod(nameof(ResourceProxy.Detach));
+        var baseAttach = baseType.GetMethod(nameof(ResourceProxyOld.Detach));
         generator.Emit(OpCodes.Call, baseAttach); // Non-virtual call on base.Attach()
 
         generator.Emit(OpCodes.Ret); // Finish method

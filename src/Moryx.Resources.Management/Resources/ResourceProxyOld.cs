@@ -9,7 +9,7 @@ namespace Moryx.Resources.Management;
 /// <summary>
 /// Base type for all proxies
 /// </summary>
-internal abstract class ResourceProxy : IResource
+internal abstract class ResourceProxyOld : IResource
 {
     /// <summary>
     /// Type controller field to convert references to public resources before returning them
@@ -26,7 +26,7 @@ internal abstract class ResourceProxy : IResource
     /// <summary>
     /// Create proxy for a given target
     /// </summary>
-    protected ResourceProxy(IResource target, IResourceTypeController typeController)
+    protected ResourceProxyOld(IResource target, IResourceTypeController typeController)
     {
         Target = target;
         _typeController = typeController;
@@ -90,7 +90,7 @@ internal abstract class ResourceProxy : IResource
     {
         if (instance is null) return default;
 
-        var proxy = (ResourceProxy)instance;
+        var proxy = (ResourceProxyOld)instance;
         return (TResource)proxy.Target;
     }
 
@@ -109,7 +109,7 @@ internal abstract class ResourceProxy : IResource
 /// <summary>
 /// Resource proxy base for typed access to resources
 /// </summary>
-internal abstract class ResourceProxy<TTarget> : ResourceProxy
+internal abstract class ResourceProxyOld<TTarget> : ResourceProxyOld
     where TTarget : Resource
 {
     /// <summary>
@@ -129,7 +129,7 @@ internal abstract class ResourceProxy<TTarget> : ResourceProxy
     /// <summary>
     /// Create proxy for a given target
     /// </summary>
-    protected ResourceProxy(TTarget target, IResourceTypeController typeController) : base(target, typeController)
+    protected ResourceProxyOld(TTarget target, IResourceTypeController typeController) : base(target, typeController)
     {
     }
 }
