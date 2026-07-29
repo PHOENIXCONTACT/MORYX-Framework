@@ -6,9 +6,12 @@ using Moryx.Modules;
 namespace Moryx.Material.Integrations.Orders.Integrator.Components;
 
 /// <summary>
-/// Orchestrates configured <see cref="Linking.LinkingHook"/> plugins for all
+/// Orchestrates configured <see cref="Linking.ILinkingHook"/> plugins for all
 /// <see cref="IOrderLinkedMaterialContainer"/> resources at runtime.
 /// </summary>
 internal interface ILinkingHookManager : IAsyncPlugin
 {
+    void ProcessLinkingRequested(RequestContext context);
+
+    void ProcessLinkingApplied(AppliedContext context);
 }

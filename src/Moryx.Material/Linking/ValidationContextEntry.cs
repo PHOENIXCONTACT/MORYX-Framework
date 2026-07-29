@@ -11,17 +11,23 @@ public class ValidationContextEntry
     /// <summary>Severity of the entry.</summary>
     public ValidationSeverity Severity { get; }
 
-    /// <summary>Human readable text.</summary>
+    /// <summary>Human-readable text.</summary>
     public string Text { get; }
 
-    /// <summary>Originating hook type (fully qualified), if known.</summary>
+    /// <summary>Originating hook type, if known.</summary>
     public Type? HookType { get; }
 
-    /// <summary>Time the entry was recorded.</summary>
-    public DateTime Timestamp { get; }
+    /// <summary>UTC timestamp when the entry was recorded.</summary>
+    public DateTimeOffset Timestamp { get; }
 
-    /// <summary>Creates a new entry.</summary>
-    public ValidationContextEntry(ValidationSeverity severity, string text, Type? hookType, DateTime timestamp)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ValidationContextEntry"/> class.
+    /// </summary>
+    /// <param name="severity">Severity of the entry.</param>
+    /// <param name="text">Human-readable entry text.</param>
+    /// <param name="hookType">Originating hook type, if known.</param>
+    /// <param name="timestamp">UTC timestamp when the entry was recorded.</param>
+    public ValidationContextEntry(ValidationSeverity severity, string text, Type? hookType, DateTimeOffset timestamp)
     {
         Severity = severity;
         Text = text;

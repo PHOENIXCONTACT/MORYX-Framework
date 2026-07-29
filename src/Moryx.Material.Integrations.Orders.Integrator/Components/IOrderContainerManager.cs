@@ -7,9 +7,8 @@ namespace Moryx.Material.Integrations.Orders.Integrator.Components;
 
 /// <summary>
 /// Lifecycle manager for <see cref="IOrderLinkedMaterialContainer"/> resources.
-/// Handles activation/deactivation of <see cref="OrderReference"/> instances based on
-/// integration startup, shutdown and order business events, and cascades unlinking when
-/// containers are removed.
+/// Handles container registration and container lifecycle events.
+/// It also forwards order-linking events to be handled.
 /// </summary>
 internal interface IOrderContainerManager : IAsyncPlugin
 {

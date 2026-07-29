@@ -1,35 +1,32 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.Extensions.Logging;
-using Moryx.AbstractionLayer.Resources;
 using Moryx.Configuration;
 using Moryx.Container;
+using Moryx.Material.Facade;
+using Moryx.Material.Integrations.Orders.Integrator.Components;
 using Moryx.Material.Linking;
-using Moryx.Runtime.Modules;
 using Moryx.Orders;
-
-#pragma warning disable CS8618
+using Moryx.Runtime.Modules;
 
 namespace Moryx.Material.Integrations.Orders.Integrator;
 
 /// <summary>
 /// Module controller of the order integration for material management. This module wires
 /// <see cref="IOrderLinkedMaterialContainer"/> resources to the order management facade and
-/// orchestrates configurable <see cref="LinkingHook"/> plugins.
+/// orchestrates configurable <see cref="ILinkingHook"/> plugins.
 /// </summary>
-[Description("Wires order linking semantics into the material management module.")]
-public class ModuleController(
-    IModuleContainerFactory containerFactory,
-    IConfigManager configManager,
-    ILoggerFactory loggerFactory)
+[Display(Name = "Material Mánagement - Order Integration", Description = "Wires order linking semantics into the material management module.")]
+public class ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory)
     : ServerModuleBase<ModuleConfig>(containerFactory, configManager, loggerFactory)
 {
-    internal const string ModuleName = "MaterialOrderIntegrator";
-
     /// <inheritdoc />
-    public override string Name => ModuleName;
+    public override string Name => "Material Mánagement - Order Integration";
+
+    #region Dependencies
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
     /// <summary>
     /// Order management facade used to resolve <see cref="Order"/> business objects.
@@ -38,38 +35,38 @@ public class ModuleController(
     public IOrderManagement OrderManagement { get; set; }
 
     /// <summary>
-    /// Material management facade used to record lineage events.
+    /// Material management facade used to record lineage events and retrieve relevant order linked containers
     /// </summary>
     [RequiredModuleApi(IsStartDependency = true, IsOptional = false)]
     public IMaterialManagement MaterialManagement { get; set; }
 
-    /// <summary>
-    /// Resource management used to discover and observe order-linked containers.
-    /// </summary>
-    [RequiredModuleApi(IsStartDependency = true, IsOptional = false)]
-    public IResourceManagement ResourceManagement { get; set; }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+    #endregion
 
     /// <inheritdoc />
     protected override Task OnInitializeAsync(CancellationToken cancellationToken)
     {
-        Container
+        _ = Container
             .SetInstance(OrderManagement)
-            .SetInstance(MaterialManagement)
-            .SetInstance(ResourceManagement);
+            .SetInstance(MaterialManagement);
 
-        Container.LoadComponents<LinkingHook>();
+        Container.LoadComponents<ILinkingHook>();
         return Task.CompletedTask;
     }
 
     /// <inheritdoc />
-    protected override Task OnStartAsync(CancellationToken cancellationToken)
+    protected override async Task OnStartAsync(CancellationToken cancellationToken)
     {
-        return Container.Resolve<ComponentOrchestration>().StartAsync(cancellationToken);
+        await Container.Resolve<ILinkingHookManager>().StartAsync(cancellationToken);
+        await Container.Resolve<IOrderReferencesPool>().StartAsync(cancellationToken);
+        await Container.Resolve<IOrderContainerManager>().StartAsync(cancellationToken);
     }
 
     /// <inheritdoc />
-    protected override Task OnStopAsync(CancellationToken cancellationToken)
+    protected override async Task OnStopAsync(CancellationToken cancellationToken)
     {
-        return Container.Resolve<ComponentOrchestration>().StopAsync(cancellationToken);
+        await Container.Resolve<IOrderContainerManager>().StopAsync(cancellationToken);
+        await Container.Resolve<IOrderReferencesPool>().StopAsync(cancellationToken);
+        await Container.Resolve<ILinkingHookManager>().StopAsync(cancellationToken);
     }
 }

@@ -19,23 +19,14 @@ public abstract class Reference
     /// Current state of this reference.
     /// </summary>
     [DataMember]
-    public ReferenceState State { get; protected internal set; } = ReferenceState.Initialized;
+    public ReferenceState State { get; protected set; } = ReferenceState.Initialized;
 }
 
-/// <summary>
-/// State machine of <see cref="Reference"/>.
-/// </summary>
-public enum ReferenceState
+public static class ReferenceExtensions
 {
-    /// <summary>Reference info available; business object not yet resolved.</summary>
-    Initialized = 0,
-
-    /// <summary>Business object has been resolved; mapped properties accessible.</summary>
-    Active = 1,
-
-    /// <summary>Business object intentionally detached (e.g. shutdown).</summary>
-    Inactive = 2,
-
-    /// <summary>Lookup for the business object failed.</summary>
-    Unavailable = 3
+    extension(Reference reference)
+    {
+        public bool IsActive() => reference.State == ReferenceState.Active;
+        public bool IsValid() => reference.State != ReferenceState.Unavailable;
+    }
 }
