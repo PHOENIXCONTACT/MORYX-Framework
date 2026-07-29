@@ -68,7 +68,8 @@ internal static class Converter
             Material = container.Material,
             Quantity = container.Quantity,
             Unit = container.Unit,
-            State = container.State.ToModel()
+            State = container.State.ToModel(),
+            Type = container.GetType().ToModel(),
         };
     }
 
