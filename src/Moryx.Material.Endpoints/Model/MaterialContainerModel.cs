@@ -31,4 +31,7 @@ public class MaterialContainerModel
 
     [DataMember]
     public MaterialStateClassificationModel State { get; set; }
+
+    [DataMember]
+    public MaterialContainerTypeModel Type { get; set; }
 }
