@@ -11,30 +11,20 @@ namespace Moryx.Material.Linking;
 /// They observe and may influence the validation phase via the <see cref="ValidationContext"/>,
 /// and produce side effects in the applied phase.
 /// </remarks>
-public abstract class LinkingHook
+public abstract class LinkingHook : ILinkingHook
 {
-    /// <summary>
-    /// Container raising the linking event. Set by the orchestrator before invocation.
-    /// </summary>
-    protected internal IMaterialContainer Container { get; internal set; } = null!;
+    /// <inheritdoc/>
+    public required IMaterialContainer Container { protected get; set; }
 
-    /// <summary>
-    /// Linking request being handled. Set by the orchestrator before invocation.
-    /// </summary>
-    protected internal LinkingRequest Request { get; internal set; } = null!;
+    /// <inheritdoc/>
+    public required LinkingRequest Request { protected get; set; }
 
-    /// <summary>
-    /// Shared validation context. Set by the orchestrator before invocation.
-    /// </summary>
-    protected internal ValidationContext ValidationContext { get; internal set; } = null!;
+    /// <inheritdoc/>
+    public required ValidationContext ValidationContext { protected get; set; }
 
-    /// <summary>
-    /// Called during the request phase. Hooks may add validation entries or requirements.
-    /// </summary>
-    public virtual Task HandleLinkRequestAsync(CancellationToken ct) => Task.CompletedTask;
+    /// <inheritdoc/>
+    public Task HandleLinkRequestAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 
-    /// <summary>
-    /// Called during the applied phase to perform side effects (notifications, tracking, etc.).
-    /// </summary>
-    public virtual Task HandleLinkAppliedAsync(CancellationToken ct) => Task.CompletedTask;
+    /// <inheritdoc/>
+    public Task HandleLinkAppliedAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 }

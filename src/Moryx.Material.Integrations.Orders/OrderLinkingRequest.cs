@@ -26,11 +26,6 @@ public class OrderLinkingRequest : LinkingRequest
     public OrderReference? PreviousOrder { get; }
 
     /// <summary>
-    /// New <see cref="OrderReference"/> populated by the integration during request handling.
-    /// </summary>
-    public OrderReference? NewOrder { get; internal set; }
-
-    /// <summary>
     /// Creates a linking (or re-linking) request.
     /// </summary>
     public OrderLinkingRequest(string orderNumber, string? operationNumber = null, OrderReference? previousOrder = null)
@@ -41,6 +36,7 @@ public class OrderLinkingRequest : LinkingRequest
         IsUnlink = false;
     }
 
+    // TODO: Add nice extension methods on LinkingRequest for creating the object
     /// <summary>
     /// Creates a pure unlinking request.
     /// </summary>

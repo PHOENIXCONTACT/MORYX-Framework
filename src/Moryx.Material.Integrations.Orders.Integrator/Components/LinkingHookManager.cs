@@ -1,248 +1,197 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.ComponentModel.DataAnnotations;
 using Microsoft.Extensions.Logging;
-using Moryx.AbstractionLayer.Resources;
+using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Logging;
 using Moryx.Material.Linking;
 using Moryx.Orders;
+using ValidationContext = Moryx.Material.Linking.ValidationContext;
 
 namespace Moryx.Material.Integrations.Orders.Integrator.Components;
 
 [Component(LifeCycle.Singleton, typeof(ILinkingHookManager))]
 internal class LinkingHookManager : ILinkingHookManager, ILoggingComponent
 {
-    public IModuleLogger Logger { get; set; } = null!;
+    #region Dependencies
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+    public IModuleLogger Logger { get; set; }
 
-    public IResourceManagement ResourceManagement { get; set; } = null!;
+    public IOrderManagement OrderManagement { get; set; }
 
-    public IOrderManagement OrderManagement { get; set; } = null!;
+    public IOrderLinkingHookFactory HookFactory { get; set; }
 
-    public IMaterialManagement MaterialManagement { get; set; } = null!;
+    public IOrderReferencesPool ReferencesPool { get; set; }
 
-    public ILinkingHookFactory HookFactory { get; set; } = null!;
-
-    public ModuleConfig Config { get; set; } = null!;
+    public ModuleConfig Config { get; set; }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+    #endregion
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        ResourceManagement.ResourceAdded += OnResourceAdded;
-        ResourceManagement.ResourceRemoved += OnResourceRemoved;
-
-        foreach (var container in ResourceManagement.GetResources<IOrderLinkedMaterialContainer>())
-            Subscribe(container);
-
         return Task.CompletedTask;
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
     {
-        ResourceManagement.ResourceAdded -= OnResourceAdded;
-        ResourceManagement.ResourceRemoved -= OnResourceRemoved;
-
-        foreach (var container in ResourceManagement.GetResources<IOrderLinkedMaterialContainer>())
-            Unsubscribe(container);
-
         return Task.CompletedTask;
     }
 
-    private void OnResourceAdded(object? sender, IResource resource)
+    public void ProcessLinkingRequested(RequestContext context)
     {
-        if (resource is IOrderLinkedMaterialContainer container)
-            Subscribe(container);
-    }
-
-    private void OnResourceRemoved(object? sender, IResource resource)
-    {
-        if (resource is IOrderLinkedMaterialContainer container)
-            Unsubscribe(container);
-    }
-
-    private void Subscribe(IOrderLinkedMaterialContainer container)
-    {
-        container.OrderLinkRequested += OnOrderLinkRequested;
-        container.OrderLinkApplied += OnOrderLinkApplied;
-    }
-
-    private void Unsubscribe(IOrderLinkedMaterialContainer container)
-    {
-        container.OrderLinkRequested -= OnOrderLinkRequested;
-        container.OrderLinkApplied -= OnOrderLinkApplied;
-    }
-
-    private void OnOrderLinkRequested(object? sender, OrderLinkRequestEventArgs e)
-    {
+        // TODO: Do we want this? If yes we need cancellation token/module stop handling
         // Schedule async handling without blocking the event source.
-        _ = HandleLinkRequestedAsync(e);
+        _ = HandleLinkRequestedAsync(context);
     }
 
-    private async Task HandleLinkRequestedAsync(OrderLinkRequestEventArgs e)
+    private async Task HandleLinkRequestedAsync(RequestContext context)
     {
-        var request = e.OrderRequest;
-        var validationContext = new ValidationContext();
-        Order? order = null;
-        var previousOrder = request.PreviousOrder?.Order;
+        var request = context.OrderRequest;
+        var container = context.Container;
+        var validation = new ValidationContext();
+        Order? orderToBeLinked = null;
+        OrderReference? referenceToBeLinked = null;
 
         try
         {
-            // Resolve the new order business object if this is a (re)link
-            if (!request.IsUnlink && request.OrderNumber != null)
+            // Resolve the new orderToBeLinked business object if this is a (re)link
+            if (!request.IsUnlink && request.OrderNumber is not null)
             {
-                var operation = await OrderManagement
-                    .LoadOperationAsync(request.OrderNumber, request.OperationNumber ?? string.Empty)
-                    .ConfigureAwait(false);
-
-                order = operation?.Order;
-                if (order == null)
+                orderToBeLinked = await OrderManagement.LoadOrderFor(request.OrderNumber, request.OperationNumber);
+                referenceToBeLinked = ReferencesPool.GetOrCreate(request.OrderNumber, request.OperationNumber);
+                if (orderToBeLinked == null)
                 {
-                    validationContext.AddError(
-                        $"Order '{request.OrderNumber}' (operation '{request.OperationNumber}') could not be resolved.",
-                        GetType());
-                }
-                else
-                {
-                    var reference = new OrderReference(request.OrderNumber, request.OperationNumber);
-                    reference.Attach(order);
-                    request.NewOrder = reference;
+                    validation.AddError($"Order '{request.OrderNumber}' (operation '{request.OperationNumber}') could not be resolved. Hooks executed ");
                 }
             }
 
+            var previouslyLinkedOrder = await OrderManagement.LoadOrderFor(request.PreviousOrder);
             // Execute all configured hooks
-            await ExecuteHooksAsync(
-                e,
-                validationContext,
-                order,
-                previousOrder,
-                applyPhase: false,
-                CancellationToken.None);
+
+            Config.Hooks.ForEach(async hook => await ExecuteHook(hook, container, request, validation, orderToBeLinked, previouslyLinkedOrder, false));
         }
         catch (Exception ex)
         {
-            Logger?.Log(LogLevel.Error, ex, "Error during link request handling for container {0}", e.Container.Id);
-            validationContext.AddError(ex, GetType());
+            Logger?.LogError(ex, "Error during linking request handling for container {id} - {name}", container.Id, container.Name);
+            validation.AddError(ex);
+        }
+
+        if (context.ResponseCallback is null)
+        {
+            Logger?.LogWarning("Material container {id} - {name} requests linking to an order without providing a {callback}",
+                container.Id, container.Name, nameof(LinkingRequestEventArgs.ResponseCallback));
+            return;
         }
 
         // Deliver response to container
-        var response = new LinkingResponse(validationContext, request.NewOrder);
-        if (e.ResponseCallback != null)
-        {
-            try
-            {
-                await e.ResponseCallback(response);
-            }
-            catch (Exception ex)
-            {
-                Logger?.Log(LogLevel.Error, ex, "Container failed to handle linking response for {0}", e.Container.Id);
-            }
-        }
-    }
-
-    private void OnOrderLinkApplied(object? sender, OrderLinkAppliedEventArgs e)
-    {
-        _ = HandleLinkAppliedAsync(e);
-    }
-
-    private async Task HandleLinkAppliedAsync(OrderLinkAppliedEventArgs e)
-    {
-        var request = (OrderLinkingRequest)e.Request;
-        var order = e.AppliedReference?.Order ?? request.NewOrder?.Order;
-        var previousOrder = request.PreviousOrder?.Order;
-
+        var response = new LinkingResponse(validation, referenceToBeLinked);
         try
         {
-            // Forge a synthetic OrderLinkRequestEventArgs for hook context propagation
-            var requestArgs = new OrderLinkRequestEventArgs((IOrderLinkedMaterialContainer)e.Container, request);
-            await ExecuteHooksAsync(
-                requestArgs,
-                e.Context,
-                order,
-                previousOrder,
-                applyPhase: true,
-                CancellationToken.None);
-
-            await RecordLineageAsync(e, request);
+            await context.ResponseCallback(response);
         }
         catch (Exception ex)
         {
-            Logger?.Log(LogLevel.Error, ex, "Error during link applied handling for container {0}", e.Container.Id);
+            Logger?.Log(LogLevel.Error, ex, "Container failed to handle linking response for {id} - {name}", container.Id, container.Name);
         }
     }
 
-    private async Task ExecuteHooksAsync(
-        OrderLinkRequestEventArgs e,
-        ValidationContext context,
-        Order? order,
-        Order? previousOrder,
-        bool applyPhase,
-        CancellationToken cancellationToken)
+    private async Task ExecuteHook(OrderLinkingHookConfig hookName, IMaterialContainer container,
+        OrderLinkingRequest request, ValidationContext validation, Order? order, Order? previousOrder, bool applyPhase)
     {
-        foreach (var hookName in Config.Hooks)
+        OrderLinkingHook? hook = null;
+        try
         {
-            LinkingHook? hook = null;
-            try
+            hook = await HookFactory.Create(hookName, CancellationToken.None) as OrderLinkingHook;
+            if (hook is null)
             {
-                hook = HookFactory.Create(hookName);
-                if (hook == null)
-                {
-                    context.AddError($"Configured hook '{hookName}' could not be created.", GetType());
-                    continue;
-                }
-
-                hook.Container = e.Container;
-                hook.Request = e.Request;
-                hook.ValidationContext = context;
-
-                if (hook is OrderLinkingHook orderHook)
-                {
-                    orderHook.Order = order;
-                    orderHook.PreviousOrder = previousOrder;
-                }
-
-                if (applyPhase)
-                    await hook.HandleLinkAppliedAsync(cancellationToken);
-                else
-                    await hook.HandleLinkRequestAsync(cancellationToken);
+                validation.AddError($"Configured hook '{hookName}' could not be created.");
+                return;
             }
-            catch (Exception ex)
+
+            hook.Container = container;
+            hook.Request = request;
+            hook.ValidationContext = validation;
+            hook.Order = order;
+            hook.PreviousOrder = previousOrder;
+            
+            if (applyPhase)
             {
-                Logger?.Log(LogLevel.Error, ex, "Hook {0} threw during {1}", hookName, applyPhase ? "apply" : "request");
-                context.AddError(ex, hook?.GetType() ?? typeof(LinkingHook));
+                await hook.HandleLinkAppliedAsync(CancellationToken.None);
             }
-            finally
+            else
             {
-                if (hook != null)
-                    HookFactory.Destroy(hook);
+                await hook.HandleLinkRequestAsync(CancellationToken.None);
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger?.Log(LogLevel.Error, ex, "Hook {0} threw during {1}", hookName, applyPhase ? "apply" : "request");
+            validation.AddError(ex, hook?.GetType() ?? typeof(ILinkingHook));
+        }
+        finally
+        {
+            if (hook != null)
+            {
+                HookFactory.Destroy(hook);
             }
         }
     }
 
-    private async Task RecordLineageAsync(OrderLinkAppliedEventArgs e, OrderLinkingRequest request)
+    public void ProcessLinkingApplied(AppliedContext context)
     {
-        var successful = !e.Context.HasErrors;
+        // TODO: Do we want this? If yes we need cancellation token/module stop handling
+        _ = HandleLinkAppliedAsync(context);
+    }
 
-        if (request.PreviousOrder != null)
+    private async Task HandleLinkAppliedAsync(AppliedContext context)
+    {
+        var request = context.OrderRequest;
+        var container = context.Container;
+        var validation = context.Validation;
+        var hasLinkedOrder = !request.IsUnlink && request.OrderNumber is not null;
+        var linkedReference = hasLinkedOrder ? ReferencesPool.GetOrCreate(request.OrderNumber, request.OperationNumber) : null;
+        var linkedOrder = hasLinkedOrder ? await OrderManagement.LoadOrderFor(request.OrderNumber, request.OperationNumber) : null;
+        var previouslyLinkedOrder = await OrderManagement.LoadOrderFor(request.PreviousOrder);
+        try
         {
-            await MaterialManagement.RecordLineageAsync(new OrderUnlinkLineageEvent
-            {
-                ContainerId = e.Container.Id,
-                OrderNumber = request.PreviousOrder.OrderNumber,
-                OperationNumber = request.PreviousOrder.OperationNumber,
-                Successful = successful,
-                Description = "Order unlinked from container."
-            });
+            Config.Hooks.ForEach(async hook =>
+            await ExecuteHook(hook, container, request, validation, linkedOrder, previouslyLinkedOrder, false));
+            //await RecordLineageAsync(e, request);
         }
-
-        if (!request.IsUnlink && e.AppliedReference != null)
+        catch (Exception ex)
         {
-            await MaterialManagement.RecordLineageAsync(new OrderLinkLineageEvent
-            {
-                ContainerId = e.Container.Id,
-                OrderNumber = e.AppliedReference.OrderNumber,
-                OperationNumber = e.AppliedReference.OperationNumber,
-                Successful = successful,
-                Description = "Order linked to container."
-            });
+            Logger?.LogError(ex, "Error during link applied handling for container {id} - {name}", container.Id, container.Name);
         }
     }
+
+    //private async Task RecordLineageAsync(OrderLinkAppliedEventArgs e, OrderLinkingRequest request)
+    //{
+    //    var successful = !e.Context.HasErrors;
+
+    //    if (request.PreviousOrder != null)
+    //    {
+    //        await MaterialManagement.RecordLineageAsync(new OrderUnlinkLineageEvent
+    //        {
+    //            ContainerId = e.Container.Id,
+    //            OrderNumber = request.PreviousOrder.OrderNumber,
+    //            OperationNumber = request.PreviousOrder.OperationNumber,
+    //            Successful = successful,
+    //            Description = "Order unlinked from container."
+    //        });
+    //    }
+
+    //    if (!request.IsUnlink && e.AppliedReference != null)
+    //    {
+    //        await MaterialManagement.RecordLineageAsync(new OrderLinkLineageEvent
+    //        {
+    //            ContainerId = e.Container.Id,
+    //            OrderNumber = e.AppliedReference.OrderNumber,
+    //            OperationNumber = e.AppliedReference.OperationNumber,
+    //            Successful = successful,
+    //            Description = "Order linked to container."
+    //        });
+    //    }
+    //}
 }

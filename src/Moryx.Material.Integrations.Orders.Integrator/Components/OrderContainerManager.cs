@@ -1,114 +1,166 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Microsoft.Extensions.Logging;
-using Moryx.AbstractionLayer.Resources;
+using System.Collections.Concurrent;
 using Moryx.Container;
 using Moryx.Logging;
-using Moryx.Orders;
+using Moryx.Material.Facade;
+using Moryx.Material.States;
+using Moryx.Tools;
 
 namespace Moryx.Material.Integrations.Orders.Integrator.Components;
 
 [Component(LifeCycle.Singleton, typeof(IOrderContainerManager))]
 internal class OrderContainerManager : IOrderContainerManager, ILoggingComponent
 {
-    public IModuleLogger Logger { get; set; } = null!;
+    private readonly ConcurrentDictionary<long, IOrderLinkedMaterialContainer> _containers = [];
 
-    public IResourceManagement ResourceManagement { get; set; } = null!;
+    #region Dependencies
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+    public IModuleLogger Logger { get; set; }
 
-    public IOrderManagement OrderManagement { get; set; } = null!;
+    public IMaterialManagement MaterialManagement { get; set; }
 
-    public IMaterialManagement MaterialManagement { get; set; } = null!;
+    public ILinkingHookManager HookManager { get; set; }
+
+    public IOrderReferencesPool OperationReferencePool { get; set; }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+    #endregion
+
+    #region Lifecycle
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        // Restore references for already-loaded containers
-        foreach (var container in ResourceManagement.GetResources<IOrderLinkedMaterialContainer>())
-            ActivateReference(container);
+        MaterialManagement.ContainerStateChanged += OnContainerStateChanged;
+        MaterialManagement.GetContainers(c => c is IOrderLinkedMaterialContainer { State: not StateClassification.Deregistered })
+            .Cast<IOrderLinkedMaterialContainer>().ForEach(TryAdd);
+        _containers.ForEach(pair => SubstituteReferenceOf(pair.Value));
 
-        ResourceManagement.ResourceAdded += OnResourceAdded;
-        ResourceManagement.ResourceRemoved += OnResourceRemoved;
         return Task.CompletedTask;
+    }
+
+    private void OnContainerStateChanged(object? sender, ContainerStateChangedEventArgs e)
+    {
+        if (e.Container is not IOrderLinkedMaterialContainer container)
+        {
+            return;
+        }
+        else if (e.NewStateInformation is DeregisteredStateInformation)
+        {
+            if (_containers.TryRemove(container.Id, out var removedContainer))
+            {
+                Detach(removedContainer);
+                //HandleContainerRemoved(removedContainer);
+            }
+        }
+        else
+        {
+            TryAdd(container);
+        }
+    }
+
+    private void TryAdd(IOrderLinkedMaterialContainer c)
+    {
+        if (!_containers.TryAdd(c.Id, c))
+        {
+            return;
+        }
+
+        SubstituteReferenceOf(c);
+        c.OrderLinkRequested += OnOrderLinkRequested;
+        c.OrderLinkApplied += OnOrderLinkApplied;
+    }
+
+    private void OnOrderLinkRequested(object? sender, OrderLinkRequestEventArgs e)
+    {
+        if (sender is IOrderLinkedMaterialContainer c)
+        {
+            HookManager.ProcessLinkingRequested(new(c, e));
+        }
+    }
+
+    private void OnOrderLinkApplied(object? sender, OrderLinkAppliedEventArgs e)
+    {
+        if (sender is IOrderLinkedMaterialContainer c)
+        {
+            HookManager.ProcessLinkingApplied(new(c, e));
+        }
+    }
+
+    private void SubstituteReferenceOf(IOrderLinkedMaterialContainer value)
+    {
+        var link = value.LinkedOrder;
+
+        // Container is not linked
+        if (link is null)
+        {
+            return;
+        }
+
+        var reference = OperationReferencePool.Get(link);
+        // Link is already an actively managed reference
+        if (ReferenceEquals(reference, link))
+        {
+            return;
+        }
+
+        // Link references an unknown order in the system
+        if (reference is null)
+        {
+            value.LinkedOrder = OperationReferencePool.GetOrCreate(link.OrderNumber, link.OperationNumber);
+            return;
+        }
+
+        // Link is updated and now actively managed
+        value.LinkedOrder = reference;
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
     {
-        ResourceManagement.ResourceAdded -= OnResourceAdded;
-        ResourceManagement.ResourceRemoved -= OnResourceRemoved;
+        MaterialManagement.ContainerStateChanged -= OnContainerStateChanged;
+        _containers.ForEach(Detach);
+        _containers.Clear();
 
-        // Deactivate all references on shutdown
-        foreach (var container in ResourceManagement.GetResources<IOrderLinkedMaterialContainer>())
-        {
-            container.LinkedOrder?.Detach();
-        }
         return Task.CompletedTask;
     }
 
-    private void OnResourceAdded(object? sender, IResource resource)
+    private void Detach(KeyValuePair<long, IOrderLinkedMaterialContainer> pair)
     {
-        if (resource is IOrderLinkedMaterialContainer container)
-            ActivateReference(container);
+        Detach(pair.Value);
     }
 
-    private void OnResourceRemoved(object? sender, IResource resource)
+    private void Detach(IOrderLinkedMaterialContainer container)
     {
-        if (resource is IOrderLinkedMaterialContainer container)
-            HandleContainerRemoved(container);
+        container.OrderLinkRequested -= OnOrderLinkRequested;
+        container.OrderLinkApplied -= OnOrderLinkApplied;
     }
 
-    private void ActivateReference(IOrderLinkedMaterialContainer container)
-    {
-        var reference = container.LinkedOrder;
-        if (reference == null)
-            return;
+    // TODO: Lineage realted handling
+    //private void HandleContainerRemoved(IOrderLinkedMaterialContainer container)
+    //{
+    //    // Cascade auto-unlink: record an unlink lineage event when an order-linked container is removed.
+    //    var reference = container.LinkedOrder;
+    //    if (reference == null)
+    //        return;
 
-        try
-        {
-            // Best-effort synchronous resolution; LoadOperationAsync is async so we trigger a fire-and-forget
-            _ = ResolveAsync(reference);
-        }
-        catch (Exception ex)
-        {
-            Logger?.Log(LogLevel.Warning, ex, "Failed to activate reference for container {0}", container.Id);
-            reference.MarkUnavailable();
-        }
-    }
+    //    try
+    //    {
+    //        _ = MaterialManagement.RecordLineageAsync(new OrderUnlinkLineageEvent
+    //        {
+    //            ContainerId = container.Id,
+    //            OrderNumber = reference.OrderNumber,
+    //            OperationNumber = reference.OperationNumber,
+    //            Successful = true,
+    //            Description = "Order unlinked due to container removal."
+    //        });
 
-    private async Task ResolveAsync(OrderReference reference)
-    {
-        var operation = await OrderManagement
-            .LoadOperationAsync(reference.OrderNumber, reference.OperationNumber ?? string.Empty)
-            .ConfigureAwait(false);
+    //        reference.Detach();
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        Logger?.Log(LogLevel.Warning, ex, "Failed to cascade unlink for container {0}", container.Id);
+    //    }
+    //}
 
-        if (operation?.Order != null)
-            reference.Attach(operation.Order);
-        else
-            reference.MarkUnavailable();
-    }
-
-    private void HandleContainerRemoved(IOrderLinkedMaterialContainer container)
-    {
-        // Cascade auto-unlink: record an unlink lineage event when an order-linked container is removed.
-        var reference = container.LinkedOrder;
-        if (reference == null)
-            return;
-
-        try
-        {
-            _ = MaterialManagement.RecordLineageAsync(new OrderUnlinkLineageEvent
-            {
-                ContainerId = container.Id,
-                OrderNumber = reference.OrderNumber,
-                OperationNumber = reference.OperationNumber,
-                Successful = true,
-                Description = "Order unlinked due to container removal."
-            });
-
-            reference.Detach();
-        }
-        catch (Exception ex)
-        {
-            Logger?.Log(LogLevel.Warning, ex, "Failed to cascade unlink for container {0}", container.Id);
-        }
-    }
+    #endregion
 }

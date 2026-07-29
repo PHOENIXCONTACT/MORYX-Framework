@@ -1,6 +1,8 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Microsoft.Extensions.Logging;
+
 namespace Moryx.Material.States;
 
 internal sealed class UninitializedState(MaterialContainer context, StateMachines.StateBase.StateMap stateMap) :
@@ -34,8 +36,10 @@ internal sealed class UninitializedState(MaterialContainer context, StateMachine
                 NextState(StateDeregistered);
                 return;
             default:
+                Context.Logger?.LogError(
+                    "Tried to advance the material container {id}-{name} with unkown state information of type {type}. " +
+                    "Remaining in {state}...", Context.Id, Context.Name, info?.GetType().Name, nameof(UninitializedState));
                 return;
         }
     }
 }
-

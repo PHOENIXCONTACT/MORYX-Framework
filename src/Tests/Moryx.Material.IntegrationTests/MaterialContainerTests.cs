@@ -65,9 +65,9 @@ internal sealed class MaterialContainerTests
         // Arrange
         // Act
         var containerId = await _resourceManagement.CreateUnsafeAsync(typeof(BasicMaterialContainer), _ => Task.CompletedTask);
-        var container = _resourceManagement.GetResource<IMaterialContainer>(containerId);
 
         // Assert
+        var container = _resourceManagement.GetResource<IMaterialContainer>(containerId);
         Assert.Multiple(() =>
         {
             Assert.That(container, Is.Not.Null);

@@ -22,5 +22,10 @@ public enum UpdateKind
     /// <summary>
     /// The filling level or quantity is changed.
     /// </summary>
-    FillingLevel = 1 << 1
+    FillingLevel = 1 << 1,
+
+    /// <summary>
+    /// The change denotes a relative rather than an absolute change
+    /// </summary>
+    Relative =  1 << 8,
 }

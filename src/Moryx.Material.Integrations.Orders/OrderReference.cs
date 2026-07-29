@@ -13,25 +13,23 @@ namespace Moryx.Material.Integrations.Orders;
 [DataContract]
 public class OrderReference : Reference
 {
-    private Order? _order;
-
     /// <summary>
     /// Order number; always available even when <see cref="State"/> is not <see cref="ReferenceState.Active"/>.
     /// </summary>
     [DataMember]
-    public string OrderNumber { get; private set; } = string.Empty;
+    public string OrderNumber { get; protected set; } = string.Empty;
 
     /// <summary>
-    /// Optional operation number.
+    /// Operation number, null if operation is not specified
     /// </summary>
     [DataMember]
-    public string? OperationNumber { get; private set; }
+    public string? OperationNumber { get; protected set; }
 
     /// <summary>
     /// Cached operation status, mapped from the underlying business object when active.
+    /// This information is rest when the reference is not actively maintained.
     /// </summary>
-    [DataMember]
-    public string? Status { get; private set; }
+    public OperationStateClassification? Status { get; protected set; }
 
     /// <summary>
     /// Creates a new <see cref="OrderReference"/> in <see cref="ReferenceState.Initialized"/>.
@@ -41,45 +39,13 @@ public class OrderReference : Reference
         OrderNumber = orderNumber ?? throw new ArgumentNullException(nameof(orderNumber));
         OperationNumber = operationNumber;
     }
+}
 
-    /// <summary>
-    /// Parameterless constructor for serialization frameworks.
-    /// </summary>
-    protected OrderReference() { }
-
-    /// <summary>
-    /// Order business object resolved by the integration. May be <c>null</c> when the
-    /// reference is not <see cref="ReferenceState.Active"/>.
-    /// </summary>
-    public Order? Order => _order;
-
-    /// <summary>
-    /// Attaches the resolved <see cref="Order"/> business object and transitions the reference to <see cref="ReferenceState.Active"/>.
-    /// Intended to be called by the integration's <c>OrderContainerManager</c>.
-    /// </summary>
-    internal void Attach(Order order)
+public static class OrderReferenceExtensions
+{
+    extension(OrderReference? reference)
     {
-        _order = order ?? throw new ArgumentNullException(nameof(order));
-        OrderNumber = order.Number;
-        // Operation number is preserved unless not set.
-        State = ReferenceState.Active;
-    }
-
-    /// <summary>
-    /// Detaches the underlying <see cref="Order"/>, transitioning the reference to <see cref="ReferenceState.Inactive"/>.
-    /// </summary>
-    internal void Detach()
-    {
-        _order = null;
-        State = ReferenceState.Inactive;
-    }
-
-    /// <summary>
-    /// Marks this reference as unavailable (lookup failed).
-    /// </summary>
-    internal void MarkUnavailable()
-    {
-        _order = null;
-        State = ReferenceState.Unavailable;
+        public bool ValueEquals(OrderReference? other) => (reference is null && other is null)
+            || other is not null && reference is not null && reference.OrderNumber == other.OrderNumber && reference.OperationNumber == other.OperationNumber;
     }
 }

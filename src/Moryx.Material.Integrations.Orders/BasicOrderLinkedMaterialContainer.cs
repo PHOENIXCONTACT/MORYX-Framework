@@ -10,8 +10,6 @@ namespace Moryx.Material.Integrations.Orders;
 /// <summary>
 /// Ready-to-use, non-abstract <see cref="OrderLinkedMaterialContainer"/> for the most common cases.
 /// </summary>
-[DataContract]
-[ResourceRegistration]
 [DisplayName("Basic Order-Linked Material Container")]
 [Description("Default order-linkable container resource.")]
 public class BasicOrderLinkedMaterialContainer : OrderLinkedMaterialContainer

@@ -13,7 +13,7 @@ public interface IOrderLinkedMaterialContainer : IMaterialContainer
     /// <summary>
     /// Currently linked order, if any.
     /// </summary>
-    OrderReference? LinkedOrder { get; }
+    OrderReference? LinkedOrder { get; set; }
 
     /// <summary>
     /// Initiates a linking request, optionally auto-unlinking the previously linked order.

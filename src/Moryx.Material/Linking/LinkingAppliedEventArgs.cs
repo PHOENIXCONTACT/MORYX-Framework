@@ -6,30 +6,20 @@ namespace Moryx.Material.Linking;
 /// <summary>
 /// Base event args raised by a container after the link has been applied (or unlinking completed).
 /// </summary>
-public abstract class LinkingAppliedEventArgs : EventArgs
+/// <remarks>
+/// Initializes a new instance of the <see cref="LinkingAppliedEventArgs"/> class.
+/// </remarks>
+/// <param name="request">Original linking request.</param>
+/// <param name="context">Validation context carried over from the request phase.</param>
+public abstract class LinkingAppliedEventArgs(LinkingRequest request, ValidationContext context) : EventArgs
 {
-    /// <summary>
-    /// Container raising the event.
-    /// </summary>
-    public IMaterialContainer Container { get; }
-
     /// <summary>
     /// Original linking request.
     /// </summary>
-    public LinkingRequest Request { get; }
+    public LinkingRequest Request { get; } = request;
 
     /// <summary>
     /// Validation context (carried over from the request phase).
     /// </summary>
-    public ValidationContext Context { get; }
-
-    /// <summary>
-    /// Creates a new instance.
-    /// </summary>
-    protected LinkingAppliedEventArgs(IMaterialContainer container, LinkingRequest request, ValidationContext context)
-    {
-        Container = container;
-        Request = request;
-        Context = context;
-    }
+    public ValidationContext Context { get; } = context;
 }
