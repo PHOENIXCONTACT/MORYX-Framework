@@ -267,8 +267,8 @@ internal class ResourceTypeController : IResourceTypeController, IResourceTypeTr
 
         var interfaces = RelevantInterfaces(linker);
         // Move up the type tree until the parent offers less interfaces than the current linker, is abstract or a generic
-        while (linker.BaseType != null && !linker.BaseType.ResourceType.IsGenericType
-                                       && interfaces.Count == RelevantInterfaces(linker.BaseType).Count)
+        while (linker.BaseType != null && !linker.BaseType.ResourceType.IsGenericType &&
+               interfaces.Count == RelevantInterfaces(linker.BaseType).Count && linker.BaseType.Creatable)
         {
             linker = linker.BaseType;
         }
