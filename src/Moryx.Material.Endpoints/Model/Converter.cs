@@ -69,7 +69,7 @@ internal static class Converter
             Quantity = container.Quantity,
             Unit = container.Unit,
             State = container.State.ToModel(),
-            Type = container.GetType().ToModel(),
+            Type = container.GetResourceType().ToModel()
         };
     }
 

@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Reflection.Emit;
 using Moryx.AbstractionLayer.Resources;
@@ -116,6 +117,9 @@ internal class ResourceProxyBuilder
         // Override Detach
         OverrideDetach(typeBuilder, baseType, targetProperty.GetMethod, resourceType, eventListener);
 
+        // Apply Attribute denoting the proxies source type
+        SetProxySourceTypeAttribute(typeBuilder, resourceType);
+
         return typeBuilder.CreateTypeInfo();
     }
 
@@ -219,7 +223,7 @@ internal class ResourceProxyBuilder
     }
 
     /// <summary>
-    /// Define a method on the proxy that forwards the call the target 
+    /// Define a method on the proxy that forwards the call the target
     /// </summary>
     private static void DefineMethod(TypeBuilder typeBuilder, Type baseType, MethodInfo targetGetter, MethodInfo method)
     {
@@ -298,7 +302,7 @@ internal class ResourceProxyBuilder
     }
 
     /// <summary>
-    /// Define an event and the corresponding handler method. This includes defining the field, the event and the 
+    /// Define an event and the corresponding handler method. This includes defining the field, the event and the
     /// add_ and remove_ methods. Finally we also add a method used as a listener for the Target event and raise method
     /// for this event.
     /// This code was inspired by: https://stackoverflow.com/questions/13619527/how-do-i-use-the-eventbuilder-to-create-an-event
@@ -446,5 +450,16 @@ internal class ResourceProxyBuilder
         generator.Emit(OpCodes.Call, baseAttach); // Non-virtual call on base.Attach()
 
         generator.Emit(OpCodes.Ret); // Finish method
+    }
+
+    /// <summary>
+    /// Creates and adds the <see cref="ProxySourceTypeAttribute"/> referring to the <param name="resourceType"></param>
+    /// to the <param name="typeBuilder"></param> linking the proxy type to its original type
+    /// </summary>
+    private static void SetProxySourceTypeAttribute(TypeBuilder typeBuilder, Type resourceType)
+    {
+        var ctor = typeof(ProxySourceTypeAttribute).GetConstructor([typeof(Type)]);
+        var cab = new CustomAttributeBuilder(ctor, [resourceType]);
+        typeBuilder.SetCustomAttribute(cab);
     }
 }
