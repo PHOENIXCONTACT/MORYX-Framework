@@ -25,6 +25,8 @@ internal class ResourceProxyBuilder
         var options = new ProxyGenerationOptions();
         options.AddMixinInstance(mixin);
         options.BaseTypeForInterfaceProxy = typeof(ResourceProxyBase);
+        var ctor = typeof(ProxyTargetTypeAttribute).GetConstructor([typeof(Type)]);
+        options.AdditionalAttributes.Add(new CustomAttributeInfo(ctor, [target.GetType()]));
 
         // Use the most specific IResource-derived interface as primary, fall back to IResource itself.
         // Most specific means no other candidate in the list derives from it.
