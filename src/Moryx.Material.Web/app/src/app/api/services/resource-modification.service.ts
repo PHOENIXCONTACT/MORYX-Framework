@@ -24,22 +24,22 @@ import { getDetails } from '../fn/resource-modification/get-details';
 import { GetDetails$Params } from '../fn/resource-modification/get-details';
 import { getDetailsBatch } from '../fn/resource-modification/get-details-batch';
 import { GetDetailsBatch$Params } from '../fn/resource-modification/get-details-batch';
-import { getResources_2 } from '../fn/resource-modification/get-resources-2';
-import { GetResources_2$Params } from '../fn/resource-modification/get-resources-2';
+import { getResources } from '../fn/resource-modification/get-resources';
+import { GetResources$Params } from '../fn/resource-modification/get-resources';
 import { getType } from '../fn/resource-modification/get-type';
 import { GetType$Params } from '../fn/resource-modification/get-type';
 import { getTypeTree } from '../fn/resource-modification/get-type-tree';
 import { GetTypeTree$Params } from '../fn/resource-modification/get-type-tree';
-import { invokeMethod_1 } from '../fn/resource-modification/invoke-method-1';
-import { InvokeMethod_1$Params } from '../fn/resource-modification/invoke-method-1';
+import { invokeMethod } from '../fn/resource-modification/invoke-method';
+import { InvokeMethod$Params } from '../fn/resource-modification/invoke-method';
 import { remove } from '../fn/resource-modification/remove';
 import { Remove$Params } from '../fn/resource-modification/remove';
 import { ResourceModel } from '../models/resource-model';
 import { ResourceTypeModel } from '../models/resource-type-model';
 import { save } from '../fn/resource-modification/save';
 import { Save$Params } from '../fn/resource-modification/save';
-import { update_2 } from '../fn/resource-modification/update-2';
-import { Update_2$Params } from '../fn/resource-modification/update-2';
+import { update } from '../fn/resource-modification/update';
+import { Update$Params } from '../fn/resource-modification/update';
 
 @Injectable({ providedIn: 'root' })
 export class ResourceModificationService extends BaseService {
@@ -155,28 +155,28 @@ export class ResourceModificationService extends BaseService {
     );
   }
 
-  /** Path part for operation `getResources_2()` */
-  static readonly GetResources_2Path = '/api/moryx/resources/query';
+  /** Path part for operation `getResources()` */
+  static readonly GetResourcesPath = '/api/moryx/resources/query';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getResources_2()` instead.
+   * To access only the response body, use `getResources()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  getResources_2$Response(params?: GetResources_2$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ResourceModel>>> {
-    const obs = getResources_2(this.http, this.rootUrl, params, context);
+  getResources$Response(params?: GetResources$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ResourceModel>>> {
+    const obs = getResources(this.http, this.rootUrl, params, context);
     return obs;
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getResources_2$Response()` instead.
+   * To access the full response (for headers, for example), `getResources$Response()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  getResources_2(params?: GetResources_2$Params, context?: HttpContext): Observable<Array<ResourceModel>> {
-    const resp = this.getResources_2$Response(params, context);
+  getResources(params?: GetResources$Params, context?: HttpContext): Observable<Array<ResourceModel>> {
+    const resp = this.getResources$Response(params, context);
     return resp.pipe(
       map((r: StrictHttpResponse<Array<ResourceModel>>): Array<ResourceModel> => r.body)
     );
@@ -209,28 +209,28 @@ export class ResourceModificationService extends BaseService {
     );
   }
 
-  /** Path part for operation `update_2()` */
-  static readonly Update_2Path = '/api/moryx/resources/{id}';
+  /** Path part for operation `update()` */
+  static readonly UpdatePath = '/api/moryx/resources/{id}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `update_2()` instead.
+   * To access only the response body, use `update()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  update_2$Response(params: Update_2$Params, context?: HttpContext): Observable<StrictHttpResponse<ResourceModel>> {
-    const obs = update_2(this.http, this.rootUrl, params, context);
+  update$Response(params: Update$Params, context?: HttpContext): Observable<StrictHttpResponse<ResourceModel>> {
+    const obs = update(this.http, this.rootUrl, params, context);
     return obs;
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `update_2$Response()` instead.
+   * To access the full response (for headers, for example), `update$Response()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  update_2(params: Update_2$Params, context?: HttpContext): Observable<ResourceModel> {
-    const resp = this.update_2$Response(params, context);
+  update(params: Update$Params, context?: HttpContext): Observable<ResourceModel> {
+    const resp = this.update$Response(params, context);
     return resp.pipe(
       map((r: StrictHttpResponse<ResourceModel>): ResourceModel => r.body)
     );
@@ -263,28 +263,28 @@ export class ResourceModificationService extends BaseService {
     );
   }
 
-  /** Path part for operation `invokeMethod_1()` */
-  static readonly InvokeMethod_1Path = '/api/moryx/resources/{id}/invoke/{method}';
+  /** Path part for operation `invokeMethod()` */
+  static readonly InvokeMethodPath = '/api/moryx/resources/{id}/invoke/{method}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `invokeMethod_1()` instead.
+   * To access only the response body, use `invokeMethod()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  invokeMethod_1$Response(params: InvokeMethod_1$Params, context?: HttpContext): Observable<StrictHttpResponse<Entry>> {
-    const obs = invokeMethod_1(this.http, this.rootUrl, params, context);
+  invokeMethod$Response(params: InvokeMethod$Params, context?: HttpContext): Observable<StrictHttpResponse<Entry>> {
+    const obs = invokeMethod(this.http, this.rootUrl, params, context);
     return obs;
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `invokeMethod_1$Response()` instead.
+   * To access the full response (for headers, for example), `invokeMethod$Response()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  invokeMethod_1(params: InvokeMethod_1$Params, context?: HttpContext): Observable<Entry> {
-    const resp = this.invokeMethod_1$Response(params, context);
+  invokeMethod(params: InvokeMethod$Params, context?: HttpContext): Observable<Entry> {
+    const resp = this.invokeMethod$Response(params, context);
     return resp.pipe(
       map((r: StrictHttpResponse<Entry>): Entry => r.body)
     );

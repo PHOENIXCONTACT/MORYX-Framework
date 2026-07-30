@@ -1,0 +1,25 @@
+<h2 mat-dialog-title>
+    Pre-Advice
+</h2>
+
+<mat-dialog-content class="mat-typography reason-input">
+    <section class="reason-input">
+        <mat-form-field floatLabel="always" class="full-width" appearance="outline">
+            <mat-label>Reason</mat-label>
+            <mat-select [(value)]="reason" placeholder="Reason for pre-advice">
+                @for (reason of reasons(); track $index)
+                {
+                <mat-option [value]="reason">{{ reason }}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+    </section>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button mat-dialog-close color="primary" class="transform-to-uppercase">
+        Cancel
+    </button>
+    <button mat-flat-button class="transform-to-uppercase" [disabled]="!reason()" (click)="advice()">
+        Done
+    </button>
+</mat-dialog-actions>

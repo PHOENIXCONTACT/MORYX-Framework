@@ -4,6 +4,8 @@
   "output": "src/app/api",
   "ignoreUnusedModels": true,
   "includeTags": [
+    "ResourceModification",
+    "MaterialManagement"
   ],
   "defaultTag": "MaterialManagement",
   "module": true,

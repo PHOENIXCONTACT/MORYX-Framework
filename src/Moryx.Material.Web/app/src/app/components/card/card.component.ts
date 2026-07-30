@@ -1,9 +1,12 @@
 
-import { Component, input } from '@angular/core';
+import { Component, inject, Input, input } from '@angular/core';
 import { MatAnchor, MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import {MatChipsModule} from '@angular/material/chips';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogPreAdviceComponent } from 'src/app/dialogs/dialog-pre-advice/dialog-pre-advice.component';
+import { MaterialContainerModel, ResourceModel, ResourceTypeModel } from 'src/app/api/models';
 @Component({
   selector: 'app-card',
   imports: [MatAnchor, MatIconModule, MatButtonModule, MatCardModule, MatChipsModule],
@@ -11,8 +14,15 @@ import {MatChipsModule} from '@angular/material/chips';
   styleUrl: './card.component.scss',
 })
 export class CardComponent {
-  icon = input.required<string>();
-  title = input.required<string>();
-  instanceCount = input.required<string>();
   links = input<string[]>([]);
+  container = input.required<MaterialContainerModel>();
+  types = input.required<ResourceTypeModel[]>();
+  private dialog = inject(MatDialog);
+
+
+  preAdvice() {
+    this.dialog.open(DialogPreAdviceComponent, {
+      data: this.container()
+    });
+  }
 }

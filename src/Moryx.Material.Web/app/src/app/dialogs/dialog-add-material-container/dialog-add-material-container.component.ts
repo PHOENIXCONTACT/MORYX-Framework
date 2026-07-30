@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, OnDestroy, OnInit, resource, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,9 +9,9 @@ import { MatListModule, MatSelectionListChange } from '@angular/material/list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { MethodEntry, NavigableEntryEditor } from '@moryx/ngx-web-framework/entry-editor';
-import { MaterialContainerTypeModel } from 'src/app/api/models';
-import { MaterialManagementService } from 'src/app/api/services';
-import { MaterialFlowService } from 'src/app/services/material-flow.service';
+import { firstValueFrom, Observable, SubscriptionLike } from 'rxjs';
+import { MaterialContainerTypeModel, ResourceTypeModel } from 'src/app/api/models';
+import { MaterialManagementService, ResourceModificationService } from 'src/app/api/services';
 
 @Component({
   selector: 'app-dialog-add-material-container',
@@ -27,22 +27,29 @@ import { MaterialFlowService } from 'src/app/services/material-flow.service';
   templateUrl: './dialog-add-material-container.component.html',
   styleUrl: './dialog-add-material-container.component.scss',
 })
-export class DialogAddMaterialContainerComponent {
-  types = signal<MaterialContainerTypeModel[] | undefined>([]);
-  resourceType = signal<any | undefined>(undefined);
+export class DialogAddMaterialContainerComponent implements OnDestroy{
+  types = signal<ResourceTypeModel[]>([]);
+  resourceType = signal<ResourceTypeModel | undefined>(undefined);
   selectedCtor = signal<MethodEntry | undefined>(undefined);
 
-  private data = inject<any>(MAT_DIALOG_DATA);
-  private dialogRef = inject(MatDialogRef<DialogAddMaterialContainerComponent>);
   private materialApi = inject(MaterialManagementService);
-  private typesSource = toSignal(this.materialApi.getTypes())
+  private resourceApi = inject(ResourceModificationService);
+  private subscriptions: SubscriptionLike[] = [];
 
-  constructor(){
-    effect(() => {
-      const types = this.typesSource();
-      this.types.set(types ?? []);
+  constructor() {
+    const sub = this.materialApi.getTypes().subscribe(materialTypes => {
+      const promises =  materialTypes.map(x => x.fullName).map(t => firstValueFrom(this.resourceApi.getType({name : t ?? ''})));
+      Promise.all(promises).then(types => {
+        this.types.set(types);
+      })
     })
+    this.subscriptions.push(sub);
   }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
+
   byName(a: any, b: any): number {
     return (a.displayName ?? a.name)?.localeCompare(b.displayName ?? b.name ?? '') ?? -1;
   }
@@ -80,3 +87,4 @@ export class DialogAddMaterialContainerComponent {
     } as any;
   }
 }
+

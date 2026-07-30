@@ -5,7 +5,10 @@
 
 import { Component, computed, effect, inject, OnInit, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-
+import {
+    LanguageService,
+    SnackbarService
+} from '@moryx/ngx-web-framework/services';
 import { RouterOutlet, RouterLink, RouterLinkActive, ActivatedRoute, Router, EventType, NavigationEnd } from '@angular/router';
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from '@angular/material/button';
@@ -18,7 +21,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DialogAddMaterialContainerComponent } from './dialogs/dialog-add-material-container/dialog-add-material-container.component';
 import { MaterialFlowService } from './services/material-flow.service';
-import { MaterialManagementService } from './api/services';
+import { MaterialManagementService, ResourceModificationService } from './api/services';
 
 @Component({
     selector: 'app-root',
@@ -41,8 +44,9 @@ export class App {
     private dialog = inject(MatDialog);
     private materialFlow = inject(MaterialFlowService);
     private materialApi = inject(MaterialManagementService);
-    private containersSource =toSignal(this.materialApi.getAll_2());
-
+    private containersSource = toSignal(this.materialApi.getAll());
+    private resourceApi = inject(ResourceModificationService);
+    private snackbarService = inject(SnackbarService);
     view = computed(() => {
         const event = this.routeEvent();
         const url = event?.urlAfterRedirects ?? "";
@@ -53,7 +57,7 @@ export class App {
     views = Views;
     selectedOrders = signal<string[]>([]);
     selectedProducts = signal<string[]>([]);
-
+    
     constructor() {
         effect(() => {
             const filters = [];
@@ -65,6 +69,7 @@ export class App {
             }
             this.materialFlow.executeFilter(filters);
         })
+
     }
 
     products() {
@@ -78,14 +83,22 @@ export class App {
         });
 
         dialogRef.afterClosed().subscribe(async (result: any | undefined) => {
-            if (!result) return;
-            // const constructed = await lastValueFrom(this.modificationService
-            //     .constructWithParameters({
-            //         type: result.name,
-            //         method: result.method?.name,
-            //         body: result.method?.parameters,
-            //     }))
-            //     .catch(async (e: HttpErrorResponse) => await this.snackbarService.handleError(e));
+            if (!result) {
+                return;
+            }
+
+            const constructed = await lastValueFrom(this.resourceApi
+                .constructWithParameters({
+                    type: result.name,
+                    method: result.method?.name,
+                    body: result.method?.parameters,
+                }))
+                .catch(async (e: HttpErrorResponse) => await this.snackbarService.handleError(e));
+            if (!constructed) {
+                return;
+            }
+            this.materialFlow.raiseContainerAdded(constructed);
+            this.snackbarService.showSuccess("Material Container Created!");
         }
         )
     }

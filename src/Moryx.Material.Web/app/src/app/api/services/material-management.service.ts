@@ -17,8 +17,8 @@ import { StrictHttpResponse } from '../strict-http-response';
 
 import { containerChanges } from '../fn/material-management/container-changes';
 import { ContainerChanges$Params } from '../fn/material-management/container-changes';
-import { getAll_2 } from '../fn/material-management/get-all-2';
-import { GetAll_2$Params } from '../fn/material-management/get-all-2';
+import { getAll } from '../fn/material-management/get-all';
+import { GetAll$Params } from '../fn/material-management/get-all';
 import { getTypes } from '../fn/material-management/get-types';
 import { GetTypes$Params } from '../fn/material-management/get-types';
 import { MaterialContainerModel } from '../models/material-container-model';
@@ -32,28 +32,28 @@ export class MaterialManagementService extends BaseService {
     super(config, http);
   }
 
-  /** Path part for operation `getAll_2()` */
-  static readonly GetAll_2Path = '/api/moryx/materials/containers';
+  /** Path part for operation `getAll()` */
+  static readonly GetAllPath = '/api/moryx/materials/containers';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getAll_2()` instead.
+   * To access only the response body, use `getAll()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getAll_2$Response(params?: GetAll_2$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<MaterialContainerModel>>> {
-    const obs = getAll_2(this.http, this.rootUrl, params, context);
+  getAll$Response(params?: GetAll$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<MaterialContainerModel>>> {
+    const obs = getAll(this.http, this.rootUrl, params, context);
     return obs;
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getAll_2$Response()` instead.
+   * To access the full response (for headers, for example), `getAll$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getAll_2(params?: GetAll_2$Params, context?: HttpContext): Observable<Array<MaterialContainerModel>> {
-    const resp = this.getAll_2$Response(params, context);
+  getAll(params?: GetAll$Params, context?: HttpContext): Observable<Array<MaterialContainerModel>> {
+    const resp = this.getAll$Response(params, context);
     return resp.pipe(
       map((r: StrictHttpResponse<Array<MaterialContainerModel>>): Array<MaterialContainerModel> => r.body)
     );

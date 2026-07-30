@@ -10,25 +10,8 @@ import { NgModule, ModuleWithProviders, SkipSelf, Optional } from '@angular/core
 import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
-import { CommonService } from './services/common.service';
-import { DatabaseService } from './services/database.service';
-import { FactoryMonitorService } from './services/factory-monitor.service';
-import { JobManagementService } from './services/job-management.service';
 import { MaterialManagementService } from './services/material-management.service';
-import { MediaServerService } from './services/media-server.service';
-import { ModulesService } from './services/modules.service';
-import { NotificationPublisherService } from './services/notification-publisher.service';
-import { OperatorManagementService } from './services/operator-management.service';
-import { OrderManagementService } from './services/order-management.service';
-import { ProcessEngineService } from './services/process-engine.service';
-import { ProductManagementService } from './services/product-management.service';
 import { ResourceModificationService } from './services/resource-modification.service';
-import { ShiftManagementService } from './services/shift-management.service';
-import { SkillManagementService } from './services/skill-management.service';
-import { TestService } from './services/test.service';
-import { VisualInstructionsService } from './services/visual-instructions.service';
-import { WorkplanService } from './services/workplan.service';
-import { WorkplanEditingService } from './services/workplan-editing.service';
 
 /**
  * Module that provides all services and configuration.
@@ -38,25 +21,8 @@ import { WorkplanEditingService } from './services/workplan-editing.service';
   exports: [],
   declarations: [],
   providers: [
-    CommonService,
-    DatabaseService,
-    FactoryMonitorService,
-    JobManagementService,
     MaterialManagementService,
-    MediaServerService,
-    ModulesService,
-    NotificationPublisherService,
-    OperatorManagementService,
-    OrderManagementService,
-    ProcessEngineService,
-    ProductManagementService,
     ResourceModificationService,
-    ShiftManagementService,
-    SkillManagementService,
-    TestService,
-    VisualInstructionsService,
-    WorkplanService,
-    WorkplanEditingService,
     ApiConfiguration
   ],
 })

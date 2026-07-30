@@ -1,5 +1,4 @@
 @for (container of containers(); track $index)
 {
-<app-card icon="home" [title]="container.name +' - '+ container.material"
-    [instanceCount]="container.quantity+''+container.unit+' '+ container.material" />
+<app-card [links]="[]" [container]="container" [types]="types()" />
 }
