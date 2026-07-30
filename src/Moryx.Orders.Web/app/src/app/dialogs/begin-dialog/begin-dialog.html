@@ -100,7 +100,8 @@
         TranslationConstants.BEGIN_DIALOG.PARTIAL_AMOUNT | translate
       }}
     </mat-label>
-    <input matInput type="number" [formControl]="targetAmountControl" (blur)="limitTargetAmount()"/>
+    <input matInput type="number" min="0" (beforeinput)="blockNonDigitInput($event)" [formControl]="targetAmountControl"
+      (blur)="limitTargetAmount()"/>
     <button mat-icon-button type="button" matPrefix [disabled]="hasMinimalValue()" (click)="setMinTargetAmount()"
             class="min-amount-button">
       <mat-icon>align_justify_flex_start</mat-icon>

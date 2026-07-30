@@ -21,6 +21,7 @@ import { MatInputModule } from "@angular/material/input";
 import { MatIconModule } from "@angular/material/icon";
 import { OperatorSelector } from "@app/components/operator-selector/operator-selector";
 import { DialogContext } from "@app/components/dialog-context/dialog-context";
+import { blockNonDigitInput } from '@app/dialogs/digit-input-helper';
 
 @Component({
   selector: "app-report-dialog",
@@ -74,6 +75,7 @@ export class ReportDialog implements OnInit {
   })
 
   protected TranslationConstants = TranslationConstants;
+  protected blockNonDigitInput =  blockNonDigitInput;
 
   private dialog = inject(MatDialogRef<ReportDialog>);
   protected data = inject<ReportDialogData>(MAT_DIALOG_DATA);

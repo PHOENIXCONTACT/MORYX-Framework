@@ -41,25 +41,25 @@
       </mat-error>
     }
   </mat-form-field>
-  
+
   <!-- Product Selection -->
   <mat-form-field appearance="outline" class="full-width top-spaced">
     <mat-label>{{ TranslationConstants.CREATE_DIALOG.PRODUCT | translate }}</mat-label>
-    <input 
+    <input
       #productInput
-      type="text" 
-      matInput 
-      [formControl]="productFormControl" 
+      type="text"
+      matInput
+      [formControl]="productFormControl"
       [matAutocomplete]="productAutoComplete"
       (input)="filterProduct()"
       (focus)="filterProduct()"
       (focusout)="filterProduct()">
     @if (selectedProduct()) {
-      <button 
-        matSuffix 
-        matIconButton 
-        aria-label="Clear" 
-        class="suffix-icon" 
+      <button
+        matSuffix
+        matIconButton
+        aria-label="Clear"
+        class="suffix-icon"
         (click)="selectedProduct.set(undefined)">
         <mat-icon>close</mat-icon>
       </button>
@@ -77,21 +77,21 @@
   <!-- Recipe Selection -->
   <mat-form-field appearance="outline" class="full-width top-spaced">
     <mat-label>{{ TranslationConstants.CREATE_DIALOG.RECIPE | translate }}</mat-label>
-    <input 
+    <input
       #recipeInput
-      type="text" 
-      matInput 
-      [formControl]="recipeFormControl" 
+      type="text"
+      matInput
+      [formControl]="recipeFormControl"
       [matAutocomplete]="recipeAutoComplete"
       (input)="filterRecipe()"
       (focus)="filterRecipe()"
       (focusout)="filterRecipe()">
     @if (selectedRecipe()) {
-      <button 
-        matSuffix 
+      <button
+        matSuffix
         matIconButton
-        aria-label="Clear" 
-        class="suffix-icon" 
+        aria-label="Clear"
+        class="suffix-icon"
         (click)="selectedRecipe.set(undefined)">
         <mat-icon>close</mat-icon>
       </button>
@@ -105,12 +105,13 @@
 
   <mat-form-field appearance="outline" class="full-width top-spaced">
     <mat-label>{{ TranslationConstants.CREATE_DIALOG.AMOUNT | translate }}</mat-label>
-    <input type="number" matInput [(ngModel)]="amount" [disabled]="isLoading()"/>
+    <input type="number" min="0" (beforeinput)="blockNonDigitInput($event)" matInput [(ngModel)]="amount"
+      [disabled]="isLoading()"/>
   </mat-form-field>
 
   @if(operations().length > 0) {
     <h3 class="top-spaced">
-      {{ TranslationConstants.CREATE_DIALOG.ADDED_OPERATIONS | translate }} 
+      {{ TranslationConstants.CREATE_DIALOG.ADDED_OPERATIONS | translate }}
       ({{ operations().length }})
     </h3>
     <mat-list class="create-dialog-operation-list-container">
