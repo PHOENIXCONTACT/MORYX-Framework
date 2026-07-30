@@ -15,9 +15,9 @@ internal sealed class MaterialContainerTests : TestBase
         // Arrange
         // Act
         var containerId = await _resourceManagement.CreateUnsafeAsync(typeof(BasicMaterialContainer), _ => Task.CompletedTask);
-        var container = _resourceManagement.GetResource<IMaterialContainer>(containerId);
 
         // Assert
+        var container = _resourceManagement.GetResource<IMaterialContainer>(containerId);
         Assert.Multiple(() =>
         {
             Assert.That(container, Is.Not.Null);
@@ -32,7 +32,7 @@ internal sealed class MaterialContainerTests : TestBase
         // Arrange
         var hostId = await CreateContainerHostAsync();
         const string material = "Some Material";
-        const decimal quantity = 42m;
+        const double quantity = 42;
         const string unit = "Some Unit";
 
         // Act
@@ -65,7 +65,7 @@ internal sealed class MaterialContainerTests : TestBase
         {
             Id = "Some Id",
             Material = "Some Material",
-            RequestedQuantity = 42m,
+            RequestedQuantity = 42,
             Unit = "Some Unit",
             ExpectedArrival = DateTime.UtcNow,
         };

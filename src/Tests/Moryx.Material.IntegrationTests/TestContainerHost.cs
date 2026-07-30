@@ -8,7 +8,7 @@ namespace Moryx.Material.IntegrationTests;
 
 /// <summary>
 /// Test resource that hosts <see cref="MaterialContainer"/> instances. Mimics the
-/// scenarios where a resource takes an action within the material-flow in MORYX (e.g. 
+/// scenarios where a resource takes an action within the material-flow in MORYX (e.g.
 /// registers a new <see cref="MaterialContainer"/> or material via a <see cref="MaterialRequest"/>
 /// using the <see cref="IResourceGraph"/>.
 /// </summary>
@@ -20,7 +20,7 @@ public class TestContainerHost : Resource
     /// Should create a <see cref="BasicMaterialContainer"/> in <see cref="States.StateClassification.Available"/>
     /// using the resource constructor for material registration.
     /// </summary>
-    public async Task<MaterialContainer> RegisterMaterialAsync(string material, decimal quantity, string? unit, CancellationToken cancellationToken = default)
+    public async Task<MaterialContainer> RegisterMaterialAsync(string material, double quantity, string? unit, CancellationToken cancellationToken = default)
     {
         var container = Graph.Instantiate<BasicMaterialContainer>().Configure(c => c.With(
             material: material,

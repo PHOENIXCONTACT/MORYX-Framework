@@ -77,11 +77,18 @@ public abstract class MaterialContainer : Resource, IMaterialContainer, IStateCo
             eventArgs.OldMaterial = Material;
             eventArgs.NewMaterial = Material = update.Material;
         }
-        // ToDo: Should a negative Quantity throw an invalid operation exception?
-        // Should update.Quantity be prevented beforehand or interpreted here as a relative update?
+
         if (update.Kind.HasFlag(UpdateKind.FillingLevel)) {
-            eventArgs.OldQuantity = Quantity;
-            eventArgs.NewQuantity = Quantity = update.Quantity;
+            if (update.Kind.HasFlag(UpdateKind.Relative))
+            {
+                eventArgs.OldQuantity = Quantity;
+                eventArgs.NewQuantity = Quantity -= update.Quantity;
+            }
+            else
+            {
+                eventArgs.OldQuantity = Quantity;
+                eventArgs.NewQuantity = Quantity = update.Quantity;
+            }
         }
 
         RaiseResourceChanged();
