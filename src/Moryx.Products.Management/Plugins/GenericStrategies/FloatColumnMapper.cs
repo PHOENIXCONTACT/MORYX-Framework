@@ -12,6 +12,10 @@ namespace Moryx.Products.Management;
 [Component(LifeCycle.Transient, typeof(IPropertyMapper), Name = nameof(FloatColumnMapper))]
 internal class FloatColumnMapper : ColumnMapper<double>
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="targetType"></param>
     public FloatColumnMapper(Type targetType) : base(targetType)
     {
     }

@@ -25,6 +25,15 @@ internal class ModuleConsole : IServerModuleConsole
     }
 
     [EntrySerialize]
+    [Description("Update an existing product type configuration and add mappings for newly introduced properties.")]
+    public string UpdateTypeConfiguration(
+        [PossibleTypes(typeof(ProductType), UseFullname = true)]
+        string productType)
+    {
+        return Configurator.UpdateTypeConfiguration(productType);
+    }
+
+    [EntrySerialize]
     [Description("Automatically configure the necessary strategies for a product type.")]
     public string ConfigureInstance([PossibleTypes(typeof(ProductInstance), UseFullname = true)] string instanceType)
     {

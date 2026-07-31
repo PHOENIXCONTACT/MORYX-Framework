@@ -47,10 +47,19 @@ internal class ProductTypeInformation
 
     public ProductType CreateTypeFromEntity(ProductTypeEntity entity)
     {
-        var productType = Constructor();
-        productType.Name = entity.Name;
-        productType.Id = entity.Id;
-        productType.Identity = new ProductIdentity(entity.Identifier, entity.Revision);
+        ProductType productType = null;
+        if(Constructor!=null)
+        {
+            productType = Constructor();
+            productType.Name = entity.Name;
+            productType.Id = entity.Id;
+            productType.Identity = new ProductIdentity(entity.Identifier, entity.Revision);
+        }
+        else
+        {
+            var type = entity.GetType();
+            productType = new ProductReference(new ProductIdentity(entity.Identifier, entity.Revision));
+        }
 
         ProductInstance v;
 
