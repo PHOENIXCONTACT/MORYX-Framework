@@ -53,6 +53,7 @@
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="10.2.3" />
 
     <PackageVersion Include="Castle.Windsor" Version="6.0.0" />
+    <PackageVersion Include="Castle.Core" Version="5.2.1" />
 
     <!-- Dependencies for drivers and adapters -->
     <PackageVersion Include="System.IO.Ports" Version="10.0.0" />

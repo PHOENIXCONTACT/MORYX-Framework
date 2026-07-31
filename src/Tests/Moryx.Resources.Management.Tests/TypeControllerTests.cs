@@ -34,8 +34,7 @@ public class TypeControllerTests
 
         _typeController = new ResourceTypeController
         {
-            Container = containerMock.Object,
-            ProxyBuilder = new ResourceProxyBuilder()
+            Container = containerMock.Object
         };
         _typeController.Start();
     }
