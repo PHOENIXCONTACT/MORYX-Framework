@@ -42,6 +42,7 @@ internal class InternalOrderReference : OrderReference
     internal InternalOrderReference(string orderNumber, string? operationNumber = null) : base(orderNumber, operationNumber)
     {
         OrderNumber = orderNumber;
+        OperationNumber = operationNumber;
     }
 }
 
