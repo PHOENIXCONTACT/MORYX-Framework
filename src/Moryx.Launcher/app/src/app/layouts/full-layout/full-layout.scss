@@ -12,6 +12,7 @@
 }
 
 mat-sidenav {
+  width: fit-content;
   overflow: visible;
   border-right: 1px solid var(--mat-sys-outline-variant);
   filter: drop-shadow(1px 0 2px color-mix(in srgb, var(--mat-sys-shadow) 6%, transparent));
