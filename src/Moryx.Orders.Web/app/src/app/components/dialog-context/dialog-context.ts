@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, ChangeDetectionStrategy, input } from "@angular/core";
+import { Component, ChangeDetectionStrategy, input, signal } from "@angular/core";
 import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
 import { OperationModel } from "@app/api/models";
 import { TranslatePipe } from "@ngx-translate/core";
@@ -24,4 +24,14 @@ import { MatTooltip } from "@angular/material/tooltip";
 export class DialogContext {
   protected TranslationConstants = TranslationConstants;
   operationModel = input.required<OperationModel>();
+  orderExpanded = signal(false);
+  productExpanded = signal(false);
+
+  toggleOrderExpansion(): void {
+    this.orderExpanded.update(v => !v);
+  }
+
+  toggleProductExpansion(): void {
+    this.productExpanded.update(v => !v);
+  }
 }

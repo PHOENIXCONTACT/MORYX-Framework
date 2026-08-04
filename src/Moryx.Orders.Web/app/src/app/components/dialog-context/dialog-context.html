@@ -6,7 +6,8 @@
 
     @let orderValue = model.order + ' - ' + model.number;
 
-    <span class="info-value" [matTooltip]="orderValue" matTooltipPosition="below">
+    <span class="info-value" [class.expanded]="orderExpanded()" [matTooltip]="orderValue" matTooltipPosition="below"
+      (click)="toggleOrderExpansion()">
       {{ orderValue }}
     </span>
   </p>
@@ -16,7 +17,8 @@
     @let productValue = model.productIdentifier + '-' + (model.productRevision | number:'2.0') + ' ' +
       model.productName;
 
-    <span class="info-value" [matTooltip]="productValue" matTooltipPosition="below">
+    <span class="info-value" [class.expanded]="productExpanded()" [matTooltip]="productValue" matTooltipPosition="below"
+      (click)="toggleProductExpansion()">
       {{productValue}}
     </span>
   </p>
