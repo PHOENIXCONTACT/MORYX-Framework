@@ -1,4 +1,4 @@
-@for (container of containers(); track $index)
+@for (container of containers(); track container)
 {
-<app-card [links]="[]" [container]="container" [types]="types()" />
+<app-card [links]="[]" [container]="container"/>
 }

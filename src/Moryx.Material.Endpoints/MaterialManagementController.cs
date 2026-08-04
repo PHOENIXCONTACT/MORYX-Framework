@@ -41,7 +41,7 @@ public class MaterialManagementController(IMaterialManagement materialManagement
     #region GET
 
     [HttpGet("containers")]
-    [ProducesResponseType(typeof(MaterialContainerModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(MaterialContainerModel[]), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Policy = MaterialPermissions.CanRead)]
     public ActionResult<MaterialContainerModel[]> GetContainers()

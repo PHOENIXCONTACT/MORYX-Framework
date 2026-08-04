@@ -7,6 +7,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogPreAdviceComponent } from 'src/app/dialogs/dialog-pre-advice/dialog-pre-advice.component';
 import { MaterialContainerModel, ResourceModel, ResourceTypeModel } from 'src/app/api/models';
+import { DialogContainerLinkingComponent } from 'src/app/dialogs/dialog-container-linking/dialog-container-linking.component';
 @Component({
   selector: 'app-card',
   imports: [MatAnchor, MatIconModule, MatButtonModule, MatCardModule, MatChipsModule],
@@ -16,7 +17,6 @@ import { MaterialContainerModel, ResourceModel, ResourceTypeModel } from 'src/ap
 export class CardComponent {
   links = input<string[]>([]);
   container = input.required<MaterialContainerModel>();
-  types = input.required<ResourceTypeModel[]>();
   private dialog = inject(MatDialog);
 
 
@@ -24,5 +24,9 @@ export class CardComponent {
     this.dialog.open(DialogPreAdviceComponent, {
       data: this.container()
     });
+  }
+
+  link() {
+    this.dialog.open(DialogContainerLinkingComponent);
   }
 }

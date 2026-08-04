@@ -28,14 +28,7 @@ export class CardsComponent implements OnInit, OnDestroy {
   types = signal<ResourceTypeModel[]>([]);
 
   constructor() {
-    const sub = this.materialFlow.$onContainerAdded.subscribe(added => {
-      if (!added) {
-        return;
-      }
-      this.containers.update(items => [added, ...items]);
-    });
     const typeSub = this.containerApi.getTypes().subscribe(result => this.types.set(result));
-    this.subscriptions.push(sub);
     this.subscriptions.push(typeSub);
 
     effect(() => {
@@ -54,22 +47,23 @@ export class CardsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const sub = this.stream$.subscribe(e => {
-      this.updateContainer(e.data);
+      let match = this.containers().find(x => x.id === e.data.id);
+      if (match) {
+        this.updateContainer(e.data);
+      } else {
+        this.containers.set([...this.containers(), e.data])
+      }
     })
     this.subscriptions.push(sub);
   }
 
   updateContainer(e: MaterialContainerModel) {
-    this.containers.update(items => {
-      const match = items.find(x => x.id === e.id);
-      if (match) {
-        Object.assign(match, e);
-      }
-      return items;
-    })
+    const updatedList = [...this.containers()];
+    updatedList[updatedList.findIndex(i => i.id === e.id)] = e;
+    this.containers.set(updatedList);
   }
-  
-  findType(typeName: string){
+
+  findType(typeName: string) {
     return this.types().find(x => x.name === typeName);
   }
 }

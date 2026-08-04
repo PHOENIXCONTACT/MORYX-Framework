@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, computed, effect, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, resource, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
     LanguageService,
@@ -16,12 +16,13 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
-import { filter, lastValueFrom } from 'rxjs';
+import { filter, firstValueFrom, lastValueFrom } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DialogAddMaterialContainerComponent } from './dialogs/dialog-add-material-container/dialog-add-material-container.component';
 import { MaterialFlowService } from './services/material-flow.service';
 import { MaterialManagementService, ResourceModificationService } from './api/services';
+import { MaterialContainerModel } from './api/models';
 
 @Component({
     selector: 'app-root',
@@ -45,6 +46,9 @@ export class App {
     private materialFlow = inject(MaterialFlowService);
     private materialApi = inject(MaterialManagementService);
     private containersSource = toSignal(this.materialApi.getAll());
+    private containerResource = resource({
+        loader: () : Promise<MaterialContainerModel[]> => firstValueFrom(this.materialApi.getAll())
+    });
     private resourceApi = inject(ResourceModificationService);
     private snackbarService = inject(SnackbarService);
     view = computed(() => {
@@ -97,7 +101,6 @@ export class App {
             if (!constructed) {
                 return;
             }
-            this.materialFlow.raiseContainerAdded(constructed);
             this.snackbarService.showSuccess("Material Container Created!");
         }
         )
