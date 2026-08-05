@@ -1,5 +1,13 @@
 @use '../expansion-panel';
 
+.reference-table {
+  width: 100%;
+}
+
+.mat-column-type {
+  overflow-wrap: break-word;
+}
+
 .mat-column-delete {
   width: 32px;
   text-align: center;
