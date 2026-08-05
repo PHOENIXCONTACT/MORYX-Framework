@@ -20,56 +20,62 @@
     </div>
   </div>
 
-  <div class="report-dialog-form-row">
-    <mat-form-field appearance="outline" class="interrupt-dialog-report-success-count">
-      <mat-label>{{ TranslationConstants.REPORT_DIALOG.SUCCESS | translate }}</mat-label>
-      <input matInput [(ngModel)]="success" [disabled]="isLoading()"/>
-      <mat-hint align="start">
-        {{ TranslationConstants.REPORT_DIALOG.REPORTED | translate }}: {{ reportContext()?.reportedSuccess }}
-      </mat-hint>
-      <mat-hint align="end">
-        {{ TranslationConstants.REPORT_DIALOG.ESTIMATED | translate }}: {{ estimatedSuccess() }}
-      </mat-hint>
+  @if (reportContext(); as context) {
+    <div class="report-dialog-form-row">
+      <mat-form-field appearance="outline" class="interrupt-dialog-report-success-count">
+        <mat-label>{{ TranslationConstants.REPORT_DIALOG.SUCCESS | translate }}</mat-label>
+        <input matInput [(ngModel)]="success" [disabled]="isLoading()"/>
+        <mat-hint align="start">
+          {{ TranslationConstants.REPORT_DIALOG.REPORTED | translate }}: {{ context.reportedSuccess }}
+        </mat-hint>
+        <mat-hint align="end">
+          {{ TranslationConstants.REPORT_DIALOG.ESTIMATED | translate }}: {{ estimatedSuccess() }}
+        </mat-hint>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="interrupt-dialog-report-failure-count">
+        <mat-label>{{ TranslationConstants.REPORT_DIALOG.SCRAP | translate }}</mat-label>
+        <input matInput [(ngModel)]="scrap" [disabled]="isLoading()"/>
+        <mat-hint align="start">
+          {{ TranslationConstants.REPORT_DIALOG.REPORTED | translate }}: {{ context.reportedFailure }}
+        </mat-hint>
+        <mat-hint align="end">
+          {{ TranslationConstants.REPORT_DIALOG.ESTIMATED | translate }}: {{ estimatedFailure() }}
+        </mat-hint>
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline" class="full-width top-spaced">
+      <mat-label>{{ TranslationConstants.REPORT_DIALOG.COMMENT | translate }}</mat-label>
+      <textarea matInput [(ngModel)]="comment" [disabled]="isLoading()"></textarea>
     </mat-form-field>
-    <mat-form-field appearance="outline" class="interrupt-dialog-report-failure-count">
-      <mat-label>{{ TranslationConstants.REPORT_DIALOG.SCRAP | translate }}</mat-label>
-      <input matInput [(ngModel)]="scrap" [disabled]="isLoading()"/>
-      <mat-hint align="start">
-        {{ TranslationConstants.REPORT_DIALOG.REPORTED | translate }}: {{ reportContext()?.reportedFailure }}
-      </mat-hint>
-      <mat-hint align="end">
-        {{ TranslationConstants.REPORT_DIALOG.ESTIMATED | translate }}: {{ estimatedFailure() }}
-      </mat-hint>
-    </mat-form-field>
-  </div>
 
-  <mat-form-field appearance="outline" class="full-width top-spaced">
-    <mat-label>{{ TranslationConstants.REPORT_DIALOG.COMMENT | translate }}</mat-label>
-    <textarea matInput [(ngModel)]="comment" [disabled]="isLoading()"></textarea>
-  </mat-form-field>
+    <app-operator-selector class="full-width top-spaced" [isEnabled]="canReport()"
+      [(selectedOperatorId)]="selectedOperatorId" (creatingOperatorFailed)="creatingOperatorFailed.set($event)"/>
 
-  <app-operator-selector class="full-width top-spaced" [isEnabled]="canReport()"
-    [(selectedOperatorId)]="selectedOperatorId" (creatingOperatorFailed)="creatingOperatorFailed.set($event)"/>
+    <h3 class="radio-group-header">{{ TranslationConstants.REPORT_DIALOG.CONFIRMATION | translate }}</h3>
+    <mat-radio-group class="radio-group" aria-label="Select an report option" [(ngModel)]="confirmationType">
+      <mat-radio-button [disabled]="!context.canPartial || isLoading()" value="partial">
+        {{ TranslationConstants.REPORT_DIALOG.PARTIAL | translate }}
+      </mat-radio-button>
+      <mat-radio-button [disabled]="!context.canFinal || isLoading()" value="final">
+        {{ TranslationConstants.REPORT_DIALOG.FINAL | translate }}
+      </mat-radio-button>
+    </mat-radio-group>
 
-  <h3 class="radio-group-header">{{ TranslationConstants.REPORT_DIALOG.CONFIRMATION | translate }}</h3>
-  <mat-radio-group class="radio-group" aria-label="Select an report option" [(ngModel)]="confirmationType">
-    <mat-radio-button [disabled]="!reportContext()?.canPartial || isLoading()" value="partial">
-      {{ TranslationConstants.REPORT_DIALOG.PARTIAL | translate }}
-    </mat-radio-button>
-    <mat-radio-button [disabled]="!reportContext()?.canFinal || isLoading()" value="final">
-      {{ TranslationConstants.REPORT_DIALOG.FINAL | translate }}
-    </mat-radio-button>
-  </mat-radio-group>
-
-  @for (restriction of reportContext()?.restrictions; track restriction) {
-    <mat-list>
-      <mat-list-item>
-        <mat-icon matListItemIcon>
-          {{ restriction.severity === 'Error' ? 'error' : restriction.severity === 'Warning' ? 'warning' : 'info' }}
-        </mat-icon>
-        <div matListItemTitle>{{ restriction.text }}</div>
-      </mat-list-item>
-    </mat-list>
+    @if (context.restrictions?.length) {
+      <mat-list class="restriction-list">
+        @for (restriction of context.restrictions; track restriction) {
+          <mat-list-item>
+            <mat-icon matListItemIcon>
+              {{ restriction.severity === 'Error' ? 'error' : restriction.severity === 'Warning' ? 'warning' : 'info' }}
+            </mat-icon>
+            <div matListItemTitle class="restriction-text">
+              {{ restriction.text }}
+            </div>
+          </mat-list-item>
+        }
+      </mat-list>
+    }
   }
 </mat-dialog-content>
 

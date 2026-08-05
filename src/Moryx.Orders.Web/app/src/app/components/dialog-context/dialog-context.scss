@@ -35,4 +35,11 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   flex: 1 1 auto;
+  cursor: pointer;
+
+  &.expanded {
+    white-space: normal;
+    word-break: break-word;
+    text-overflow: unset;
+  }
 }

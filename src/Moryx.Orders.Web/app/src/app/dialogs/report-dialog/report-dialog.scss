@@ -1,43 +1,53 @@
 @use '../dialog-styles.scss';
 
 .report-dialog-amounts-row {
-    display: flex;
-    width: 100%;
-    margin-bottom: 16px;
+  display: flex;
+  width: 100%;
+  margin-bottom: 16px;
 }
 
 .amounts-data-entry {
-    flex: 1;
-    font-size: 16px;
+  flex: 1;
+  font-size: 16px;
 }
 
 .radio-group-header {
-    margin-top: 8px;
-    margin-bottom: 8px;
+  margin-top: 8px;
+  margin-bottom: 8px;
 }
 
 .radio-group {
-    margin-bottom: 8px;
+  margin-bottom: 8px;
 }
 
 .mat-radio-button ~ .mat-radio-button {
-    margin-left: 16px;
+  margin-left: 16px;
 }
 
 .report-dialog-form-row {
-    display: flex;
+  display: flex;
 }
 
 .interrupt-dialog-report-success-count {
-    width: 100%;
-    margin-right: 4px;
+  width: 100%;
+  margin-right: 4px;
 }
 
 .interrupt-dialog-report-failure-count {
-    width: 100%;
-    margin-left: 4px;
+  width: 100%;
+  margin-left: 4px;
 }
 
 .interrupt-dialog-title {
-    margin-left: -5px;
+  margin-left: -5px;
+}
+
+.restriction-list mat-icon {
+  margin-left: 0;
+}
+
+.restriction-text {
+  white-space: normal;
+  word-break: break-word;
+  font-size: inherit;
 }
