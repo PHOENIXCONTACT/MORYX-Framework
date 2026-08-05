@@ -3,23 +3,12 @@
 <div class="dialog-context">
   <p class="dialog-context-item">
     <span class="info-label">{{ TranslationConstants.DIALOG_CONTEXT.ORDER | translate }}</span>
-
-    @let orderValue = model.order + ' - ' + model.number;
-
-    <span class="info-value" [class.expanded]="orderExpanded()" [matTooltip]="orderValue" matTooltipPosition="below"
-      (click)="toggleOrderExpansion()">
-      {{ orderValue }}
-    </span>
+    <span class="info-value">{{ model.order + ' - ' + model.number }}</span>
   </p>
   <p class="dialog-context-item">
     <span class="info-label">{{ TranslationConstants.DIALOG_CONTEXT.PRODUCT | translate }}</span>
-
-    @let productValue = model.productIdentifier + '-' + (model.productRevision | number:'2.0') + ' ' +
-      model.productName;
-
-    <span class="info-value" [class.expanded]="productExpanded()" [matTooltip]="productValue" matTooltipPosition="below"
-      (click)="toggleProductExpansion()">
-      {{productValue}}
+    <span class="info-value">
+      {{ model.productIdentifier + '-' + (model.productRevision | number:'2.0') + ' ' + model.productName }}
     </span>
   </p>
 </div>
