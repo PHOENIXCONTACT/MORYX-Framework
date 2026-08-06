@@ -47,7 +47,7 @@ public class ProductStorageTests
         ReflectionTool.TestMode = true;
         // This call is necessary for NUnit to load the type
         var someType = new WatchType();
-
+        // needed for product storage tests
         var testType = new TextColumnMapperTestProductType();
     }
 
@@ -1046,6 +1046,4 @@ public class ProductStorageTests
         Assert.That(loaded.ComplexData1, Is.Not.Null);
         Assert.That(loaded.ComplexData1.Content, Is.EqualTo("Content"));
     }
-
-
 }

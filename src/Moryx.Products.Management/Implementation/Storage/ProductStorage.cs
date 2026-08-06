@@ -179,12 +179,12 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
 
         var classificationMask = (int)classifications;
         var recipeEntities = (from recipeEntity in uow.GetRepository<IProductRecipeRepository>().Linq.Active()
-            let classificationValue = recipeEntity.Classification
-            where recipeEntity.ProductId == productId
-            where classificationValue >= 0 // We never return clones in this query
-            where (classificationValue & classificationMask) == classificationValue
+                              let classificationValue = recipeEntity.Classification
+                              where recipeEntity.ProductId == productId
+                              where classificationValue >= 0 // We never return clones in this query
+                              where (classificationValue & classificationMask) == classificationValue
 
-            select recipeEntity).ToArray();
+                              select recipeEntity).ToArray();
 
         var loadRecipeTasks = recipeEntities.Select(async (entity) => await LoadRecipe(uow, entity, cancellationToken)).ToArray();
         var results = await Task.WhenAll(loadRecipeTasks);
@@ -666,9 +666,9 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
                 var links = (IEnumerable<ProductPartLink>)partLinkInfo.Value;
                 // Delete the removed ones
                 var toDelete = (from link in typeEntity.Parts
-                    where link.PropertyName == linkStrategy.PropertyName
-                    where links.All(l => l.Id != link.Id)
-                    select link).ToArray();
+                                where link.PropertyName == linkStrategy.PropertyName
+                                where links.All(l => l.Id != link.Id)
+                                select link).ToArray();
                 await linkStrategy.DeletePartLinkAsync(toDelete, cancellationToken);
                 linkRepo.RemoveRange(toDelete);
 
@@ -1017,12 +1017,12 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
         using var uow = Factory.Create();
         var productRepo = uow.GetRepository<IProductTypeRepository>();
         var queryResult = (from entity in productRepo.Linq
-            where entity.Id == productId
-            select new
-            {
-                entity,
-                parentCount = entity.Parents.Count(pl => pl.Parent.Deleted == null)
-            }).FirstOrDefault();
+                           where entity.Id == productId
+                           select new
+                           {
+                               entity,
+                               parentCount = entity.Parents.Count(pl => pl.Parent.Deleted == null)
+                           }).FirstOrDefault();
         // No match, nothing removed!
         if (queryResult == null)
             return Task.FromResult(false);
