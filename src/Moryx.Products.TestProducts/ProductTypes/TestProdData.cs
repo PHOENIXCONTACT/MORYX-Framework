@@ -1,0 +1,11 @@
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+namespace Moryx.Products.TestProducts;
+
+public class TestProdData
+{
+    public int TotalAmount { get; set; }
+
+    public string WorkerName { get; set; }
+}

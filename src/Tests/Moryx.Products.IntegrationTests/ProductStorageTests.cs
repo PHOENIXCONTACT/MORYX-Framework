@@ -20,6 +20,7 @@ using Moryx.AbstractionLayer.TestTools;
 using Moryx.AbstractionLayer.Workplans;
 using Moryx.Model.Repositories;
 using Moryx.Products.Management.Model;
+using Moryx.Products.TestProducts;
 using Moryx.Serialization;
 using NUnit.Framework;
 // ReSharper disable PossibleNullReferenceException
@@ -973,4 +974,46 @@ public class ProductStorageTests
         Assert.That(ex.Message,
             Does.Contain(nameof(GenericInstanceConfiguration)));
     }
+
+    [Test]
+    public async Task LoadTypesQueryShouldReturnCompleteProductType()
+    {
+        // Arrange
+        var product = new TextColumnMapperTestProductType
+        {
+            Name = "QueryTest",
+            Identity = new ProductIdentity("999001", 1),
+
+            Integer1 = 42,
+            MyText1 = "Hello",
+
+            ComplexData1 = new ComplexData
+            {
+                Content = "Content",
+                PropertyName = "Property",
+                Number = 123,
+                Weight = 4.5f
+            }
+        };
+
+        await _storage.SaveTypeAsync(product);
+
+        // Act
+        var loaded = (await _storage.LoadTypesAsync(
+                new ProductQuery
+                {
+                    TypeName = typeof(TextColumnMapperTestProductType).FullName
+                }))
+            .OfType<TextColumnMapperTestProductType>()
+            .Single();
+
+        // Assert
+        Assert.That(loaded.Integer1, Is.EqualTo(42));
+        Assert.That(loaded.MyText1, Is.EqualTo("Hello"));
+
+        Assert.That(loaded.ComplexData1, Is.Not.Null);
+        Assert.That(loaded.ComplexData1.Content, Is.EqualTo("Content"));
+    }
+
+
 }

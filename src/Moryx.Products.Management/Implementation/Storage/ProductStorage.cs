@@ -263,7 +263,7 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
 
     #region Load product
 
-    public Task<IReadOnlyList<ProductType>> LoadTypesAsync(ProductQuery query, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<ProductType>> LoadTypesAsync(ProductQuery query, CancellationToken cancellationToken = default)
     {
         using var uow = Factory.Create();
         var baseSet = uow.GetRepository<IProductTypeRepository>().Linq;
@@ -371,10 +371,18 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
             .ThenBy(p => p.Identifier)
             .ThenBy(p => p.Revision).ToList();
 
-        var results = products.Where(p => _typeInformation.ContainsKey(p.TypeName))
-            .Select(p => _typeInformation[p.TypeName].CreateTypeFromEntity(p)).ToArray();
+        //var results = products.Where(p => _typeInformation.ContainsKey(p.TypeName))
+        //    .Select(p => _typeInformation[p.TypeName].CreateTypeFromEntity(p)).ToArray();
 
-        return Task.FromResult<IReadOnlyList<ProductType>>(results);
+        //return Task.FromResult<IReadOnlyList<ProductType>>(results);
+
+        var transformed = products
+            .Where(p => _typeInformation.ContainsKey(p.TypeName))
+            .Select(p => Transform(uow, p, true, cancellationToken));
+
+        var results1 = await Task.WhenAll(transformed);
+        
+        return results1;
     }
 
     private static Expression ConvertPropertyFilter(Type targetType, PropertyFilter filter)
