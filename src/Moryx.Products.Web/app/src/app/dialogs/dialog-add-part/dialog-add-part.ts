@@ -65,7 +65,6 @@ export class DialogAddPart {
         possibleParts = possibleParts.filter((p) => currentParts[0]?.id !== p.id);
       }
 
-      // Todo: Make possible parts a resource signal
       this.possibleParts.set(possibleParts);
       this.filteredPossibleParts.set(possibleParts);
     }).catch((e) => this.snackbarService.handleError(e));
@@ -96,8 +95,8 @@ export class DialogAddPart {
     return false;
   }
 
-  protected createProductNameWithIdentity(product: ProductModel | undefined, shortened: boolean = false, maxLength: number = 40): string {
-    return this.editProductsService.createProductNameWithIdentity(product, shortened, maxLength);
+  protected createProductNameWithIdentity(product: ProductModel | undefined): string {
+    return this.editProductsService.createProductNameWithIdentity(product);
   }
 }
 
