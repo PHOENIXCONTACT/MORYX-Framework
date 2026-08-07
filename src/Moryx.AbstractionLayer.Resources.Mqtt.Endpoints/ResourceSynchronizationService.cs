@@ -271,6 +271,7 @@ public class ResourceSynchronizationService : IMqttService
     {
         return resourceManagement.ModifyUnsafeAsync(matchingResource.Id, resource =>
         {
+            _logger.LogInformation("Updating local resource with identity '{identity}'", (resource as IIdentifiableObject)?.Identity?.Identifier); 
             SetInstanceValue(jsonProperties, resource);
             return Task.FromResult(true);
         });
@@ -280,6 +281,7 @@ public class ResourceSynchronizationService : IMqttService
     {
         var message = MqttMessageSerialization.GetJsonPayload(matchingResource, _options.JsonSerializerOptions);
         TryAddToMessageCache(GetHashString(message));
+        _logger.LogInformation("Removing local resource with identity '{identity}'", (matchingResource as IIdentifiableObject)?.Identity?.Identifier);
 
         return resourceManagement.DeleteAsync(matchingResource.Id);
     }
@@ -388,6 +390,10 @@ public class ResourceSynchronizationService : IMqttService
     private Resource ProcessResource(Resource resource, string topic)
     {
         var synchronizationAttribute = resource.GetType().GetCustomAttribute<ResourceSynchronizationAttribute>();
+        if (synchronizationAttribute is null)
+        {
+            return resource;
+        }
         if (synchronizationAttribute?.SynchronizationTypeId is null)
         {
             _logger.LogError("Resource of type {resourceType} is marked for synchronization but has no SynchronizationTypeId defined.", resource.GetType().FullName);

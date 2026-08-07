@@ -1,46 +1,29 @@
-@if (notification()) {
+@let currentNotification = notification();
+@if (currentNotification) {
   <div class="scaling">
     <mat-card class="notification-card">
-      <mat-card-header
-        class="notification-header"
-        [class]="'has-background-' + notification()?.severity"
-        >
+      <mat-card-header class="notification-header" [class]="'has-background-' + currentNotification.severity">
         <div mat-card-avatar class="notification-icon">
-          <mat-icon
-            [inline]="true"
-            role="complementary"
-            aria-label="Notification Severity Icon"
-            >
-            {{ getIcon(notification()!) }}
+          <mat-icon [inline]="true" role="complementary" aria-label="Notification Severity Icon">
+            {{ getIcon(currentNotification) }}
           </mat-icon>
         </div>
         <mat-card-title class="notification-title">
-          <markdown [data]="notification()?.title" [disableSanitizer]="true" />
+          <markdown [data]="currentNotification.title" [disableSanitizer]="true" [inline]="true" />
         </mat-card-title>
-        <mat-card-subtitle>{{
-          notification()?.created | date: "medium"
-        }}</mat-card-subtitle>
+        <mat-card-subtitle>{{ currentNotification.created | date: "medium" }}</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content class="notification-content">
         <div class="content">
-          <markdown class="notification-message" [data]="notification()?.message" [disableSanitizer]="true" />
-          @if (notification()?.properties && isArrayNotEmpty(notification()?.properties?.subEntries)) {
-            <navigable-entry-editor
-              [entry]="notification()!.properties!"
-              [disabled]="true"
-              queryParam="properties"
-            ></navigable-entry-editor>
+          <markdown [data]="currentNotification.message" [disableSanitizer]="true" />
+          @if (currentNotification.properties && isArrayNotEmpty(currentNotification.properties.subEntries)) {
+            <navigable-entry-editor [entry]="currentNotification.properties" [disabled]="true" queryParam="properties" />
           }
         </div>
       </mat-card-content>
-      @if (notification()?.isAcknowledgable) {
+      @if (currentNotification.isAcknowledgable) {
         <mat-card-actions align="end">
-          <button
-            mat-button
-            color="primary"
-            type="button"
-            (click)="onAcknowledge(notification()!)"
-            >
+          <button mat-button color="primary" type="button" (click)="onAcknowledge(currentNotification)">
             {{ TranslationConstants.DETAILS.ACKNOWLEDGE | translate }}
           </button>
         </mat-card-actions>
@@ -48,10 +31,5 @@
     </mat-card>
   </div>
 } @else {
-  <img
-    src="{{ environment.assets + 'assets/moryx_transparent_colored.png' }}"
-    alt="Semi-transparent Moryx Banner"
-    width="80%"
-    />
+  <img src="{{ environment.assets + 'assets/moryx_transparent_colored.png' }}" alt="Semi-transparent Moryx Banner" width="80%" />
 }
-

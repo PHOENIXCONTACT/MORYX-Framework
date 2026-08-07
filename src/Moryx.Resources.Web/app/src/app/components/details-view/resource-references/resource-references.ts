@@ -18,6 +18,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
+import { WordBreakPipe } from '@app/pipes/word-break.pipe';
 
 
 @Component({
@@ -33,7 +34,8 @@ import { MatButtonModule } from '@angular/material/button';
     MatSelectModule,
     MatTableModule,
     TranslatePipe,
-    MatButtonModule
+    MatButtonModule,
+    WordBreakPipe,
 ]
 })
 export class ResourceReferences {
