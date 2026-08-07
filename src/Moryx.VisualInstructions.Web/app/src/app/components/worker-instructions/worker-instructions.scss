@@ -161,4 +161,14 @@
   display: flex;
   align-items: flex-end;
   justify-content: end;
+
+  // only on very big screen (4k)  make the result button bigger
+  @media (width >=2560px) {
+    gap: 30px;
+    margin-right: 10px;
+    .mat-mdc-outlined-button {
+      min-height: 150px;
+      margin-bottom: 80px;
+    }
+  }
 }
