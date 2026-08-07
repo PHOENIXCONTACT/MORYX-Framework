@@ -54,7 +54,7 @@
         <div class="result-actions">
           @if(displayedInstruction()?.type === InstructionType.Execute){
             @for (result of displayedInstruction()?.results; track result) {
-              <button  mat-stroked-button
+              <button  mat-flat-button
                 type="button" (click)="onSelectResult(result)">
                 {{ result.displayValue }}
               </button>

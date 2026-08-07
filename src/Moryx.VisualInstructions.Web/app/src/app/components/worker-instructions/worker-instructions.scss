@@ -86,7 +86,7 @@
   margin-top: -16px;
 }
 
-.mat-mdc-outlined-button {
+.mat-mdc-unelevated-button {
   text-transform: uppercase;
   font-size: xx-large;
   height: 80px;
@@ -166,7 +166,7 @@
   @media (width >=2560px) {
     gap: 30px;
     margin-right: 10px;
-    .mat-mdc-outlined-button {
+    .mat-mdc-unelevated-button {
       min-height: 150px;
       margin-bottom: 80px;
     }
