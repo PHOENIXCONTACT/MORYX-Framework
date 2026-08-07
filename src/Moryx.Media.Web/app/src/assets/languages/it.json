@@ -6,7 +6,7 @@
     "FAILED_LOADING": "Non è stato possibile stabilire la connessione al server. Controllare la connessione di rete o riprovare più tardi."
   },
 
-  "CONTEXT_MENU": {
+  "VARIANT_ACTION": {
     "DELETE": "Elimina",
     "INFO": "Info",
     "DOWNLOAD": "Scarica"

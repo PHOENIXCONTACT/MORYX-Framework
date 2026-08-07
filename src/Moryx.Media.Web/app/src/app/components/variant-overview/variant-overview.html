@@ -13,6 +13,18 @@
               <mat-icon>arrow_back</mat-icon>
             </button>
             <span class="toolbar-spacer"></span>
+            <button mat-icon-button class="media-toolbar-button" [disabled]="!selectedVariant()" (click)="onInfo(selectedVariant()!)" aria-label="Info"
+              [matTooltip]="TranslationConstants.VARIANT_ACTION.INFO | translate" matTooltipShowDelay="500">
+              <mat-icon>info</mat-icon>
+            </button>
+            <button mat-icon-button class="media-toolbar-button" [disabled]="!selectedVariant()" (click)="onDownload(selectedVariant()!)" aria-label="Download"
+              [matTooltip]="TranslationConstants.VARIANT_ACTION.DOWNLOAD | translate" matTooltipShowDelay="500">
+              <mat-icon>download</mat-icon>
+            </button>
+            <button mat-icon-button class="media-toolbar-button" [disabled]="!selectedVariant() || selectedVariant()?.name === 'master'" (click)="onDelete(selectedVariant()!)" aria-label="Delete"
+              [matTooltip]="TranslationConstants.VARIANT_ACTION.DELETE | translate" matTooltipShowDelay="500">
+              <mat-icon>delete_forever</mat-icon>
+            </button>
           </mat-toolbar-row>
           <mat-toolbar-row>
             <button mat-icon-button aria-label="Spacer" disabled="true">
@@ -35,16 +47,16 @@
           <ng-template matMenuContent let-variant="variant">
             <button mat-menu-item type="button" (click)="onInfo(variant)">
               <mat-icon>info</mat-icon>
-              <span>{{ TranslationConstants.CONTEXT_MENU.INFO | translate }}</span>
+              <span>{{ TranslationConstants.VARIANT_ACTION.INFO | translate }}</span>
             </button>
             <button mat-menu-item type="button" (click)="onDownload(variant)">
               <mat-icon>download</mat-icon>
-              <span>{{ TranslationConstants.CONTEXT_MENU.DOWNLOAD | translate }}</span>
+              <span>{{ TranslationConstants.VARIANT_ACTION.DOWNLOAD | translate }}</span>
             </button>
             @if (variant.name !== 'master') {
               <button mat-menu-item type="button" (click)="onDelete(variant)">
                 <mat-icon>delete_forever</mat-icon>
-                <span>{{ TranslationConstants.CONTEXT_MENU.DELETE | translate }}</span>
+                <span>{{ TranslationConstants.VARIANT_ACTION.DELETE | translate }}</span>
               </button>
             }
           </ng-template>

@@ -5,7 +5,7 @@
     "EMPTY_STATE_TEXT": "To add content click on the upload sign and select a file.",
     "FAILED_LOADING": "The connection to the server could not be established. Please check your network connection or try again later."
   },
-  "CONTEXT_MENU": {
+  "VARIANT_ACTION": {
     "DELETE": "Delete",
     "INFO": "Info",
     "DOWNLOAD": "Download"

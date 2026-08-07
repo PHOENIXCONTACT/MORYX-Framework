@@ -17,10 +17,10 @@ export class TranslationConstants {
     FAILED_LOADING: 'MEDIA_OVERVIEW.FAILED_LOADING',
   };
 
-  public static readonly CONTEXT_MENU = {
-    DELETE: 'CONTEXT_MENU.DELETE',
-    INFO: 'CONTEXT_MENU.INFO',
-    DOWNLOAD: 'CONTEXT_MENU.DOWNLOAD',
+  public static readonly VARIANT_ACTION = {
+    DELETE: 'VARIANT_ACTION.DELETE',
+    INFO: 'VARIANT_ACTION.INFO',
+    DOWNLOAD: 'VARIANT_ACTION.DOWNLOAD',
   };
 
   public static readonly MEDIA_FILE_VARIANTS = 'MEDIA_FILE_VARIANTS';

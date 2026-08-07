@@ -5,7 +5,7 @@
     "EMPTY_STATE_TEXT": "Um Inhalte hinzuzufügen, klicke auf Hochladen und wähle eine Datei.",
     "FAILED_LOADING": "Die Verbindung zum Server ist leider fehlgeschlagen. Bitte überprüfe deine Netzwerkverbindung oder versuch es später nochmal."
   },
-  "CONTEXT_MENU": {
+  "VARIANT_ACTION": {
     "DELETE": "Löschen",
     "INFO": "Info",
     "DOWNLOAD": "Herunterladen"
