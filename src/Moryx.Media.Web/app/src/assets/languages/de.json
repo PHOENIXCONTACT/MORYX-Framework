@@ -17,7 +17,9 @@
     "ALREADY_EXISTS_MESSAGE": "Variante mit diesem Namen existiert bereits in diesem Medienelement",
     "DELETE_MESSAGE": "Möchten Sie diese Variante wirklich entfernen?",
     "CREATION_DATE": "Erstelldatum",
-    "SIZE": "Größe"
+    "SIZE": "Größe",
+    "EMPTY_STATE_HEADER": "Keine Variante ausgewählt",
+    "EMPTY_STATE_TEXT": "Wählen Sie eine Variante aus der Liste, um die Details anzuzeigen."
   },
 
   "ADD_VARIANT_DIALOG": {

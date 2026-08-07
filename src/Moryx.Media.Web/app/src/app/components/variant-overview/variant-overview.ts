@@ -28,7 +28,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDividerModule } from '@angular/material/divider';
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
+import { VariantDetailsHeader } from './variant-details-header/variant-details-header';
+import { VariantDefaultView } from './variant-default-view/variant-default-view';
 
 @Component({
   selector: 'app-variant-overview',
@@ -46,7 +49,10 @@ import { NgxDocViewerModule } from 'ngx-doc-viewer';
     NgxDocViewerModule,
     CommonModule,
     TranslatePipe,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatDividerModule,
+    VariantDetailsHeader,
+    VariantDefaultView
   ]
 })
 export class VariantOverview implements OnInit, OnDestroy {

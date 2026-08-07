@@ -86,27 +86,35 @@
         </mat-nav-list>
       </div>
     </mat-sidenav>
-    <mat-sidenav-content class="variant-container">
-      @switch (bigPictureLoadingState()) {
-        @case (1) {
-          <mat-spinner></mat-spinner>
-        }
-        @case (2) {
-          @if (!bigPictureIsPdf()) {
-            <img
-              src="{{ bigPictureUrl() }}"
-              alt="Image could not be loaded"
-              class="variant-image"
-              />
+    <mat-sidenav-content class="variant-content">
+      @if (selectedVariant(); as variant) {
+        <app-variant-details-header [selectedVariant]="variant" />
+        <mat-divider />
+        <div class="variant-container">
+          @switch (bigPictureLoadingState()) {
+            @case (1) {
+              <mat-spinner></mat-spinner>
+            }
+            @case (2) {
+              @if (!bigPictureIsPdf()) {
+                <img
+                  src="{{ bigPictureUrl() }}"
+                  alt="Image could not be loaded"
+                  class="variant-image"
+                  />
+              }
+              @if (bigPictureIsPdf()) {
+                <ngx-doc-viewer
+                  [url]="pdfUrl()!"
+                  viewer="url"
+                  class="variant-pdf"
+                ></ngx-doc-viewer>
+              }
+            }
           }
-          @if (bigPictureIsPdf()) {
-            <ngx-doc-viewer
-              [url]="pdfUrl()!"
-              viewer="url"
-              class="variant-pdf"
-            ></ngx-doc-viewer>
-          }
-        }
+        </div>
+      } @else {
+        <app-variant-default-view />
       }
     </mat-sidenav-content>
   </mat-sidenav-container>

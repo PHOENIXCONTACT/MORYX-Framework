@@ -101,9 +101,14 @@
   }
 }
 
+.variant-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 .variant-container {
   flex: 1 1 auto;
-  height: 100%;
   padding: 8px;
   box-sizing: border-box;
   overflow: hidden;

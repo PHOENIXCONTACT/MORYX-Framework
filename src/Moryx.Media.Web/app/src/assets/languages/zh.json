@@ -17,7 +17,9 @@
     "ALREADY_EXISTS_MESSAGE": "此名称的变体已存在于此内容中",
     "DELETE_MESSAGE": "您确定要删除此变体吗？",
     "CREATION_DATE": "创建日期",
-    "SIZE": "大小"
+    "SIZE": "大小",
+    "EMPTY_STATE_HEADER": "未选择变体",
+    "EMPTY_STATE_TEXT": "从列表中选择一个变体以查看其详细信息。"
   },
 
   "ADD_VARIANT_DIALOG": {
