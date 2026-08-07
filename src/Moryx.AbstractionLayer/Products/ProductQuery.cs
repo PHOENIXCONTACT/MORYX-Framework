@@ -77,6 +77,9 @@ public class ProductQuery
     /// </summary>
     [DataMember]
     public List<PropertyFilter> PropertyFilters { get; set; }
+
+    [DataMember]
+    public bool LoadFullTypeInformation { get; set; }
 }
 
 /// <summary>

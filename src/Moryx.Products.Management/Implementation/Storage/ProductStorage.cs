@@ -371,11 +371,19 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
             .ThenBy(p => p.Identifier)
             .ThenBy(p => p.Revision).ToList();
 
-        var transformed = products
-            .Where(p => _typeInformation.ContainsKey(p.TypeName))
-            .Select(p => Transform(uow, p, true, cancellationToken));
+        if (query.LoadFullTypeInformation)
+        {
+            var transformed = products
+                .Where(p => _typeInformation.ContainsKey(p.TypeName))
+                .Select(p => Transform(uow, p, true, cancellationToken));
 
-        var results = await Task.WhenAll(transformed);
+            return await Task.WhenAll(transformed);
+        }
+
+        var results = products
+            .Where(p => _typeInformation.ContainsKey(p.TypeName))
+            .Select(p => _typeInformation[p.TypeName].CreateTypeFromEntity(p))
+            .ToArray();
 
         return results;
     }

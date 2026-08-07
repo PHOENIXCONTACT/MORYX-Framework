@@ -973,8 +973,7 @@ public class ProductStorageTests
             Does.Contain(nameof(GenericInstanceConfiguration)));
     }
 
-    [Test(Description =
-        "LoadTypesAsync(ProductQuery) must return fully populated product types and not only the base information.")]
+    [Test(Description = "LoadTypesAsync(ProductQuery) returns fully populated product types if full loading is requested.")]
     public async Task LoadTypesQueryShouldReturnCompleteProductType()
     {
         // Arrange
@@ -990,12 +989,43 @@ public class ProductStorageTests
         // Act
         var loaded = (await _storage.LoadTypesAsync(new ProductQuery
         {
-            TypeName = typeof(DisplayWatchFaceType).FullName
+            TypeName = typeof(DisplayWatchFaceType).FullName,
+            LoadFullTypeInformation = true
         }))
             .OfType<DisplayWatchFaceType>()
             .Single(p => p.Identity.Identifier == "999001");
 
         // Assert
         Assert.That(loaded.Resolution, Is.EqualTo(180));
+    }
+
+    [Test(Description = "LoadTypesAsync(ProductQuery) returns only base type information by default.")]
+    public async Task LoadTypesQueryShouldReturnBaseInformationByDefault()
+    {
+        // Arrange
+        var product = new DisplayWatchFaceType
+        {
+            Name = "QueryTest",
+            Identity = new ProductIdentity("999002", 1),
+            Resolution = 180
+        };
+
+        await _storage.SaveTypeAsync(product);
+
+        // Act
+        var loaded = (await _storage.LoadTypesAsync(new ProductQuery
+            {
+                TypeName = typeof(DisplayWatchFaceType).FullName
+            }))
+            .OfType<DisplayWatchFaceType>()
+            .Single(p => p.Identity.Identifier == "999002");
+
+        // Assert
+        Assert.That(loaded.Id, Is.Not.EqualTo(0));
+        Assert.That(loaded.Name, Is.EqualTo("QueryTest"));
+        Assert.That(loaded.Identity.Identifier, Is.EqualTo("999002"));
+
+        // Resolution should not be loaded in lightweight mode
+        Assert.That(loaded.Resolution, Is.EqualTo(0));
     }
 }
