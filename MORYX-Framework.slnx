@@ -75,7 +75,6 @@
     <Project Path="src/Moryx.AbstractionLayer.Products.Endpoints/Moryx.AbstractionLayer.Products.Endpoints.csproj" />
     <Project Path="src/Moryx.Products.Management/Moryx.Products.Management.csproj" />
     <Project Path="src/Moryx.Products.Samples/Moryx.Products.Samples.csproj" />
-    <Project Path="src/Moryx.Products.TestProducts/Moryx.Products.TestProducts.csproj" />
     <Project Path="src/Moryx.Products.Web/Moryx.Products.Web.csproj" />
   </Folder>
   <Folder Name="/Resources/">

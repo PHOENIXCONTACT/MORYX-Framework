@@ -20,7 +20,6 @@ using Moryx.AbstractionLayer.TestTools;
 using Moryx.AbstractionLayer.Workplans;
 using Moryx.Model.Repositories;
 using Moryx.Products.Management.Model;
-using Moryx.Products.TestProducts;
 using Moryx.Serialization;
 using NUnit.Framework;
 // ReSharper disable PossibleNullReferenceException
@@ -47,8 +46,6 @@ public class ProductStorageTests
         ReflectionTool.TestMode = true;
         // This call is necessary for NUnit to load the type
         var someType = new WatchType();
-        // needed for product storage tests
-        var testType = new TextColumnMapperTestProductType();
     }
 
     [SetUp]
@@ -140,37 +137,6 @@ public class ProductStorageTests
                     TargetType = typeof(WatchPackageType).FullName,
                     JsonColumn = nameof(IGenericColumns.Text8),
                     PropertyConfigs = []
-                },
-
-                new GenericTypeConfiguration
-                {
-                    TargetType = typeof(GenericJsonTestProductType).FullName,
-                    JsonColumn = nameof(IGenericColumns.Text8),
-                    PropertyConfigs = []
-                },
-
-                new GenericTypeConfiguration
-                {
-                    TargetType = typeof(TextColumnMapperTestProductType).FullName,
-
-                    JsonColumn = nameof(IGenericColumns.Text8),
-
-                    PropertyConfigs =
-                    [
-                        new PropertyMapperConfig
-                        {
-                            PropertyName = nameof(TextColumnMapperTestProductType.Integer1),
-                            Column = nameof(IGenericColumns.Integer1),
-                            PluginName = nameof(IntegerColumnMapper)
-                        },
-
-                        new PropertyMapperConfig
-                        {
-                            PropertyName = nameof(TextColumnMapperTestProductType.MyText1),
-                            Column = nameof(IGenericColumns.Text1),
-                            PluginName = nameof(TextColumnMapper)
-                        }
-                    ]
                 },
             ],
             InstanceStrategies =
@@ -1007,43 +973,29 @@ public class ProductStorageTests
             Does.Contain(nameof(GenericInstanceConfiguration)));
     }
 
-    [Test]
+    [Test(Description =
+        "LoadTypesAsync(ProductQuery) must return fully populated product types and not only the base information.")]
     public async Task LoadTypesQueryShouldReturnCompleteProductType()
     {
         // Arrange
-        var product = new TextColumnMapperTestProductType
+        var product = new DisplayWatchFaceType
         {
             Name = "QueryTest",
             Identity = new ProductIdentity("999001", 1),
-
-            Integer1 = 42,
-            MyText1 = "Hello",
-
-            ComplexData1 = new ComplexData
-            {
-                Content = "Content",
-                PropertyName = "Property",
-                Number = 123,
-                Weight = 4.5f
-            }
+            Resolution = 180
         };
 
         await _storage.SaveTypeAsync(product);
 
         // Act
-        var loaded = (await _storage.LoadTypesAsync(
-                new ProductQuery
-                {
-                    TypeName = typeof(TextColumnMapperTestProductType).FullName
-                }))
-            .OfType<TextColumnMapperTestProductType>()
-            .Single();
+        var loaded = (await _storage.LoadTypesAsync(new ProductQuery
+        {
+            TypeName = typeof(DisplayWatchFaceType).FullName
+        }))
+            .OfType<DisplayWatchFaceType>()
+            .Single(p => p.Identity.Identifier == "999001");
 
         // Assert
-        Assert.That(loaded.Integer1, Is.EqualTo(42));
-        Assert.That(loaded.MyText1, Is.EqualTo("Hello"));
-
-        Assert.That(loaded.ComplexData1, Is.Not.Null);
-        Assert.That(loaded.ComplexData1.Content, Is.EqualTo("Content"));
+        Assert.That(loaded.Resolution, Is.EqualTo(180));
     }
 }
