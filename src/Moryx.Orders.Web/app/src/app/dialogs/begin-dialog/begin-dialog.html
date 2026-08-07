@@ -32,69 +32,41 @@
 
   <app-dialog-context class="full-width dialog-context" [operationModel]="operation.model"></app-dialog-context>
 
-  <mat-grid-list cols="3" rowHeight="50px">
-    <mat-grid-tile>
-      <div class="content-data-entry">
-        <span><b>{{
-            TranslationConstants.BEGIN_DIALOG.TOTAL_AMOUNT | translate
-          }}</b></span>
-        <div>{{ operation.model.totalAmount }}</div>
+  <div class="data-grid">
+    <div class="content-data-entry">
+      <span><b>{{ TranslationConstants.BEGIN_DIALOG.TOTAL_AMOUNT | translate }}</b></span>
+      <div>{{ operation.model.totalAmount }}</div>
+    </div>
+    <div class="content-data-entry">
+      <span><b>{{ TranslationConstants.BEGIN_DIALOG.OVERDELIVERY | translate }}</b></span>
+      <div [style.color]="overDeliveryReached() ? 'var(--mat-sys-error)' : 'var(--mat-sys-on-surface)'">
+        {{ operation.model.overDeliveryAmount }} ({{ operation.overDelivery }} %)
       </div>
-    </mat-grid-tile>
-    <mat-grid-tile>
-      <div class="content-data-entry">
-        <span><b>{{
-            TranslationConstants.BEGIN_DIALOG.OVERDELIVERY | translate
-          }}</b></span>
-        <div [style.color]="overDeliveryReached() ? 'var(--mat-sys-error)' : 'var(--mat-sys-on-surface)'">
-          {{ operation.model.overDeliveryAmount }} ({{ operation.overDelivery }}
-          %)
-        </div>
+    </div>
+    <div class="content-data-entry">
+      <span><b>{{ TranslationConstants.BEGIN_DIALOG.UNDERDELIVERY | translate }}</b></span>
+      <div [style.color]="underDeliveryReached() ? 'var(--mat-sys-error)' : 'var(--mat-sys-on-surface)'">
+        {{ operation.model.underDeliveryAmount }} ({{ operation.underDelivery }} %)
       </div>
-    </mat-grid-tile>
-    <mat-grid-tile>
-      <div class="content-data-entry">
-        <span><b>{{
-            TranslationConstants.BEGIN_DIALOG.UNDERDELIVERY | translate
-          }}</b></span>
-        <div [style.color]="underDeliveryReached() ? 'var(--mat-sys-error)' : 'var(--mat-sys-on-surface)'">
-          {{ operation.model.underDeliveryAmount }} ({{
-            operation.underDelivery
-          }}
-          %)
-        </div>
-      </div>
-    </mat-grid-tile>
-    <mat-grid-tile>
-      <div class="content-data-entry">
-        <span><b>{{
-            TranslationConstants.BEGIN_DIALOG.ESTIMATED | translate
-          }}</b></span>
-        <div>{{ currentPartialAmount }}</div>
-      </div>
-    </mat-grid-tile>
-    <mat-grid-tile>
-      <div class="content-data-entry">
-        <span><b>{{
-            TranslationConstants.BEGIN_DIALOG.SUCCESS | translate
-          }}</b></span>
-        <div>{{ successCount }}</div>
-      </div>
-    </mat-grid-tile>
-    <mat-grid-tile>
-      <div class="content-data-entry">
-        <span><b>{{
-            TranslationConstants.BEGIN_DIALOG.SCRAP | translate
-          }}</b></span>
-        <div>{{ scrapCount }}</div>
-      </div>
-    </mat-grid-tile>
-    <mat-grid-tile colspan="3">
+    </div>
+    <div class="content-data-entry">
+      <span><b>{{ TranslationConstants.BEGIN_DIALOG.ESTIMATED | translate }}</b></span>
+      <div>{{ currentPartialAmount }}</div>
+    </div>
+    <div class="content-data-entry">
+      <span><b>{{ TranslationConstants.BEGIN_DIALOG.SUCCESS | translate }}</b></span>
+      <div>{{ successCount }}</div>
+    </div>
+    <div class="content-data-entry">
+      <span><b>{{ TranslationConstants.BEGIN_DIALOG.SCRAP | translate }}</b></span>
+      <div>{{ scrapCount }}</div>
+    </div>
+    <div class="progress-bar-entry">
       <app-multi-progress-bar [totalAmount]="estimatedTotal()" [successCount]="successCount" [scrapCount]="scrapCount"
                               [activeCount]="partialCount()" [activeLabel]="TranslationConstants.OPERATIONS.PARTIAL"
                               variant="forecast"/>
-    </mat-grid-tile>
-  </mat-grid-list>
+    </div>
+  </div>
   <mat-form-field appearance="outline">
     <mat-label>{{
         TranslationConstants.BEGIN_DIALOG.PARTIAL_AMOUNT | translate
@@ -129,7 +101,8 @@
   </mat-form-field>
 
   <app-operator-selector class="full-width top-spaced" [isEnabled]="canBegin"
-    [(selectedOperatorId)]="selectedOperatorId" (creatingOperatorFailed)="creatingOperatorFailed.set($event)"/>
+                         [(selectedOperatorId)]="selectedOperatorId"
+                         (creatingOperatorFailed)="creatingOperatorFailed.set($event)"/>
 </mat-dialog-content>
 
 <div mat-dialog-actions align="end">
