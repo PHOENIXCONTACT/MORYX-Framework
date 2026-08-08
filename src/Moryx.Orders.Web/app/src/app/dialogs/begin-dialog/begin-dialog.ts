@@ -19,7 +19,6 @@ import { OperatorsService } from '@app/services/operators.service';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
-import { MatGridListModule } from '@angular/material/grid-list';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
@@ -39,7 +38,6 @@ import { DialogContext } from "@app/components/dialog-context/dialog-context";
     MatDialogModule,
     CommonModule,
     TranslatePipe,
-    MatGridListModule,
     MatFormFieldModule,
     ReactiveFormsModule,
     FormsModule,
