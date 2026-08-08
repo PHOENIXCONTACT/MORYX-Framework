@@ -44,7 +44,7 @@
       </mat-form-field>
     </div>
 
-    <mat-form-field appearance="outline" class="full-width top-spaced">
+    <mat-form-field appearance="outline" class="full-width top-spaced" subscriptSizing="dynamic">
       <mat-label>{{ TranslationConstants.REPORT_DIALOG.COMMENT | translate }}</mat-label>
       <textarea matInput [(ngModel)]="comment" [disabled]="isLoading()"></textarea>
     </mat-form-field>
