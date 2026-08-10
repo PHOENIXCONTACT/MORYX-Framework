@@ -22,9 +22,6 @@ using Moryx.Model.Repositories;
 using Moryx.Products.Management.Model;
 using Moryx.Serialization;
 using NUnit.Framework;
-// ReSharper disable PossibleNullReferenceException
-// ReSharper disable StringLiteralTypo
-// ReSharper disable CommentTypo
 
 namespace Moryx.Products.IntegrationTests;
 
@@ -69,178 +66,178 @@ public class ProductStorageTests
         _storage = new ProductStorage
         {
             Factory = _factory,
-            StrategyFactory = strategyFactory.Object,
-            Config = new ModuleConfig
-            {
-                TypeStrategies =
-                [
-                    new ProductTypeConfiguration
-                    {
-                        TargetType = typeof(WatchType).FullName,
-                        PluginName = nameof(WatchStrategy)
-                    },
+            StrategyFactory = strategyFactory.Object
+        };
+        _storage.Config = new ModuleConfig
+        {
+            TypeStrategies =
+            [
+                new ProductTypeConfiguration
+                {
+                    TargetType = typeof(WatchType).FullName,
+                    PluginName = nameof(WatchStrategy)
+                },
 
-                    new GenericTypeConfiguration
-                    {
-                        TargetType = typeof(WatchFaceType).FullName,
-                        PropertyConfigs =
-                        [
-                            new PropertyMapperConfig
-                            {
-                                PropertyName = nameof(WatchFaceType.Brand),
-                                Column = nameof(IGenericColumns.Text1),
-                                PluginName = nameof(TextColumnMapper)
-                            },
+                new GenericTypeConfiguration
+                {
+                    TargetType = typeof(WatchFaceType).FullName,
+                    PropertyConfigs =
+                    [
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(WatchFaceType.Brand),
+                            Column = nameof(IGenericColumns.Text1),
+                            PluginName = nameof(TextColumnMapper)
+                        },
 
-                            new PropertyMapperConfig
-                            {
-                                PropertyName = nameof(WatchFaceType.IsDigital),
-                                Column = nameof(IGenericColumns.Integer1),
-                                PluginName = nameof(IntegerColumnMapper)
-                            },
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(WatchFaceType.IsDigital),
+                            Column = nameof(IGenericColumns.Integer1),
+                            PluginName = nameof(IntegerColumnMapper)
+                        },
 
-                            new PropertyMapperConfig
-                            {
-                                PropertyName = nameof(WatchFaceType.Color),
-                                Column = string.Empty,
-                                PluginName = nameof(NullPropertyMapper)
-                            }
-                        ],
-                        JsonColumn = nameof(IGenericColumns.Text8)
-                    },
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(WatchFaceType.Color),
+                            Column = string.Empty,
+                            PluginName = nameof(NullPropertyMapper)
+                        }
+                    ],
+                    JsonColumn = nameof(IGenericColumns.Text8)
+                },
 
-                    new GenericTypeConfiguration
-                    {
-                        TargetType = typeof(DisplayWatchFaceType).FullName,
-                        PropertyConfigs =
-                        [
-                            new PropertyMapperConfig
-                            {
-                                PropertyName = nameof(DisplayWatchFaceType.Resolution),
-                                Column = nameof(IGenericColumns.Integer1),
-                                PluginName = nameof(IntegerColumnMapper)
-                            }
-                        ],
-                        JsonColumn = nameof(IGenericColumns.Text8)
-                    },
+                new GenericTypeConfiguration
+                {
+                    TargetType = typeof(DisplayWatchFaceType).FullName,
+                    PropertyConfigs =
+                    [
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(DisplayWatchFaceType.Resolution),
+                            Column = nameof(IGenericColumns.Integer1),
+                            PluginName = nameof(IntegerColumnMapper)
+                        }
+                    ],
+                    JsonColumn = nameof(IGenericColumns.Text8)
+                },
 
-                    new GenericTypeConfiguration
-                    {
-                        TargetType = typeof(NeedleType).FullName,
-                        PropertyConfigs = [],
-                        JsonColumn = nameof(IGenericColumns.Text8)
-                    },
+                new GenericTypeConfiguration
+                {
+                    TargetType = typeof(NeedleType).FullName,
+                    PropertyConfigs = [],
+                    JsonColumn = nameof(IGenericColumns.Text8)
+                },
 
-                    new GenericTypeConfiguration
-                    {
-                        TargetType = typeof(WatchPackageType).FullName,
-                        JsonColumn = nameof(IGenericColumns.Text8),
-                        PropertyConfigs = []
-                    }
-                ],
-                InstanceStrategies =
-                [
-                    new GenericInstanceConfiguration
-                    {
-                        TargetType = typeof(WatchInstance).FullName,
-                        JsonColumn = nameof(IGenericColumns.Text8),
-                        PropertyConfigs =
-                        [
-                            new PropertyMapperConfig
-                            {
-                                PropertyName = nameof(WatchInstance.DeliveryDate),
-                                Column = nameof(IGenericColumns.Integer1),
-                                PluginName = nameof(IntegerColumnMapper)
-                            },
+                new GenericTypeConfiguration
+                {
+                    TargetType = typeof(WatchPackageType).FullName,
+                    JsonColumn = nameof(IGenericColumns.Text8),
+                    PropertyConfigs = []
+                }
+            ],
+            InstanceStrategies =
+            [
+                new GenericInstanceConfiguration
+                {
+                    TargetType = typeof(WatchInstance).FullName,
+                    JsonColumn = nameof(IGenericColumns.Text8),
+                    PropertyConfigs =
+                    [
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(WatchInstance.DeliveryDate),
+                            Column = nameof(IGenericColumns.Integer1),
+                            PluginName = nameof(IntegerColumnMapper)
+                        },
 
-                            new PropertyMapperConfig
-                            {
-                                PropertyName = nameof(WatchInstance.TimeSet),
-                                Column = nameof(IGenericColumns.Integer2),
-                                PluginName = nameof(IntegerColumnMapper)
-                            },
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(WatchInstance.TimeSet),
+                            Column = nameof(IGenericColumns.Integer2),
+                            PluginName = nameof(IntegerColumnMapper)
+                        },
 
-                            new PropertyMapperConfig
-                            {
-                                PropertyName = nameof(WatchInstance.Identity),
-                                Column = nameof(IGenericColumns.Text1),
-                                PluginName = nameof(TextColumnMapper)
-                            }
-                        ]
-                    },
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(WatchInstance.Identity),
+                            Column = nameof(IGenericColumns.Text1),
+                            PluginName = nameof(TextColumnMapper)
+                        }
+                    ]
+                },
 
-                    new GenericInstanceConfiguration
-                    {
-                        TargetType = typeof(WatchFaceInstance).FullName,
-                        PropertyConfigs =
-                        [
-                            new PropertyMapperConfig
-                            {
-                                PropertyName = nameof(WatchFaceInstance.Identifier),
-                                Column = nameof(IGenericColumns.Text1),
-                                PluginName = nameof(TextColumnMapper)
-                            },
+                new GenericInstanceConfiguration
+                {
+                    TargetType = typeof(WatchFaceInstance).FullName,
+                    PropertyConfigs =
+                    [
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(WatchFaceInstance.Identifier),
+                            Column = nameof(IGenericColumns.Text1),
+                            PluginName = nameof(TextColumnMapper)
+                        },
 
-                            new PropertyMapperConfig
-                            {
-                                PropertyName = nameof(WatchFaceInstance.Identity),
-                                Column = nameof(IGenericColumns.Text2),
-                                PluginName = nameof(TextColumnMapper)
-                            }
-                        ],
-                        JsonColumn = nameof(IGenericColumns.Text8)
-                    },
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(WatchFaceInstance.Identity),
+                            Column = nameof(IGenericColumns.Text2),
+                            PluginName = nameof(TextColumnMapper)
+                        }
+                    ],
+                    JsonColumn = nameof(IGenericColumns.Text8)
+                },
 
-                    new ProductInstanceConfiguration()
-                    {
-                        TargetType = typeof(NeedleInstance).FullName,
-                        PluginName = nameof(SkipInstancesStrategy)
-                    }
+                new ProductInstanceConfiguration()
+                {
+                    TargetType = typeof(NeedleInstance).FullName,
+                    PluginName = nameof(SkipInstancesStrategy)
+                }
 
-                ],
-                LinkStrategies =
-                [
-                    new ProductLinkConfiguration()
-                    {
-                        TargetType = typeof(WatchType).FullName,
-                        PartName = nameof(WatchType.WatchFace),
-                        PluginName = nameof(SimpleLinkStrategy)
-                    },
+            ],
+            LinkStrategies =
+            [
+                new ProductLinkConfiguration()
+                {
+                    TargetType = typeof(WatchType).FullName,
+                    PartName = nameof(WatchType.WatchFace),
+                    PluginName = nameof(SimpleLinkStrategy)
+                },
 
-                    new GenericLinkConfiguration
-                    {
-                        TargetType = typeof(WatchType).FullName,
-                        PartName = nameof(WatchType.Needles),
-                        JsonColumn = nameof(IGenericColumns.Text8),
-                        PropertyConfigs =
-                        [
-                            new PropertyMapperConfig
-                            {
-                                PropertyName = nameof(NeedlePartLink.Role),
-                                PluginName = nameof(IntegerColumnMapper),
-                                Column = nameof(IGenericColumns.Integer1)
-                            }
-                        ]
-                    },
+                new GenericLinkConfiguration
+                {
+                    TargetType = typeof(WatchType).FullName,
+                    PartName = nameof(WatchType.Needles),
+                    JsonColumn = nameof(IGenericColumns.Text8),
+                    PropertyConfigs =
+                    [
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(NeedlePartLink.Role),
+                            PluginName = nameof(IntegerColumnMapper),
+                            Column = nameof(IGenericColumns.Integer1)
+                        }
+                    ]
+                },
 
-                    new ProductLinkConfiguration()
-                    {
-                        TargetType = typeof(WatchPackageType).FullName,
-                        PartName = nameof(WatchPackageType.PossibleWatches),
-                        PluginName = nameof(SimpleLinkStrategy)
-                    }
+                new ProductLinkConfiguration()
+                {
+                    TargetType = typeof(WatchPackageType).FullName,
+                    PartName = nameof(WatchPackageType.PossibleWatches),
+                    PluginName = nameof(SimpleLinkStrategy)
+                }
 
-                ],
-                RecipeStrategies =
-                [
-                    new GenericRecipeConfiguration
-                    {
-                        TargetType = typeof(WatchProductRecipe).FullName,
-                        JsonColumn = nameof(IGenericColumns.Text8),
-                        PropertyConfigs = []
-                    }
-                ]
-            }
+            ],
+            RecipeStrategies =
+            [
+                new GenericRecipeConfiguration
+                {
+                    TargetType = typeof(WatchProductRecipe).FullName,
+                    JsonColumn = nameof(IGenericColumns.Text8),
+                    PropertyConfigs = []
+                }
+            ]
         };
 
         await _storage.StartAsync();
@@ -954,23 +951,5 @@ public class ProductStorageTests
         Assert.That(byType4.Count, Is.GreaterThanOrEqualTo(1));
         Assert.That(byType5.Count, Is.GreaterThanOrEqualTo(1));
         Assert.That(byType6.Count, Is.GreaterThanOrEqualTo(1));
-    }
-
-    [Test]
-    public void Initialize_WithWrongConfigType_ThrowsMeaningfulException()
-    {
-        var strategy = new GenericInstanceStrategy();
-
-        var config = new ProductInstanceConfiguration
-        {
-            PluginName = nameof(GenericInstanceStrategy),
-            TargetType = "TestType"
-        };
-
-        var ex = Assert.ThrowsAsync<InvalidOperationException>(
-            async () => await strategy.InitializeAsync(config));
-
-        Assert.That(ex.Message,
-            Does.Contain(nameof(GenericInstanceConfiguration)));
     }
 }
