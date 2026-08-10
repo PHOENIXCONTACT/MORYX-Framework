@@ -24,17 +24,7 @@ public class StrategyBase<TConfig, TConfigBase> : IAsyncConfiguredInitializable<
     /// </summary>
     public virtual Task InitializeAsync(TConfigBase config, CancellationToken cancellationToken = default)
     {
-        if (config is not TConfig typedConfig)
-        {
-            throw new InvalidOperationException(
-                $"Configuration mismatch for plugin '{config.PluginName}' " +
-                $"and target type '{config.TargetType}'. " +
-                $"Expected configuration type '{typeof(TConfig).Name}', " +
-                $"but received '{config.GetType().Name}'. " +
-                $"Please recreate the strategy configuration in the ControlCenter.");
-        }
-
-        Config = typedConfig;
+        Config = (TConfig)config;
         return Task.CompletedTask;
     }
 }
