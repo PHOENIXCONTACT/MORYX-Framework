@@ -96,14 +96,13 @@ export class ResourceReferences {
     }
   }
 
-  protected addTarget(table: MatTable<ResourceModel>) {
-    if (!this.selectedTarget || !this.selectedReference()) {
+  protected addTarget(table: MatTable<ResourceModel>, target: ResourceModel) {
+    if (!target || !this.selectedReference()) {
       return;
     }
 
-    this.selectedReference()?.targets?.push(this.selectedTarget as ResourceModel);
+    this.selectedReference()?.targets?.push(target);
     this.possibleResources.set(this.getPossibleResources());
-    this.selectedTarget = undefined;
     table.renderRows();
   }
 
@@ -131,7 +130,7 @@ export class ResourceReferences {
   }
 
   protected deleteTarget(target: ResourceModel) {
-    if (!this.selectedReference) {
+    if (!this.selectedReference()) {
       return;
     }
 
@@ -140,6 +139,7 @@ export class ResourceReferences {
       return ref;
     });
 
+    this.selectedTarget = undefined;
     this.possibleResources.set(this.getPossibleResources());
   }
 

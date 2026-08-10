@@ -78,11 +78,11 @@
                   TranslationConstants.DETAILS.REFERENCES.LINKED_RESOURCE | translate
                 }}</mat-label>
                 <mat-select
-                  [(value)]="selectedTarget"
+                  [value]="null"
             placeholder="{{
               TranslationConstants.DETAILS.REFERENCES.PLACEHOLDER | translate
             }}"
-                  (selectionChange)="addTarget(table)"
+                  (selectionChange)="addTarget(table, $event.value)"
                   >
                   @for (pr of possibleResources(); track pr) {
                     <mat-option [value]="pr" class="resource-option">
