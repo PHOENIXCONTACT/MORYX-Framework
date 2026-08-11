@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Processes;
 using Moryx.FactoryMonitor.Endpoints.Converter;
+using Microsoft.Extensions.Logging;
 
 namespace Moryx.FactoryMonitor.Endpoints.Tests;
 
@@ -39,15 +40,16 @@ public abstract class BaseTest
     protected Position _assemblyCellposition;
     protected Position _solderingCellPosition;
     protected ResourceGraphMock _graph;
-
+    protected Mock<ILogger<FactoryMonitorController>> _logger;
     [SetUp]
     public virtual void Setup()
     {
         _graph = new ResourceGraphMock();
+        _logger = new Mock<ILogger<FactoryMonitorController>>();
         // positions
         _assemblyCellposition = new Position { PositionX = 0.5, PositionY = 0.7 };
         _solderingCellPosition = new Position { PositionX = 0.3, PositionY = 0.5 };
-        var converter = new Converter.Converter(new CellSerialization());
+        var converter = new Converter.Converter(new CellSerialization(), _logger.Object);
 
         //manufacturing resource
         _manufactoringFactory = _graph.Instantiate<ManufacturingFactory>();

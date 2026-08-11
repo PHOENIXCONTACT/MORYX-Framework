@@ -21,5 +21,4 @@ public class CellPropertySettings
     public virtual object CurrentValue { get; set; }
     [DataMember]
     public string DisplayName { get; set; }
-
 }

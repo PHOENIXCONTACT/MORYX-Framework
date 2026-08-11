@@ -78,7 +78,7 @@ public class FactoryMonitorController : ControllerBase
         var locationsToCellMappings = MapCellsTo(locations);
         var orders = TryGetOrders();
         var activities = TryGetActivities();
-        var converter = new Converter.Converter(_serialization);
+        var converter = new Converter.Converter(_serialization, _logger);
 
         foreach (var l2cMapping in locationsToCellMappings)
         {
@@ -160,7 +160,7 @@ public class FactoryMonitorController : ControllerBase
         var locations = _resourceManager.GetResources<IMachineLocation>();
         var locationToCellMappings = MapCellsTo(locations);
 
-        var converter = new Converter.Converter(_serialization);
+        var converter = new Converter.Converter(_serialization, _logger);
         return locationToCellMappings.Select(l2cMapping => new SimpleGraph { Id = l2cMapping.Key.Id }
             .ToVisualItemModel(_resourceManager, _logger, converter)).ToList();
     }
@@ -179,7 +179,7 @@ public class FactoryMonitorController : ControllerBase
             return NotFound(Strings.FactoryMonitorController_FactoryNotFound_);
         }
 
-        var converter = new Converter.Converter(_serialization);
+        var converter = new Converter.Converter(_serialization, _logger);
         var graph = _resourceManager.ReadUnsafe(factory.Id, SimpleGraph.Create);
 
         var output = graph.Children
