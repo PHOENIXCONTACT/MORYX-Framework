@@ -8,8 +8,7 @@
 
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 
 import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
@@ -58,9 +57,9 @@ export class WorkplanEditingService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  availableSteps$Response(params?: AvailableSteps$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<WorkplanStepRecipe>>> {
+  availableSteps$Response(params?: AvailableSteps$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<WorkplanStepRecipe>>> {
     const obs = availableSteps(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -69,11 +68,9 @@ export class WorkplanEditingService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  availableSteps(params?: AvailableSteps$Params, context?: HttpContext): Observable<Array<WorkplanStepRecipe>> {
+  availableSteps(params?: AvailableSteps$Params, context?: HttpContext): Promise<Array<WorkplanStepRecipe>> {
     const resp = this.availableSteps$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<WorkplanStepRecipe>>): Array<WorkplanStepRecipe> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<WorkplanStepRecipe>>): Array<WorkplanStepRecipe> => r.body);
   }
 
   /** Path part for operation `editWorkplan()` */
@@ -85,9 +82,9 @@ export class WorkplanEditingService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  editWorkplan$Response(params?: EditWorkplan$Params, context?: HttpContext): Observable<StrictHttpResponse<WorkplanSessionModel>> {
+  editWorkplan$Response(params?: EditWorkplan$Params, context?: HttpContext): Promise<StrictHttpResponse<WorkplanSessionModel>> {
     const obs = editWorkplan(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -96,11 +93,9 @@ export class WorkplanEditingService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  editWorkplan(params?: EditWorkplan$Params, context?: HttpContext): Observable<WorkplanSessionModel> {
+  editWorkplan(params?: EditWorkplan$Params, context?: HttpContext): Promise<WorkplanSessionModel> {
     const resp = this.editWorkplan$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<WorkplanSessionModel>): WorkplanSessionModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<WorkplanSessionModel>): WorkplanSessionModel => r.body);
   }
 
   /** Path part for operation `openSession()` */
@@ -112,9 +107,9 @@ export class WorkplanEditingService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  openSession$Response(params: OpenSession$Params, context?: HttpContext): Observable<StrictHttpResponse<WorkplanSessionModel>> {
+  openSession$Response(params: OpenSession$Params, context?: HttpContext): Promise<StrictHttpResponse<WorkplanSessionModel>> {
     const obs = openSession(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -123,11 +118,9 @@ export class WorkplanEditingService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  openSession(params: OpenSession$Params, context?: HttpContext): Observable<WorkplanSessionModel> {
+  openSession(params: OpenSession$Params, context?: HttpContext): Promise<WorkplanSessionModel> {
     const resp = this.openSession$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<WorkplanSessionModel>): WorkplanSessionModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<WorkplanSessionModel>): WorkplanSessionModel => r.body);
   }
 
   /** Path part for operation `updateSession()` */
@@ -139,9 +132,9 @@ export class WorkplanEditingService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  updateSession$Response(params: UpdateSession$Params, context?: HttpContext): Observable<StrictHttpResponse<WorkplanSessionModel>> {
+  updateSession$Response(params: UpdateSession$Params, context?: HttpContext): Promise<StrictHttpResponse<WorkplanSessionModel>> {
     const obs = updateSession(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -150,11 +143,9 @@ export class WorkplanEditingService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  updateSession(params: UpdateSession$Params, context?: HttpContext): Observable<WorkplanSessionModel> {
+  updateSession(params: UpdateSession$Params, context?: HttpContext): Promise<WorkplanSessionModel> {
     const resp = this.updateSession$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<WorkplanSessionModel>): WorkplanSessionModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<WorkplanSessionModel>): WorkplanSessionModel => r.body);
   }
 
   /** Path part for operation `closeSession()` */
@@ -166,9 +157,9 @@ export class WorkplanEditingService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  closeSession$Response(params: CloseSession$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  closeSession$Response(params: CloseSession$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = closeSession(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -177,11 +168,9 @@ export class WorkplanEditingService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  closeSession(params: CloseSession$Params, context?: HttpContext): Observable<void> {
+  closeSession(params: CloseSession$Params, context?: HttpContext): Promise<void> {
     const resp = this.closeSession$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
   /** Path part for operation `autoLayout()` */
@@ -193,9 +182,9 @@ export class WorkplanEditingService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  autoLayout$Response(params: AutoLayout$Params, context?: HttpContext): Observable<StrictHttpResponse<WorkplanSessionModel>> {
+  autoLayout$Response(params: AutoLayout$Params, context?: HttpContext): Promise<StrictHttpResponse<WorkplanSessionModel>> {
     const obs = autoLayout(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -204,11 +193,9 @@ export class WorkplanEditingService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  autoLayout(params: AutoLayout$Params, context?: HttpContext): Observable<WorkplanSessionModel> {
+  autoLayout(params: AutoLayout$Params, context?: HttpContext): Promise<WorkplanSessionModel> {
     const resp = this.autoLayout$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<WorkplanSessionModel>): WorkplanSessionModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<WorkplanSessionModel>): WorkplanSessionModel => r.body);
   }
 
   /** Path part for operation `saveSession()` */
@@ -220,9 +207,9 @@ export class WorkplanEditingService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  saveSession$Response(params: SaveSession$Params, context?: HttpContext): Observable<StrictHttpResponse<WorkplanSessionModel>> {
+  saveSession$Response(params: SaveSession$Params, context?: HttpContext): Promise<StrictHttpResponse<WorkplanSessionModel>> {
     const obs = saveSession(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -231,11 +218,9 @@ export class WorkplanEditingService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  saveSession(params: SaveSession$Params, context?: HttpContext): Observable<WorkplanSessionModel> {
+  saveSession(params: SaveSession$Params, context?: HttpContext): Promise<WorkplanSessionModel> {
     const resp = this.saveSession$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<WorkplanSessionModel>): WorkplanSessionModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<WorkplanSessionModel>): WorkplanSessionModel => r.body);
   }
 
   /** Path part for operation `addStep()` */
@@ -247,9 +232,9 @@ export class WorkplanEditingService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  addStep$Response(params: AddStep$Params, context?: HttpContext): Observable<StrictHttpResponse<WorkplanNodeModel>> {
+  addStep$Response(params: AddStep$Params, context?: HttpContext): Promise<StrictHttpResponse<WorkplanNodeModel>> {
     const obs = addStep(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -258,11 +243,9 @@ export class WorkplanEditingService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  addStep(params: AddStep$Params, context?: HttpContext): Observable<WorkplanNodeModel> {
+  addStep(params: AddStep$Params, context?: HttpContext): Promise<WorkplanNodeModel> {
     const resp = this.addStep$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<WorkplanNodeModel>): WorkplanNodeModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<WorkplanNodeModel>): WorkplanNodeModel => r.body);
   }
 
   /** Path part for operation `updateStep()` */
@@ -274,9 +257,9 @@ export class WorkplanEditingService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  updateStep$Response(params: UpdateStep$Params, context?: HttpContext): Observable<StrictHttpResponse<WorkplanNodeModel>> {
+  updateStep$Response(params: UpdateStep$Params, context?: HttpContext): Promise<StrictHttpResponse<WorkplanNodeModel>> {
     const obs = updateStep(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -285,11 +268,9 @@ export class WorkplanEditingService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  updateStep(params: UpdateStep$Params, context?: HttpContext): Observable<WorkplanNodeModel> {
+  updateStep(params: UpdateStep$Params, context?: HttpContext): Promise<WorkplanNodeModel> {
     const resp = this.updateStep$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<WorkplanNodeModel>): WorkplanNodeModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<WorkplanNodeModel>): WorkplanNodeModel => r.body);
   }
 
   /** Path part for operation `removeNode()` */
@@ -301,9 +282,9 @@ export class WorkplanEditingService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  removeNode$Response(params: RemoveNode$Params, context?: HttpContext): Observable<StrictHttpResponse<WorkplanSessionModel>> {
+  removeNode$Response(params: RemoveNode$Params, context?: HttpContext): Promise<StrictHttpResponse<WorkplanSessionModel>> {
     const obs = removeNode(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -312,11 +293,9 @@ export class WorkplanEditingService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  removeNode(params: RemoveNode$Params, context?: HttpContext): Observable<WorkplanSessionModel> {
+  removeNode(params: RemoveNode$Params, context?: HttpContext): Promise<WorkplanSessionModel> {
     const resp = this.removeNode$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<WorkplanSessionModel>): WorkplanSessionModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<WorkplanSessionModel>): WorkplanSessionModel => r.body);
   }
 
   /** Path part for operation `connectStep()` */
@@ -328,9 +307,9 @@ export class WorkplanEditingService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  connectStep$Response(params: ConnectStep$Params, context?: HttpContext): Observable<StrictHttpResponse<WorkplanSessionModel>> {
+  connectStep$Response(params: ConnectStep$Params, context?: HttpContext): Promise<StrictHttpResponse<WorkplanSessionModel>> {
     const obs = connectStep(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -339,11 +318,9 @@ export class WorkplanEditingService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  connectStep(params: ConnectStep$Params, context?: HttpContext): Observable<WorkplanSessionModel> {
+  connectStep(params: ConnectStep$Params, context?: HttpContext): Promise<WorkplanSessionModel> {
     const resp = this.connectStep$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<WorkplanSessionModel>): WorkplanSessionModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<WorkplanSessionModel>): WorkplanSessionModel => r.body);
   }
 
   /** Path part for operation `disconnectStep()` */
@@ -355,9 +332,9 @@ export class WorkplanEditingService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  disconnectStep$Response(params: DisconnectStep$Params, context?: HttpContext): Observable<StrictHttpResponse<WorkplanSessionModel>> {
+  disconnectStep$Response(params: DisconnectStep$Params, context?: HttpContext): Promise<StrictHttpResponse<WorkplanSessionModel>> {
     const obs = disconnectStep(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -366,12 +343,9 @@ export class WorkplanEditingService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  disconnectStep(params: DisconnectStep$Params, context?: HttpContext): Observable<WorkplanSessionModel> {
+  disconnectStep(params: DisconnectStep$Params, context?: HttpContext): Promise<WorkplanSessionModel> {
     const resp = this.disconnectStep$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<WorkplanSessionModel>): WorkplanSessionModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<WorkplanSessionModel>): WorkplanSessionModel => r.body);
   }
 
 }
-

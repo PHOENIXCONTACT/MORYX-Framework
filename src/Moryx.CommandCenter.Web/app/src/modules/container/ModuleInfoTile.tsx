@@ -28,9 +28,7 @@ export class ModuleInfoTile extends React.Component<React.PropsWithChildren<Modu
         </Grid>
 
         <Grid container={true} size={12}
-              direction="column"
-              justifyContent="flex-start"
-              alignItems="stretch"
+              sx={{ flexDirection: "column", justifyContent: "flex-start", alignItems: "stretch" }}
               spacing={this.props.spacing != null ? this.props.spacing : 0}
         >
           {this.props.children}

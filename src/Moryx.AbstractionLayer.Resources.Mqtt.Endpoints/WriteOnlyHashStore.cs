@@ -1,0 +1,70 @@
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using Moryx.Threading;
+
+namespace Moryx.AbstractionLayer.Resources.Mqtt.Endpoints;
+
+/// <summary>
+/// Hash store with auto-clear functionality
+/// </summary>
+/// <typeparam name="T"></typeparam>
+/// <param name="parallelOperations"></param>
+internal class WriteOnlyHashStore<T>(IParallelOperations parallelOperations) : IDisposable
+{
+    private readonly List<T> _cache = [];
+    private readonly Lock _lock = new();
+    private int _timerId;
+
+    /// <summary>
+    /// Initialize the store with the given <paramref name="cleanUpInterval"/>
+    /// </summary>
+    /// <param name="cleanUpInterval"></param>
+    public void Initialize(int cleanUpInterval)
+    {
+        _timerId = parallelOperations.ScheduleExecution(Clean, 0, cleanUpInterval);
+    }
+
+    private void Clean()
+    {
+        lock (_lock)
+        {
+            _cache.Clear();
+        }
+    }
+
+    /// <summary>
+    /// Write the given <paramref name="value"/> to the store
+    /// </summary>
+    /// <param name="value"></param>
+    public void Write(T value)
+    {
+        lock (_lock)
+        {
+            _cache.Add(value);
+        }
+    }
+
+    /// <summary>
+    /// Checks if the store contains the given <paramref name="value"/>
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    public bool Contains(T value)
+    {
+        lock (_lock)
+        {
+            return _cache.Contains(value);
+        }
+    }
+
+    /// <summary>
+    /// Manually dispose
+    /// </summary>
+    /// <returns></returns>
+    public void Dispose()
+    {
+        parallelOperations.StopExecution(_timerId);
+        GC.SuppressFinalize(this);
+    }
+}

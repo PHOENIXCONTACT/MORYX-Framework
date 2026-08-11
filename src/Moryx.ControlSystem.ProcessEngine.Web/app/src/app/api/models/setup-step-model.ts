@@ -11,4 +11,3 @@ export interface SetupStepModel {
   name?: string | null;
   state?: StepState;
 }
-

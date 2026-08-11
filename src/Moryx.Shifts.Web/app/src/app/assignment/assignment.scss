@@ -1,0 +1,85 @@
+:host {
+  display: block;
+}
+
+.assignment-wrapper {
+  padding: 4px 8px;
+
+  &.invisible {
+    visibility: hidden;
+  }
+}
+
+.assignment-card {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid var(--mat-sys-outline);
+  background: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+
+  .assignment-wrapper:hover & {
+    border-color: var(--mat-sys-primary);
+  }
+}
+
+.assignment-card--priority {
+  @extend .assignment-card;
+  background: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
+}
+
+.card-menu-btn {
+  --mdc-icon-button-state-layer-size: 24px;
+  --mdc-icon-button-icon-size: 18px;
+  padding: 0;
+}
+
+.card-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-icons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.icon-warning {
+  color: var(--mat-sys-error);
+}
+
+.icon-info {
+  color: var(--mat-sys-tertiary);
+}
+
+.notes-label {
+  font-weight: 300;
+  margin-top: 12px;
+}
+
+.notes-text {
+  font-style: italic;
+  color: var(--mat-sys-tertiary);
+}
+
+.resource-name {
+  font-weight: 500;
+  margin-top: 8px;
+  width: 144px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.not-qualified-operator {
+  color: var(--mat-sys-error);
+}
+
+.not-allowed-operator {
+  color: var(--mat-sys-error);
+}

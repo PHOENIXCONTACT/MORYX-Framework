@@ -13,7 +13,7 @@ Wouldn't it be nice if there exists a simple component that ensures the correct 
 
 In this section the usage of the `DelayQueue` will be explained in reference to the example we mentioned in the introduction: Sending data through a serial port.
 
-Let's assume you have got a component (which may can be configured) that handles the connection with the serial port and that sends your data through the port. This kind of component is shown in the code below.
+Let's assume you have got a component (which can be configured) that handles the connection with the serial port and that sends your data through the port. This kind of component is shown in the code below.
 
 Before you can start you'll need an IParallelOperations DI-object. Of course you'll need a message queue. For the queue you have to mention the type of the messages you want to send in between the diamond-operator: `<FooMessageData>`. After this you can create a new DelayQueue for your messages. Therefore you have to hand in the injected ParallelOperations object. The queue will be created as `IDelayQueue<FooMessageData> _queue = new DelayQueue<FooMessageData>(ParallelOperations);`.
 

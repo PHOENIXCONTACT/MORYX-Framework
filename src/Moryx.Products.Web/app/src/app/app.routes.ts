@@ -4,51 +4,46 @@
 */
 
 import { Routes } from "@angular/router";
-import { DefaultViewComponent } from "./components/default-view/default-view.component";
-import { ProductPartsComponent } from "./components/products-details-view/product-parts/product-parts.component";
-import { ProductPropertiesComponent } from "./components/products-details-view/product-properties/product-properties.component";
-import { ProductRecipesDetailsComponent } from "./components/products-details-view/product-recipes/product-recipes-details/product-recipes-details.component";
-import { ProductRecipesComponent } from "./components/products-details-view/product-recipes/product-recipes.component";
-import { ProductReferencesComponent } from "./components/products-details-view/product-references/product-references.component";
-import { ProductsDetailsViewComponent } from "./components/products-details-view/products-details-view.component";
-import { ProductsImporterComponent } from "./components/products-importer/products-importer.component";
-import { SearchResultComponent } from "./components/search-result/search-result.component";
-import { ImporterGuard } from "./guards/importer.guard";
-import { ProductsDetailsViewResolver } from "./components/products-details-view/products-details-view-resolver";
+import { DefaultView } from "./components/default-view/default-view";
+import { ProductParts } from "./components/products-details-view/product-parts/product-parts";
+import { ProductProperties } from "./components/products-details-view/product-properties/product-properties";
+import { ProductRecipesDetails } from "./components/products-details-view/product-recipes/product-recipes-details/product-recipes-details";
+import { ProductRecipes } from "./components/products-details-view/product-recipes/product-recipes";
+import { ProductReferences } from "./components/products-details-view/product-references/product-references";
+import { ProductsDetailsView } from "./components/products-details-view/products-details-view";
+import { ProductsImporter } from "./components/products-importer/products-importer";
+import { SearchResult } from "./components/search-result/search-result";
+import { ProductResolver } from "./components/products-details-view/products-resolver";
+import { WorkInProgressGuard } from "./app-guard";
+import { ReferencesResolver } from "./components/products-details-view/product-references/references-resolver";
+import { RecipeResolver } from "./components/products-details-view/product-recipes/product-recipes-details/recipe-resolver";
+import { PartsResolver } from "./components/products-details-view/product-parts/part-resolver";
+import { CancellationComponent } from "./components/cancellation/cancellation.component";
 
 export const routes: Routes = [
   {
     path: 'details/:id',
-    component: ProductsDetailsViewComponent,
+    component: ProductsDetailsView,
     resolve: {
-      product: ProductsDetailsViewResolver
+      product: ProductResolver
     },
     children: [
       { path: '', redirectTo: 'properties', pathMatch: 'full' },
-      { path: 'properties', component: ProductPropertiesComponent },
-      { path: 'references', component: ProductReferencesComponent },
-      {
-        path: 'parts/:partName/:partId',
-        component: ProductPartsComponent,
-      },
+      { path: 'properties', component: ProductProperties },
+      { path: 'references', component: ProductReferences, resolve: { references: ReferencesResolver } },
+      { path: 'parts/:partName/:partId', component: ProductParts, resolve: { references: PartsResolver }},
       {
         path: 'recipes',
-        component: ProductRecipesComponent,
+        component: ProductRecipes,
         children: [
-          { path: '', component: DefaultViewComponent, pathMatch: 'full' },
-              {
-                path: ':recipeId',
-                component: ProductRecipesDetailsComponent,
-              },
+          { path: '', component: DefaultView, pathMatch: 'full' },
+          { path: ':recipeId', component: ProductRecipesDetails, resolve: { references: RecipeResolver } },
         ],
       },
     ],
   },
-  { path: '', component: DefaultViewComponent, pathMatch: 'full' },
-  {
-    path: 'import/:importer',
-    component: ProductsImporterComponent,
-    canActivate: [ImporterGuard]
-  },
-      {path: 'search', component: SearchResultComponent}
+  { path: '', component: DefaultView, pathMatch: 'full', canActivate: [WorkInProgressGuard] },
+  { path: 'import/:importer', component: ProductsImporter },
+  { path: 'search', component: SearchResult },
+  { path: 'cancel', component: CancellationComponent }
 ]

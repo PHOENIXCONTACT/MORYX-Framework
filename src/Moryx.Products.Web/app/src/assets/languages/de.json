@@ -59,9 +59,7 @@
     "REMOVE": "ENTFERNEN",
     "ADD": "HINZUFÜGEN",
     "REPLACE": "ERSETZEN",
-    "DETAILS": {
-      "TITLE": "Konfiguration für die Verbindung zwischen dem Produkt und seinem Teil"
-    }
+    "OPEN": "PRODUKT ÖFFNEN"
   },
   "ADD_DIALOG": {
     "TITLE": "Teil auswählen",

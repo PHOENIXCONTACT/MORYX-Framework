@@ -15,4 +15,3 @@ export interface ReferenceFilter {
   role?: ResourceReferenceRole;
   valueConstraint?: ReferenceValue;
 }
-

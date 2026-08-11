@@ -1,0 +1,43 @@
+<h2 mat-dialog-title>{{ TranslationConstants.ABOUT.TITLE | translate }}</h2>
+
+<mat-dialog-content>
+  <h3 class="section-title">{{ TranslationConstants.ABOUT.APPLICATION | translate }}</h3>
+  <dl>
+    @for (entry of appEntries(); track entry.label) {
+      <div class="entry">
+        <dt>{{ entry.label | translate }}</dt>
+        <dd>{{ entry.value }}</dd>
+      </div>
+    }
+  </dl>
+
+  <h3 class="section-title">{{ TranslationConstants.ABOUT.HOST | translate }}</h3>
+  <dl>
+    @for (entry of hostEntries(); track entry.label) {
+      <div class="entry">
+        <dt>{{ entry.label | translate }}</dt>
+        <dd>{{ entry.value }}</dd>
+      </div>
+    }
+    @if (serverTime()) {
+      <div class="entry">
+        <dt>{{ TranslationConstants.ABOUT.SERVER_TIME | translate }}</dt>
+        <dd>{{ serverTime() }}</dd>
+      </div>
+    }
+  </dl>
+
+  <h3 class="section-title">{{ TranslationConstants.ABOUT.SHORTCUTS | translate }}</h3>
+  <dl>
+    @for (shortcut of shortcuts; track shortcut.label) {
+      <div class="entry">
+        <dt>{{ shortcut.label | translate }}</dt>
+        <dd><kbd>{{ isMac ? shortcut.keys.mac : shortcut.keys.other }}</kbd></dd>
+      </div>
+    }
+  </dl>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>{{ TranslationConstants.ABOUT.CLOSE | translate }}</button>
+</mat-dialog-actions>

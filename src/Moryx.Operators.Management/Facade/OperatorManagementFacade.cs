@@ -1,7 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Immutable;
+using System.Globalization;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Operators.Attendances;
 using Moryx.Operators.Exceptions;
@@ -13,7 +13,7 @@ using Moryx.Users;
 
 namespace Moryx.Operators.Management;
 
-internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAttendanceManagement, ISkillManagement, IUserManagement
+internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAttendanceManagement, IAttendanceManagementExtended, ISkillManagement, IUserManagement
 {
     #region Dependencies
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -36,7 +36,7 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
         get
         {
             ValidateHealthState();
-            return [..OperatorManager.Operators.Select(o => o.Operator)];
+            return [.. OperatorManager.Operators.Select(o => o.Operator)];
         }
     }
 
@@ -49,9 +49,15 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
     {
         ArgumentNullException.ThrowIfNull(@operator);
         if (string.IsNullOrEmpty(@operator.Identifier))
-            throw new ArgumentException(string.Format(Strings.OperatorManagementFacade_NotNullExceptionMessage, nameof(Operator.Identifier)));
+        {
+            throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Strings.OperatorManagementFacade_NotNullExceptionMessage, nameof(Operator.Identifier)));
+        }
+
         if (Operators.Any(o => o.Identifier == @operator.Identifier))
+        {
             throw new AlreadyExistsException(@operator.Identifier);
+        }
+
         return @operator;
     }
 
@@ -63,9 +69,15 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
     private string VerifiedExisting(string identifier)
     {
         if (string.IsNullOrEmpty(identifier))
-            throw new ArgumentException(string.Format(Strings.OperatorManagementFacade_NotNullExceptionMessage, nameof(Operator.Identifier)));
+        {
+            throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Strings.OperatorManagementFacade_NotNullExceptionMessage, nameof(Operator.Identifier)));
+        }
+
         if (!Operators.Any(o => o.Identifier == identifier))
-            throw new ArgumentException(string.Format(Strings.OperatorManagementFacade_ReferenceNotFoundExceptionMessage, nameof(Operator), identifier));
+        {
+            throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Strings.OperatorManagementFacade_ReferenceNotFoundExceptionMessage, nameof(Operator), identifier));
+        }
+
         return identifier;
     }
 
@@ -73,7 +85,7 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
         => OperatorManager.Update(VerifiedKnown(@operator));
 
     private Operator VerifiedKnown(Operator @operator) => Operators.Any(o => o.Identifier == @operator.Identifier) ? @operator :
-            throw new ArgumentException(string.Format(Strings.OperatorManagementFacade_ReferenceNotFoundExceptionMessage, nameof(Operator), @operator.Identifier));
+            throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Strings.OperatorManagementFacade_ReferenceNotFoundExceptionMessage, nameof(Operator), @operator.Identifier));
 
     public event EventHandler<OperatorChangedEventArgs>? OperatorChanged;
 
@@ -109,7 +121,7 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
 
     private OperatorData VerifiedExisting(AssignableOperator @operator)
         => OperatorManager.Operators.SingleOrDefault(o => o.Identifier == @operator.Identifier) ??
-            throw new ArgumentException(string.Format(Strings.OperatorManagementFacade_ReferenceNotFoundExceptionMessage, nameof(Operator), @operator.Identifier));
+            throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Strings.OperatorManagementFacade_ReferenceNotFoundExceptionMessage, nameof(Operator), @operator.Identifier));
 
     public void SignOut(AssignableOperator @operator, IOperatorAssignable resource)
     {
@@ -117,9 +129,32 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
         AttendanceManager.SignOut(VerifiedExisting(@operator), resource);
     }
 
+    /// <inheritdoc />
     public event EventHandler<AssignableOperator>? OperatorSignedIn;
 
+    /// <inheritdoc />
     public event EventHandler<AssignableOperator>? OperatorSignedOut;
+
+    /// <inheritdoc/>
+    public event EventHandler<SignInStatusChangedArgs>? SignInStatusChanged;
+
+    /// <inheritdoc />
+    public IEnumerable<IOperatorAssignable> Assignables => ResourceManagement.GetResources<IOperatorAssignable>();
+
+    /// <inheritdoc />
+    public IOperatorAssignable GetAssignable(long id)
+    {
+        return ResourceManagement.GetResource<IOperatorAssignable>(id);
+    }
+
+    /// <inheritdoc />
+    public IReadOnlyList<AttendanceChangedArgs> GetAttendingOperators(IOperatorAssignable resource)
+    {
+        return ((IAttendanceManagement)this).Operators
+            .Where(o => o.AssignedResources.Any(r => r.Id == resource.Id))
+            .Select(o => new AttendanceChangedArgs(o, this.GetSkills(o).ToArray()))
+            .ToArray();
+    }
 
     #endregion
 
@@ -153,7 +188,7 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
     private SkillCreationContext Verified(SkillCreationContext context)
     {
         context.Type = SkillTypes.SingleOrDefault(t => t.Id == context.Type?.Id) ??
-            throw new ArgumentException(string.Format(Strings.OperatorManagementFacade_ReferenceNotFoundExceptionMessage, nameof(SkillType), context.Type.Id));
+            throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Strings.OperatorManagementFacade_ReferenceNotFoundExceptionMessage, nameof(SkillType), context.Type.Id));
         return context;
     }
 
@@ -164,7 +199,7 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
     }
 
     private Skill VerifiedSkill(long id) => SkillManager.Skills.SingleOrDefault(s => s.Id == id) ??
-            throw new ArgumentException(string.Format(Strings.OperatorManagementFacade_ReferenceNotFoundExceptionMessage, nameof(Skill), id));
+            throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Strings.OperatorManagementFacade_ReferenceNotFoundExceptionMessage, nameof(Skill), id));
 
     public SkillType CreateSkillType(SkillTypeCreationContext context)
     {
@@ -183,7 +218,10 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
     private SkillType Verified(SkillType type)
     {
         if (SkillTypes.SingleOrDefault(t => t.Id == type.Id) is null)
-            throw new ArgumentException(string.Format(Strings.OperatorManagementFacade_ReferenceNotFoundExceptionMessage, nameof(SkillType), type.Id));
+        {
+            throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Strings.OperatorManagementFacade_ReferenceNotFoundExceptionMessage, nameof(SkillType), type.Id));
+        }
+
         return type;
     }
 
@@ -194,7 +232,7 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
     }
 
     private SkillType VerifiedType(long id) => SkillManager.SkillTypes.SingleOrDefault(t => t.Id == id) ??
-            throw new ArgumentException(string.Format(Strings.OperatorManagementFacade_ReferenceNotFoundExceptionMessage, nameof(SkillType), id));
+            throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Strings.OperatorManagementFacade_ReferenceNotFoundExceptionMessage, nameof(SkillType), id));
 
     public event EventHandler<SkillChangedEventArgs>? SkillChanged;
 
@@ -210,7 +248,7 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
         get
         {
             ValidateHealthState();
-            return [..OperatorManager.Operators.Select(o => o.User)];
+            return [.. OperatorManager.Operators.Select(o => o.User)];
         }
     }
 
@@ -233,7 +271,7 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
 
     private OperatorData VerifiedExisting(User user)
         => OperatorManager.Operators.SingleOrDefault(o => o.Identifier == user.Identifier) ??
-            throw new ArgumentException(string.Format(Strings.OperatorManagementFacade_ReferenceNotFoundExceptionMessage, nameof(Operator), user.Identifier));
+            throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Strings.OperatorManagementFacade_ReferenceNotFoundExceptionMessage, nameof(Operator), user.Identifier));
 
     /// <inheritdoc/>
     public void SignOut(User user)
@@ -270,6 +308,7 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
 
         AttendanceManager.OperatorSignedIn += ParallelOperations.DecoupleListener<OperatorData>(OnOperatorSignedIn);
         AttendanceManager.OperatorSignedOut += ParallelOperations.DecoupleListener<OperatorData>(OnOperatorSignedOut);
+        AttendanceManager.SignInStatusChanged += ParallelOperations.DecoupleListener<SignInStatusChangedArgs>(OnSignInStatusChanged);
         OperatorManager.OperatorChanged += ParallelOperations.DecoupleListener<OperatorChangedEventArgs>(OnOperatorChanged);
         SkillManager.SkillChanged += ParallelOperations.DecoupleListener<SkillChangedEventArgs>(OnSkillChanged);
         SkillManager.SkillTypeChanged += ParallelOperations.DecoupleListener<SkillTypeChangedEventArgs>(OnSkillTypeChanged);
@@ -289,6 +328,11 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
     {
         OperatorSignedOut?.Invoke(this, operatorData.Operator);
         UserSignedOut?.Invoke(this, operatorData.User);
+    }
+
+    private void OnSignInStatusChanged(object? sender, SignInStatusChangedArgs e)
+    {
+        SignInStatusChanged?.Invoke(sender, e);
     }
 
     private void OnOperatorChanged(object? sender, OperatorChangedEventArgs eventArgs) => OperatorChanged?.Invoke(this, eventArgs);

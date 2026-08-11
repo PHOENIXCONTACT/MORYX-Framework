@@ -1,0 +1,35 @@
+
+.chip-row {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 4px;
+}
+
+.skill-chip-dark {
+  border: 1px solid var(--mat-sys-on-surface-variant);
+  background-color: var(--mat-sys-on-surface-variant);
+  color: var(--mat-sys-surface);
+  border-radius: 2px;
+  padding: 0 4px;
+}
+
+.skill-chip-light {
+  border: 1px solid var(--mat-sys-outline-variant);
+  background-color: var(--mat-sys-surface-variant);
+  color: var(--mat-sys-on-surface-variant);
+  border-radius: 2px;
+  padding: 0 4px;
+}
+
+.chip-text {
+  width: 550px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: right;
+}
+
+.chip-medium {
+  font-weight: 500;
+}

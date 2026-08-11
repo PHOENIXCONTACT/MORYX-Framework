@@ -1,0 +1,11 @@
+<div class="order-wrapper">
+  <div class="order-card">
+    <div class="order-row">
+      <span>{{ order().orderNumber }} - {{ order().operationNumber }}</span>
+      <mat-icon>shopping_cart</mat-icon>
+    </div>
+    <span class="order-hours">
+      {{ prettyMilliseconds(order().totalHours * hourToMillisecond) }}
+    </span>
+  </div>
+</div>

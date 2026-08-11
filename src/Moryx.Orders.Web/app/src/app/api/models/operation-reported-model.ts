@@ -12,4 +12,3 @@ export interface OperationReportedModel {
   operationModel?: OperationModel;
   report?: ReportModel;
 }
-

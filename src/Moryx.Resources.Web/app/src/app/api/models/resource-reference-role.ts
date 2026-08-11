@@ -10,4 +10,3 @@ export enum ResourceReferenceRole {
   Target = 'Target',
   Source = 'Source'
 }
-

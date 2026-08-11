@@ -35,4 +35,3 @@ export function getDetails(http: HttpClient, rootUrl: string, params: GetDetails
 }
 
 getDetails.PATH = '/api/moryx/resources/{id}';
-

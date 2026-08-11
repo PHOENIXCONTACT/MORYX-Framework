@@ -1,0 +1,14 @@
+.work-hours {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+}
+
+.work-hours-label--lg {
+  font-size: 1.125rem;
+}
+
+.work-hours-icon--sm {
+  font-size: 1rem;
+}

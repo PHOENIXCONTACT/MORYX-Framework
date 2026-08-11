@@ -1,0 +1,59 @@
+@if (methods()?.length) {
+  <mat-accordion class="panel-accordion">
+    @for (method of methods(); track method) {
+      <mat-expansion-panel (opened)="onMethodSelected(method)">
+        <mat-expansion-panel-header collapsedHeight="56px" expandedHeight="56px">
+          <div class="panel-header">
+            <mat-panel-title class="panel-title">
+              {{ method.displayName }}
+            </mat-panel-title>
+            <mat-panel-description class="panel-description">
+              {{ method.description }}
+            </mat-panel-description>
+          </div>
+        </mat-expansion-panel-header>
+        @let result = methodResult();
+        @if (method.name === selectedMethod()?.name) {
+          @if (method.parameters && method.parameters.subEntries?.length && !resultView()) {
+            <navigable-entry-editor [entry]="method.parameters" queryParam="methodParameters" [disabled]="false"/>
+          }
+
+          @if (result !== undefined && resultView()) {
+            @if (result.subEntries &&
+            result.subEntries.length > 0 &&
+            result.subEntries[0].subEntries &&
+            result.subEntries[0].subEntries.length > 0) {
+              <navigable-entry-editor [entry]="result" [disabled]="true" queryParam="methodParametersResult"/>
+            } @else {
+              <entry-editor [entry]="result" [disabled]="true"/>
+            }
+          }
+        }
+
+        @if (!result && resultView()) {
+          <p>
+            {{ TranslationConstants.DETAILS.METHODS.WAS_INVOKED | translate }}
+          </p>
+        }
+
+        <mat-action-row class="method-buttons" align="start">
+          @if (!resultView()) {
+            <button mat-flat-button (click)="onInvoke(method)">
+              {{ TranslationConstants.DETAILS.METHODS.INVOKE | translate }}
+            </button>
+          }
+          @if (resultView()) {
+            <button mat-stroked-button (click)="onInvoke(method)">
+              {{ TranslationConstants.DETAILS.METHODS.REPEAT | translate }}
+            </button>
+          }
+          @if (resultView()) {
+            <button mat-button (click)="onChangeToParameters(method)">
+              {{ TranslationConstants.DETAILS.METHODS.CLEAR | translate }}
+            </button>
+          }
+        </mat-action-row>
+      </mat-expansion-panel>
+    }
+  </mat-accordion>
+}

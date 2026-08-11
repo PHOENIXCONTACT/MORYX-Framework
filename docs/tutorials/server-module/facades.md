@@ -96,7 +96,7 @@ Of course a module can import more than one facade. Just add more properties of 
 
 ## Importing many facades
 
-Like with every DI-container the Runtime facade linker is able to inject a collection of instances if more than one component exports the interface. While most frameworks will leave you the choice of collection type. Currently collection injection only works with arrays. So far the dependency manager does not take collection injection into account when it comes to start dependencies. Therefor be careful when accessing the facades as the might raise InvalidHealthStateExceptions.
+Like with every DI-container the Runtime facade linker is able to inject a collection of instances if more than one component exports the interface. While most frameworks will leave you the choice of collection type. Currently collection injection only works with arrays. So far the dependency manager does not take collection injection into account when it comes to start dependencies. Therefor be careful when accessing the facades as this might raise InvalidHealthStateExceptions.
 Usage in code:
 
 ````cs
@@ -115,12 +115,11 @@ when the dependency raised events before the listener had reached the necessary 
 After many long discussions including circular dependencies, three way handshake
 and sacrificing kittens to the race-condition-god, we came up with a fairly simple solution. Events are supposed to propagate changes and should be used as such.
 
-Every event invocation represents an incremental change that occurred within an object. An entry added to the collection or a modified property. Without the initial/
-previous state of the object its current state can not be determined.
+Every event invocation represents an incremental change that occurred within an object. An entry added to the collection or a modified property. Without the initial/previous state of the object its current state can not be determined.
 Therefore, every API that offers events must also provide methods to retrieve the current state of the component.
 
 Transferring this to MORYX facades means that for every event there must be a way to retrieve the current state of the module.
-This decouples the life cycles and allows the dependent to be started and stopped at any time without having to worry what they might miss in the process.
+This decouples the life cycles and allows the dependent module to be started and stopped at any time without having to worry about what it might have missed in the process.
 For example the API for a `JobManagement` could simply be:
 
 ````cs

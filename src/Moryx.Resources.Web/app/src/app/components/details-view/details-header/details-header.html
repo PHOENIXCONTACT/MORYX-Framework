@@ -1,0 +1,50 @@
+@let resource = activeResource();
+@let isEditing = editMode();
+
+<div class="header">
+  <div class="header-information">
+    @if (isEditing) {
+      <div class="header-container">
+        <mat-form-field class="form-field" appearance="outline" require>
+          <mat-label>{{
+            TranslationConstants.SHARED.NAME | translate
+          }}</mat-label>
+          <input
+            matInput
+            aria-label="Resource Name"
+            [(ngModel)]="resource.name"
+            (ngModelChange)="updateResource()"
+            [disabled]="!isEditing"
+            required="true"
+            />
+        </mat-form-field>
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>{{
+            TranslationConstants.SHARED.DESCRIPTION | translate
+          }}</mat-label>
+          <input
+            matInput
+            aria-label="Resource Description"
+            class="header-information-general-description-input"
+            [(ngModel)]="resource.description"
+            (ngModelChange)="updateResource()"
+            [disabled]="!isEditing"
+            />
+        </mat-form-field>
+      </div>
+    } @else {
+      <div>
+        <h2 class="header-information-title">
+          {{
+          resource.name && resource.name.trim()
+          ? resource.name
+          : (TranslationConstants.APP.NO_NAME | translate)
+          }}
+        </h2>
+        <p class="header-subtitle">{{ resource.description }}</p>
+      </div>
+    }
+
+  </div>
+</div>
+<mat-divider class="header-border"></mat-divider>

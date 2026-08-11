@@ -40,4 +40,3 @@ export interface FieldInfo {
   name?: string | null;
   reflectedType?: Type;
 }
-

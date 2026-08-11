@@ -10,4 +10,3 @@ export interface OperationRecipeModel {
   id?: number;
   name?: string | null;
 }
-

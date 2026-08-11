@@ -35,4 +35,3 @@ export function getResources(http: HttpClient, rootUrl: string, params: GetResou
 }
 
 getResources.PATH = '/api/moryx/operators/resources/{operatorIdentifier}';
-

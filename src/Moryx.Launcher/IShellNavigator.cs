@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Moryx.Launcher;
 
+//TODO: make it internal in next major
 /// <summary>
 /// Component to determine navigation items for the shell
 /// </summary>

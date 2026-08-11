@@ -1,0 +1,81 @@
+@use '@angular/material' as mat;
+
+:host {
+  @include mat.toolbar-overrides((
+    container-background-color: var(--mat-sys-surface-container-lowest),
+  ));
+
+  mat-toolbar {
+    border-bottom: 1px solid var(--mat-sys-outline-variant);
+  }
+}
+
+.workstation-container {
+  height: 100%;
+  overflow-y: auto;
+  background-color: var(--mat-sys-background);
+  color: var(--mat-sys-on-background);
+}
+
+.fab-container {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  z-index: 100;
+}
+
+.fab-stack {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+}
+
+.management-button {
+  background-color: var(--mat-sys-surface-container-lowest);
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.station-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: auto;
+  gap: 16px;
+  margin: 8px;
+  padding-bottom: 32px;
+}
+
+.station-grid {
+  @include mat.card-overrides((
+    elevated-container-color: var(--mat-sys-surface-container-lowest),
+    filled-container-color: var(--mat-sys-surface-container-lowest),
+    outlined-container-color: var(--mat-sys-surface-container-lowest),
+  ));
+}
+
+.station-card {
+  height: 384px;
+  display: flex;
+  flex-direction: column;
+
+  mat-card-header {
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.station-card-body {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.expanded-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: auto;
+  padding: 8px;
+}

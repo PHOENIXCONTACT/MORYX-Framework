@@ -3,7 +3,7 @@ uid: HowToCreateAResource
 ---
 # How to create a resource
 
-This tutorial shows how a [Resource](../../src/Moryx.AbstractionLayer/Resources/Resource.cs) should be implemented. Take a look [here](../articles/Resources/Overview.md), if you are not firm with the concept of a `Resource`. This tutorial describes how a basic `Resource` is created. Besides the basic `Resource` that this tutorial tackels, other more specialized types include [Public resources](../../src/Moryx.AbstractionLayer/Resources/PublicResource.cs), [Driver resources](../Resources/Types/DriverResource.md) or [Interaction resources](../Resources/Types/InteractionResource.md).
+This tutorial shows how a [Resource](../../src/Moryx.AbstractionLayer/Resources/Resource.cs) should be implemented. Take a look [here](../articles/Resources/Overview.md), if you are not firm with the concept of a `Resource`. This tutorial describes how a basic `Resource` is created. Besides the basic `Resource` that this tutorial tackels, other resource aspects can be found in [Resources](../../src/Moryx.AbstractionLayer/Resources/Resource.cs), [Driver resources](/docs/articles/module-resources/Types/driver-resource.md) or [Visual instructions](/docs/articles/module-visual-instructions/index.md).
 
 ## Basic resource files
 

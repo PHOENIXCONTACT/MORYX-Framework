@@ -1,0 +1,173 @@
+@let active = this.selected();
+
+<mat-sidenav-container class="resources">
+  <mat-sidenav opened role="navigation" mode="side" class="resources-tree" [disableClose]="true">
+    <div class="resources-side-bar" (click)="clickContainer($event)">
+      <div class="toolbar-wrapper">
+      @if (!active) {
+        <mat-toolbar
+          color="primary"
+          [style.background-image]="'url(' + resourceToolbarImage + ')'"
+          >
+          <mat-toolbar-row>
+            <button mat-icon-button aria-label="Disabled Menu" disabled>
+              <mat-icon></mat-icon>
+            </button>
+            <span class="resources-toolbar-spacer"></span>
+            <button
+              type="button"
+              (click)="onReload()"
+              mat-icon-button
+              aria-label="Reload resources"
+              [matTooltip]="TranslationConstants.SHARED.RELOAD | translate"
+              matTooltipShowDelay="500"
+              >
+              <mat-icon>sync</mat-icon>
+            </button>
+          </mat-toolbar-row>
+          <mat-toolbar-row>
+            <button mat-icon-button aria-label="Spacer" disabled="true">
+              <mat-icon></mat-icon>
+            </button>
+            <span>{{ TranslationConstants.APP.RESOURCES | translate }}</span>
+          </mat-toolbar-row>
+        </mat-toolbar>
+      } @else {
+        <mat-toolbar
+          [style.background-image]="'url(' + resourceToolbarImage + ')'"
+          class="resources-toolbar"
+          >
+          <mat-toolbar-row>
+            <button
+              type="button"
+              (click)="onDeselect()"
+              mat-icon-button
+              aria-label="Unselect resource"
+              [matTooltip]="TranslationConstants.SHARED.CANCEL | translate"
+              matTooltipShowDelay="500"
+              >
+              <mat-icon>close</mat-icon>
+            </button>
+            <span class="resources-toolbar-spacer"></span>
+            @if (!isEditMode()) {
+              <button
+                type="button"
+                (click)="onEdit()"
+                mat-icon-button
+                aria-label="Add child"
+                [matTooltip]="TranslationConstants.SHARED.EDIT | translate"
+                matTooltipShowDelay="500"
+                >
+                <mat-icon>edit</mat-icon>
+              </button>
+            }
+            @if (!isEditMode()) {
+              <button
+                type="button"
+                (click)="onAdd()"
+                mat-icon-button
+                aria-label="Add child"
+                [matTooltip]="TranslationConstants.SHARED.ADD_CHILD | translate"
+                matTooltipShowDelay="500"
+                >
+                <mat-icon>masked_transitions_add</mat-icon>
+              </button>
+            }
+            @if (!isEditMode()) {
+              <button
+                type="button"
+                (click)="onDelete(active.id)"
+                mat-icon-button
+                aria-label="Delete resource"
+                [matTooltip]="TranslationConstants.SHARED.DELETE | translate"
+                matTooltipShowDelay="500"
+                >
+                <mat-icon>delete</mat-icon>
+              </button>
+            }
+            @if (isEditMode()) {
+              <button
+                type="button"
+                (click)="onSave()"
+                mat-icon-button
+                aria-label="Save resource"
+                [matTooltip]="TranslationConstants.SHARED.SAVE | translate"
+                matTooltipShowDelay="500"
+                >
+                <mat-icon>save</mat-icon>
+              </button>
+            }
+            @if (isEditMode()) {
+              <button
+                type="button"
+                (click)="onCancelEditing()"
+                mat-icon-button
+                aria-label="Cancel editing resource"
+                [matTooltip]="TranslationConstants.SHARED.CANCEL | translate"
+                matTooltipShowDelay="500"
+                >
+                <mat-icon>cancel</mat-icon>
+              </button>
+            }
+          </mat-toolbar-row>
+          <mat-toolbar-row></mat-toolbar-row>
+        </mat-toolbar>
+      }
+
+      @if (!active) {
+        <button
+          mat-fab
+          color="primary"
+          class="resources-add-button"
+          type="button"
+          aria-label="Add resource"
+          (click)="onAdd()"
+          [matTooltip]="TranslationConstants.SHARED.ADD | translate"
+          matTooltipShowDelay="500"
+          >
+          <mat-icon>add</mat-icon>
+        </button>
+      }
+      </div>
+
+      <mat-menu #contextMenu="matMenu">
+        <ng-template matMenuContent let-id="id">
+          <button
+            mat-menu-item
+            [disabled]="isEditMode()"
+            (click)="onDelete(id)"
+            >
+            <mat-icon>delete_forever</mat-icon>
+            <span>{{ TranslationConstants.SHARED.DELETE | translate }}</span>
+          </button>
+          <button
+            [disabled]="isEditMode()"
+            mat-menu-item
+            (click)="onSelectAndEdit(id)"
+            >
+            <mat-icon>edit</mat-icon>
+            <span>{{ TranslationConstants.SHARED.EDIT | translate }}</span>
+          </button>
+        </ng-template>
+      </mat-menu>
+      <!-- A hidden div is created to set the position of the menu-->
+      <div
+        style="visibility: hidden; position: fixed"
+        [style.left]="menuTopLeftPosition().x"
+        [style.top]="menuTopLeftPosition().y"
+        [matMenuTriggerFor]="contextMenu"
+      ></div>
+
+      <app-resource-tree
+        [resources]="resources()"
+        [selected]="selected()"
+        (nodeSelected)="selectResource($event)"
+        (nodeContextMenu)="openContextMenuByClicking($event.event, $event.id)"
+      />
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content role="main">
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

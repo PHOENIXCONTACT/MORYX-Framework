@@ -1,0 +1,40 @@
+@if (!isLoading()) {
+  @if (!isEmpty()) {
+    <mat-sidenav-container
+      class="sidenav-container"
+      >
+      <mat-sidenav opened mode="side" position="start" class="notifications-sidenav">
+        <div class="notifications-sidebar">
+          <mat-toolbar
+          [style.background-image]="'url(' + notificationsToolbarImage() + ')'"
+            class="notifications-toolbar"
+            >
+            <mat-toolbar-row>
+              <span class="spacer"></span>
+            </mat-toolbar-row>
+            <mat-toolbar-row class="notifications-module-title">
+              <button mat-icon-button title="Disabled toggle" disabled></button>
+              <span>{{ TranslationConstants.APP.NOTIFICATIONS | translate }}</span>
+            </mat-toolbar-row>
+          </mat-toolbar>
+          <app-notifications class="notifications-list"></app-notifications>
+        </div>
+      </mat-sidenav>
+      <mat-sidenav-content class="notification-details-container">
+        <app-notification-details class="notification-details"></app-notification-details>
+      </mat-sidenav-content>
+    </mat-sidenav-container>
+  } @else {
+    <empty-state
+      header="{{ TranslationConstants.APP.EMPTY_STATE_HEADER | translate }}"
+      message="{{ TranslationConstants.APP.EMPTY_STATE_TEXT | translate }}"
+      icon="bedtime"
+    ></empty-state>
+  }
+} @else {
+  <div class="notifications-loading">
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </div>
+}
+
+

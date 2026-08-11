@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Globalization;
 using Microsoft.Extensions.DependencyInjection;
 using Moryx.Container;
 using Moryx.Serialization;
@@ -17,6 +18,6 @@ public class FacacadeRecipeValueAttribute : PossibleValuesAttribute
     public override IEnumerable<string> GetValues(IContainer localContainer, IServiceProvider serviceProvider)
     {
         var module = serviceProvider.GetRequiredService<ITestModule>();
-        return [module.Bla.ToString("D")];
+        return [module.Bla.ToString("D", CultureInfo.InvariantCulture)];
     }
 }

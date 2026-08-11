@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Globalization;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Capabilities;
 using Moryx.AbstractionLayer.Resources;
@@ -304,7 +305,7 @@ internal sealed class ResourceAssignment : IActivityPoolListener, IResourceAssig
         Logger.Log(LogLevel.Error, "No resource has required capabilities for '{0}'", activityData.Activity.GetType().Name);
 
         var notification = new Notification(Strings.ResourceAssignment_UnassignedActivityNotification_Title,
-            string.Format(Strings.ResourceAssignment_UnassignedActivityNotification_Message, activityData.Activity.GetType().Name), ModuleConfig.UnassignedActivitySeverity, true);
+            string.Format(CultureInfo.CurrentCulture, Strings.ResourceAssignment_UnassignedActivityNotification_Message, activityData.Activity.GetType().Name), ModuleConfig.UnassignedActivitySeverity, true);
 
         NotificationAdapter.Publish(this, notification, activityData);
     }

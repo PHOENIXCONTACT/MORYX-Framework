@@ -391,7 +391,7 @@ internal class ProductConverter
         return productRecipe;
     }
 
-    public ProductInstanceModel ConvertProductInstance(ProductInstance instance)
+    public static ProductInstanceModel ConvertProductInstance(ProductInstance instance)
     {
         var model = new ProductInstanceModel
         {
@@ -403,7 +403,7 @@ internal class ProductConverter
         return model;
     }
 
-    public ProductInstance ConvertProductInstanceBack(ProductInstanceModel model, ProductType type)
+    public static ProductInstance ConvertProductInstanceBack(ProductInstanceModel model, ProductType type)
     {
         var productInstance = type.CreateInstance();
         productInstance.Id = model.Id;

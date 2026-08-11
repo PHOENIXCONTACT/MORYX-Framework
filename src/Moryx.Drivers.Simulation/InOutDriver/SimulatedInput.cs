@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Globalization;
 using Moryx.AbstractionLayer.Drivers.InOut;
 
 namespace Moryx.Drivers.Simulation.InOutDriver;
@@ -13,7 +14,7 @@ public class SimulatedInput : IInput
     /// <summary>
     /// Direkt access to a single value
     /// </summary>
-    public object Value => Values.ContainsKey(string.Empty) ? Values[string.Empty] : default;
+    public object Value => Values.TryGetValue(string.Empty, out var singleValue) ? singleValue : default;
 
     /// <summary>
     /// Index based access
@@ -22,8 +23,8 @@ public class SimulatedInput : IInput
     {
         get
         {
-            var key = index.ToString("D");
-            return Values.ContainsKey(key) ? Values[key] : default;
+            var key = index.ToString("D", CultureInfo.InvariantCulture);
+            return Values.TryGetValue(key, out var indexedValue) ? indexedValue : default;
         }
     }
 
@@ -32,7 +33,7 @@ public class SimulatedInput : IInput
     /// </summary>
     /// <param name="key"></param>
     /// <returns></returns>
-    public object this[string key] => Values.ContainsKey(key) ? Values[key] : default;
+    public object this[string key] => Values.TryGetValue(key, out var keyedValue) ? keyedValue : default;
 
     /// <summary>
     /// All access types supported

@@ -1,0 +1,21 @@
+@let notification = currentNotification();
+@let title = notification?.title || '';
+
+@if (notification !== undefined) {
+  <a class="outerborder"
+    [href]="url()">
+
+    <div class="content">
+      <mat-icon class="icon">
+        {{ getIcon(notification?.severity) }}
+      </mat-icon>
+
+      <!-- Recreate dom to start fade in animation on title change -->
+      @for (t of [title]; track t) {
+        <span class="innertext">
+          {{ t }}
+        </span>
+      }
+    </div>
+  </a>
+}

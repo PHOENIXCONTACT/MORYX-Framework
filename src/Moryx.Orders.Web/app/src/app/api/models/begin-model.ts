@@ -10,4 +10,3 @@ export interface BeginModel {
   amount?: number;
   userId?: string | null;
 }
-

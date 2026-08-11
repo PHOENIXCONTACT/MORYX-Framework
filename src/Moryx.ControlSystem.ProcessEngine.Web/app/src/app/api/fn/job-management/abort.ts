@@ -34,4 +34,3 @@ export function abort(http: HttpClient, rootUrl: string, params: Abort$Params, c
 }
 
 abort.PATH = '/api/moryx/jobs/{jobId}/abort';
-

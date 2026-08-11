@@ -3,7 +3,6 @@
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;
-using Moryx.ControlSystem.Cells;
 using Moryx.ControlSystem.Recipes;
 using Moryx.ControlSystem.Setups;
 using Moryx.Logging;
@@ -15,7 +14,7 @@ namespace Moryx.ControlSystem.SetupProvider;
 [Component(LifeCycle.Singleton, typeof(ISetupManager))]
 internal partial class SetupManager : ISetupManager, ILoggingComponent
 {
-    private readonly ICollection<ISetupTrigger> _triggers = new List<ISetupTrigger>();
+    private readonly List<ISetupTrigger> _triggers = [];
 
     #region Dependencies
     /// <summary>
@@ -41,9 +40,14 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
     {
         foreach (var triggerConfig in Config.SetupTriggers)
         {
+            if (triggerConfig.Disabled)
+            {
+                continue;
+            }
             var trigger = TriggerFactory.Create(triggerConfig);
             _triggers.Add(trigger);
         }
+        _triggers.Sort((t1, t2) => t1.SortOrder - t2.SortOrder);
     }
 
     /// <inheritdoc />
@@ -74,7 +78,9 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
             if (evaluation is SetupEvaluation.Change change)
             {
                 if (ShouldSkipForExecution(execution, targetSystem, change, trigger.GetType().Name))
+                {
                     continue;
+                }
             }
 
             triggers.Add(trigger);
@@ -89,19 +95,19 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
 
         // Create all necessary setup steps
         var stepGroups = new Dictionary<int, List<IWorkplanStep>>();
-        foreach (var trigger in triggers.OrderBy(t => t.SortOrder))
+        foreach (var trigger in triggers)
         {
             var index = trigger.SortOrder;
 
-            if (!stepGroups.TryGetValue(index, out var value))
+            if (!stepGroups.TryGetValue(index, out var stepGroup))
             {
-                value = new List<IWorkplanStep>();
-                stepGroups[index] = value;
+                stepGroup = new List<IWorkplanStep>();
+                stepGroups[index] = stepGroup;
             }
 
-            value.AddRange(TryCreateSteps(trigger, recipe));
+            stepGroup.AddRange(TryCreateSteps(trigger, recipe));
 
-            if (value.Count == 0)
+            if (stepGroup.Count == 0)
             {
                 Logger.LogWarning("Trigger '{triggerName}' with sort index {sortOrder} found the system to require a setup {executionType}, but did not create workplan steps.",
                     trigger.GetType().Name, index, trigger.Execution);
@@ -123,10 +129,18 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
             Version = 1,
             State = WorkplanState.Released
         };
-        workplan.Add(stepGroups.SelectMany(sg => sg.Value).ToArray());
+        workplan.Add(stepGroups.SelectMany(sg => sg.Value).ToArray<IWorkplanNode>());
 
         // Wire steps within the workplan
-        WireWorkplan(workplan, stepGroups);
+        try
+        {
+            WireWorkplan(workplan, stepGroups);
+        }
+        catch (Exception e)
+        {
+            Logger.LogError(e, "Error creating setup workplan");
+            throw;
+        }
 
         // Create a setup recipe
         var setupRecipe = new SetupRecipe
@@ -201,6 +215,8 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
             {
                 // Default case: Single step for the sort order
                 var step = steps[0];
+                ValidateStep(step);
+
                 step.Inputs[0] = input;
                 step.Outputs[0] = output;
                 step.Outputs[1] = step.Outputs[2] = failed;
@@ -215,7 +231,7 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
                 workplan.Add(split, join);
 
                 // All parallel steps are inserted between split and join
-                for (int stepIndex = 0; stepIndex < steps.Count; stepIndex++)
+                for (var stepIndex = 0; stepIndex < steps.Count; stepIndex++)
                 {
                     var stepIn = WorkplanInstance.CreateConnector($"Split-{stepGroup.Key}-{stepIndex + 1}");
                     var stepOut = WorkplanInstance.CreateConnector($"Join-{stepGroup.Key}-{stepIndex + 1}");
@@ -225,6 +241,8 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
                     join.Inputs[stepIndex] = stepOut;
 
                     var step = steps[stepIndex];
+                    ValidateStep(step);
+
                     step.Inputs[0] = stepIn;
                     step.Outputs[0] = stepOut;
                     step.Outputs[1] = step.Outputs[2] = failed;
@@ -233,6 +251,17 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
 
             input = output;
         }
+
+        return;
+
+        void ValidateStep(IWorkplanStep step)
+        {
+            if (step.Outputs.Length != 3)
+            {
+                throw new InvalidOperationException($"Step {step.Name} does not have exactly 3 outputs to wire success, failure and technical error. " +
+                                                    "Exactly 3 outputs are required.");
+            }
+        }
     }
 
     private bool ShouldSkipForExecution(SetupExecution execution, ISetupTarget targetSystem, SetupEvaluation.Change change, string triggerName)
@@ -240,7 +269,6 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
         switch (execution)
         {
             case SetupExecution.BeforeProduction:
-            {
                 var targetCells = targetSystem.Cells(change.TargetCapabilities);
                 var hasTargetCaps = targetCells.Any();
 
@@ -251,10 +279,8 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
                     return true;
                 }
                 return false;
-            }
 
             case SetupExecution.AfterProduction:
-            {
                 var currentCells = targetSystem.Cells(change.CurrentCapabilities);
                 var hasCurrentCaps = currentCells.Any();
 
@@ -266,12 +292,10 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
                     return true;
                 }
                 return false;
-            }
             default:
                 return false;
         }
     }
-
 
     private static partial class Log
     {

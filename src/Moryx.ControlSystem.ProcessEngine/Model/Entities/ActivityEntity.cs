@@ -41,7 +41,7 @@ public class ActivityEntity : IEntity
 
     public virtual string TracingData { get; set; }
 
-    public virtual bool Success { get; set; } = false;
+    public virtual bool Success { get; set; }
 
     public virtual long? Result { get; set; }
 

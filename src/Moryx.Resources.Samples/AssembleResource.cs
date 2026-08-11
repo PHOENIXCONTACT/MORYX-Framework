@@ -5,11 +5,13 @@
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Resources;
+using Moryx.AbstractionLayer.Resources.Attributes;
 using Moryx.Serialization;
 
 namespace Moryx.Resources.Samples;
 
 [ResourceRegistration]
+[ResourceSynchronization("Synchronization.Assemble", Mode = SynchronizationMode.Full)]
 [DisplayName("Handarbeitsplatz"), Description("Handarbeitsplatz für manuele Arbeiten.")]
 public class AssembleResource : Cell
 {

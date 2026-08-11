@@ -8,19 +8,6 @@
         "EXPAND" : "Expand",
         "GO_BACK" : "Go back"
     },
-    "AVAILABILITIES" : {
-        "TITLE": "Availabilities",
-        "THIS_WEEK": " This Week",
-        "OPERATORS": "Operators"
-    },
-    "AVAILABILITY_DIALOG" : {
-        "TITLE": "New Availability",
-        "DESCRIPTION": "Create an absence notice for an operator",
-        "FROM": "From",
-        "TO": "To",
-        "CANCEL" : "Cancel",
-        "SAVE": "Save"
-    },
     "SKILL_TYPES" : {
         "NAME": "Name",
         "TRAINED_OPERATORS": "Trained Operators",
@@ -29,7 +16,6 @@
     "OPERATORS_MANAGEMENT" : {
         "MANAGE_OPERATORS" : "Manage Operators",
         "SKILL_TYPES" : "Skill Types",
-        "AVAILABILITIES" : "Availabilities",
         "NAME": "Name",
         "NUMBER": "Number",
         "EDIT" : "EDIT",

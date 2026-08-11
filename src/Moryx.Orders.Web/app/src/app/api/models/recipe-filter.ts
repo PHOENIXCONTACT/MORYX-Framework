@@ -11,4 +11,3 @@ export enum RecipeFilter {
   WithRecipe = 'WithRecipe',
   WithoutRecipes = 'WithoutRecipes'
 }
-

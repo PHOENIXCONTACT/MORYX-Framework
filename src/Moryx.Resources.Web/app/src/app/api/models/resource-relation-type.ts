@@ -21,4 +21,3 @@ export enum ResourceRelationType {
   Extension = 'Extension',
   Custom = 'Custom'
 }
-

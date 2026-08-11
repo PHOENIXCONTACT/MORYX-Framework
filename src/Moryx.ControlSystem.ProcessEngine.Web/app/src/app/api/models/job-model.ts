@@ -21,4 +21,3 @@ export interface JobModel {
   state?: string | null;
   workplan?: string | null;
 }
-

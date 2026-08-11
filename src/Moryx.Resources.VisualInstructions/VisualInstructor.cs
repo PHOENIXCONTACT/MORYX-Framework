@@ -148,13 +148,13 @@ public class VisualInstructor : Resource, IVisualInstructor, IVisualInstructionS
     {
         Logger.Log(LogLevel.Debug, "Clearing instruction with id {0} on {1}", instructionId, Name);
 
-        if (!_instructionDict.ContainsKey(instructionId))
+        if (!_instructionDict.TryGetValue(instructionId, out var openInstruction))
         {
             Logger.Log(LogLevel.Information, "Did not send clear via event for {0}, because the instruction is not in the instruction list", instructionId);
             return;
         }
 
-        var instruction = _instructionDict[instructionId].Model;
+        var instruction = openInstruction.Model;
         lock (_instructionDict)
         {
             if (!_instructionDict.Remove(instructionId))

@@ -16,4 +16,3 @@ export interface CustomAttributeData {
   constructorArguments?: Array<CustomAttributeTypedArgument> | null;
   namedArguments?: Array<CustomAttributeNamedArgument> | null;
 }
-

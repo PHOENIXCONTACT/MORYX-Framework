@@ -11,4 +11,3 @@ export interface ResourceReferenceModel {
   name?: string | null;
   targets?: Array<ResourceModel> | null;
 }
-

@@ -3,41 +3,35 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { inject, Injectable, signal } from '@angular/core';
 import { AssignmentCardModel } from '../models/assignment-card-model';
 import AssignmentData from '../models/assignment-data';
-import {
-  OperatorManagementService,
-  ShiftManagementService,
-} from '../api/services';
-import { ShiftAssignementModel } from '../api/models/shift-assignement-model';
+import { ShiftManagementService } from '@api/services';
+import { ShiftAssignementModel } from '@api/models/shift-assignement-model';
 import {
   calendarDatesToFlagEnumString
 } from '../models/model-converter';
-import { ShiftAssignementCreationContextModel } from '../api/models/shift-assignement-creation-context-model';
+import { ShiftAssignementCreationContextModel } from '@api/models/shift-assignement-creation-context-model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AssignmentService {
+  private shiftAssignmentService = inject(ShiftManagementService);
 
+  private readonly _assignments = signal<AssignmentCardModel[]>([]);
+  readonly assignments = this._assignments.asReadonly();
 
-  public assignments = new BehaviorSubject<AssignmentCardModel[]>([]);
+  constructor() {
 
-  constructor(
-    private shiftAssignmentService: ShiftManagementService,
-    private operatorService: OperatorManagementService
-  ) {
-  
   }
 
-  public setAssignments(values : AssignmentCardModel[]){
-    this.assignments.next(values);
+  public setAssignments(values: AssignmentCardModel[]) {
+    this._assignments.set(values);
   }
 
   public addNewAssignment(assignment: AssignmentData) {
-    var newAssignment = <AssignmentCardModel>{
+    const newAssignment = <AssignmentCardModel>{
       days: assignment.days,
       resource: assignment.resource,
       notes: assignment.notes,
@@ -52,28 +46,26 @@ export class AssignmentService {
       resourceId: newAssignment.resource.id,
       operatorIdentifier: newAssignment.operator.id,
       shiftId: newAssignment.shiftInstanceId,
-      priority: newAssignment.priority ,
-      assignedDays:  calendarDatesToFlagEnumString(assignment.days, assignment.shift.startDate,assignment.shift.endDate)
+      priority: newAssignment.priority,
+      assignedDays: calendarDatesToFlagEnumString(assignment.days, assignment.shift.startDate, assignment.shift.endDate)
     }
 
-    const assignmentAsync = firstValueFrom(this.shiftAssignmentService.createShiftAssignement({
+    return this.shiftAssignmentService.createShiftAssignement({
       body: data
-    }));
-
-    return assignmentAsync.then(createdAssignment => {
-          newAssignment.id = createdAssignment.id ?? 0;
-          newAssignment.assignedDays = data.assignedDays ?? '';
-          return newAssignment;
+    }).then(createdAssignment => {
+      newAssignment.id = createdAssignment.id ?? 0;
+      newAssignment.assignedDays = data.assignedDays ?? '';
+      return newAssignment;
     })
   }
 
   public updateAssignment(assignmentId: number, update: AssignmentData) {
-    const foundAssignment = this.assignments.value.find(
+    const foundAssignment = this.assignments().find(
       (x: AssignmentCardModel) => x.id == assignmentId
     );
 
     if (foundAssignment) {
-      var updated = <AssignmentCardModel>{
+      const updated = <AssignmentCardModel>{
         days: update.days,
         id: assignmentId,
         resource: update.resource,
@@ -90,41 +82,40 @@ export class AssignmentService {
         operatorIdentifier: updated.operator.id,
         shiftId: updated.shiftInstanceId,
         priority: updated.priority,
-        assignedDays:  calendarDatesToFlagEnumString(updated.days, update.shift.startDate,update.shift.endDate)
+        assignedDays: calendarDatesToFlagEnumString(updated.days, update.shift.startDate, update.shift.endDate)
       }
 
       this.shiftAssignmentService.updateShiftAssignement({
         body: data
-      }).subscribe( createdAssignment => {
-        // this.assignments.next([
-        //   ...this.assignments.value.filter((x) => x.id != assignmentId),
+      }).then(() => {
+        // this.assignments.set([
+        //   ...this.assignments().filter((x) => x.id != assignmentId),
         //   updated,
         // ]);
-        if(update.operator)
+        if (update.operator) {
           foundAssignment.operator = update.operator;
-        if(update.resource)
+        }
+        if (update.resource) {
           foundAssignment.resource = update.resource;
+        }
         foundAssignment.days = update.days;
         foundAssignment.notes = update.notes;
         foundAssignment.priority = update.priority;
       })
-     
+
     }
   }
 
   delete(id: number) {
-     this.shiftAssignmentService.deleteShiftAssignement({
+    this.shiftAssignmentService.deleteShiftAssignement({
       id: id
-     }).subscribe({
-      next: succes =>{
-         this.assignments.next(this.assignments.value.filter(x => x.id != id));
-      },
-      error: e => console.log(e)
-     })
+    }).then(() => {
+      this._assignments.update(current => current.filter(x => x.id != id));
+    }).catch(e => console.log(e));
   }
 
-  addAssignmentsToList(assignments: AssignmentCardModel[]){
-    this.assignments.next([...this.assignments.value,...assignments]);
+  addAssignmentsToList(assignments: AssignmentCardModel[]) {
+    this._assignments.update(current => [...current, ...assignments]);
   }
 }
 

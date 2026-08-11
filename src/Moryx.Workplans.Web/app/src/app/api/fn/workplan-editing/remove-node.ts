@@ -37,4 +37,3 @@ export function removeNode(http: HttpClient, rootUrl: string, params: RemoveNode
 }
 
 removeNode.PATH = '/api/moryx/workplans/sessions/{sessionId}/nodes/{nodeId}';
-

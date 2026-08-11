@@ -1,0 +1,364 @@
+<div class="app-layout">
+  <!-- Header -->
+  <mat-toolbar class="header">
+    <div class="header-left">
+      <button mat-stroked-button (click)="navigateToCurrentWeek()" [disabled]="calendarState()!.isCurrentWeek()">
+        {{ TranslationConstants.APP_COMPONENT.THIS_WEEK | translate }}
+      </button>
+
+      <!-- Filters -->
+      <div class="filter-group">
+        <!-- Operator filter -->
+        <button [class]="getFilterButtonStyle('Operator')" (click)="operatorFilterButtonClicked()">
+          @if (operatorsSelectedForFilter().length) {
+            <span class="filter-value">
+              @for (operator of operatorsSelectedForFilter(); track $index) {
+                {{ operator.name }},
+              }
+            </span>
+          } @else {
+            <span class="filter-label">
+              {{ TranslationConstants.APP_COMPONENT.OPERATORS | translate }}:</span>
+            {{ TranslationConstants.APP_COMPONENT.ALL | translate }}
+          }
+          @if (!isOperatorFilterPanelOpened()) {
+            <mat-icon>keyboard_arrow_down</mat-icon>
+          }
+          @if (isOperatorFilterPanelOpened()) {
+            <mat-icon>keyboard_arrow_up</mat-icon>
+          }
+        </button>
+
+        @if (isOperatorFilterPanelOpened()) {
+          <div class="filter-panel filter-panel--left">
+            <div class="filter-panel-content">
+              <span class="filter-panel-title">
+                {{ TranslationConstants.APP_COMPONENT.FILTER_OPERATORS | translate }}
+              </span>
+              <mat-form-field class="-mb-4" appearance="outline">
+                <mat-label>{{ TranslationConstants.APP_COMPONENT.SEARCH | translate }}...</mat-label>
+                <input matInput type="text" [(ngModel)]="searchOperatorInCalendarString"/>
+                <mat-icon matSuffix>search</mat-icon>
+              </mat-form-field>
+              <mat-divider></mat-divider>
+              <div class="filter-panel-list">
+                @for (operator of filterdOperatorList(searchOperatorInCalendarString()); track operator.id) {
+                  <mat-checkbox (change)="selectOperator(operator)" [checked]="isOperatorSelected(operator)">
+                    {{ operator.name }}
+                  </mat-checkbox>
+                }
+              </div>
+              <div class="filter-panel-footer">
+                <button mat-button aria-label="Close filter" (click)="operatorFilterButtonClicked()">
+                  {{ TranslationConstants.APP_COMPONENT.CLOSE | translate }}
+                </button>
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- Resource filter -->
+        <button [class]="getFilterButtonStyle('Resource')" (click)="resourceFilterButtonClicked()">
+          @if (resourcesSelectedForFilter().length) {
+            <span class="filter-value">
+              @for (resource of resourcesSelectedForFilter(); track $index) {
+                {{ resource.name }},
+              }
+            </span>
+          } @else {
+            <span class="filter-label">
+              {{ TranslationConstants.APP_COMPONENT.RESOURCES | translate }}:</span>
+            {{ TranslationConstants.APP_COMPONENT.ALL | translate }}
+          }
+          <mat-icon>keyboard_arrow_down</mat-icon>
+        </button>
+
+        @if (isResourceFilterPanelOpened()) {
+          <div class="filter-panel filter-panel--right">
+            <div class="filter-panel-content">
+              <span class="filter-panel-title">
+                {{ TranslationConstants.APP_COMPONENT.FILTER_RESOURCES | translate }}
+              </span>
+              <mat-form-field class="-mb-4" appearance="outline">
+                <mat-label>{{ TranslationConstants.APP_COMPONENT.SEARCH | translate }}...</mat-label>
+                <input matInput type="text" [(ngModel)]="searchResourceInCalendarString"/>
+                <mat-icon matSuffix>search</mat-icon>
+              </mat-form-field>
+              <mat-divider></mat-divider>
+              <div class="filter-panel-list">
+                @for (resource of filteredResourceList(searchResourceInCalendarString()); track resource.id) {
+                  <mat-checkbox (change)="selectResource(resource)" [checked]="isResourceSelected(resource)">
+                    {{ resource.name }}
+                  </mat-checkbox>
+                }
+              </div>
+              <div class="filter-panel-footer">
+                <button mat-button aria-label="Close filter" (click)="resourceFilterButtonClicked()">
+                  {{ TranslationConstants.APP_COMPONENT.CLOSE | translate }}
+                </button>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Day navigators -->
+    <div class="nav-group">
+      <button mat-icon-button aria-label="Previous Week" (click)="navigateToPreviousWeek()">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      <div class="nav-date">
+        <span class="nav-date-week">
+          {{ TranslationConstants.APP_COMPONENT.WEEK_NUMBER | translate }}-{{ calendarState()!.current.calendarWeek }}
+        </span>
+        <span class="nav-date-range">{{ calendarState()!.current.datesDisplayed }}</span>
+      </div>
+      <button mat-icon-button aria-label="Next week" (click)="navigateToNextWeek()">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+
+    <div class="actions-group">
+      <button mat-icon-button matTooltip="Duplicate current Assignments and shifts"
+              (click)="copyShiftAndAssignment()">
+        <mat-icon>content_copy</mat-icon>
+      </button>
+      <mat-divider vertical></mat-divider>
+      <button mat-flat-button color="primary" (click)="addShiftType()">
+        {{ TranslationConstants.APP_COMPONENT.ADD_SHIFT | translate }}
+      </button>
+    </div>
+  </mat-toolbar>
+
+  <!-- Main Container -->
+  <div class="main-container" cdkDropListGroup>
+    <div class="main-content">
+      @if (!shifts().length || !shiftInstancesForCurrentView().length) {
+        <empty-state class="empty-state-container"
+          [header]="!shiftInstancesForCurrentView().length
+            ? calendarState()!.current.datesDisplayed : 'Shifts Management'"
+          [icon]="!shiftInstancesForCurrentView().length ? 'search' : 'calendar_month'"
+          [message]="(!shiftInstancesForCurrentView().length
+            ? TranslationConstants.APP_COMPONENT.NO_ASSIGNMENT
+            : TranslationConstants.APP_COMPONENT.NO_SHIFT) | translate"/>
+      }
+
+      <main class="main-grid">
+        @for (shift of shiftInstancesForCurrentView(); track shift) {
+          <section class="shift-section">
+            <!-- Shift header -->
+            <div class="shift-header">
+              <div class="shift-header-left">
+                <button class="shift-title-btn" (click)="displayShiftInstance(shift.id)">
+                  {{ shift.shiftName }}
+                  <span class="shift-time">
+                    {{ formatDateDigits(shift.startTime.hours) }}:{{ formatDateDigits(shift.startTime.minutes) }}
+                    - {{ formatDateDigits(shift.endTime.hours) }}:{{ formatDateDigits(shift.endTime.minutes) }}
+                  </span>
+                </button>
+                @if (currentView() === 'Orders') {
+                  <app-work-hours-icon size="md"
+                    [operatorHours]="totalHoursOfTheShift(getShiftInstanceById(shift.id), assignments())"
+                    [orderHours]="totalOrderHours(getOrdersBasedOnOperatorHours(
+                      getShiftInstanceById(shift.id)?.startDate,
+                      getShiftInstanceById(shift.id)?.endDate,
+                      orders(),
+                      totalHoursOfTheShift(getShiftInstanceById(shift.id), assignments())
+                    ))"/>
+                }
+              </div>
+              <button mat-icon-button aria-label="Drawer closer"
+                      [class.invisible]="drawerIsOpened()" (click)="toggleDrawer()">
+                <mat-icon>keyboard_double_arrow_left</mat-icon>
+              </button>
+            </div>
+
+            <!-- Days grid -->
+            <div class="days-grid">
+              @for (viewDate of calendarState()!.currentViewDates(); track viewDate.date) {
+                <div class="day-column">
+                  <!-- Day header -->
+                  <div class="day-header"
+                       [class.line-through]="!isDayInInterval(viewDate.date,
+                         getShiftInstanceById(shift.id)?.startDate,
+                         getShiftInstanceById(shift.id)?.endDate) && currentView() === 'Assignments'">
+                    @if (currentView() === 'Assignments') {
+                      <div class="day-header-operators">
+                        <span [class]="totalOperators(calendarState()!.startDate, calendarState()!.endDate,
+                                viewDate, filteredAssignments(), getShiftInstanceById(shift.id))
+                              ? 'day-header-operators-count'
+                              : 'day-header-operators-count day-header-operators-count--warning'">
+                          {{ totalOperators(calendarState()!.startDate, calendarState()!.endDate,
+                               viewDate, filteredAssignments(), getShiftInstanceById(shift.id)) }}
+                        </span>
+                        <mat-icon>groups</mat-icon>
+                      </div>
+                    }
+                    @if (currentView() === 'Orders') {
+                      <app-work-hours-icon size="sm"
+                        [orderHours]="getOrderHoursForTheDay(orders(), viewDate.date,
+                          totalOperators(calendarState()!.startDate, calendarState()!.endDate,
+                            viewDate, filteredAssignments(), getShiftInstanceById(shift.id))
+                          * shiftDayLengthInHours(getShiftInstanceById(shift.id), filteredAssignments()))"
+                        [operatorHours]="totalOperators(calendarState()!.startDate, calendarState()!.endDate,
+                          viewDate, filteredAssignments(), getShiftInstanceById(shift.id))
+                          * shiftDayLengthInHours(getShiftInstanceById(shift.id), filteredAssignments())"/>
+                    }
+                    <div class="day-header-date">
+                      <span class="day-name">
+                        {{ (shortDayName(localizedDayName(viewDate.day) | translate)).toUpperCase() }}
+                      </span>
+                      @if (currentView() === 'Assignments') {
+                        <span>{{ localizedFormatDate(viewDate.date,
+                          TranslationConstants.DATE_FORMAT.MONTH_AND_DAY | translate) }}</span>
+                      }
+                    </div>
+                  </div>
+
+                  <div class="day-spacer">Empty space</div>
+
+                  <!-- Day content -->
+                  @if (!isDraggingItem() && currentView() === 'Assignments') {
+                    @for (assignment of filteredAssignments(); track assignment.id) {
+                      @if (!isDayInInterval(viewDate.date,
+                        getShiftInstanceById(shift.id)?.startDate,
+                        getShiftInstanceById(shift.id)?.endDate)
+                        && currentView() === 'Assignments' && !isDraggingItem()) {
+                        <div class="disabled-day-card">
+                          <div class="disabled-day-card-inner">
+                            <mat-icon class="muted-icon">block</mat-icon>
+                          </div>
+                        </div>
+                      }
+                      @if (assignment.shiftInstanceId === shift.id
+                        && isDayInInterval(viewDate.date, calendarState()!.startDate, calendarState()!.endDate)
+                        && isDayInInterval(viewDate.date,
+                             getShiftInstanceById(shift.id)?.startDate,
+                             getShiftInstanceById(shift.id)?.endDate)) {
+                        <app-assignment [assignment]="assignment" [calendarState]="calendarState()!"
+                                        [shift]="shift" [calendarDate]="viewDate"/>
+                      }
+                    }
+                  }
+
+                  <!-- Orders -->
+                  @if (currentView() === 'Orders') {
+                    @for (order of getOrderOfTheDayBasedOnOperatorHours(orders(), viewDate.date,
+                      totalOperators(calendarState()!.startDate, calendarState()!.endDate,
+                        viewDate, filteredAssignments(), getShiftInstanceById(shift.id))
+                      * shiftDayLengthInHours(getShiftInstanceById(shift.id), filteredAssignments()));
+                      track order.operationNumber) {
+                      <app-order-item [order]="order"/>
+                    }
+                  }
+
+                  <!-- Day drop zone -->
+                  @if (isDayInInterval(viewDate.date,
+                    getShiftInstanceById(shift.id)?.startDate,
+                    getShiftInstanceById(shift.id)?.endDate) && currentView() === 'Assignments') {
+                    <div class="drop-zone day-assignment-drop-zone-height" cdkDropList
+                         (cdkDropListDropped)="dropElement($event, shift, viewDate)"
+                         [class.hidden]="!isDraggingItem()" [id]="dayDropListId">
+                      <span class="drop-zone-label">
+                        {{ TranslationConstants.APP_COMPONENT.ASSIGN_TO | translate }}
+                        {{ localizedDayName(viewDate.day) | translate }}
+                      </span>
+                    </div>
+                  }
+
+                  <!-- Disabled day drop zone -->
+                  @if (!isDayInInterval(viewDate.date,
+                    getShiftInstanceById(shift.id)?.startDate,
+                    getShiftInstanceById(shift.id)?.endDate) && currentView() === 'Assignments') {
+                    <div class="disabled-drop-zone day-assignment-drop-zone-height"
+                         [class.hidden]="!isDraggingItem()">
+                      <mat-icon class="muted-icon">block</mat-icon>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+
+            <!-- Week drop zone -->
+            @if (hasDayInShiftInterval(calendarState()!.currentViewDates(),
+              getShiftInstanceById(shift.id)?.startDate,
+              getShiftInstanceById(shift.id)?.endDate) && currentView() === 'Assignments') {
+              <div class="week-drop-zone week-assignment-drop-zone-height" cdkDropList
+                   (cdkDropListDropped)="dropElement($event, shift)"
+                   [class.hidden]="!isDraggingItem()" [id]="weekDropListId">
+                <span class="week-drop-zone-label">
+                  {{ TranslationConstants.APP_COMPONENT.ASSIGN_TO_SHIFT | translate }}
+                </span>
+              </div>
+            }
+
+            <!-- Disabled week drop zone -->
+            @if (!hasDayInShiftInterval(calendarState()!.currentViewDates(),
+              getShiftInstanceById(shift.id)?.startDate,
+              getShiftInstanceById(shift.id)?.endDate) && currentView() === 'Assignments') {
+              <div class="week-disabled-drop-zone" [class.hidden]="!isDraggingItem()" [id]="weekDropListId">
+                <mat-icon class="muted-icon">block</mat-icon>
+              </div>
+            }
+          </section>
+        }
+        <div class="spacer-bottom"></div>
+      </main>
+    </div>
+
+    <!-- Drawer -->
+    <div [class]="drawerIsOpened() ? 'drawer drawer--open' : 'drawer drawer--closed'">
+      <div class="drawer-header">
+        <button mat-icon-button aria-label="Drawer closer" (click)="toggleDrawer()">
+          <mat-icon>close</mat-icon>
+        </button>
+        <span class="drawer-title">{{ TranslationConstants.APP_COMPONENT.SHIFT_ELEMENTS | translate }}</span>
+      </div>
+
+      <div class="drawer-content">
+        <mat-form-field appearance="outline">
+          <mat-label>{{ TranslationConstants.APP_COMPONENT.SEARCH | translate }}...</mat-label>
+          <input matInput type="text" [(ngModel)]="droppableElementSearchString"/>
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        <mat-tab-group [selectedIndex]="selectedShiftElementTab() === 'Locations' ? 0 : 1"
+                       (selectedIndexChange)="selectedShiftElementTab.set($event === 0 ? 'Locations' : 'Operators')">
+          <mat-tab [label]="TranslationConstants.APP_COMPONENT.RESOURCES | translate">
+            <div class="drawer-results">
+              <ul id="resources-list-shift-element" role="list" class="drawer-list" cdkDropList
+                  [cdkDropListData]="filteredResourceList(droppableElementSearchString())">
+                @for (resource of filteredResourceList(droppableElementSearchString()); track resource.id) {
+                  <li role="listitem" class="drawer-list-item" cdkDrag
+                      (cdkDragStarted)="dragResourceOrOperator(true)"
+                      (cdkDragEnded)="dragResourceOrOperator(false)" [cdkDragData]="resource">
+                    <div *cdkDragPlaceholder></div>
+                    {{ resource.name }}
+                  </li>
+                }
+                <li role="listitem" class="drawer-list-spacer"></li>
+              </ul>
+            </div>
+          </mat-tab>
+          <mat-tab [label]="TranslationConstants.APP_COMPONENT.OPERATORS | translate">
+            <div class="drawer-results">
+              <ul id="operators-list-shift-element" role="list" class="drawer-list" cdkDropList
+                  [cdkDropListData]="filterdOperatorList(droppableElementSearchString())">
+                @for (operator of filterdOperatorList(droppableElementSearchString()); track operator.id) {
+                  <li role="listitem" class="drawer-list-item" cdkDrag
+                      (cdkDragStarted)="dragResourceOrOperator(true)"
+                      (cdkDragEnded)="dragResourceOrOperator(false)" [cdkDragData]="operator">
+                    <div *cdkDragPlaceholder></div>
+                    {{ operator.name }}
+                  </li>
+                }
+                <li role="listitem" class="drawer-list-spacer"></li>
+              </ul>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+    </div>
+  </div>
+</div>

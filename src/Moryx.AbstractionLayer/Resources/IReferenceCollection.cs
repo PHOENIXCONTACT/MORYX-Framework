@@ -21,6 +21,20 @@ public interface IReferenceCollection
     event EventHandler<ReferenceCollectionChangedEventArgs> CollectionChanged;
 }
 
+// TODO: Merge with IReferenceCollection in next major
+// TODO: Add a way to synchronize access to the underlying collection properly.
+//       Is not a best practice and not possible in an async context
+/// <summary>
+/// Temporary extension interface to include new functionality that should be merged into IReferenceCollection later
+/// </summary>
+public interface IReferenceCollectionExtended : IReferenceCollection
+{
+    /// <summary>
+    /// Notifies the collection that the UnderlyingCollection was changed directly
+    /// </summary>
+    void UnderlyingCollectionChanged();
+}
+
 /// <summary>
 /// Event args for the <see cref="IReferenceCollection.CollectionChanged"/> event
 /// </summary>

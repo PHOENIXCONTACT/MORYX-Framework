@@ -75,7 +75,7 @@ internal class JobStorage : IJobStorage, IJobHistory, ILoggingComponent
     /// <summary>
     /// Counter for pending storage tasks
     /// </summary>
-    private int _pendingTasks = 0;
+    private int _pendingTasks;
 
     #region LifeCycle
 

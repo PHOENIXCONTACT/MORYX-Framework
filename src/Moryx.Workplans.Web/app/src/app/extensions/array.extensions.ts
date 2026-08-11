@@ -3,6 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface Array<T> {
   clone(): Array<T>;
   remove(item: T): void;

@@ -18,4 +18,3 @@ export interface JobProcessModel {
   started?: string;
   state?: ProcessProgress;
 }
-

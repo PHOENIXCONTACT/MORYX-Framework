@@ -1,0 +1,6 @@
+@for (order of runningOrders(); track order) {
+  <div class="order-container" [class.isToggled]="order.isToggled" (click)="toggleOrder(order)">
+    <div class="order-color-indicator" [style.background]="order.orderColor"></div>
+    <h4>{{order.orderNumber}}-{{order.operationNumber}}</h4>
+  </div>
+}

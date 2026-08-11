@@ -1,6 +1,0 @@
-:host{
-    display: none;
-    position: absolute;
-    left:  -100000px;
-    z-index: 999;
-}

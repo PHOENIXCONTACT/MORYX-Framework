@@ -1,0 +1,30 @@
+@if (successPercent() >= 1) {
+  <div class="bar success"
+       [style.flex-basis.%]="successPercent()"
+       matTooltip="{{ TranslationConstants.OPERATIONS.SUCCESS | translate }}: {{ successCount() }}">
+  </div>
+}
+@if (scrapPercent() >= 1) {
+  <div class="bar scrap"
+       [style.flex-basis.%]="scrapPercent()"
+       matTooltip="{{ TranslationConstants.OPERATIONS.SCRAP | translate }}: {{ scrapCount() }}">
+  </div>
+}
+@if (activePercent() >= 1) {
+  <div class="bar active"
+       [style.flex-basis.%]="activePercent()"
+       matTooltip="{{ activeLabel() | translate }}: {{ activeCount() }}">
+  </div>
+}
+@if (pendingPercent() >= 1) {
+  <div class="bar pending"
+       [style.flex-basis.%]="pendingPercent()"
+       matTooltip="{{ TranslationConstants.OPERATIONS.PENDING | translate }}: {{ pendingCount() }}">
+  </div>
+}
+@if (residualPercent() >= 1) {
+  <div class="bar residual"
+       [style.flex-basis.%]="residualPercent()"
+       matTooltip="{{ TranslationConstants.OPERATIONS.RESIDUAL | translate }}: {{ residualCount() }}">
+  </div>
+}

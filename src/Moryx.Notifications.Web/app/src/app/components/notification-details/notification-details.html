@@ -1,0 +1,35 @@
+@let currentNotification = notification();
+@if (currentNotification) {
+  <div class="scaling">
+    <mat-card class="notification-card">
+      <mat-card-header class="notification-header" [class]="'has-background-' + currentNotification.severity">
+        <div mat-card-avatar class="notification-icon">
+          <mat-icon [inline]="true" role="complementary" aria-label="Notification Severity Icon">
+            {{ getIcon(currentNotification) }}
+          </mat-icon>
+        </div>
+        <mat-card-title class="notification-title">
+          <markdown [data]="currentNotification.title" [disableSanitizer]="true" [inline]="true" />
+        </mat-card-title>
+        <mat-card-subtitle>{{ currentNotification.created | date: "medium" }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content class="notification-content">
+        <div class="content">
+          <markdown [data]="currentNotification.message" [disableSanitizer]="true" />
+          @if (currentNotification.properties && isArrayNotEmpty(currentNotification.properties.subEntries)) {
+            <navigable-entry-editor [entry]="currentNotification.properties" [disabled]="true" queryParam="properties" />
+          }
+        </div>
+      </mat-card-content>
+      @if (currentNotification.isAcknowledgable) {
+        <mat-card-actions align="end">
+          <button mat-button color="primary" type="button" (click)="onAcknowledge(currentNotification)">
+            {{ TranslationConstants.DETAILS.ACKNOWLEDGE | translate }}
+          </button>
+        </mat-card-actions>
+      }
+    </mat-card>
+  </div>
+} @else {
+  <img src="{{ environment.assets + 'assets/moryx_transparent_colored.png' }}" alt="Semi-transparent Moryx Banner" width="80%" />
+}

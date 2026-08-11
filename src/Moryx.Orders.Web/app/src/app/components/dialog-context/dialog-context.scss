@@ -1,0 +1,40 @@
+:host {
+  display: block;
+}
+
+.dialog-context {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.dialog-context-item {
+  margin: 0;
+  display: flex;
+  align-items: flex-start;
+
+  padding: 10px 12px;
+  background: var(--mat-sys-surface-container-low);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-left: 2px solid var(--mat-sys-primary);
+  border-radius: 4px;
+  min-width: 0;
+}
+
+.dialog-context-item .info-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--mat-sys-on-surface-variant);
+  white-space: nowrap;
+  flex: 0 0 100px;
+}
+
+.dialog-context-item .info-value {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--mat-sys-on-surface);
+  word-break: break-word;
+  flex: 1 1 auto;
+}

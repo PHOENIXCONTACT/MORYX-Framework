@@ -15,4 +15,3 @@ export interface ProcessHolderGroupModel {
   positions?: Array<ProcessHolderPositionModel> | null;
   visualization?: VisualizationModel;
 }
-

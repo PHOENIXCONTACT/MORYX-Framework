@@ -1,8 +1,0 @@
-{
-    "$schema": "node_modules/ng-openapi-gen/ng-openapi-gen-schema.json",
-    "input": "http://localhost:7266/swagger/v1/swagger.json",
-    "ignoreUnusedModels": true,
-    "includeTags": [
-        "ResourceModification"      
-    ]
-  }

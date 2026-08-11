@@ -3,36 +3,41 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Injectable, NgZone } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { JobManagementService } from '../api/services';
-import { JobModel } from '../api/models/job-model';
+import { inject, Injectable, signal } from '@angular/core';
+import { JobManagementService } from '@api/services';
+import { JobModel } from '@api/models/job-model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class JobManagementStreamService {
-  updatedJob: BehaviorSubject<JobModel | undefined> = new BehaviorSubject<JobModel | undefined>(undefined);
+  private jobManagementService = inject(JobManagementService);
 
-  constructor(
-    private jobManagementService: JobManagementService,
-    private ngZone: NgZone) {
+  private eventSource?: EventSource;
+  private readonly _updatedJob = signal<JobModel | undefined>(undefined);
+  readonly updatedJob = this._updatedJob.asReadonly();
 
-    const eventSource = new EventSource(this.jobManagementService.rootUrl + JobManagementService.ProgressStreamPath);
-    eventSource.onmessage = event => {
+  connect() {
+    this.eventSource = new EventSource(this.jobManagementService.rootUrl + JobManagementService.ProgressStreamPath);
+    this.eventSource.onmessage = event => {
       const job = <JobModel>JSON.parse(event.data);
-      this.ngZone.run(() => this.publishUpdate(job));
+      this.publishUpdate(job);
     };
   }
 
   private publishUpdate(job: JobModel): void {
     if (Object.keys(job).length > 0) {
-      this.updatedJob.next(job);
+      this._updatedJob.set(job);
     }
     else {
-      this.updatedJob.next(undefined);
+      this._updatedJob.set(undefined);
     }
   }
 
+  disconnect() {
+    if (this.eventSource) {
+      this.eventSource.close();
+      this.eventSource = undefined;
+    }
+  }
 }
-

@@ -1,0 +1,6 @@
+<div class="work-hours">
+  <span [class.work-hours-label--lg]="size() === 'md'">
+    {{orderHours().toFixed(0)}}h/{{operatorHours().toFixed(0)}}h
+  </span>
+  <mat-icon [class.work-hours-icon--sm]="size() === 'sm'">punch_clock</mat-icon>
+</div>

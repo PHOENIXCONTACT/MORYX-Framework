@@ -3,7 +3,6 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-require("../../types/constants");
 import { ActionType } from "../../common/redux/Types";
 import ModulesRestClient from "../api/ModulesRestClient";
 import Config from "../models/Config";

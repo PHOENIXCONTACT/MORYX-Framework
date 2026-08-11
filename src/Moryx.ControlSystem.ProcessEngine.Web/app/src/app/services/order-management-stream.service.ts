@@ -3,21 +3,37 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Injectable, NgZone } from '@angular/core';
-import { ApiConfiguration } from 'src/app/api/api-configuration';
-import { OperationAdvicedModel, OperationReportedModel, OperationStartedModel, OperationType } from 'src/app/models/operation-models';
-import { OperationModel } from '../api/models/operation-model';
+import { inject, Injectable } from '@angular/core';
+import { ApiConfiguration } from '@api/api-configuration';
+import { OperationAdvicedModel, OperationReportedModel, OperationStartedModel, OperationType } from '@app/models/operation-models';
+import { OperationModel } from '@api/models/operation-model';
+import { ReportModel } from '@api/models/report-model';
+import { AdviceModel } from '@api/models/advice-model';
+
+interface OperationTypeCallbackMap {
+  [OperationType.Start]: (operation: OperationModel, userId: string) => void;
+  [OperationType.Progress]: (operation: OperationModel) => void;
+  [OperationType.Update]: (operation: OperationModel) => void;
+  [OperationType.Completed]: (operation: OperationModel, report: ReportModel) => void;
+  [OperationType.Interrupted]: (operation: OperationModel, report: ReportModel) => void;
+  [OperationType.Report]: (operation: OperationModel, report: ReportModel) => void;
+  [OperationType.Advice]: (operation: OperationModel, advice: AdviceModel) => void;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class OrderManagementStreamService {
-  constructor(private config: ApiConfiguration, private zone: NgZone) { }
+  private config = inject(ApiConfiguration);
 
-  public stream(operationType: OperationType, callbackFunction: Function) {
-    const eventSource = new EventSource(this.config.rootUrl + '/api/moryx/orders/stream');
+  private eventSource?: EventSource;
 
-    eventSource.addEventListener(OperationType[OperationType.Start], event => {
+  public connect<T extends OperationType>(operationType: T, callbackFunction: OperationTypeCallbackMap[T]) {
+    this.eventSource = new EventSource(this.config.rootUrl + '/api/moryx/orders/stream');
+    // Cast needed because TypeScript cannot narrow the generic T inside the method body
+    const callback = callbackFunction as (...args: unknown[]) => void;
+
+    this.eventSource.addEventListener(OperationType[OperationType.Start], event => {
       const operationStartedModel = JSON.parse(event.data) as OperationStartedModel;
       if (
         !operationStartedModel.operationModel ||
@@ -27,19 +43,19 @@ export class OrderManagementStreamService {
         return;
       }
 
-      this.zone.run(() => callbackFunction(operationStartedModel.operationModel!, operationStartedModel.userId!));
+      callback(operationStartedModel.operationModel!, operationStartedModel.userId!);
     });
 
-    eventSource.addEventListener(OperationType[OperationType.Progress], event => {
+    this.eventSource.addEventListener(OperationType[OperationType.Progress], event => {
       const operationModel = JSON.parse(event.data) as OperationModel;
       if (!operationModel || operationType !== OperationType.Progress) {
         return;
       }
 
-      this.zone.run(() => callbackFunction(operationModel!));
+      callback(operationModel!);
     });
 
-    eventSource.addEventListener(OperationType[OperationType.Completed], event => {
+    this.eventSource.addEventListener(OperationType[OperationType.Completed], event => {
       const operationReportedModel = JSON.parse(event.data) as OperationReportedModel;
       if (
         !operationReportedModel.operationModel ||
@@ -49,10 +65,10 @@ export class OrderManagementStreamService {
         return;
       }
 
-      this.zone.run(() => callbackFunction(operationReportedModel.operationModel!, operationReportedModel.reportModel!));
+      callback(operationReportedModel.operationModel!, operationReportedModel.reportModel!);
     });
 
-    eventSource.addEventListener(OperationType[OperationType.Interrupted], event => {
+    this.eventSource.addEventListener(OperationType[OperationType.Interrupted], event => {
       const operationReportedModel = JSON.parse(event.data) as OperationReportedModel;
       if (
         !operationReportedModel.operationModel ||
@@ -62,10 +78,10 @@ export class OrderManagementStreamService {
         return;
       }
 
-      this.zone.run(() => callbackFunction(operationReportedModel.operationModel!, operationReportedModel.reportModel!));
+      callback(operationReportedModel.operationModel!, operationReportedModel.reportModel!);
     });
 
-    eventSource.addEventListener(OperationType[OperationType.Report], event => {
+    this.eventSource.addEventListener(OperationType[OperationType.Report], event => {
       const operationReportedModel = JSON.parse(event.data) as OperationReportedModel;
       if (
         !operationReportedModel.operationModel ||
@@ -75,10 +91,10 @@ export class OrderManagementStreamService {
         return;
       }
 
-      this.zone.run(() => callbackFunction(operationReportedModel.operationModel!, operationReportedModel.reportModel!));
+      callback(operationReportedModel.operationModel!, operationReportedModel.reportModel!);
     });
 
-    eventSource.addEventListener(OperationType[OperationType.Advice], event => {
+    this.eventSource.addEventListener(OperationType[OperationType.Advice], event => {
       const operationadvicedModel = JSON.parse(event.data) as OperationAdvicedModel;
       if (
         !operationadvicedModel.operationModel ||
@@ -88,17 +104,24 @@ export class OrderManagementStreamService {
         return;
       }
 
-      this.zone.run(() => callbackFunction(operationadvicedModel.operationModel!, operationadvicedModel.adviceModel!));
+      callback(operationadvicedModel.operationModel!, operationadvicedModel.adviceModel!);
     });
 
-    eventSource.addEventListener(OperationType[OperationType.Update], event => {
+    this.eventSource.addEventListener(OperationType[OperationType.Update], event => {
       const operationModel = JSON.parse(event.data) as OperationModel;
       if (!operationModel || operationType !== OperationType.Update) {
         return;
       }
 
-      this.zone.run(() => callbackFunction(operationModel!));
+      callback(operationModel!);
     });
+  }
+
+  disconnect() {
+    if (this.eventSource) {
+      this.eventSource.close();
+      this.eventSource = undefined;
+    }
   }
 }
 

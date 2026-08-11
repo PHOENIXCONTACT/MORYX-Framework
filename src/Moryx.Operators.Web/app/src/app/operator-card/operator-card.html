@@ -1,0 +1,13 @@
+<div class="card"
+     [class.assigned]="isAssigned()"
+     [class.unassigned]="!isAssigned()"
+     (click)="toggle()">
+  <span class="card-label">{{ operator().data.pseudonym ?? operator().data.identifier }}</span>
+  <mat-icon class="card-icon">
+    @if (isAssigned()) {
+      person
+    } @else {
+      person_off
+    }
+  </mat-icon>
+</div>

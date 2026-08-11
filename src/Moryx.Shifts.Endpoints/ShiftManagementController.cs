@@ -1,12 +1,13 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Operators;
 using Moryx.Runtime.Modules;
-using System.ComponentModel.DataAnnotations;
 using Moryx.Shifts.Endpoints.Models;
 using Moryx.Shifts.Endpoints.Properties;
 
@@ -261,18 +262,18 @@ public class ShiftManagementController : ControllerBase
         {
             var shift = _shiftManagement.GetShift(context.ShiftId);
             if (shift is null)
-                return UnprocessableEntity(string.Format(Strings.ShiftManagementController_IdNotFound, nameof(Shift), nameof(context.ShiftId)));
+                return UnprocessableEntity(string.Format(CultureInfo.CurrentCulture, Strings.ShiftManagementController_IdNotFound, nameof(Shift), nameof(context.ShiftId)));
 
             var resource = _resourceManagement.GetResource<IResource>(context.ResourceId);
             if (resource is null)
-                return UnprocessableEntity(string.Format(Strings.ShiftManagementController_IdNotFound, nameof(IResource), nameof(context.ResourceId)));
+                return UnprocessableEntity(string.Format(CultureInfo.CurrentCulture, Strings.ShiftManagementController_IdNotFound, nameof(IResource), nameof(context.ResourceId)));
 
             if (context.OperatorIdentifier is null)
-                return UnprocessableEntity(string.Format(Strings.ShiftManagementController_NotNull, nameof(context.OperatorIdentifier)));
+                return UnprocessableEntity(string.Format(CultureInfo.CurrentCulture, Strings.ShiftManagementController_NotNull, nameof(context.OperatorIdentifier)));
 
             var @operator = _operatorManagement.Operators.FirstOrDefault(x => x.Identifier == context.OperatorIdentifier);
             if (@operator is null)
-                return UnprocessableEntity(string.Format(Strings.ShiftManagementController_IdNotFound, nameof(Operator), nameof(context.OperatorIdentifier)));
+                return UnprocessableEntity(string.Format(CultureInfo.CurrentCulture, Strings.ShiftManagementController_IdNotFound, nameof(Operator), nameof(context.OperatorIdentifier)));
 
             var result = _shiftManagement.CreateShiftAssignement(context.FromModel(shift, resource, @operator)).ToModel();
             return Ok(result);
@@ -294,18 +295,18 @@ public class ShiftManagementController : ControllerBase
         {
             var shift = _shiftManagement.GetShift(shiftAssignement.ShiftId);
             if (shift is null)
-                return UnprocessableEntity(string.Format(Strings.ShiftManagementController_IdNotFound, nameof(Shift), nameof(shiftAssignement.ShiftId)));
+                return UnprocessableEntity(string.Format(CultureInfo.CurrentCulture, Strings.ShiftManagementController_IdNotFound, nameof(Shift), nameof(shiftAssignement.ShiftId)));
 
             var resource = _resourceManagement.GetResource<IResource>(shiftAssignement.ResourceId);
             if (resource is null)
-                return UnprocessableEntity(string.Format(Strings.ShiftManagementController_IdNotFound, nameof(IResource), nameof(shiftAssignement.ResourceId)));
+                return UnprocessableEntity(string.Format(CultureInfo.CurrentCulture, Strings.ShiftManagementController_IdNotFound, nameof(IResource), nameof(shiftAssignement.ResourceId)));
 
             if (shiftAssignement.OperatorIdentifier is null)
-                return UnprocessableEntity(string.Format(Strings.ShiftManagementController_NotNull, nameof(shiftAssignement.OperatorIdentifier)));
+                return UnprocessableEntity(string.Format(CultureInfo.CurrentCulture, Strings.ShiftManagementController_NotNull, nameof(shiftAssignement.OperatorIdentifier)));
 
             var @operator = _operatorManagement.Operators.FirstOrDefault(x => x.Identifier == shiftAssignement.OperatorIdentifier);
             if (@operator is null)
-                return UnprocessableEntity(string.Format(Strings.ShiftManagementController_IdNotFound, nameof(Operator), nameof(shiftAssignement.OperatorIdentifier)));
+                return UnprocessableEntity(string.Format(CultureInfo.CurrentCulture, Strings.ShiftManagementController_IdNotFound, nameof(Operator), nameof(shiftAssignement.OperatorIdentifier)));
 
             _shiftManagement.UpdateShiftAssignement(shiftAssignement.FromModel(shift, resource, @operator));
             return NoContent();

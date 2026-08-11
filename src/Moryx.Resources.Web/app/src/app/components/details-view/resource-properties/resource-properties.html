@@ -1,0 +1,15 @@
+@let entry = properties();
+
+@if (entry) {
+  <navigable-entry-editor
+    [entry]="entry"
+    (entryChange)="propertiesChanged($event)"
+    queryParam = "resourceProperties"
+    [disabled]="!isEditMode()"
+    >
+  </navigable-entry-editor>
+} @else {
+  <div class="properties-loading-screen">
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </div>
+}

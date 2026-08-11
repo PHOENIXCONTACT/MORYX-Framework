@@ -3,60 +3,54 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
+import { inject, Injectable, signal } from '@angular/core';
 import { ShiftTypeModel } from '../models/shift-type-model';
-import { ShiftCardModel } from '../models/shift-card-model';
 import { ShiftInstanceModel } from '../models/shift-instance-model';
-import { SHIFTS, SHIFT_INSTANCES, SHIFT_TYPES } from '../models/dummy-data';
-import { ShiftManagementService } from '../api/services';
-import { Time } from '@angular/common';
-import { ShiftModel } from '../api/models/shift-model';
+import { ShiftManagementService } from '@api/services';
+import { ShiftModel } from '@api/models/shift-model';
 import { formatDateDigits } from '../utils';
 import moment from 'moment';
-import { ShiftCreationContextModel } from '../api/models/shift-creation-context-model';
-import { ShiftTypeCreationContextModel } from '../api/models/shift-type-creation-context-model';
-import {
-  shiftToShitInstanceModel,
-  shiftTypeToShiftTypeModel,
-} from '../models/model-converter';
+import { ShiftCreationContextModel } from '@api/models/shift-creation-context-model';
+import { ShiftTypeCreationContextModel } from '@api/models/shift-type-creation-context-model';
+import { shiftToShitInstanceModel, shiftTypeToShiftTypeModel } from '../models/model-converter';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ShiftService {
-  public shiftTypes = new BehaviorSubject<ShiftTypeModel[]>([]);
-  public shiftInstances = new BehaviorSubject<ShiftInstanceModel[]>([]);
+  private shiftManagement = inject(ShiftManagementService);
+  private readonly _shiftTypes = signal<ShiftTypeModel[]>([]);
+  readonly shiftTypes = this._shiftTypes.asReadonly();
+  private readonly _shiftInstances = signal<ShiftInstanceModel[]>([]);
+  readonly shiftInstances = this._shiftInstances.asReadonly();
 
-  constructor(private shiftManagement: ShiftManagementService) {
+  constructor() {
     //fetch shift types
     this.shiftManagement.getShiftTypes()
-      .subscribe((shifts) => {
+      .then((shifts) => {
         const typeModels = shifts.map(shiftTypeToShiftTypeModel);
-        this.shiftTypes.next(typeModels);
+        this._shiftTypes.set(typeModels);
 
         // //fetch shift instances
         this.shiftManagement.getShifts()
-          .subscribe((instanceModels) => {
+          .then((instanceModels) => {
             const instances = instanceModels.map((x) =>
               shiftToShitInstanceModel(typeModels, x)
             );
-            this.shiftInstances.next(instances);
+            this._shiftInstances.set(instances);
           });
       });
   }
 
   public addToInstanceList(instance: ShiftInstanceModel) {
-    this.shiftInstances.next([...this.shiftInstances.value, instance]);
+    this._shiftInstances.update(current => [...current, instance]);
   }
 
   public addToTypeList(type: ShiftTypeModel) {
-    this.shiftTypes.next([...this.shiftTypes.value, type]);
+    this._shiftTypes.update(current => [...current, type]);
   }
 
-  public addType(
-    shift: ShiftTypeModel
-  ) {
+  public addType(shift: ShiftTypeModel) {
     //format the startTime & endTime to time format hh:mm:ss.ms
     const from = `${formatDateDigits(shift.startTime.hours)}:${formatDateDigits(
       shift.startTime.minutes
@@ -70,8 +64,8 @@ export class ShiftService {
       startTime: from,
       endTime: to,
     };
-    const typeAsync = firstValueFrom(this.shiftManagement.createShiftType({ body: data }));
-    return typeAsync.then(typeResult => shiftTypeToShiftTypeModel(typeResult));
+    return this.shiftManagement.createShiftType({ body: data })
+      .then(typeResult => shiftTypeToShiftTypeModel(typeResult));
   }
 
   public addInstance(shift: ShiftInstanceModel) {
@@ -80,11 +74,8 @@ export class ShiftService {
       typeId: shift.shiftType.id,
     };
 
-    const shiftInstanceAsync = firstValueFrom(this.shiftManagement.createShift({
-      body: data,
-    }));
-
-    return shiftInstanceAsync.then(instance => shiftToShitInstanceModel(this.shiftTypes.value, instance));
+    return this.shiftManagement.createShift({ body: data })
+      .then(instance => shiftToShitInstanceModel(this.shiftTypes(), instance));
   }
 
   updateInstance(id: number, shiftInstance: ShiftInstanceModel) {
@@ -98,9 +89,11 @@ export class ShiftService {
       .updateShift({
         body: update,
       })
-      .subscribe((result) => {
-        const found = this.shiftInstances.value.find((x) => x.id === id);
-        if (!found) return;
+      .then(() => {
+        const found = this.shiftInstances().find((x) => x.id === id);
+        if (!found) {
+          return;
+        }
         found.startDate = shiftInstance.startDate;
         found.endDate = shiftInstance.endDate;
       });

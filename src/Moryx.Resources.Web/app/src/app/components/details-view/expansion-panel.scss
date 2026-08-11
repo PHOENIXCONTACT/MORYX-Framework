@@ -1,0 +1,52 @@
+@use '@angular/material' as mat;
+
+:host {
+  display: flex;
+  width: 100%;
+  max-width: 60em;
+  height: 100%;
+  overflow: hidden;
+  justify-content: center;
+}
+
+.panel-accordion {
+  flex: 1 1;
+  justify-self: center;
+  padding: 8px;
+  overflow: auto;
+  @include mat.expansion-overrides((
+    container-background-color: var(--mat-sys-surface-container-lowest),
+  ));
+}
+
+.panel-header {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.panel-title {
+  display: block;
+  flex: none;
+  margin: 0;
+  width: 100%;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.panel-description {
+  display: block;
+  flex: none;
+  margin: 0;
+  width: 100%;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font: var(--mat-sys-body-medium);
+  color: var(--mat-sys-on-surface-variant);
+}

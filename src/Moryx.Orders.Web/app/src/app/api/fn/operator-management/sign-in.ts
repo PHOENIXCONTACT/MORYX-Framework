@@ -36,4 +36,3 @@ export function signIn(http: HttpClient, rootUrl: string, params?: SignIn$Params
 }
 
 signIn.PATH = '/api/moryx/operators/signin';
-

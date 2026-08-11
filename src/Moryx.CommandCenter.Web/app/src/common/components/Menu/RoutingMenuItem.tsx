@@ -7,7 +7,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import * as React from "react";
-import { Location, NavLink, useLocation } from "react-router-dom";
+import { Location, NavLink, useLocation } from "react-router";
 import MenuItemModel from "../../models/MenuItemModel";
 
 interface MenuItemProps {
@@ -47,7 +47,7 @@ function RoutingMenuItem(props: MenuItemProps) {
         <ListItemText
           primary={props.MenuItem.Name}
           secondary={props.MenuItem.SecondaryName}
-          secondaryTypographyProps={{fontSize: "x-small"}}>
+          slotProps={{ secondary: { style: { fontSize: "x-small" } } }}>
           {props.MenuItem.Content}
         </ListItemText>
       </ListItemButton>

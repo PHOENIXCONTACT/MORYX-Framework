@@ -3,69 +3,66 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subject, catchError, from, map, tap, throwError } from 'rxjs';
-import { Observable } from 'rxjs';
-import { WorkplanSessionModel } from '../api/models';
-import { WorkplanEditingService } from '../api/services';
+import { inject, Injectable, signal } from '@angular/core';
+import { WorkplanSessionModel } from '@api/models';
+import { WorkplanEditingService } from '@api/services';
 import { PrototypeToEntryConverter } from '@moryx/ngx-web-framework/entry-editor';
 import { BrowserStorageService } from './browser-storage.service';
-import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SessionsService {
-  private activeSession: BehaviorSubject<string | undefined>;
-  activeSession$: Observable<string | undefined>;
-  private availableSessions: BehaviorSubject<string[]>;
-  availableSessions$: Observable<string[]>;
-  private sessionUpdated = new Subject<WorkplanSessionModel>();
-  sessionUpdated$ = this.sessionUpdated.asObservable();
-
+  private workplanEditing = inject(WorkplanEditingService);
+  private browserStorage = inject(BrowserStorageService);
   private cachedSessionModels = new Map<string, WorkplanSessionModel>();
 
-  constructor(private workplanEditing: WorkplanEditingService, private browserStorage: BrowserStorageService) {
-    this.activeSession = new BehaviorSubject<string | undefined>(browserStorage.getActiveSession());
-    this.activeSession$ = this.activeSession.asObservable();
-    this.availableSessions = new BehaviorSubject<string[]>(
-      browserStorage.getStorageSessions().map(sso => sso.sessionToken)
-    );
-    this.availableSessions$ = this.availableSessions.asObservable();
-  }
+  private readonly _activeSession = signal<string | undefined>(this.browserStorage.getActiveSession());
+  readonly activeSession = this._activeSession.asReadonly();
+  private readonly _availableSessions = signal<string[]>(
+    this.browserStorage.getStorageSessions().map(sso => sso.sessionToken)
+  );
+  readonly availableSessions = this._availableSessions.asReadonly();
+  private readonly _sessionUpdated = signal<WorkplanSessionModel | undefined>(undefined);
+  readonly sessionUpdated = this._sessionUpdated.asReadonly();
 
-  getSession(sessionToken: string): Observable<WorkplanSessionModel> {
+  async getSession(sessionToken: string): Promise<WorkplanSessionModel> {
     const cachedModel = this.cachedSessionModels.get(sessionToken);
-    if (cachedModel) return from([cachedModel]);
+    if (cachedModel) {
+      return cachedModel;
+    }
 
-    return this.workplanEditing.openSession({ sessionId: sessionToken }).pipe(
-      tap(session => this.processOpenedSession(session)),
-      catchError((error: HttpErrorResponse): Observable<WorkplanSessionModel> => throwError(() => error))
-    );
+    const session = await this.workplanEditing.openSession({ sessionId: sessionToken });
+    this.processOpenedSession(session);
+    return session;
   }
 
-  getSessionForWorkplan(workplanId: number, duplicate: boolean = false): Observable<WorkplanSessionModel> {
+  async getSessionForWorkplan(workplanId: number, duplicate: boolean = false): Promise<WorkplanSessionModel> {
     let cachedModel = undefined;
-    for (let cs of this.cachedSessionModels.values()) if (cs.workplanId === workplanId) cachedModel = cs;
-    if (cachedModel) return from([cachedModel]);
+    for (const cs of this.cachedSessionModels.values()) {if (cs.workplanId === workplanId) {
+      cachedModel = cs;}
+    }
+    if (cachedModel) {
+      return cachedModel;
+    }
 
-    return this.workplanEditing.editWorkplan({ body: { workplanId: workplanId, duplicate: duplicate } }).pipe(
-      tap(session => this.processOpenedSession(session)),
-      catchError((error: HttpErrorResponse): Observable<WorkplanSessionModel> => throwError(() => error))
-    );
+    const session = await this.workplanEditing.editWorkplan({ body: { workplanId: workplanId, duplicate: duplicate } });
+    this.processOpenedSession(session);
+    return session;
   }
 
   private processOpenedSession(session: WorkplanSessionModel): void {
-    if (!this.availableSessions.value.any(token => token === session.sessionToken)) this.addNewSession(session);
-    else this.addSessionToCache(session);
+    if (!this.availableSessions().any(token => token === session.sessionToken)) {
+      this.addNewSession(session);
+    } else {
+      this.addSessionToCache(session);
+    }
   }
 
   private addNewSession(session: WorkplanSessionModel) {
     this.browserStorage.addSession(session);
 
-    const newAvailableSessions = this.availableSessions.value;
-    newAvailableSessions.push(session.sessionToken!);
-    this.availableSessions.next(newAvailableSessions);
+    this._availableSessions.update(sessions => [...sessions, session.sessionToken!]);
 
     this.addSessionToCache(session);
   }
@@ -74,64 +71,61 @@ export class SessionsService {
     this.cachedSessionModels.set(session.sessionToken!, session);
   }
 
-  saveSession(session: WorkplanSessionModel): Observable<WorkplanSessionModel> {
+  async saveSession(session: WorkplanSessionModel): Promise<WorkplanSessionModel> {
     session.nodes?.forEach(n => {
       if (n?.properties) {
         PrototypeToEntryConverter.convertToEntry(n?.properties);
       }
     });
 
-    return this.workplanEditing.saveSession({ sessionId: session.sessionToken!, body: session }).pipe(
-      tap(session => this.registerUpdatedSession(session)),
-      catchError((error: HttpErrorResponse): Observable<WorkplanSessionModel> => throwError(() => error))
-    );
+    const saved = await this.workplanEditing.saveSession({ sessionId: session.sessionToken!, body: session });
+    this.registerUpdatedSession(saved);
+    return saved;
   }
 
-  updateSession(session: WorkplanSessionModel): Observable<WorkplanSessionModel> {
-    return this.workplanEditing.updateSession({ sessionId: session.sessionToken!, body: session }).pipe(
-      tap(session => this.registerUpdatedSession(session)),
-      catchError((error: HttpErrorResponse): Observable<WorkplanSessionModel> => throwError(() => error))
-    );
+  async updateSession(session: WorkplanSessionModel): Promise<WorkplanSessionModel> {
+    const updated = await this.workplanEditing.updateSession({ sessionId: session.sessionToken!, body: session });
+    this.registerUpdatedSession(updated);
+    return updated;
   }
 
   registerUpdatedSession(session: WorkplanSessionModel) {
     this.cachedSessionModels.set(session.sessionToken!, session);
     this.browserStorage.updateSession(session);
-    this.sessionUpdated.next(session);
+    this._sessionUpdated.set(session);
   }
 
   async activateSession(sessionToken: string){
-    if (!this.availableSessions.value.any(t => t === sessionToken)) {
-      await this.getSession(sessionToken).toAsync();
+    if (!this.availableSessions().any(t => t === sessionToken)) {
+      await this.getSession(sessionToken);
     }
-          
+
     this.browserStorage.setActiveSession(sessionToken);
-    this.activeSession.next(sessionToken);
+    this._activeSession.set(sessionToken);
   }
 
   deactivateSession() {
     this.browserStorage.removeActiveSession();
-    this.activeSession.next(undefined);
+    this._activeSession.set(undefined);
   }
 
-  closeSession(sessionToken: string): Observable<void> {
-    return this.workplanEditing.closeSession({ sessionId: sessionToken }).pipe(
-      tap(() => this.processSessionClosed(sessionToken)),
-      catchError((error: HttpErrorResponse): Observable<void> => throwError(() => error))
-    );
+  async closeSession(sessionToken: string): Promise<void> {
+    await this.workplanEditing.closeSession({ sessionId: sessionToken });
+    this.processSessionClosed(sessionToken);
   }
 
   private processSessionClosed(sessionToken: string): void {
     this.browserStorage.closeSession(sessionToken);
     this.cachedSessionModels.delete(sessionToken);
 
-    const remainingSessions = this.availableSessions.value.filter(st => st != sessionToken);
-    this.availableSessions.next(remainingSessions);
+    this._availableSessions.update(sessions => sessions.filter(st => st != sessionToken));
 
-    if (this.activeSession.value != sessionToken) return;
+    if (this.activeSession() != sessionToken) {
+      return;
+    }
 
     this.browserStorage.removeActiveSession();
-    this.activeSession.next(undefined);
+    this._activeSession.set(undefined);
   }
 }
 

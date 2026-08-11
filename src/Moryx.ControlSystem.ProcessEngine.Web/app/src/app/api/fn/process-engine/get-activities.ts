@@ -35,4 +35,3 @@ export function getActivities(http: HttpClient, rootUrl: string, params: GetActi
 }
 
 getActivities.PATH = '/api/moryx/processes/running/{id}/activities';
-

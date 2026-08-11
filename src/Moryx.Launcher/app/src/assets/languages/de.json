@@ -1,0 +1,65 @@
+{
+  "MORE": {
+    "VIEWS": "Ansichten",
+    "ABOUT": "Über",
+    "FULLSCREEN_MODE": "Vollbild",
+    "OPERATOR_MODE": "Bediener",
+    "FULL_MODE": "Vollständig",
+    "TOP_REGION": "Oberes Panel",
+    "RIGHT_REGION": "Rechtes Panel",
+    "SPOTLIGHT": "Spotlight",
+    "THEME": "Darstellung",
+    "THEME_LIGHT": "Hell",
+    "THEME_DARK": "Dunkel",
+    "THEME_SYSTEM": "System"
+  },
+  "LANGUAGE": {
+    "LANGUAGE": "Sprache"
+  },
+  "SEARCH": {
+    "PLACEHOLDER": "Suchen...",
+    "NO_PROVIDER": "Kein Suchanbieter verfügbar",
+    "CLEAR": "Löschen",
+    "NO_RESULTS": "Keine Ergebnisse für \"{{query}}\"",
+    "DIALOG_LABEL": "Suche"
+  },
+  "FULLSCREEN_LAYOUT": {
+    "EXIT_FULLSCREEN": "Vollbild beenden",
+    "MODULES": "Module",
+    "MORE": "Mehr"
+  },
+  "NAVIGATION": {
+    "ALL": "Alle",
+    "MORE": "Mehr",
+    "NO_ITEMS": "Keine Einträge."
+  },
+  "AUTH": {
+    "LOG_IN": "Anmelden"
+  },
+  "ABOUT": {
+    "TITLE": "Über",
+    "APPLICATION": "Anwendung",
+    "HOST": "Host",
+    "SERVER_TIME": "Serverzeit",
+    "CLOSE": "Schließen",
+    "LABEL_TITLE": "Titel",
+    "LABEL_PRODUCT": "Produkt",
+    "LABEL_DESCRIPTION": "Beschreibung",
+    "LABEL_VERSION": "Version",
+    "LABEL_INFORMATIONAL_VERSION": "Informationsversion",
+    "LABEL_COMPANY": "Unternehmen",
+    "LABEL_CONFIGURATION": "Konfiguration",
+    "LABEL_COPYRIGHT": "Copyright",
+    "LABEL_TARGET_FRAMEWORK": "Zielframework",
+    "LABEL_MACHINE_NAME": "Gerätename",
+    "LABEL_OS": "Betriebssystem",
+    "LABEL_UPTIME": "Betriebszeit",
+    "SHORTCUTS": "Tastenkürzel"
+  },
+  "SHORTCUTS": {
+    "SPOTLIGHT": "Spotlight",
+    "FULL_MODE": "Vollständiges Layout",
+    "OPERATOR_MODE": "Bediener-Layout",
+    "FULLSCREEN_MODE": "Vollbild-Layout"
+  }
+}

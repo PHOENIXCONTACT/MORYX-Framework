@@ -14,4 +14,3 @@ export interface ProcessHolderGroupModelArrayApiResponse {
   succeeded?: boolean;
   timestamp?: string;
 }
-

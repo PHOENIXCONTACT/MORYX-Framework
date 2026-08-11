@@ -11,4 +11,3 @@ export interface AttendableResourceModel {
   name?: string | null;
   requiredSkills?: Array<string> | null;
 }
-

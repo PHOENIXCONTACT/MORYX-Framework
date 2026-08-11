@@ -1,0 +1,28 @@
+
+
+:host {
+  padding: 24px 24px 4px 24px;
+  background-color: var(--mat-sys-surface-container-lowest);
+}
+
+.form-field {
+  width: 100%;
+}
+
+.header-border {
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
+}
+
+.header-information-title {
+  margin-bottom: 0px;
+}
+
+.header-subtitle {
+  color: var(--mat-sys-outline);
+}
+
+@media (max-width: 400px) {
+  .form-container {
+    grid-template-columns: 1fr;
+  }
+}

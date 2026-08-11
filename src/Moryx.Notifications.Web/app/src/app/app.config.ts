@@ -3,68 +3,45 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import {
-  HttpClient,
-  provideHttpClient,
-  withInterceptorsFromDi,
-} from "@angular/common/http";
+import { provideHttpClient, withInterceptors } from "@angular/common/http";
 import { provideRouter } from "@angular/router";
-import { TranslateHttpLoader } from "@ngx-translate/http-loader";
-import { environment } from "src/environments/environment";
+import { environment } from "../environments/environment";
 import { routes } from "./app.routes";
-import { ApplicationConfig, importProvidersFrom } from "@angular/core";
-import { BrowserModule } from "@angular/platform-browser";
-import { MatButtonModule } from "@angular/material/button";
-import { MatCardModule } from "@angular/material/card";
-import { MatIconModule } from "@angular/material/icon";
-import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import { MatSidenavModule } from "@angular/material/sidenav";
-import { MatSnackBarModule } from "@angular/material/snack-bar";
-import { MatToolbarModule } from "@angular/material/toolbar";
-import { provideAnimations } from "@angular/platform-browser/animations";
-import {
-  ApiInterceptor,
-  API_INTERCEPTOR_PROVIDER,
-  MoryxSnackbarService,
-} from "@moryx/ngx-web-framework";
-import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
-import { ApiModule } from "./api/api.module";
-import { MarkdownModule } from "ngx-markdown";
+import { ApplicationConfig } from "@angular/core";
+import { provideMoryxMaterialDefaults } from "@moryx/ngx-web-framework/material";
+import { languageInterceptor, apiErrorInterceptor } from "@moryx/ngx-web-framework/interceptors";
 
-function httpTranslateLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(
-    http,
-    environment.assets + "assets/languages/"
-  );
-}
+import { provideTranslateService } from '@ngx-translate/core';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+import { provideApiConfiguration } from '@api/api-configuration';
+import { provideMarkdown } from "ngx-markdown";
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    importProvidersFrom([
-      MarkdownModule.forRoot(),
-      BrowserModule,
-      MatProgressSpinnerModule,
-      MatIconModule,
-      MatButtonModule,
-      MatCardModule,
-      MatToolbarModule,
-      MatSidenavModule,
-      MatSnackBarModule,
-      ApiModule.forRoot({ rootUrl: environment.rootUrl }),
-      TranslateModule.forRoot({
-        loader: {
-          provide: TranslateLoader,
-          useFactory: httpTranslateLoaderFactory,
-          deps: [HttpClient],
-        },
+
+    // Configure the API endpoint
+    provideApiConfiguration(environment.rootUrl),
+
+    // Setup HttpClient with functional interceptors
+    provideHttpClient(
+      withInterceptors([languageInterceptor, apiErrorInterceptor])
+    ),
+
+    // Configure translation loader
+    provideTranslateService({
+      loader: provideTranslateHttpLoader({
+        prefix: environment.assets + 'assets/languages/',
+        suffix: '.json'
       }),
-    ]),
-    ApiInterceptor,
-    API_INTERCEPTOR_PROVIDER,
-    MoryxSnackbarService,
-    provideHttpClient(withInterceptorsFromDi()),
-    provideAnimations(),
+      fallbackLang: 'en'
+    }),
+
+    // Configure markdown
+    provideMarkdown(),
+
+    // Provides angular material defaults
+    provideMoryxMaterialDefaults()
   ],
 };
 

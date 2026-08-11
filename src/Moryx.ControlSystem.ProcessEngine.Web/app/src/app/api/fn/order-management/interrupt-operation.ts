@@ -12,18 +12,17 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { ReportModel } from '../../models/report-model';
 
 export interface InterruptOperation$Params {
   guid: string;
-      body?: ReportModel
+  userIdentifier?: string;
 }
 
 export function interruptOperation(http: HttpClient, rootUrl: string, params: InterruptOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
   const rb = new RequestBuilder(rootUrl, interruptOperation.PATH, 'post');
   if (params) {
     rb.path('guid', params.guid, {});
-    rb.body(params.body, 'application/*+json');
+    rb.query('userIdentifier', params.userIdentifier, {});
   }
 
   return http.request(
@@ -37,4 +36,3 @@ export function interruptOperation(http: HttpClient, rootUrl: string, params: In
 }
 
 interruptOperation.PATH = '/api/moryx/orders/{guid}/interrupt';
-

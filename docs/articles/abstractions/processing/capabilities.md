@@ -38,7 +38,7 @@ public class MyCapabilities : CapabilitiesBase
 }
 ````
 
-In any case you can extend your capabilities with more properties to give the resource are more meaningful self description. Let's take the ScrewingCapabilities as an example. Maybe there is more than one station which has ScrewingCapabilities but each can handle a different screw head. Our Capability implementation could then look like:
+In any case you can extend your capabilities with more properties to give the resource a more meaningful self description. Let's take the ScrewingCapabilities as an example. Maybe there is more than one station which has ScrewingCapabilities but each can handle a different screw head. Our Capability implementation could then look like:
 
 ```` cs
 public enum ScrewHead

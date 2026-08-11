@@ -1,0 +1,12 @@
+@if (!isLoggedIn()) {
+  <button mat-button type="button" (click)="signIn()">
+    <mat-icon>account_circle</mat-icon>
+    {{ TranslationConstants.AUTH.LOG_IN | translate }}
+  </button>
+}
+@if (isLoggedIn()) {
+  <button mat-button type="button" (click)="signOut()">
+    <mat-icon>logout</mat-icon>
+    {{ userName() }}
+  </button>
+}

@@ -48,7 +48,7 @@ internal class ModuleDependencyManager : IModuleDependencyManager
     /// </summary>
     public IModuleDependency GetDependencyBranch(IServerModule plugin)
     {
-        return _cache.ContainsKey(plugin) ? _cache[plugin] : null;
+        return _cache.TryGetValue(plugin, out var pluginsDependencies) ? pluginsDependencies : null;
     }
 
     public IReadOnlyList<IServerModule> BuildDependencyTree(IReadOnlyList<IServerModule> allModules)
@@ -112,7 +112,7 @@ internal class ModuleDependencyManager : IModuleDependencyManager
         return satisfiedModules;
     }
 
-    private void FillArray(Type propType, ImportingProperty importingProperty, IServerModule module, IDictionary<object, IServerModule> facadeProviders)
+    private static void FillArray(Type propType, ImportingProperty importingProperty, IServerModule module, IDictionary<object, IServerModule> facadeProviders)
     {
         var elemType = propType.GetElementType();
         var facades = facadeProviders.Keys.Where(elemType.IsInstanceOfType).ToArray();
@@ -201,7 +201,7 @@ internal class ModuleDependencyManager : IModuleDependencyManager
         return converted;
     }
 
-    private IReadOnlyList<IServerModule> StartDependencies(IServerModule module, IDictionary<object, IServerModule> facadeProviders)
+    private static IReadOnlyList<IServerModule> StartDependencies(IServerModule module, IDictionary<object, IServerModule> facadeProviders)
     {
         // Get all dependencies of this plugin service
         var dependencyServices = new List<IServerModule>();
@@ -213,13 +213,13 @@ internal class ModuleDependencyManager : IModuleDependencyManager
             var propType = importingProperty.Property.PropertyType;
             if (propType.IsArray)
                 propType = propType.GetElementType();
-            var dependencyProviders = facadeProviders.Where(facadePair => propType.IsInstanceOfType(facadePair.Key));
+            var dependencyProviders = facadeProviders.Where(facadePair => propType.IsInstanceOfType(facadePair.Key)).ToArray();
             foreach (var dependencyProvider in dependencyProviders)
                 dependencyServices.Add(dependencyProvider.Value);
 
             // when there is no facade provider for the dependency,
             // add a missing dependency for the property type
-            if (dependencyProviders.Count() == 0)
+            if (dependencyProviders.Length == 0)
                 dependencyServices.Add(new MissingServerModule(propType, importingProperty.Attribute.IsOptional));
         }
 

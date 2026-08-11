@@ -7,7 +7,9 @@ import moment from 'moment';
 import { DayOfTheWeek } from "./calendar-state";
 
 export function dateToString(date: Date | undefined): string{
-    if(!date) return "N/A";
+    if(!date) {
+      return "N/A";
+    }
     return date.toDateString();
 }
 
@@ -29,11 +31,13 @@ export function isDayInInterval(
     startDate?: Date,
     endDate?: Date
   ): boolean {
-    if (!startDate || !endDate) return false;
-  
+    if (!startDate || !endDate) {
+      return false;
+    }
+
     const startMoment = moment(startDate);
     const endMoment = moment(endDate);
-  
+
     return startMoment.isSameOrBefore(date) && endMoment.isSameOrAfter(date)
   }
 
@@ -41,15 +45,15 @@ export function isDayInInterval(
   export function stringToDate(date?: string): Date {
     return moment(date).toDate();
  }
- 
- // take a number and return a the value in 00 to 24 string 
+
+ // take a number and return a the value in 00 to 24 string
 export function formatDateDigits(number: number): string {
     return number <= 9 ? '0' + number : ''+number;
   }
-  
+
 
   export function isSameDate(dateA: Date,dateB: Date){
-    var flag = moment(dateA).isSame(moment(dateB),'date');
+    const flag = moment(dateA).isSame(moment(dateB), 'date');
     return flag;
   }
 

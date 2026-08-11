@@ -3,13 +3,13 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Injectable } from '@angular/core';
-import { MoryxSnackbarService } from '@moryx/ngx-web-framework';
-import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { ReferenceValue, ResourceModel, ResourceTypeModel } from '../api/models';
 import { ResourceModificationService } from '../api/services';
-import { TranslationConstants } from '../extensions/translation-constants.extensions';
+import { TranslationConstants } from '../extensions/translation-constants';
+
 
 /**
  * This service handles the set of existing resources and resource types
@@ -19,33 +19,29 @@ import { TranslationConstants } from '../extensions/translation-constants.extens
   providedIn: 'root',
 })
 export class CacheResourceService {
+  private resourceModificationService = inject(ResourceModificationService);
+  private snackbarService = inject(SnackbarService);
+
   TranslationConstants = TranslationConstants;
   private readonly ChildReferenceName = 'Children';
 
   rootType: ResourceTypeModel | undefined;
   flatTypes: ResourceTypeModel[] | undefined;
-  resources: BehaviorSubject<ResourceModel[] | undefined> = new BehaviorSubject<ResourceModel[] | undefined>(undefined);
-  flatResources: BehaviorSubject<ResourceModel[] | undefined> = new BehaviorSubject<ResourceModel[] | undefined>(
-    undefined
-  );
-
-  constructor(
-    private resourceModification: ResourceModificationService,
-    public translate: TranslateService,
-    private moryxSnackbar: MoryxSnackbarService
-  ) {
-    this.resources.subscribe(resources => this.pushFlattenedResources(resources));
-  }
-
-  private pushFlattenedResources(resources: ResourceModel[] | undefined) {
-    var flattendResources = [] as ResourceModel[];
-    if (resources) resources.forEach(r => this.collectflattenedResources(r, flattendResources));
-
-    this.flatResources.next(flattendResources);
-  }
+  private readonly _resources = signal<ResourceModel[] | undefined>(undefined);
+  readonly resources = this._resources.asReadonly();
+  flatResources = computed<ResourceModel[]>(() => {
+    const resources = this.resources();
+    const flattened: ResourceModel[] = [];
+    if (resources) {
+      resources.forEach(r => this.collectflattenedResources(r, flattened));
+    }
+    return flattened;
+  });
 
   private collectflattenedResources(root: ResourceModel, flattendResources: ResourceModel[]) {
-    if (flattendResources?.find(r => r.id === root.id)) return;
+    if (flattendResources?.find(r => r.id === root.id)) {
+      return;
+    }
     flattendResources.push(root);
     root.references
       ?.find(ref => ref.name === this.ChildReferenceName)
@@ -53,43 +49,43 @@ export class CacheResourceService {
   }
 
   removeResource(resource: ResourceModel) {
-    var newResources = this.resources.getValue() ?? [];
+    const newResources = this.resources() ?? [];
 
     //Handle children's references
-    var childReferences = resource.references?.find(r => r.name === this.ChildReferenceName)?.targets;
+    const childReferences = resource.references?.find(r => r.name === this.ChildReferenceName)?.targets;
     childReferences?.forEach(c => newResources.push(c));
 
     //Handle parent's reference
-    var parent = this.flatResources
-      .getValue()
+    const parent = this.flatResources()
       ?.find(p =>
         p.references?.find(r => r.name === this.ChildReferenceName)?.targets?.find(r => r.id === resource.id)
       );
     if (parent) {
       this.removeChildFromParent(parent, resource);
-      this.resources.next(newResources);
+      this._resources.set(newResources);
     } else {
-      this.resources.next(newResources.filter(r => r.id != resource.id));
+      this._resources.set(newResources.filter(r => r.id != resource.id));
     }
   }
 
   private removeChildFromParent(parent: ResourceModel, child: ResourceModel) {
-    var childrenReferences = parent?.references?.find(ref => ref.name === this.ChildReferenceName);
-    if (childrenReferences) childrenReferences.targets = childrenReferences.targets?.filter(t => t.id != child.id);
+    const childrenReferences = parent?.references?.find(ref => ref.name === this.ChildReferenceName);
+    if (childrenReferences) {
+      childrenReferences.targets = childrenReferences.targets?.filter(t => t.id != child.id);
+    }
   }
 
   async loadResources() {
-    await this.resourceModification
+    await this.resourceModificationService
       .getTypeTree()
-      .toAsync()
       .then(rootType => {
         this.rootType = rootType;
         this.flatTypes = [];
         this.collectflattenedTypes(rootType, this.flatTypes);
       })
-      .catch(async err => await this.moryxSnackbar.handleError(err));
+      .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err));
 
-    await this.resourceModification
+    await this.resourceModificationService
       .getResources({
         body: {
           referenceCondition: {
@@ -97,16 +93,17 @@ export class CacheResourceService {
             valueConstraint: ReferenceValue.NullOrEmpty,
           },
           referenceRecursion: true,
-          includedReferences: [{ name: this.ChildReferenceName }],
+          includedReferences: [{name: this.ChildReferenceName}],
         },
       })
-      .toAsync()
-      .then(resources => this.resources.next(resources))
-      .catch(async err => await this.moryxSnackbar.handleError(err));
+      .then(resources => this._resources.set(resources))
+      .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err));
   }
 
   private collectflattenedTypes(root: ResourceTypeModel, flattendTypes: ResourceTypeModel[]) {
-    if (flattendTypes?.find(t => t.name === root.name)) return;
+    if (flattendTypes?.find(t => t.name === root.name)) {
+      return;
+    }
     flattendTypes.push(root);
     root.derivedTypes?.forEach(t => this.collectflattenedTypes(t, flattendTypes));
   }

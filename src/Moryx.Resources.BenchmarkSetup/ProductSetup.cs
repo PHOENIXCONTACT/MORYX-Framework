@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Globalization;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Model;
 using Moryx.Model.Attributes;
@@ -99,7 +100,7 @@ public class ProductSetup : IModelSetup
             };
             if (i < stepCount - 1)
             {
-                connector = WorkplanInstance.CreateConnector(i.ToString("D2"));
+                connector = WorkplanInstance.CreateConnector(i.ToString("D2", CultureInfo.InvariantCulture));
                 workplan.Add(connector);
             }
             else

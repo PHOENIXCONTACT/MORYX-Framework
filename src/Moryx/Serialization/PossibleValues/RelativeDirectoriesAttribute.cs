@@ -54,7 +54,7 @@ public class RelativeDirectoriesAttribute : PossibleValuesAttribute
     /// <inheritdoc />
     public override bool UpdateFromPredecessor => false;
 
-    private IEnumerable<string> GetSubDirectories(string path)
+    private static IEnumerable<string> GetSubDirectories(string path)
     {
         var dirs = new List<string>();
         foreach (var directory in Directory.GetDirectories(path))

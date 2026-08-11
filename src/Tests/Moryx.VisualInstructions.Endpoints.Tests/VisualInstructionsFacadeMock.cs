@@ -43,9 +43,8 @@ internal class VisualInstructionsFacadeMock : IVisualInstructions
     }
 
     public IReadOnlyList<ActiveInstruction> GetInstructions(string identifier)
-        => _instructions.ContainsKey(identifier)
-            ? _instructions[identifier]
-            : Array.Empty<ActiveInstruction>();
+        => _instructions.TryGetValue(identifier, out var activeInstruction)
+            ? activeInstruction : [];
 
     public IReadOnlyList<string> GetInstructors()
     {

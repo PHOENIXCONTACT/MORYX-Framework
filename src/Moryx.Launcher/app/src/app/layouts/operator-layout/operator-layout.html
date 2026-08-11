@@ -1,0 +1,23 @@
+<div class="main-area">
+  @if (showTopRegion()) {
+    <div class="top-region">
+      <slot name="topRegion" (slotchange)="onTopRegionSlotChange($event)"></slot>
+    </div>
+  } @else {
+    <slot name="topRegion" (slotchange)="onTopRegionSlotChange($event)" hidden></slot>
+  }
+
+  <div class="content">
+    <slot name="app"></slot>
+  </div>
+
+  <app-horizontal-module-nav></app-horizontal-module-nav>
+</div>
+
+@if (showRightRegion()) {
+  <aside class="right-region">
+    <slot name="rightRegion" (slotchange)="onRightRegionSlotChange($event)"></slot>
+  </aside>
+} @else {
+  <slot name="rightRegion" (slotchange)="onRightRegionSlotChange($event)" hidden></slot>
+}

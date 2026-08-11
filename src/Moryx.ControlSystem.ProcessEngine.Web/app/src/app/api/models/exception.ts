@@ -19,4 +19,3 @@ export interface Exception {
   stackTrace?: string | null;
   targetSite?: MethodBase;
 }
-

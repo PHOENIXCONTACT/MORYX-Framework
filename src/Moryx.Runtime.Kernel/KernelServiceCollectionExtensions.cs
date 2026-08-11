@@ -4,6 +4,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Moryx.Configuration;
 using Moryx.Container;
+using Moryx.Runtime.Kernel.Configuration;
 using Moryx.Runtime.Modules;
 using Moryx.Threading;
 using Moryx.Tools;
@@ -20,10 +21,27 @@ public static class KernelServiceCollectionExtensions
         /// <summary>
         /// Link MORYX kernel to the service collection
         /// </summary>
-        public void AddMoryxKernel()
+        /// <param name="configurationIntegration">opt-in to inject asp.net core configuration into module configs</param>
+        public void AddMoryxKernel(bool configurationIntegration = false)
         {
             // Register config manager
-            serviceCollection.AddSingleton<ConfigManager>();
+            if (configurationIntegration)
+            {
+                serviceCollection.AddSingleton<ConfigManager>(serviceProvider =>
+                {
+                    var manager = ActivatorUtilities.CreateInstance<ConfigManager>(serviceProvider);
+                    return manager.ConfigureValueProviders(original => [
+                        manager._sharedProvider,
+                        ActivatorUtilities.CreateInstance<MicrosoftExtensionsConfigProvider>(serviceProvider),
+                        new ActivatorValueProvider(),
+                        new DefaultValueAttributeProvider(),
+                    ]);
+                });
+            }
+            else
+            {
+                serviceCollection.AddSingleton<ConfigManager>();
+            }
             serviceCollection.AddSingleton<IConfigManager>(x => x.GetRequiredService<ConfigManager>());
 
             // Register module manager
@@ -89,7 +107,10 @@ public static class KernelServiceCollectionExtensions
         // Load config manager
         var configManager = serviceProvider.GetRequiredService<ConfigManager>();
         if (!Directory.Exists(configDirectory))
+        {
             Directory.CreateDirectory(configDirectory);
+        }
+
         configManager.ConfigDirectory = configDirectory;
         return configManager;
     }

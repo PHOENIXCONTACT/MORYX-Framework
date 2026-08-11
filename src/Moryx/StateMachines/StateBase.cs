@@ -66,9 +66,13 @@ public abstract class StateBase
     /// <summary>
     /// Creates a new InvalidOperationException and logs it to the context
     /// </summary>
-    private Exception CreateAndLogInvalidStateException(string methodName)
+    private InvalidOperationException CreateAndLogInvalidStateException(string methodName)
     {
-        var error = $"The state with the name '{GetType().Name}' cannot handle the method '{methodName}'.";
+        var contextInfo = Context is IPersistentObject persistentObject
+            ? $"{Context.GetType().Name} (Id = {persistentObject.Id})"
+            : Context.GetType().Name;
+
+        var error = $"The state '{GetType().Name}' cannot handle the method '{methodName}'. Responsible context: '{contextInfo}'.";
 
         // ReSharper disable once SuspiciousTypeConversion.Global
         (Context as ILoggingComponent)?.Logger.Log(LogLevel.Error, error);

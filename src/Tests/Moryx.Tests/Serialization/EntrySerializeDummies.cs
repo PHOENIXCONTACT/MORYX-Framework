@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Moryx.Serialization;
 
@@ -38,7 +39,9 @@ public class EntrySerialize_NotClassMixed
     public string AlwaysProperty1 { get; set; } = "123456";
 
     [EntrySerialize(EntrySerializeMode.Never)]
+#pragma warning disable IDE0051 // Remove unused private members
     private string NeverProperty1 { get; set; } = "987654";
+#pragma warning restore IDE0051 // Remove unused private members
 
     public bool NullProperty1 { get; set; } = true;
 
@@ -48,7 +51,11 @@ public class EntrySerialize_NotClassMixed
     [EntrySerialize(EntrySerializeMode.Never)]
     public string NeverMethod1() => "1234";
 
+#pragma warning disable CA1822 // Mark members as static
+#pragma warning disable IDE0051 // Remove unused private members
     private bool NullMethod1() => true;
+#pragma warning restore IDE0051 // Remove unused private members
+#pragma warning restore CA1822 // Mark members as static
 }
 
 // ReSharper disable once InconsistentNaming
@@ -115,7 +122,7 @@ public class EntrySerialize_Inherited : EntrySerialize_InheritedBase
 {
     public string NullProperty2 { get; set; } = "789456";
 
-    public bool NullProperty3 { get; set; } = false;
+    public bool NullProperty3 { get; set; }
 }
 
 [EntrySerialize]
@@ -124,7 +131,7 @@ public class AlwaysClass_Inherited : EntrySerialize_InheritedBase
     [EntrySerialize]
     public string NullProperty2 { get; set; } = "789456";
 
-    public bool NullProperty3 { get; set; } = false;
+    public bool NullProperty3 { get; set; }
 }
 
 public class EntrySerialize_Methods : EntrySerialize_InheritedBase
@@ -142,7 +149,9 @@ public class EntrySerialize_Methods : EntrySerialize_InheritedBase
     }
 
     [EntrySerialize]
+#pragma warning disable CA1822 // Mark members as static
     internal void InvocableInternal()
+#pragma warning restore CA1822 // Mark members as static
     {
 
     }
@@ -154,7 +163,11 @@ public class EntrySerialize_Methods : EntrySerialize_InheritedBase
     }
 
     [EntrySerialize]
+#pragma warning disable CA1822 // Mark members as static
+#pragma warning disable IDE0051 // Remove unused private members
     private void NonInvocablePrivate()
+#pragma warning restore IDE0051 // Remove unused private members
+#pragma warning restore CA1822 // Mark members as static
     {
 
     }
@@ -169,5 +182,11 @@ public class EntrySerialize_Methods : EntrySerialize_InheritedBase
     public Task<string> AsyncWithStringResult()
     {
         return Task.FromResult("Test");
+    }
+
+    [EntrySerialize]
+    public async Task<string> MethodWithRequiredAndOptionalParameters(string plainParameter, [Required] string requiredParameter, string nullableString = null, string defaultValueString = "Some test string")
+    {
+        return "Done";
     }
 }

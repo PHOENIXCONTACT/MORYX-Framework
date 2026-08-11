@@ -34,4 +34,3 @@ export function resetPosition(http: HttpClient, rootUrl: string, params: ResetPo
 }
 
 resetPosition.PATH = '/api/moryx/processes/holders/positions/{id}/reset';
-

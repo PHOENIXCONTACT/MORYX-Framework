@@ -13,4 +13,3 @@ export interface IOperatorAssignable {
   name?: string | null;
   requiredSkills?: ICapabilities;
 }
-

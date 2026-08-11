@@ -115,7 +115,11 @@ internal abstract class TestsBase
     /// <summary>
     /// Verifies whether the sets of assigned resources contain the same resources
     /// </summary>
-    private static bool ObjectsAreEqual(IReadOnlyList<IOperatorAssignable> assignedResources1, IReadOnlyList<IOperatorAssignable> assignedResources2)
+    /// <remarks>
+    /// This does not verify that the resources are equal. It only validates that all resources in assignedResources1 are in assignedResources2.
+    /// That means assignedResources1 can be a subset of assignedResources2 including the empty set!
+    /// </remarks>
+    protected static bool ObjectsAreEqual(IReadOnlyList<IOperatorAssignable> assignedResources1, IReadOnlyList<IOperatorAssignable> assignedResources2)
         => assignedResources1.All(r1 => assignedResources2.Any(r2 => r1.Id == r2.Id));
 
     #endregion

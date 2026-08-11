@@ -36,4 +36,3 @@ export function getTypes(http: HttpClient, rootUrl: string, params?: GetTypes$Pa
 }
 
 getTypes.PATH = '/api/moryx/products/types/query';
-

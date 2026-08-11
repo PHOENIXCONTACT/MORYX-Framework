@@ -3,12 +3,10 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { AttendableResourceModel } from "../api/models/attendable-resource-model";
-import { DayOfTheWeek } from "./assignment-card-model";
+import { AttendableResourceModel } from "@api/models/attendable-resource-model";
 import { CalendarDate, CalendarState } from "./calendar-state";
 import { OperatorModel } from "./operator-model";
 import { ShiftCardModel } from "./shift-card-model";
-import { ShiftInstanceModel } from "./shift-instance-model";
 
 export default interface AssignmentData{
     operator?: OperatorModel;

@@ -80,7 +80,7 @@ public abstract class BaseTest
         _resourceManagementMock.Setup(rm =>
                 rm.GetResource<IMachineLocation>(It.Is<Func<IMachineLocation, bool>>(f => f(_assemblyCellLocation))))
             .Returns(_assemblyCellLocation);
-        _resourceManagementMock.Setup(rm => rm.ReadUnsafe(_assemblyCellLocation.Id, It.IsAny<Func<Resource, MachineLocation>>()))
+        _resourceManagementMock.Setup(rm => rm.ReadUnsafe(_assemblyCellLocation.Id, It.IsAny<Func<Resource, IResource>>()))
             .Returns(_assemblyCellLocation);
         //_solderingCell location
         _solderingCellLocation = _graph.Instantiate<MachineLocation>();
@@ -91,7 +91,7 @@ public abstract class BaseTest
         _resourceManagementMock.Setup(rm =>
                 rm.GetResource<IMachineLocation>(It.Is<Func<IMachineLocation, bool>>(f => f(_solderingCellLocation))))
             .Returns(_solderingCellLocation);
-        _resourceManagementMock.Setup(rm => rm.ReadUnsafe(_solderingCellLocation.Id, It.IsAny<Func<Resource, MachineLocation>>()))
+        _resourceManagementMock.Setup(rm => rm.ReadUnsafe(_solderingCellLocation.Id, It.IsAny<Func<Resource, IResource>>()))
             .Returns(_solderingCellLocation);
 
         // resource management cells
@@ -101,15 +101,15 @@ public abstract class BaseTest
             .Returns(GetLocations());
         _resourceManagementMock.Setup(rm => rm.GetResources(It.IsAny<Func<IMachineLocation, bool>>()))
             .Returns(GetLocations());
-        _resourceManagementMock.Setup(rm => rm.ReadUnsafe(_assemblyCellId, It.IsAny<Func<Resource, Resource>>()))
+        _resourceManagementMock.Setup(rm => rm.ReadUnsafe(_assemblyCellId, It.IsAny<Func<Resource, IResource>>()))
             .Returns(_assemblyCell);
         _resourceManagementMock.Setup(rm => rm.ReadUnsafe(_assemblyCellId, It.IsAny<Func<Resource, ResourceChangedModel>>()))
             .Returns(converter.ToResourceChangedModel(_assemblyCell));
-        _resourceManagementMock.Setup(rm => rm.ReadUnsafe(_solderingCellId, It.IsAny<Func<Resource, Resource>>()))
+        _resourceManagementMock.Setup(rm => rm.ReadUnsafe(_solderingCellId, It.IsAny<Func<Resource, IResource>>()))
             .Returns(_solderingCell);
         _resourceManagementMock.Setup(rm => rm.ReadUnsafe(_solderingCellId, It.IsAny<Func<Resource, ResourceChangedModel>>()))
             .Returns(converter.ToResourceChangedModel(_solderingCell));
-        _resourceManagementMock.Setup(rm => rm.ReadUnsafe(_manufactoringFactoryId, It.IsAny<Func<Resource, Resource>>()))
+        _resourceManagementMock.Setup(rm => rm.ReadUnsafe(_manufactoringFactoryId, It.IsAny<Func<Resource, IResource>>()))
             .Returns(_manufactoringFactory);
         _resourceManagementMock.Setup(rm => rm.ReadUnsafe(_manufactoringFactoryId, It.IsAny<Func<Resource, ResourceChangedModel>>()))
             .Returns(converter.ToResourceChangedModel(_manufactoringFactory));
@@ -117,7 +117,7 @@ public abstract class BaseTest
         _processFacadeMock.Setup(pm => pm.GetRunningProcesses())
             .Returns([]);
         _processFacadeMock.Setup(pm => pm.Targets(It.IsAny<Activity>()))
-            .Returns<Activity>(a => _activityTargets.ContainsKey(a) ? _activityTargets[a] : []);
+            .Returns<Activity>(a => _activityTargets.TryGetValue(a, out var activityTarget) ? activityTarget : []);
 
         //orders
         _orderFacadeMock.Setup(o => o.GetOperations(It.IsAny<Func<Operation, bool>>()))

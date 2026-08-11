@@ -1,0 +1,31 @@
+.order-wrapper {
+  padding: 4px 8px;
+}
+
+.order-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 8px;
+  background: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  border-radius: 4px;
+  border: 1px solid var(--mat-sys-outline-variant);
+
+  .order-wrapper:hover & {
+    border-color: var(--mat-sys-primary);
+  }
+}
+
+.order-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.order-hours {
+  font-weight: 500;
+  margin-top: 8px;
+}

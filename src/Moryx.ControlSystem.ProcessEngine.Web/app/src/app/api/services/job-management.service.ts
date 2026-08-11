@@ -8,8 +8,7 @@
 
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 
 import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
@@ -42,9 +41,9 @@ export class JobManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getJob$Response(params: GetJob$Params, context?: HttpContext): Observable<StrictHttpResponse<JobModel>> {
+  getJob$Response(params: GetJob$Params, context?: HttpContext): Promise<StrictHttpResponse<JobModel>> {
     const obs = getJob(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -53,11 +52,9 @@ export class JobManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getJob(params: GetJob$Params, context?: HttpContext): Observable<JobModel> {
+  getJob(params: GetJob$Params, context?: HttpContext): Promise<JobModel> {
     const resp = this.getJob$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<JobModel>): JobModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<JobModel>): JobModel => r.body);
   }
 
   /** Path part for operation `getAll()` */
@@ -69,9 +66,9 @@ export class JobManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getAll$Response(params?: GetAll$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<JobModel>>> {
+  getAll$Response(params?: GetAll$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<JobModel>>> {
     const obs = getAll(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -80,11 +77,9 @@ export class JobManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getAll(params?: GetAll$Params, context?: HttpContext): Observable<Array<JobModel>> {
+  getAll(params?: GetAll$Params, context?: HttpContext): Promise<Array<JobModel>> {
     const resp = this.getAll$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<JobModel>>): Array<JobModel> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<JobModel>>): Array<JobModel> => r.body);
   }
 
   /** Path part for operation `complete()` */
@@ -96,9 +91,9 @@ export class JobManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  complete$Response(params: Complete$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  complete$Response(params: Complete$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = complete(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -107,11 +102,9 @@ export class JobManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  complete(params: Complete$Params, context?: HttpContext): Observable<void> {
+  complete(params: Complete$Params, context?: HttpContext): Promise<void> {
     const resp = this.complete$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
   /** Path part for operation `abort()` */
@@ -123,9 +116,9 @@ export class JobManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  abort$Response(params: Abort$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  abort$Response(params: Abort$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = abort(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -134,11 +127,9 @@ export class JobManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  abort(params: Abort$Params, context?: HttpContext): Observable<void> {
+  abort(params: Abort$Params, context?: HttpContext): Promise<void> {
     const resp = this.abort$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
   /** Path part for operation `progressStream()` */
@@ -150,9 +141,9 @@ export class JobManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  progressStream$Response(params?: ProgressStream$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  progressStream$Response(params?: ProgressStream$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = progressStream(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -161,12 +152,9 @@ export class JobManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  progressStream(params?: ProgressStream$Params, context?: HttpContext): Observable<void> {
+  progressStream(params?: ProgressStream$Params, context?: HttpContext): Promise<void> {
     const resp = this.progressStream$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
 }
-

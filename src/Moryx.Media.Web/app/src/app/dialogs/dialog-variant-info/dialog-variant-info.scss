@@ -1,0 +1,16 @@
+.info-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 6px 24px;
+  margin: 0;
+
+  dt {
+    font-weight: 500;
+    min-width: 100px;
+  }
+
+  dd {
+    margin: 0;
+    min-width: 270px;
+  }
+}

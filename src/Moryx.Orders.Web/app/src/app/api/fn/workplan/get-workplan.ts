@@ -35,4 +35,3 @@ export function getWorkplan(http: HttpClient, rootUrl: string, params: GetWorkpl
 }
 
 getWorkplan.PATH = '/api/moryx/workplans/{id}';
-

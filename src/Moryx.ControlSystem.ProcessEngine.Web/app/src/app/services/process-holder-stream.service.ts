@@ -3,34 +3,33 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Injectable, NgZone } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { ProcessHolderGroupModel } from '../api/models/process-holder-group-model';
-import { ProcessEngineService } from '../api/services';
+import { inject, Injectable, signal } from '@angular/core';
+import { ProcessHolderGroupModel } from '@api/models/process-holder-group-model';
+import { ProcessEngineService } from '@api/services';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProcessHolderStreamService {
+  private processEngineService = inject(ProcessEngineService);
+  private eventSource?: EventSource;
 
-  $updatedWpc = new BehaviorSubject<ProcessHolderGroupModel | undefined>(undefined);
+  private readonly _updatedProcessHolderGroups = signal<ProcessHolderGroupModel | undefined>(undefined);
+  readonly updatedProcessHolderGroups = this._updatedProcessHolderGroups.asReadonly();
 
-  constructor(private ngZone: NgZone,
-    private processService: ProcessEngineService
-  ) {
-    this.publishUpdates();
-  }
-
-  publishUpdates() {
-    const eventSource = new EventSource(this.processService.rootUrl + ProcessEngineService.GroupStreamPath);
-    eventSource.onmessage = event => {
-      const wpcGroup = JSON.parse(event.data);
-      this.ngZone.run(() => {
-        console.log('update received :', wpcGroup);
-        this.$updatedWpc.next(wpcGroup)
-      });
+  connect() {
+    this.eventSource = new EventSource(this.processEngineService.rootUrl + ProcessEngineService.GroupStreamPath);
+    this.eventSource.onmessage = event => {
+      const holderGroup = JSON.parse(event.data);
+      console.log('update received :', holderGroup);
+      this._updatedProcessHolderGroups.set(holderGroup);
     };
   }
 
+  disconnect() {
+    if (this.eventSource) {
+      this.eventSource.close();
+      this.eventSource = undefined;
+    }
+  }
 }
-

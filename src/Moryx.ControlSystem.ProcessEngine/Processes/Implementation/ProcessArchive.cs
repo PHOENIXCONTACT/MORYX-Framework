@@ -62,25 +62,58 @@ internal class ProcessArchive : IProcessArchive
         var processRepo = uow.GetRepository<IProcessEntityRepository>();
 
         var query = (from processEntity in processRepo.Linq
-            where processEntity.ReferenceId == productInstance.Id
-            select new { processEntity.Id, processEntity.Job.RecipeId }).ToList(); // TODO use ToListAsync and fix tests
+        where processEntity.ReferenceId == productInstance.Id
+        select new { processEntity.Id, processEntity.Job.RecipeId }).ToList(); // TODO use ToListAsync and fix tests
 
         var processes = new List<Process>();
         foreach (var match in query)
         {
-            var recipe = (ProductionRecipe)await ProductManagement.LoadRecipeAsync(match.RecipeId);
-            var process = (ProductionProcess)recipe.CreateProcess();
-            process.Id = match.Id;
-            process.ProductInstance = productInstance;
-            var context = new ProcessWorkplanContext(process);
-            var taskMap = recipe.Workplan.Steps
-                .Select(step => step.CreateInstance(context))
-                .OfType<ITask>().ToDictionary(task => task.Id, task => task);
-            ProcessStorage.FillActivities(uow, process, taskMap);
+            var process = await CreateAndFillProcess(uow, match.Id, match.RecipeId, productInstance, cancellationToken);
             processes.Add(process);
         }
 
         return processes;
+    }
+
+    public async Task<Process> GetProcess(long id, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        using var uow = UnitOfWorkFactory.Create();
+        var repo = uow.GetRepository<IProcessEntityRepository>();
+
+        var query = from processEntity in repo.Linq
+                    where processEntity.Id == id
+                    select new { processEntity.Id, processEntity.Job.RecipeId, processEntity.ReferenceId };
+
+        var entity = query.FirstOrDefault();
+
+        if (entity == null)
+        {
+            return null;
+        }
+
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var productInstance = await ProductManagement.LoadInstanceAsync(entity.ReferenceId, cancellationToken);
+        var process = await CreateAndFillProcess(uow, id, entity.RecipeId, productInstance, cancellationToken);
+
+        return process;
+    }
+
+    private async Task<ProductionProcess> CreateAndFillProcess(IUnitOfWork uow, long id, long recipeId, ProductInstance instance, CancellationToken cancellationToken)
+    {
+        var recipe = (ProductionRecipe)await ProductManagement.LoadRecipeAsync(recipeId, cancellationToken);
+        var process = (ProductionProcess)recipe.CreateProcess();
+        process.Id = id;
+        process.ProductInstance = instance;
+        var context = new ProcessWorkplanContext(process);
+        var taskMap = recipe.Workplan.Steps
+            .Select(step => step.CreateInstance(context))
+            .OfType<ITask>().ToDictionary(task => task.Id, task => task);
+        ProcessStorage.FillActivities(uow, process, taskMap);
+
+        return process;
     }
 
     public async IAsyncEnumerable<IProcessChunk> GetProcesses(ProcessRequestFilter filterType, DateTime start, DateTime end, long[] jobIds,
@@ -125,7 +158,7 @@ internal class ProcessArchive : IProcessArchive
         var processRepo = uow.GetRepository<IProcessEntityRepository>();
 
         // Otherwise load it on the fly
-        var recipe = (IWorkplanRecipe)await ProductManagement.LoadRecipeAsync(jobEntity.RecipeId);
+        var recipe = (IWorkplanRecipe)await ProductManagement.LoadRecipeAsync(jobEntity.RecipeId, cancellationToken);
         var job = new Job(recipe, jobEntity.Amount)
         {
             Id = jobEntity.Id,
@@ -155,7 +188,7 @@ internal class ProcessArchive : IProcessArchive
         {
             var process = (ProductionProcess)recipe.CreateProcess();
             process.Id = query[index].Id;
-            process.ProductInstance = await ProductManagement.LoadInstanceAsync(query[index].ReferenceId);
+            process.ProductInstance = await ProductManagement.LoadInstanceAsync(query[index].ReferenceId, cancellationToken);
             ProcessStorage.FillActivities(uow, process, taskMap);
             processes[index] = process;
         }

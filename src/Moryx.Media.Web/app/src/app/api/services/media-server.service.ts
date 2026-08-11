@@ -8,8 +8,7 @@
 
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 
 import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
@@ -51,9 +50,9 @@ export class MediaServerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getAll$Response(params?: GetAll$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ContentDescriptorModel>>> {
+  getAll$Response(params?: GetAll$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<ContentDescriptorModel>>> {
     const obs = getAll(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -62,11 +61,9 @@ export class MediaServerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getAll(params?: GetAll$Params, context?: HttpContext): Observable<Array<ContentDescriptorModel>> {
+  getAll(params?: GetAll$Params, context?: HttpContext): Promise<Array<ContentDescriptorModel>> {
     const resp = this.getAll$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<ContentDescriptorModel>>): Array<ContentDescriptorModel> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<ContentDescriptorModel>>): Array<ContentDescriptorModel> => r.body);
   }
 
   /** Path part for operation `get()` */
@@ -78,9 +75,9 @@ export class MediaServerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  get$Response(params: Get$Params, context?: HttpContext): Observable<StrictHttpResponse<ContentDescriptorModel>> {
+  get$Response(params: Get$Params, context?: HttpContext): Promise<StrictHttpResponse<ContentDescriptorModel>> {
     const obs = get(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -89,11 +86,9 @@ export class MediaServerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  get(params: Get$Params, context?: HttpContext): Observable<ContentDescriptorModel> {
+  get(params: Get$Params, context?: HttpContext): Promise<ContentDescriptorModel> {
     const resp = this.get$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<ContentDescriptorModel>): ContentDescriptorModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<ContentDescriptorModel>): ContentDescriptorModel => r.body);
   }
 
   /** Path part for operation `removeContent()` */
@@ -105,9 +100,9 @@ export class MediaServerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  removeContent$Response(params: RemoveContent$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  removeContent$Response(params: RemoveContent$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = removeContent(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -116,11 +111,9 @@ export class MediaServerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  removeContent(params: RemoveContent$Params, context?: HttpContext): Observable<void> {
+  removeContent(params: RemoveContent$Params, context?: HttpContext): Promise<void> {
     const resp = this.removeContent$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
   /** Path part for operation `getVariant()` */
@@ -132,9 +125,9 @@ export class MediaServerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getVariant$Response(params: GetVariant$Params, context?: HttpContext): Observable<StrictHttpResponse<VariantDescriptor>> {
+  getVariant$Response(params: GetVariant$Params, context?: HttpContext): Promise<StrictHttpResponse<VariantDescriptor>> {
     const obs = getVariant(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -143,11 +136,9 @@ export class MediaServerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getVariant(params: GetVariant$Params, context?: HttpContext): Observable<VariantDescriptor> {
+  getVariant(params: GetVariant$Params, context?: HttpContext): Promise<VariantDescriptor> {
     const resp = this.getVariant$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<VariantDescriptor>): VariantDescriptor => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<VariantDescriptor>): VariantDescriptor => r.body);
   }
 
   /** Path part for operation `removeVariant()` */
@@ -159,9 +150,9 @@ export class MediaServerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  removeVariant$Response(params: RemoveVariant$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  removeVariant$Response(params: RemoveVariant$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = removeVariant(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -170,11 +161,9 @@ export class MediaServerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  removeVariant(params: RemoveVariant$Params, context?: HttpContext): Observable<void> {
+  removeVariant(params: RemoveVariant$Params, context?: HttpContext): Promise<void> {
     const resp = this.removeVariant$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
   /** Path part for operation `getVariantStream()` */
@@ -186,9 +175,9 @@ export class MediaServerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getVariantStream$Plain$Response(params: GetVariantStream$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<Blob>> {
+  getVariantStream$Plain$Response(params: GetVariantStream$Plain$Params, context?: HttpContext): Promise<StrictHttpResponse<Blob>> {
     const obs = getVariantStream$Plain(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -197,11 +186,9 @@ export class MediaServerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getVariantStream$Plain(params: GetVariantStream$Plain$Params, context?: HttpContext): Observable<Blob> {
+  getVariantStream$Plain(params: GetVariantStream$Plain$Params, context?: HttpContext): Promise<Blob> {
     const resp = this.getVariantStream$Plain$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Blob>): Blob => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Blob>): Blob => r.body);
   }
 
   /**
@@ -210,9 +197,9 @@ export class MediaServerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getVariantStream$Json$Response(params: GetVariantStream$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<Blob>> {
+  getVariantStream$Json$Response(params: GetVariantStream$Json$Params, context?: HttpContext): Promise<StrictHttpResponse<Blob>> {
     const obs = getVariantStream$Json(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -221,11 +208,9 @@ export class MediaServerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getVariantStream$Json(params: GetVariantStream$Json$Params, context?: HttpContext): Observable<Blob> {
+  getVariantStream$Json(params: GetVariantStream$Json$Params, context?: HttpContext): Promise<Blob> {
     const resp = this.getVariantStream$Json$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Blob>): Blob => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Blob>): Blob => r.body);
   }
 
   /** Path part for operation `addMaster()` */
@@ -237,9 +222,9 @@ export class MediaServerService extends BaseService {
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  addMaster$Response(params?: AddMaster$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
+  addMaster$Response(params?: AddMaster$Params, context?: HttpContext): Promise<StrictHttpResponse<string>> {
     const obs = addMaster(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -248,11 +233,9 @@ export class MediaServerService extends BaseService {
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  addMaster(params?: AddMaster$Params, context?: HttpContext): Observable<string> {
+  addMaster(params?: AddMaster$Params, context?: HttpContext): Promise<string> {
     const resp = this.addMaster$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<string>): string => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<string>): string => r.body);
   }
 
   /** Path part for operation `addVariant()` */
@@ -264,9 +247,9 @@ export class MediaServerService extends BaseService {
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  addVariant$Response(params: AddVariant$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
+  addVariant$Response(params: AddVariant$Params, context?: HttpContext): Promise<StrictHttpResponse<string>> {
     const obs = addVariant(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -275,12 +258,9 @@ export class MediaServerService extends BaseService {
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  addVariant(params: AddVariant$Params, context?: HttpContext): Observable<string> {
+  addVariant(params: AddVariant$Params, context?: HttpContext): Promise<string> {
     const resp = this.addVariant$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<string>): string => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<string>): string => r.body);
   }
 
 }
-

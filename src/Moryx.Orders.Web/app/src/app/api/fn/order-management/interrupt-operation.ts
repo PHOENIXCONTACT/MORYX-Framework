@@ -36,4 +36,3 @@ export function interruptOperation(http: HttpClient, rootUrl: string, params: In
 }
 
 interruptOperation.PATH = '/api/moryx/orders/{guid}/interrupt';
-

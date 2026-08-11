@@ -35,4 +35,3 @@ export function getLogs(http: HttpClient, rootUrl: string, params: GetLogs$Param
 }
 
 getLogs.PATH = '/api/moryx/orders/{guid}/logs';
-

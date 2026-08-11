@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Globalization;
 using Moryx.AbstractionLayer.Properties;
 
 namespace Moryx.AbstractionLayer.Products;
@@ -15,7 +16,7 @@ public class ProductNotFoundException : Exception
     /// </summary>
     /// <param name="id">Id that was not found</param>
     public ProductNotFoundException(long id)
-        : base(string.Format(Strings.ProductNotFoundException_Message, id))
+        : base(string.Format(CultureInfo.CurrentCulture, Strings.ProductNotFoundException_Message, id))
     {
     }
 }

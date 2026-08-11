@@ -72,7 +72,9 @@ public class KernelServiceCollectionExtensionsTests
         // Arrange
         var directoryPath = "TestDirectory";
         if (Directory.Exists(directoryPath))
+        {
             Directory.Delete(directoryPath);
+        }
 
         _serviceCollection.AddMoryxKernel();
         var provider = _serviceCollection.BuildServiceProvider();

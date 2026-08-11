@@ -34,4 +34,3 @@ export function complete(http: HttpClient, rootUrl: string, params: Complete$Par
 }
 
 complete.PATH = '/api/moryx/jobs/{jobId}/complete';
-

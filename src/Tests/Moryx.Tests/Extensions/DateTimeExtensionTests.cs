@@ -144,7 +144,7 @@ public class DateTimeExtensionTests
 
     #endregion
 
-    private void AssertEqualDateTime(DateTime a, DateTime b)
+    private static void AssertEqualDateTime(DateTime a, DateTime b)
     {
         Assert.That(b.Day, Is.EqualTo(a.Day));
         Assert.That(b.Hour, Is.EqualTo(a.Hour));

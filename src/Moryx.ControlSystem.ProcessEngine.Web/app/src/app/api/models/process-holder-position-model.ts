@@ -16,4 +16,3 @@ export interface ProcessHolderPositionModel {
   position?: number;
   process?: string | null;
 }
-

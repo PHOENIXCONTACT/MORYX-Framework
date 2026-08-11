@@ -17,6 +17,6 @@ Property mappers are strategies to map a single property to a database column an
 
 ## Configuration
 
-The easiest and fastest way to configure the generic strategy is using the `AutoMapper`. This can be achieved through the product managements console on the *MaintenanceWeb* or directly with console commands.
+The easiest and fastest way to configure the generic strategy is using the `AutoMapper`. This can be achieved through the product management's console on the *MaintenanceWeb* or directly with console commands.
 
 To manually configure a generic strategy for a business object, add an instance of the generic config to the respective strategy collection in the *ProductManagers* configuration. Next select the target type from the drop-down. Per default the JSON column is set to `Text8`, feel free to change this to any other text column. Optionally you can add specific configurations for specific properties using the above mentioned column mappers. Currently there is property name support on the web UI for business object definitions, you will have to correctly configure property names manually.

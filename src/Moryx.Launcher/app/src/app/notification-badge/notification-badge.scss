@@ -1,0 +1,40 @@
+:host {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.badge-ring {
+  position: relative;
+  display: flex;
+}
+
+.badge-ping {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background-color: var(--mat-sys-error);
+  opacity: 0.75;
+  animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.badge-count {
+  display: inline-flex;
+  border-radius: 9999px;
+  min-height: 1.25rem;
+  min-width: 1.25rem;
+  background-color: var(--mat-sys-error);
+  justify-content: center;
+  align-items: center;
+  color: var(--mat-sys-on-error);
+  font-size: 0.75rem;
+}
+
+@keyframes ping {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}

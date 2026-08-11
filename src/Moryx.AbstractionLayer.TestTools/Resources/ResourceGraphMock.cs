@@ -114,7 +114,7 @@ public class ResourceGraphMock : IResourceGraph
         return Task.CompletedTask;
     }
 
-    private void SetReferenceCollections(Resource instance)
+    private static void SetReferenceCollections(Resource instance)
     {
         var resourceType = instance.GetType();
         var properties = (from prop in resourceType.GetProperties()

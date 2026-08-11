@@ -32,4 +32,3 @@ export function progressStream(http: HttpClient, rootUrl: string, params?: Progr
 }
 
 progressStream.PATH = '/api/moryx/jobs/stream';
-

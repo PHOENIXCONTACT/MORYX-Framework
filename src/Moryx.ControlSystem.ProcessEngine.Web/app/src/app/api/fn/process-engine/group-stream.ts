@@ -33,4 +33,3 @@ export function groupStream(http: HttpClient, rootUrl: string, params?: GroupStr
 }
 
 groupStream.PATH = '/api/moryx/processes/holders/stream';
-

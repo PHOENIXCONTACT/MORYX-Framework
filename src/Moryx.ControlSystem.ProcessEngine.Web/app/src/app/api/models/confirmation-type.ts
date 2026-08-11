@@ -10,4 +10,3 @@ export enum ConfirmationType {
   Partial = 'Partial',
   Final = 'Final'
 }
-

@@ -11,4 +11,3 @@ export interface AdviceModel {
   partId?: number | null;
   toteBoxNumber?: string | null;
 }
-

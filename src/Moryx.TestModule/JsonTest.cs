@@ -89,7 +89,7 @@ public class JsonTest : IPlugin
     {
     }
 
-    private ModuleConfig CreateConfig()
+    private static ModuleConfig CreateConfig()
     {
         var config = new ModuleConfig
         {
@@ -176,7 +176,7 @@ public class JsonTest : IPlugin
         return [writeTime, readTime];
     }
 
-    private long WriteLoop(IUnitOfWork uow, ModuleConfig config, JsonSerializerSettings settings)
+    private static long WriteLoop(IUnitOfWork uow, ModuleConfig config, JsonSerializerSettings settings)
     {
         var json = JsonConvert.SerializeObject(config, typeof(ConfigBase), settings);
         var entity = uow.GetRepository<IJsonEntityRepository>().Create(json);
@@ -184,7 +184,7 @@ public class JsonTest : IPlugin
         return entity.Id;
     }
 
-    private ConfigBase ReadLoop(IUnitOfWork uow, long id, JsonSerializerSettings settings)
+    private static ConfigBase ReadLoop(IUnitOfWork uow, long id, JsonSerializerSettings settings)
     {
         var json = (from e in uow.GetRepository<IJsonEntityRepository>().Linq
             where e.Id == id

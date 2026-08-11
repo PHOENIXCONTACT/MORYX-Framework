@@ -8,8 +8,7 @@
 
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 
 import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
@@ -80,9 +79,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getOperations$Response(params?: GetOperations$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<OperationModel>>> {
+  getOperations$Response(params?: GetOperations$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<OperationModel>>> {
     const obs = getOperations(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -91,11 +90,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getOperations(params?: GetOperations$Params, context?: HttpContext): Observable<Array<OperationModel>> {
+  getOperations(params?: GetOperations$Params, context?: HttpContext): Promise<Array<OperationModel>> {
     const resp = this.getOperations$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<OperationModel>>): Array<OperationModel> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<OperationModel>>): Array<OperationModel> => r.body);
   }
 
   /** Path part for operation `addOperation()` */
@@ -107,9 +104,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  addOperation$Response(params?: AddOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<OperationModel>> {
+  addOperation$Response(params?: AddOperation$Params, context?: HttpContext): Promise<StrictHttpResponse<OperationModel>> {
     const obs = addOperation(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -118,11 +115,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  addOperation(params?: AddOperation$Params, context?: HttpContext): Observable<OperationModel> {
+  addOperation(params?: AddOperation$Params, context?: HttpContext): Promise<OperationModel> {
     const resp = this.addOperation$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<OperationModel>): OperationModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<OperationModel>): OperationModel => r.body);
   }
 
   /** Path part for operation `operationStream()` */
@@ -134,9 +129,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  operationStream$Response(params?: OperationStream$Params, context?: HttpContext): Observable<StrictHttpResponse<OperationChangedModel>> {
+  operationStream$Response(params?: OperationStream$Params, context?: HttpContext): Promise<StrictHttpResponse<OperationChangedModel>> {
     const obs = operationStream(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -145,11 +140,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  operationStream(params?: OperationStream$Params, context?: HttpContext): Observable<OperationChangedModel> {
+  operationStream(params?: OperationStream$Params, context?: HttpContext): Promise<OperationChangedModel> {
     const resp = this.operationStream$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<OperationChangedModel>): OperationChangedModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<OperationChangedModel>): OperationChangedModel => r.body);
   }
 
   /** Path part for operation `getOperation()` */
@@ -161,9 +154,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getOperation$Response(params: GetOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<OperationModel>> {
+  getOperation$Response(params: GetOperation$Params, context?: HttpContext): Promise<StrictHttpResponse<OperationModel>> {
     const obs = getOperation(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -172,11 +165,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getOperation(params: GetOperation$Params, context?: HttpContext): Observable<OperationModel> {
+  getOperation(params: GetOperation$Params, context?: HttpContext): Promise<OperationModel> {
     const resp = this.getOperation$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<OperationModel>): OperationModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<OperationModel>): OperationModel => r.body);
   }
 
   /** Path part for operation `getDocuments()` */
@@ -188,9 +179,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getDocuments$Response(params: GetDocuments$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<DocumentModel>>> {
+  getDocuments$Response(params: GetDocuments$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<DocumentModel>>> {
     const obs = getDocuments(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -199,11 +190,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getDocuments(params: GetDocuments$Params, context?: HttpContext): Observable<Array<DocumentModel>> {
+  getDocuments(params: GetDocuments$Params, context?: HttpContext): Promise<Array<DocumentModel>> {
     const resp = this.getDocuments$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<DocumentModel>>): Array<DocumentModel> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<DocumentModel>>): Array<DocumentModel> => r.body);
   }
 
   /** Path part for operation `getDocumentStream()` */
@@ -215,9 +204,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getDocumentStream$Response(params: GetDocumentStream$Params, context?: HttpContext): Observable<StrictHttpResponse<Blob>> {
+  getDocumentStream$Response(params: GetDocumentStream$Params, context?: HttpContext): Promise<StrictHttpResponse<Blob>> {
     const obs = getDocumentStream(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -226,11 +215,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getDocumentStream(params: GetDocumentStream$Params, context?: HttpContext): Observable<Blob> {
+  getDocumentStream(params: GetDocumentStream$Params, context?: HttpContext): Promise<Blob> {
     const resp = this.getDocumentStream$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Blob>): Blob => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Blob>): Blob => r.body);
   }
 
   /** Path part for operation `getProductParts()` */
@@ -242,9 +229,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getProductParts$Response(params: GetProductParts$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ProductPartModel>>> {
+  getProductParts$Response(params: GetProductParts$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<ProductPartModel>>> {
     const obs = getProductParts(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -253,11 +240,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getProductParts(params: GetProductParts$Params, context?: HttpContext): Observable<Array<ProductPartModel>> {
+  getProductParts(params: GetProductParts$Params, context?: HttpContext): Promise<Array<ProductPartModel>> {
     const resp = this.getProductParts$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<ProductPartModel>>): Array<ProductPartModel> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<ProductPartModel>>): Array<ProductPartModel> => r.body);
   }
 
   /** Path part for operation `getBeginContext()` */
@@ -269,9 +254,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getBeginContext$Response(params: GetBeginContext$Params, context?: HttpContext): Observable<StrictHttpResponse<BeginContext>> {
+  getBeginContext$Response(params: GetBeginContext$Params, context?: HttpContext): Promise<StrictHttpResponse<BeginContext>> {
     const obs = getBeginContext(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -280,11 +265,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getBeginContext(params: GetBeginContext$Params, context?: HttpContext): Observable<BeginContext> {
+  getBeginContext(params: GetBeginContext$Params, context?: HttpContext): Promise<BeginContext> {
     const resp = this.getBeginContext$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<BeginContext>): BeginContext => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<BeginContext>): BeginContext => r.body);
   }
 
   /** Path part for operation `beginOperation()` */
@@ -296,9 +279,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  beginOperation$Response(params: BeginOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  beginOperation$Response(params: BeginOperation$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = beginOperation(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -307,11 +290,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  beginOperation(params: BeginOperation$Params, context?: HttpContext): Observable<void> {
+  beginOperation(params: BeginOperation$Params, context?: HttpContext): Promise<void> {
     const resp = this.beginOperation$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
   /** Path part for operation `getReportContext()` */
@@ -323,9 +304,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getReportContext$Response(params: GetReportContext$Params, context?: HttpContext): Observable<StrictHttpResponse<ReportContext>> {
+  getReportContext$Response(params: GetReportContext$Params, context?: HttpContext): Promise<StrictHttpResponse<ReportContext>> {
     const obs = getReportContext(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -334,11 +315,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getReportContext(params: GetReportContext$Params, context?: HttpContext): Observable<ReportContext> {
+  getReportContext(params: GetReportContext$Params, context?: HttpContext): Promise<ReportContext> {
     const resp = this.getReportContext$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<ReportContext>): ReportContext => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<ReportContext>): ReportContext => r.body);
   }
 
   /** Path part for operation `reportOperation()` */
@@ -350,9 +329,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  reportOperation$Response(params: ReportOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  reportOperation$Response(params: ReportOperation$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = reportOperation(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -361,11 +340,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  reportOperation(params: ReportOperation$Params, context?: HttpContext): Observable<void> {
+  reportOperation(params: ReportOperation$Params, context?: HttpContext): Promise<void> {
     const resp = this.reportOperation$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
   /** Path part for operation `getInterruptContext()` */
@@ -377,9 +354,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getInterruptContext$Response(params: GetInterruptContext$Params, context?: HttpContext): Observable<StrictHttpResponse<ReportContext>> {
+  getInterruptContext$Response(params: GetInterruptContext$Params, context?: HttpContext): Promise<StrictHttpResponse<ReportContext>> {
     const obs = getInterruptContext(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -388,11 +365,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getInterruptContext(params: GetInterruptContext$Params, context?: HttpContext): Observable<ReportContext> {
+  getInterruptContext(params: GetInterruptContext$Params, context?: HttpContext): Promise<ReportContext> {
     const resp = this.getInterruptContext$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<ReportContext>): ReportContext => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<ReportContext>): ReportContext => r.body);
   }
 
   /** Path part for operation `interruptOperation()` */
@@ -404,9 +379,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  interruptOperation$Response(params: InterruptOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  interruptOperation$Response(params: InterruptOperation$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = interruptOperation(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -415,11 +390,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  interruptOperation(params: InterruptOperation$Params, context?: HttpContext): Observable<void> {
+  interruptOperation(params: InterruptOperation$Params, context?: HttpContext): Promise<void> {
     const resp = this.interruptOperation$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
   /** Path part for operation `getAdviceContext()` */
@@ -431,9 +404,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getAdviceContext$Response(params: GetAdviceContext$Params, context?: HttpContext): Observable<StrictHttpResponse<AdviceContext>> {
+  getAdviceContext$Response(params: GetAdviceContext$Params, context?: HttpContext): Promise<StrictHttpResponse<AdviceContext>> {
     const obs = getAdviceContext(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -442,11 +415,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getAdviceContext(params: GetAdviceContext$Params, context?: HttpContext): Observable<AdviceContext> {
+  getAdviceContext(params: GetAdviceContext$Params, context?: HttpContext): Promise<AdviceContext> {
     const resp = this.getAdviceContext$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<AdviceContext>): AdviceContext => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<AdviceContext>): AdviceContext => r.body);
   }
 
   /** Path part for operation `adviceOperation()` */
@@ -458,9 +429,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  adviceOperation$Response(params: AdviceOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  adviceOperation$Response(params: AdviceOperation$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = adviceOperation(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -469,11 +440,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  adviceOperation(params: AdviceOperation$Params, context?: HttpContext): Observable<void> {
+  adviceOperation(params: AdviceOperation$Params, context?: HttpContext): Promise<void> {
     const resp = this.adviceOperation$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
   /** Path part for operation `getLogs()` */
@@ -485,9 +454,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getLogs$Response(params: GetLogs$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<OperationLogMessageModel>>> {
+  getLogs$Response(params: GetLogs$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<OperationLogMessageModel>>> {
     const obs = getLogs(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -496,11 +465,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getLogs(params: GetLogs$Params, context?: HttpContext): Observable<Array<OperationLogMessageModel>> {
+  getLogs(params: GetLogs$Params, context?: HttpContext): Promise<Array<OperationLogMessageModel>> {
     const resp = this.getLogs$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<OperationLogMessageModel>>): Array<OperationLogMessageModel> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<OperationLogMessageModel>>): Array<OperationLogMessageModel> => r.body);
   }
 
   /** Path part for operation `getAssignableRecipes()` */
@@ -512,9 +479,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getAssignableRecipes$Response(params?: GetAssignableRecipes$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<OperationRecipeModel>>> {
+  getAssignableRecipes$Response(params?: GetAssignableRecipes$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<OperationRecipeModel>>> {
     const obs = getAssignableRecipes(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -523,11 +490,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getAssignableRecipes(params?: GetAssignableRecipes$Params, context?: HttpContext): Observable<Array<OperationRecipeModel>> {
+  getAssignableRecipes(params?: GetAssignableRecipes$Params, context?: HttpContext): Promise<Array<OperationRecipeModel>> {
     const resp = this.getAssignableRecipes$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<OperationRecipeModel>>): Array<OperationRecipeModel> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<OperationRecipeModel>>): Array<OperationRecipeModel> => r.body);
   }
 
   /** Path part for operation `abortOperation()` */
@@ -539,9 +504,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  abortOperation$Response(params: AbortOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  abortOperation$Response(params: AbortOperation$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = abortOperation(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -550,11 +515,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  abortOperation(params: AbortOperation$Params, context?: HttpContext): Observable<void> {
+  abortOperation(params: AbortOperation$Params, context?: HttpContext): Promise<void> {
     const resp = this.abortOperation$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
   /** Path part for operation `updateOperation()` */
@@ -566,9 +529,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  updateOperation$Response(params: UpdateOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  updateOperation$Response(params: UpdateOperation$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = updateOperation(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -577,11 +540,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  updateOperation(params: UpdateOperation$Params, context?: HttpContext): Observable<void> {
+  updateOperation(params: UpdateOperation$Params, context?: HttpContext): Promise<void> {
     const resp = this.updateOperation$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
   /** Path part for operation `reload()` */
@@ -593,9 +554,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  reload$Response(params: Reload$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  reload$Response(params: Reload$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = reload(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -604,12 +565,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  reload(params: Reload$Params, context?: HttpContext): Observable<void> {
+  reload(params: Reload$Params, context?: HttpContext): Promise<void> {
     const resp = this.reload$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
 }
-

@@ -14,4 +14,3 @@ export interface ReportModel {
   successCount?: number;
   userIdentifier?: string | null;
 }
-

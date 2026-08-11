@@ -1,14 +1,18 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Collections.Concurrent;
+using System.Net.ServerSentEvents;
+using System.Runtime.CompilerServices;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Threading.Channels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moryx.AspNetCore;
 using Moryx.Notifications.Endpoints.Models;
 using Moryx.Notifications.Endpoints.Properties;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace Moryx.Notifications.Endpoints;
 
@@ -22,15 +26,12 @@ public class NotificationPublisherController : ControllerBase
 {
     private readonly INotificationPublisher _notificationPublisher;
 
-    private static readonly JsonSerializerSettings _serializerSettings = CreateSerializerSettings();
-
-    private static JsonSerializerSettings CreateSerializerSettings()
+    private static readonly ConcurrentDictionary<Guid, Channel<SseItem<string>>> _notificationStreamSubscribers = new();
+    private static readonly JsonSerializerOptions _serializerOptions = new()
     {
-        var serializerSettings = new JsonSerializerSettings();
-        serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-        serializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
-        return serializerSettings;
-    }
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        Converters = { new JsonStringEnumConverter() }
+    };
 
     public NotificationPublisherController(INotificationPublisher notificationPublisher)
         => _notificationPublisher = notificationPublisher;
@@ -55,57 +56,78 @@ public class NotificationPublisherController : ControllerBase
         return Converter.ToModel(notification);
     }
 
-    private TaskCompletionSource _notificationTcs;
-
     [HttpGet("stream")]
     [ProducesResponseType(typeof(NotificationModel[]), StatusCodes.Status200OK)]
     [Authorize(Policy = NotificationPermissions.CanView)]
     public async Task NotificationStream(CancellationToken cancellationToken)
     {
-        var response = Response;
-        response.Headers.Add("Content-Type", "text/event-stream");
+        // TODO: do not always broadcast all notifications, separate in event-types
+        // https://github.com/PHOENIXCONTACT/MORYX-Framework/issues/1231
 
-        // Define event handling
-        _notificationTcs = new TaskCompletionSource();
-        var eventHandler = new EventHandler<Notification>((sender, notification) => _notificationTcs.TrySetResult());
-        // Register handler to facade
-        _notificationPublisher.Published += eventHandler;
-        _notificationPublisher.Acknowledged += eventHandler;
+        // Define event handlers that broadcast immediately when notifications change
+        var publishedEventHandler = new EventHandler<Notification>((_, _) =>
+            Broadcast());
+
+        var acknowledgedEventHandler = new EventHandler<Notification>((_, _) =>
+            Broadcast());
 
         try
         {
-            // Create infinite loop awaiting changes or cancellation
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                // Write notifications
-                var notifications = _notificationPublisher.GetAll()
-                    .Select(Converter.ToModel).ToList();
-                var json = JsonConvert.SerializeObject(notifications, _serializerSettings);
+            var result = TypedResults.ServerSentEvents(Subscribe(cancellationToken));
 
-                await response.WriteAsync($"data: {json}\r\r", cancellationToken);
+            // Register event handlers after result creation but before execution to ensure finally cleanup
+            _notificationPublisher.Published += publishedEventHandler;
+            _notificationPublisher.Acknowledged += acknowledgedEventHandler;
 
-                // Await task completion
-                await Task.WhenAny(_notificationTcs.Task, Task.Delay(30000, cancellationToken));
-
-                // Create new TCS
-                _notificationTcs = new TaskCompletionSource();
-            }
+            await result.ExecuteAsync(HttpContext);
         }
         catch (OperationCanceledException)
         {
+            // client disconnected — this is expected, not an error
         }
         finally
         {
-            // Unregister handler from facade
-            _notificationPublisher.Published -= eventHandler;
-            _notificationPublisher.Acknowledged -= eventHandler;
-
-            _notificationTcs.TrySetCanceled();
-            _notificationTcs = null;
+            _notificationPublisher.Published -= publishedEventHandler;
+            _notificationPublisher.Acknowledged -= acknowledgedEventHandler;
         }
 
-        await response.WriteAsync("retry: 1000\n");
-        await response.CompleteAsync();
+        return;
+
+        async IAsyncEnumerable<SseItem<string>> Subscribe([EnumeratorCancellation] CancellationToken cancelToken)
+        {
+            var channel = Channel.CreateUnbounded<SseItem<string>>();
+            var id = Guid.NewGuid();
+            _notificationStreamSubscribers[id] = channel;
+
+            // Send all notifications set as first item
+            var initialNotifications = _notificationPublisher.GetAll()
+                .Select(Converter.ToModel).ToArray();
+            yield return new SseItem<string>(JsonSerializer.Serialize(initialNotifications, _serializerOptions));
+
+            try
+            {
+                await foreach (var data in channel.Reader.ReadAllAsync(cancelToken))
+                {
+                    yield return data;
+                }
+            }
+            finally
+            {
+                _notificationStreamSubscribers.TryRemove(id, out _);
+            }
+        }
+
+        // Local helper to broadcast all notifications to all connected clients
+        void Broadcast()
+        {
+            var notifications = _notificationPublisher.GetAll()
+                .Select(Converter.ToModel).ToArray();
+
+            foreach (var channel in _notificationStreamSubscribers.Values)
+            {
+                channel.Writer.TryWrite(new SseItem<string>(JsonSerializer.Serialize(notifications, _serializerOptions)));
+            }
+        }
     }
 
     [HttpPost("{guid}/acknowledge")]

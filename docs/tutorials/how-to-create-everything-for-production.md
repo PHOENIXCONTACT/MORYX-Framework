@@ -35,12 +35,12 @@ First add a folder for the steps called *Activies*. In this folder, create subfo
         |-PackTask.cs
         |-PackParameter.cs
 ````
-Let's continue by implementing the paramters. Parameters have to implement the abstract class [Parameters](../../src/Moryx.AbstractionLayer/Activities/Parameters.cs). If the corresponding resource should show VisualInstructions during the activity, usw `VisualInstructionParameters` instead.
+Let's continue by implementing the parameters. Parameters have to implement the abstract class [Parameters](../../src/Moryx.AbstractionLayer/Activities/Parameters.cs). If the corresponding resource should show VisualInstructions during the activity, use `VisualInstructionParameters` instead.
 
 In the method `Populate()`, `instance` is the parameter of the just created activity in the current process. In this method you copy information from general parameters configured in the workplan to the specific ones.
 ```cs
-public class AssembleParameters: Parameters{
-
+public class AssembleParameters: Parameters
+{
     [EntrySerialize, DataMember]
     public string FlourType {get;set;}
 
@@ -48,8 +48,8 @@ public class AssembleParameters: Parameters{
     {
         base.Populate(process, instance);
 
-            var parameters = (AssembleParameters)instance;
-            parameters.FlourType = FlourType;
+        var parameters = (AssembleParameters)instance;
+        parameters.FlourType = FlourType;
     }
 }
 ```
@@ -65,9 +65,9 @@ public enum AssemblyResults
     Failed
 }
 ```
-An activity implements [Activity](../../src/Moryx.AbstractionLayer/Activities/Activity.cs). On the top it has the class attribute [ActivityResults](../../src/Moryx.AbstractionLayer/Activities/ActivityResult.cs), which defines the results of the step. 
+An activity implements [Activity](../../src/Moryx.AbstractionLayer/Activities/Activity.cs) and is attributed with [ActivityResults](../../src/Moryx.AbstractionLayer/Activities/ActivityResult.cs), which defines the results of the step. 
 
-Then we have to decide, if our activity needs a process. Putting everything together needs us to be in the possession of the goods carrier, i.e. a bowl. Otherwise the ingredients would be all over the place but not in the bowl they belong and which will be carried to the next step. In order for the process engine to match our activity to a suitable `Resource`, we have to define our required `Capabilities`. The `Resources` provide `Capabilities`, which define their abilities. And if needed and provided `Capabilities` match and the resource is ready to work, the activity will be routed to it.
+Then we have to decide, if our activity needs a process. Putting everything together needs us to be in the possession of the goods carrier, i.e. a bowl. Otherwise the ingredients would be all over the place but not in the bowl they belong and which will be carried to the next step. In order for the process engine to match our activity to a suitable `Resource`, we have to define our required `Capabilities`. The `Resources` provide `Capabilities`, which define their abilities. If needed and provided `Capabilities` match and the resource is ready to work, the activity will be routed to it.
 
 ```cs
 [ActivityResults(typeof(AssembleResults))]
@@ -116,11 +116,12 @@ public class AssembleCapabilities : CapabilitiesBase{   
     public int NumberOfIngredients {get;set;}    
     
     protected override bool ProvidedBy(ICapabilities provided){
-        var providedAssemble = provided as AssembleCapabilities; 
-        if(providedAssebmle == null)            
+        var providedAssemble = provided as AssembleCapabilities;
+
+        if (providedAssemble == null)            
             return false;        
     
-        return provided.NumberOfIngredients >= NumberOfIngredients;    
+        return providedAssemble.NumberOfIngredients >= NumberOfIngredients;    
     }
 }
 
@@ -133,4 +134,4 @@ public class AssembleActivity: Activity<AssembleParameters>{ 
 }
 ```
 
-Now you can repeat these steps for all steps in your process. After you are done, you have all the required classes to create a workplan out of it and execute the digital process.For more information on how to implement the execution of an activity in a specific resource, please have a look at the tutorial about [Cells](how-to-create-a-cell.md).
+Now you can repeat these steps for all steps in your process. After you are done, you have all the required classes to create a workplan out of it and execute the digital process. For more information on how to implement the execution of an activity in a specific resource, please have a look at the tutorial about [Cells](how-to-create-a-cell.md).

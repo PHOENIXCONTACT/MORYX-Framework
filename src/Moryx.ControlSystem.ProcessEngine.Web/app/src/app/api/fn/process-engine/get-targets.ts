@@ -35,4 +35,3 @@ export function getTargets(http: HttpClient, rootUrl: string, params: GetTargets
 }
 
 getTargets.PATH = '/api/moryx/processes/running/{id}/targets';
-

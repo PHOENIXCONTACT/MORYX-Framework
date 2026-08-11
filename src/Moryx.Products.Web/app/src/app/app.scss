@@ -1,0 +1,93 @@
+@use '@angular/material' as mat;
+
+.overview {
+  flex: 1;
+  display: flex;
+  flex-flow: row nowrap;
+  overflow: hidden;
+}
+.mat-toolbar-row{
+  color: white;
+  button{
+    color: white;
+    margin: 4px;
+  }
+}
+.overview-tree {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  height: 100%;
+}
+
+.overview-tree-header {
+  width: 100%;
+  height: fit-content;
+}
+
+.products-toolbar {
+  background-color: rgba(0, 0, 0, 0.60);
+  background-blend-mode: darken;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.overview-tree-content {
+  flex: 1 1;
+  overflow: hidden;
+  background-color: var(--mat-sys-surface-container-lowest);
+  align-items: stretch;
+}
+
+.overview-tree-content-filter {
+  display: flex;
+  flex: 1 1;
+  justify-content: center;
+  padding: 5px;
+  width: 100%;
+}
+
+.overview-tree-content-filter-form {
+  display: flex;
+  flex-flow: column nowrap;
+  height: fit-content;
+  width: 100%;
+}
+
+.overview-tree-content-filter-actions {
+  display: flex;
+  height: fit-content;
+  flex-flow: row nowrap;
+  justify-content: flex-end;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.toolbar-wrapper {
+  position: relative;
+  overflow: visible;
+}
+
+.overview-import-button {
+  position: absolute;
+  bottom: 0;
+  right: 16px;
+  transform: translateY(50%);
+  z-index: 10;
+}
+
+.overview-details {
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: auto;
+  overflow: hidden;
+}
+.filter-name{
+  margin-top: 10px;
+}

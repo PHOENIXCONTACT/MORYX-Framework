@@ -11,4 +11,3 @@ export enum EventAttributes {
   SpecialName = 'SpecialName',
   RtSpecialName = 'RTSpecialName'
 }
-

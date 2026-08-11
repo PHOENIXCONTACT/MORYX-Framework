@@ -39,17 +39,17 @@ First we have to take care of the properties required by the Runtime. They are n
 
 ### Hard coded entity creation
 
-When the setup gets executed, MORYX will create a `IUnitOfWork` and provides it within the `Execute` method. Here everything can be done for setting up the database:
+When the setup gets executed, MORYX will create a `IUnitOfWork` and provide it within the `ExecuteAsync` method. Here everything can be done for setting up the database:
 
 ````cs
-public Task ExecuteAsync(IUnitOfWork openContext, string setupData)
+public Task ExecuteAsync(IUnitOfWork openContext, string setupData, CancellationToken cancellationToken)
 {
 }
 ````
 
 ## File based setup
 
-In many cases we have to import from other system through some export formats or we create our own import file standard. In any case we have to read a files content and insert its information into the database. For our example we will use a very simple file format that does not require any complex file parsing. If you have to parse CSV or Excel files, please refer to the CsvHelper or EPPlus documentation.
+In many cases we have to import from other system through some export formats or we create our own import file standard. In any case we have to read a file's content and insert its information into the database. For our example we will use a very simple file format that does not require any complex file parsing. If you have to parse CSV or Excel files, please refer to the CsvHelper or EPPlus documentation.
 
 ### File based infrastructure
 

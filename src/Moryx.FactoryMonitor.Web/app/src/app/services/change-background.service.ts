@@ -3,63 +3,58 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { FactoryMonitorService } from '../api/services';
-import { MoryxSnackbarService } from '@moryx/ngx-web-framework';
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { FactoryMonitorService } from '@api/services';
+import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { FactorySelectionService } from './factory-selection.service';
-import { environment } from 'src/environments/environment';
-import { FactoryStateModel } from '../api/models/factory-state-model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class ChangeBackgroundService {
-  defaultUrl = environment.rootUrl + '/background.PNG';
-  private _factory?: FactoryStateModel;
-  private _backgroundChanged = new BehaviorSubject<string>(this.defaultUrl);
-  public backgroundChanged$ = this._backgroundChanged.asObservable();
-  private _canSaveBackground = new BehaviorSubject<boolean>(false);
-  public canSaveBackground$ = this._canSaveBackground.asObservable();
+  private factoryMonitorService = inject(FactoryMonitorService);
+  private snackbarService = inject(SnackbarService);
+  private factorySelectionService = inject(FactorySelectionService);
 
-  constructor(private factoryMonitorService: FactoryMonitorService,
-    private snackbar: MoryxSnackbarService,
-    private factorySelectionService: FactorySelectionService) {
-    this.factorySelectionService.factorySelected$.subscribe({
-      next: factorySelected => {
-        this._factory = factorySelected;
-        this._factory = factorySelected;
-        this.changeLocalBackground(factorySelected?.backgroundURL ?? this.defaultUrl);
-        this._canSaveBackground.next(true);
-      }
-    });
-    this.factoryMonitorService.initialFactoryState().subscribe({
-      next: () => {
-        this._backgroundChanged.next(this._backgroundChanged.getValue());
-        this.factoryMonitorService.initialFactoryState().subscribe({ next: () => { this._backgroundChanged.next(this._backgroundChanged.getValue()); } });
-
-      }
-    });
-  }
+  private readonly _backgroundChanged = signal<string | undefined>(undefined);
+  readonly backgroundChanged = this._backgroundChanged.asReadonly();
+  public canSaveBackground = computed(() => !!this.factorySelectionService.factorySelected());
 
   public changeBackground(url: string) {
-    if (!url || !this._factory?.id) return;
+    if (!url || !this.factorySelectionService.factorySelected()) {
+      return;
+    }
 
     this.factoryMonitorService
       .changeBackground({
-        resourceId: this._factory.id,
-        url: url,
+        resourceId: this.factorySelectionService.factorySelected(),
+        url: url
       })
-      .subscribe({
-        next: () => {
-          this._backgroundChanged.next(url)
-        },
-        error: () => this.snackbar.showError('An error occured while saving the background URL'),
-      });
+      .then(() => {
+        this.updateBackground(url);
+      })
+      .catch(() => this.snackbarService.showError('An error occured while saving the background URL'));
   }
 
-  public changeLocalBackground(url: string) {
-    this._backgroundChanged.next(url);
+  public updateBackground(url: string | null | undefined) {
+    if (!url) {
+      this._backgroundChanged.set(undefined);
+      return;
+    }
+
+    if (!this.isAbsoluteUrl(url)) {
+      url = environment.rootUrl + url;
+    }
+
+    this._backgroundChanged.set(url);
+  }
+
+  private isAbsoluteUrl(url: string): boolean {
+    try {
+      return Boolean(new URL(url).origin);
+    } catch {
+      return false;
+    }
   }
 }
-

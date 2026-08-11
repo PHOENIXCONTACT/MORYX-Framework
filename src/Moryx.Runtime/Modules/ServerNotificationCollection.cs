@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using Moryx.Modules;
 
@@ -9,8 +10,9 @@ namespace Moryx.Runtime.Modules;
 
 internal class ServerNotificationCollection : INotificationCollection
 {
-    private readonly List<IModuleNotification> _internalList = [];
-    private readonly object _lockObj = new();
+    private const int MaxCollectionSize = 2500;
+    private readonly Collection<IModuleNotification> _internalList = [];
+    private readonly Lock _lockObj = new();
 
     // ReSharper disable once InconsistentlySynchronizedField
     public int Count => _internalList.Count;
@@ -21,7 +23,9 @@ internal class ServerNotificationCollection : INotificationCollection
     {
         List<IModuleNotification> copy;
         lock (_lockObj)
+        {
             copy = _internalList.ToList();
+        }
 
         return copy.GetEnumerator();
     }
@@ -30,16 +34,31 @@ internal class ServerNotificationCollection : INotificationCollection
 
     public void Add(IModuleNotification item)
     {
+        IModuleNotification removedItem = null;
         lock (_lockObj)
+        {
             _internalList.Add(item);
+            if (_internalList.Count > MaxCollectionSize)
+            {
+                removedItem = _internalList.First();
+                _internalList.Remove(removedItem);
+            }
+        }
 
         CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item));
+
+        if (removedItem != null)
+        {
+            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item));
+        }
     }
 
     public void Clear()
     {
         lock (_lockObj)
+        {
             _internalList.Clear();
+        }
 
         CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
     }
@@ -48,7 +67,9 @@ internal class ServerNotificationCollection : INotificationCollection
     {
         bool contains;
         lock (_lockObj)
+        {
             contains = _internalList.Contains(item);
+        }
 
         return contains;
     }
@@ -56,14 +77,18 @@ internal class ServerNotificationCollection : INotificationCollection
     public void CopyTo(IModuleNotification[] array, int arrayIndex)
     {
         lock (_lockObj)
+        {
             _internalList.CopyTo(array, arrayIndex);
+        }
     }
 
     public bool Remove(IModuleNotification item)
     {
         bool removed;
         lock (_lockObj)
+        {
             removed = _internalList.Remove(item);
+        }
 
         CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item));
         return removed;

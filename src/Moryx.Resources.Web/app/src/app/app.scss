@@ -1,0 +1,60 @@
+
+.resources {
+  flex: 1;
+}
+
+.resources-tree {
+  width: 300px;
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
+}
+
+.resources-side-bar {
+  height: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: stretch;
+}
+
+.resources-toolbar {
+  color: white;
+  background-color: rgba(0, 0, 0, 0.60);
+  background-blend-mode: darken;
+}
+
+.no-overflow {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.resources-toolbar-spacer {
+  flex: 1 1 auto;
+}
+
+.mat-toolbar-row{
+  color: white;
+  button{
+    color: white;
+    margin: 4px;
+  }
+}
+
+.toolbar-wrapper {
+  position: relative;
+  overflow: visible;
+}
+
+.resources-add-button {
+  position: absolute;
+  bottom: 0;
+  right: 16px;
+  transform: translateY(50%);
+  z-index: 10;
+}
+
+.resources-side-bar-right {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: stretch;
+  justify-content: flex-end;
+}

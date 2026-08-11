@@ -11,6 +11,7 @@ using NUnit.Framework;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Moryx.Resources.Management.Model;
+using System.Collections.Generic;
 
 namespace Moryx.Resources.Management.Tests;
 
@@ -51,6 +52,23 @@ public class ResourceEntityAccessorTests
 
         Assert.That(resource.Enabled);
         Assert.That(resource.Number, Is.EqualTo(42));
+    }
+	
+	
+    [Test(Description = "Calling Instantiate on a type that holds ignored properties does not override these properties")]
+    public void InstantiateWithoutEntityDoesNotOverrideIgnoredJsonProperties()
+    {
+        // Arrange
+        var accessor = new ResourceEntityAccessor
+        {
+            Type = typeof(DefaultTestResource).ResourceType()
+        };
+
+        // Act
+        var resource = accessor.Instantiate(_typeControllerMock, _resourceGraph) as DefaultTestResource;
+
+        // Assert
+        Assert.That(resource.InitializedProperty, Is.Not.Null);
     }
 
     [Test(Description = "Instantiates a resource")]
@@ -131,14 +149,18 @@ public class ResourceEntityAccessorTests
 
     private class ExtensionDataTestBase
     {
+#pragma warning disable CA1822 // Mark members as static
         public int Value1 => 1;
 
         public string Value2 => "MyVal";
+#pragma warning restore CA1822 // Mark members as static
     }
 
     private class ExtensionDataInherited : ExtensionDataTestBase
     {
+#pragma warning disable CA1822 // Mark members as static
         public long Value3 => 42;
+#pragma warning restore CA1822 // Mark members as static
     }
 
     private class DefaultTestResource : Resource
@@ -148,6 +170,9 @@ public class ResourceEntityAccessorTests
 
         [DataMember, DefaultValue(true)]
         public bool Enabled { get; set; }
+		
+		[DataMember, JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+		public List<string> InitializedProperty { get; set; } = [];
     }
 
     private class TestResource : Resource

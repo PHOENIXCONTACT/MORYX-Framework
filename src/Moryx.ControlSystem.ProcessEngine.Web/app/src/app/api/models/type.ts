@@ -91,4 +91,3 @@ export interface Type {
   typeInitializer?: ConstructorInfo;
   underlyingSystemType?: Type;
 }
-

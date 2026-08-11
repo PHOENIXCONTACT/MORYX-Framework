@@ -16,4 +16,3 @@ export enum PropertyAttributes {
   Reserved4 = 'Reserved4',
   ReservedMask = 'ReservedMask'
 }
-

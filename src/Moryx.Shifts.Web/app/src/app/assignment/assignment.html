@@ -1,0 +1,60 @@
+@if (assignment().notes || assignment().priority >= 1) {
+  <div class="assignment-wrapper" [class.invisible]="!assignmentIsForGivenDay(calendarDate())">
+    <div class="assignment-card--priority">
+      <div class="card-row">
+        <span>{{ assignment().operator.name }}</span>
+        <div class="card-icons">
+          @if (assignment().priority >= 1) {
+            <mat-icon class="icon-warning">info</mat-icon>
+          } @else {
+            <mat-icon class="icon-info">description</mat-icon>
+          }
+          @if (assignment().status === notQualified) {
+            <mat-icon class="icon-info">person_alert</mat-icon>
+          }
+          <button mat-icon-button [matMenuTriggerFor]="menu" class="card-menu-btn">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="showAssigmentDetails()">
+              {{ TranslationConstants.ASSIGNMENT.DETAILS | translate }}
+            </button>
+            <button mat-menu-item (click)="deleteAssignment()">
+              {{ TranslationConstants.ASSIGNMENT.DELETE | translate }}
+            </button>
+          </mat-menu>
+        </div>
+      </div>
+      <span class="notes-label">{{ TranslationConstants.ASSIGNMENT.NOTES | translate }}:</span>
+      <span class="notes-text">{{ assignment().notes }}</span>
+      <span class="resource-name">{{ assignment().resource.name }}</span>
+    </div>
+  </div>
+}
+
+@if (!assignment().notes && assignment().priority === 0) {
+  <div class="assignment-wrapper" [class.invisible]="!assignmentIsForGivenDay(calendarDate())">
+    <div class="assignment-card">
+      <div class="card-row">
+        <span>{{ assignment().operator.name }}</span>
+        <div class="card-icons">
+          @if (assignment().status === notQualified) {
+            <mat-icon class="not-qualified-operator">person_alert</mat-icon>
+          }
+          <button mat-icon-button [matMenuTriggerFor]="menu" class="card-menu-btn">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="showAssigmentDetails()">
+              {{ TranslationConstants.ASSIGNMENT.DETAILS | translate }}
+            </button>
+            <button mat-menu-item (click)="deleteAssignment()">
+              {{ TranslationConstants.ASSIGNMENT.DELETE | translate }}
+            </button>
+          </mat-menu>
+        </div>
+      </div>
+      <span class="resource-name">{{ assignment().resource.name }}</span>
+    </div>
+  </div>
+}

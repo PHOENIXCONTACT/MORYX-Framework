@@ -16,7 +16,7 @@ import { ReportModel } from '../../models/report-model';
 
 export interface ReportOperation$Params {
   guid: string;
-      body?: ReportModel
+  body?: ReportModel
 }
 
 export function reportOperation(http: HttpClient, rootUrl: string, params: ReportOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
@@ -37,4 +37,3 @@ export function reportOperation(http: HttpClient, rootUrl: string, params: Repor
 }
 
 reportOperation.PATH = '/api/moryx/orders/{guid}/report';
-

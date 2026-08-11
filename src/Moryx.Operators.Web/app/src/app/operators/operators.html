@@ -1,0 +1,13 @@
+<div class="operator-grid">
+  @for (operator of operators(); track operator) {
+    <app-operator-card
+      [workstationId]="workstation().data.id ?? 0"
+      [operator]="operator"
+      (toggleAssignment)="handleToggleAssignment($event)"></app-operator-card>
+  }
+</div>
+@if (operators().length === 0) {
+  <div class="empty-container">
+    <empty-state [header]="''" [message]="TranslationConstants.OPERATORS.EMPTY_MESSAGE | translate"></empty-state>
+  </div>
+}

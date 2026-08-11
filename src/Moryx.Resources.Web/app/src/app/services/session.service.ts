@@ -3,7 +3,6 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { FlatTreeControl } from '@angular/cdk/tree';
 import { Injectable } from '@angular/core';
 import { ResourceModel } from '../api/models';
 
@@ -14,24 +13,13 @@ export class SessionService {
   private readonly RESOURCE_TREE: string = 'resource-tree';
   private readonly WIP_RESOURCE: string = 'wip-resource';
 
-  constructor() { }
-
-  storeTreeState(treeControl: FlatTreeControl<FlatNode, FlatNode>) {
-    const nodes = treeControl.dataNodes.filter(n => treeControl.isExpanded(n)).map(n => n.id);
-    const nodesString = nodes.join(",");
-    sessionStorage.setItem(this.RESOURCE_TREE, nodesString);
+  storeTreeState(expandedIds: number[]) {
+    sessionStorage.setItem(this.RESOURCE_TREE, expandedIds.join(','));
   }
 
-  restoreTreeState(treeControl: FlatTreeControl<FlatNode, FlatNode>): void {
-    const expandedNodes = sessionStorage.getItem(this.RESOURCE_TREE);
-    if (!expandedNodes) return;
-
-    const expandedNodesArray = expandedNodes.split(',');
-    for (let id of expandedNodesArray) {
-      const node = treeControl.dataNodes.find(n => String(n.id) === id);
-      if (!node) continue;
-      treeControl.expand(node);
-    }
+  getExpandedIds(): number[] {
+    const stored = sessionStorage.getItem(this.RESOURCE_TREE);
+    return stored ? stored.split(',').filter(Boolean).map(Number) : [];
   }
 
   setWipResource(resource: ResourceModel, details: ResourceStorageDetails) {
@@ -44,10 +32,11 @@ export class SessionService {
     return item ? JSON.parse(item) : undefined;
   }
 
-  removeWipResource() {
+  removeWipResource(): ResourceStorageObject | undefined {
+    const product = this.getWipResource();
     sessionStorage.removeItem(this.WIP_RESOURCE);
+    return product;
   }
-
 }
 
 export interface ResourceStorageObject {
@@ -57,12 +46,5 @@ export interface ResourceStorageObject {
 
 export interface ResourceStorageDetails {
   createNewResource: boolean;
-}
-
-export interface FlatNode {
-  expandable: boolean;
-  name: string;
-  level: number;
-  id: number;
 }
 

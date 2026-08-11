@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Globalization;
 using Moryx.AbstractionLayer.Drivers.InOut;
 
 namespace Moryx.Drivers.Simulation.InOutDriver;
@@ -15,7 +16,7 @@ public class SimulatedOutput : IOutput
         get
         {
             var key = string.Empty;
-            return Values.ContainsKey(key) ? Values[key] : default;
+            return Values.TryGetValue(key, out var singleValue) ? singleValue : default;
         }
         set
         {
@@ -34,12 +35,12 @@ public class SimulatedOutput : IOutput
     {
         get
         {
-            var key = index.ToString("D");
-            return Values.ContainsKey(key) ? Values[key] : default;
+            var key = index.ToString("D", CultureInfo.InvariantCulture);
+            return Values.TryGetValue(key, out var indexedValue) ? indexedValue : default;
         }
         set
         {
-            var key = index.ToString("D");
+            var key = index.ToString("D", CultureInfo.InvariantCulture);
             Values[key] = value;
             OutputSet?.Invoke(this, key);
         }
@@ -50,7 +51,7 @@ public class SimulatedOutput : IOutput
     /// </summary>
     public object this[string key]
     {
-        get => Values.ContainsKey(key) ? Values[key] : default;
+        get => Values.TryGetValue(key, out var keyedValue) ? keyedValue : default;
         set
         {
             Values[key] = value;

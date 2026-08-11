@@ -12,4 +12,3 @@ export enum SetupJobClassification {
   Cleanup = 'Cleanup',
   Manual = 'Manual'
 }
-

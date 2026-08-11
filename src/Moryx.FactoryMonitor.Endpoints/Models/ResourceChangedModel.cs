@@ -14,17 +14,20 @@ public class ResourceChangedModel : VisualizableItemModel
     [DataMember]
     public virtual string CellName { get; set; }
 
+    // ToDo: Verify why this is duplicated and not using the location of the visual item
     [DataMember]
-    public virtual string CellIconName { get; set; }
+    public virtual string CellIconName { get => base.IconName; set => base.IconName = value; }
 
     [DataMember]
     public virtual string CellImageURL { get; set; }
 
+    // ToDo: Verify why this is duplicated and not using the location of the visual item
     [DataMember]
-    public long Id { get; set; }
+    public long Id { get => base.Id; set => base.Id = value; }
 
+    // ToDo: Verify why this is duplicated and not using the location of the visual item
     [DataMember]
-    public CellLocationModel CellLocation { get; set; }
+    public CellLocationModel CellLocation { get => base.Location; set => base.Location = value; }
 
     [DataMember]
     public Dictionary<string, CellPropertySettings> CellPropertySettings { get; set; }

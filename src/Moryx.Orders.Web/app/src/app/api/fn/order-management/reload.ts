@@ -34,4 +34,3 @@ export function reload(http: HttpClient, rootUrl: string, params: Reload$Params,
 }
 
 reload.PATH = '/api/moryx/orders/{guid}/reload';
-

@@ -3,9 +3,9 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Entry } from "@moryx/ngx-web-framework";
+import { Entry } from "@moryx/ngx-web-framework/entry-editor";
 
-export interface SkillType{
+export interface SkillType {
     id: number;
     name: string;
     duration: string;

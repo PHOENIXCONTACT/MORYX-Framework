@@ -1,14 +1,16 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Collections.Concurrent;
+using System.Runtime.CompilerServices;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moryx.ControlSystem.Jobs.Endpoints.Properties;
-using Newtonsoft.Json;
 using System.Threading.Channels;
 using Moryx.AspNetCore;
-using Newtonsoft.Json.Serialization;
 
 namespace Moryx.ControlSystem.Jobs.Endpoints;
 
@@ -22,15 +24,12 @@ public class JobManagementController : ControllerBase
 {
     private readonly IJobManagement _jobManagement;
 
-    private static readonly JsonSerializerSettings _serializerSettings = CreateSerializerSettings();
-
-    private static JsonSerializerSettings CreateSerializerSettings()
+    private static readonly ConcurrentDictionary<Guid, Channel<string>> _jobStreamSubscribers = new();
+    private static readonly JsonSerializerOptions _serializerOptions = new()
     {
-        var serializerSettings = new JsonSerializerSettings();
-        serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-        serializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
-        return serializerSettings;
-    }
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        Converters = { new JsonStringEnumConverter() }
+    };
 
     public JobManagementController(IJobManagement jobManagement)
         => _jobManagement = jobManagement;
@@ -82,56 +81,65 @@ public class JobManagementController : ControllerBase
         return Ok();
     }
 
-    private static void WriteToEventQueue(ChannelWriter<string> writer, Job job)
-    {
-        var serialized = JsonConvert.SerializeObject(Converter.ToModel(job), _serializerSettings);
-        writer.TryWrite(serialized);
-    }
-
     [HttpGet("stream")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task ProgressStream(CancellationToken cancellationToken)
     {
-        var response = Response;
-        response.Headers["Content-Type"] = "text/event-stream";
+        // Define event handlers using the broadcast helper
+        var progressEventHandler = new EventHandler<Job>((_, job) =>
+            Broadcast(job));
 
-        // Define event handling
-        var jobUpdates = Channel.CreateUnbounded<string>();
-        var progressEventHandler = new EventHandler<Job>((_, job) => WriteToEventQueue(jobUpdates.Writer, job));
-        var stateEventHandler = new EventHandler<JobStateChangedEventArgs>((_, eventArgs) => WriteToEventQueue(jobUpdates.Writer, eventArgs.Job));
-
-        // Register handler to facade
-        _jobManagement.ProgressChanged += progressEventHandler;
-        _jobManagement.StateChanged += stateEventHandler;
+        var stateEventHandler = new EventHandler<JobStateChangedEventArgs>((_, e) =>
+            Broadcast(e.Job));
 
         try
         {
-            // Create infinite loop awaiting changes or cancellation
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                // Await entry in queue
-                var streamContent = await jobUpdates.Reader.ReadAsync(cancellationToken);
-                await response.WriteAsync($"data: {streamContent}\r\r", cancellationToken);
-            }
+            var result = TypedResults.ServerSentEvents(Subscribe(cancellationToken));
+
+            // Register event handlers after result creation but before execution to ensure finally cleanup
+            _jobManagement.ProgressChanged += progressEventHandler;
+            _jobManagement.StateChanged += stateEventHandler;
+
+            await result.ExecuteAsync(HttpContext);
         }
         catch (OperationCanceledException)
         {
-        }
-        catch (ChannelClosedException)
-        {
-        }
-        catch (InvalidOperationException)
-        {
+            // client disconnected — this is expected, not an error
         }
         finally
         {
-            // Unregister handler from facade
             _jobManagement.ProgressChanged -= progressEventHandler;
             _jobManagement.StateChanged -= stateEventHandler;
-
-            jobUpdates.Writer.TryComplete();
         }
 
-        await response.CompleteAsync();
+        return;
+
+        async IAsyncEnumerable<string> Subscribe([EnumeratorCancellation] CancellationToken cancelToken)
+        {
+            var channel = Channel.CreateUnbounded<string>();
+            var id = Guid.NewGuid();
+            _jobStreamSubscribers[id] = channel;
+
+            try
+            {
+                await foreach (var data in channel.Reader.ReadAllAsync(cancelToken))
+                {
+                    yield return data;
+                }
+            }
+            finally
+            {
+                _jobStreamSubscribers.TryRemove(id, out _);
+            }
+        }
+
+        // Local helper to broadcast job updates to all connected clients
+        static void Broadcast(Job job)
+        {
+            foreach (var channel in _jobStreamSubscribers.Values)
+            {
+                channel.Writer.TryWrite(JsonSerializer.Serialize(Converter.ToModel(job), _serializerOptions));
+            }
+        }
     }
 }

@@ -1,0 +1,85 @@
+@let connectors = currentProduct()?.parts;
+@let currentConnector = expandedPart();
+@let currentPart = selectedPart();
+
+@if (connectors?.length) {
+  <mat-accordion class="accordion">
+    @for (connector of connectors; track connector.name) {
+      <mat-expansion-panel
+        [expanded]="currentConnector?.name === connector.name"
+        (afterCollapse)="onDeselectPartConnector(connector)"
+        (opened)="onSelectPartConnector(connector)">
+        <mat-expansion-panel-header>
+          <mat-panel-title>{{ connector.displayName ? connector.displayName : connector.name }}</mat-panel-title>
+          <mat-panel-description>{{ getConnectorPreview(connector) }}</mat-panel-description>
+        </mat-expansion-panel-header>
+        @if (currentConnector?.name === connector.name) {
+          @if (connector.isCollection) {
+            <div class="collection">
+              <mat-nav-list class="list">
+                @for (partElement of connector.parts; track partElement.id) {
+                  <a mat-list-item
+                    [routerLink]="getPartRoute(partElement)"
+                    [queryParamsHandling]="'preserve'"
+                    class="item"
+                    [class.moryx-selected]="currentPart?.id === partElement.id">
+                    <span matListItemTitle>{{ partElement.product?.name }}</span>
+                    <span matListItemLine>{{ partElement.product?.identifier }}-{{ partElement.product?.revision }}</span>
+                    <button
+                      matListItemMeta
+                      mat-icon-button
+                      [matTooltip]="TranslationConstants.PARTS.OPEN | translate"
+                      [class.hidden]="isEditMode()"
+                      (click)="$event.stopPropagation(); openProduct(partElement)">
+                      <mat-icon>arrow_outward</mat-icon>
+                    </button>
+                  </a>
+                }
+              </mat-nav-list>
+              <app-product-parts-details class="details" />
+            </div>
+          } @else {
+            <app-product-parts-details class="details" />
+          }
+        }
+        <mat-action-row>
+          @if (connector.isCollection) {
+            <button
+              mat-button
+              [disabled]="!isEditMode() || !currentPart"
+              (click)="removePart()">
+              {{ TranslationConstants.PARTS.REMOVE | translate }}
+            </button>
+            <button
+              mat-flat-button
+              [disabled]="!isEditMode()"
+              (click)="addPart()">
+              {{ TranslationConstants.PARTS.ADD | translate }}
+            </button>
+          } @else {
+            @if (currentPart) {
+              <button
+                mat-button
+                [disabled]="isEditMode()"
+                (click)="openProduct(currentPart)">
+                {{ TranslationConstants.PARTS.OPEN | translate }}
+              </button>
+            }
+            <button
+              mat-button
+              [disabled]="!isEditMode() || !currentPart"
+              (click)="removePart()">
+              {{ TranslationConstants.PARTS.REMOVE | translate }}
+            </button>
+            <button
+              mat-flat-button
+              [disabled]="!isEditMode()"
+              (click)="addPart()">
+              {{ TranslationConstants.PARTS.REPLACE | translate }}
+            </button>
+          }
+        </mat-action-row>
+      </mat-expansion-panel>
+    }
+  </mat-accordion>
+}

@@ -1,0 +1,9 @@
+@use '@angular/material' as mat;
+
+:host {
+  display: block;
+}
+
+.outer-field {
+  width: 100%;
+}

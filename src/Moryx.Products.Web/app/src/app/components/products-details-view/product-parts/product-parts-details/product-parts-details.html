@@ -1,0 +1,14 @@
+@let connector = partConnector();
+@let part = productPart();
+
+@if (!part || !connector) {
+  <!-- Undefined state -->
+} @else if (part.properties?.subEntries?.length) {
+  <navigable-entry-editor
+    [disabled]="!isEditMode()"
+    [entry]="part.properties!"
+    queryParam="productPart"
+  ></navigable-entry-editor>
+} @else {
+  <empty-state style="scale: 66%;" [header]="''" [message]="''" icon="assignment_turned_in" />
+}

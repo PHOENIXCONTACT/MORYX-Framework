@@ -127,7 +127,7 @@ public class SerializationTests
         for (var i = 1; i <= 5; i++)
         {
             var newInstance = entry1.Prototypes[0].Instantiate();
-            newInstance.Value.Current = (1 + i).ToString();
+            newInstance.Value.Current = (1 + i).ToString(CultureInfo.InvariantCulture);
             entry1.SubEntries.Add(newInstance);
         }
 
@@ -162,7 +162,7 @@ public class SerializationTests
         for (var i = 1; i <= 5; i++)
         {
             var newInstance = entry1.Prototypes[0].Instantiate();
-            newInstance.Value.Current = (1 + i).ToString();
+            newInstance.Value.Current = (1 + i).ToString(CultureInfo.InvariantCulture);
             newInstance.DisplayName = "Key" + i;
             entry1.SubEntries.Add(newInstance);
         }
@@ -214,7 +214,7 @@ public class SerializationTests
         for (var i = 1; i <= 2; i++)
         {
             var newInstance = entry1.Prototypes[0].Instantiate();
-            newInstance.Value.Current = (1 + i).ToString();
+            newInstance.Value.Current = (1 + i).ToString(CultureInfo.InvariantCulture);
             newInstance.DisplayName = "Key" + i;
             entry1.SubEntries.Add(newInstance);
         }
@@ -303,7 +303,7 @@ public class SerializationTests
         for (var i = 1; i <= 5; i++)
         {
             var newInstance = ent.Prototypes[0].Instantiate();
-            newInstance.Value.Current = (1 + i).ToString();
+            newInstance.Value.Current = (1 + i).ToString(CultureInfo.InvariantCulture);
             ent.SubEntries.Add(newInstance);
         }
 
@@ -498,7 +498,7 @@ public class SerializationTests
             {
                 var newInstance = colEntry.Prototypes[0].Instantiate();
                 // change "Key" + 10
-                newInstance.DisplayName = (prefill + i).ToString();
+                newInstance.DisplayName = (prefill + i).ToString(CultureInfo.InvariantCulture);
                 // change "Value"
                 newInstance.SubEntries[0].Value.Current = (prefill + i).ToString("F2", defaultSerialization.FormatProvider);
                 newInstance.SubEntries[1].Value.Current = newInstance.SubEntries[1].Value.Possible[2].Key;
@@ -511,7 +511,7 @@ public class SerializationTests
             for (var i = 1; i <= newValues; i++)
             {
                 var newInstance = colEntry.Prototypes[0].Instantiate();
-                newInstance.SubEntries[0].Value.Current = (prefill + i).ToString();
+                newInstance.SubEntries[0].Value.Current = (prefill + i).ToString(CultureInfo.InvariantCulture);
                 newInstance.SubEntries[1].Value.Current = newInstance.SubEntries[1].Value.Possible[2].Key;
                 colEntry.SubEntries.Add(newInstance);
             }
@@ -623,9 +623,9 @@ public class SerializationTests
         // Act
         var colEntry = CollectionEntry(encoded.SubEntries, type);
         if (type == CollectionType.Dictionary)
-            colEntry.SubEntries.RemoveAll(e => removedIndexes.Contains(int.Parse(e.Identifier) - 1));
+            colEntry.SubEntries.RemoveAll(e => removedIndexes.Contains(int.Parse(e.Identifier, CultureInfo.InvariantCulture) - 1));
         else
-            colEntry.SubEntries.RemoveAll(e => removedIndexes.Contains(int.Parse(e.Identifier)));
+            colEntry.SubEntries.RemoveAll(e => removedIndexes.Contains(int.Parse(e.Identifier, CultureInfo.InvariantCulture)));
         EntryConvert.UpdateInstance(obj, encoded);
 
         // Assert

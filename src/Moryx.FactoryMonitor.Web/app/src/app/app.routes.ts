@@ -4,16 +4,16 @@
 */
 
 import { Routes } from '@angular/router';
-import { FactoryBoardComponent } from './components/factory-board/factory-board.component';
+import { FactoryBoard } from './components/factory-board/factory-board';
 
 export const routes: Routes = [
   {
     path: 'factory/:id',
-    component: FactoryBoardComponent,
+    component: FactoryBoard,
   },
   {
     path: 'root',
-    component: FactoryBoardComponent,
+    component: FactoryBoard,
   },
   {
     path: '',

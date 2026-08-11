@@ -1,0 +1,18 @@
+@let data = currentCell();
+
+<div
+  #cell
+  class="cell-container"
+  [style.border-color]="borderColor()"
+  [style.background]="backgroundColor()"
+  [style.top]="(data.location?.positionY ?? 0) * 100 + '%'"
+  [style.left]="(data.location?.positionX ?? 0) * 100 + '%'"
+  cdkDrag
+  cdkDragBoundary=".draggable-area"
+  (cdkDragEnded)="onCellMove($event)"
+  [cdkDragDisabled]="!isEditMode()"
+  (click)="onCellClicked()">
+  <mat-icon [style.color]="iconColor()">{{
+    data.iconName
+  }}</mat-icon>
+</div>

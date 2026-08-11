@@ -1,0 +1,23 @@
+mat-dialog-content {
+  padding-top: 4px !important;
+  padding-bottom: 16px !important;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.dialog-row {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.not-qualified-operator {
+  color: var(--mat-sys-error);
+}
+
+.not-allowed-operator {
+  color: var(--mat-sys-error);
+}

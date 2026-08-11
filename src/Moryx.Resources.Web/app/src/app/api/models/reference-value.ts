@@ -11,4 +11,3 @@ export enum ReferenceValue {
   NullOrEmpty = 'NullOrEmpty',
   NotEmpty = 'NotEmpty'
 }
-

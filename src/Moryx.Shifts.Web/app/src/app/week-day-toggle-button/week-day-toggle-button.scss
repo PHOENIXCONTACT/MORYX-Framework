@@ -1,0 +1,30 @@
+:host {
+  display: block;
+}
+
+.toggle-label {
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.toggle-grid {
+  display: grid;
+  grid-auto-rows: auto;
+  grid-auto-flow: row;
+}
+
+.toggle-group {
+  width: 100%;
+}
+
+.readonly-week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.readonly-day {
+  font-weight: 500;
+  border: 1px solid var(--mat-sys-outline-variant);
+  text-align: center;
+  padding: 12px 0;
+}

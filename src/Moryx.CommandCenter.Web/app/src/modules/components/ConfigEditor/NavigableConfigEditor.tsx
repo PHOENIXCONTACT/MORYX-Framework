@@ -9,7 +9,7 @@ import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import queryString from "query-string";
 import * as React from "react";
-import {Location, useLocation, useNavigate} from "react-router-dom";
+import { Location, useLocation, useNavigate } from "react-router";
 import Entry from "../../models/Entry";
 import ConfigEditor from "./ConfigEditor";
 

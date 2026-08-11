@@ -2,25 +2,19 @@
 
 ## Description
 
-This module provides the functiality to edit workplans graphically. It provides workplans and enables operations on workplan items.It also enables saving modified workplans with additional graphical information.
+This module provides the functiality to edit workplans graphically. It provides workplans and enables operations on workplan items. It also enables saving modified workplans with additional graphical information.
 
 ## Provided facades
 
-`IWorkplanEditing` (see Moryx.Workplans.IWorkplanEditing in Moryx Platform)
+[`IWorkplanEditing`](/src/Moryx.Workplans/IWorkplanEditing.cs)
+
+## Provided Endpoint
+
+This module provides a REST API for editing workplans. See [Workplans Editing Endpoint](endpoint.md) for details on available operations and permissions.
 
 ## Dependencies
 
-Workflows Editing depends on the following APIs and DataModels. Detailed documentation can (hopefully) be found by clicking the dependencies link.
-
-`IWorkplanEditing` (see Moryx.Workplans.IWorkplanEditing in Moryx Platform)
-
-`IWorkplans ` (see Moryx.Workplans.IWorkplans in Moryx Platform)
-
 ### Referenced facades
-
-Plugin API | Start Dependency | Optional | Usage
------------|------------------|----------|------
-`IProductManagement` (see Moryx.Products.IProductManagement in AbstractionLayer)| Yes | No | The Product Management is used the get products and workplan information.
 
 ### Used DataModels
 

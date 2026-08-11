@@ -461,19 +461,19 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     public Task<OpcUaNode> GetNodeAsync(string nodeId, CancellationToken cancellationToken = default)
     {
         var expandedNodeId = OpcUaNode.CreateExpandedNodeId(GetNodeIdAsString(nodeId));
-        if (!_nodesFlat.TryGetValue(expandedNodeId, out var value))
+        if (!_nodesFlat.TryGetValue(expandedNodeId, out var node))
         {
             return null;
         }
 
-        return Task.FromResult(value);
+        return Task.FromResult(node);
     }
 
     private string GetNodeIdAsString(string identifier)
     {
-        if (_nodeIdAliasDictionary.TryGetValue(identifier, out var value))
+        if (_nodeIdAliasDictionary.TryGetValue(identifier, out var nodeId))
         {
-            return value;
+            return nodeId;
         }
 
         return identifier;
@@ -744,9 +744,9 @@ public class OpcUaDriver : Driver, IOpcUaDriver
         {
             var nextRdNodeId = OpcUaNode.CreateExpandedNodeId(nextRd.NodeId.ToString());
             OpcUaNode node = null;
-            if (_nodesFlat.TryGetValue(nextRdNodeId, out var value))
+            if (_nodesFlat.TryGetValue(nextRdNodeId, out var exisitingNode))
             {
-                node = value;
+                node = exisitingNode;
             }
 
             if (node == null)

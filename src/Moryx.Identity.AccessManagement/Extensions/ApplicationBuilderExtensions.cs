@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 
 namespace Moryx.Identity.AccessManagement;
 
@@ -25,7 +26,7 @@ public static class ApplicationBuilderExtensions
             var token = context.Request.Cookies[MoryxIdentityDefaults.JWT_COOKIE_NAME];
             if (!string.IsNullOrEmpty(token) && !context.Request.Headers.ContainsKey("Authorization"))
             {
-                context.Request.Headers.Add("Authorization", "Bearer " + token);
+                context.Request.Headers.Append("Authorization", "Bearer " + token);
             }
             await next();
         });

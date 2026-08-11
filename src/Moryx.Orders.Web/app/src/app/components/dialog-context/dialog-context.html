@@ -1,0 +1,14 @@
+@let model = operationModel();
+
+<div class="dialog-context">
+  <p class="dialog-context-item">
+    <span class="info-label">{{ TranslationConstants.DIALOG_CONTEXT.ORDER | translate }}</span>
+    <span class="info-value">{{ model.order + ' - ' + model.number }}</span>
+  </p>
+  <p class="dialog-context-item">
+    <span class="info-label">{{ TranslationConstants.DIALOG_CONTEXT.PRODUCT | translate }}</span>
+    <span class="info-value">
+      {{ model.productIdentifier + '-' + (model.productRevision | number:'2.0') + ' ' + model.productName }}
+    </span>
+  </p>
+</div>

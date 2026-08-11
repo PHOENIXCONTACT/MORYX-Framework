@@ -4,19 +4,17 @@
 */
 
 import { Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CookieService {
 
-  constructor() { }
-
   getCookie(name: string) {
-    let ca: Array<string> = document.cookie.split(';');
-    let caLen: number = ca.length;
-    let cookieName = `${name}=`;
+    const ca: Array<string> = document.cookie.split(';');
+    const caLen: number = ca.length;
+    const cookieName = `${name}=`;
     let c: string;
 
     for (let i: number = 0; i < caLen; i += 1) {
@@ -29,14 +27,15 @@ export class CookieService {
   }
 
   setCookie(name: string, value: string, expireDays: number, path: string = '') {
-    let d: Date = new Date();
+    const d: Date = new Date();
     d.setTime(d.getTime() + expireDays * 24 * 60 * 60 * 1000);
-    let expires: string = `expires=${d.toUTCString()}`;
-    let cpath: string = path ? `; path=${path}` : '; path=/';
-    if (environment.production)
+    const expires: string = `expires=${d.toUTCString()}`;
+    const cpath: string = path ? `; path=${path}` : '; path=/';
+    if (environment.production) {
       document.cookie = `${name}=${encodeURI(value)}; ${expires}${cpath}`;
-    else
+    } else {
       document.cookie = `${name}=${encodeURI(value)}; ${expires}${cpath}; samesite=none; secure`;
+    }
   }
 }
 

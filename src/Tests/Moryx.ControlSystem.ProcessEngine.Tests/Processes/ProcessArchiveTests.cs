@@ -240,6 +240,21 @@ public class ProcessArchiveTests
         Assert.That(process.ProductInstance, Is.InstanceOf<DummyProductInstance>());
     }
 
+    [Test]
+    public async Task GetProcessesById()
+    {
+        // Arrange
+        var jobs = CreateJobEntities();
+        var entities = CreateProcessEntities(jobs);
+        CreateTestData(jobs, entities);
+
+        // Act
+        var process = await _processArchive.GetProcess(entities[0].ReferenceId, CancellationToken.None);
+
+        // Assert
+        Assert.That(process, Is.Not.Null);
+    }
+
     private void CreateTestData(IReadOnlyList<JobEntity> jobs, IReadOnlyList<ProcessEntity> processes)
     {
         var queryableJobEntityMock = new Mock<IQueryable<JobEntity>>();

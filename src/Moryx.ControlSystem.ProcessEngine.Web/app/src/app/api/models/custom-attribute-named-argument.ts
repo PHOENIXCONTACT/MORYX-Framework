@@ -14,4 +14,3 @@ export interface CustomAttributeNamedArgument {
   memberName?: string | null;
   typedValue?: CustomAttributeTypedArgument;
 }
-

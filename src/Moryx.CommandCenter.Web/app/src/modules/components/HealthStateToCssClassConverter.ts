@@ -3,8 +3,6 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { ChipPropsColorOverrides } from "@mui/material/Chip";
-import * as React from "react";
 import { ModuleServerModuleState } from "../models/ModuleServerModuleState";
 
 export interface ForegroundBackgroundCssClass {

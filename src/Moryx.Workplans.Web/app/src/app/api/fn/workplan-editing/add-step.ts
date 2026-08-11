@@ -38,4 +38,3 @@ export function addStep(http: HttpClient, rootUrl: string, params: AddStep$Param
 }
 
 addStep.PATH = '/api/moryx/workplans/sessions/{sessionId}/nodes';
-

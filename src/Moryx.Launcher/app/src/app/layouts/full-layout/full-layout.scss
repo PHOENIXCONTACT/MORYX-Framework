@@ -1,0 +1,43 @@
+@use "../layout";
+
+.logo-host {
+  display: flex;
+  align-items: center;
+  margin-left: 4px;
+}
+
+.logo {
+  height: 46px;
+  width: auto;
+}
+
+mat-sidenav {
+  width: fit-content;
+  overflow: visible;
+  border-right: 1px solid var(--mat-sys-outline-variant);
+  filter: drop-shadow(1px 0 2px color-mix(in srgb, var(--mat-sys-shadow) 6%, transparent));
+}
+
+mat-sidenav-container {
+  flex: 1;
+  --mat-sidenav-container-background-color: var(--mat-sys-surface-container-lowest);
+  --mat-sidenav-container-shape: 0;
+}
+
+mat-sidenav-content {
+  display: flex;
+  flex-direction: column;
+}
+
+mat-toolbar {
+  --mat-toolbar-container-background-color: var(--mat-sys-surface-container-lowest);
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  box-shadow: 0 1px 2px 0 color-mix(in srgb, var(--mat-sys-shadow) 6%, transparent),
+              0 1px 1px -1px color-mix(in srgb, var(--mat-sys-shadow) 6%, transparent);
+  position: relative;
+  z-index: 2;
+}
+
+.toolbar-spacer {
+  flex: 1 1 auto;
+}

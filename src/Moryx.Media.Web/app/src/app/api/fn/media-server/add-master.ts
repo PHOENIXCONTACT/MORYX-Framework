@@ -36,4 +36,3 @@ export function addMaster(http: HttpClient, rootUrl: string, params?: AddMaster$
 }
 
 addMaster.PATH = '/api/moryx/media/master';
-

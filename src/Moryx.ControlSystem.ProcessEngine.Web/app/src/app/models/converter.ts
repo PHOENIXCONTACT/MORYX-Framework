@@ -3,21 +3,13 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { ProcessHolderGroupModel } from "../api/models/process-holder-group-model";
-import { ProcessHolderPositionModel } from "../api/models/process-holder-position-model";
+import { ProcessHolderGroupModel } from "@api/models/process-holder-group-model";
 import { ProcessHolderGroup } from "./process-holder-group-model";
 import ProcessHolderNode from "./process-holder-node";
-import { ProcessHolderPosition } from "./process-holder-position-model";
 
 export function ConvertToProcessHolderGroup(group: ProcessHolderGroupModel) {
   return <ProcessHolderGroup>{
     ...group,
-  };
-}
-
-export function ConvertToProcessHolderPosition(position: ProcessHolderPositionModel) {
-  return <ProcessHolderPosition>{
-    ...position,
   };
 }
 

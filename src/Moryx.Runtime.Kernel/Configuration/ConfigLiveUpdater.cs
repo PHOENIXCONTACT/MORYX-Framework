@@ -55,7 +55,7 @@ internal class ConfigLiveUpdater
         return true;
     }
 
-    private Type GetSharedType(Type sharedType, object target, object source)
+    private static Type GetSharedType(Type sharedType, object target, object source)
     {
         // Check if both objects are identical or have the same type
         Type targetType = target.GetType(), sourceType;
@@ -76,7 +76,7 @@ internal class ConfigLiveUpdater
         return common ?? sharedType;
     }
 
-    private List<Type> GetBaseTypes(Type targetType)
+    private static List<Type> GetBaseTypes(Type targetType)
     {
         var targetsBases = new List<Type>();
         var baseType = targetType.BaseType;

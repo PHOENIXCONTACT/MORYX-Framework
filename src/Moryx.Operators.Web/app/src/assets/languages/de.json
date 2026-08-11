@@ -8,19 +8,6 @@
         "EXPAND" : "Expandieren",
         "GO_BACK" : "Geh zurück"
     },
-    "AVAILABILITIES" : {
-        "TITLE": "Verfügbarkeiten",
-        "THIS_WEEK": "Diese Woche",
-        "OPERATORS": "Bediener"
-    },
-    "AVAILABILITY_DIALOG" : {
-        "TITLE": "Neue Verfügbarkeit",
-        "DESCRIPTION": "Abwesenheitsnotiz für einen Bediener erstellen",
-        "FROM": "Aus",
-        "TO": "Zu",
-        "CANCEL" : "Stornieren",
-        "SAVE": "Speichern"
-    },
     "SKILL_TYPES" : {
         "NAME": "Name",
         "TRAINED_OPERATORS": "Geschulte Bediener",
@@ -29,7 +16,6 @@
     "OPERATORS_MANAGEMENT" : {
         "MANAGE_OPERATORS" : "Bediener verwalten",
         "SKILL_TYPES" : "Fertigkeitstypen",
-        "AVAILABILITIES" : "Verfügbarkeiten",
         "NAME": "Name",
         "NUMBER": "Nummer",
         "SKILLSET": "Fähigkeiten",

@@ -15,11 +15,15 @@ export function getHierarchieLineFor(
   targetId: number | undefined,
   resourceTree: ResourceModel[] | undefined
 ): number[] {
-  if (!targetId || !resourceTree) return [];
+  if (!targetId || !resourceTree) {
+    return [];
+  }
   let line: number[] = [];
-  for (let r of resourceTree) {
+  for (const r of resourceTree) {
     const possibleLine = exploreHierarchieLineFor(r, targetId);
-    if (!possibleLine) continue;
+    if (!possibleLine) {
+      continue;
+    }
     line = possibleLine;
     break;
   }
@@ -27,29 +31,32 @@ export function getHierarchieLineFor(
 }
 
 /**
-   * This method takes a source resource and the id of the target resource. It runs
-   * a DFS on the node and its children for the resource with the matching id. The
-   * method returns and empty array, if the source resource is the target. If the
-   * target was found in any of the resources children it appends its own to the
-   * array of ids provided by the relevant child. Otherwise, i.e. the target could
-   * not be found in any of the child trees, the method returns undefined.
-   * @method
-   */
-export function exploreHierarchieLineFor(
-    source: ResourceModel,
-    targetId: number
-  ): number[] | undefined {
-    if (source.id === targetId) return [];
+ * This method takes a source resource and the id of the target resource. It runs
+ * a DFS on the node and its children for the resource with the matching id. The
+ * method returns and empty array, if the source resource is the target. If the
+ * target was found in any of the resources children it appends its own to the
+ * array of ids provided by the relevant child. Otherwise, i.e. the target could
+ * not be found in any of the child trees, the method returns undefined.
+ * @method
+ */
+export function exploreHierarchieLineFor(source: ResourceModel, targetId: number): number[] | undefined {
+  if (source.id === targetId) {
+    return [];
+  }
 
-    const childReferences =
-      source.references?.find((ref) => ref.name == "Children")?.targets ?? [];
-    if (!childReferences.length) return undefined;
-
-    for (let c of childReferences) {
-      const path = exploreHierarchieLineFor(c, targetId);
-      if (!path) continue;
-      path.push(source.id!);
-      return path;
-    }
+  const childReferences =
+    source.references?.find((ref) => ref.name == "Children")?.targets ?? [];
+  if (!childReferences.length) {
     return undefined;
   }
+
+  for (const c of childReferences) {
+    const path = exploreHierarchieLineFor(c, targetId);
+    if (!path) {
+      continue;
+    }
+    path.push(source.id!);
+    return path;
+  }
+  return undefined;
+}

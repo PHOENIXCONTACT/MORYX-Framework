@@ -16,4 +16,3 @@ export interface VariantDescriptor {
   preview?: PreviewDescriptor;
   size?: number;
 }
-

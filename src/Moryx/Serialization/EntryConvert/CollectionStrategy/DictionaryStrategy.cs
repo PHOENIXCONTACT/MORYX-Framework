@@ -11,7 +11,6 @@ namespace Moryx.Serialization;
 internal class DictionaryStrategy : ICollectionStrategy
 {
     private readonly IDictionary _dictionary;
-    private readonly IList _toDelete = new List<object>();
     private readonly ICustomSerialization _serialization;
 
     public DictionaryStrategy(IDictionary dictionary, ICustomSerialization serialization)

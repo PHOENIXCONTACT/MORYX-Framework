@@ -43,7 +43,7 @@ internal class OperationDataPool : IOperationDataPool, IOperationPool
         var operationRepo = uow.GetRepository<IOperationEntityRepository>();
         // Restore only operations which are not completed
         var restored = await operationRepo.Linq.Active()
-            .Where(o => o.State < OperationDataStateBase.CompletedKey).ToArrayAsync();
+            .Where(o => o.State < OperationDataStateBase.CompletedKey).ToArrayAsync(cancellationToken);
 
         foreach (var entity in restored)
             await RestoreByEntity(entity);

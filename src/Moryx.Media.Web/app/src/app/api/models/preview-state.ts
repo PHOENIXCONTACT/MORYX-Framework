@@ -13,4 +13,3 @@ export enum PreviewState {
   Unsupported = 'Unsupported',
   Removed = 'Removed'
 }
-

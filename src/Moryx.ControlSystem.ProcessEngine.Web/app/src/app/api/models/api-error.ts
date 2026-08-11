@@ -12,4 +12,3 @@ export interface ApiError {
   exception?: Exception;
   message?: string | null;
 }
-

@@ -27,4 +27,3 @@ export enum FieldAttributes {
   HasDefault = 'HasDefault',
   ReservedMask = 'ReservedMask'
 }
-

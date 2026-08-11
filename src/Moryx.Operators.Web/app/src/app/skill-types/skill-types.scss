@@ -1,0 +1,55 @@
+@use '@angular/material' as mat;
+
+:host {
+  @include mat.toolbar-overrides((
+    container-background-color: var(--mat-sys-surface-container-lowest),
+  ));
+
+  mat-toolbar {
+    border-bottom: 1px solid var(--mat-sys-outline-variant);
+  }
+}
+
+.skill-types-container {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  background-color: var(--mat-sys-background);
+  color: var(--mat-sys-on-background);
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.fab-container {
+  position: absolute;
+  z-index: 100;
+  bottom: 20px;
+  right: 20px;
+}
+
+.table-content {
+  width: 100%;
+  padding: 8px;
+  position: relative;
+}
+
+.skill-types-list {
+  overflow-y: auto;
+
+  @include mat.table-overrides(
+    (
+      background-color: var(--mat-sys-surface-container-lowest),
+    )
+  );
+}
+
+.mat-column-actions {
+  width: 100px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}

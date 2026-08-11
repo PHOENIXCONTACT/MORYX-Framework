@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Microsoft.EntityFrameworkCore;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;
@@ -156,22 +157,25 @@ internal class RecipeManagement : IRecipeManagement, IWorkplans
         var recipeRepo = uow.GetRepository<IProductRecipeRepository>();
 
         // Update all non-clone recipes of that workplan
-        var affectedRecipes = recipeRepo.Linq
-            .Where(r => r.WorkplanId == workplan.Id && r.Classification > 0).ToList();
+        var affectedRecipes = await recipeRepo.Linq
+            .Where(r => r.WorkplanId == workplan.Id && r.Classification > 0).ToArrayAsync(cancellationToken);
 
         var entity = RecipeStorage.ToWorkplanEntity(uow, workplan);
+        // No changes are executed if cancelled
+        cancellationToken.ThrowIfCancellationRequested();
+
         foreach (var recipe in affectedRecipes)
         {
             recipe.Workplan = entity;
         }
 
-        uow.SaveChanges();
+        await uow.SaveChangesAsync(CancellationToken.None);
 
         workplan.Id = entity.Id;
 
         foreach (var recipeEntity in affectedRecipes)
         {
-            var recipe = await Storage.LoadRecipeAsync(recipeEntity.Id);
+            var recipe = await Storage.LoadRecipeAsync(recipeEntity.Id, CancellationToken.None);
             RaiseRecipeChanged(recipe);
         }
 

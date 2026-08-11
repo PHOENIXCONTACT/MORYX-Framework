@@ -36,4 +36,3 @@ export function signOut(http: HttpClient, rootUrl: string, params?: SignOut$Para
 }
 
 signOut.PATH = '/api/moryx/operators/signout';
-

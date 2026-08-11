@@ -1,0 +1,25 @@
+@let product = currentProduct();
+@let link = activeLink();
+
+<app-products-details-header />
+
+<mat-divider></mat-divider>
+
+<nav mat-tab-nav-bar class="product-details-navigation" [tabPanel]="tabPanel">
+  @if (product?.properties !== undefined) {
+  <a mat-tab-link [active]="link === Tabs.Properties" (click)="routeTo(Tabs.Properties)">{{
+    TranslationConstants.SHARED.PROPERTIES | translate }}</a>
+  }
+  @if (product?.parts?.length) {
+  <a mat-tab-link [active]="link === Tabs.Parts" (click)="routeTo(Tabs.Parts)">{{
+    TranslationConstants.DETAILS.PARTS | translate }}</a>
+  }
+  <a mat-tab-link [active]="link === Tabs.Recipes" (click)="routeTo(Tabs.Recipes)">{{
+    TranslationConstants.DETAILS.RECIPES | translate }}</a>
+  <a mat-tab-link [active]="link === Tabs.References" (click)="routeTo(Tabs.References)">{{
+    TranslationConstants.DETAILS.REFERENCES | translate }}</a>
+</nav>
+
+<mat-tab-nav-panel class="product-details-information" #tabPanel>
+  <router-outlet></router-outlet>
+</mat-tab-nav-panel>

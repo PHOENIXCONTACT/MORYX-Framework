@@ -16,4 +16,4 @@
 
 
 
-All test cases should be executed on a running release build of the `Moryx.Identity.IdentityServer` project in the identity-demo repository make sure to configure it to a new database name to also validate the migrations are still working and that it can be setup.
+All test cases should be executed on a running release build of the `Moryx.Identity.IdentityServer` project in the identity-demo repository. Make sure to configure it to a new database name to also validate that the migrations are still working and that it can be setup.

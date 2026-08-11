@@ -1,0 +1,38 @@
+<span class="toggle-label">
+  {{ TranslationConstants.DIALOGS.WEEK_ASSIGNMENT_DIALOG.DAYS_OF_THE_SHIFT | translate }}
+</span>
+
+@if (!readOnly()) {
+  <div class="toggle-grid">
+    @for (week of getCalendarDaysPerWeek(); track $index) {
+      <mat-button-toggle-group aria-label="days of the shift week 1" multiple
+                               class="toggle-group" hideMultipleSelectionIndicator>
+        @for (calendarDay of week; track $index) {
+          <mat-button-toggle [value]="calendarDay"
+                             [checked]="isDaySelected(calendarDay) && isDayInInterval(calendarDay.date, startDate(), endDate())"
+                             (change)="onButtonToggled($event)"
+                             [disabled]="!isDayInInterval(calendarDay.date, startDate(), endDate())">
+            {{ (shortDayName(localizedDayName(calendarDay.day) | translate)).toUpperCase() }}
+            {{ formatDateDigits(calendarDay.date.getDate()) }}
+          </mat-button-toggle>
+        }
+      </mat-button-toggle-group>
+    }
+  </div>
+}
+
+@if (readOnly()) {
+  <div class="toggle-grid">
+    @for (week of getCalendarDaysPerWeek(); track $index) {
+      <div class="readonly-week">
+        @for (calendarDay of week; track $index) {
+          <span class="readonly-day"
+                [class.line-through]="!isDayInInterval(calendarDay.date, startDate(), endDate())">
+            {{ (shortDayName(localizedDayName(calendarDay.day) | translate)).toUpperCase() }}
+            {{ formatDateDigits(calendarDay.date.getDate()) }}
+          </span>
+        }
+      </div>
+    }
+  </div>
+}

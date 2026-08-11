@@ -1,0 +1,26 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
+import { OrderModel } from '../models/order-model';
+import prettyMilliseconds from 'pretty-ms';
+
+import { MatIconModule } from '@angular/material/icon';
+
+@Component({
+  selector: 'app-order-item',
+  templateUrl: './order-item.html',
+  styleUrl: './order-item.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [
+    MatIconModule
+]
+})
+export class OrderItem {
+  protected prettyMilliseconds = prettyMilliseconds;
+  protected hourToMillisecond = 3600000;
+  readonly order = input.required<OrderModel>();
+}
+

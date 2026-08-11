@@ -21,5 +21,5 @@ public class TransportPathModel
     public virtual CellLocationModel Destination { get; set; }
 
     [DataMember]
-    public virtual List<Position> WayPoints { get; set; } = new List<Position>();
+    public virtual List<Position> WayPoints { get; set; } = [];
 }

@@ -177,10 +177,8 @@ public class ParallelOperations : IParallelOperations
     {
         lock (_runningTimers)
         {
-            if (!_runningTimers.ContainsKey(timerId))
+            if (!_runningTimers.TryGetValue(timerId, out var timer))
                 return;
-
-            var timer = _runningTimers[timerId];
             timer.Dispose();
             _runningTimers.Remove(timerId);
         }

@@ -10,4 +10,3 @@ import { IntPtr } from '../models/int-ptr';
 export interface RuntimeMethodHandle {
   value?: IntPtr;
 }
-

@@ -17,8 +17,6 @@ public class ParallelOperationTests
 {
     private const string ExceptionMsg = "Hello World!";
     private const int MaxTrows = 3;
-    private const int SleepTime = 1000;
-
     private ParallelOperations _threadFactory;
     private readonly ManualResetEventSlim _callbackReceivedEvent = new(false);
 

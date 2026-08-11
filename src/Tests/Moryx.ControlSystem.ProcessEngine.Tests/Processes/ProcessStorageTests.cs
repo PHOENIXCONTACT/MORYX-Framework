@@ -356,7 +356,7 @@ public class ProcessStorageTests
     #endregion
 
     #region helper
-    private ActivityData CreateActivityData(Activity activity, ProcessData processData)
+    private static ActivityData CreateActivityData(Activity activity, ProcessData processData)
     {
         var activityData = new ActivityData(activity)
         {
@@ -369,7 +369,7 @@ public class ProcessStorageTests
         return activityData;
     }
 
-    private ProcessData CreateProcessData(long jobId, long processId)
+    private static ProcessData CreateProcessData(long jobId, long processId)
     {
         var recipe = DummyRecipe.BuildRecipe();
 

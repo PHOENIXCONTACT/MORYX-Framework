@@ -13,11 +13,11 @@ The base class requires three methods:
 * **UpdateParameters:** Some parameters were entered by the user and the importer can now update, add or modify other parameters. This provides an interactive workflow between the client and importer plugin. For example an importer could prefill the revision field after a material number was entered.
 * **Import:** Parse the parameters from the client and construct an `ProductType` instance. **DO NOT** write this to the database, but return the unsaved object instead.
 
-It is important that the new created importer is configured in the **Maintenance -> ProductManager -> Importers**.
+It is important that the new created importer is configured in the **Command Center -> ProductManager -> Configuration -> Importers**.
 
 ## Prototype importer
 
-A simple prototype importer for our watch product model is shown below. Like other plugins it needs to define a config and export it as `ExpectedConfig` above the class. The `ImporterType.Prototype` defines that this importer creates an empty product instance that can later be finalized using the default product editor.
+A simple prototype importer for our watch product model is shown below. Like other plugins it needs to define a config and export it as `ExpectedConfig` above the class.
 
 ````cs
 [DataContract]
@@ -97,7 +97,7 @@ public class FileImporterConfig : ProductImporterConfig
 
 [ExpectedConfig(typeof(FileImporterConfig))]
 [ProductImporter(nameof(FileImporter)]
-public class FileImporter : ProductImporterBase<FileImporterConfig>
+public class FileImporter : ProductImporterBase<FileImporterConfig, FileImportParameters>
 {
     protected override object GenerateParameters()
     {

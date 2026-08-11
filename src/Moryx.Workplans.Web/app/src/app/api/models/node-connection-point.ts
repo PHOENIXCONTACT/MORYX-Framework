@@ -12,4 +12,3 @@ export interface NodeConnectionPoint {
   index?: number;
   name?: string | null;
 }
-

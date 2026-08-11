@@ -32,16 +32,15 @@
     "EMPTY_STATE_TEXT": "Wähle eine Resource aus der Liste oder klicke auf das Plus um eine neue Resource hinzuzufügen."
   },
   "DETAILS": {
-    "PROPERTIES": "Eigenschaften",
-    "REFERENCES": "Referenzen",
-    "METHODS": "Methoden",
-    "REFS": {
-      "LINK": "Link",
+    "PROPERTIES_TAB_TITLE": "Eigenschaften",
+    "REFERENCES_TAB_TITLE": "Referenzen",
+    "METHODS_TAB_TITLE": "Methoden",
+    "REFERENCES": {
       "LINKED_RESOURCE": "Referenzierte Ressource",
-      "REFERENCE_PLACEHOLDER": "Wähle eine der verfügbaren Resourcen, um sie als Referenz hinzuzufügen",
+      "PLACEHOLDER": "Wähle eine der verfügbaren Resourcen, um sie als Referenz hinzuzufügen",
       "NO_TARGET": "Keine Referenz ausgewählt"
     },
-    "METS": {
+    "METHODS": {
       "WAS_INVOKED": "Die Methode wurde aufgerufen",
       "INVOKE": "AUFRUFEN",
       "REPEAT": "WIEDERHOLEN",

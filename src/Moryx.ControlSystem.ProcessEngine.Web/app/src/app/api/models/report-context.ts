@@ -18,4 +18,3 @@ export interface ReportContext {
   unreportedFailure?: number;
   unreportedSuccess?: number;
 }
-

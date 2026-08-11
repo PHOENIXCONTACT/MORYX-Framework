@@ -58,9 +58,7 @@
     "REMOVE": "删除",
     "ADD": "添加",
     "REPLACE": "替换",
-    "DETAILS": {
-      "TITLE": "产品与零件之间的连接配置"
-    }
+    "OPEN": "开放式产品"
   },
   "ADD_DIALOG": {
     "TITLE": "选择零件",

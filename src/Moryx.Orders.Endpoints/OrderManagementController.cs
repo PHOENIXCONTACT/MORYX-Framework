@@ -1,15 +1,18 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Collections.Concurrent;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moryx.AbstractionLayer.Products;
 using Moryx.Orders.Endpoints.Properties;
 using Moryx.Users;
-using Newtonsoft.Json.Serialization;
-using Newtonsoft.Json;
 using System.Net;
+using System.Net.ServerSentEvents;
+using System.Runtime.CompilerServices;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Channels;
 using Moryx.AspNetCore;
 using Moryx.Orders.Endpoints.Models;
@@ -27,17 +30,12 @@ public class OrderManagementController : ControllerBase
     private readonly IOrderManagement _orderManagement;
     private readonly IUserManagement _userManagement;
 
-    private static readonly JsonSerializerSettings _serializerSettings = CreateSerializerSettings();
-
-    private static JsonSerializerSettings CreateSerializerSettings()
+    private static readonly ConcurrentDictionary<Guid, Channel<(string, string)>> _operationStreamSubscribers = new();
+    private static readonly JsonSerializerOptions _serializerOptions = new()
     {
-        var serializerSettings = new JsonSerializerSettings
-        {
-            ContractResolver = new CamelCasePropertyNamesContractResolver()
-        };
-        serializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
-        return serializerSettings;
-    }
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        Converters = { new JsonStringEnumConverter() }
+    };
 
     public OrderManagementController(IOrderManagement orderManagement, IUserManagement userManagement = null)
     {
@@ -51,110 +49,74 @@ public class OrderManagementController : ControllerBase
     [Authorize(Policy = OrderPermissions.CanView)]
     public ActionResult<OperationModel[]> GetOperations(string orderNumber = null, string operationNumber = null)
     {
-        return _orderManagement.GetOperations(_ => true)
+        var operations = _orderManagement.GetOperations(_ => true)
             .Where(o => orderNumber is null || o.Order.Number == orderNumber)
             .Where(o => operationNumber is null || o.Number == operationNumber)
             .Select(Converter.ToModel).ToArray();
+
+        return operations;
     }
 
     [HttpGet("stream")]
     [ProducesResponseType(typeof(OperationChangedModel), StatusCodes.Status200OK)]
     public async Task OperationStream(CancellationToken cancellationToken)
     {
-        var response = Response;
-        response.Headers["Content-Type"] = "text/event-stream";
+        // Define event handlers using the broadcast helper
+        var updateEventHandler = new EventHandler<OperationChangedEventArgs>((_, e) =>
+            Broadcast(nameof(OperationTypes.Update), Converter.ToModel(e.Operation)));
 
-        var operationsChannel = Channel.CreateUnbounded<Tuple<string, string>>();
-
-        // Define event handling
-        var updateEventHandler = new EventHandler<OperationChangedEventArgs>((_, eventArgs) =>
-        {
-            var json = JsonConvert.SerializeObject(Converter.ToModel(eventArgs.Operation), _serializerSettings);
-            operationsChannel.Writer.TryWrite(new Tuple<string, string>(nameof(OperationTypes.Update), json));
-        });
-        _orderManagement.OperationUpdated += updateEventHandler;
-
-        var adviceEventHandler = new EventHandler<OperationAdviceEventArgs>((_, eventArgs) =>
-        {
-            var advicedOperation = new OperationAdvicedModel
+        var adviceEventHandler = new EventHandler<OperationAdviceEventArgs>((_, e) =>
+            Broadcast(nameof(OperationTypes.Advice), new OperationAdvicedModel
             {
-                OperationModel = Converter.ToModel(eventArgs.Operation),
-                Advice = Converter.ToModel(eventArgs.Advice)
-            };
-            var json = JsonConvert.SerializeObject(advicedOperation, _serializerSettings);
-            operationsChannel.Writer.TryWrite(new Tuple<string, string>(nameof(OperationTypes.Advice), json));
-        });
-        _orderManagement.OperationAdviced += adviceEventHandler;
+                OperationModel = Converter.ToModel(e.Operation),
+                Advice = Converter.ToModel(e.Advice)
+            }));
 
-        var reportEventHandler = new EventHandler<OperationReportEventArgs>((_, eventArgs) =>
-        {
-            var reportedOperation = new OperationReportedModel
+        var reportEventHandler = new EventHandler<OperationReportEventArgs>((_, e) =>
+            Broadcast(nameof(OperationTypes.Report), new OperationReportedModel
             {
-                OperationModel = Converter.ToModel(eventArgs.Operation),
-                Report = Converter.ToModel(eventArgs.Report)
-            };
-            var json = JsonConvert.SerializeObject(reportedOperation, _serializerSettings);
-            operationsChannel.Writer.TryWrite(new Tuple<string, string>(nameof(OperationTypes.Report), json));
-        });
-        _orderManagement.OperationPartialReport += reportEventHandler;
+                OperationModel = Converter.ToModel(e.Operation),
+                Report = Converter.ToModel(e.Report)
+            }));
 
-        var interruptedEventHandler = new EventHandler<OperationChangedEventArgs>((_, eventArgs) =>
-        {
-            var json = JsonConvert.SerializeObject(Converter.ToModel(eventArgs.Operation), _serializerSettings);
-            operationsChannel.Writer.TryWrite(new Tuple<string, string>(nameof(OperationTypes.Interrupted), json));
-        });
-        _orderManagement.OperationInterrupted += interruptedEventHandler;
+        var interruptedEventHandler = new EventHandler<OperationChangedEventArgs>((_, e) =>
+            Broadcast(nameof(OperationTypes.Interrupted), Converter.ToModel(e.Operation)));
 
-        var completedEventHandler = new EventHandler<OperationReportEventArgs>((_, eventArgs) =>
-        {
-            var completedOperation = new OperationReportedModel
+        var completedEventHandler = new EventHandler<OperationReportEventArgs>((_, e) =>
+            Broadcast(nameof(OperationTypes.Completed), new OperationReportedModel
             {
-                OperationModel = Converter.ToModel(eventArgs.Operation),
-                Report = Converter.ToModel(eventArgs.Report)
-            };
-            var json = JsonConvert.SerializeObject(completedOperation, _serializerSettings);
-            operationsChannel.Writer.TryWrite(new Tuple<string, string>(nameof(OperationTypes.Completed), json));
-        });
-        _orderManagement.OperationCompleted += completedEventHandler;
+                OperationModel = Converter.ToModel(e.Operation),
+                Report = Converter.ToModel(e.Report)
+            }));
 
-        var startedEventHandler = new EventHandler<OperationStartedEventArgs>((_, eventArgs) =>
-        {
-            var startedOperation = new OperationStartedModel
+        var startedEventHandler = new EventHandler<OperationStartedEventArgs>((_, e) =>
+            Broadcast(nameof(OperationTypes.Start), new OperationStartedModel
             {
-                OperationModel = Converter.ToModel(eventArgs.Operation),
-                UserId = eventArgs.User.Identifier
-            };
-            var json = JsonConvert.SerializeObject(startedOperation, _serializerSettings);
-            operationsChannel.Writer.TryWrite(new Tuple<string, string>(nameof(OperationTypes.Start), json));
-        });
-        _orderManagement.OperationStarted += startedEventHandler;
+                OperationModel = Converter.ToModel(e.Operation),
+                UserId = e.User.Identifier
+            }));
 
-        var changedEventHandler = new EventHandler<OperationChangedEventArgs>((_, eventArgs) =>
-        {
-            var json = JsonConvert.SerializeObject(Converter.ToModel(eventArgs.Operation), _serializerSettings);
-            operationsChannel.Writer.TryWrite(new Tuple<string, string>(nameof(OperationTypes.Progress), json));
-        });
-        _orderManagement.OperationProgressChanged += changedEventHandler;
+        var changedEventHandler = new EventHandler<OperationChangedEventArgs>((_, e) =>
+            Broadcast(nameof(OperationTypes.Progress), Converter.ToModel(e.Operation)));
 
         try
         {
-            // Create infinite loop awaiting changes or cancellation
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                var changes = await operationsChannel.Reader.ReadAsync(cancellationToken);
+            var result = TypedResults.ServerSentEvents(Subscribe(cancellationToken));
 
-                await response.WriteAsync($"event: {changes.Item1}\n", cancellationToken);
-                await response.WriteAsync($"data: {changes.Item2}\r\r", cancellationToken);
-            }
+            // Register event handlers after result creation but before execution to ensure finally cleanup
+            _orderManagement.OperationUpdated += updateEventHandler;
+            _orderManagement.OperationAdviced += adviceEventHandler;
+            _orderManagement.OperationPartialReport += reportEventHandler;
+            _orderManagement.OperationInterrupted += interruptedEventHandler;
+            _orderManagement.OperationCompleted += completedEventHandler;
+            _orderManagement.OperationStarted += startedEventHandler;
+            _orderManagement.OperationProgressChanged += changedEventHandler;
+
+            await result.ExecuteAsync(HttpContext);
         }
         catch (OperationCanceledException)
         {
-        }
-        catch (ChannelClosedException)
-        {
-        }
-        catch (InvalidOperationException)
-        {
+            // client disconnected — this is expected, not an error
         }
         finally
         {
@@ -165,11 +127,37 @@ public class OrderManagementController : ControllerBase
             _orderManagement.OperationCompleted -= completedEventHandler;
             _orderManagement.OperationStarted -= startedEventHandler;
             _orderManagement.OperationProgressChanged -= changedEventHandler;
-
-            operationsChannel.Writer.TryComplete();
         }
 
-        await response.CompleteAsync();
+        return;
+
+        async IAsyncEnumerable<SseItem<string>> Subscribe([EnumeratorCancellation] CancellationToken cancelToken)
+        {
+            var channel = Channel.CreateUnbounded<(string, string)>();
+            var id = Guid.NewGuid();
+            _operationStreamSubscribers[id] = channel;
+
+            try
+            {
+                await foreach (var evt in channel.Reader.ReadAllAsync(cancelToken))
+                {
+                    yield return new SseItem<string>(evt.Item2, eventType: evt.Item1);
+                }
+            }
+            finally
+            {
+                _operationStreamSubscribers.TryRemove(id, out _);
+            }
+        }
+
+        // Local helper to broadcast events to all connected clients
+        static void Broadcast(string eventType, object data)
+        {
+            foreach (var channel in _operationStreamSubscribers.Values)
+            {
+                channel.Writer.TryWrite((eventType, JsonSerializer.Serialize(data, _serializerOptions)));
+            }
+        }
     }
 
     [HttpGet]

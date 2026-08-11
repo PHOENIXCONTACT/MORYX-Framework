@@ -1,0 +1,10 @@
+<mat-menu #moduleGridMenu="matMenu" panelClass="module-grid-panel">
+  <div class="module-grid" (click)="$event.stopPropagation()">
+    @for (module of modules(); track module.route) {
+      <a class="module-grid-item" [href]="resolveHref(module)" [title]="module.description" [class.active]="module.route === activeRoute()">
+        <mat-icon>{{ module.icon }}</mat-icon>
+        <span>{{ module.title }}</span>
+      </a>
+    }
+  </div>
+</mat-menu>

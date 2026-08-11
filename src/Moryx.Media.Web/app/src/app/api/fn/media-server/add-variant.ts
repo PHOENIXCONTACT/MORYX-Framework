@@ -40,4 +40,3 @@ export function addVariant(http: HttpClient, rootUrl: string, params: AddVariant
 }
 
 addVariant.PATH = '/api/moryx/media/{contentId}/{variantName}';
-

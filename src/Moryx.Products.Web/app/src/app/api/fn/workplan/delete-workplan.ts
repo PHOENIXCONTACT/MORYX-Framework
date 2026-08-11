@@ -34,4 +34,3 @@ export function deleteWorkplan(http: HttpClient, rootUrl: string, params: Delete
 }
 
 deleteWorkplan.PATH = '/api/moryx/workplans/{id}';
-

@@ -26,9 +26,11 @@ internal class SimulationActivitiesTests : BaseTest
 
         _assemblyDriverMock = new Mock<SimulatedDummyTestDriver>() { DefaultValue = DefaultValue.Mock };
         _anotherAssemblyDriverMock = new Mock<SimulatedDummyTestDriver>() { DefaultValue = DefaultValue.Mock };
+        _assemblyDriverMock.Object.Id = 10;
         _assemblyDriverMock.SetupGet(dr => dr.Cell).Returns(_assemblyCell);
         _assemblyDriverMock.SetupGet(dr => dr.Usages).Returns([_assemblyCell]);
         _assemblyDriverMock.SetupGet(dr => dr.SimulatedState).Returns(SimulationState.Idle);
+        _anotherAssemblyDriverMock.Object.Id = 20;
         _anotherAssemblyDriverMock.SetupGet(dr => dr.Cell).Returns(_anotherAssemblyCell);
         _anotherAssemblyDriverMock.SetupGet(dr => dr.Usages).Returns([_anotherAssemblyCell]);
         _anotherAssemblyDriverMock.SetupGet(dr => dr.SimulatedState).Returns(SimulationState.Idle);

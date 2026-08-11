@@ -99,7 +99,24 @@ public class ActivityDispatcherTests : ProcessTestsBase
         AssertActivityDispatch(dummy, _serialCellMock);
     }
 
-    [Test]
+    [Test(Description = "Re-Dispatch running activity to pull RTW with process id")]
+    public void ReDispatchRunningActivityOnReadyToWorkPullWithProcessId()
+    {
+        // Arrange: Running activity in pool
+        var dummy = new DummyActivity();
+        var activityData = FillPool(dummy, _productionCellMock.Object);
+        DataPool.TryUpdateActivity(activityData, ActivityState.Configured);
+        DataPool.TryUpdateActivity(activityData, ActivityState.Running);
+        var rtw = Session.StartSession(ActivityClassification.Production, ReadyToWorkType.Push, ValidProcessId);
+
+        // Act
+        RaiseReadyToWork(_productionCellMock, rtw);
+
+        // Assert
+        AssertActivityDispatch(dummy, _productionCellMock);
+    }
+
+    [Test(Description = "Dispatch activity to cell added after component start")]
     public void DispatchActivityToNewCell()
     {
         // Arrange
@@ -172,6 +189,7 @@ public class ActivityDispatcherTests : ProcessTestsBase
         });
 
         Assert.That(ModifiedActivity, Is.Not.Null);
+        Assert.That(ModifiedActivity.Resource, Is.EqualTo(resourceMock.Object));
         Assert.That(ModifiedActivity.State, Is.EqualTo(ActivityState.Running));
     }
 
@@ -289,7 +307,7 @@ public class ActivityDispatcherTests : ProcessTestsBase
             "The activty should be not dispatched and no StartActivity call at the SerialCell should be occured");
     }
 
-    [Test]
+    [Test(Description = "Update activity state when receiving a result")]
     public void UpdateActivityOnCompletion()
     {
         // Arrange: Running activity in pool
@@ -310,7 +328,7 @@ public class ActivityDispatcherTests : ProcessTestsBase
         Assert.That(ModifiedActivity.State, Is.EqualTo(ActivityState.ResultReceived));
     }
 
-    [Test]
+    [Test(Description = "Replace RTW Push sessions from the same cell in session cache")]
     public void ReadyToWorkOverride()
     {
         // Arrange: Place a push message in the queue
@@ -382,7 +400,7 @@ public class ActivityDispatcherTests : ProcessTestsBase
             "There should be no SequenceCompleted call at the SerialCell.");
     }
 
-    [Test]
+    [Test(Description = "Call 'ProcessAborting' on active cells when process changes to Aborting state")]
     public void InformCellAboutProcessAbortion()
     {
         // Arrange
@@ -420,7 +438,7 @@ public class ActivityDispatcherTests : ProcessTestsBase
         Assert.That(result, Is.Empty, "There should be no more activities.");
     }
 
-    [Test(Description = "Do not dispatch dummy activity to cell 1 because of constrain.")]
+    [Test(Description = "Do not dispatch dummy activity to cell 1 because of constraint.")]
     public void NoActvitityDispatchingIfConstraintsNotFit()
     {
         // Arrange

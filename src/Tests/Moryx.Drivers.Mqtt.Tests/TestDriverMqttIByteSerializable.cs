@@ -119,10 +119,10 @@ public class TestDriverMqttIByteSerializable
 
     }
 
-    private void SendMessageBoolMqttMessage(MqttApplicationMessage mqttMsg, CancellationToken token)
+    private void SendMessageBoolMqttMessage(MqttApplicationMessage mqttMsg, CancellationToken cancellationToken)
     {
         //Assert 2
-        Assert.That(token, Is.EqualTo(CancellationToken.None));
+        Assert.That(cancellationToken, Is.EqualTo(CancellationToken.None));
         Assert.That(mqttMsg.Topic.Equals(_driver.Identifier + _topicBoolMqtt.Identifier),
             "Topic should be " + _driver.Identifier + _topicBoolMqtt.Identifier + ", but is " + mqttMsg.Topic);
         Assert.That(mqttMsg.QualityOfServiceLevel, Is.EqualTo(MqttQualityOfServiceLevel.ExactlyOnce),
@@ -150,10 +150,10 @@ public class TestDriverMqttIByteSerializable
 
     }
 
-    private void SendMessageBoolIByteSerializableMessage(MqttApplicationMessage sentMsg, CancellationToken token)
+    private void SendMessageBoolIByteSerializableMessage(MqttApplicationMessage sentMsg, CancellationToken cancellationToken)
     {
         //Assert 2
-        Assert.That(token, Is.EqualTo(CancellationToken.None));
+        Assert.That(cancellationToken, Is.EqualTo(CancellationToken.None));
         Assert.That(sentMsg.Topic.Equals(_driver.Identifier + _topicBoolIByteSerializable.Identifier),
             "Topic should be " + _driver.Identifier + _topicBoolIByteSerializable.Identifier + ", but is " + sentMsg.Topic);
         Assert.That(sentMsg.QualityOfServiceLevel, Is.EqualTo(MqttQualityOfServiceLevel.ExactlyOnce),

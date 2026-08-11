@@ -1,0 +1,61 @@
+@use '@angular/material' as mat;
+@use "@moryx/ngx-web-framework/styles/variables" as *;
+
+.operation-recipe-container {
+    height: 100%;
+    @include mat.sidenav-overrides((
+        container-background-color: var(--mat-sys-surface-container-lowest),
+        container-width : 300px
+     ));
+}
+
+.operation-recipe-details-container {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    padding : 10px;
+}
+
+.operation-recipe-toolbar {
+    background-size: cover;
+    color: var(--mat-sys-surface-container-lowest) !important;
+    a {
+        color: var(--mat-sys-surface-container-lowest) !important;
+    }
+}
+
+mat-list {
+    padding-top: 0px;
+}
+
+.operation-recipes-list-item:hover {
+    background-color: var(--mat-sys-surface-container-highest);
+    cursor: pointer;
+}
+
+.operation-recipe-details {
+    display: flex;
+    flex-flow: column nowrap;
+    padding: 8px;
+}
+
+.operation-recipe-loading {
+    position: absolute;
+    bottom: 0px;
+    z-index: 10;
+}
+
+.operation-recipe-toolbar-details {
+    display: flex;
+    flex-flow: column;
+    align-items: flex-start;
+}
+.moryx-selected{
+    background-color: $primary-light;
+}
+.toolbar-nav{
+    @include mat.sidenav-overrides((
+        container-background-color: var(--mat-sys-surface-container-lowest),
+        container-width: 50px
+      ));
+}

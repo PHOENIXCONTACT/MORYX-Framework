@@ -12,7 +12,7 @@ internal static class ResourceManagementExtensions
 {
     public static IManufacturingFactory GetRootFactory(this IResourceManagement resourceManagement)
     {
-        var rootFactory = resourceManagement.GetResource<IManufacturingFactory>(x => (x as ManufacturingFactory).Parent is null);
+        var rootFactory = resourceManagement.GetResource<IManufacturingFactory>(x => (x as Resource).Parent is null);
 
         return rootFactory is null ? throw new NoRootFactoryException(Strings.ResourceManagementExtensions_NoRootFactoryException) : rootFactory;
     }

@@ -13,4 +13,3 @@ export interface SetupJobModel {
   steps?: Array<SetupStepModel> | null;
   targetRecipeId?: number;
 }
-

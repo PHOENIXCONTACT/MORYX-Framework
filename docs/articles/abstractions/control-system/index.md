@@ -58,26 +58,26 @@ An Operation within the OrderManagement consists of the following properties (so
 
 In some production areas the separation of Orders and Operations is not necessary. Because of this, it is very common that an Order is only related to one Operation.
 
-**Sources:** The OrderManagement can have multiple sources where orders and operations can be received. The module provides a plugin structure to extend these sources. The default source will be represented by MES. Also very common is OrderManagement WPF UI for testing purposes or as fallback if other sources does not work.
+**Sources:** Different sources can be utilized to populate the OrderManagement with Operations, either through the Rest API defined in `Moryx.Orders.Endpoints` or through Adpaters accessing the 
+[IOrderManagement](/src/Moryx.Orders/Facade/IOrderManagement.cs) facade. Information about the source of an Operation can be provided through the `source` parameter, when an Operation is added to the OrderManagement using `AddOperationAsync`.
 
-**User Interface:** The ui of the order management will be used to show all orders to produce on the current machine.
-
+**User Interface:** The UI of the Order Management will be used to show all Orders to produce on the current machine.
 
 ### Relation to the ProcessEngine
 
-The OrderManagement is directly connected to the ProcessEngine which is responsible for the whole process execution. The OrderManagement can advice the ProcessEngine to produce an amount of materials. The only entities which are needed for it are a production recipe and the amount which are requested. Recipes defines the parameters and workplans to achieve a certain result similar to a cooking recipe. The result of an execution of the recipe is usually an article (or material).
+The OrderManagement is directly connected to the ProcessEngine which is responsible for the whole process execution. The OrderManagement can advice the ProcessEngine to produce an amount of materials. The only entities which are needed are a production recipe and the requested amount. Recipes define the parameters and workplans to achieve a certain result similar to a cooking recipe. The result of an execution of the recipe is usually an article (or material).
 
-The ProcessEngine will use this information and creates abstract production jobs for it. This can be one or multiple which depends on the request of the OrderManagement.
+The ProcessEngine will use this information to create one or multiple abstract production jobs, which depends on the request of the OrderManagement.
 
 ````text
 Operation 1----->n ProductionJob
 ````
 
-Because of the abstraction, the ProcessEngine does not know anything about orders or operations. The relation is only known within the OrderManagement.
+Because of the abstraction the ProcessEngine does not know anything about orders or operations. The relation is only known within the OrderManagement.
 
 ## Recipes
 
-As already implied a recipe defines the parameters and workplans to achieve a certain result similar to a cooking recipe. The general and abstract description can be found in the `FrameworkLayer AbstractionLayer`. Currently there are these specialization of recipes:
+As already implied a recipe defines the parameters and workplans to achieve a certain result similar to a cooking recipe. Currently there are these specialization of recipes:
 
 - `Product Recipes` are used to produce products with a workplan. Its parameter is the description of the product to be produced.
 - `Setup Recipes` are used to setup the facility. They contain parameters and a generated workplan with tasks to be done.
@@ -92,7 +92,7 @@ A cooking recipe is a set of instructions that describes how to prepare or make 
 |----------------|-------------------|
 | The name of the dish | Short description of the production recipe e.g. `Production of 439849-01 without soldering` |
 | How much time it will take to prepare the dish | That is currently not used |
-| The required ingredients along with their quantities or proportions | This will derived from the product which is a property of the production recipe |
+| The required ingredients along with their quantities or proportions | This will be derived from the product which is a property of the production recipe |
 | Necessary equipment and environment needed to prepare the dish | This information can be derived from the referenced workplan in the production recipe. Each task can be mapped to the facility over capabilities. |
 | An ordered list of preparation steps and techniques | This is the workplan |
 | The number of servings that the recipe will provide (the "yield") | This information will not be written to the recipe. It is part of the ControlSystem jobs |
@@ -121,7 +121,7 @@ To make the sample complete a production of a bread will be described. Think abo
 - Cup (Capabilities: Capacity 200 milliliters)
 - Bowl (Capabilities: Capacity: 2 liters)
 
-These are our tools which can be used to produce a simple bread. To do it, we need some ingredients for example a simple farmers bread:
+These are our tools which can be used to produce a simple bread. To do it, we need some ingredients for example a simple farmer's bread:
 
 - 2 cups all-purpose flour
 - 1 1/2 teaspoons salt
@@ -129,7 +129,7 @@ These are our tools which can be used to produce a simple bread. To do it, we ne
 - 2/3-1 cup water, room temperature
 - 1/3 cup whole or 2% milk, room temperature
 
-For the production of the bread we need a recipe which matches our ingredients and our available facility (kitchen). Lets have a look on our recipe properties. The name is quiet simple `Farmers bread`. More important is the product description which is described with ingredients and a workplan for our facility (kitchen). additional recipe properties which are needed:
+For the production of the bread we need a recipe which matches our ingredients and our available facility (kitchen). Lets have a look on our recipe properties. The name is quiet simple `Farmer's bread`. More important is the product description which is described with ingredients and a workplan for our facility (kitchen). Additional recipe properties which are needed are:
 
 | Property | Description | Value |
 |----------|-------------|-------|
@@ -144,17 +144,17 @@ For the production of the bread we need a recipe which matches our ingredients a
 | MixerSpeed | Speed for the mixer | 200 rounds per minute |
 | SliceThickness | Thickness for the slices | 1 centimeter |
 
-The workplan is quiet simple. All ingredients will be put into the mixer bowl. After that, the bowl will be covered and have to sit. After the sitting process, more ingredients will be added and mixed. If the base for the bread is ready, it have to be baked. To serve it, it have to be sliced.
+The workplan is quiet simple. All ingredients will be put into the mixer bowl. After that, the bowl will be covered and have to sit. After the sitting process, more ingredients will be added and mixed. If the base for the bread is ready, it has to be baked. To serve it, it has to be sliced.
 
 ![Bake bread Activity Flow](images/bake-bread-activity-flow.png)
 
-With all these information and tools a worker can bake the farmers bread. Please note that it is very important to do not mix the product description and the recipe. On another kitchen, the recipe can be another version for example the workplan can be another with merged or more extended steps or the oven have other capabilities (e.g. no capability to bake with circulating air).
+With all these information and tools a worker can bake the farmer's bread. Please note that it is very important to destinguish the product description from the recipe. On another kitchen the recipe can be different. This may include a different workplan where steps are merged or extended or the oven may have other capabilities (e.g. no capability to bake with circulating air).
 
 ## Jobs
 
 With the production recipe and amount, the [ProcessEngine](xref:ProcessEngine) can execute the referenced workplan for a defined amount of times. Jobs will be created for this pair. They will be handled by the ProcessEngine part [JobManagement](xref:ProcessEngine.JobManagement).
 
-A job is the smallest independently assignable work order within the ControlSystem which knows currently two types:
+A job is the smallest independently assignable work unit within the ControlSystem which knows currently two types:
 
 - `Production Job`
   A production job is usually the most common type. It is used to produce products according to the product description provided by the production recipe.
@@ -162,7 +162,7 @@ A job is the smallest independently assignable work order within the ControlSyst
 - `Setup Job`
   A setup job will be created by the [SetupManagement](xref:ProcessEngine.SetupManagement) to change the setup of the facility. It compares the required setups with the facility and creates setup jobs between them if needed.
 
-Jobs are unchangeable. This means later changes of job information (e.g. amount, recipe properties) is not possible and also not desired. Jobs are more seen as *throw away* entities. So whenever the amount have to be adjusted a new job will be created with the additional amount. If the recipe information should be changed, production jobs have to be completed or aborted so that jobs with the new information can be created.
+Jobs are unchangeable. This means later changes of job information (e.g. amount, recipe properties) is not possible and also not desired. Jobs are more seen as *throw away* entities. So whenever the amount has to be adjusted a new job must be created with a new amount. If the recipe information needs to be changed, production jobs have to be completed or aborted so that jobs with the new information can be created.
 
 When a job is executed, it lets the ProcessController create a series of processes depending on the amount and type given with the job.
 
@@ -191,11 +191,11 @@ In order to execute an activity, a [cell implementation](cell-resource.md) is se
 In addition to the capabilities a cell selector can be used to fine tune the otherwise first-come-first-serve selection of the process engine.
 
 - [Cell implementation](cell-resource.md): Implement a cell resource and interact with the process engine 
-- [Cell selection](cell-selector.md): Learn how to customize the selection of an activities targets
+- [Cell selection](cell-selector.md): Learn how to customize the selection of activity targets
 
 ## Notifications
 
-The major components of the ControlSystem and AbstractionLayer are capable to publish Notifications. Notifications will be used to mainly inform the user about information, errors and also warnings. When ever the facility have a problem or information the user will be informed.
+The major components of the ControlSystem and AbstractionLayer are capable to publish Notifications. Notifications will be used to mainly inform the user about information, errors and also warnings. Whenever the facility has a problem or has information to provide the user will be informed.
 
 The [NotificationPublisher](xref:NotificationPublisher) collects these user based notifications from the components and handles them. The responsibility of this component is to store, publish to clients and acknowledge notifications.
 

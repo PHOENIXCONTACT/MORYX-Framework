@@ -36,4 +36,3 @@ export class ApiConfiguration {
 export interface ApiConfigurationParams {
   rootUrl?: string;
 }
-

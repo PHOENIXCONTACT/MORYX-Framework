@@ -416,8 +416,9 @@ The analytics module was doing nothing and the web module was replaced by suppor
 ### Module Orders
 
 - Removed report from interrupt of an operation. Reporting during an interruption doesn't add any value. The quantity for the report can only be predicted and will be inaccurate if something goes wrong or is reworked during the interruption.
-- Facade Renaming:
-  - `GetOperationAsync` -> `LoadOperationAsync`
+  -  `void InterruptOperation(Operation operation, OperationReport report);` -> `Task InterruptOperationAsync(Operation operation, User user, CancellationToken cancellationToken = default);`
+  - `event EventHandler<OperationReportEventArgs> OperationInterrupted;` -> `event EventHandler<OperationChangedEventArgs> OperationInterrupted;`
+- Allowing more changes on a created operation before starting it.
   - `SetOperationSortOrder` and `UpdateSource` were combined to `UpdateOperationAsync`. It supports both functionalities and included changing `PlannedStart` and `PlannedEnd` as well.
 
 #### Async Lifecycle Support for OrderManagement
@@ -460,7 +461,7 @@ Additionally, the APIs of these components have been updated to return `Task` or
 
 **`IOrderManagement`-facade:**
 
-- `Operation GetOperation` -> `Task<Operation> GetOperationAsync`
+- `Operation GetOperation` -> `Task<Operation> LoadOperationAsync`
 - `Operation AddOperation` -> `Task<Operation> AddOperationAsync`
 - `void BeginOperation` -> `Task BeginOperationAsync`
 - `void AbortOperation` -> `Task AbortOperationAsync`
@@ -516,6 +517,7 @@ Additionally, the APIs of these components have been updated to return `Task` or
   - The initializers are registered transient by default.
   - It is subject to the [#async-life-cycle](#async-life-cycle) changes.
   - Introduced `ResourceInitializerResult` object for extensibility and option to save
+  - A `ComponentNotFoundException` is thrown now, if an initializer is configured in the `Moryx.Resources.Management.ModuleConfig.json` but not found in the assembly load context. Check your configuration in this case.
 
   <details>
     <summary> Code Replacement Snippets </summary>
@@ -691,22 +693,57 @@ This is part of the unification of the general [data model changes](#data-model-
 
 Bugfixes:
 
-* The change in ConnectingToBrokerState prevents an application crash that were not uncommon during debugging
+- The change in ConnectingToBrokerState prevents an application crash that were not uncommon during debugging
 
 Cleanup:
 
-* Mostly typos in the string resources or non equal punctuation
-* Don't use the obsolete Payload Method and use ReadOnlySequence instead. To avoid unnecessary array copies methods deserializing the data have breaking signature changes
-* Remove Newtonoft.Json in favor of System.Text.Json
+- Mostly typos in the string resources or non equal punctuation
+- Don't use the obsolete Payload Method and use ReadOnlySequence instead. To avoid unnecessary array copies methods deserializing the data have breaking signature changes
+<details>
+  <summary> Code Replacement Snippets </summary>
+
+  ```csharp
+   Deserialize(byte[] messageAsBytes) // replace with
+   Deserialize(ReadOnlySequence<byte> messageAsBytes)
+  ```
+</details>
+- Remove Newtonoft.Json in favor of System.Text.Json
+- Move namespace `Moryx.Drivers.Mqtt.MqttTopics` to `Moryx.Drivers.Mqtt.Topics`
 
 Features:
 
-* Add the option to add custom topics as the User by removing internal access modifiers from MqttTopic Serialize and Deserialize
-* Add Retain information for Publishing and Receiving messages
-* Support Mqtt5 response topics
-* Support unsubscribing from Topics, by removing or changing the resource
-* Support changing the broker without restarting the Resource Management, by a) providing a Reconnect method and b) handling changes to the relevant properties
-* Support diagnostic tracing of message contents, before and after deserialization
+- Add the option to add custom topics as the User by removing internal access modifiers from MqttTopic Serialize and Deserialize
+- Add Retain information for Publishing and Receiving messages
+- Support Mqtt5 response topics
+- Support unsubscribing from Topics, by removing or changing the resource
+- Support changing the broker without restarting the Resource Management, by a) providing a Reconnect method and b) handling changes to the relevant properties
+- Support diagnostic tracing of message contents, before and after deserialization
+
+#### Required SQL Update:
+
+````sql
+// SQLite
+UPDATE Resources
+SET "Type" = 'Moryx.Drivers.Mqtt.Topics.MqttTopicIByteSerializable'
+WHERE "Type" = 'Moryx.Drivers.Mqtt.MqttTopics.MqttTopicIByteSerializable';
+UPDATE Resources
+SET "Type" = 'Moryx.Drivers.Mqtt.Topics.MqttTopicJson'
+WHERE "Type" = 'Moryx.Drivers.Mqtt.MqttTopics.MqttTopicJson';
+UPDATE Resources
+SET "Type" = 'Moryx.Drivers.Mqtt.Topics.MqttTopicPrimitive'
+WHERE "Type" = 'Moryx.Drivers.Mqtt.MqttTopics.MqttTopicPrimitive';
+
+// PostgreSQL
+UPDATE public."Resources"
+SET "Type" = 'Moryx.Drivers.Mqtt.Topics.MqttTopicIByteSerializable '
+WHERE "Type" = 'Moryx.Drivers.Mqtt.MqttTopics.MqttTopicIByteSerializable ';
+UPDATE public."Resources"
+SET "Type" = 'Moryx.Drivers.Mqtt.Topics.MqttTopicJson'
+WHERE "Type" = 'Moryx.Drivers.Mqtt.MqttTopics.MqttTopicJson';
+UPDATE public."Resources"
+SET "Type" = 'Moryx.Drivers.Mqtt.Topics.MqttTopicPrimitive'
+WHERE "Type" = 'Moryx.Drivers.Mqtt.MqttTopics.MqttTopicPrimitive';
+````
 
 ### OPC-UA Driver`
 

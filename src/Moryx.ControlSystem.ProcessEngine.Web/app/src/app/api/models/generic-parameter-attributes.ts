@@ -14,6 +14,6 @@ export enum GenericParameterAttributes {
   ReferenceTypeConstraint = 'ReferenceTypeConstraint',
   NotNullableValueTypeConstraint = 'NotNullableValueTypeConstraint',
   DefaultConstructorConstraint = 'DefaultConstructorConstraint',
-  SpecialConstraintMask = 'SpecialConstraintMask'
+  SpecialConstraintMask = 'SpecialConstraintMask',
+  AllowByRefLike = 'AllowByRefLike'
 }
-

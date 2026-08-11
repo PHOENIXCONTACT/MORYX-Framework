@@ -8,8 +8,7 @@
 
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 
 import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
@@ -71,9 +70,9 @@ export class ProductManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getProductCustomization$Response(params?: GetProductCustomization$Params, context?: HttpContext): Observable<StrictHttpResponse<ProductCustomization>> {
+  getProductCustomization$Response(params?: GetProductCustomization$Params, context?: HttpContext): Promise<StrictHttpResponse<ProductCustomization>> {
     const obs = getProductCustomization(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -82,11 +81,9 @@ export class ProductManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getProductCustomization(params?: GetProductCustomization$Params, context?: HttpContext): Observable<ProductCustomization> {
+  getProductCustomization(params?: GetProductCustomization$Params, context?: HttpContext): Promise<ProductCustomization> {
     const resp = this.getProductCustomization$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<ProductCustomization>): ProductCustomization => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<ProductCustomization>): ProductCustomization => r.body);
   }
 
   /** Path part for operation `import()` */
@@ -98,9 +95,9 @@ export class ProductManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  import$Response(params: Import$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ProductModel>>> {
+  import$Response(params: Import$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<ProductModel>>> {
     const obs = import$(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -109,11 +106,9 @@ export class ProductManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  import(params: Import$Params, context?: HttpContext): Observable<Array<ProductModel>> {
+  import(params: Import$Params, context?: HttpContext): Promise<Array<ProductModel>> {
     const resp = this.import$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<ProductModel>>): Array<ProductModel> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<ProductModel>>): Array<ProductModel> => r.body);
   }
 
   /** Path part for operation `getTypeByIdentity()` */
@@ -125,9 +120,9 @@ export class ProductManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getTypeByIdentity$Response(params?: GetTypeByIdentity$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ProductModel>>> {
+  getTypeByIdentity$Response(params?: GetTypeByIdentity$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<ProductModel>>> {
     const obs = getTypeByIdentity(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -136,11 +131,9 @@ export class ProductManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getTypeByIdentity(params?: GetTypeByIdentity$Params, context?: HttpContext): Observable<Array<ProductModel>> {
+  getTypeByIdentity(params?: GetTypeByIdentity$Params, context?: HttpContext): Promise<Array<ProductModel>> {
     const resp = this.getTypeByIdentity$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<ProductModel>>): Array<ProductModel> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<ProductModel>>): Array<ProductModel> => r.body);
   }
 
   /** Path part for operation `saveType()` */
@@ -152,9 +145,9 @@ export class ProductManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  saveType$Response(params?: SaveType$Params, context?: HttpContext): Observable<StrictHttpResponse<number>> {
+  saveType$Response(params?: SaveType$Params, context?: HttpContext): Promise<StrictHttpResponse<number>> {
     const obs = saveType(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -163,11 +156,9 @@ export class ProductManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  saveType(params?: SaveType$Params, context?: HttpContext): Observable<number> {
+  saveType(params?: SaveType$Params, context?: HttpContext): Promise<number> {
     const resp = this.saveType$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<number>): number => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<number>): number => r.body);
   }
 
   /** Path part for operation `getTypes()` */
@@ -179,9 +170,9 @@ export class ProductManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  getTypes$Response(params?: GetTypes$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ProductModel>>> {
+  getTypes$Response(params?: GetTypes$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<ProductModel>>> {
     const obs = getTypes(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -190,11 +181,9 @@ export class ProductManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  getTypes(params?: GetTypes$Params, context?: HttpContext): Observable<Array<ProductModel>> {
+  getTypes(params?: GetTypes$Params, context?: HttpContext): Promise<Array<ProductModel>> {
     const resp = this.getTypes$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<ProductModel>>): Array<ProductModel> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<ProductModel>>): Array<ProductModel> => r.body);
   }
 
   /** Path part for operation `getTypeById()` */
@@ -206,9 +195,9 @@ export class ProductManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getTypeById$Response(params: GetTypeById$Params, context?: HttpContext): Observable<StrictHttpResponse<ProductModel>> {
+  getTypeById$Response(params: GetTypeById$Params, context?: HttpContext): Promise<StrictHttpResponse<ProductModel>> {
     const obs = getTypeById(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -217,11 +206,9 @@ export class ProductManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getTypeById(params: GetTypeById$Params, context?: HttpContext): Observable<ProductModel> {
+  getTypeById(params: GetTypeById$Params, context?: HttpContext): Promise<ProductModel> {
     const resp = this.getTypeById$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<ProductModel>): ProductModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<ProductModel>): ProductModel => r.body);
   }
 
   /** Path part for operation `updateType()` */
@@ -233,9 +220,9 @@ export class ProductManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  updateType$Response(params: UpdateType$Params, context?: HttpContext): Observable<StrictHttpResponse<number>> {
+  updateType$Response(params: UpdateType$Params, context?: HttpContext): Promise<StrictHttpResponse<number>> {
     const obs = updateType(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -244,11 +231,9 @@ export class ProductManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  updateType(params: UpdateType$Params, context?: HttpContext): Observable<number> {
+  updateType(params: UpdateType$Params, context?: HttpContext): Promise<number> {
     const resp = this.updateType$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<number>): number => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<number>): number => r.body);
   }
 
   /** Path part for operation `duplicate()` */
@@ -260,9 +245,9 @@ export class ProductManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  duplicate$Response(params: Duplicate$Params, context?: HttpContext): Observable<StrictHttpResponse<ProductModel>> {
+  duplicate$Response(params: Duplicate$Params, context?: HttpContext): Promise<StrictHttpResponse<ProductModel>> {
     const obs = duplicate(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -271,11 +256,9 @@ export class ProductManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  duplicate(params: Duplicate$Params, context?: HttpContext): Observable<ProductModel> {
+  duplicate(params: Duplicate$Params, context?: HttpContext): Promise<ProductModel> {
     const resp = this.duplicate$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<ProductModel>): ProductModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<ProductModel>): ProductModel => r.body);
   }
 
   /** Path part for operation `deleteType()` */
@@ -287,9 +270,9 @@ export class ProductManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  deleteType$Response(params: DeleteType$Params, context?: HttpContext): Observable<StrictHttpResponse<boolean>> {
+  deleteType$Response(params: DeleteType$Params, context?: HttpContext): Promise<StrictHttpResponse<boolean>> {
     const obs = deleteType(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -298,11 +281,9 @@ export class ProductManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  deleteType(params: DeleteType$Params, context?: HttpContext): Observable<boolean> {
+  deleteType(params: DeleteType$Params, context?: HttpContext): Promise<boolean> {
     const resp = this.deleteType$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<boolean>): boolean => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<boolean>): boolean => r.body);
   }
 
   /** Path part for operation `getRecipes()` */
@@ -314,9 +295,9 @@ export class ProductManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getRecipes$Response(params: GetRecipes$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<RecipeModel>>> {
+  getRecipes$Response(params: GetRecipes$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<RecipeModel>>> {
     const obs = getRecipes(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -325,11 +306,9 @@ export class ProductManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getRecipes(params: GetRecipes$Params, context?: HttpContext): Observable<Array<RecipeModel>> {
+  getRecipes(params: GetRecipes$Params, context?: HttpContext): Promise<Array<RecipeModel>> {
     const resp = this.getRecipes$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<RecipeModel>>): Array<RecipeModel> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<RecipeModel>>): Array<RecipeModel> => r.body);
   }
 
   /** Path part for operation `getInstance()` */
@@ -341,9 +320,9 @@ export class ProductManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getInstance$Response(params: GetInstance$Params, context?: HttpContext): Observable<StrictHttpResponse<ProductInstanceModel>> {
+  getInstance$Response(params: GetInstance$Params, context?: HttpContext): Promise<StrictHttpResponse<ProductInstanceModel>> {
     const obs = getInstance(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -352,11 +331,9 @@ export class ProductManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getInstance(params: GetInstance$Params, context?: HttpContext): Observable<ProductInstanceModel> {
+  getInstance(params: GetInstance$Params, context?: HttpContext): Promise<ProductInstanceModel> {
     const resp = this.getInstance$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<ProductInstanceModel>): ProductInstanceModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<ProductInstanceModel>): ProductInstanceModel => r.body);
   }
 
   /** Path part for operation `getInstances()` */
@@ -368,9 +345,9 @@ export class ProductManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getInstances$Response(params?: GetInstances$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ProductInstanceModel>>> {
+  getInstances$Response(params?: GetInstances$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<ProductInstanceModel>>> {
     const obs = getInstances(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -379,11 +356,9 @@ export class ProductManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getInstances(params?: GetInstances$Params, context?: HttpContext): Observable<Array<ProductInstanceModel>> {
+  getInstances(params?: GetInstances$Params, context?: HttpContext): Promise<Array<ProductInstanceModel>> {
     const resp = this.getInstances$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<ProductInstanceModel>>): Array<ProductInstanceModel> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<ProductInstanceModel>>): Array<ProductInstanceModel> => r.body);
   }
 
   /** Path part for operation `saveInstance()` */
@@ -395,9 +370,9 @@ export class ProductManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  saveInstance$Response(params?: SaveInstance$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  saveInstance$Response(params?: SaveInstance$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = saveInstance(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -406,11 +381,9 @@ export class ProductManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  saveInstance(params?: SaveInstance$Params, context?: HttpContext): Observable<void> {
+  saveInstance(params?: SaveInstance$Params, context?: HttpContext): Promise<void> {
     const resp = this.saveInstance$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
   /** Path part for operation `createInstance()` */
@@ -422,9 +395,9 @@ export class ProductManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  createInstance$Response(params?: CreateInstance$Params, context?: HttpContext): Observable<StrictHttpResponse<ProductInstanceModel>> {
+  createInstance$Response(params?: CreateInstance$Params, context?: HttpContext): Promise<StrictHttpResponse<ProductInstanceModel>> {
     const obs = createInstance(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -433,11 +406,9 @@ export class ProductManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  createInstance(params?: CreateInstance$Params, context?: HttpContext): Observable<ProductInstanceModel> {
+  createInstance(params?: CreateInstance$Params, context?: HttpContext): Promise<ProductInstanceModel> {
     const resp = this.createInstance$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<ProductInstanceModel>): ProductInstanceModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<ProductInstanceModel>): ProductInstanceModel => r.body);
   }
 
   /** Path part for operation `getRecipe()` */
@@ -449,9 +420,9 @@ export class ProductManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getRecipe$Response(params: GetRecipe$Params, context?: HttpContext): Observable<StrictHttpResponse<RecipeModel>> {
+  getRecipe$Response(params: GetRecipe$Params, context?: HttpContext): Promise<StrictHttpResponse<RecipeModel>> {
     const obs = getRecipe(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -460,11 +431,9 @@ export class ProductManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getRecipe(params: GetRecipe$Params, context?: HttpContext): Observable<RecipeModel> {
+  getRecipe(params: GetRecipe$Params, context?: HttpContext): Promise<RecipeModel> {
     const resp = this.getRecipe$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<RecipeModel>): RecipeModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<RecipeModel>): RecipeModel => r.body);
   }
 
   /** Path part for operation `updateRecipe()` */
@@ -476,9 +445,9 @@ export class ProductManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  updateRecipe$Response(params: UpdateRecipe$Params, context?: HttpContext): Observable<StrictHttpResponse<number>> {
+  updateRecipe$Response(params: UpdateRecipe$Params, context?: HttpContext): Promise<StrictHttpResponse<number>> {
     const obs = updateRecipe(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -487,11 +456,9 @@ export class ProductManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  updateRecipe(params: UpdateRecipe$Params, context?: HttpContext): Observable<number> {
+  updateRecipe(params: UpdateRecipe$Params, context?: HttpContext): Promise<number> {
     const resp = this.updateRecipe$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<number>): number => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<number>): number => r.body);
   }
 
   /** Path part for operation `saveRecipe()` */
@@ -503,9 +470,9 @@ export class ProductManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  saveRecipe$Response(params?: SaveRecipe$Params, context?: HttpContext): Observable<StrictHttpResponse<number>> {
+  saveRecipe$Response(params?: SaveRecipe$Params, context?: HttpContext): Promise<StrictHttpResponse<number>> {
     const obs = saveRecipe(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -514,11 +481,9 @@ export class ProductManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  saveRecipe(params?: SaveRecipe$Params, context?: HttpContext): Observable<number> {
+  saveRecipe(params?: SaveRecipe$Params, context?: HttpContext): Promise<number> {
     const resp = this.saveRecipe$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<number>): number => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<number>): number => r.body);
   }
 
   /** Path part for operation `createRecipe()` */
@@ -530,9 +495,9 @@ export class ProductManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  createRecipe$Response(params: CreateRecipe$Params, context?: HttpContext): Observable<StrictHttpResponse<RecipeModel>> {
+  createRecipe$Response(params: CreateRecipe$Params, context?: HttpContext): Promise<StrictHttpResponse<RecipeModel>> {
     const obs = createRecipe(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -541,12 +506,9 @@ export class ProductManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  createRecipe(params: CreateRecipe$Params, context?: HttpContext): Observable<RecipeModel> {
+  createRecipe(params: CreateRecipe$Params, context?: HttpContext): Promise<RecipeModel> {
     const resp = this.createRecipe$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<RecipeModel>): RecipeModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<RecipeModel>): RecipeModel => r.body);
   }
 
 }
-

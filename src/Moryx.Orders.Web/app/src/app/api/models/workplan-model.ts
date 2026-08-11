@@ -13,4 +13,3 @@ export interface WorkplanModel {
   state?: WorkplanState;
   version?: number;
 }
-

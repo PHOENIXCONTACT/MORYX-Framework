@@ -35,4 +35,3 @@ export function getProductParts(http: HttpClient, rootUrl: string, params: GetPr
 }
 
 getProductParts.PATH = '/api/moryx/orders/{guid}/productparts';
-

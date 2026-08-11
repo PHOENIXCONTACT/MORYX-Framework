@@ -13,4 +13,3 @@ export interface ContentDescriptorModel {
   name?: string | null;
   variants?: Array<VariantDescriptor> | null;
 }
-

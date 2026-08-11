@@ -10,7 +10,7 @@ namespace Moryx.Resources.Management;
 /// <summary>
 /// Collection that wraps another collection of references
 /// </summary>
-internal class ReferenceCollection<TResource> : IReferences<TResource>
+internal class ReferenceCollection<TResource> : IReferences<TResource>, IReferenceCollectionExtended
     where TResource : class, IResource
 {
     private readonly Resource _parent;
@@ -48,7 +48,10 @@ internal class ReferenceCollection<TResource> : IReferences<TResource>
     public void Add(TResource item)
     {
         lock (UnderlyingCollection)
+        {
             UnderlyingCollection.Add(item);
+        }
+
         RaiseCollectionChanged();
     }
 
@@ -59,10 +62,15 @@ internal class ReferenceCollection<TResource> : IReferences<TResource>
     {
         var result = false;
         lock (UnderlyingCollection)
+        {
             result = UnderlyingCollection.Remove(item);
+        }
 
         if (result)
+        {
             RaiseCollectionChanged();
+        }
+
         return result;
     }
 
@@ -72,7 +80,10 @@ internal class ReferenceCollection<TResource> : IReferences<TResource>
     public void Clear()
     {
         lock (UnderlyingCollection)
+        {
             UnderlyingCollection.Clear();
+        }
+
         RaiseCollectionChanged();
     }
 
@@ -82,7 +93,9 @@ internal class ReferenceCollection<TResource> : IReferences<TResource>
     public bool Contains(TResource item)
     {
         lock (UnderlyingCollection)
+        {
             return UnderlyingCollection.Contains(item);
+        }
     }
 
     /// <summary>
@@ -91,7 +104,9 @@ internal class ReferenceCollection<TResource> : IReferences<TResource>
     public void CopyTo(TResource[] array, int arrayIndex)
     {
         lock (UnderlyingCollection)
+        {
             UnderlyingCollection.CopyTo(array, arrayIndex);
+        }
     }
 
     /// <summary>
@@ -100,7 +115,9 @@ internal class ReferenceCollection<TResource> : IReferences<TResource>
     public IEnumerator<TResource> GetEnumerator()
     {
         lock (UnderlyingCollection)
+        {
             return UnderlyingCollection.Cast<TResource>().ToList().GetEnumerator();
+        }
     }
 
     IEnumerator IEnumerable.GetEnumerator()
@@ -113,5 +130,11 @@ internal class ReferenceCollection<TResource> : IReferences<TResource>
         var args = new ReferenceCollectionChangedEventArgs(_parent, _property);
         CollectionChanged?.Invoke(this, args);
     }
+
+    public void UnderlyingCollectionChanged()
+    {
+        RaiseCollectionChanged();
+    }
+
     public event EventHandler<ReferenceCollectionChangedEventArgs> CollectionChanged;
 }

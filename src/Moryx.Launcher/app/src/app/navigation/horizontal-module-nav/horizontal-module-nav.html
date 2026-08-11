@@ -1,0 +1,34 @@
+<nav #navEl>
+  @if (modules().length) {
+    <button class="nav-item" [matMenuTriggerFor]="moduleGridMenu.moduleGridMenu()">
+      <div class="icon-wrapper">
+        <mat-icon>view_module</mat-icon>
+      </div>
+      <span class="nav-title">{{ TranslationConstants.NAVIGATION.ALL | translate }}</span>
+    </button>
+  }
+
+  @for (module of visibleModules(); track module.route) {
+    <a class="nav-item" [href]="resolveHref(module)" [title]="module.description" [class.active]="module.route === activeRoute()">
+      <div class="icon-wrapper">
+        <mat-icon>{{ module.icon }}</mat-icon>
+        @if (asWeb(module)?.eventStream; as eventStream) {
+          <app-notification-badge [eventStream]="eventStream"></app-notification-badge>
+        }
+      </div>
+      <span class="nav-title">{{ module.title }}</span>
+    </a>
+  } @empty {
+    <span class="empty">{{ TranslationConstants.NAVIGATION.NO_ITEMS | translate }}</span>
+  }
+
+  <button class="nav-item" [matMenuTriggerFor]="moreMenu.appMenu()">
+    <div class="icon-wrapper">
+      <mat-icon>more_horiz</mat-icon>
+    </div>
+    <span class="nav-title">{{ TranslationConstants.NAVIGATION.MORE | translate }}</span>
+  </button>
+</nav>
+
+<app-more-menu #moreMenu></app-more-menu>
+<app-module-grid-menu #moduleGridMenu></app-module-grid-menu>

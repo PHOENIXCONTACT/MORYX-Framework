@@ -14,4 +14,3 @@ export interface ProductionJobModel {
   runningCount?: number;
   successCount?: number;
 }
-

@@ -199,7 +199,7 @@ The same use case as in the section before. You implement a component but there 
 
 In this case you also need a `DependencyRegistrationAttribute` but with an additional `Moryx.Container.ISubInitializer`. A `SubInitializer` can load types from other assemblies like in the following example.
 
-Know we implement a Plugin in a different Assembly:
+Now we implement a Plugin in a different Assembly:
 
 ````cs
 [Plugin(LifeCycle.Transient, typeof(IUserAssignmentHook), Name = PluginName)]
@@ -349,7 +349,7 @@ internal interface ISampleFactory
 
 ### Wrong build path
 
-YOu must reference your project in the application-project or start-project so that the MORYX Container can find your components. Joe Gunchy forgot to reference his project in the application-project so the container can't find his components. Don´t be stupid like Joe.
+You must reference your project in the application-project or start-project so that the MORYX Container can find your components. Joe Gunchy forgot to reference his project in the application-project so the container can't find his components. Don´t be stupid like Joe.
 
 ### Missing Name, Class or Interface
 

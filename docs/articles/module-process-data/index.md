@@ -3,7 +3,7 @@ uid: ProcessDataMonitor
 ---
 # ProcessDataMonitor
 
-The ProcessDataMonitor is the central module to collect process data from all sources provided in the MORYX process. The module does summarize all process data but does not handle them and there is no persistence. There is also an API to listen to the occured process data and handle them like write it to external systems.
+The ProcessDataMonitor is the central module to collect process data from all sources provided in the MORYX process. The module does summarize all process data but does not handle them and there is no persistence. There is also an API to listen to the occurred process data and handle them like write it to external systems.
 
 ## Provided Facades
 
@@ -98,7 +98,7 @@ Each listener must be configured for existing measurands. So every measurand can
 
 ## Data Structure
 
-The implemented data structure is derived from the famous *InfluxDB*. We dont have invented the wheel again, we just implemented the key concepts of it.
+The implemented data structure is derived from the famous *InfluxDB*. We don't have invented the wheel again, we just implemented the key concepts of it.
 
 **IMeasurement**
 
@@ -132,7 +132,7 @@ A sample for the process data monitor is a module which is referencing the `IPro
 
 ![ProcessEngine Adapter](images/sample-adapter-orchestration.png)
 
-This architecture makes the PDM fully independet. Adapters are named like the adopted module with the prefix "Pdm". This is just a naming convention and makes it more easy to identify adapter modules.
+This architecture makes the PDM fully independent. Adapters are named like the adopted module with the prefix "Pdm". This is just a naming convention and makes it more easy to identify adapter modules.
 
 ### PdmControlSystemKernel
 
@@ -158,7 +158,7 @@ The ControlSystem adapter is used to convert `IProcessControl` facade events and
 | runtimeMs | Field | 757 | Time in ms from the activity start to completion |
 | type | Tag | BenchmarkActivity | Type name of the activity |
 
-The existing measurments can be extendet with the known binding API. There are two configuration options within the `ModuleConfig`: `ProcessBindings` and `ActivityBindings`. Both are configured the same. The binding engine will be used to configure additional fields and tags. As a sample we add the product identifier to the *controlSystem_processes* measurement:
+The existing measurments can be extended with the known binding API. There are two configuration options within the `ModuleConfig`: `ProcessBindings` and `ActivityBindings`. Both are configured the same. The binding engine will be used to configure additional fields and tags. As a sample we add the product identifier to the *controlSystem_processes* measurement:
 
 ````json
 {
@@ -207,7 +207,7 @@ The NotificationPublisher adapter is using the `INotificationPublisher` facade a
 | severity | Tag | Error | Severity of the notification |
 | type | Tag | CellStateNotification | Type name of the notification |
 
-The existing measurment can also be extendet with the known binding API. There is one configuration option within the `ModuleConfig`: `NotificationBindings`.
+The existing measurment can also be extended with the known binding API. There is one configuration option within the `ModuleConfig`: `NotificationBindings`.
 The binding engine will be used to configure additional fields and tags. The only available base key is `Notification`.
 As a sample we add the acknowledger to the *notification_acknowledged* measurement:
 

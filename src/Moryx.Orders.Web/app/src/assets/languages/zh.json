@@ -3,8 +3,9 @@
     "TITLE": "订单"
   },
   "OPERATIONS": {
-    "TITLE": "消息",
-    "SUB_TITLE": "零件清单",
+    "LOG_TITLE": "消息",
+    "PARTS_TITLE": "零件清单",
+    "FILTER_TITLE": "过滤器",
     "SOURCE_TITLE": "操作源",
     "AMOUNT": "数量",
     "SUCCESS": "成功",
@@ -41,15 +42,20 @@
       "UNIT": "单位",
       "STAGING_INDICATOR": "暂存指示器"
     },
+    "FILTERS": {
+      "HIDE_COMPLETED": "隐藏已完成"
+    },
     "EMPTY_LOG": "此日志为空",
     "FAILED_LOADING": "无法建立与服务器的连接。请检查您的网络连接或稍后重试。",
     "EMPTY_STATE_HEADER": "没有订单",
-    "EMPTY_STATE_TEXT": "单击加号创建订单并开始配置。"
+    "EMPTY_STATE_TEXT": "单击加号创建订单并开始配置。",
+    "CREATE": "创建",
+    "FILTER": "筛选"
   },
   "RECIPES": {
     "RECIPES_OF": "配方 -",
     "GENERAL": "常规",
-    "IDENTIFIER": "标识符",
+    "NAME": "名称",
     "WORKPLAN": "工作计划",
     "CLASSIFICATION": "分类",
     "PROPERTIES": "属性",
@@ -58,14 +64,13 @@
   "DOCUMENTS": {
     "DOCUMENTS_OF": "文档 -",
     "EMPTY_STATE_HEADER": "未选择文档",
-    "EMPTY_STATE_TEXT": "在左侧的列表中单击一个文档以显示其内容。"
+    "EMPTY_STATE_TEXT": "在左侧的列表中单击一个文档以显示其内容。",
+    "IMAGE_ALT": "操作文档"
   },
   "REPORT_DIALOG": {
     "REPORT_TITLE": "报告操作",
     "REPORT": "报告",
     "OPERATION": "操作",
-    "ORDER": "订单",
-    "PRODUCT": "产品",
     "AMOUNT": "数量",
     "OVERDELIVERY": "超交",
     "UNDERDELIVERY": "欠交",
@@ -80,7 +85,8 @@
   },
   "INTERRUPT_DIALOG": {
     "TITLE": "中断操作",
-    "PROMPT": "接下来的操作不会启动新进程。已经启动的进程将正常完成，操作状态将变为 '中断'。"
+    "PROMPT": "接下来的操作不会启动新进程。已经启动的进程将正常完成，操作状态将变为 '中断'。",
+    "INTERRUPT": "中断"
   },
   "CREATE_DIALOG": {
     "TITLE": "新订单",
@@ -100,8 +106,6 @@
   },
   "BEGIN_DIALOG": {
     "TITLE": "开始生产",
-    "ORDER": "订单",
-    "PRODUCT": "产品",
     "TOTAL_AMOUNT": "总数量",
     "SUCCESS": "成功",
     "SCRAP": "废品",
@@ -109,15 +113,20 @@
     "OVERDELIVERY": "超交",
     "UNDERDELIVERY": "欠交",
     "PARTIAL_AMOUNT": "部分数量",
-    "BEGIN": "开始",
-    "OPERATOR_SELECTION_LABEL": "操作",
-    "OPERATOR_SELECTION_PLACEHOLDER": "(可选） 请选择您的助手",
-    "OPERATOR_SELECTION_NOT_SUPPORTED": "不允许更改存储空间"
+    "BEGIN": "开始"
+  },
+  "OPERATOR_SELECTOR": {
+    "OPERATOR_SELECTOR_LABEL": "操作",
+    "OPERATOR_SELECTOR_PLACEHOLDER": "(可选） 请选择您的助手"
   },
   "CHANGE_AMOUNT_DIALOG": {
     "TITLE": "更新当前目标金额",
     "UPDATE_AMOUNT": "更新金额",
     "CANNOT_REDUCE_TARGET_AMOUNT": "目标金额不得进一步减少"
+  },
+  "DIALOG_CONTEXT": {
+    "ORDER": "订单",
+    "PRODUCT": "产品"
   },
   "DISMISS": "关闭",
   "CANCEL": "取消",

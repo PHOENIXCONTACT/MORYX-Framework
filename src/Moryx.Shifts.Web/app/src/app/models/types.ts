@@ -39,5 +39,5 @@ export enum PossibleAssignedDays {
     "TwentyEighth" =  28,
     "TwentyNinth" =  29,
     "Thirtieth" =  30,
-    "ThirtyFirst" =  30
+    "ThirtyFirst" =  31
 }

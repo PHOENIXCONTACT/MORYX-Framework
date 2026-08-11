@@ -27,7 +27,7 @@ public class ResourceLinkerTests
     public void PrepareLinker()
     {
         var mock = new Mock<IResourceGraph>();
-        mock.Setup(g => g.Get(It.IsAny<long>())).Returns<long>(id => _graph.ContainsKey(id) ? _graph[id] : null);
+        mock.Setup(g => g.Get(It.IsAny<long>())).Returns<long>(id => _graph.TryGetValue(id, out var resource) ? resource : null);
 
         _linker = new ResourceLinker
         {

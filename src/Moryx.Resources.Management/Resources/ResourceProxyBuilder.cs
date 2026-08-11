@@ -39,7 +39,7 @@ internal class ResourceProxyBuilder
     /// <summary>
     /// Prepare builder on first execution, skip otherwise
     /// </summary>
-    public void PrepareBuilder()
+    public static void PrepareBuilder()
     {
         if (ModuleBuilder != null)
             return;
@@ -53,7 +53,7 @@ internal class ResourceProxyBuilder
     /// <summary>
     /// Get the previously build type from the dynamic module
     /// </summary>
-    public Type GetType(string proxyName)
+    public static Type GetType(string proxyName)
     {
         return ModuleBuilder.GetType(proxyName);
     }
@@ -61,7 +61,7 @@ internal class ResourceProxyBuilder
     /// <summary>
     /// Build a proxy for this resouce type
     /// </summary>
-    public Type Build(Type resourceType, IReadOnlyList<Type> interfaces)
+    public static Type Build(Type resourceType, IReadOnlyList<Type> interfaces)
     {
         var proxyName = $"{resourceType.ResourceType()}_Proxy";
 

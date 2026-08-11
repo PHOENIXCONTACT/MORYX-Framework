@@ -33,4 +33,3 @@ export function operationStream(http: HttpClient, rootUrl: string, params?: Oper
 }
 
 operationStream.PATH = '/api/moryx/orders/stream';
-

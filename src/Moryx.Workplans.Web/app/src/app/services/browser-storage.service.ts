@@ -4,7 +4,7 @@
 */
 
 import { Injectable } from '@angular/core';
-import { WorkplanSessionModel } from '../api/models';
+import { WorkplanSessionModel } from '@api/models';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +13,8 @@ export class BrowserStorageService {
   private readonly SESSION_OBJECTS: string = 'sessions-objects';
   private readonly ACTIVE_SESSION: string = 'active-session';
 
-  constructor() {}
+  constructor() {
+  }
 
   //#region ACTIVE_SESSION CRUD actions
   setActiveSession(sessionToken: string | undefined | null) {
@@ -29,6 +30,7 @@ export class BrowserStorageService {
   removeActiveSession(): void {
     sessionStorage.removeItem(this.ACTIVE_SESSION);
   }
+
   //#endregion
 
   //#region SESSIONS_OBJECTS CRUD actions
@@ -59,8 +61,9 @@ export class BrowserStorageService {
           sso.sessionToken === updatedStorageObject.sessionToken &&
           (sso.name != updatedStorageObject.name || sso.workplanId != updatedStorageObject.workplanId)
       )
-    )
+    ) {
       return;
+    }
 
     currentStorageObjects = currentStorageObjects.filter(sso => sso.sessionToken !== updatedStorageObject.sessionToken);
     currentStorageObjects.push(updatedStorageObject);
@@ -71,8 +74,11 @@ export class BrowserStorageService {
     let sessionStorageObjects = this.getStorageSessions();
     sessionStorageObjects = sessionStorageObjects.filter(sso => sso.sessionToken !== sessionToken);
     this.setSessions(sessionStorageObjects);
-    if (this.getActiveSession() === sessionToken) this.removeActiveSession();
+    if (this.getActiveSession() === sessionToken) {
+      this.removeActiveSession();
+    }
   }
+
   //#endregion
 
   private toSessionStorageObject(session: WorkplanSessionModel): SessionStorageObject {

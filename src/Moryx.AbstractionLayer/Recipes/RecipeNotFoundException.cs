@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Globalization;
 using Moryx.AbstractionLayer.Properties;
 
 namespace Moryx.AbstractionLayer.Recipes;
@@ -15,7 +16,7 @@ public class RecipeNotFoundException : Exception
     /// </summary>
     /// <param name="id">Id that was not found in database</param>
     public RecipeNotFoundException(long id)
-        : base(string.Format(Strings.RecipeNotFoundException_Message, id))
+        : base(string.Format(CultureInfo.CurrentCulture, Strings.RecipeNotFoundException_Message, id))
     {
     }
 }

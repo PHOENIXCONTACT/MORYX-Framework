@@ -107,7 +107,7 @@ internal class HashPath
         }
     }
 
-    private Exception LoggedException(Exception e, IModuleLogger logger, string cause)
+    private static Exception LoggedException(Exception e, IModuleLogger logger, string cause)
     {
         switch (e)
         {

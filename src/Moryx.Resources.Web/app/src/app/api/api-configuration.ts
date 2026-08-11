@@ -9,6 +9,18 @@
 import { Injectable } from '@angular/core';
 
 /**
+ * Provides the ApiConfiguration configuration object with a given root URL.
+ */
+export function provideApiConfiguration(rootUrl: string) {
+  var config = new ApiConfiguration();
+  config.rootUrl = rootUrl;
+  return {
+    provide: ApiConfiguration,
+    useValue: config
+  };
+}
+
+/**
  * Global configuration
  */
 @Injectable({
@@ -24,4 +36,3 @@ export class ApiConfiguration {
 export interface ApiConfigurationParams {
   rootUrl?: string;
 }
-

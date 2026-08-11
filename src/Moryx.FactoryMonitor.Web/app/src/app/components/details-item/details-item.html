@@ -1,0 +1,12 @@
+  <mat-icon>
+    {{ value().iconName ? value().iconName : 'info' }}
+  </mat-icon>
+  <div class="property-container">
+    <div class="property-content">
+      <span class="property-value truncate">
+        {{ value().currentValue ? value().currentValue : '-' }}
+      </span>
+      <span class="property-unit" [style.visibility]="value().valueUnit ? 'visible':'hidden'">{{value().valueUnit}}</span>
+    </div>
+    <span class="property-label">{{name()}}</span>
+  </div>

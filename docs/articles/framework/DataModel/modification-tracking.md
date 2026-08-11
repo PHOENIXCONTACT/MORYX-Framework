@@ -22,7 +22,7 @@ The example above defines four additional columns: Id (from `EntityBase`), Creat
 - `Updated`: Shows when the row was updated
 - `Deleted`: Is set when the row was deleted.
 
-`Created` and `Updated` are automatically set by the db context base class [MoryxDbContext](/src/Moryx.Model/MoryxDbContext.cs) whenever the entity was modified. Your context must derive from it. The `Deleted` flag is only automatically set, if the [UnitOfWork with Repositories](unit-of-work-pattern.md) is used, otherwise if plain EntityFramework, the `DbSet`-extension `RemoveSoft` is the way to set the flag. The `RemoveSoft` extension only sets the `Deleted`-property on the entity to the current datetime. To synchronize the DateTimes, the `MoryxDbContext` will modify the `Deleted`-property again to match with the `Updated`-property.
+`Created` and `Updated` are automatically set by the db context base class [MoryxDbContext](/src/Moryx.Model/MoryxDbContext.cs) whenever the entity was modified. Your context must derive from it. The `Deleted` flag is only automatically set, if the [UnitOfWork with Repositories](unit-of-work-pattern.md) is used, otherwise if plain EntityFramework is used, the `DbSet`-extension `RemoveSoft` is the way to set the flag. The `RemoveSoft` extension only sets the `Deleted`-property on the entity to the current datetime. To synchronize the DateTimes, the `MoryxDbContext` will modify the `Deleted`-property again to match with the `Updated`-property.
 
 ## Migrations
 

@@ -14,6 +14,11 @@ public interface IOperatorAssignable : IResource
     /// </summary>
     ICapabilities RequiredSkills { get; }
 
+    // TODO: Change parameter type in moryx 12 as discussed in https://github.com/PHOENIXCONTACT/MORYX-Framework/pull/1185/changes#r3008187999
+    /// <summary>
+    /// Inform the assignable about the currently assigned operators and their skills
+    /// </summary>
+    /// <param name="attandances"></param>
     void AttendanceChanged(IReadOnlyList<AttendanceChangedArgs> attandances);
 }
 

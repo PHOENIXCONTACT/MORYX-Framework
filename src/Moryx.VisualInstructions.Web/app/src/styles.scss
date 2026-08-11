@@ -1,5 +1,3 @@
-@use "@moryx/ngx-web-framework/styles/theme" as *;
-@use "@moryx/ngx-web-framework/styles/variables" as *;
 
 html,
 body {
@@ -42,12 +40,12 @@ app-root {
   }
 }
 
-.navigation-bar {
+.navigation-bar:has(> .navigation-bar-item:only-child) {
   display: none !important;
 }
 
 .hover-button {
-  background-color: $light-background-hover;
+  background-color: var(--mat-sys-surface-container-highest);
   opacity: 0.5;
   box-shadow: none;
   width: 60px;

@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -8,23 +9,29 @@ using Moryx.AbstractionLayer.Capabilities;
 using Moryx.ControlSystem.Cells;
 using Moryx.ControlSystem.Processes;
 using Moryx.FactoryMonitor.Endpoints.Models;
-using Newtonsoft.Json;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Processes;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Moryx.FactoryMonitor.Endpoints.Tests;
 
 [TestFixture]
-
 public class FactoryMonitorController_StateStreamTest : BaseTest
 {
+    private static readonly JsonSerializerOptions _serializerOptions = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        Converters = { new JsonStringEnumConverter() }
+    };
 
     [SetUp]
     public override void Setup()
@@ -80,7 +87,7 @@ public class FactoryMonitorController_StateStreamTest : BaseTest
     }
 
     [Test]
-    public void FactoryStatesStream()
+    public async Task FactoryStatesStream()
     {
         //Arrange
         var source = new CancellationTokenSource();
@@ -104,21 +111,28 @@ public class FactoryMonitorController_StateStreamTest : BaseTest
 
         _factoryMonitor.ControllerContext = new ControllerContext();
         _factoryMonitor.ControllerContext.HttpContext = new DefaultHttpContext();
+        _factoryMonitor.ControllerContext.HttpContext.RequestServices = new ServiceCollection()
+            .Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(o =>
+            {
+                o.SerializerOptions.PropertyNamingPolicy = _serializerOptions.PropertyNamingPolicy;
+                foreach (var c in _serializerOptions.Converters)
+                    o.SerializerOptions.Converters.Add(c);
+            })
+            .BuildServiceProvider();
+
         _factoryMonitor.ControllerContext.HttpContext.Response.Body = memoryStream;
 
         _processFacadeMock.Setup(pm => pm.Targets(It.IsAny<Process>()))
             .Returns<Process>(p => _activityTargets.Where(pair => pair.Key.Process == p).SelectMany(pair => pair.Value).ToList());
         _processFacadeMock.Setup(pm => pm.GetRunningProcesses()).Returns([process]);
-        //Act
 
-        Task.Run(async () =>
-        {
-            await _factoryMonitor.FactoryStatesStream(cancellationToken);
-        });
+        // Act — event handlers and the channel subscriber are set up synchronously before
+        // FactoryStatesStream suspends at its first await
+        var streamTask = _factoryMonitor.FactoryStatesStream(cancellationToken);
 
         //assembly activity
-        StartFirstActivity(process, assemblyActivity);
-        Thread.Sleep(500);
+        await StartFirstActivityAsync(process, assemblyActivity);
+        await Task.Delay(500);
         ReadJsonData(memoryStream, streamResponseCells, streamResponseOrders, streamResponseActivities);
 
         // Assert
@@ -127,24 +141,24 @@ public class FactoryMonitorController_StateStreamTest : BaseTest
 
         //Assert part 1
         RaiseActivityUpdated(assemblyActivity, ActivityProgress.Completed);
-        Thread.Sleep(500);
+        await Task.Delay(500);
         ReadJsonData(memoryStream, streamResponseCells, streamResponseOrders, streamResponseActivities);
 
         //verify that the assembly cell is idle
         Assert.That(streamResponseCells.LastOrDefault(x => x.Id == _assemblyCellId)?.State,
             Is.EqualTo(CellState.Idle));
 
-        StartSecondActivity(process, solderingActivity);
-        Thread.Sleep(500);
+        await StartSecondActivityAsync(process, solderingActivity);
+        await Task.Delay(500);
         ReadJsonData(memoryStream, streamResponseCells, streamResponseOrders, streamResponseActivities);
 
         //Assert part 2
         //verify that the soldering cell is running
-        Assert.That(streamResponseCells.LastOrDefault(x => x.Id == _solderingCellId)?.State
-            , Is.EqualTo(CellState.Running));
+        Assert.That(streamResponseCells.LastOrDefault(x => x.Id == _solderingCellId)?.State,
+            Is.EqualTo(CellState.Running));
 
         RaiseActivityUpdated(solderingActivity, ActivityProgress.Completed);
-        Thread.Sleep(500);
+        await Task.Delay(500);
         ReadJsonData(memoryStream, streamResponseCells, streamResponseOrders, streamResponseActivities);
 
         //verify that the soldering cell is not running
@@ -153,74 +167,97 @@ public class FactoryMonitorController_StateStreamTest : BaseTest
 
         // end of the process
         RaiseProcessUpdated(process, ProcessProgress.Completed);
-        Thread.Sleep(500);
+        await Task.Delay(500);
         ReadJsonData(memoryStream, streamResponseCells, streamResponseOrders, streamResponseActivities);
 
         //Assert part 3
         _solderingCell.ChangeCapabilities(NullCapabilities.Instance);
-        Thread.Sleep(500);
+        await Task.Delay(500);
         ReadJsonData(memoryStream, streamResponseCells, streamResponseOrders, streamResponseActivities);
 
         Assert.That(streamResponseCells.LastOrDefault(x => x.Id == _solderingCellId)?.State, Is.EqualTo(CellState.NotReadyToWork));
 
-        //cancel/stop the request task
-        memoryStream.Close();
+        // Cleanup
+        // Cancel first — the channel's ReadAllAsync then throws OperationCanceledException cleanly.
+        // Await the task so the controller's finally block finishes before the test returns.
         source.Cancel();
+        try
+        {
+            await streamTask;
+        }
+        catch (OperationCanceledException)
+        {
+        }
     }
 
-    private void ReadJsonData(MemoryStream memoryStream, List<CellStateChangedModel> cells, List<OrderModel> orders, List<ActivityChangedModel> activities)
+    private static void ReadJsonData(MemoryStream memoryStream, List<CellStateChangedModel> cells, List<OrderModel> orders, List<ActivityChangedModel> activities)
     {
-        var jsonData = Encoding.UTF8.GetString(memoryStream.ToArray());
-        if (string.IsNullOrEmpty(jsonData)) return;
-
-        var array = jsonData.Split("type: ").ToList();
-        foreach (var item in array)
+        var text = Encoding.UTF8.GetString(memoryStream.ToArray());
+        if (string.IsNullOrEmpty(text))
         {
-            if (item.Contains("cellStateChangedModel"))
+            return;
+        }
+
+        // SSE events are delimited by blank lines
+        foreach (var block in text.Split(["\n\n", "\r\n\r\n"], StringSplitOptions.RemoveEmptyEntries))
+        {
+            string eventType = null;
+            string data = null;
+
+            foreach (var line in block.Split(["\r\n", "\n"], StringSplitOptions.RemoveEmptyEntries))
             {
-                //clean up remove "cells" and "data:" text
-                var content = item.Replace("cellStateChangedModel", "").Replace("data: ", "");
-                if (!string.IsNullOrEmpty(content))
-                    cells.Add(JsonConvert.DeserializeObject<CellStateChangedModel>(content));
+                if (line.StartsWith("event: "))
+                {
+                    eventType = line["event: ".Length..];
+                }
+                else if (line.StartsWith("data: "))
+                {
+                    data = line["data: ".Length..];
+                }
             }
-            else if (item.Contains("activityChangedModel"))
+
+            if (data == null)
             {
-                //clean up, remove "processes" and "data:" text
-                var content = item.Replace("activityChangedModel", "").Replace("data: ", "");
-                if (!string.IsNullOrEmpty(content))
-                    activities.Add(JsonConvert.DeserializeObject<ActivityChangedModel>(content));
+                continue;
             }
-            else if (item.Contains("process"))
+
+            switch (eventType)
             {
-                //clean up, remove "processes" and "data:" text
-                var content = item.Replace("process", "").Replace("data: ", "");
-                if (!string.IsNullOrEmpty(content))
-                    orders.AddRange(JsonConvert.DeserializeObject<List<OrderModel>>(content));
+                case "cellStateChangedModel":
+                    cells.Add(JsonSerializer.Deserialize<CellStateChangedModel>(data, _serializerOptions));
+                    break;
+                case "activityChangedModel":
+                    activities.Add(JsonSerializer.Deserialize<ActivityChangedModel>(data, _serializerOptions));
+                    break;
+                case "processes":
+                    var order = JsonSerializer.Deserialize<OrderModel>(data, _serializerOptions);
+                    if (order != null) orders.Add(order);
+                    break;
+                // resourceChangedModel is intentionally ignored in these tests
             }
         }
     }
 
-    private void StartSecondActivity(Process process, SolderingActivity mySecondActivity)
+    private async Task StartSecondActivityAsync(Process process, SolderingActivity mySecondActivity)
     {
-
         // ---------------------second activity
         AssignActivity(process, mySecondActivity, _solderingCell);
         RaiseActivityUpdated(mySecondActivity, ActivityProgress.Ready);
 
-        Thread.Sleep(200);
-        //activity updated
+        await Task.Delay(200);
+
         RaiseActivityUpdated(mySecondActivity, ActivityProgress.Running);
         RaiseProcessUpdated(process, ProcessProgress.Running);
     }
 
-    private void StartFirstActivity(Process process, AssemblyActivity myFirstActivity)
+    private async Task StartFirstActivityAsync(Process process, AssemblyActivity myFirstActivity)
     {
         // ----------- First activity
         AssignActivity(process, myFirstActivity, _assemblyCell);
         RaiseProcessUpdated(process, ProcessProgress.Ready);
         RaiseActivityUpdated(myFirstActivity, ActivityProgress.Ready);
 
-        Thread.Sleep(200);
+        await Task.Delay(200);
 
         RaiseActivityUpdated(myFirstActivity, ActivityProgress.Running);
         RaiseProcessUpdated(process, ProcessProgress.Running);

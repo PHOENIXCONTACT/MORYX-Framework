@@ -14,4 +14,3 @@ export interface ExtendedOperatorModel {
   lastName?: string | null;
   pseudonym?: string | null;
 }
-

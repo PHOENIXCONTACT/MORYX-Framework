@@ -1,0 +1,38 @@
+<div class="main-area">
+  @if (showTopRegion()) {
+    <div class="top-bar">
+      <slot name="topRegion" (slotchange)="onTopRegionSlotChange($event)"></slot>
+    </div>
+  } @else {
+    <slot name="topRegion" (slotchange)="onTopRegionSlotChange($event)" hidden></slot>
+  }
+
+  <div class="content">
+    <slot name="app"></slot>
+  </div>
+
+  <div class="floating-toolbar" [class.visible]="showExitButton()">
+    <button mat-raised-button (click)="exitFullscreen()">
+      <mat-icon>fullscreen_exit</mat-icon>
+      {{ TranslationConstants.FULLSCREEN_LAYOUT.EXIT_FULLSCREEN | translate }}
+    </button>
+    <button mat-raised-button [matMenuTriggerFor]="moduleGridMenu.moduleGridMenu()">
+      <mat-icon>view_module</mat-icon>
+      {{ TranslationConstants.FULLSCREEN_LAYOUT.MODULES | translate }}
+    </button>
+    <button mat-raised-button [matMenuTriggerFor]="moreMenu.appMenu()">
+      <mat-icon>more_horiz</mat-icon>
+      {{ TranslationConstants.FULLSCREEN_LAYOUT.MORE | translate }}
+    </button>
+    <app-more-menu #moreMenu></app-more-menu>
+    <app-module-grid-menu #moduleGridMenu></app-module-grid-menu>
+  </div>
+</div>
+
+@if (showRightRegion()) {
+  <aside class="right-region">
+    <slot name="rightRegion" (slotchange)="onRightRegionSlotChange($event)"></slot>
+  </aside>
+} @else {
+  <slot name="rightRegion" (slotchange)="onRightRegionSlotChange($event)" hidden></slot>
+}

@@ -29,4 +29,3 @@ export interface PropertyInfo {
   reflectedType?: Type;
   setMethod?: MethodInfo;
 }
-

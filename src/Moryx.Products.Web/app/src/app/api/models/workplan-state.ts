@@ -11,4 +11,3 @@ export enum WorkplanState {
   Released = 'Released',
   Revoked = 'Revoked'
 }
-

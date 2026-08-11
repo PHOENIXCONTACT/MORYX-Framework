@@ -27,14 +27,14 @@ internal class SharedConfigProvider : IValueProvider
         return ValueProviderResult.Handled;
     }
 
-    internal IEnumerable<ConfigBase> IncludedSharedConfigs(object parent)
+    internal static IEnumerable<ConfigBase> IncludedSharedConfigs(object parent)
     {
         var sharedConfigs = new List<ConfigBase>();
         ScanType(parent, sharedConfigs);
         return sharedConfigs;
     }
 
-    private void ScanType(object instance, List<ConfigBase> foundShared)
+    private static void ScanType(object instance, List<ConfigBase> foundShared)
     {
         foreach (var property in instance.GetType().GetProperties())
         {

@@ -14,4 +14,3 @@ export interface ProductCustomization {
   productTypes?: Array<ProductDefinitionModel> | null;
   recipeTypes?: Array<RecipeDefinitionModel> | null;
 }
-

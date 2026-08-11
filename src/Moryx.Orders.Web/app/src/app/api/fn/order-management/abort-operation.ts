@@ -34,4 +34,3 @@ export function abortOperation(http: HttpClient, rootUrl: string, params: AbortO
 }
 
 abortOperation.PATH = '/api/moryx/orders/{guid}/abort';
-

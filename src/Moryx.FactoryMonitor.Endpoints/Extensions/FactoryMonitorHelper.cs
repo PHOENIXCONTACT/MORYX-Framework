@@ -1,98 +1,83 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Resources;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.ControlSystem.Cells;
 using Moryx.ControlSystem.Processes;
 using Moryx.Factory;
 using Moryx.FactoryMonitor.Endpoints.Models;
 using Moryx.Orders;
-using Newtonsoft.Json;
-using System.Threading.Channels;
 
 namespace Moryx.FactoryMonitor.Endpoints.Extensions;
 
 internal static class FactoryMonitorHelper
 {
-    public static async Task OrderStarted(OperationStartedEventArgs orderEventArg, JsonSerializerSettings serializerSettings, Channel<Tuple<string, string>> _factoryChannel, CancellationToken cancellationToken)
+    private const string Order_Event_Type_Key = "order";
+    private const string Order_Changed_Event_Type_Key = "orderChanged";
+    private const string Cell_State_Event_Type_Key = "cellStateChangedModel";
+    private const string Activity_Event_Type_Key = "activityChangedModel";
+    private const string Recource_Event_Type_Key = "resourceChangedModel";
+
+    public static void OrderStarted(OperationStartedEventArgs orderEventArg, List<OrderModel> models, Action<string, object> broadcast)
     {
-        var orderModel = Converter.Converter.ToOrderModel(orderEventArg.Operation);
-        await SendOrderUpdate(orderModel, serializerSettings, _factoryChannel, cancellationToken);
+        var orderModel = models.Single(o => o.Order == orderEventArg.Operation.Order.Number && o.Operation == orderEventArg.Operation.Number);
+        broadcast(Order_Event_Type_Key, orderModel);
     }
 
-    public static async Task OrderUpdated(OperationChangedEventArgs orderEventArg, JsonSerializerSettings serializerSettings, Channel<Tuple<string, string>> _factoryChannel, CancellationToken cancellationToken)
+    public static void OrderUpdated(OperationChangedEventArgs orderEventArg, Action<string, object> broadcast)
     {
-        if (cancellationToken.IsCancellationRequested || orderEventArg.Operation.State is not OperationStateClassification.Running) return;
+        if (orderEventArg.Operation.State is not OperationStateClassification.Running)
+        {
+            return;
+        }
 
         var orderReferenceModel = Converter.Converter.ToOrderChangedModel(orderEventArg.Operation);
-        await SendOrderUpdate(orderReferenceModel, serializerSettings, _factoryChannel, cancellationToken);
+        broadcast(Order_Changed_Event_Type_Key, orderReferenceModel);
     }
 
-    public static async Task SendOrderUpdate(OrderChangedModel orderModel, JsonSerializerSettings serializerSettings, Channel<Tuple<string, string>> _factoryChannel, CancellationToken cancellationToken)
+    public static void PublishCellUpdate(CellStateChangedModel cellModel, Action<string, object> broadcast)
     {
-        var json = JsonConvert.SerializeObject(orderModel, serializerSettings);
-        await _factoryChannel.Writer.WriteAsync(new Tuple<string, string>("processes", json), cancellationToken);
+        broadcast(Cell_State_Event_Type_Key, cellModel);
     }
 
-    public static async Task PublishCellUpdate(CellStateChangedModel cellModel, JsonSerializerSettings serializerSettings, Channel<Tuple<string, string>> _factoryChannel, CancellationToken cancellationToken)
+    public static void ActivityUpdated(ActivityUpdatedEventArgs activityEventArg, List<ICell> cells,
+        List<OrderModel> orderModels, Action<string, object> broadcast)
     {
-        if (cancellationToken.IsCancellationRequested) return;
-        var json = JsonConvert.SerializeObject(cellModel, serializerSettings);
-        await _factoryChannel.Writer.WriteAsync(new Tuple<string, string>("cellStateChangedModel", json), cancellationToken);
+        if (activityEventArg.Progress == ActivityProgress.Ready)
+        {
+            return;
+        }
+
+        var cell = cells.FirstOrDefault(x => x.Id == activityEventArg.Activity.Tracing.ResourceId);
+        if (cell is null)
+        {
+            return;
+        }
+
+        var activityChangedModel = cell.GetActivityChangedModel(activityEventArg.Activity, orderModels);
+        broadcast(Activity_Event_Type_Key, activityChangedModel);
+
+        var cellStateChangedModel = cell.GetCellStateChangedModel(activityEventArg.Progress);
+        broadcast(Cell_State_Event_Type_Key, cellStateChangedModel);
     }
 
-    public static async Task ActivityUpdated(
-        ActivityUpdatedEventArgs activityEventArg,
-        JsonSerializerSettings serializerSettings,
-        Channel<Tuple<string, string>> _factoryChannel,
-        List<ICell> cells,
-        Resource resource,
+    public static void ResourceUpdated(IResourceManagement resourceManager,
+        Func<IEnumerable<IMachineLocation>, Dictionary<IMachineLocation, ICell>> mapCellsTo,
         Converter.Converter converter,
-        List<OrderModel> orderModels,
-        CancellationToken cancellationToken)
+        Action<string, object> broadcast)
     {
-        if (cancellationToken.IsCancellationRequested || activityEventArg.Progress == ActivityProgress.Ready) return;
+        var locations = resourceManager.GetResources<IMachineLocation>();
+        // ToDo: Added and removed resources not reflected
+        var locationToCellMappings = mapCellsTo(locations);
 
-        if (!cells.Any(x => x.Id == activityEventArg.Activity.Tracing.ResourceId)) return;
-
-        var cell = resource;
-        var activityChangedModel = (cell as ICell).GetActivityChangedModel(activityEventArg.Activity, orderModels);
-
-        var cellStateChangedModel = (cell as ICell).GetCellStateChangedModel(activityEventArg.Progress, resource);
-
-        var json = JsonConvert.SerializeObject(activityChangedModel, serializerSettings);
-        await _factoryChannel.Writer.WriteAsync(new Tuple<string, string>("activityChangedModel", json), cancellationToken);
-
-        json = JsonConvert.SerializeObject(cellStateChangedModel, serializerSettings);
-        await _factoryChannel.Writer.WriteAsync(new Tuple<string, string>("cellStateChangedModel", json), cancellationToken);
-    }
-
-    public static async Task ResourceUpdated(
-        JsonSerializerSettings serializerSettings,
-        Channel<Tuple<string, string>> _factoryChannel,
-        IResourceManagement resourceManager,
-        Func<IMachineLocation, bool> cellFilter,
-        Converter.Converter converter,
-        CancellationToken cancellationToken)
-    {
-        if (cancellationToken.IsCancellationRequested) return;
-
-        var cells = resourceManager.GetResources(cellFilter)
-            .Select(location => location.Machine)
-            .Cast<ICell>();
-
-        foreach (var cell in cells)
-            await SendResourceUpdate(cell.GetResourceChangedModel(converter, resourceManager, cellFilter), serializerSettings, _factoryChannel, cancellationToken);
-    }
-
-    public static async Task SendResourceUpdate(ResourceChangedModel resourceChangedModel,
-        JsonSerializerSettings serializerSettings,
-        Channel<Tuple<string, string>> _factoryChannel,
-        CancellationToken cancellationToken)
-    {
-        if (cancellationToken.IsCancellationRequested) return;
-        var json = JsonConvert.SerializeObject(resourceChangedModel, serializerSettings);
-        await _factoryChannel.Writer.WriteAsync(new Tuple<string, string>("resourceChangedModel", json), cancellationToken);
+        foreach (var l2cMapping in locationToCellMappings)
+        {
+            var cell = l2cMapping.Value;
+            var location = l2cMapping.Key;
+            var resourceChangedModel = cell.GetResourceChangedModel(converter, resourceManager, location);
+            broadcast(Recource_Event_Type_Key, resourceChangedModel);
+        }
     }
 
     public static List<TransportRouteModel> CreateRoutes(IReadOnlyList<IMachineLocation> locations)
@@ -106,10 +91,9 @@ internal static class FactoryMonitorHelper
                 Destination = Converter.Converter.ToCellLocationModel(x.Destination),
                 Origin = Converter.Converter.ToCellLocationModel(x.Origin),
                 WayPoints = x.WayPoints
-            })?.Select(t => Converter.Converter.ToTransportRouteModel(t)).ToList();
+            }).Select(Converter.Converter.ToTransportRouteModel).ToList();
 
-            if (result is not null)
-                routes.AddRange(result);
+            routes.AddRange(result);
         }
         return routes;
     }

@@ -1,0 +1,75 @@
+<form [formGroup]="form" class="details-container">
+  <section role="main" class="main-section">
+    <div class="main-content">
+      <mat-toolbar>
+        <a
+          mat-icon-button
+          aria-label="Go back"
+          [matTooltip]="TranslationConstants.WORKSTATION_OPERATORS.GO_BACK | translate"
+          routerLink="/skill-types/">
+          <mat-icon>arrow_back</mat-icon>
+        </a>
+        <span>
+          @if (skillType().id > 0) {
+            {{ TranslationConstants.SKILL_TYPE_DETAILS.SKILL_TYPE_DETAILS | translate }}
+          } @else {
+            {{ TranslationConstants.SKILL_TYPE_DETAILS.NEW_SKILL_TYPE | translate }}
+          }
+        </span>
+      </mat-toolbar>
+      <!-- form fields -->
+      <div class="skill-form">
+        <section>
+          <mat-form-field class="full-width field-spacing" appearance="outline">
+            <mat-label>
+              {{ TranslationConstants.SKILL_TYPE_DETAILS.NAME | translate }}
+            </mat-label>
+            <mat-hint>
+              {{ TranslationConstants.SKILL_TYPE_DETAILS.NAME_DESCRIPTION | translate }}
+            </mat-hint>
+            <input
+              matInput
+              aria-label="name"
+              id="name"
+              formControlName="name"/>
+          </mat-form-field>
+          <mat-form-field class="full-width" appearance="outline">
+            <mat-label>
+              {{ TranslationConstants.SKILL_TYPE_DETAILS.VALIDITY_PERIOD | translate }}
+            </mat-label>
+            <input
+              type="number"
+              matInput
+              id="duration"
+              formControlName="duration"/>
+          </mat-form-field>
+        </section>
+        <span class="capability-header">
+          {{ TranslationConstants.SKILL_TYPE_DETAILS.SKILL_CAPABILITY | translate }}
+        </span>
+        <section>
+          <navigable-entry-editor
+            [entry]="skillType().acquiredCapabilities"
+            queryParam="acquiredCapabilities"
+            [disabled]="false">
+          </navigable-entry-editor>
+        </section>
+      </div>
+    </div>
+  </section>
+  <section class="sidebar">
+    <div class="sidebar-actions">
+      <button
+        mat-icon-button
+        aria-label="Save"
+        [matTooltip]="TranslationConstants.ADD_OPERATOR_DIALOG.SAVE | translate"
+        matTooltipPosition="left"
+        matTooltipShowDelay="500"
+        type="submit"
+        (click)="onSave()"
+        [disabled]="form.invalid">
+        <mat-icon>save</mat-icon>
+      </button>
+    </div>
+  </section>
+</form>

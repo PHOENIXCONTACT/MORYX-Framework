@@ -37,4 +37,3 @@ export function getRunningProcessesOfJob(http: HttpClient, rootUrl: string, para
 }
 
 getRunningProcessesOfJob.PATH = '/api/moryx/processes/job';
-

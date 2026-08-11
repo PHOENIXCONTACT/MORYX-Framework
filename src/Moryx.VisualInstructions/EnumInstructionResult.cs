@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Globalization;
 using Moryx.Tools;
 
 namespace Moryx.VisualInstructions;
@@ -17,7 +18,7 @@ public static class EnumInstructionResult
     {
         return ParseEnum(resultEnum, exceptions).Select(pair => new InstructionResult
         {
-            Key = pair.Value.ToString("D"),
+            Key = pair.Value.ToString("D", CultureInfo.InvariantCulture),
             DisplayValue = pair.Key
         }).ToList();
     }
@@ -27,7 +28,7 @@ public static class EnumInstructionResult
     /// </summary>
     public static int ResultToEnumValue(Type resultEnum, InstructionResult result)
     {
-        return int.Parse(result.Key);
+        return int.Parse(result.Key, CultureInfo.InvariantCulture);
     }
 
     /// <summary>
@@ -50,7 +51,7 @@ public static class EnumInstructionResult
     public static TEnum ResultToGenericEnumValue<TEnum>(InstructionResult result)
         where TEnum : Enum
     {
-        var numeric = int.Parse(result.Key);
+        var numeric = int.Parse(result.Key, CultureInfo.InvariantCulture);
         return (TEnum)Enum.ToObject(typeof(TEnum), numeric);
     }
 

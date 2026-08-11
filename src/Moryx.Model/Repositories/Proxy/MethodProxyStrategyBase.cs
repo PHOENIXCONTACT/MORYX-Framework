@@ -8,7 +8,7 @@ namespace Moryx.Model.Repositories.Proxy;
 
 internal abstract class MethodProxyStrategyBase : IMethodProxyStrategy
 {
-    protected MethodBuilder DefineMethod(TypeBuilder typeBuilder, MethodInfo methodInfo)
+    protected static MethodBuilder DefineMethod(TypeBuilder typeBuilder, MethodInfo methodInfo)
     {
         const MethodAttributes methodAttributes = MethodAttributes.Public | MethodAttributes.Final |
                                                   MethodAttributes.Virtual | MethodAttributes.NewSlot |

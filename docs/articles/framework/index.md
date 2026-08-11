@@ -51,3 +51,7 @@ For more details see @subpage bindings.
 The MORYX Framework provides a state machine implementation that can be used to add state machine capabilities to resources, drivers or modules.
 
 - [State Machine](state-machine.md)
+
+## Runtime Termination
+
+To terminate the runtime in a graceful way, several aspects must be considered. Details concerning this topic can be found [here](runtime-termination.md).

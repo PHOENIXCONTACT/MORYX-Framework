@@ -24,4 +24,3 @@ export interface ProductQuery {
   selector?: Selector;
   typeName?: string | null;
 }
-

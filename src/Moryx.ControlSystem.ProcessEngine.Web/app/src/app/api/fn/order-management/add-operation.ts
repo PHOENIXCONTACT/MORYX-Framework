@@ -38,4 +38,3 @@ export function addOperation(http: HttpClient, rootUrl: string, params?: AddOper
 }
 
 addOperation.PATH = '/api/moryx/orders';
-

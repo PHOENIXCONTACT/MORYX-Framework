@@ -35,4 +35,3 @@ export function getOperation(http: HttpClient, rootUrl: string, params: GetOpera
 }
 
 getOperation.PATH = '/api/moryx/orders/{guid}';
-

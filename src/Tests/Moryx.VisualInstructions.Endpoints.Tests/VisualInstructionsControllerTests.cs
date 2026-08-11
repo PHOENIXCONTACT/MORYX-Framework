@@ -3,6 +3,8 @@
 
 using System;
 using System.Linq;
+using Moq;
+using Moryx.Runtime.Modules;
 using NUnit.Framework;
 
 namespace Moryx.VisualInstructions.Endpoints.Tests;
@@ -12,13 +14,17 @@ public class VisualInstructionsControllerTests
 {
     private VisualInstructionsFacadeMock _visualInstructionsFacadeMock;
     private VisualInstructionsController _controller;
-
+    private Mock<IModuleManager> _moduleManagerMock;
+    private Mock<IServiceProvider> _serviceProviderMock;
     [SetUp]
     public void SetUp()
     {
 
         _visualInstructionsFacadeMock = new VisualInstructionsFacadeMock();
-        _controller = new VisualInstructionsController(_visualInstructionsFacadeMock);
+        _moduleManagerMock = new Mock<IModuleManager>();
+        _serviceProviderMock = new Mock<IServiceProvider>();
+        _moduleManagerMock.Setup(x => x.AllModules).Returns([]);
+        _controller = new VisualInstructionsController(_visualInstructionsFacadeMock, _moduleManagerMock.Object, _serviceProviderMock.Object);
     }
 
     [Test]

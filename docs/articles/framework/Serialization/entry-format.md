@@ -11,12 +11,12 @@ Serialized entries can be then stored in JSON or send over WCF.
 
 ## Entry
 
-The `Entry` class represents property definition. It consists of the properties `Identifier`, `DisplayName` and `EntryValue Value`. `Identifier` is set and used by the serializer to map the entry value to a property or a collection item. Depending on the entry type it is either a property name, collection index or dictionary key. The `DisplayName` is intended for the user to understand the meaning of the entry value. It can be identical with the `Identifier`, but does not have to be and unlike the `Identifier` it is not required to be unique within its context. Both collections `Prototypes` and `Subentries` as well as `EntryValidation Validation` are optional properties. They are only used for some of the possible types of entry types. Entry class can have tree structure where `Entry` instances are located in SubEntries and/or Prototypes.
+The class [Entry](/src/Moryx/Serialization/EntryConvert/Entry.cs) represents a property definition. It consists of the properties `Identifier`, `DisplayName` and `Value`. `Identifier` is set and used by the serializer to map the entry value to a property or a collection item. Depending on the entry type it is either a property name, collection index or dictionary key. The `DisplayName` is intended for the user to understand the meaning of the entry value. It can be identical with the `Identifier`, but does not have to be and unlike the `Identifier` it is not required to be unique within its context. Both collections `Prototypes` and `Subentries` as well as `Validation` are optional properties. They are only used for some of the possible types of entry types. `Entry` instances can be organized in a tree structure, where subentries are located in `SubEntries` and/or `Prototypes`.
 
-We can decorate property with attributes:
+We can decorate a property with attributes:
 
 - `DisplayNameAttribute` when provided then _DisplayName_ will be taken from this attribute
-- `DescriptionAttribute` provides general description for Entry
+- `DescriptionAttribute` provides general description for the entry
 - `ReadOnlyAttribute` when provided, the `EntryValue.IsReadOnly` will be set to `true`
 
 ## EntryValue
@@ -25,10 +25,10 @@ It holds the value of the `Entry`, its type and necessary modification informati
 
 `EntryValueType.Class` is used either for properties that reference another object, items in a collection or as object prototypes. 
 
-- `Current` contains the value of the property as a string. For `EntryValueType.Class` this contains the type name of the object to replace it from a prototype or detect inheritance.
-- `Default` property holds value that should be put into `Current` when creating new instance of Entry or when the users wants to reset the value.
+- `Current` contains the value of the property as a string. For `EntryValueType.Class` this property contains the type name of the object to replace it from a prototype or detect inheritance.
+- `Default` property holds the value that should be put into `Current` when creating a new entry instance or when the users wants to reset the value.
 - `Possible` is a collection of possible values. If this collection is not empty, the current value must be on this list.
-- `IsReadOnly` when set to true we can't change `Current` value.
+- `IsReadOnly` describes whether the `Current` value can be altered.
 
 ## EntryValidation
 
@@ -36,14 +36,14 @@ Based on property attributes EntryValidation class can be created.
 
 Possible attributes are:
 
-- `PasswordAttribute` Property stores password
+- `PasswordAttribute` Property stores a password
 - `MinLengthAttribute` Minimum length
 - `MaxLengthAttribute` Maximum length
 - `RegularExpressionAttribute` Specifies that `Current` value must match provided regular expression 
 - `StringLengthAttribute` Specifies the length of the value that should be provided 
-- `RequiredAttribute` Specifies if Entry current value is required to be filled
+- `RequiredAttribute` Specifies if the entry's `Current` value is required to be filled
 
-Entry validation enables to check if changed property value fit validation criteria.
+Entry validation enables to check if a changed property value fits validation criteria.
 
 ## SubEntries
 

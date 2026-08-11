@@ -1,0 +1,168 @@
+<div class="details-container">
+  <section role="main" class="main-section">
+    <div class="main-content">
+      <!-- floating button -->
+      @if (editMode()) {
+        <div class="fab-container">
+          <button mat-fab color="primary" (click)="onAddSkillClick()">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+      }
+      <mat-toolbar>
+        <a
+          mat-icon-button
+          aria-label="Go back"
+          [matTooltip]="TranslationConstants.WORKSTATION_OPERATORS.GO_BACK | translate"
+          routerLink="/management">
+          <mat-icon>arrow_back</mat-icon>
+        </a>
+        <span>{{ TranslationConstants.OPERATOR_DETAILS.TITLE | translate }}</span>
+      </mat-toolbar>
+
+      <!-- form fields -->
+      <div class="form-section">
+        @if (!editMode()) {
+          <span class="operator-name">
+            {{ operator().firstName + " " + operator().lastName }}
+          </span>
+        }
+        @if (editMode()) {
+          <div class="name-row">
+            <mat-form-field class="full-width" require appearance="outline">
+              <mat-label>
+                {{ TranslationConstants.ADD_OPERATOR_DIALOG.FIRSTNAME | translate }}
+              </mat-label>
+              <input
+                matInput
+                [(ngModel)]="operator().firstName"
+                [disabled]="!editMode()"
+                required="true"/>
+            </mat-form-field>
+            <mat-form-field class="full-width" require appearance="outline">
+              <mat-label>
+                {{ TranslationConstants.ADD_OPERATOR_DIALOG.LASTNAME | translate }}
+              </mat-label>
+              <input
+                matInput
+                [(ngModel)]="operator().lastName"
+                [disabled]="!editMode()"
+                required="true"/>
+            </mat-form-field>
+          </div>
+        }
+        <mat-form-field class="full-width" appearance="outline">
+          <mat-label>
+            {{ TranslationConstants.ADD_OPERATOR_DIALOG.PSEUDONYM | translate }}
+          </mat-label>
+          <input
+            matInput
+            [value]="operator().pseudonym"
+            [disabled]="editMode() === false"/>
+        </mat-form-field>
+      </div>
+      <!-- skill list toolbar -->
+      <div class="skill-toolbar">
+        <span class="skill-header">
+          {{ TranslationConstants.OPERATOR_DETAILS.SKILLS | translate }}
+        </span>
+      </div>
+      <mat-form-field class="search-field" appearance="outline">
+        <input
+          matInput
+          (keyup)="applyFilter($event)"
+          [placeholder]="TranslationConstants.OPERATOR_DETAILS.SEARCH_SKILL | translate"
+          #input/>
+      </mat-form-field>
+
+      <div class="table-container">
+        <section class="skill-list">
+          <table mat-table [dataSource]="dataSource">
+            <ng-container matColumnDef="type">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ TranslationConstants.OPERATOR_DETAILS.NAME | translate }}
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ findSkillTypeById(element.typeId)?.name }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="obtainedOn">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ TranslationConstants.OPERATOR_DETAILS.OBTAINED_ON | translate }}
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ dateToString(element.obtainedOn) }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="expiresOn">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ TranslationConstants.OPERATOR_DETAILS.EXPIRES_ON | translate }}
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ dateToString(element.expiresOn) }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef aria-label="row actions">
+                &nbsp;
+              </th>
+              <td mat-cell *matCellDef="let element">
+                <button mat-icon-button (click)="onDeleteSkillClick(element)" [disabled]="!editMode()">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+
+            <tr
+              mat-header-row
+              *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
+        </section>
+      </div>
+    </div>
+  </section>
+  <section class="sidebar">
+    <div class="sidebar-actions">
+      @if (editMode()) {
+        <a
+          mat-icon-button
+          aria-label="Cancel Editing"
+          [matTooltip]="TranslationConstants.ADD_OPERATOR_DIALOG.CANCEL | translate"
+          matTooltipPosition="left"
+          matTooltipShowDelay="500"
+          type="reset"
+          (click)="onStopEditing()">
+          <mat-icon>cancel</mat-icon>
+        </a>
+      }
+      @if (!editMode()) {
+        <button
+          mat-icon-button
+          aria-label="Start editing the selected resource"
+          [matTooltip]="TranslationConstants.OPERATORS_MANAGEMENT.EDIT | translate"
+          matTooltipPosition="left"
+          matTooltipShowDelay="500"
+          type="button"
+          (click)="onStartEditing()">
+          <mat-icon>edit</mat-icon>
+        </button>
+      }
+      @if (editMode()) {
+        <button
+          mat-icon-button
+          aria-label="Save the edited resource"
+          [matTooltip]="TranslationConstants.ADD_OPERATOR_DIALOG.SAVE | translate"
+          matTooltipPosition="left"
+          matTooltipShowDelay="500"
+          type="submit"
+          (click)="onSave()">
+          <mat-icon>save</mat-icon>
+        </button>
+      }
+    </div>
+  </section>
+</div>

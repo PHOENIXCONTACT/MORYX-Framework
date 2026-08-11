@@ -54,4 +54,3 @@ export type { UpdateWorkplan$Params as UpdateWorkplan$Params } from './fn/workpl
 export { updateWorkplan as updateWorkplan } from './fn/workplan/update-workplan';
 export type { DeleteWorkplan$Params as DeleteWorkplan$Params } from './fn/workplan/delete-workplan';
 export { deleteWorkplan as deleteWorkplan } from './fn/workplan/delete-workplan';
-

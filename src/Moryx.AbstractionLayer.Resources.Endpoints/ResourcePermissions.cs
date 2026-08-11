@@ -28,7 +28,7 @@ public static class ResourcePermissions
     /// </summary>
     public const string CanEdit = _prefix + "CanEdit";
 
-    // ToDo: Rename permission to CanViewTypeTree
+    // TODO: Rename permission to CanViewTypeTree in the next major
     /// <summary>
     /// Permission for all actions related to viewing the resource type tree
     /// </summary>

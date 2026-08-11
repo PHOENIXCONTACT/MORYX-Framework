@@ -3,8 +3,9 @@
     "TITLE": "Ordini"
   },
   "OPERATIONS": {
-    "TITLE": "Messaggi",
-    "SUB_TITLE": "Elenco dei pezzi",
+    "LOG_TITLE": "Messaggi",
+    "PARTS_TITLE": "Elenco dei pezzi",
+    "FILTER_TITLE": "Filtro",
     "SOURCE_TITLE": "Fonte dell'operazione",
     "AMOUNT": "Quantità",
     "SUCCESS": "Successo",
@@ -41,15 +42,20 @@
       "UNIT": "Unità",
       "STAGING_INDICATOR": "Indicatore di gestione temporanea"
     },
+    "FILTERS": {
+      "HIDE_COMPLETED": "Nascondi completati"
+    },
     "EMPTY_LOG": "Questo registro è vuoto",
     "FAILED_LOADING": "Non è stato possibile stabilire la connessione al server. Controllare la connessione di rete o riprovare più tardi.",
     "EMPTY_STATE_HEADER": "Nessun ordine",
-    "EMPTY_STATE_TEXT": "Per creare un ordine, fare clic sul segno più e avviare la configurazione."
+    "EMPTY_STATE_TEXT": "Per creare un ordine, fare clic sul segno più e avviare la configurazione.",
+    "CREATE": "Crea",
+    "FILTER": "Filtro"
   },
   "RECIPES": {
     "RECIPES_OF": "Ricette di",
     "GENERAL": "Generale",
-    "IDENTIFIER": "Identificatore",
+    "NAME": "Nome",
     "WORKPLAN": "Piano di Lavoro",
     "CLASSIFICATION": "Classificazione",
     "PROPERTIES": "Proprietà",
@@ -58,14 +64,13 @@
   "DOCUMENTS": {
     "DOCUMENTS_OF": "Documenti di",
     "EMPTY_STATE_HEADER": "Nessun documento selezionato",
-    "EMPTY_STATE_TEXT": "Fare clic su uno qualsiasi dei documenti dall'elenco a sinistra per visualizzarne il contenuto."
+    "EMPTY_STATE_TEXT": "Fare clic su uno qualsiasi dei documenti dall'elenco a sinistra per visualizzarne il contenuto.",
+    "IMAGE_ALT": "Documento dell'operazione"
   },
   "REPORT_DIALOG": {
     "REPORT_TITLE": "Report Operazione",
     "REPORT": "REPORT",
     "OPERATION": "Operazione",
-    "ORDER": "Ordine",
-    "PRODUCT": "Prodotto",
     "AMOUNT": "Quantità",
     "OVERDELIVERY": "Prodotte",
     "UNDERDELIVERY": "Non prodotte",
@@ -80,7 +85,8 @@
   },
   "INTERRUPT_DIALOG": {
     "TITLE": "Ferma Operazione",
-    "PROMPT": "Per la seguente operazione non vengono avviati nuovi processi. I processi già avviati vengono completati normalmente e lo stato dell'operazione passa a 'Interrotto'."
+    "PROMPT": "Per la seguente operazione non vengono avviati nuovi processi. I processi già avviati vengono completati normalmente e lo stato dell'operazione passa a 'Interrotto'.",
+    "INTERRUPT": "FERMA"
   },
   "CREATE_DIALOG": {
     "TITLE": "Nuovo Ordine",
@@ -100,8 +106,6 @@
   },
   "BEGIN_DIALOG": {
     "TITLE": "Inizia la Produzione",
-    "ORDER": "Ordine",
-    "PRODUCT": "Prodotto",
     "TOTAL_AMOUNT": "Quantità totale",
     "SUCCESS": "Successo",
     "SCRAP": "Fallite",
@@ -109,15 +113,20 @@
     "OVERDELIVERY": "Prodotte",
     "UNDERDELIVERY": "Non prodotte",
     "PARTIAL_AMOUNT": "Quantità parziale",
-    "BEGIN": "INIZIA",
-    "OPERATOR_SELECTION_LABEL": "Operatore",
-    "OPERATOR_SELECTION_PLACEHOLDER": "(Facoltativo) Selezionare un operatore",
-    "OPERATOR_SELECTION_NOT_SUPPORTED": "Selezione dell'operatore non supportata"
+    "BEGIN": "INIZIA"
+  },
+  "OPERATOR_SELECTOR": {
+    "OPERATOR_SELECTOR_LABEL": "Operatore",
+    "OPERATOR_SELECTOR_PLACEHOLDER": "(Facoltativo) Selezionare un operatore"
   },
   "CHANGE_AMOUNT_DIALOG": {
     "TITLE": "Aggiornare l'importo target corrente",
     "UPDATE_AMOUNT": "IMPORTO AGGIORNATO",
     "CANNOT_REDUCE_TARGET_AMOUNT": "L'importo target non può essere ulteriormente ridotto"
+  },
+  "DIALOG_CONTEXT": {
+    "ORDER": "Ordine",
+    "PRODUCT": "Prodotto"
   },
   "DISMISS": "RIFIUTARE",
   "CANCEL": "CANCELLA",

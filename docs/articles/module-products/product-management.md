@@ -21,11 +21,11 @@ None. The product management does not depend on any other server module.
 
 ## Used DataModels
 
-* [Moryx.Products.Model](/src/Moryx.Products.Model/) This data model is used to store product data as well as instance data. The product data describes how to produce an product instance and represents the manufacturing master data while the instance data contains tracing data about every produced instance which is the dynamic data of the product management module.
+* [Moryx.Products.Management.Model](/src/Moryx.Products.Management/Model/) This data model is used to store product data as well as instance data. The product data describes how to produce an product instance and represents the manufacturing master data while the instance data contains tracing data about every produced instance which is the dynamic data of the product management module.
 
 # Architecture
 The ProductManagement is the central component to manage product types and their instances. Each application can [define custom classes](product-definition.md) to best
-meet their requirements. Each application also defines a set of plugins to adapt the product management to their needs.
+meet their requirements. Each application also defines a set of plugins to adapt the product management to its needs.
 
 ## Overview
 

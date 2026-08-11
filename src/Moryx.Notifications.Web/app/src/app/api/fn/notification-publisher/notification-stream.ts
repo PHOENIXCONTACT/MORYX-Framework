@@ -33,4 +33,3 @@ export function notificationStream(http: HttpClient, rootUrl: string, params?: N
 }
 
 notificationStream.PATH = '/api/moryx/notifications/stream';
-

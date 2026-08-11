@@ -1,6 +1,10 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Collections.Concurrent;
+using System.Runtime.CompilerServices;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Channels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -13,34 +17,29 @@ using Moryx.ControlSystem.Jobs;
 using Moryx.ControlSystem.Processes.Endpoints.Extensions;
 using Moryx.ControlSystem.Processes.Endpoints.Properties;
 using Moryx.ControlSystem.Processes.Endpoints.StreamServices;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace Moryx.ControlSystem.Processes.Endpoints;
 
 /// <summary>
-/// Definition of a REST API on the <see cref="IProcessEnging"/> facade.
+/// Definition of a REST API on the <see cref="IProcessControl"/> facade.
 /// </summary>
 [ApiController]
 [Route("api/moryx/processes/")]
 [Produces("application/json")]
-public class ProcessEngineController : ControllerBase
+public class ProcessEngineController : ControllerBase // TODO: Rename to ProcessControlController
 {
     private readonly IProcessControl _processControl;
     private readonly IProductManagement _productManagement;
     private readonly IResourceManagement _resourceManagement;
     private readonly IJobManagement _jobManagement;
 
-    private static readonly JsonSerializerSettings _serializerSettings = CreateSerializerSettings();
-
-    private static JsonSerializerSettings CreateSerializerSettings()
+    private static readonly ConcurrentDictionary<Guid, Channel<string>> _processStreamSubscribers = new();
+    private static readonly ConcurrentDictionary<Guid, Channel<string>> _activityStreamSubscribers = new();
+    private static readonly JsonSerializerOptions _serializerOptions = new()
     {
-        var serializerSettings = new JsonSerializerSettings();
-        serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-        serializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
-        return serializerSettings;
-    }
-
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        Converters = { new JsonStringEnumConverter() }
+    };
     public ProcessEngineController(IProcessControl processControl, IProductManagement productManagement,
         IResourceManagement resourceManagement, IJobManagement jobManagement)
     {
@@ -211,51 +210,56 @@ public class ProcessEngineController : ControllerBase
     [ProducesResponseType(typeof(JobProcessModel), StatusCodes.Status200OK)]
     public async Task ProcessUpdatesStream(CancellationToken cancellationToken)
     {
-        var response = Response;
-        response.Headers["Content-Type"] = "text/event-stream";
-
-        var serializerSettings = new JsonSerializerSettings();
-        serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-        serializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
-
-        // Define event handling
-        var processes = Channel.CreateUnbounded<ProcessUpdatedEventArgs>();
-        var eventHandler = new EventHandler<ProcessUpdatedEventArgs>((_, processEventArgs) =>
-        {
-            processes.Writer.TryWrite(processEventArgs);
-        });
-        _processControl.ProcessUpdated += eventHandler;
+        // Define event handler using the broadcast helper
+        var eventHandler = new EventHandler<ProcessUpdatedEventArgs>((_, e) =>
+            Broadcast(e));
 
         try
         {
-            // Create infinite loop awaiting changes or cancellation
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                // Write processes
-                var processArgs = await processes.Reader.ReadAsync(cancellationToken);
-                var processModel = Converter.ConvertProcess(processArgs.Process, _processControl, _resourceManagement);
-                processModel.State = processArgs.Progress;
+            var result = TypedResults.ServerSentEvents(Subscribe(cancellationToken));
 
-                var json = JsonConvert.SerializeObject(processModel, _serializerSettings);
-                await response.WriteAsync($"data: {json}\r\r", cancellationToken);
-            }
-        }
-        catch (OperationCanceledException)
-        {
-        }
-        catch (ChannelClosedException)
-        {
-        }
-        catch (InvalidOperationException)
-        {
+            // Register event handler after result creation but before execution to ensure finally cleanup
+            _processControl.ProcessUpdated += eventHandler;
+
+            await result.ExecuteAsync(HttpContext);
         }
         finally
         {
-            // Unregister handler from facade
             _processControl.ProcessUpdated -= eventHandler;
-            processes.Writer.TryComplete();
         }
-        await response.CompleteAsync();
+
+        return;
+
+        async IAsyncEnumerable<string> Subscribe([EnumeratorCancellation] CancellationToken cancelToken)
+        {
+            var channel = Channel.CreateUnbounded<string>();
+            var id = Guid.NewGuid();
+            _processStreamSubscribers[id] = channel;
+
+            try
+            {
+                await foreach (var data in channel.Reader.ReadAllAsync(cancelToken))
+                {
+                    yield return data;
+                }
+            }
+            finally
+            {
+                _processStreamSubscribers.TryRemove(id, out _);
+            }
+        }
+
+        // Local helper to broadcast process updates to all connected clients
+        void Broadcast(ProcessUpdatedEventArgs e)
+        {
+            var processModel = Converter.ConvertProcess(e.Process, _processControl, _resourceManagement);
+            processModel.State = e.Progress;
+
+            foreach (var channel in _processStreamSubscribers.Values)
+            {
+                channel.Writer.TryWrite(JsonSerializer.Serialize(processModel, _serializerOptions));
+            }
+        }
     }
 
     [HttpGet]
@@ -263,47 +267,61 @@ public class ProcessEngineController : ControllerBase
     [ProducesResponseType(typeof(ProcessActivityModel), StatusCodes.Status200OK)]
     public async Task ActivitiesUpdatesStream(CancellationToken cancellationToken)
     {
-        var response = Response;
-        response.Headers["Content-Type"] = "text/event-stream";
-        var activities = Channel.CreateUnbounded<ActivityUpdatedEventArgs>();
-
-        // Define event handling
-        var eventHandler = new EventHandler<ActivityUpdatedEventArgs>((sender, activityEventArgs) =>
-        {
-            activities.Writer.TryWrite(activityEventArgs);
-        });
-        _processControl.ActivityUpdated += eventHandler;
+        // Define event handler using the broadcast helper
+        var eventHandler = new EventHandler<ActivityUpdatedEventArgs>((_, e) =>
+            Broadcast(e));
 
         try
         {
-            // Create infinite loop awaiting changes or cancellation
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                // Write notifications
-                var activityArgs = await activities.Reader.ReadAsync(cancellationToken);
-                var activityModel = Converter.ConvertActivity(activityArgs.Activity, _processControl, _resourceManagement);
-                activityModel.State = activityArgs.Progress.ToString();
+            var result = TypedResults.ServerSentEvents(Subscribe(cancellationToken));
 
-                var json = JsonConvert.SerializeObject(activityModel, _serializerSettings);
-                await response.WriteAsync($"data: {json}\r\r", cancellationToken);
-            }
+            // Register event handler after result creation but before execution to ensure finally cleanup
+            _processControl.ActivityUpdated += eventHandler;
+
+            await result.ExecuteAsync(HttpContext);
         }
         catch (OperationCanceledException)
         {
-        }
-        catch (ChannelClosedException)
-        {
-        }
-        catch (InvalidOperationException)
-        {
+            // client disconnected — this is expected, not an error
         }
         finally
         {
-            // Unregister handler from facade
             _processControl.ActivityUpdated -= eventHandler;
-            activities.Writer.TryComplete();
         }
-        await response.CompleteAsync();
+
+        return;
+
+        async IAsyncEnumerable<string> Subscribe([EnumeratorCancellation] CancellationToken cancelToken)
+        {
+            var channel = Channel.CreateUnbounded<string>();
+            var id = Guid.NewGuid();
+            _activityStreamSubscribers[id] = channel;
+
+            try
+            {
+                await foreach (var data in channel.Reader.ReadAllAsync(cancelToken))
+                {
+                    yield return data;
+                }
+            }
+            finally
+            {
+                _activityStreamSubscribers.TryRemove(id, out _);
+            }
+        }
+
+        // Local helper to broadcast activity updates to all connected clients
+        void Broadcast(ActivityUpdatedEventArgs e)
+        {
+            var activityModel = Converter.ConvertActivity(e.Activity, _processControl, _resourceManagement);
+            activityModel.State = e.Progress.ToString();
+
+            foreach (var channel in _activityStreamSubscribers.Values)
+            {
+                channel.Writer.TryWrite(JsonSerializer.Serialize(activityModel, _serializerOptions));
+            }
+        }
+
     }
 
     #region Process Holder
@@ -326,7 +344,7 @@ public class ProcessEngineController : ControllerBase
     [ProducesResponseType(typeof(ProcessHolderGroupModel), StatusCodes.Status200OK)]
     public async Task GroupStream(CancellationToken cancellationToken)
     {
-        var stream = new ProcessHolderGroupStream(_resourceManagement, _serializerSettings);
+        var stream = new ProcessHolderGroupStream(_resourceManagement);
         await stream.Start(HttpContext, cancellationToken);
     }
 
@@ -360,7 +378,7 @@ public class ProcessEngineController : ControllerBase
     }
     #endregion
 
-    private new ActionResult<TResult> HttpResponse<TResult>(Func<TResult> func, Func<TResult, ActionResult<TResult>> onSuccess = null)
+    private ActionResult<TResult> HttpResponse<TResult>(Func<TResult> func, Func<TResult, ActionResult<TResult>> onSuccess = null)
     {
         try
         {
@@ -380,7 +398,7 @@ public class ProcessEngineController : ControllerBase
         }
     }
 
-    private new ActionResult HttpResponse(Action action)
+    private ActionResult HttpResponse(Action action)
     {
         try
         {
@@ -398,7 +416,7 @@ public class ProcessEngineController : ControllerBase
         ResourceNotFoundException _ => NotFound(ex.Message),
         ArgumentNullException _ => BadRequest(ex.Message),
         ArgumentException _ => BadRequest(ex.Message),
-        KeyNotFoundException _ => StatusCode(500, ex.Message),
-        _ => StatusCode(500, ex.Message),
+        KeyNotFoundException _ => StatusCode(StatusCodes.Status500InternalServerError, ex.Message),
+        _ => StatusCode(StatusCodes.Status500InternalServerError, ex.Message),
     };
 }

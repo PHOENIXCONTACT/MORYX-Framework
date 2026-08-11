@@ -11,4 +11,3 @@ export interface StructLayoutAttribute {
   typeId?: any | null;
   value?: LayoutKind;
 }
-

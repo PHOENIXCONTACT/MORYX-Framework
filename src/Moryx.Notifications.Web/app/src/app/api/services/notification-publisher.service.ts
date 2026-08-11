@@ -8,8 +8,7 @@
 
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 
 import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
@@ -40,9 +39,9 @@ export class NotificationPublisherService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getAll$Response(params?: GetAll$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<NotificationModel>>> {
+  getAll$Response(params?: GetAll$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<NotificationModel>>> {
     const obs = getAll(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -51,11 +50,9 @@ export class NotificationPublisherService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getAll(params?: GetAll$Params, context?: HttpContext): Observable<Array<NotificationModel>> {
+  getAll(params?: GetAll$Params, context?: HttpContext): Promise<Array<NotificationModel>> {
     const resp = this.getAll$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<NotificationModel>>): Array<NotificationModel> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<NotificationModel>>): Array<NotificationModel> => r.body);
   }
 
   /** Path part for operation `get()` */
@@ -67,9 +64,9 @@ export class NotificationPublisherService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  get$Response(params: Get$Params, context?: HttpContext): Observable<StrictHttpResponse<NotificationModel>> {
+  get$Response(params: Get$Params, context?: HttpContext): Promise<StrictHttpResponse<NotificationModel>> {
     const obs = get(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -78,11 +75,9 @@ export class NotificationPublisherService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  get(params: Get$Params, context?: HttpContext): Observable<NotificationModel> {
+  get(params: Get$Params, context?: HttpContext): Promise<NotificationModel> {
     const resp = this.get$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<NotificationModel>): NotificationModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<NotificationModel>): NotificationModel => r.body);
   }
 
   /** Path part for operation `notificationStream()` */
@@ -94,9 +89,9 @@ export class NotificationPublisherService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  notificationStream$Response(params?: NotificationStream$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<NotificationModel>>> {
+  notificationStream$Response(params?: NotificationStream$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<NotificationModel>>> {
     const obs = notificationStream(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -105,11 +100,9 @@ export class NotificationPublisherService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  notificationStream(params?: NotificationStream$Params, context?: HttpContext): Observable<Array<NotificationModel>> {
+  notificationStream(params?: NotificationStream$Params, context?: HttpContext): Promise<Array<NotificationModel>> {
     const resp = this.notificationStream$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<NotificationModel>>): Array<NotificationModel> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<NotificationModel>>): Array<NotificationModel> => r.body);
   }
 
   /** Path part for operation `acknowledge()` */
@@ -121,9 +114,9 @@ export class NotificationPublisherService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  acknowledge$Response(params: Acknowledge$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  acknowledge$Response(params: Acknowledge$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = acknowledge(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -132,12 +125,9 @@ export class NotificationPublisherService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  acknowledge(params: Acknowledge$Params, context?: HttpContext): Observable<void> {
+  acknowledge(params: Acknowledge$Params, context?: HttpContext): Promise<void> {
     const resp = this.acknowledge$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
 }
-

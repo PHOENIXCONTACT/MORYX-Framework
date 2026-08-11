@@ -1,8 +1,9 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.Modules;
+using System.Globalization;
 using Moryx.AbstractionLayer.Products;
+using Moryx.Modules;
 
 namespace Moryx.Products.Samples;
 
@@ -28,7 +29,7 @@ public class FileImporter : ProductImporterBase<FileImporterConfig, FileImportPa
         {
             var textReader = new StreamReader(stream);
             var identifier = textReader.ReadLine();
-            var revision = short.Parse(textReader.ReadLine() ?? "0");
+            var revision = short.Parse(textReader.ReadLine() ?? "0", CultureInfo.InvariantCulture);
             var name = textReader.ReadLine();
 
             return Task.FromResult(new ProductImporterResult

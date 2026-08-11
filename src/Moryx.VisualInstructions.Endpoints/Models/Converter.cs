@@ -2,14 +2,13 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Configuration;
-using Moryx.VisualInstructions;
 using Moryx.Serialization;
 
 namespace Moryx.VisualInstructions.Endpoints;
 
-internal static class Converter
+internal class Converter(ICustomSerialization serialization)
 {
-    internal static ICustomSerialization _serialization = new PossibleValuesSerialization(null, null, new EmptyValueProvider());
+    internal ICustomSerialization _serialization = serialization;
 
     internal static ActiveInstruction FromModel(InstructionModel instruction)
     {
@@ -23,7 +22,7 @@ internal static class Converter
         };
     }
 
-    internal static InstructionModel ToModel(ActiveInstruction instruction)
+    public InstructionModel ToModel(ActiveInstruction instruction)
     {
         InstructionResultModel[] results = [];
         if (instruction.Results?.Count > 0)
@@ -47,7 +46,7 @@ internal static class Converter
         return model;
     }
 
-    private class EmptyValueProvider : IEmptyPropertyProvider
+    internal class EmptyValueProvider : IEmptyPropertyProvider
     {
         public void FillEmpty(object obj)
         {

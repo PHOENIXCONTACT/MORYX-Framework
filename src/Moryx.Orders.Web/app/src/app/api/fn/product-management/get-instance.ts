@@ -35,4 +35,3 @@ export function getInstance(http: HttpClient, rootUrl: string, params: GetInstan
 }
 
 getInstance.PATH = '/api/moryx/products/instances/{id}';
-

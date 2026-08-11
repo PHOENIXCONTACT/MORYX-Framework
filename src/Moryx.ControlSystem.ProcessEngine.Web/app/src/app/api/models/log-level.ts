@@ -15,4 +15,3 @@ export enum LogLevel {
   Critical = 'Critical',
   None = 'None'
 }
-

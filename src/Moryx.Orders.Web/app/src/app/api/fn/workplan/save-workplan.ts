@@ -35,4 +35,3 @@ export function saveWorkplan(http: HttpClient, rootUrl: string, params?: SaveWor
 }
 
 saveWorkplan.PATH = '/api/moryx/workplans';
-

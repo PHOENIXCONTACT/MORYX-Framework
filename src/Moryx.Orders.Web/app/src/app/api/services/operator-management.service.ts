@@ -8,8 +8,7 @@
 
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 
 import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
@@ -38,6 +37,8 @@ import { signIn } from '../fn/operator-management/sign-in';
 import { SignIn$Params } from '../fn/operator-management/sign-in';
 import { signOut } from '../fn/operator-management/sign-out';
 import { SignOut$Params } from '../fn/operator-management/sign-out';
+import { stream } from '../fn/operator-management/stream';
+import { Stream$Params } from '../fn/operator-management/stream';
 import { update } from '../fn/operator-management/update';
 import { Update$Params } from '../fn/operator-management/update';
 
@@ -56,9 +57,9 @@ export class OperatorManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getAll$Response(params?: GetAll$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<AssignableOperator>>> {
+  getAll$Response(params?: GetAll$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<AssignableOperator>>> {
     const obs = getAll(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -67,11 +68,9 @@ export class OperatorManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getAll(params?: GetAll$Params, context?: HttpContext): Observable<Array<AssignableOperator>> {
+  getAll(params?: GetAll$Params, context?: HttpContext): Promise<Array<AssignableOperator>> {
     const resp = this.getAll$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<AssignableOperator>>): Array<AssignableOperator> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<AssignableOperator>>): Array<AssignableOperator> => r.body);
   }
 
   /** Path part for operation `add()` */
@@ -83,9 +82,9 @@ export class OperatorManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  add$Response(params?: Add$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
+  add$Response(params?: Add$Params, context?: HttpContext): Promise<StrictHttpResponse<string>> {
     const obs = add(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -94,11 +93,9 @@ export class OperatorManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  add(params?: Add$Params, context?: HttpContext): Observable<string> {
+  add(params?: Add$Params, context?: HttpContext): Promise<string> {
     const resp = this.add$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<string>): string => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<string>): string => r.body);
   }
 
   /** Path part for operation `deleteOperator()` */
@@ -110,9 +107,9 @@ export class OperatorManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  deleteOperator$Response(params?: DeleteOperator$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  deleteOperator$Response(params?: DeleteOperator$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = deleteOperator(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -121,11 +118,9 @@ export class OperatorManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  deleteOperator(params?: DeleteOperator$Params, context?: HttpContext): Observable<void> {
+  deleteOperator(params?: DeleteOperator$Params, context?: HttpContext): Promise<void> {
     const resp = this.deleteOperator$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
   /** Path part for operation `get()` */
@@ -137,9 +132,9 @@ export class OperatorManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  get$Response(params: Get$Params, context?: HttpContext): Observable<StrictHttpResponse<ExtendedOperatorModel>> {
+  get$Response(params: Get$Params, context?: HttpContext): Promise<StrictHttpResponse<ExtendedOperatorModel>> {
     const obs = get(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -148,11 +143,9 @@ export class OperatorManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  get(params: Get$Params, context?: HttpContext): Observable<ExtendedOperatorModel> {
+  get(params: Get$Params, context?: HttpContext): Promise<ExtendedOperatorModel> {
     const resp = this.get$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<ExtendedOperatorModel>): ExtendedOperatorModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<ExtendedOperatorModel>): ExtendedOperatorModel => r.body);
   }
 
   /** Path part for operation `update()` */
@@ -164,9 +157,9 @@ export class OperatorManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  update$Response(params: Update$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
+  update$Response(params: Update$Params, context?: HttpContext): Promise<StrictHttpResponse<string>> {
     const obs = update(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -175,11 +168,9 @@ export class OperatorManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  update(params: Update$Params, context?: HttpContext): Observable<string> {
+  update(params: Update$Params, context?: HttpContext): Promise<string> {
     const resp = this.update$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<string>): string => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<string>): string => r.body);
   }
 
   /** Path part for operation `getOperatorsByResource()` */
@@ -191,9 +182,9 @@ export class OperatorManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getOperatorsByResource$Response(params: GetOperatorsByResource$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ExtendedOperatorModel>>> {
+  getOperatorsByResource$Response(params: GetOperatorsByResource$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<ExtendedOperatorModel>>> {
     const obs = getOperatorsByResource(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -202,11 +193,9 @@ export class OperatorManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getOperatorsByResource(params: GetOperatorsByResource$Params, context?: HttpContext): Observable<Array<ExtendedOperatorModel>> {
+  getOperatorsByResource(params: GetOperatorsByResource$Params, context?: HttpContext): Promise<Array<ExtendedOperatorModel>> {
     const resp = this.getOperatorsByResource$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<ExtendedOperatorModel>>): Array<ExtendedOperatorModel> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<ExtendedOperatorModel>>): Array<ExtendedOperatorModel> => r.body);
   }
 
   /** Path part for operation `getResources()` */
@@ -218,9 +207,9 @@ export class OperatorManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getResources$Response(params: GetResources$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<AttendableResourceModel>>> {
+  getResources$Response(params: GetResources$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<AttendableResourceModel>>> {
     const obs = getResources(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -229,11 +218,9 @@ export class OperatorManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getResources(params: GetResources$Params, context?: HttpContext): Observable<Array<AttendableResourceModel>> {
+  getResources(params: GetResources$Params, context?: HttpContext): Promise<Array<AttendableResourceModel>> {
     const resp = this.getResources$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<AttendableResourceModel>>): Array<AttendableResourceModel> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<AttendableResourceModel>>): Array<AttendableResourceModel> => r.body);
   }
 
   /** Path part for operation `getResources_1()` */
@@ -245,9 +232,9 @@ export class OperatorManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getResources_1$Response(params?: GetResources_1$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<AttendableResourceModel>>> {
+  getResources_1$Response(params?: GetResources_1$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<AttendableResourceModel>>> {
     const obs = getResources_1(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -256,11 +243,9 @@ export class OperatorManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getResources_1(params?: GetResources_1$Params, context?: HttpContext): Observable<Array<AttendableResourceModel>> {
+  getResources_1(params?: GetResources_1$Params, context?: HttpContext): Promise<Array<AttendableResourceModel>> {
     const resp = this.getResources_1$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<AttendableResourceModel>>): Array<AttendableResourceModel> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<AttendableResourceModel>>): Array<AttendableResourceModel> => r.body);
   }
 
   /** Path part for operation `getDefaultOperator()` */
@@ -272,9 +257,9 @@ export class OperatorManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getDefaultOperator$Response(params?: GetDefaultOperator$Params, context?: HttpContext): Observable<StrictHttpResponse<ExtendedOperatorModel>> {
+  getDefaultOperator$Response(params?: GetDefaultOperator$Params, context?: HttpContext): Promise<StrictHttpResponse<ExtendedOperatorModel>> {
     const obs = getDefaultOperator(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -283,11 +268,9 @@ export class OperatorManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getDefaultOperator(params?: GetDefaultOperator$Params, context?: HttpContext): Observable<ExtendedOperatorModel> {
+  getDefaultOperator(params?: GetDefaultOperator$Params, context?: HttpContext): Promise<ExtendedOperatorModel> {
     const resp = this.getDefaultOperator$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<ExtendedOperatorModel>): ExtendedOperatorModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<ExtendedOperatorModel>): ExtendedOperatorModel => r.body);
   }
 
   /** Path part for operation `signIn()` */
@@ -299,9 +282,9 @@ export class OperatorManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  signIn$Response(params?: SignIn$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  signIn$Response(params?: SignIn$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = signIn(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -310,11 +293,9 @@ export class OperatorManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  signIn(params?: SignIn$Params, context?: HttpContext): Observable<void> {
+  signIn(params?: SignIn$Params, context?: HttpContext): Promise<void> {
     const resp = this.signIn$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
   /** Path part for operation `signOut()` */
@@ -326,9 +307,9 @@ export class OperatorManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  signOut$Response(params?: SignOut$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  signOut$Response(params?: SignOut$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = signOut(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -337,12 +318,34 @@ export class OperatorManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  signOut(params?: SignOut$Params, context?: HttpContext): Observable<void> {
+  signOut(params?: SignOut$Params, context?: HttpContext): Promise<void> {
     const resp = this.signOut$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
+  }
+
+  /** Path part for operation `stream()` */
+  static readonly StreamPath = '/api/moryx/operators/stream';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `stream()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  stream$Response(params?: Stream$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
+    const obs = stream(this.http, this.rootUrl, params, context);
+    return firstValueFrom(obs);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `stream$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  stream(params?: Stream$Params, context?: HttpContext): Promise<void> {
+    const resp = this.stream$Response(params, context);
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
 }
-

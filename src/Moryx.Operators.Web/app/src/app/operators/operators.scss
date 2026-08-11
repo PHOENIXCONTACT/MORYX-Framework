@@ -1,0 +1,12 @@
+
+.operator-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: auto;
+  gap: 8px;
+}
+
+.empty-container {
+  width: 100%;
+  height: 100%;
+}

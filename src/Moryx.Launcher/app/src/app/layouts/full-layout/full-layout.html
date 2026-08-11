@@ -1,0 +1,44 @@
+<div class="main-area">
+  <mat-toolbar>
+    <button mat-icon-button aria-label="Menu" (click)="toggleNav()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <div class="logo-host">
+      <a [href]="environment.rootUrl">
+        <img [src]="environment.assets + 'assets/moryx-banner-small.svg'" class="logo" alt="MORYX Logo">
+      </a>
+    </div>
+    @if (showTopRegion()) {
+      <slot name="topRegion" (slotchange)="onTopRegionSlotChange($event)"></slot>
+    } @else {
+      <div class="toolbar-spacer"></div>
+      <slot name="topRegion" (slotchange)="onTopRegionSlotChange($event)" hidden></slot>
+    }
+    <app-toolbar-search></app-toolbar-search>
+    @if (authConfigured()) {
+      <app-auth-button></app-auth-button>
+    }
+    <button mat-icon-button aria-label="More options" [matMenuTriggerFor]="moreMenu.appMenu()">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <app-more-menu #moreMenu></app-more-menu>
+  </mat-toolbar>
+
+  <mat-sidenav-container autosize>
+    <mat-sidenav mode="side" opened>
+      <app-vertical-module-nav [collapsed]="navCollapsed()"></app-vertical-module-nav>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+      <slot name="app"></slot>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
+
+@if (showRightRegion()) {
+  <aside class="right-region">
+    <slot name="rightRegion" (slotchange)="onRightRegionSlotChange($event)"></slot>
+  </aside>
+} @else {
+  <slot name="rightRegion" (slotchange)="onRightRegionSlotChange($event)" hidden></slot>
+}

@@ -9,4 +9,3 @@
 export interface ICapabilities {
   isCombined?: boolean;
 }
-

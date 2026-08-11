@@ -1,0 +1,45 @@
+<mat-tree [dataSource]="treeData()" [childrenAccessor]="childrenAccessor">
+  <mat-tree-node
+    *matTreeNodeDef="let node"
+    (click)="onNodeClick(node.id)"
+    (contextmenu)="onContextMenu($event, node.id)"
+    class="tree-node"
+    [class.selected]="selected()?.id === node.id"
+  >
+    <button mat-icon-button title="Disabled toggle" disabled></button>
+    @if (node.id === 0) {
+      <span class="node-label">{{ node.name }}</span>
+    } @else {
+      <span class="node-label">
+        {{ createProductIdentity(node.identifier, node.revision) }} {{ node.name }}
+      </span>
+    }
+  </mat-tree-node>
+
+  <mat-tree-node
+    *matTreeNodeDef="let node; when: hasChild"
+    #treeNode="matTreeNode"
+    (click)="onNodeClick(node.id)"
+    (contextmenu)="onContextMenu($event, node.id)"
+    class="tree-node"
+    [class.selected]="selected()?.id === node.id"
+  >
+    <button
+      mat-icon-button
+      matTreeNodeToggle
+      [attr.aria-label]="'toggle ' + node.name"
+      (click)="onExpandOrCollapseNode(node)"
+    >
+      <mat-icon class="mat-icon-rtl-mirror">
+        {{ treeNode.isExpanded ? "expand_more" : "chevron_right" }}
+      </mat-icon>
+    </button>
+    @if (node.id === 0) {
+      <span class="node-label">{{ node.name }}</span>
+    } @else {
+      <span class="node-label">
+        {{ createProductIdentity(node.identifier, node.revision) }} {{ node.name }}
+      </span>
+    }
+  </mat-tree-node>
+</mat-tree>

@@ -1,0 +1,39 @@
+@use '@angular/material' as mat;
+@use "@moryx/ngx-web-framework/styles/variables" as *;
+
+:host {
+  flex: 1 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: var(--mat-sys-surface-container-lowest);
+  height: 100%;
+  touch-action: auto;
+  display: block;
+  @include mat.tree-overrides((
+    node-min-height: 40px,
+    container-background-color: var(--mat-sys-surface-container-lowest),
+  ));
+}
+
+.tree-node {
+  cursor: pointer !important;
+  box-sizing: border-box;
+  width: 100%;
+  padding-right: 16px;
+  -webkit-touch-callout: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+
+  &:hover {
+    background-color: var(--mat-sys-surface-container-highest);
+  }
+
+  &.selected {
+    background-color: $primary;
+  }
+
+  .node-label {
+    flex: 1 1;
+  }
+}

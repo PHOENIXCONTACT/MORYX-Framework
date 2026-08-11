@@ -1,0 +1,20 @@
+<mat-chip-set class="chip-row">
+  @if (useTagStyle()) {
+    @if (operatorSkills().length <= 5) {
+      @for (skill of operatorSkills(); track skill) {
+        <mat-chip class="skill-chip-dark">
+          findSkillTypeById(skill.typeId)?.name
+        </mat-chip>
+      }
+    } @else {
+      <mat-chip class="skill-chip-light" [matTooltip]="skillTooltipText()">
+        {{ operatorSkills().length }} Skills
+      </mat-chip>
+    }
+  }
+</mat-chip-set>
+@if (!useTagStyle()) {
+  <mat-chip-set class="chip-text">
+    <mat-chip class="chip-medium">{{ skillTooltipText() }}</mat-chip>
+  </mat-chip-set>
+}

@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Globalization;
 using Moq;
 using Moryx.Tools;
 using NUnit.Framework;
@@ -112,7 +113,7 @@ public class FunctionResultWithTypeTests : FunctionResultTestsBase
     public void ResultToStringEqualsTheResultsToStringReturnValue()
     {
         var floatResult = FunctionResult.Ok(3.14f);
-        string floatAsString = Convert.ToString(3.14f); // avoid localization issues
+        string floatAsString = Convert.ToString(3.14f, CultureInfo.CurrentCulture);
         var noResult = FunctionResult.Ok(new Nothing());
         var nullResult = FunctionResult.Ok<object>(null);
 

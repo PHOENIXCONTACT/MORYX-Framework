@@ -18,7 +18,7 @@ public abstract class DeviceCommunicationBase : IDeviceCommunication
     protected int _timerId;
 
     /// <inheritdoc/>
-    protected bool _started = false;
+    protected bool _started;
 
     /// <inheritdoc/>
     protected Func<FunctionResult> _execute;

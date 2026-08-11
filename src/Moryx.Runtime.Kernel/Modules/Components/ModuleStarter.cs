@@ -115,13 +115,13 @@ internal class ModuleStarter : ModuleManagerComponent, IModuleStarter
         // Now we start every service waiting on this service to return
         await _waitingModulesSemaphore.ExecuteAsync(async () =>
         {
-            if (!WaitingModules.TryGetValue(module, out var value))
+            if (!WaitingModules.TryGetValue(module, out var previouslyWaitingModules))
                 return;
 
             // To increase boot speed we fork module start if more than one dependent was found
-            foreach (var waitingModule in value.ToArray())
+            foreach (var waitingModule in previouslyWaitingModules.ToArray())
             {
-                value.Remove(waitingModule);
+                previouslyWaitingModules.Remove(waitingModule);
                 await StartModule(waitingModule, cancellationToken);
             }
 

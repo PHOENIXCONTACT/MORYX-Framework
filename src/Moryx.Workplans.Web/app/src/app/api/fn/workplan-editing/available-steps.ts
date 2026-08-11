@@ -33,4 +33,3 @@ export function availableSteps(http: HttpClient, rootUrl: string, params?: Avail
 }
 
 availableSteps.PATH = '/api/moryx/workplans/steps';
-

@@ -3,8 +3,9 @@
     "TITLE": "Aufträge"
   },
   "OPERATIONS": {
-    "TITLE": "Meldungen",
-    "SUB_TITLE": "Stückliste",
+    "LOG_TITLE": "Meldungen",
+    "PARTS_TITLE": "Stückliste",
+    "FILTER_TITLE": "Filter",
     "SOURCE_TITLE": "Vorgangsquelle",
     "AMOUNT": "Menge",
     "SUCCESS": "Gutmenge",
@@ -41,15 +42,20 @@
       "UNIT": "Einheit",
       "STAGING_INDICATOR": "Bereitstellungskennzeichen"
     },
+    "FILTERS": {
+      "HIDE_COMPLETED": "Abgeschlossene ausblenden"
+    },
     "EMPTY_LOG": "Dieses Protokoll ist leer",
     "FAILED_LOADING": "Die Verbindung zum Server ist leider fehlgeschlagen. Bitte überprüfe deine Netzwerkverbindung oder versuch es später nochmal.",
     "EMPTY_STATE_HEADER": "Keine Aufträge",
-    "EMPTY_STATE_TEXT": "Um einen Auftrag zu erstellen klicke auf das Plus und starte die Konfiguration."
+    "EMPTY_STATE_TEXT": "Um einen Auftrag zu erstellen klicke auf das Plus und starte die Konfiguration.",
+    "CREATE": "Erstellen",
+    "FILTER": "Filter"
   },
   "RECIPES": {
     "RECIPES_OF": "Rezepte von",
     "GENERAL": "Allgemein",
-    "IDENTIFIER": "ID",
+    "NAME": "Name",
     "WORKPLAN": "Arbeitsplan",
     "CLASSIFICATION": "Klassifikation",
     "PROPERTIES": "Eigenschaften",
@@ -58,16 +64,13 @@
   "DOCUMENTS": {
     "DOCUMENTS_OF": "Dokumente von",
     "EMPTY_STATE_HEADER": "Kein Dokument ausgewählt",
-    "EMPTY_STATE_TEXT": "Klicken Sie auf eines der Dokumente aus der Liste auf der linken Seite, um es zu öffnen."
+    "EMPTY_STATE_TEXT": "Klicken Sie auf eines der Dokumente aus der Liste auf der linken Seite, um es zu öffnen.",
+    "IMAGE_ALT": "Vorgangsdokument"
   },
   "REPORT_DIALOG": {
     "REPORT_TITLE": "Vorgang rückmelden",
-    "INTERRUPT_TITLE": "Vorgang unterbrechen",
     "REPORT": "RÜCKMELDEN",
-    "INTERRUPT": "UNTERBRECHEN",
     "OPERATION": "Vorgang",
-    "ORDER": "Auftrag",
-    "PRODUCT": "Produkt",
     "AMOUNT": "Menge",
     "OVERDELIVERY": "Überlieferung",
     "UNDERDELIVERY": "Unterlieferung",
@@ -78,11 +81,12 @@
     "COMMENT": "Kommentar",
     "CONFIRMATION": "Rückmeldeart",
     "PARTIAL": "Teilrückmelden",
-    "FINAL": "Endrückmelden",
+    "FINAL": "Endrückmelden"
   },
   "INTERRUPT_DIALOG": {
     "TITLE": "Vorgang unterbrechen",
-    "PROMPT": "Es werden keine neuen Prozesse für den Vorgang gestartet. Bereits gestartete Prozesse werden normal beendet und anschließend wechselt der Status des Vorgangs zu 'Unterbrochen'."
+    "PROMPT": "Es werden keine neuen Prozesse für den Vorgang gestartet. Bereits gestartete Prozesse werden normal beendet und anschließend wechselt der Status des Vorgangs zu 'Unterbrochen'.",
+    "INTERRUPT": "UNTERBRECHEN"
   },
   "CREATE_DIALOG": {
     "TITLE": "Neuer Auftrag",
@@ -102,8 +106,6 @@
   },
   "BEGIN_DIALOG": {
     "TITLE": "Beginnen Sie mit der Produktion",
-    "ORDER": "Auftrag",
-    "PRODUCT": "Produkt",
     "TOTAL_AMOUNT": "Auftragsmenge",
     "SUCCESS": "Gutmenge",
     "SCRAP": "Ausschuss",
@@ -111,15 +113,20 @@
     "OVERDELIVERY": "Überlieferung",
     "UNDERDELIVERY": "Unterlieferung",
     "PARTIAL_AMOUNT": "Zielmenge",
-    "BEGIN": "BEGINNEN",
-    "OPERATOR_SELECTION_LABEL": "Bediener",
-    "OPERATOR_SELECTION_PLACEHOLDER": "(Optional) Wählen Sie einen Bediener",
-    "OPERATOR_SELECTION_NOT_SUPPORTED": "Bedienerauswahl wird nicht untersützt"
+    "BEGIN": "BEGINNEN"
+  },
+  "OPERATOR_SELECTOR": {
+    "OPERATOR_SELECTOR_LABEL": "Bediener",
+    "OPERATOR_SELECTOR_PLACEHOLDER": "(Optional) Wählen Sie einen Bediener"
   },
   "CHANGE_AMOUNT_DIALOG": {
     "TITLE": "Ändern Sie die aktuelle Zielmenge",
     "UPDATE_AMOUNT": "MENGE ÄNDERN",
     "CANNOT_REDUCE_TARGET_AMOUNT": "Die Zielmenge kann nicht weiter reduziert werden"
+  },
+  "DIALOG_CONTEXT": {
+    "ORDER": "Auftrag",
+    "PRODUCT": "Produkt"
   },
   "DISMISS": "OKAY",
   "CANCEL": "ABBRECHEN",

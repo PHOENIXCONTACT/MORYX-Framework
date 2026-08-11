@@ -4,23 +4,21 @@
 */
 
 import { Time } from '@angular/common';
-import { ShiftTypeModel as MoryxShiftsEndpointsShiftTypeModel } from '../api/models';
-import { AssignableOperator } from '../api/models/assignable-operator';
-import { ShiftAssignementModel } from '../api/models/shift-assignement-model';
+import { ShiftTypeModel as MoryxShiftsEndpointsShiftTypeModel } from '@api/models';
+import { AssignableOperator } from '@api/models/assignable-operator';
+import { ShiftAssignementModel } from '@api/models/shift-assignement-model';
 import { AssignmentCardModel } from './assignment-card-model';
 import { OperatorModel, OperatorStatus } from './operator-model';
 import { ShiftTypeModel } from './shift-type-model';
 import { ShiftInstanceModel } from './shift-instance-model';
-import { ShiftModel } from '../api/models/shift-model';
+import { ShiftModel } from '@api/models/shift-model';
 import { stringToDate } from '../utils';
 import moment from 'moment';
-import { AssignedDays } from '../api/models/assigned-days';
 import { CalendarDate } from './calendar-state';
 import { PossibleAssignedDays } from './types';
 import { ShiftCardModel } from './shift-card-model';
-import { AttendableResourceModel } from '../api/models/attendable-resource-model';
-import { ExtendedOperatorModel } from '../api/models/extended-operator-model';
-
+import { AttendableResourceModel } from '@api/models/attendable-resource-model';
+import { ExtendedOperatorModel } from '@api/models/extended-operator-model';
 
 
 export function assignableOperatorToOperatorModel(
@@ -71,7 +69,9 @@ export function addCalendarDaysToAssignment(
   shiftInstance: ShiftInstanceModel | undefined,
 ): AssignmentCardModel {
 
-  if (!shiftInstance) return model;
+  if (!shiftInstance) {
+    return model;
+  }
 
   model.days = assignedDaysToCalendarDates(shiftInstance.startDate, shiftInstance.endDate, model.assignedDays);
   return model;
@@ -82,9 +82,11 @@ export function assignedDaysToCalendarDates(
   endDate: Date,
   assignedDays: string
 ): CalendarDate[] {
-  let calendarDates: CalendarDate[] = [];
+  const calendarDates: CalendarDate[] = [];
 
-  if (!assignedDays) return calendarDates;
+  if (!assignedDays) {
+    return calendarDates;
+  }
 
   const dayStringArray = assignedDays.split(',');
   const start = moment(startDate);
@@ -103,7 +105,7 @@ export function assignedDaysToCalendarDates(
       continue;
     }
 
-    for (let dayString of dayStringArray) {
+    for (const dayString of dayStringArray) {
       const dayEnum = PossibleAssignedDays[day];
       const dayValue = dayString.replace(' ', '');
       if (dayEnum === dayValue) {
@@ -118,11 +120,7 @@ export function assignedDaysToCalendarDates(
   return calendarDates;
 }
 
-export function shiftTypeToShiftTypeModel(
-  shiftType: MoryxShiftsEndpointsShiftTypeModel
-): ShiftTypeModel {
-
-
+export function shiftTypeToShiftTypeModel(shiftType: MoryxShiftsEndpointsShiftTypeModel): ShiftTypeModel {
   const data = <ShiftTypeModel>{
     id: shiftType.id,
     name: shiftType.name,
@@ -176,12 +174,15 @@ export function calendarDatesToFlagEnumString(calendarDates: CalendarDate[], shi
     const day = PossibleAssignedDays[index];
     const correspondingCalendarDate = calendarDates.find(x => moment(x.date).diff(currentDate) === 0);
     //the current date is not in the calendar for the shift
-    if (!correspondingCalendarDate) continue;
+    if (!correspondingCalendarDate) {
+      continue;
+    }
 
-    if (stringResult === '')
+    if (stringResult === '') {
       stringResult += `${day}`;
-    else
+    } else {
       stringResult += `,${day}`
+    }
   }
   return stringResult;
 }

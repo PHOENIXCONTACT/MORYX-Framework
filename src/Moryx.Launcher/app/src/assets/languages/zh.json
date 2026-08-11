@@ -1,0 +1,65 @@
+{
+  "MORE": {
+    "VIEWS": "视图",
+    "ABOUT": "关于",
+    "FULLSCREEN_MODE": "全屏",
+    "OPERATOR_MODE": "操作员",
+    "FULL_MODE": "完整",
+    "TOP_REGION": "顶部面板",
+    "RIGHT_REGION": "右侧面板",
+    "SPOTLIGHT": "聚焦",
+    "THEME": "主题",
+    "THEME_LIGHT": "浅色",
+    "THEME_DARK": "深色",
+    "THEME_SYSTEM": "系统"
+  },
+  "LANGUAGE": {
+    "LANGUAGE": "语言"
+  },
+  "SEARCH": {
+    "PLACEHOLDER": "搜索...",
+    "NO_PROVIDER": "没有可用的搜索提供程序",
+    "CLEAR": "清除",
+    "NO_RESULTS": "没有找到 \"{{query}}\" 的结果",
+    "DIALOG_LABEL": "搜索"
+  },
+  "FULLSCREEN_LAYOUT": {
+    "EXIT_FULLSCREEN": "退出全屏",
+    "MODULES": "模块",
+    "MORE": "更多"
+  },
+  "NAVIGATION": {
+    "ALL": "全部",
+    "MORE": "更多",
+    "NO_ITEMS": "没有项目。"
+  },
+  "AUTH": {
+    "LOG_IN": "登录"
+  },
+  "ABOUT": {
+    "TITLE": "关于",
+    "APPLICATION": "应用程序",
+    "HOST": "主机",
+    "SERVER_TIME": "服务器时间",
+    "CLOSE": "关闭",
+    "LABEL_TITLE": "标题",
+    "LABEL_PRODUCT": "产品",
+    "LABEL_DESCRIPTION": "描述",
+    "LABEL_VERSION": "版本",
+    "LABEL_INFORMATIONAL_VERSION": "信息版本",
+    "LABEL_COMPANY": "公司",
+    "LABEL_CONFIGURATION": "配置",
+    "LABEL_COPYRIGHT": "版权",
+    "LABEL_TARGET_FRAMEWORK": "目标框架",
+    "LABEL_MACHINE_NAME": "机器名称",
+    "LABEL_OS": "操作系统",
+    "LABEL_UPTIME": "运行时间",
+    "SHORTCUTS": "快捷键"
+  },
+  "SHORTCUTS": {
+    "SPOTLIGHT": "聚焦",
+    "FULL_MODE": "完整布局",
+    "OPERATOR_MODE": "操作员布局",
+    "FULLSCREEN_MODE": "全屏布局"
+  }
+}

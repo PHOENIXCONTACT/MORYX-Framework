@@ -8,8 +8,7 @@
 
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 
 import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
@@ -62,9 +61,9 @@ export class ProcessEngineService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getRunningProcessesOfJob$Response(params?: GetRunningProcessesOfJob$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<JobProcessModel>>> {
+  getRunningProcessesOfJob$Response(params?: GetRunningProcessesOfJob$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<JobProcessModel>>> {
     const obs = getRunningProcessesOfJob(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -73,11 +72,9 @@ export class ProcessEngineService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getRunningProcessesOfJob(params?: GetRunningProcessesOfJob$Params, context?: HttpContext): Observable<Array<JobProcessModel>> {
+  getRunningProcessesOfJob(params?: GetRunningProcessesOfJob$Params, context?: HttpContext): Promise<Array<JobProcessModel>> {
     const resp = this.getRunningProcessesOfJob$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<JobProcessModel>>): Array<JobProcessModel> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<JobProcessModel>>): Array<JobProcessModel> => r.body);
   }
 
   /** Path part for operation `getRunningProcesses()` */
@@ -89,9 +86,9 @@ export class ProcessEngineService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getRunningProcesses$Response(params?: GetRunningProcesses$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<JobProcessModel>>> {
+  getRunningProcesses$Response(params?: GetRunningProcesses$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<JobProcessModel>>> {
     const obs = getRunningProcesses(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -100,11 +97,9 @@ export class ProcessEngineService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getRunningProcesses(params?: GetRunningProcesses$Params, context?: HttpContext): Observable<Array<JobProcessModel>> {
+  getRunningProcesses(params?: GetRunningProcesses$Params, context?: HttpContext): Promise<Array<JobProcessModel>> {
     const resp = this.getRunningProcesses$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<JobProcessModel>>): Array<JobProcessModel> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<JobProcessModel>>): Array<JobProcessModel> => r.body);
   }
 
   /** Path part for operation `getProcesses()` */
@@ -116,9 +111,9 @@ export class ProcessEngineService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getProcesses$Response(params: GetProcesses$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<JobProcessModel>>> {
+  getProcesses$Response(params: GetProcesses$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<JobProcessModel>>> {
     const obs = getProcesses(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -127,11 +122,9 @@ export class ProcessEngineService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getProcesses(params: GetProcesses$Params, context?: HttpContext): Observable<Array<JobProcessModel>> {
+  getProcesses(params: GetProcesses$Params, context?: HttpContext): Promise<Array<JobProcessModel>> {
     const resp = this.getProcesses$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<JobProcessModel>>): Array<JobProcessModel> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<JobProcessModel>>): Array<JobProcessModel> => r.body);
   }
 
   /** Path part for operation `getProcess()` */
@@ -143,9 +136,9 @@ export class ProcessEngineService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getProcess$Response(params: GetProcess$Params, context?: HttpContext): Observable<StrictHttpResponse<JobProcessModel>> {
+  getProcess$Response(params: GetProcess$Params, context?: HttpContext): Promise<StrictHttpResponse<JobProcessModel>> {
     const obs = getProcess(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -154,11 +147,9 @@ export class ProcessEngineService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getProcess(params: GetProcess$Params, context?: HttpContext): Observable<JobProcessModel> {
+  getProcess(params: GetProcess$Params, context?: HttpContext): Promise<JobProcessModel> {
     const resp = this.getProcess$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<JobProcessModel>): JobProcessModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<JobProcessModel>): JobProcessModel => r.body);
   }
 
   /** Path part for operation `getActivities()` */
@@ -170,9 +161,9 @@ export class ProcessEngineService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getActivities$Response(params: GetActivities$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ProcessActivityModel>>> {
+  getActivities$Response(params: GetActivities$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<ProcessActivityModel>>> {
     const obs = getActivities(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -181,11 +172,9 @@ export class ProcessEngineService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getActivities(params: GetActivities$Params, context?: HttpContext): Observable<Array<ProcessActivityModel>> {
+  getActivities(params: GetActivities$Params, context?: HttpContext): Promise<Array<ProcessActivityModel>> {
     const resp = this.getActivities$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<ProcessActivityModel>>): Array<ProcessActivityModel> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<ProcessActivityModel>>): Array<ProcessActivityModel> => r.body);
   }
 
   /** Path part for operation `getTargets()` */
@@ -197,9 +186,9 @@ export class ProcessEngineService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getTargets$Response(params: GetTargets$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ActivityResourceModel>>> {
+  getTargets$Response(params: GetTargets$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<ActivityResourceModel>>> {
     const obs = getTargets(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -208,11 +197,9 @@ export class ProcessEngineService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getTargets(params: GetTargets$Params, context?: HttpContext): Observable<Array<ActivityResourceModel>> {
+  getTargets(params: GetTargets$Params, context?: HttpContext): Promise<Array<ActivityResourceModel>> {
     const resp = this.getTargets$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<ActivityResourceModel>>): Array<ActivityResourceModel> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<ActivityResourceModel>>): Array<ActivityResourceModel> => r.body);
   }
 
   /** Path part for operation `getTargets_1()` */
@@ -224,9 +211,9 @@ export class ProcessEngineService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getTargets_1$Response(params: GetTargets_1$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ActivityResourceModel>>> {
+  getTargets_1$Response(params: GetTargets_1$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<ActivityResourceModel>>> {
     const obs = getTargets_1(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -235,11 +222,9 @@ export class ProcessEngineService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getTargets_1(params: GetTargets_1$Params, context?: HttpContext): Observable<Array<ActivityResourceModel>> {
+  getTargets_1(params: GetTargets_1$Params, context?: HttpContext): Promise<Array<ActivityResourceModel>> {
     const resp = this.getTargets_1$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<Array<ActivityResourceModel>>): Array<ActivityResourceModel> => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<Array<ActivityResourceModel>>): Array<ActivityResourceModel> => r.body);
   }
 
   /** Path part for operation `processUpdatesStream()` */
@@ -251,9 +236,9 @@ export class ProcessEngineService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  processUpdatesStream$Response(params?: ProcessUpdatesStream$Params, context?: HttpContext): Observable<StrictHttpResponse<JobProcessModel>> {
+  processUpdatesStream$Response(params?: ProcessUpdatesStream$Params, context?: HttpContext): Promise<StrictHttpResponse<JobProcessModel>> {
     const obs = processUpdatesStream(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -262,11 +247,9 @@ export class ProcessEngineService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  processUpdatesStream(params?: ProcessUpdatesStream$Params, context?: HttpContext): Observable<JobProcessModel> {
+  processUpdatesStream(params?: ProcessUpdatesStream$Params, context?: HttpContext): Promise<JobProcessModel> {
     const resp = this.processUpdatesStream$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<JobProcessModel>): JobProcessModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<JobProcessModel>): JobProcessModel => r.body);
   }
 
   /** Path part for operation `activitiesUpdatesStream()` */
@@ -278,9 +261,9 @@ export class ProcessEngineService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  activitiesUpdatesStream$Response(params?: ActivitiesUpdatesStream$Params, context?: HttpContext): Observable<StrictHttpResponse<ProcessActivityModel>> {
+  activitiesUpdatesStream$Response(params?: ActivitiesUpdatesStream$Params, context?: HttpContext): Promise<StrictHttpResponse<ProcessActivityModel>> {
     const obs = activitiesUpdatesStream(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -289,11 +272,9 @@ export class ProcessEngineService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  activitiesUpdatesStream(params?: ActivitiesUpdatesStream$Params, context?: HttpContext): Observable<ProcessActivityModel> {
+  activitiesUpdatesStream(params?: ActivitiesUpdatesStream$Params, context?: HttpContext): Promise<ProcessActivityModel> {
     const resp = this.activitiesUpdatesStream$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<ProcessActivityModel>): ProcessActivityModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<ProcessActivityModel>): ProcessActivityModel => r.body);
   }
 
   /** Path part for operation `getGroups()` */
@@ -305,9 +286,9 @@ export class ProcessEngineService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getGroups$Response(params?: GetGroups$Params, context?: HttpContext): Observable<StrictHttpResponse<ProcessHolderGroupModelArrayApiResponse>> {
+  getGroups$Response(params?: GetGroups$Params, context?: HttpContext): Promise<StrictHttpResponse<ProcessHolderGroupModelArrayApiResponse>> {
     const obs = getGroups(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -316,11 +297,9 @@ export class ProcessEngineService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getGroups(params?: GetGroups$Params, context?: HttpContext): Observable<ProcessHolderGroupModelArrayApiResponse> {
+  getGroups(params?: GetGroups$Params, context?: HttpContext): Promise<ProcessHolderGroupModelArrayApiResponse> {
     const resp = this.getGroups$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<ProcessHolderGroupModelArrayApiResponse>): ProcessHolderGroupModelArrayApiResponse => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<ProcessHolderGroupModelArrayApiResponse>): ProcessHolderGroupModelArrayApiResponse => r.body);
   }
 
   /** Path part for operation `groupStream()` */
@@ -332,9 +311,9 @@ export class ProcessEngineService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  groupStream$Response(params?: GroupStream$Params, context?: HttpContext): Observable<StrictHttpResponse<ProcessHolderGroupModel>> {
+  groupStream$Response(params?: GroupStream$Params, context?: HttpContext): Promise<StrictHttpResponse<ProcessHolderGroupModel>> {
     const obs = groupStream(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -343,11 +322,9 @@ export class ProcessEngineService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  groupStream(params?: GroupStream$Params, context?: HttpContext): Observable<ProcessHolderGroupModel> {
+  groupStream(params?: GroupStream$Params, context?: HttpContext): Promise<ProcessHolderGroupModel> {
     const resp = this.groupStream$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<ProcessHolderGroupModel>): ProcessHolderGroupModel => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<ProcessHolderGroupModel>): ProcessHolderGroupModel => r.body);
   }
 
   /** Path part for operation `resetGroup()` */
@@ -359,9 +336,9 @@ export class ProcessEngineService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  resetGroup$Response(params: ResetGroup$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  resetGroup$Response(params: ResetGroup$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = resetGroup(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -370,11 +347,9 @@ export class ProcessEngineService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  resetGroup(params: ResetGroup$Params, context?: HttpContext): Observable<void> {
+  resetGroup(params: ResetGroup$Params, context?: HttpContext): Promise<void> {
     const resp = this.resetGroup$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
   /** Path part for operation `resetPosition()` */
@@ -386,9 +361,9 @@ export class ProcessEngineService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  resetPosition$Response(params: ResetPosition$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  resetPosition$Response(params: ResetPosition$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = resetPosition(this.http, this.rootUrl, params, context);
-    return obs;
+    return firstValueFrom(obs);
   }
 
   /**
@@ -397,12 +372,9 @@ export class ProcessEngineService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  resetPosition(params: ResetPosition$Params, context?: HttpContext): Observable<void> {
+  resetPosition(params: ResetPosition$Params, context?: HttpContext): Promise<void> {
     const resp = this.resetPosition$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
-    );
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
 }
-

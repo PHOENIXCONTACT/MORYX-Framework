@@ -1,0 +1,39 @@
+<div class="overview">
+  <mat-nav-list class="overview-list">
+    @for (recipe of recipes(); track recipe) {
+      <mat-list-item
+        (click)="onSelect(recipe)"
+        [activated]="selectedRecipe()?.id === recipe.id"
+        class="overview-item"
+        >
+        <div class="overview-item-content">
+          <span class="overview-item-name">{{
+            recipe.name
+          }}</span>
+          <button
+            mat-icon-button
+            (click)="onDeleteRecipe($event, recipe)"
+            [disabled]="!isEditMode()"
+            >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </mat-list-item>
+    }
+  </mat-nav-list>
+  <div class="overview-actions" align="end">
+    <button
+      mat-flat-button
+      class="add-recipe-button"
+      [disabled]="!isEditMode()"
+      (click)="onAddRecipe()"
+      >
+      <mat-icon>add</mat-icon>
+      {{ TranslationConstants.DETAILS.RECIPS.ADD_RECIPE | translate }}
+    </button>
+  </div>
+</div>
+
+<div class="details">
+  <router-outlet></router-outlet>
+</div>

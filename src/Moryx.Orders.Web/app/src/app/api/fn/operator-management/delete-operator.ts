@@ -34,4 +34,3 @@ export function deleteOperator(http: HttpClient, rootUrl: string, params?: Delet
 }
 
 deleteOperator.PATH = '/api/moryx/operators';
-

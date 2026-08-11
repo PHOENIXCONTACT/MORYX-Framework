@@ -1,0 +1,18 @@
+@let factory = parameters();
+
+<div
+  #FactoryElement
+  class="cell-container"
+  [style.border-color]="borderColor()"
+  [style.background]="backgroundColor"
+  [style.top]="(factory.location?.positionY ?? 0) * 100 + '%'"
+  [style.left]="(factory.location?.positionX ?? 0) * 100 + '%'"
+  cdkDrag
+  cdkDragBoundary=".draggable-area"
+  (cdkDragEnded)="onCellMove($event)"
+  [cdkDragDisabled]="!isEditMode()"
+  (click)="onCellClicked()">
+  <mat-icon [style.color]="iconColor()">{{
+    factory.iconName
+  }}</mat-icon>
+</div>

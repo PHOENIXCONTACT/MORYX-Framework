@@ -52,7 +52,7 @@ internal class ResourceTypeController : IResourceTypeController, IResourceTypeTr
 
     /// <inheritdoc />
     public IResourceTypeNode this[string typeName] =>
-        _typeCache.ContainsKey(typeName) ? _typeCache[typeName] : null;
+        _typeCache.TryGetValue(typeName, out var resourceType) ? resourceType : null;
 
     /// <inheritdoc />
     IResourceTypeNode IResourceTypeTree.RootType => RootType;
@@ -63,7 +63,7 @@ internal class ResourceTypeController : IResourceTypeController, IResourceTypeTr
     public void Start()
     {
         // Define module on first start
-        ProxyBuilder.PrepareBuilder();
+        ResourceProxyBuilder.PrepareBuilder();
 
         BuildTypeTree();
     }
@@ -134,11 +134,8 @@ internal class ResourceTypeController : IResourceTypeController, IResourceTypeTr
 
     public Resource Create(string type)
     {
-        if (!_typeCache.ContainsKey(type))
+        if (!_typeCache.TryGetValue(type, out var linker))
             throw new KeyNotFoundException($"No resource of type {type} found!");
-
-        var linker = _typeCache[type];
-
         if (!linker.Creatable)
             throw new InvalidOperationException($"The resource of type {type} is not creatable.");
 
@@ -165,9 +162,9 @@ internal class ResourceTypeController : IResourceTypeController, IResourceTypeTr
 
         // If there is currently a proxy for this resource detach and destroy it
         var id = instance.Id;
-        if (_proxyCache.ContainsKey(id))
+        if (_proxyCache.TryGetValue(id, out var resourceProxy))
         {
-            _proxyCache[id].Detach();
+            resourceProxy.Detach();
             _proxyCache.Remove(id);
         }
     }
@@ -229,8 +226,8 @@ internal class ResourceTypeController : IResourceTypeController, IResourceTypeTr
     private IResource GetOrCreateProxy(Resource instance)
     {
         // Did we build a proxy for this instance before?
-        if (_proxyCache.ContainsKey(instance.Id))
-            return _proxyCache[instance.Id];
+        if (_proxyCache.TryGetValue(instance.Id, out var resourceProxy))
+            return resourceProxy;
 
         var resourceType = instance.GetType();
 
@@ -249,7 +246,7 @@ internal class ResourceTypeController : IResourceTypeController, IResourceTypeTr
     /// </summary>
     private ResourceProxy InstantiateProxy(string typeName, Resource instance)
     {
-        var proxyType = ProxyBuilder.GetType(_proxyTypeCache[typeName]);
+        var proxyType = ResourceProxyBuilder.GetType(_proxyTypeCache[typeName]);
         var proxyInstance = (ResourceProxy)Activator.CreateInstance(proxyType, instance, this);
         proxyInstance.Attach();
         return proxyInstance;
@@ -275,14 +272,14 @@ internal class ResourceTypeController : IResourceTypeController, IResourceTypeTr
 
         // Step 2: Check if we already created a proxy for this type. If we already
         // did use this one for the requested type as well.
-        if (_proxyTypeCache.ContainsKey(linker.Name))
+        if (_proxyTypeCache.TryGetValue(linker.Name, out var existingProxyType))
         {
-            _proxyTypeCache[targetType.Name] = _proxyTypeCache[linker.Name];
+            _proxyTypeCache[targetType.Name] = existingProxyType;
             return;
         }
 
         // Step 3: Build a proxy type for the least specific base type
-        var proxyType = ProxyBuilder.Build(linker.ResourceType, interfaces);
+        var proxyType = ResourceProxyBuilder.Build(linker.ResourceType, interfaces);
 
         // Step 4: Assign the new proxy type to all derived types from the
         // match to the originally requested one

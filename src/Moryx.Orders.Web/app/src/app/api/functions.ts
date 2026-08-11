@@ -28,6 +28,8 @@ export type { SignIn$Params as SignIn$Params } from './fn/operator-management/si
 export { signIn as signIn } from './fn/operator-management/sign-in';
 export type { SignOut$Params as SignOut$Params } from './fn/operator-management/sign-out';
 export { signOut as signOut } from './fn/operator-management/sign-out';
+export type { Stream$Params as Stream$Params } from './fn/operator-management/stream';
+export { stream as stream } from './fn/operator-management/stream';
 export type { GetOperations$Params as GetOperations$Params } from './fn/order-management/get-operations';
 export { getOperations as getOperations } from './fn/order-management/get-operations';
 export type { AddOperation$Params as AddOperation$Params } from './fn/order-management/add-operation';
@@ -116,4 +118,3 @@ export type { UpdateWorkplan$Params as UpdateWorkplan$Params } from './fn/workpl
 export { updateWorkplan as updateWorkplan } from './fn/workplan/update-workplan';
 export type { DeleteWorkplan$Params as DeleteWorkplan$Params } from './fn/workplan/delete-workplan';
 export { deleteWorkplan as deleteWorkplan } from './fn/workplan/delete-workplan';
-

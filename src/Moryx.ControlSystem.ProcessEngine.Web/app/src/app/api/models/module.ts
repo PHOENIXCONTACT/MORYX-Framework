@@ -20,4 +20,3 @@ export interface Module {
   name?: string | null;
   scopeName?: string | null;
 }
-

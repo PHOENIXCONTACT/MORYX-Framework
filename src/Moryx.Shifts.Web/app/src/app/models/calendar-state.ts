@@ -6,7 +6,7 @@
 import  moment from 'moment';
 import { DayOfTheWeek } from './assignment-card-model';
 import { TranslateService } from '@ngx-translate/core';
-import { TranslationConstants } from '../extensions/translation-constants.extensions';
+import { TranslationConstants } from '../translation-constants';
 
 export interface CalendarModel {
   calendarWeek: number;
@@ -23,7 +23,7 @@ export class CalendarState {
   private state: CalendarModel = <CalendarModel>{calendarWeek:0, startDate: new Date(), intervalDays:0, datesDisplayed: ''};
   private calendarDates: CalendarDate[] = [];
   private lang = 'en';
-  
+
   constructor(private translate: TranslateService) {
 
       this.reset();
@@ -55,7 +55,7 @@ export class CalendarState {
         datesDisplayed: `${now.startOf('week').format(dateFormat)} - ${now
           .endOf('week').format(dateFormat)}`,
       };
-  
+
       this.calendarDates = this.generateDates(this.state.intervalDays);
     });
   }
@@ -73,20 +73,24 @@ export class CalendarState {
   }
 
   public currentViewDates(numberOfDays: number = 0) {
-    if(numberOfDays>0) return this.generateDates(numberOfDays);
+    if(numberOfDays>0) {
+      return this.generateDates(numberOfDays);
+    }
     return this.calendarDates;
   }
 
   public viewDatesStartingFrom(date: Date, numberOfDays: number = 0): CalendarDate[] {
-    var lenght = 7;
-    if(numberOfDays > 0) lenght = numberOfDays;
+    let lenght = 7;
+    if(numberOfDays > 0) {
+      lenght = numberOfDays;
+    }
     return this.generateDates(lenght,date);
   }
 
   public getNextWeek(format: string): CalendarModel {
     this.initLang();
     const current = moment(this.state.startDate);
-    
+
     const nextStartDate = current.endOf('week').add(1, 'days').startOf('week');
     return <CalendarModel>{
       calendarWeek: this.state.calendarWeek + 1,
@@ -127,14 +131,17 @@ export class CalendarState {
 
   public generateDates(numberOfDays: number = 7, startDate?: Date): CalendarDate[] {
     this.initLang();
- 
-    var dates : CalendarDate[] = [];
-    var currentMoment: moment.Moment;
 
-    if(!startDate) currentMoment =  moment(this.state.startDate);
-    else currentMoment = moment(startDate);
+    const dates: CalendarDate[] = [];
+    let currentMoment: moment.Moment;
 
-    var end = moment(currentMoment).add(numberOfDays, 'days');
+    if(!startDate) {
+      currentMoment =  moment(this.state.startDate);
+    } else {
+      currentMoment = moment(startDate);
+    }
+
+    const end = moment(currentMoment).add(numberOfDays, 'days');
     for (
       let currentDate = currentMoment;
       currentDate.diff(end, 'days') < 0;

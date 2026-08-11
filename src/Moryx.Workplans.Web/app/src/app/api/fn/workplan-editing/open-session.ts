@@ -35,4 +35,3 @@ export function openSession(http: HttpClient, rootUrl: string, params: OpenSessi
 }
 
 openSession.PATH = '/api/moryx/workplans/sessions/{sessionId}';
-

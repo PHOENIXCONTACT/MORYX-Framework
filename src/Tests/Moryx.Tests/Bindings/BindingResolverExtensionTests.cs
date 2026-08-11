@@ -162,7 +162,7 @@ public class BindingResolverExtensionTests
         Assert.That(result, Is.EqualTo(textResult));
     }
 
-    private int CountChainLinks(IBindingResolverChain chain)
+    private static int CountChainLinks(IBindingResolverChain chain)
     {
         var links = 0;
         var currentChainLink = chain;
@@ -175,7 +175,7 @@ public class BindingResolverExtensionTests
         return links;
     }
 
-    private SomeComplexClass CreateData()
+    private static SomeComplexClass CreateData()
     {
         return new SomeComplexClass
         {

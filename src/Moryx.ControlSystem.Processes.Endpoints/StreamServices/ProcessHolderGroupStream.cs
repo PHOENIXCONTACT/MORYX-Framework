@@ -1,98 +1,120 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Collections.Concurrent;
+using System.Runtime.CompilerServices;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Channels;
 using Microsoft.AspNetCore.Http;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.ControlSystem.Processes.Endpoints.EventHandlers;
-using Newtonsoft.Json;
 
 namespace Moryx.ControlSystem.Processes.Endpoints.StreamServices;
 
 /// <summary>
 /// Provides the streaming functionality for the process holder Group
 /// </summary>
-/// <param name="resourceManagement"></param>
-/// <param name="_serializerSettings"></param>
-internal class ProcessHolderGroupStream(
-    IResourceManagement resourceManagement,
-    JsonSerializerSettings _serializerSettings)
+internal class ProcessHolderGroupStream(IResourceManagement resourceManagement)
 {
+    private static readonly ConcurrentDictionary<Guid, Channel<string>> _subscribers = new();
+    private static readonly JsonSerializerOptions _serializerOptions = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        Converters = { new JsonStringEnumConverter() }
+    };
+
     /// <summary>
     /// Starts the Process Holder Group stream
     /// </summary>
-    /// <param name="response">the http response object</param>
+    /// <param name="context">the http context object</param>
     /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
     /// <returns></returns>
     public async Task Start(HttpContext context, CancellationToken cancellationToken)
     {
-        context.Response.Headers.ContentType = "text/event-stream";
-
-        //using this because resourceManagement.GetResources<T> is very restricted in the sense
+        // using unsafe because resourceManagement.GetResources<T> is very restricted in the sense
         // that casting at line 55 doesn't work
         var groups = resourceManagement.GetResourcesUnsafe<IProcessHolderGroup>(_ => true);
-        var allPositions = resourceManagement.GetResourcesUnsafe<IProcessHolderPosition>(_ => true);
+        var allPositions = resourceManagement.GetResourcesUnsafe<IProcessHolderPosition>(_ => true).ToArray();
 
-        // Define event handling
-        var groupChannel = Channel.CreateUnbounded<ProcessHolderGroupChangedEventArg>();
-        var processChanged = ProcessHolderEventHandlers.OnProcessChanged(groupChannel);
-        var groupChanged = ProcessHolderEventHandlers.OnGroupChanged(groupChannel);
-        var resourceAdded = ProcessHolderEventHandlers.OnResourceAdded(groupChannel, groupChanged);
+        // Define event handlers using ProcessHolderEventHandlers with broadcast action
+        var processChanged = ProcessHolderEventHandlers.OnProcessChanged(Broadcast);
+        var groupChanged = ProcessHolderEventHandlers.OnGroupChanged(Broadcast);
+        var resourceAdded = ProcessHolderEventHandlers.OnResourceAdded(groupChanged, Broadcast);
         var resourceRemoved = ProcessHolderEventHandlers.OnResourceRemoved(processChanged, groupChanged);
-        var resetExecuted = ProcessHolderEventHandlers.OnResetExecuted(groupChannel);
+        var resetExecuted = ProcessHolderEventHandlers.OnResetExecuted(Broadcast);
 
-        foreach (var position in allPositions)
-        {
-            position.ProcessChanged += processChanged;
-            position.ResetExecuted += resetExecuted;
-        }
-
-        foreach (var group in groups)
-        {
-            (group as ProcessHolderGroup).Changed += groupChanged;
-        }
-
-        resourceManagement.ResourceAdded += resourceAdded;
-        resourceManagement.ResourceRemoved += resourceRemoved;
         try
         {
-            // Create infinite loop awaiting changes or cancellation
-            while (!cancellationToken.IsCancellationRequested)
+            var result = TypedResults.ServerSentEvents(Subscribe(cancellationToken));
+
+            // Register event handlers after result creation but before execution to ensure finally cleanup
+            foreach (var position in allPositions)
             {
-                // Write groups
-                var groupChangeArgs = await groupChannel.Reader.ReadAsync(cancellationToken);
-                if (groupChangeArgs != null)
-                {
-                    var json = JsonConvert.SerializeObject(groupChangeArgs.Group, _serializerSettings);
-                    await context.Response.WriteAsync($"data: {json}\r\r", cancellationToken);
-                }
+                position.ProcessChanged += processChanged;
+                position.ResetExecuted += resetExecuted;
             }
+
+            foreach (var group in groups)
+            {
+                (group as ProcessHolderGroup).Changed += groupChanged;
+            }
+
+            resourceManagement.ResourceAdded += resourceAdded;
+            resourceManagement.ResourceRemoved += resourceRemoved;
+
+            await result.ExecuteAsync(context);
         }
         catch (OperationCanceledException)
         {
-        }
-        catch (ChannelClosedException)
-        {
-        }
-        catch (InvalidOperationException)
-        {
+            // client disconnected — this is expected, not an error
         }
         finally
         {
+            // Unregister handlers
             foreach (var position in allPositions)
             {
                 position.ProcessChanged -= processChanged;
                 position.ResetExecuted -= resetExecuted;
             }
+
             foreach (var group in groups)
             {
                 (group as ProcessHolderGroup).Changed -= groupChanged;
             }
+
             resourceManagement.ResourceAdded -= resourceAdded;
             resourceManagement.ResourceRemoved -= resourceRemoved;
-
-            groupChannel.Writer.TryComplete();
         }
-        await context.Response.CompleteAsync();
+    }
+
+    /// <summary>
+    /// Local helper to broadcast process holder group changes to all connected clients
+    /// </summary>
+    private static void Broadcast(ProcessHolderGroupModel groupModel)
+    {
+        foreach (var channel in _subscribers.Values)
+        {
+            channel.Writer.TryWrite(JsonSerializer.Serialize(groupModel, _serializerOptions));
+        }
+    }
+
+    private static async IAsyncEnumerable<string> Subscribe([EnumeratorCancellation] CancellationToken cancellationToken)
+    {
+        var channel = Channel.CreateUnbounded<string>();
+        var id = Guid.NewGuid();
+        _subscribers[id] = channel;
+
+        try
+        {
+            await foreach (var data in channel.Reader.ReadAllAsync(cancellationToken))
+            {
+                yield return data;
+            }
+        }
+        finally
+        {
+            _subscribers.TryRemove(id, out _);
+        }
     }
 }

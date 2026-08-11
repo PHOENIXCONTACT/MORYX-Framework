@@ -1,0 +1,63 @@
+@use "@moryx/ngx-web-framework/styles/variables" as *;
+
+:host {
+  display: block;
+  width: 220px;
+  height: 100%;
+}
+
+:host(.collapsed) {
+  width: 58px;
+}
+
+mat-nav-list {
+  padding: 8px;
+  --mat-list-list-item-one-line-container-height: 40px;
+  --mat-list-list-item-label-text-size: 0.9rem;
+  --mat-list-list-item-label-text-weight: 600;
+  --mat-list-list-item-leading-icon-start-space: 8px;
+  --mat-list-list-item-leading-icon-end-space: 8px;
+}
+
+.nav-item-wrapper {
+  position: relative;
+}
+
+a[mat-list-item] {
+  border-radius: 4px;
+  position: relative;
+  margin-bottom: 2px;
+
+  &:hover {
+    background-color: rgba($primary, 0.3);
+    color: $primary;
+    --mat-list-list-item-hover-label-text-color: #{$primary};
+  }
+
+  &:focus, &:active {
+    color: $primary;
+    --mat-list-list-item-focus-label-text-color: #{$primary};
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    border-radius: 4px 0 0 4px;
+    background: transparent;
+    transition: background 0.2s ease;
+  }
+
+  &.active {
+    color: $primary;
+    --mat-list-list-item-label-text-color: #{$primary};
+    --mat-list-list-item-leading-icon-color: #{$primary};
+  }
+
+  &.active::after {
+    background: $primary;
+  }
+}

@@ -1,26 +1,29 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Collections.Concurrent;
+using System.Globalization;
+using System.Net.ServerSentEvents;
+using System.Runtime.CompilerServices;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Threading.Channels;
+using System.Timers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Serialization;
-using Newtonsoft.Json;
+using Microsoft.Extensions.Logging;
+using Moryx.AbstractionLayer.Capabilities;
+using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Resources;
+using Moryx.AspNetCore;
+using Moryx.ControlSystem.Cells;
 using Moryx.ControlSystem.Processes;
 using Moryx.Factory;
-using Moryx.ControlSystem.Cells;
-using System.Threading.Channels;
-using Microsoft.Extensions.Logging;
-using Moryx.Orders;
-using Moryx.AbstractionLayer.Capabilities;
-using System.Timers;
-using Moryx.FactoryMonitor.Endpoints.Models;
-using Moryx.AbstractionLayer.Processes;
-using Moryx.AspNetCore;
 using Moryx.FactoryMonitor.Endpoints.Converter;
-using Moryx.FactoryMonitor.Endpoints.Properties;
-//old models in '.Model' namespace. Only ones still in use: TransoirtRoute- / PathModel & CellSettingsModel
 using Moryx.FactoryMonitor.Endpoints.Extensions;
+using Moryx.FactoryMonitor.Endpoints.Models;
+using Moryx.FactoryMonitor.Endpoints.Properties;
+using Moryx.Orders;
 using Timer = System.Timers.Timer;
 
 namespace Moryx.FactoryMonitor.Endpoints;
@@ -40,8 +43,15 @@ public class FactoryMonitorController : ControllerBase
     private readonly IOrderManagement _orderManager;
     private readonly CellSerialization _serialization;
 
-    private List<ICell> _cells;
-    private Timer resourceChangedTimer;
+    private static readonly ConcurrentDictionary<Guid, Channel<(string EventType, string Data)>> _factoryStreamSubscribers = new();
+    private static readonly JsonSerializerOptions _serializerOptions = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        Converters = { new JsonStringEnumConverter() }
+    };
+
+    private Dictionary<IMachineLocation, ICell> _locationToCellMappings;
+    private Timer _resourceChangedTimer;
     private readonly ILogger<FactoryMonitorController> _logger;
 
     public FactoryMonitorController(IResourceManagement resourceManager, IProcessControl processControl, IOrderManagement orderManagement, ILogger<FactoryMonitorController> logger = null)
@@ -60,52 +70,86 @@ public class FactoryMonitorController : ControllerBase
     [HttpGet("state")]
     public ActionResult<FactoryStateModel> InitialFactoryState()
     {
-        var locations = _resourceManager.GetResources<IMachineLocation>();
-        var cells = locations.Where(CellFilterBaseOnLocation)
-            .Select(l => l.Machine)
-            .Cast<ICell>().ToList();
         var activityChangedModels = new List<ActivityChangedModel>();
         var cellStateChangedModels = new List<CellStateChangedModel>();
         var resourceChangedModels = new List<ResourceChangedModel>();
-        var orderModels = new List<OrderModel>();
 
-        var activities = _processControl.GetRunningProcesses()
-            .Select(p => p.CurrentActivity())
-            .Where(a => a is not null && a.Tracing is not null);
-        var converter = new Converter.Converter(_serialization, _logger);
+        var locations = _resourceManager.GetResources<IMachineLocation>();
+        var locationsToCellMappings = MapCellsTo(locations);
+        var orders = TryGetOrders();
+        var activities = TryGetActivities();
+        var converter = new Converter.Converter(_serialization);
 
-        foreach (var cell in cells)
+        foreach (var l2cMapping in locationsToCellMappings)
         {
-            if (activities.Any(a => a.Tracing.ResourceId == cell.Id && a.Tracing.Started is not null && a.Tracing.Completed is null))
+            var location = l2cMapping.Key;
+            var cell = l2cMapping.Value;
+            var activity = activities.FirstOrDefault(a => a.Tracing.ResourceId == cell.Id && a.Tracing.Started is not null && a.Tracing.Completed is null);
+            if (activity is not null)
             {
-                var activity = activities.FirstOrDefault(a => a.Tracing.ResourceId == cell.Id);
                 //to-do: handle multiple activities in one cell
-                activityChangedModels.Add(cell.GetActivityChangedModel(activity, _orderManager.GetOrderModels(_colorPalette)));
-                cellStateChangedModels.Add(cell.GetCellStateChangedModel(ActivityProgress.Running, _resourceManager.ReadUnsafe(cell.Id, r => r)));
+                activityChangedModels.Add(cell.GetActivityChangedModel(activity, orders));
+                cellStateChangedModels.Add(cell.GetCellStateChangedModel(ActivityProgress.Running));
             }
             else
             {
-                cellStateChangedModels.Add(cell.GetCellStateChangedModel(_resourceManager.ReadUnsafe(cell.Id, r => r)));
+                cellStateChangedModels.Add(cell.GetCellStateChangedModel());
             }
-            resourceChangedModels.Add(cell.GetResourceChangedModel(converter, _resourceManager, CellFilterBaseOnLocation));
+            resourceChangedModels.Add(cell.GetResourceChangedModel(converter, _resourceManager, location));
         }
 
-        activityChangedModels = activityChangedModels.OrderBy(x => x.ResourceId).ToList();
-        cellStateChangedModels = cellStateChangedModels.OrderBy(x => x.Id).ToList();
-        resourceChangedModels = resourceChangedModels.OrderBy(x => x.Id).ToList();
-        orderModels = _orderManager.GetOrderModels(_colorPalette).OrderBy(x => x.Order).ThenBy(x => x.Operation).ToList();
+        activityChangedModels = [.. activityChangedModels.OrderBy(x => x.ResourceId)];
+        cellStateChangedModels = [.. cellStateChangedModels.OrderBy(x => x.Id)];
+        resourceChangedModels = [.. resourceChangedModels.OrderBy(x => x.Id)];
 
         var factory = _resourceManager.GetRootFactory();
 
-        var model = Converter.Converter.ToFactoryStateModel(factory);
+        var model = new FactoryStateModel() { Id = factory.Id };
         model.ActivityChangedModels = activityChangedModels;
         model.CellStateChangedModels = cellStateChangedModels;
         model.ResourceChangedModels = resourceChangedModels;
-        model.OrderModels = orderModels;
+        model.OrderModels = orders;
 
         return model;
     }
 
+    private IEnumerable<AbstractionLayer.Activities.Activity> TryGetActivities()
+    {
+        try
+        {
+            return _processControl.GetRunningProcesses()
+                .Select(p => p.CurrentActivity())
+                .Where(a => a is not null && a.Tracing is not null);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Could not retrieve activity information in {name}", nameof(FactoryMonitorController));
+            // We want to fail gracefully, if e.g. the facade is not yet available
+            return [];
+        }
+    }
+
+    private List<OrderModel> TryGetOrders()
+    {
+        try
+        {
+            return _orderManager.GetOrderModels(_colorPalette);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Could not retrieve order information in {name}", nameof(FactoryMonitorController));
+            // We want to fail gracefully, if e.g. the facade is not yet available
+            return [];
+        }
+    }
+
+    // ToDo: This is sub-optimal as IMachineLocation does not require a cell to be referenced (and shouldn't) but we
+    // assume each location to have a cell in this endpoint and the UI. Could be changed for MORYX 12;
+    // Also this constitutes duplicate scan-through-the-resource-graph-logic as in the SimpleGraph implementation, this should be unified
+    private Dictionary<IMachineLocation, ICell> MapCellsTo(IEnumerable<IMachineLocation> locations) =>
+        locations.ToDictionary(l => l, GetReferencedCellOrChildCell).Where(kv => kv.Value is not null).ToDictionary();
+
+    // Currently returns a list of all visualizable items and is not used, so remove or at least rename in MORYX 12
     /// <summary>
     /// List of all the cells
     /// </summary>
@@ -113,13 +157,15 @@ public class FactoryMonitorController : ControllerBase
     [HttpGet("cells")]
     public ActionResult<List<VisualizableItemModel>> AllCells()
     {
-        var cells = _resourceManager.GetResources<IMachineLocation>()
-            .Where(CellFilterBaseOnLocation);
+        var locations = _resourceManager.GetResources<IMachineLocation>();
+        var locationToCellMappings = MapCellsTo(locations);
 
-        var converter = new Converter.Converter(_serialization, _logger);
-        return cells.Select(x => new SimpleGraph { Id = x.Id }.ToVisualItemModel(_resourceManager, _logger, converter, CellFilterBaseOnLocation)).ToList();
+        var converter = new Converter.Converter(_serialization);
+        return locationToCellMappings.Select(l2cMapping => new SimpleGraph { Id = l2cMapping.Key.Id }
+            .ToVisualItemModel(_resourceManager, _logger, converter)).ToList();
     }
 
+    // ToDo: Endpoints usually return arrays and pagination would be good.
     /// <summary>
     /// Get the list of displayable item for this current factory view
     /// </summary>
@@ -128,23 +174,18 @@ public class FactoryMonitorController : ControllerBase
     {
         // check if there is a factory with the given id
         var factory = _resourceManager.GetResource<IManufacturingFactory>(x => x.Id == factoryId);
-        if (factory is null) return NotFound(Strings.FactoryMonitorController_FactoryNotFound_);
-        var converter = new Converter.Converter(_serialization, _logger);
+        if (factory is null)
+        {
+            return NotFound(Strings.FactoryMonitorController_FactoryNotFound_);
+        }
 
-        var root = _resourceManager.GetRootFactory();
-        SimpleGraph graph = _resourceManager.ReadUnsafe(factory.Id, e => SimpleGraph.Create(e as ManufacturingFactory));
+        var converter = new Converter.Converter(_serialization);
+        var graph = _resourceManager.ReadUnsafe(factory.Id, SimpleGraph.Create);
 
-        //root level (Factory)
-        if (root.Id == factoryId)
-            return graph.Children.Select(e => e.ToVisualItemModel(_resourceManager, _logger, converter, CellFilterBaseOnLocation))
-                .Where(x => x is not null).ToList();
-
-        // 1 level tree graph
-        graph = graph.GetSubGraphById(factoryId);
-        if (graph is null) return NotFound();
-
-        var output = graph.Children.Select(e => e.ToVisualItemModel(_resourceManager, _logger, converter, CellFilterBaseOnLocation))
+        var output = graph.Children
+            .Select(e => e.ToVisualItemModel(_resourceManager, _logger, converter))
             .Where(x => x is not null).ToList();
+
         return output;
     }
 
@@ -166,7 +207,11 @@ public class FactoryMonitorController : ControllerBase
         };
 
         var factory = _resourceManager.ReadUnsafe(factoryId, e => (ManufacturingFactory)e);
-        if (factory is not ManufacturingFactory manufacturingFactory) BadRequest(Strings.FactoryMonitorController_FactoryNotFound_);
+        if (factory is not ManufacturingFactory manufacturingFactory)
+        {
+            BadRequest(Strings.FactoryMonitorController_FactoryNotFound_);
+        }
+
         var parentFactory = factory.GetFactory(); //Get Parent factory
 
         return new FactoryModel
@@ -188,88 +233,110 @@ public class FactoryMonitorController : ControllerBase
     [ProducesResponseType(typeof(OrderChangedModel), StatusCodes.Status200OK)]
     public async Task FactoryStatesStream(CancellationToken cancellationToken)
     {
-        var response = Response;
-        response.Headers.Append("Content-Type", "text/event-stream");
-
-        // Configure Serialization Settings
-        var serializerSettings = new JsonSerializerSettings();
-        serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-        serializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
-
-        var _factoryChannel = Channel.CreateUnbounded<Tuple<string, string>>();
-
-        resourceChangedTimer = new();
-        resourceChangedTimer.Interval = 5000;
-        resourceChangedTimer.AutoReset = true;
-        resourceChangedTimer.Enabled = true;
-
+        // Early validation - check if there are cells to monitor
         var locations = _resourceManager.GetResources<IMachineLocation>();
-        _cells = locations.Where(CellFilterBaseOnLocation)
-            .Select(l => l.Machine)
-            .Cast<ICell>().ToList();
-        if (_cells.Count == 0)
+        // ToDo: Added and removed resources not reflected
+        _locationToCellMappings = MapCellsTo(locations);
+
+        if (_locationToCellMappings.Count == 0)
         {
-            await response.WriteAsync("retry: 5000\n", cancellationToken: cancellationToken);
-            await response.CompleteAsync();
+            Response.Headers.Append("Retry-After", "5");
             return;
         }
         var converter = new Converter.Converter(_serialization, _logger);
 
-        var resourceEventHandler = new ElapsedEventHandler(async (sender, eventArgs) =>
-            await FactoryMonitorHelper.ResourceUpdated(serializerSettings, _factoryChannel, _resourceManager, CellFilterBaseOnLocation, converter, cancellationToken)); //resource events are substitute with a timer event since there are no such events
+        // Define event handlers using helper methods
+        var resourceEventHandler = new ElapsedEventHandler((_, _) =>
+            FactoryMonitorHelper.ResourceUpdated(_resourceManager, l => MapCellsTo(l), converter, Broadcast));
 
-        var capabilitiesEventHandler = new EventHandler<ICapabilities>(async (sender, eventArgs) =>
-            await FactoryMonitorHelper.PublishCellUpdate((sender as ICell).GetCellStateChangedModel(_resourceManager.ReadUnsafe((sender as ICell).Id, r => r)), serializerSettings, _factoryChannel, cancellationToken));
+        var capabilitiesEventHandler = new EventHandler<ICapabilities>((sender, _) =>
+            FactoryMonitorHelper.PublishCellUpdate((sender as ICell)?.GetCellStateChangedModel(), Broadcast));
 
-        var orderStartedEventHandler = new EventHandler<OperationStartedEventArgs>(async (sender, eventArgs) =>
-            await FactoryMonitorHelper.OrderStarted(eventArgs, serializerSettings, _factoryChannel, cancellationToken));
+        var orderStartedEventHandler = new EventHandler<OperationStartedEventArgs>((_, eventArgs) =>
+            FactoryMonitorHelper.OrderStarted(eventArgs, TryGetOrders(), Broadcast));
 
-        var orderEventHandler = new EventHandler<OperationChangedEventArgs>(async (sender, eventArgs) =>
-            await FactoryMonitorHelper.OrderUpdated(eventArgs, serializerSettings, _factoryChannel, cancellationToken));
+        var orderEventHandler = new EventHandler<OperationChangedEventArgs>((sender, eventArgs) =>
+            FactoryMonitorHelper.OrderUpdated(eventArgs, Broadcast));
 
-        var activityEventHandler = new EventHandler<ActivityUpdatedEventArgs>(async (sender, eventArgs) => await
-            FactoryMonitorHelper.ActivityUpdated(eventArgs, serializerSettings, _factoryChannel, _cells, _resourceManager.ReadUnsafe(eventArgs.Activity.Tracing.ResourceId, r => r), converter, _orderManager.GetOrderModels(_colorPalette), cancellationToken));
+        // ToDo: This breaks if new cells were added and process activities
+        var activityEventHandler = new EventHandler<ActivityUpdatedEventArgs>((sender, eventArgs) =>
+            FactoryMonitorHelper.ActivityUpdated(eventArgs, [.. _locationToCellMappings.Values],
+                TryGetOrders(), Broadcast));
 
-        foreach (var cell in _cells)
-        {
-            //register to cell notready-to-work event
-            cell.CapabilitiesChanged += capabilitiesEventHandler;
-        }
-
-        _orderManager.OperationStarted += orderStartedEventHandler;
-        _orderManager.OperationUpdated += orderEventHandler;
-        _processControl.ActivityUpdated += activityEventHandler;
-        resourceChangedTimer.Elapsed += resourceEventHandler;
+        // Setup timer
+        _resourceChangedTimer = new();
+        _resourceChangedTimer.Interval = 5000;
+        _resourceChangedTimer.AutoReset = true;
+        _resourceChangedTimer.Enabled = true;
 
         try
         {
-            // Create infinite loop awaiting changes or cancellation
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                var changes = await _factoryChannel.Reader.ReadAsync(cancellationToken);
+            var result = TypedResults.ServerSentEvents(Subscribe(cancellationToken));
 
-                await response.WriteAsync($"type: {changes.Item1}\n", cancellationToken);
-                await response.WriteAsync($"data: {changes.Item2}\r\r", cancellationToken);
+            // Register event handlers after result creation but before execution to ensure finally cleanup
+            foreach (var l2cMapping in _locationToCellMappings)
+            {
+                l2cMapping.Value.CapabilitiesChanged += capabilitiesEventHandler;
             }
+
+            _orderManager.OperationStarted += orderStartedEventHandler;
+            _orderManager.OperationUpdated += orderEventHandler;
+            _processControl.ActivityUpdated += activityEventHandler;
+            _resourceChangedTimer.Elapsed += resourceEventHandler;
+
+            await result.ExecuteAsync(HttpContext);
+        }
+        catch (OperationCanceledException)
+        {
+            // client disconnected — this is expected, not an error
         }
         finally
         {
-            // Unregister handler
-            foreach (var cell in _cells)
+            // Unregister handlers
+            foreach (var l2cMapping in _locationToCellMappings)
             {
-                cell.CapabilitiesChanged -= capabilitiesEventHandler;
+                l2cMapping.Value.CapabilitiesChanged -= capabilitiesEventHandler;
             }
 
             _orderManager.OperationStarted -= orderStartedEventHandler;
             _orderManager.OperationUpdated -= orderEventHandler;
             _processControl.ActivityUpdated -= activityEventHandler;
-            resourceChangedTimer.Elapsed -= resourceEventHandler;
-
-            _factoryChannel.Writer.Complete();
+            _resourceChangedTimer.Elapsed -= resourceEventHandler;
+            _resourceChangedTimer?.Dispose();
         }
-        await response.CompleteAsync();
+
+        return;
+
+        async IAsyncEnumerable<SseItem<string>> Subscribe([EnumeratorCancellation] CancellationToken cancelToken)
+        {
+            var channel = Channel.CreateUnbounded<(string EventType, string Data)>();
+            var id = Guid.NewGuid();
+            _factoryStreamSubscribers[id] = channel;
+
+            try
+            {
+                await foreach (var (eventType, data) in channel.Reader.ReadAllAsync(cancelToken))
+                {
+                    yield return new SseItem<string>(data, eventType);
+                }
+            }
+            finally
+            {
+                _factoryStreamSubscribers.TryRemove(id, out _);
+            }
+        }
+
+        // Local helper to broadcast events to all connected clients
+        static void Broadcast(string eventType, object data)
+        {
+            foreach (var channel in _factoryStreamSubscribers.Values)
+            {
+                channel.Writer.TryWrite((eventType, JsonSerializer.Serialize(data, _serializerOptions)));
+            }
+        }
     }
 
+    // ToDo: Rename to move location in MORYX 12 and
     /// <summary>
     /// Return the location of the cell in the factory
     /// </summary>
@@ -322,7 +389,7 @@ public class FactoryMonitorController : ControllerBase
     public ActionResult<Dictionary<string, CellPropertySettings>> GetCellPropertiesSettings(string identifier)
     {
         var cellLocation = _resourceManager.GetResources<IMachineLocation>()?
-            .FirstOrDefault(x => x.Machine?.Id.ToString() == identifier);
+            .FirstOrDefault(x => x.Machine?.Id.ToString(CultureInfo.CurrentCulture) == identifier);
 
         if (cellLocation == null)
             return NotFound(new MoryxExceptionResponse { Title = "Cell/Resource not found" });
@@ -332,6 +399,7 @@ public class FactoryMonitorController : ControllerBase
         return converter.ToResourceChangedModel(cell)?.CellPropertySettings;
     }
 
+    // ToDo: Unused in MORYX 10 can be removed. If transports should be reflected, use different model
     /// <summary>
     /// Traces the route between 2 machines locations
     /// </summary>
@@ -402,13 +470,47 @@ public class FactoryMonitorController : ControllerBase
         return FactoryMonitorHelper.CreateRoutes(locations);
     }
 
-    private bool CellFilterBaseOnLocation(IMachineLocation locationParam)
+    private ICell GetReferencedCellOrChildCell(IMachineLocation location)
     {
-        var location = _resourceManager.ReadUnsafe(locationParam.Id, e => (MachineLocation)e);
-        var machine = location.Children?.FirstOrDefault(x => x is ICell);
+        var resource = _resourceManager.ReadUnsafe(location.Id, e => e);
 
-        if (location is null || machine is null) return false;
+        if (resource is not IMachineLocation locationResource)
+        {
+            throw new ArgumentException($"This cannot happen, unless there is a bug in the {_resourceManager}", nameof(location));
+        }
 
-        return true;
+        // Location is referencing a cell directly
+        if (locationResource.Machine is ICell referencedCell)
+        {
+            // ToDo: Return Resource Proxy instead
+            return referencedCell;
+        }
+
+        // Use a child cell instead
+        return GetChildCell(resource);
+    }
+
+    private static ICell GetChildCell(Resource resource)
+    {
+        // Location has no children so we don't have a referenced cell
+        if (!resource.Children.Any())
+        {
+            return null;
+        }
+
+        var childCell = resource.Children.FirstOrDefault(x => x is ICell) as ICell;
+        if (childCell is null)
+        {
+            foreach (var notACell in resource.Children)
+            {
+                var cell = GetChildCell(notACell);
+                if (cell is not null)
+                {
+                    return cell;
+                }
+            }
+        }
+
+        return childCell;
     }
 }

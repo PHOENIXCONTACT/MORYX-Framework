@@ -47,5 +47,5 @@ Lastly to appear in the navigation bar in the Launcher, replace the content of t
 >Note: The name of the file determines its path, make sure to have the baseref and the path given to the `WebModule` attribute in line with your page's name
 
 Add all content you want on your page below the code.
-This could for example mean serving an Agnular application.
-Follow along in [How to add an Angular application to your UI](./how-to-add-an-angular-application-to-your-UI.md) for instructions how to achieve that.
+This could for example mean serving an Angular application.
+Follow along in [How to add an Angular application to your UI](./how-to-add-an-angular-application-to-your-UI.md) for instructions on how to achieve that.

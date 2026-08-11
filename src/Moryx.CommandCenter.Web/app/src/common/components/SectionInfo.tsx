@@ -21,9 +21,7 @@ export class SectionInfo extends React.Component<SectionInfoPropModel> {
   public render(): React.ReactNode {
     return (
       <Grid container={true}
-            direction="row"
-            justifyContent="center"
-            alignItems="center"
+            sx={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}
             spacing={1}
       >
         <Grid>

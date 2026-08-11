@@ -26,7 +26,7 @@ internal class AdviceManager : IAdviceManager
     /// <inheritdoc />
     public async Task StartAsync(CancellationToken cancellationToken = default)
     {
-        await AdviceExecutor.InitializeAsync(ModuleConfig.Advice.AdviceExecutor);
+        await AdviceExecutor.InitializeAsync(ModuleConfig.Advice.AdviceExecutor, cancellationToken);
         await AdviceExecutor.StartAsync(cancellationToken);
     }
 

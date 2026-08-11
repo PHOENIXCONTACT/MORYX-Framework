@@ -35,4 +35,3 @@ export function save(http: HttpClient, rootUrl: string, params?: Save$Params, co
 }
 
 save.PATH = '/api/moryx/resources';
-

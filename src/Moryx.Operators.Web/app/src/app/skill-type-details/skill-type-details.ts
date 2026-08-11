@@ -1,0 +1,121 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
+import { Component, effect, inject, input, signal, untracked, ChangeDetectionStrategy } from "@angular/core";
+import { TranslationConstants } from "../extensions/translation-constants.extensions";
+import { SkillType } from "../models/skill-type-model";
+import { Router, RouterLink } from "@angular/router";
+import { Entry, EntryValueType, NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
+
+import { AppStoreService } from "../services/app-store.service";
+
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatIconModule } from "@angular/material/icon";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { TranslatePipe } from '@ngx-translate/core';
+import { MatButtonModule } from "@angular/material/button";
+import { MatToolbarModule } from "@angular/material/toolbar";
+import { MatInputModule } from "@angular/material/input";
+
+@Component({
+  selector: "app-skill-type-details",
+  templateUrl: "./skill-type-details.html",
+  styleUrl: "./skill-type-details.scss",
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [
+    ReactiveFormsModule,
+    FormsModule,
+    MatTooltipModule,
+    MatIconModule,
+    MatFormFieldModule,
+    NavigableEntryEditor,
+    TranslatePipe,
+    MatButtonModule,
+    MatToolbarModule,
+    MatInputModule,
+    RouterLink
+  ]
+})
+export class SkillTypeDetails {
+  readonly id = input.required<number>();
+  protected skillType = signal<SkillType>(<SkillType>{
+    id: 0,
+    name: "",
+    acquiredCapabilities: <Entry>{
+      value: {
+        type: EntryValueType.Class,
+      },
+    }
+  });
+
+  private route = inject(Router);
+  private appStoreService = inject(AppStoreService);
+
+  protected form = new FormGroup({
+    name: new FormControl("", [Validators.required]),
+    duration: new FormControl(0, [Validators.min(1)])
+  });
+
+  protected TranslationConstants = TranslationConstants;
+
+  constructor() {
+    effect(() => {
+      const id = this.id();
+      untracked(() => {
+        this.initialize(id);
+      });
+    });
+  }
+
+  private initialize(id: number) {
+
+    if (id <= 0) {
+      this.appStoreService.getSkillTypePrototype().then((prototype) => {
+        this.skillType.set(<SkillType>{
+          id: 0,
+          name: "",
+          acquiredCapabilities: prototype.capabilities,
+          duration: ""
+        });
+      });
+      return;
+    }
+
+
+    this.appStoreService.getSkillType(id).then((skillType) => {
+      const skillData = skillType;
+      this.form.patchValue({
+        name: skillData.name,
+        duration: Number(skillData.duration?.split(".")[0] ?? 0)
+      });
+
+      this.skillType.set(<SkillType>{
+        id: skillData.id,
+        name: skillData.name,
+        acquiredCapabilities: skillData.capabilities,
+        duration: skillData.duration
+      });
+    });
+  }
+
+  protected onSave() {
+    this.skillType.update(skill => {
+      skill.name = this.form.value.name ?? "";
+      skill.duration = `${Number(this.form.value.duration)}.00:00:00`;
+      return skill;
+    })
+    if (this.skillType()?.id <= 0) {
+      this.appStoreService
+        .newSkillType(this.skillType())
+        ?.then((addedType) =>
+          this.route.navigate(["skill-types", addedType.id])
+        );
+    } else {
+      this.appStoreService.updateType(this.skillType());
+    }
+  }
+}
+

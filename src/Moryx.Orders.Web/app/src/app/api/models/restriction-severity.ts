@@ -11,4 +11,3 @@ export enum RestrictionSeverity {
   Warning = 'Warning',
   Error = 'Error'
 }
-

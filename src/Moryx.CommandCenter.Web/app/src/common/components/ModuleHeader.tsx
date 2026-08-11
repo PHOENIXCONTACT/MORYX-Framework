@@ -7,7 +7,7 @@ import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import * as React from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { FailureBehaviour } from "../../modules/models/FailureBehaviour";
 import { ModuleStartBehaviour } from "../../modules/models/ModuleStartBehaviour";
 import { updateFailureBehaviour, updateStartBehaviour } from "../../modules/redux/ModulesActions";

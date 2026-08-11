@@ -37,4 +37,3 @@ export function duplicate(http: HttpClient, rootUrl: string, params: Duplicate$P
 }
 
 duplicate.PATH = '/api/moryx/products/types/{id}';
-

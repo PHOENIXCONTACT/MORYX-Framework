@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Globalization;
 using Microsoft.Extensions.Logging;
 using Moryx.Logging;
 
@@ -23,12 +24,12 @@ internal class OperationLogger : IOperationLogger
     public void Log(LogLevel logLevel, string message, params object[] parameters)
     {
         _logger.Log(logLevel, $"{_operationData.OrderData.Number}-{_operationData.Number}: {message}", parameters);
-        _messages.Add(new OperationLogMessage(logLevel, string.Format(message, parameters)));
+        _messages.Add(new OperationLogMessage(logLevel, string.Format(CultureInfo.CurrentCulture, message, parameters)));
     }
 
     public void LogException(LogLevel logLevel, Exception exception, string message, params object[] parameters)
     {
         _logger.Log(logLevel, exception, $"{_operationData.OrderData.Number}-{_operationData.Number}: {message}", parameters);
-        _messages.Add(new OperationLogMessage(logLevel, exception, string.Format(message, parameters)));
+        _messages.Add(new OperationLogMessage(logLevel, exception, string.Format(CultureInfo.CurrentCulture, message, parameters)));
     }
 }

@@ -465,7 +465,7 @@ public static partial class EntryConvert
     private static Entry ConvertParameter(ParameterInfo parameter, ICustomSerialization serialization)
     {
         var parameterType = parameter.ParameterType;
-        var defaultValue = parameter.HasDefaultValue ? parameter.DefaultValue.ToString() : null;
+        var defaultValue = parameter.HasDefaultValue ? parameter.DefaultValue?.ToString() : null;
 
         var parameterModel = new Entry
         {
@@ -484,7 +484,7 @@ public static partial class EntryConvert
         };
 
         // mark the parameter as required when there is no default value
-        parameterModel.Validation.IsRequired = defaultValue is null ? true : false;
+        parameterModel.Validation.IsRequired = parameter.HasDefaultValue ? false : true;
 
         switch (parameterModel.Value.Type)
         {

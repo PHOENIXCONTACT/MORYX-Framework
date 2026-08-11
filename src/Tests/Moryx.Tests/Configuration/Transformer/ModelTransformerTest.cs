@@ -3,6 +3,7 @@
 
 using System.Collections;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using Moryx.Configuration;
 using Moryx.Serialization;
@@ -150,7 +151,7 @@ public class ModelTransformerTest
                     Assert.That(propertyValue.ToString(), Is.EqualTo(entry.Value.Current), "The current value do not match.");
                 break;
             }
-            Assert.That(found, "Property is missing: {0}", propertyInfo.Name);
+            Assert.That(found, $"Property is missing: {propertyInfo.Name}");
         }
 
         // Check if i forgot some case in the test!
@@ -179,15 +180,15 @@ public class ModelTransformerTest
         // find the int field to chang its value
         var intFieldEntry = convertedObject.SubEntries.Find(entry => entry.DisplayName == "IntField");
         // check the initial value
-        Assert.That(config.IntField.ToString(), Is.EqualTo(intFieldEntry.Value.Current), "Initially the the gerneric and the object must be the same.");
+        Assert.That(config.IntField.ToString(CultureInfo.InvariantCulture), Is.EqualTo(intFieldEntry.Value.Current), "Initially the the gerneric and the object must be the same.");
         // change the value
         intFieldEntry.Value.Current = "999";
         // check that it has changed.
-        Assert.That(intFieldEntry.Value.Current, Is.Not.EqualTo(config.IntField.ToString()), "The generic must be changed!");
+        Assert.That(intFieldEntry.Value.Current, Is.Not.EqualTo(config.IntField.ToString(CultureInfo.InvariantCulture)), "The generic must be changed!");
         // save changes
         EntryConvert.UpdateInstance(config, convertedObject);
         //provider.SetConfig(config);
         // check changes are safed to the config object.
-        Assert.That(config.IntField.ToString(), Is.EqualTo(intFieldEntry.Value.Current), "After set, both must be the same.");
+        Assert.That(config.IntField.ToString(CultureInfo.InvariantCulture), Is.EqualTo(intFieldEntry.Value.Current), "After set, both must be the same.");
     }
 }

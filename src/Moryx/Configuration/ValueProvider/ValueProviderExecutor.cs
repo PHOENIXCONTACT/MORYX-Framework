@@ -11,6 +11,11 @@ namespace Moryx.Configuration;
 /// </summary>
 public class ValueProviderExecutor : IEmptyPropertyProvider
 {
+    /// <summary>
+    /// Key set for the index when iterating enumerables
+    /// </summary>
+    public const string IndexKey = "Index";
+
     private readonly ValueProviderExecutorSettings _settings;
 
     /// <summary>
@@ -51,17 +56,30 @@ public class ValueProviderExecutor : IEmptyPropertyProvider
         Iterate(targetObject, settings);
     }
 
-    private static void Iterate(object target, ValueProviderExecutorSettings settings)
+    private static void Iterate(object target, ValueProviderExecutorSettings settings, Stack<ExecutorLevel> stack = null)
     {
+        stack ??= new Stack<ExecutorLevel>();
         foreach (var property in FilterProperties(target, settings))
         {
+            var level = new ExecutorLevel(target, property, new());
+            stack.Push(level);
             foreach (var settingsProvider in settings.Providers)
             {
                 try
                 {
-                    if (settingsProvider.Handle(target, property) == ValueProviderResult.Handled)
+                    if (settingsProvider is IContextAwareValueProvider contextAware)
                     {
-                        break;
+                        if (contextAware.Handle(stack) == ValueProviderResult.Handled)
+                        {
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        if (settingsProvider.Handle(target, property) == ValueProviderResult.Handled)
+                        {
+                            break;
+                        }
                     }
                 }
                 catch (Exception)
@@ -72,19 +90,29 @@ public class ValueProviderExecutor : IEmptyPropertyProvider
             }
 
             var value = property.GetValue(target);
-            // Iterate each item of an enumerable
-            if (value is IEnumerable enumerable)
+
+            if (!property.PropertyType.IsPrimitive && property.PropertyType != typeof(string))
             {
-                foreach (var item in enumerable)
+                // Iterate each item of an enumerable
+                if (value is IEnumerable enumerable)
                 {
-                    if (item != null)
-                        Iterate(item, settings);
+                    int i = 0;
+                    foreach (var item in enumerable)
+                    {
+                        stack.Push(new ExecutorLevel(enumerable, null, new() { [IndexKey] = i++ }));
+                        if (item != null)
+                        {
+                            Iterate(item, settings, stack);
+                        }
+                        stack.Pop();
+                    }
+                }
+                else if (value != null && property.PropertyType.IsClass)
+                {
+                    Iterate(value, settings, stack);
                 }
             }
-            else if (value != null && property.PropertyType.IsClass && property.PropertyType != typeof(string))
-            {
-                Iterate(value, settings);
-            }
+            stack.Pop();
         }
     }
 

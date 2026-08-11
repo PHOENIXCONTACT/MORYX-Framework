@@ -34,4 +34,3 @@ export function acknowledge(http: HttpClient, rootUrl: string, params: Acknowled
 }
 
 acknowledge.PATH = '/api/moryx/notifications/{guid}/acknowledge';
-

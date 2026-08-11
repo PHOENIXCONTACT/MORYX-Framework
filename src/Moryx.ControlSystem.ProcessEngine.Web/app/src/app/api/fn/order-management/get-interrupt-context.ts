@@ -35,4 +35,3 @@ export function getInterruptContext(http: HttpClient, rootUrl: string, params: G
 }
 
 getInterruptContext.PATH = '/api/moryx/orders/{guid}/interrupt';
-

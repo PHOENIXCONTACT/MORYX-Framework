@@ -12,4 +12,3 @@ export interface OperatorModel {
   lastName?: string | null;
   pseudonym?: string | null;
 }
-

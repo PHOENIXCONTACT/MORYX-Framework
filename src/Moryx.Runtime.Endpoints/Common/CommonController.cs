@@ -3,7 +3,9 @@
 
 using System.Globalization;
 using System.Reflection;
+using System.Runtime.Versioning;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moryx.Runtime.Endpoints.Common.Response;
 
@@ -31,16 +33,26 @@ public class CommonController : ControllerBase
 
     [HttpGet("info/application")]
     [Authorize(Policy = RuntimePermissions.CanGetGeneralInformation)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public ActionResult<ApplicationInformationResponse> GetApplicationInfo()
     {
-        var startAssembly = Assembly.GetEntryAssembly();
-        var version = new Version(startAssembly.GetCustomAttribute<AssemblyVersionAttribute>()?.Version ?? "1.0.0");
+        var entryAssembly = Assembly.GetEntryAssembly();
+        if (entryAssembly is null)
+            return BadRequest("Entry assembly could not be determined.");
+
         return new ApplicationInformationResponse
         {
-            AssemblyProduct = startAssembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title ?? "MORYX Application",
-            AssemblyVersion = version.ToString(3),
-            AssemblyInformationalVersion = version.ToString(3),
-            AssemblyDescription = startAssembly.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description ?? "No Description provided!",
+            AssemblyVersion = entryAssembly.GetName().Version?.ToString() ?? "N/A",
+            AssemblyInformationalVersion = entryAssembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "N/A",
+            AssemblyProduct = entryAssembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product ?? "N/A",
+            AssemblyDescription = entryAssembly.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description ?? "N/A",
+            AssemblyConfiguration = entryAssembly.GetCustomAttribute<AssemblyConfigurationAttribute>()?.Configuration ?? "N/A",
+            TargetFramework = entryAssembly.GetCustomAttribute<TargetFrameworkAttribute>()?.FrameworkName ?? "N/A",
+            AssemblyCopyright = entryAssembly.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright ?? "N/A",
+            AssemblyTrademark = entryAssembly.GetCustomAttribute<AssemblyTrademarkAttribute>()?.Trademark ?? "N/A",
+            AssemblyTitle = entryAssembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title ?? "N/A",
+            AssemblyCompanyName = entryAssembly.GetCustomAttribute<AssemblyCompanyAttribute>()?.Company ?? "N/A"
         };
     }
 

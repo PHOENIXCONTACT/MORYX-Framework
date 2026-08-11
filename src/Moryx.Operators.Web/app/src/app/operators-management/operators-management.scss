@@ -1,0 +1,64 @@
+@use '@angular/material' as mat;
+
+:host {
+  background-color: var(--mat-sys-surface);
+
+  @include mat.toolbar-overrides((
+    container-background-color: var(--mat-sys-surface-container-lowest),
+  ));
+
+  mat-toolbar {
+    border-bottom: 1px solid var(--mat-sys-outline-variant);
+  }
+}
+
+.management-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background-color: var(--mat-sys-background);
+  color: var(--mat-sys-on-background);
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.main-content {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 8px;
+  row-gap: 8px;
+
+  @include mat.expansion-overrides((
+    container-background-color: var(--mat-sys-surface-container-lowest),
+  ));
+}
+
+.panel-description {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.fab-container {
+  position: absolute;
+  z-index: 100;
+  bottom: 8px;
+  right: 8px;
+}
+
+.fab-stack {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+}
+
+.secondary-button {
+  background-color: var(--mat-sys-surface-container-lowest);
+}

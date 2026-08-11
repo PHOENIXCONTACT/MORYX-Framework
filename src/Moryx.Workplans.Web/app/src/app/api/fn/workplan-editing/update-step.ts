@@ -39,4 +39,3 @@ export function updateStep(http: HttpClient, rootUrl: string, params: UpdateStep
 }
 
 updateStep.PATH = '/api/moryx/workplans/sessions/{sessionId}/nodes/{nodeId}';
-

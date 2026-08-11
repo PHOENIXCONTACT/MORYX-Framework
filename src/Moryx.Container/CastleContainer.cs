@@ -50,8 +50,8 @@ public class CastleContainer : IContainer
     /// </summary>
     public object Resolve(Type service, string name)
     {
-        if (name == null && _strategies.ContainsKey(service))
-            name = _strategies[service];
+        if (name == null && _strategies.TryGetValue(service, out var strategy))
+            name = strategy;
 
         // Resolve by name if given or determined
         if (name != null && _container.Kernel.HasComponent(name))

@@ -37,4 +37,3 @@ export function adviceOperation(http: HttpClient, rootUrl: string, params: Advic
 }
 
 adviceOperation.PATH = '/api/moryx/orders/{guid}/advice';
-

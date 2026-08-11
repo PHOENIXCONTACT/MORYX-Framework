@@ -33,4 +33,3 @@ export function getAllWorkplans(http: HttpClient, rootUrl: string, params?: GetA
 }
 
 getAllWorkplans.PATH = '/api/moryx/workplans';
-

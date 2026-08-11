@@ -19,11 +19,6 @@ public abstract class JobSchedulerBase<T> : IJobScheduler
     #endregion
 
     /// <summary>
-    /// Empty array for jobs without dependencies
-    /// </summary>
-    private readonly Job[] EmptyDependencies = [];
-
-    /// <summary>
     /// Dependency map that can be helpful for job scheduling
     /// </summary>
     private readonly Dictionary<Job, List<Job>> _dependencies = new();
@@ -56,9 +51,8 @@ public abstract class JobSchedulerBase<T> : IJobScheduler
     /// <returns></returns>
     protected IReadOnlyList<Job> Dependencies(Job target)
     {
-        return _dependencies.ContainsKey(target)
-            ? (IReadOnlyList<Job>)_dependencies[target]
-            : EmptyDependencies;
+        return _dependencies.TryGetValue(target, out var targetsDependencies)
+            ? (IReadOnlyList<Job>)targetsDependencies : [];
     }
 
     /// <summary>
@@ -66,9 +60,9 @@ public abstract class JobSchedulerBase<T> : IJobScheduler
     /// </summary>
     protected void AddDependency(Job target, Job dependency)
     {
-        if (_dependencies.ContainsKey(target))
+        if (_dependencies.TryGetValue(target, out var targetsDependencies))
         {
-            _dependencies[target].Add(dependency);
+            targetsDependencies.Add(dependency);
         }
         else
         {
@@ -81,9 +75,9 @@ public abstract class JobSchedulerBase<T> : IJobScheduler
     /// </summary>
     protected bool RemoveDependency(Job target, Job dependency)
     {
-        if (_dependencies.ContainsKey(target))
+        if (_dependencies.TryGetValue(target, out var targetsDependencies))
         {
-            var removed = _dependencies[target].Remove(dependency);
+            var removed = targetsDependencies.Remove(dependency);
 
             if (_dependencies[target].Count == 0)
                 _dependencies.Remove(target);

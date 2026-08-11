@@ -15,4 +15,3 @@ export interface ProblemDetails {
 
   [key: string]: any | number | null | string | null | undefined;
 }
-

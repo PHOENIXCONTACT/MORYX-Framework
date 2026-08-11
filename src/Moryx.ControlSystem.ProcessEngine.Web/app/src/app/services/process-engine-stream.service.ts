@@ -3,41 +3,54 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Injectable, NgZone } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { ProcessEngineService } from '../api/services';
-import { JobProcessModel } from '../api/models/job-process-model';
-import { ProcessActivityModel } from '../api/models/process-activity-model';
+import { inject, Injectable, signal } from '@angular/core';
+import { ProcessEngineService } from '@api/services';
+import { JobProcessModel } from '@api/models/job-process-model';
+import { ProcessActivityModel } from '@api/models/process-activity-model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProcessEngineStreamService {
-  updatedProcess: BehaviorSubject<JobProcessModel | undefined> = new BehaviorSubject<JobProcessModel | undefined>(undefined);
-  updatedActivity: BehaviorSubject<ProcessActivityModel | undefined> = new BehaviorSubject<ProcessActivityModel | undefined>(undefined);
+  private processEngineService = inject(ProcessEngineService);
+  private processEventSource?: EventSource;
+  private activitiesEventSource?: EventSource;
 
-  constructor(
-    private processEngineService: ProcessEngineService,
-    private ngZone: NgZone) {
+  private readonly _updatedProcess = signal<JobProcessModel | undefined>(undefined);
+  readonly updatedProcess = this._updatedProcess.asReadonly();
+  private readonly _updatedActivity = signal<ProcessActivityModel | undefined>(undefined);
+  readonly updatedActivity = this._updatedActivity.asReadonly();
+
+  connect() {
     this.publishActivityUpdates();
     this.publishProcessUpdates();
   }
 
   private publishProcessUpdates(): void {
-    const eventSource = new EventSource(this.processEngineService.rootUrl + ProcessEngineService.ProcessUpdatesStreamPath);
-    eventSource.onmessage = event => {
+    this.processEventSource = new EventSource(this.processEngineService.rootUrl + ProcessEngineService.ProcessUpdatesStreamPath);
+    this.processEventSource.onmessage = event => {
       const process = JSON.parse(event.data);
-      this.ngZone.run(() => this.updatedProcess.next(process));
+      this._updatedProcess.set(process);
     };
   }
 
   private publishActivityUpdates(): void {
-    const eventSource = new EventSource(this.processEngineService.rootUrl + ProcessEngineService.ActivitiesUpdatesStreamPath);
-    eventSource.onmessage = event => {
+    this.activitiesEventSource = new EventSource(this.processEngineService.rootUrl + ProcessEngineService.ActivitiesUpdatesStreamPath);
+    this.activitiesEventSource.onmessage = event => {
       const activity = JSON.parse(event.data);
-      this.ngZone.run(() => this.updatedActivity.next(activity));
+      this._updatedActivity.set(activity);
     };
   }
 
-}
+  disconnect() {
+    if (this.processEventSource) {
+      this.processEventSource.close();
+      this.processEventSource = undefined;
+    }
 
+    if (this.activitiesEventSource) {
+      this.activitiesEventSource.close();
+      this.activitiesEventSource = undefined;
+    }
+  }
+}

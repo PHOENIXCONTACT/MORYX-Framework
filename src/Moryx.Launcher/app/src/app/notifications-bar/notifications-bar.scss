@@ -1,0 +1,64 @@
+@use "@moryx/ngx-web-framework/styles/variables" as *;
+
+:host {
+  --color-Info: #{$info};
+  --color-Success: #{$success};
+  --color-Warning: #{$warning};
+  --color-Error: #{$danger};
+  --color-Fatal: #{$fatal};
+
+  --severity-background-color: var(--color-Success);
+  --severity-foreground-color: white;
+}
+
+.outerborder {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  pointer-events: auto;
+  margin: 0 2rem;
+  border-radius: .25rem;
+  padding: .5rem .75rem;
+  display: flex;
+  align-items: center;
+  overflow: visible;
+  background: var(--severity-background-color);
+  color: var(--severity-foreground-color);
+  text-decoration: none;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  color: var(--severity-foreground-color);
+}
+
+mat-icon.icon {
+  flex-shrink: 0;
+  font-size: 24px;
+  line-height: 1;
+  margin-right: 0.5em;
+}
+
+.innertext {
+  flex: 1;
+  font-size: 24px;
+  line-height: normal;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  animation: fadeIn 200ms ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

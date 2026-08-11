@@ -4,20 +4,20 @@
 */
 
 import { Routes } from '@angular/router';
-import { ManagementComponent } from './components/management/management.component';
-import { EditorComponent } from './components/sessions/editor/editor.component';
-import { SessionsComponent } from './components/sessions/sessions.component';
+import { Management } from './components/management/management';
+import { Editor } from './components/sessions/editor/editor';
+import { Sessions } from './components/sessions/sessions';
 
 export const routes: Routes = [
   {
     path: 'session',
-    component: SessionsComponent,
-    children: 
+    component: Sessions,
+    children:
     [
-        { path: ':token', component: EditorComponent }
+        { path: ':token', component: Editor }
     ],
   },
-  { path: 'management', component: ManagementComponent },
+  { path: 'management', component: Management },
   { path: '', redirectTo: 'management', pathMatch: 'full' },
 ];
 

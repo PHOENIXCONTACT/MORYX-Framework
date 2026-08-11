@@ -13,7 +13,7 @@ using Moryx.Threading;
 
 namespace Moryx.ControlSystem.ProcessEngine;
 
-internal class ProcessControlFacade : FacadeBase, IProcessControl
+internal class ProcessControlFacade : FacadeBase, IProcessControlExtended
 {
     #region Dependencies
 
@@ -73,6 +73,12 @@ internal class ProcessControlFacade : FacadeBase, IProcessControl
     {
         ValidateHealthState();
         return ActivityDataPool.GetProcess(process)?.NextTargets() ?? Array.Empty<ICell>();
+    }
+
+    public Task<Process> LoadArchivedProcessAsync(long id, CancellationToken cancellationToken = default)
+    {
+        ValidateHealthState();
+        return ProcessArchive.GetProcess(id, cancellationToken);
     }
 
     public IReadOnlyList<ICell> Targets(Activity activity)

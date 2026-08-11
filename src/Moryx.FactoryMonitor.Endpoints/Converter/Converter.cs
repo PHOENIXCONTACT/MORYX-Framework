@@ -15,10 +15,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Converter;
 /// <summary>
 /// Provide convertion for resources and models
 /// </summary>
-/// <remarks>
-/// Constructor
-/// </remarks>
-/// <param name="serialization"></param>
+/// <param name="serialization">Serialization for resource entry conversions</param>
 internal class Converter(ICustomSerialization serialization, ILogger<FactoryMonitorController> logger)
 {
     public ResourceChangedModel ToResourceChangedModel(Resource current)
@@ -35,32 +32,6 @@ internal class Converter(ICustomSerialization serialization, ILogger<FactoryMoni
             Id = current.Id,
             CellPropertySettings = ToCellPropertySettings(cellEntry, current.GetType()),
             CellName = current.Name,
-        };
-    }
-
-    public static ActivityChangedModel ToActivityChangedModel(ICell current)
-    {
-        if (current is null)
-        {
-            return null;
-        }
-
-        return new ActivityChangedModel
-        {
-            ResourceId = current.Id,
-        };
-    }
-
-    public static CellStateChangedModel ToCellStateChangedModel(Resource current)
-    {
-        if (current is null)
-        {
-            return null;
-        }
-
-        return new CellStateChangedModel
-        {
-            Id = current.Id,
         };
     }
 
@@ -181,21 +152,6 @@ internal class Converter(ICustomSerialization serialization, ILogger<FactoryMoni
             Id = location.Id,
             PositionX = location.Position?.PositionX ?? 0,
             PositionY = location.Position?.PositionY ?? 0
-        };
-    }
-
-    /// <summary>
-    /// Convert Transport path to TransportModelPath
-    /// </summary>
-    /// <param name="transportPath"></param>
-    /// <returns><see cref="TransportPathModel"/></returns>
-    public static TransportPathModel ToTransportPathModel(ITransportPath transportPath)
-    {
-        return new TransportPathModel
-        {
-            Destination = ToCellLocationModel(transportPath.Destination),
-            Origin = ToCellLocationModel(transportPath.Origin),
-            WayPoints = transportPath.WayPoints
         };
     }
 

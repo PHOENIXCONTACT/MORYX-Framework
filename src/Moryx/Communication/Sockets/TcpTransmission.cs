@@ -138,10 +138,12 @@ internal class TcpTransmission : IBinaryTransmission, IDisposable
     {
         var bytes = _interpreter.SerializeMessage(message);
 
+        // We send data either fully or not at all
+        cancellationToken.ThrowIfCancellationRequested();
         try
         {
             await Task.Factory.FromAsync(_stream.BeginWrite, _stream.EndWrite, bytes, 0, bytes.Length, null);
-            await _stream.FlushAsync();
+            await _stream.FlushAsync(CancellationToken.None);
         }
         catch (Exception ex)
         {

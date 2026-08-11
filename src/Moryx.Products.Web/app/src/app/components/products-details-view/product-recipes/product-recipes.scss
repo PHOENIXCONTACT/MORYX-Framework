@@ -1,0 +1,69 @@
+@use "@moryx/ngx-web-framework/styles/variables" as *;
+
+.overview {
+  flex: 1 1 20%;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-between;
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
+
+  &-list {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: stretch;
+    flex: 1 1;
+    overflow-y: auto;
+    --mat-list-active-indicator-color: #{$primary};
+    --mat-list-active-indicator-shape: 0;
+    --mat-list-list-item-one-line-container-height: 40px;
+    background: var(--mat-sys-surface-container-lowest);
+
+    ::ng-deep .mdc-list-item__content {
+      pointer-events: auto;
+    }
+  }
+
+  &-item {
+    box-sizing: border-box;
+    flex-shrink: 0;
+  }
+
+  &-item-content {
+    width: 100%;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+  }
+
+  &-item-name {
+    align-self: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &-actions {
+    height: fit-content;
+
+    .add-recipe-button {
+      width: 100%;
+    }
+  }
+}
+
+.details {
+  flex: 1 1 80%;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  margin-left: 8px;
+  margin-right: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media screen and (max-width: 768px) {
+  .overview-item-name {
+    width: 100px;
+  }
+}

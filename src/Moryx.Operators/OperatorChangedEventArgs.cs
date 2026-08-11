@@ -23,13 +23,3 @@ public class OperatorChangedEventArgs(Operator @operator) : EventArgs
     /// </summary>
     public Operator Operator { get; set; } = @operator ?? throw new ArgumentNullException(nameof(@operator));
 }
-
-/// <summary>
-/// The kind of change an operator had
-/// </summary>
-public enum OperatorChange
-{
-    Creation,
-    Update,
-    Deletion
-}

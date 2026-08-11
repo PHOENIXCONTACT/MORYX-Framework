@@ -150,15 +150,6 @@ internal class TokenService : ITokenService
             if (jtiClaim == null)
                 return FailureResult($"The token does not contain an ID.", tokenRequest);
 
-            var expiryClaim = principal.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Exp);
-            var expiryParsingSuccess = long.TryParse(expiryClaim?.Value, out var utcExpiryDate);
-            if (expiryClaim == null || !expiryParsingSuccess)
-                return FailureResult($"The token does not contain a valid timestamp.", tokenRequest);
-
-            var expDate = UnixTimeStampToDateTime(utcExpiryDate);
-            if (expDate > DateTime.UtcNow)
-                return FailureResult("Cannot refresh this token since it has not expired yet.", tokenRequest);
-
             var storedRefreshToken = await _dbContext.RefreshTokens.FirstOrDefaultAsync(x => x.Token == tokenRequest.RefreshToken);
             if (storedRefreshToken == null)
                 return FailureResult("The token does not exist.", tokenRequest);

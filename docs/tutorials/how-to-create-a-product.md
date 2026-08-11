@@ -26,7 +26,7 @@ public class NeedleType : ProductType
     }
 }
 ```
-All ProductInstances are derived from `ProductInstance<TProductType>`. Instance specific properties can be added. Depending on the size of the watch it could happen that the needle used for hours in one watch is used for minutes in another one (although this example is quite unlikely).
+All ProductInstances are derived from `ProductInstance<TProductType>`. Instance specific properties can be added. Depending on the size of the watch it could happen that a needle type is used for hours in one watch and for minutes in another watch (although this example is quite unlikely).
 ```cs
 public class NeedleInstance : ProductInstance<NeedleType>
 {
@@ -64,7 +64,7 @@ public class WatchType : ProductType
     }
 }
 ```
-If you want to add properties to the `PartLink`, you can create custom ones. In our example we used the costum part link `NeedlePartLink` to specify the role of the needle in the watch.
+If you want to add properties to a `PartLink`, you can create a custom one. In our example we used the custom part link `NeedlePartLink` to specify the role of the needle in the watch.
 ```cs
 public class NeedlePartLink : ProductPartLink<NeedleType>
 {
@@ -89,5 +89,5 @@ public class NeedlePartLink : ProductPartLink<NeedleType>
     }
 }
 ```
-In `Instantiate()` we set the role of the instance to the role speficied in the PartLink by the user.
+In `Instantiate()` we set the role of the instance to the role specified in the PartLink by the user.
 

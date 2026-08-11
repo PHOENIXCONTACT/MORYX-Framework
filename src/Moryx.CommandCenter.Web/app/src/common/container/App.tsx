@@ -6,7 +6,7 @@
 import Container from "@mui/material/Container";
 import * as React from "react";
 import { connect } from "react-redux";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import DatabasesRestClient from "../../databases/api/DatabasesRestClient";
@@ -18,12 +18,8 @@ import NotificationModel from "../../modules/models/NotificationModel";
 import ServerModuleModel from "../../modules/models/ServerModuleModel";
 import { updateHealthState, updateModules, updateNotifications } from "../../modules/redux/ModulesActions";
 import CommonRestClient from "../api/CommonRestClient";
-import ApplicationInformationResponse from "../api/responses/ApplicationInformationResponse";
-import ApplicationLoadResponse from "../api/responses/ApplicationLoadResponse";
-import HostInformationResponse from "../api/responses/HostInformationResponse";
-import SystemLoadResponse from "../api/responses/SystemLoadResponse";
 import { AppState } from "../redux/AppState";
-import { updateIsConnected, updateServerTime } from "../redux/CommonActions";
+import { updateIsConnected } from "../redux/CommonActions";
 import { ActionType } from "../redux/Types";
 
 interface AppPropModel {
@@ -36,11 +32,6 @@ interface AppPropModel {
 }
 
 interface AppDispatchPropModel {
-  onUpdateServerTime?(serverTime: string): void;
-  onUpdateApplicationInfo?(applicationInfo: ApplicationInformationResponse): void;
-  onUpdateHostInfo?(hostInfo: HostInformationResponse): void;
-  onUpdateApplicationLoad?(applicationLoad: ApplicationLoadResponse): void;
-  onUpdateSystemLoad?(systemLoad: SystemLoadResponse): void;
   onUpdateModules?(modules: ServerModuleModel[]): void;
   onUpdateModuleHealthState?(moduleName: string, healthState: ModuleServerModuleState): void;
   onUpdateModuleNotifications?(moduleName: string, notifications: NotificationModel[]): void;
@@ -60,7 +51,6 @@ const mapStateToProps = (state: AppState): AppPropModel => {
 
 const mapDispatchToProps = (dispatch: React.Dispatch<ActionType<{}>>): AppDispatchPropModel => {
   return {
-    onUpdateServerTime: (serverTime: string) => dispatch(updateServerTime(serverTime)),
     onUpdateModules: (modules: ServerModuleModel[]) => dispatch(updateModules(modules)),
     onUpdateModuleHealthState: (moduleName: string, healthState: ModuleServerModuleState) =>
       dispatch(updateHealthState(moduleName, healthState)),
@@ -71,26 +61,24 @@ const mapDispatchToProps = (dispatch: React.Dispatch<ActionType<{}>>): AppDispat
 };
 
 function App(props: AppPropModel & AppDispatchPropModel) {
-  const updateClockTimerRef = React.useRef<NodeJS.Timeout>(null);
-  const updateLoadAndModulesTimerRef = React.useRef<NodeJS.Timeout>(null);
+  const updateLoadAndModulesTimerRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
 
   React.useEffect(() => {
     updateLoadAndModulesTimerRef.current = setInterval(loadAndModulesUpdater, 5000);
-    props.ModulesRestClient.modules().then((data) => props?.onUpdateModules(data));
+    props.ModulesRestClient.modules().then((data) => props.onUpdateModules?.(data));
 
     return () => {
-      clearInterval(updateClockTimerRef.current!);
-      clearInterval(updateLoadAndModulesTimerRef.current!);
+      clearInterval(updateLoadAndModulesTimerRef.current ?? undefined);
     };
   }, []);
 
   const loadAndModulesUpdater = (): void => {
     props.Modules.forEach((module) => {
       props.ModulesRestClient.healthState(module.name).then((data) =>
-        props.onUpdateModuleHealthState(module.name, data)
+        props.onUpdateModuleHealthState?.(module.name, data)
       );
       props.ModulesRestClient.notifications(module.name).then((data) =>
-        props.onUpdateModuleNotifications(module.name, data)
+        props.onUpdateModuleNotifications?.(module.name, data)
       );
     });
   };

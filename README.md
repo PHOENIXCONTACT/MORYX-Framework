@@ -33,7 +33,7 @@ It defines the domain independent [meta model](/docs/articles/abstractions/index
 
 To contribute to the developmen of the MORYX, ensure you have the following prerequisites installed:
 
-- **Node.js** ≥ **v22.22.0 LTS**
+- **Node.js** ≥ **^22.22.3 || ^24.15.0 || ^26.0.0**
 - **.NET SDK** ≥ **10.0.101**
 
 ---
@@ -63,13 +63,13 @@ To use MORYX to _build your own application_, we recommend to
 
 - start with the [MORYX Application Developer Training](https://github.com/PHOENIXCONTACT/Application-Developer-Training)
 - and to use the [MORYX CLI Tool](https://github.com/PHOENIXCONTACT/MORYX-CLI) to develop it.
-- Additional tutorials for specific topics can be found in the [Tutorials](./docs/articles/tutorials/index.md) section of the documentation.
+- Additional tutorials for specific topics can be found in the [Tutorials](./docs/tutorials/index.md) section of the documentation.
 
 To quickly get a running MORYX application to _check out the different components_, we offer the [MORYX Demo](https://github.com/PHOENIXCONTACT/MORYX-Demo), a fully functional, simulated production system based on MORYX.
 
 ## The Ecosystem
 
-Here we list all available packages in the MORYX ecosystem separated into components, linking to their documentation and providing the respective code coverage for the component.
+Here we list all available packages in the MORYX ecosystem separated into components linking to their documentation.
 
 <details>
 <summary><font size="4"><strong>MORYX Framework and Abstractions</strong></font><br>(Includes the Framework as the core of any MORYX application as well as public APIs for components used to abstract digital twins)

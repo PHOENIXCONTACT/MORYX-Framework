@@ -19,7 +19,7 @@
     "CREATE": "CREA",
     "ADD": "Aggiungere",
     "ADD_CHILD": "Aggiungere una risorsa figlio",
-    "RELOAD:": "Aggiornare",
+    "RELOAD": "Aggiornare",
     "NEXT": "Successiva"
   },
   "ADD_RESOURCE_DIALOG": {
@@ -27,20 +27,20 @@
   },
   "DEFAULT_VIEW": {
     "FAILED_LOADING": "Non è stato possibile stabilire la connessione al server. Controllare la connessione di rete o riprovare più tardi.",
+    "NOT_FOUND": "La risorsa richiesta non esiste.",
     "EMPTY_STATE_HEADER": "Nessuna risorsa",
     "EMPTY_STATE_TEXT": "Selezionate una risorsa dall'elenco o aggiungetene una nuova facendo clic sul segno più."
   },
   "DETAILS": {
-    "PROPERTIES": "Proprietà",
-    "REFERENCES": "Riferimenti",
-    "METHODS": "Metodi",
-    "REFS": {
-      "LINK": "Link",
+    "PROPERTIES_TAB_TITLE": "Proprietà",
+    "REFERENCES_TAB_TITLE": "Riferimenti",
+    "METHODS_TAB_TITLE": "Metodi",
+    "REFERENCES": {
       "LINKED_RESOURCE": "Risorsa collegata",
       "PLACEHOLDER": "Selezionare una risorsa disponibile per aggiungerla come riferimento",
       "NO_TARGET": "Nessun target selezionato"
     },
-    "METS": {
+    "METHODS": {
       "WAS_INVOKED": "Il metodo è stato richiamato",
       "INVOKE": "ESEGUIRE",
       "REPEAT": "RIPETI",

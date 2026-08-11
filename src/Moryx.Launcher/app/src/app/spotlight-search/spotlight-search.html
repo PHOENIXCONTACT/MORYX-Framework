@@ -1,0 +1,50 @@
+@if (isOpen()) {
+  <div class="backdrop" (click)="close()"></div>
+
+  <div class="panel" role="dialog" aria-modal="true" [attr.aria-label]="TranslationConstants.SEARCH.DIALOG_LABEL | translate">
+    <div class="search-row">
+      <mat-icon class="search-icon">search</mat-icon>
+      <input
+        #searchInput
+        class="search-input"
+        type="text"
+        [placeholder]="(hasProvider() ? TranslationConstants.SEARCH.PLACEHOLDER : TranslationConstants.SEARCH.NO_PROVIDER) | translate"
+        [disabled]="!hasProvider() || disableSearchBox()"
+        [value]="query()"
+        (input)="onQueryChange($any($event.target).value)"
+        autocomplete="off"
+        spellcheck="false"
+      />
+      @if (query()) {
+        <button mat-icon-button (click)="onQueryChange('')" tabindex="-1" [attr.aria-label]="TranslationConstants.SEARCH.CLEAR | translate">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+    </div>
+
+    @if (suggestions().length > 0) {
+      <mat-divider></mat-divider>
+      <ul #resultsList class="results" role="listbox">
+        @for (suggestion of suggestions(); track suggestion.text; let i = $index) {
+          <li
+            class="result-item"
+            [class.selected]="i === activeIndex()"
+            role="option"
+            [attr.aria-selected]="i === activeIndex()"
+            (click)="navigate(suggestion)"
+            (mouseenter)="activeIndex.set(i)"
+          >
+            <mat-icon class="result-icon">{{ suggestion.url ? 'open_in_new' : 'search' }}</mat-icon>
+            <span class="result-text">{{ suggestion.text }}</span>
+            @if (suggestion.url) {
+              <mat-icon class="result-arrow">chevron_right</mat-icon>
+            }
+          </li>
+        }
+      </ul>
+    } @else if (query() && hasProvider()) {
+      <mat-divider></mat-divider>
+      <div class="no-results">{{ TranslationConstants.SEARCH.NO_RESULTS | translate: { query: query() } }}</div>
+    }
+  </div>
+}

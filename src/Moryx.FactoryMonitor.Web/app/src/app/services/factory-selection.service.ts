@@ -3,40 +3,40 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { FactoryStateModel } from '../api/models/factory-state-model';
-import { FactoryMonitorService } from '../api/services';
-import { VisualizableItemModel } from '../api/models/visualizable-item-model';
+import { inject, Injectable, signal } from '@angular/core';
+import { FactoryStateModel } from '@api/models/factory-state-model';
+import { VisualizableItemModel } from '@api/models/visualizable-item-model';
+import { FactoryMonitorService } from '@api/services';
 
+// ToDo: Make this a route resolver, it loads data and does not need to be a service for that.
 @Injectable({
   providedIn: 'root'
 })
 export class FactorySelectionService {
-  private _selectedFactory = new BehaviorSubject<FactoryStateModel|undefined>(undefined);
-  private _defaultFactory = new BehaviorSubject<FactoryStateModel|undefined>(undefined);
-  private _selectedFactoryContent = new BehaviorSubject<VisualizableItemModel[]>([]);
+  private factoryMonitorService = inject(FactoryMonitorService);
 
-  public factorySelected$ = this._selectedFactory.asObservable();
-  public defaultFactory$ = this._defaultFactory.asObservable();
-  public factoryContent$ = this._selectedFactoryContent.asObservable();
-  constructor(private factoryMonitorService: FactoryMonitorService) { }
+  private readonly _factorySelected = signal<number | undefined>(undefined);
+  readonly factorySelected = this._factorySelected.asReadonly();
+  private readonly _defaultFactory = signal<FactoryStateModel | undefined>(undefined);
+  readonly defaultFactory = this._defaultFactory.asReadonly();
+  private readonly _factoryContent = signal<VisualizableItemModel[]>([]);
+  readonly factoryContent = this._factoryContent.asReadonly();
 
-  public selectFactory(factoryId: number|undefined){
-
-    if(!factoryId) return;
+  public selectFactory(factoryId: number | undefined) {
+    if (!factoryId) {
+      return;
+    }
 
     //factory content, items to be displayed
     this.factoryMonitorService.factoryContent({factoryId: factoryId ?? 0})
-    .subscribe(items => {
-      this._selectedFactoryContent.next(items);
-      //manufacturing factory
-      this._selectedFactory.next(<FactoryStateModel>{ id: factoryId });
-    });
+      .then(items => {
+        this._factoryContent.set(items);
+        //manufacturing factory
+        this._factorySelected.set(factoryId);
+      });
   }
 
-  public setDefaultFactory(factory: FactoryStateModel | undefined){
-    this._defaultFactory.next(factory);
+  public initialize(factory: FactoryStateModel) {
+    this._defaultFactory.set(factory);
   }
 }
-

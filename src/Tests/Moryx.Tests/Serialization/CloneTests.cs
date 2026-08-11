@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Globalization;
 using System.Linq;
 using Moryx.Serialization;
 using NUnit.Framework;
@@ -32,11 +33,11 @@ public class CloneTests
         var entry = new Entry
         {
             Description = "Some dummy entry",
-            Identifier = id.ToString("D5"),
-            DisplayName = string.Format("Entry-{0}", id),
+            Identifier = id.ToString("D5", CultureInfo.InvariantCulture),
+            DisplayName = string.Format(CultureInfo.InvariantCulture, "Entry-{0}", id),
             Value = new EntryValue
             {
-                Current = (id * 123).ToString("D"),
+                Current = (id * 123).ToString("D", CultureInfo.InvariantCulture),
                 Default = "42",
                 Type = (EntryValueType)(id % 7),
                 UnitType = (EntryUnitType)(id % Enum.GetNames(typeof(EntryUnitType)).Length),
