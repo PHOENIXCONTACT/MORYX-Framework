@@ -65,6 +65,12 @@ public abstract class Activity : IActivity
     }
 
     /// <inheritdoc />
+    public ActivityResult Abort()
+    {
+        return Result = CreateAbortionResult();
+    }
+
+    /// <inheritdoc />
     public ActivityResult Complete(long resultNumber)
     {
         return Result = CreateResult(resultNumber);
@@ -80,6 +86,11 @@ public abstract class Activity : IActivity
     /// Create a typed result object for this result number
     /// </summary>
     protected abstract ActivityResult CreateResult(long resultNumber);
+
+    /// <summary>
+    /// Create a typed result object when aborting the activity; The default behaviour sets a technical failure result.
+    /// </summary>
+    protected virtual ActivityResult CreateAbortionResult() => CreateFailureResult();
 
     /// <summary>
     /// Create a typed result object for a technical failure.
