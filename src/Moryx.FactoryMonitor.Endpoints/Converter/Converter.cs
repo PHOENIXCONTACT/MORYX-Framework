@@ -6,7 +6,6 @@ using Moryx.AbstractionLayer.Resources;
 using Moryx.ControlSystem.Cells;
 using Moryx.Factory;
 using Moryx.FactoryMonitor.Endpoints.Models;
-using Moryx.Logging;
 using Moryx.Orders;
 using Moryx.Serialization;
 using Moryx.Tools;
@@ -16,26 +15,12 @@ namespace Moryx.FactoryMonitor.Endpoints.Converter;
 /// <summary>
 /// Provide convertion for resources and models
 /// </summary>
-internal class Converter
+/// <remarks>
+/// Constructor
+/// </remarks>
+/// <param name="serialization"></param>
+internal class Converter(ICustomSerialization serialization, ILogger<FactoryMonitorController> logger)
 {
-    /// <summary>
-    /// Logger for this resource
-    /// </summary>
-    public IModuleLogger Logger { get; set; }
-
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="serialization"></param>
-
-    public Converter(ICustomSerialization serialization, IModuleLogger logger = null)
-    {
-        Serialization = serialization;
-        Logger = logger;
-    }
-
-    protected ICustomSerialization Serialization { get; }
-
     public ResourceChangedModel ToResourceChangedModel(Resource current)
     {
         if (current == null)
@@ -43,7 +28,7 @@ internal class Converter
             return null;
         }
 
-        var cellEntry = EntryConvert.EncodeObject(current.Descriptor, Serialization);
+        var cellEntry = EntryConvert.EncodeObject(current.Descriptor, serialization);
 
         return new ResourceChangedModel
         {
@@ -55,22 +40,28 @@ internal class Converter
 
     public static ActivityChangedModel ToActivityChangedModel(ICell current)
     {
-        return current == null
-            ? null
-            : new ActivityChangedModel
-            {
-                ResourceId = current.Id,
-            };
+        if (current is null)
+        {
+            return null;
+        }
+
+        return new ActivityChangedModel
+        {
+            ResourceId = current.Id,
+        };
     }
 
     public static CellStateChangedModel ToCellStateChangedModel(Resource current)
     {
-        return current == null
-            ? null
-            : new CellStateChangedModel
-            {
-                Id = current.Id,
-            };
+        if (current is null)
+        {
+            return null;
+        }
+
+        return new CellStateChangedModel
+        {
+            Id = current.Id,
+        };
     }
 
     /// <summary>
@@ -103,7 +94,7 @@ internal class Converter
             }
             return cellProperties;
         }
-        var entryVisualizer = Serialization.GetProperties(baseType)
+        var entryVisualizer = serialization.GetProperties(baseType)
             .FirstOrDefault(x => x.Name == cellEntry.Identifier)?.GetCustomAttribute<EntryVisualizationAttribute>();
         if (entryVisualizer == null)
         {
@@ -147,14 +138,16 @@ internal class Converter
             Operation = orderModel?.Operation,
         };
     }
+
     private void AddOrReplaceCellProperty(Dictionary<string, CellPropertySettings> dictionary, string key, CellPropertySettings value, Type baseType)
     {
         if (dictionary.ContainsKey(key))
         {
-            Logger?.LogWarning($"Duplicate key '{key}' in resource '{baseType.Name}'. Overwriting previous value.");
+            logger.LogWarning($"Duplicate key '{key}' in resource '{baseType.Name}'. Overwriting previous value.");
         }
         dictionary[key] = value;
     }
+
     private static CellPropertySettings CreateCellPropertySettings(Entry entry, EntryVisualizationAttribute entryVisualizer)
     {
         return new CellPropertySettings
@@ -166,16 +159,14 @@ internal class Converter
             DisplayName = entry.DisplayName
         };
     }
+
     private static InternalOperationClassification GetCorrectOperationState(Operation operation)
     {
         if (operation.Progress.SuccessCount + operation.Progress.FailureCount >= operation.TargetAmount)
         {
             return InternalOperationClassification.AmountReached;
         }
-        else
-        {
-            return (InternalOperationClassification)operation.State;
-        }
+        return (InternalOperationClassification)operation.State;
     }
 
     /// <summary>
