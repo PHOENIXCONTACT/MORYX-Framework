@@ -21,6 +21,7 @@ import { TranslationConstants } from './translation-constants';
 // Register locale data for built-in Angular pipes (date, number, etc.)
 import '@angular/common/locales/global/de';
 import '@angular/common/locales/global/it';
+import '@angular/common/locales/global/zh';
 
 export const appConfig: ApplicationConfig = {
   providers: [
