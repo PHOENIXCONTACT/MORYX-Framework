@@ -4,6 +4,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Reflection;
+using System.Reflection.Metadata.Ecma335;
 using System.Runtime.Serialization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -52,6 +53,28 @@ public class ResourceModificationController : ControllerBase
     {
         var converter = new ResourceToModelConverter(_resourceTypeTree, _serialization);
         return converter.ConvertType(_resourceTypeTree.RootType);
+    }
+
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status417ExpectationFailed)]
+    [Route("types/{name}")]
+    [Authorize(Policy = ResourcePermissions.CanViewTypeTree)]
+    public ActionResult<ResourceTypeModel> GetType(string name)
+    {
+        if (string.IsNullOrEmpty(name))
+        {
+            return BadRequest(new MoryxExceptionResponse { Title = Strings.ResourceNotFoundException_ById_Message }); // TODO: Invalid Type name message
+        }
+
+        var type = _resourceTypeTree[name];
+        if (type is null)
+        {
+            return NotFound();
+        }
+
+        var converter = new ResourceToModelConverter(_resourceTypeTree, _serialization);
+        return converter.ConvertType(type);
     }
 
     [HttpGet]

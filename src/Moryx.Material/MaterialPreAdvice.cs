@@ -11,9 +11,9 @@ namespace Moryx.Material;
 public class MaterialPreAdvice
 {
     /// <summary>
-    /// The container being announced for departure.
+    /// Id of the container being announced for departure.
     /// </summary>
-    public required IMaterialContainer Container { get; set; }
+    public long ContainerId { get; set; }
 
     /// <summary>
     /// Reason for the departure.

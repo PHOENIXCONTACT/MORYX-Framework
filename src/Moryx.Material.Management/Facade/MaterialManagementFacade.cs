@@ -1,59 +1,83 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Resources;
+using Moryx.Material.Facade;
 using Moryx.Material.Lineage;
 using Moryx.Material.Management.Components;
 using Moryx.Material.States;
 using Moryx.Runtime.Modules;
+using Moryx.Tools;
 
 namespace Moryx.Material.Management;
 
-internal class MaterialManagementFacade : IMaterialManagement, IFacadeControl
+internal class MaterialManagementFacade : FacadeBase, IMaterialManagement
 {
-    public IContainerPool Pool { get; set; } = null!;
+    public IContainerPool Pool { get; set; }
 
-    public IContainerStateHandler StateHandler { get; set; } = null!;
+    public IMaterialFlowHandler MaterialFlowHandler { get; set; }
 
-    public IFulfillmentMatcher Matcher { get; set; } = null!;
+    public IFulfillmentMatcher Matcher { get; set; }
 
-    public ILineageEventStorage LineageStorage { get; set; } = null!;
+    public ILineageEventStorage LineageStorage { get; set; }
 
-    public IResourceManagement ResourceManagement { get; set; } = null!;
+    public IResourceManagement ResourceManagement { get; set; }
 
-    public Action ValidateHealthState { get; set; } = null!;
+    public IResourceTypeTree ResourceTypes { get; set; }
 
-    public void Activate()
+    public override void Activate()
     {
-        StateHandler.StateChanged += OnStateChanged;
-        StateHandler.ContainerAvailable += OnContainerAvailable;
-        StateHandler.ContainerDeregistered += OnContainerDeregistered;
-        StateHandler.MaterialRequested += OnMaterialRequested;
-        StateHandler.MaterialInbound += OnMaterialInbound;
-        StateHandler.MaterialOutbound += OnMaterialOutbound;
-
-        Pool.ContainerAdded += OnContainerAdded;
-        Pool.ContainerRemoved += OnContainerRemoved;
-
+        base.Activate();
+        Pool.StateChanged += OnStateChanged;
+        Pool.ContainerUpdated += OnContainerUpdated;
         LineageStorage.Recorded += OnLineageRecorded;
     }
 
-    public void Deactivate()
+    private void OnStateChanged(object? sender, ContainerStateChangedEventArgs e)
+        => ContainerStateChanged?.Invoke(this, e);
+
+    private void OnContainerUpdated(object? sender, ContainerUpdatedEventArgs e) => ContainerUpdated?.Invoke(this, e);
+
+    private void OnLineageRecorded(object? sender, ILineageEvent e) =>
+        LineageRecorded?.Invoke(this, new LineageRecordedEventArgs((IMaterialContainer)sender, e));
+
+    public override void Deactivate()
     {
-        StateHandler.StateChanged -= OnStateChanged;
-        StateHandler.ContainerAvailable -= OnContainerAvailable;
-        StateHandler.ContainerDeregistered -= OnContainerDeregistered;
-        StateHandler.MaterialRequested -= OnMaterialRequested;
-        StateHandler.MaterialInbound -= OnMaterialInbound;
-        StateHandler.MaterialOutbound -= OnMaterialOutbound;
-
-        Pool.ContainerAdded -= OnContainerAdded;
-        Pool.ContainerRemoved -= OnContainerRemoved;
-
+        Pool.StateChanged -= OnStateChanged;
+        Pool.ContainerUpdated -= OnContainerUpdated;
         LineageStorage.Recorded -= OnLineageRecorded;
+        base.Deactivate();
     }
 
-    #region Queries
+    #region Create
+
+    #endregion
+
+    #region Read
+
+    public IReadOnlyList<Type> GetContainerTypes()
+    {
+        ValidateHealthState();
+
+        var supportingTypeNodes = ResourceTypes.SupportedTypes(typeof(IMaterialContainer));
+        var supportingTypes = new List<Type>();
+        supportingTypeNodes.ForEach(tn => ExtractAllSupportedTypes(tn, supportingTypes));
+        // TODO: Add configurable filter to hide basic types, e.g. from Moryx.Material
+        return supportingTypes;
+    }
+
+    private static void ExtractAllSupportedTypes(IResourceTypeNode typeNode, List<Type> supportingTypes)
+    {
+        // Add non-abstract type
+        if (typeNode.Creatable)
+        {
+            supportingTypes.Add(typeNode.ResourceType);
+        }
+
+        // Add derived types which will all also be supported types
+        typeNode.DerivedTypes.ForEach(dt => ExtractAllSupportedTypes(dt, supportingTypes));
+    }
 
     public IReadOnlyList<IMaterialContainer> GetContainers()
     {
@@ -64,77 +88,70 @@ internal class MaterialManagementFacade : IMaterialManagement, IFacadeControl
     public IReadOnlyList<IMaterialContainer> GetContainers(Func<IMaterialContainer, bool> filter)
     {
         ValidateHealthState();
+        ArgumentNullException.ThrowIfNull(filter, nameof(filter));
+
         return Pool.GetAll(filter);
     }
 
-    public IMaterialContainer? GetContainer(long id)
+    public IMaterialContainer? GetContainer(IIdentity identity)
     {
         ValidateHealthState();
-        return Pool.Get(id);
+        ArgumentNullException.ThrowIfNull(identity);
+
+        return Pool.GetAll(c => c.Identity != null && identity.Equals(c.Identity)).FirstOrDefault();
     }
 
     #endregion
 
-    #region State Transitions
+    #region Update
 
-    public async Task<IMaterialContainer> RequestMaterialAsync(MaterialRequest request, CancellationToken cancellationToken = default)
+    public async Task<IMaterialContainer> RequestMaterialAsync(MaterialRequest request, Type targetContainerType, CancellationToken cancellationToken = default)
     {
         ValidateHealthState();
-        if (request == null) throw new ArgumentNullException(nameof(request));
-
-        request.Id ??= Guid.NewGuid();
-
-        // Create a virtual container resource
-        var containerId = await ResourceManagement.CreateUnsafeAsync(typeof(BasicMaterialContainer), resource =>
+        ArgumentNullException.ThrowIfNull(request);
+        if (!GetContainerTypes().Contains(targetContainerType))
         {
-            var container = (BasicMaterialContainer)resource;
-            container.Name = $"Request-{request.Id}";
-            container.Identity = request.ContainerIdentity;
-            container.Material = request.Material;
-            container.Quantity = request.RequestedQuantity;
-            container.Unit = request.Unit;
-            return Task.CompletedTask;
-        }, cancellationToken);
+            throw new InvalidOperationException($"{targetContainerType.Name} is not a valid typeNode of material container. " +
+                "Check that the necessary packages are known to the assembly and the module configuration for enabled container types.");
+        }
+        cancellationToken.ThrowIfCancellationRequested();
 
-        var created = Pool.Get(containerId)
-            ?? throw new InvalidOperationException($"Created container {containerId} not found in pool");
-
-        var requestedState = new RequestedState
-        {
-            RequestId = request.Id,
-            ExpectedArrival = request.ExpectedArrival
-        };
-
-        await StateHandler.TransitionAsync(created, requestedState, cancellationToken);
-        return created;
+        return await MaterialFlowHandler.RequestMaterialAsync(request, targetContainerType);
     }
 
     public async Task<IMaterialContainer> AnnounceMaterialAsync(MaterialAnnouncement announcement, CancellationToken cancellationToken = default)
     {
         ValidateHealthState();
-        if (announcement == null) throw new ArgumentNullException(nameof(announcement));
+        if (announcement == null)
+        {
+            throw new ArgumentNullException(nameof(announcement));
+        }
 
-        announcement.Id ??= Guid.NewGuid();
+        announcement.Id ??= Guid.NewGuid().ToString();
 
         // Try to fulfill an existing request
-        var existing = Matcher.TryMatchAnnouncement(announcement);
+        var existing = Matcher.TryMatch(announcement);
         if (existing != null)
         {
             // Match: transition existing virtual container to Inbound
-            if (existing.State is RequestedState rs)
+            if (GetStateInformation(existing) is RequestedStateInformation rs)
+            {
                 rs.IsPartiallyFulfilled = true;
+            }
 
             if (announcement.ContainerIdentity != null)
+            {
                 existing.Identity = announcement.ContainerIdentity;
+            }
 
-            var inboundState = new InboundState
+            var inboundState = new InboundStateInformation
             {
                 AnnouncementId = announcement.Id,
                 ExpectedArrival = announcement.ExpectedArrival,
                 RequestReference = announcement.RequestReference
             };
 
-            await StateHandler.TransitionAsync(existing, inboundState, cancellationToken);
+            //await MaterialFlowHandler.TransitionAsync(existing, inboundState, cancellationToken);
             return existing;
         }
 
@@ -144,38 +161,48 @@ internal class MaterialManagementFacade : IMaterialManagement, IFacadeControl
             var container = (BasicMaterialContainer)resource;
             container.Name = $"Announcement-{announcement.Id}";
             container.Identity = announcement.ContainerIdentity;
-            container.Material = announcement.Material;
-            container.Quantity = announcement.AnnouncedQuantity;
             container.Unit = announcement.Unit;
+            container.UpdateMaterial(new MaterialUpdate
+            {
+                Kind = UpdateKind.MaterialType | UpdateKind.FillingLevel,
+                Material = announcement.Material,
+                Quantity = announcement.AnnouncedQuantity,
+                Unit = announcement.Unit
+            });
             return Task.CompletedTask;
         }, cancellationToken);
 
         var created = Pool.Get(containerId)
             ?? throw new InvalidOperationException($"Created container {containerId} not found in pool");
 
-        var newInbound = new InboundState
+        var newInbound = new InboundStateInformation
         {
             AnnouncementId = announcement.Id,
             ExpectedArrival = announcement.ExpectedArrival,
             RequestReference = announcement.RequestReference
         };
-        await StateHandler.TransitionAsync(created, newInbound, cancellationToken);
+        //await MaterialFlowHandler.TransitionAsync(created, newInbound, cancellationToken);
         return created;
     }
 
     public async Task RegisterContainerAsync(IMaterialContainer container, CancellationToken cancellationToken = default)
     {
         ValidateHealthState();
-        if (container == null) throw new ArgumentNullException(nameof(container));
+        if (container == null)
+        {
+            throw new ArgumentNullException(nameof(container));
+        }
 
         // If a matching virtual container exists (Requested or Inbound), apply identity to it instead
         var match = Matcher.TryMatchRegistration(container);
         if (match != null)
         {
             if (container.Identity != null)
+            {
                 match.Identity = container.Identity;
+            }
 
-            await StateHandler.TransitionAsync(match, new AvailableState(), cancellationToken);
+            //await MaterialFlowHandler.TransitionAsync(match, new AvailableStateInformation(), cancellationToken);
 
             await LineageStorage.RecordAsync(new RegisterLineageEvent
             {
@@ -186,7 +213,7 @@ internal class MaterialManagementFacade : IMaterialManagement, IFacadeControl
             return;
         }
 
-        await StateHandler.TransitionAsync(container, new AvailableState(), cancellationToken);
+        //await MaterialFlowHandler.TransitionAsync(container, new AvailableStateInformation(), cancellationToken);
         await LineageStorage.RecordAsync(new RegisterLineageEvent
         {
             ContainerId = container.Id,
@@ -195,52 +222,63 @@ internal class MaterialManagementFacade : IMaterialManagement, IFacadeControl
         }, cancellationToken);
     }
 
+    // TODO: Should this method take the container object in the pre advice?
     public async Task<IMaterialContainer> PreAdviceMaterialAsync(MaterialPreAdvice preAdvice, CancellationToken cancellationToken = default)
     {
         ValidateHealthState();
-        if (preAdvice == null) throw new ArgumentNullException(nameof(preAdvice));
-        if (preAdvice.Container == null)
-            throw new ArgumentException("Container is required.", nameof(preAdvice));
+        ArgumentNullException.ThrowIfNull(preAdvice);
+        var container = Pool.Get(preAdvice.ContainerId) ??
+            throw new KeyNotFoundException("Material container for pre-advice could not be found.");
+        cancellationToken.ThrowIfCancellationRequested();
 
-        var outbound = new OutboundState { DepartureReason = preAdvice.DepartureReason };
-        await StateHandler.TransitionAsync(preAdvice.Container, outbound, cancellationToken);
-        return preAdvice.Container;
-    }
-
-    public async Task DeregisterContainerAsync(IMaterialContainer container, CancellationToken cancellationToken = default)
-    {
-        ValidateHealthState();
-        if (container == null) throw new ArgumentNullException(nameof(container));
-
-        var finalQuantity = container.Quantity;
-        await StateHandler.TransitionAsync(container, new DeregisteredState(), cancellationToken);
-        await LineageStorage.RecordAsync(new DeregisterLineageEvent
-        {
-            ContainerId = container.Id,
-            FinalQuantity = finalQuantity
-        }, cancellationToken);
+        return await MaterialFlowHandler.PreAdviceMaterialAsync(container, preAdvice.DepartureReason);
     }
 
     public async Task CancelMaterialRequestAsync(Guid requestId, CancellationToken cancellationToken = default)
     {
         ValidateHealthState();
 
-        var match = Pool.GetAll(c => c.State is RequestedState rs && rs.RequestId == requestId).FirstOrDefault();
+        var match = Pool.GetAll(c => GetStateInformation(c) is RequestedStateInformation rs && string.Equals(rs.RequestId, requestId.ToString(), StringComparison.Ordinal)).FirstOrDefault();
         if (match == null)
+        {
             throw new ArgumentException($"No pending request with id {requestId}.", nameof(requestId));
+        }
 
-        await StateHandler.TransitionAsync(match, new DeregisteredState(), cancellationToken);
+        //await MaterialFlowHandler.TransitionAsync(match, new DeregisteredStateInformation(), cancellationToken);
     }
 
     public async Task DropMaterialAnnouncementAsync(Guid announcementId, CancellationToken cancellationToken = default)
     {
         ValidateHealthState();
 
-        var match = Pool.GetAll(c => c.State is InboundState ins && ins.AnnouncementId == announcementId).FirstOrDefault();
+        var match = Pool.GetAll(c => GetStateInformation(c) is InboundStateInformation ins && string.Equals(ins.AnnouncementId, announcementId.ToString(), StringComparison.Ordinal)).FirstOrDefault();
         if (match == null)
+        {
             throw new ArgumentException($"No active announcement with id {announcementId}.", nameof(announcementId));
+        }
 
-        await StateHandler.TransitionAsync(match, new DeregisteredState(), cancellationToken);
+        //await MaterialFlowHandler.TransitionAsync(match, new DeregisteredStateInformation(), cancellationToken);
+    }
+
+    #endregion
+
+    #region Delete
+
+    public async Task DeregisterContainerAsync(IMaterialContainer container, CancellationToken cancellationToken = default)
+    {
+        ValidateHealthState();
+        if (container == null)
+        {
+            throw new ArgumentNullException(nameof(container));
+        }
+
+        var finalQuantity = container.Quantity;
+        //await MaterialFlowHandler.TransitionAsync(container, new DeregisteredStateInformation(), cancellationToken);
+        await LineageStorage.RecordAsync(new DeregisterLineageEvent
+        {
+            ContainerId = container.Id,
+            FinalQuantity = finalQuantity
+        }, cancellationToken);
     }
 
     #endregion
@@ -267,43 +305,14 @@ internal class MaterialManagementFacade : IMaterialManagement, IFacadeControl
 
     #endregion
 
-    #region Event forwarding
+    #region Events
 
-    private void OnContainerAdded(object? sender, IMaterialContainer container) =>
-        ContainerRegistered?.Invoke(this, new MaterialContainerEventArgs(container));
-
-    private void OnContainerRemoved(object? sender, IMaterialContainer container) =>
-        ContainerDeregistered?.Invoke(this, new MaterialContainerEventArgs(container));
-
-    private void OnStateChanged(object? sender, ContainerStateChangedEventArgs e) =>
-        ContainerStateChanged?.Invoke(this, e);
-
-    private void OnContainerAvailable(object? sender, MaterialContainerEventArgs e) =>
-        ContainerAvailable?.Invoke(this, e);
-
-    private void OnContainerDeregistered(object? sender, MaterialContainerEventArgs e) =>
-        ContainerDeregistered?.Invoke(this, e);
-
-    private void OnMaterialRequested(object? sender, MaterialContainerEventArgs e) =>
-        MaterialRequested?.Invoke(this, e);
-
-    private void OnMaterialInbound(object? sender, MaterialContainerEventArgs e) =>
-        MaterialInbound?.Invoke(this, e);
-
-    private void OnMaterialOutbound(object? sender, MaterialContainerEventArgs e) =>
-        MaterialOutbound?.Invoke(this, e);
-
-    private void OnLineageRecorded(object? sender, ILineageEvent e) =>
-        LineageRecorded?.Invoke(this, new LineageRecordedEventArgs(e));
+    public event EventHandler<ContainerStateChangedEventArgs>? ContainerStateChanged;
+    public event EventHandler<ContainerUpdatedEventArgs>? ContainerUpdated;
+    public event EventHandler<LineageRecordedEventArgs>? LineageRecorded;
 
     #endregion
 
-    public event EventHandler<MaterialContainerEventArgs>? ContainerRegistered;
-    public event EventHandler<MaterialContainerEventArgs>? ContainerDeregistered;
-    public event EventHandler<ContainerStateChangedEventArgs>? ContainerStateChanged;
-    public event EventHandler<MaterialContainerEventArgs>? MaterialRequested;
-    public event EventHandler<MaterialContainerEventArgs>? MaterialInbound;
-    public event EventHandler<MaterialContainerEventArgs>? ContainerAvailable;
-    public event EventHandler<MaterialContainerEventArgs>? MaterialOutbound;
-    public event EventHandler<LineageRecordedEventArgs>? LineageRecorded;
+    private static StateInformation? GetStateInformation(IMaterialContainer container) =>
+        (container as MaterialContainer)?.StateInformation;
 }

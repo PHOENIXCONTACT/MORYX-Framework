@@ -29,6 +29,7 @@
     <Project Path="src/Moryx.Identity/Moryx.Identity.csproj" />
   </Folder>
   <Folder Name="/Material/">
+    <Project Path="src/Moryx.Material.Endpoints/Moryx.Material.Endpoints.csproj" />
     <Project Path="src/Moryx.Material.Integrations.Orders.Integrator/Moryx.Material.Integrations.Orders.Integrator.csproj" />
     <Project Path="src/Moryx.Material.Integrations.Orders/Moryx.Material.Integrations.Orders.csproj" Id="d57e85db-8cee-4567-bd80-8fd8fece2c71" />
     <Project Path="src/Moryx.Material.Management/Moryx.Material.Management.csproj" Id="5934fd23-97b6-424f-916d-aea4741b36ef" />
@@ -117,13 +118,13 @@
     <File Path="src/Tests/Directory.Build.props" />
   </Folder>
     <Folder Name="/Tests/IntegrationTests/">
-    <Project Path="src/Tests/Moryx.Communication.Sockets.IntegrationTests/Moryx.Communication.Sockets.IntegrationTests.csproj" />
-    <Project Path="src/Tests/Moryx.Material.IntegrationTests/Moryx.Material.IntegrationTests.csproj" />
-    <Project Path="src/Tests/Moryx.Operators.Management.Integration.Tests/Moryx.Operators.Management.Integration.Tests.csproj" />
-    <Project Path="src/Tests/Moryx.Products.IntegrationTests/Moryx.Products.IntegrationTests.csproj" />
-    <Project Path="src/Tests/Moryx.Runtime.Endpoints.IntegrationTests/Moryx.Runtime.Endpoints.IntegrationTests.csproj" />
-    <Project Path="src/Tests/Moryx.Shifts.Management.IntegrationTests/Moryx.Shifts.Management.IntegrationTests.csproj" />
-  </Folder>
+      <Project Path="src/Tests/Moryx.Communication.Sockets.IntegrationTests/Moryx.Communication.Sockets.IntegrationTests.csproj" />
+      <Project Path="src/Tests/Moryx.Material.IntegrationTests/Moryx.Material.IntegrationTests.csproj" />
+      <Project Path="src/Tests/Moryx.Operators.Management.Integration.Tests/Moryx.Operators.Management.Integration.Tests.csproj" />
+      <Project Path="src/Tests/Moryx.Products.IntegrationTests/Moryx.Products.IntegrationTests.csproj" />
+      <Project Path="src/Tests/Moryx.Runtime.Endpoints.IntegrationTests/Moryx.Runtime.Endpoints.IntegrationTests.csproj" />
+      <Project Path="src/Tests/Moryx.Shifts.Management.IntegrationTests/Moryx.Shifts.Management.IntegrationTests.csproj" />
+    </Folder>
   <Folder Name="/Tests/UnitTests/">
     <Project Path="src/Tests/Moryx.AbstractionLayer.Tests/Moryx.AbstractionLayer.Tests.csproj" />
     <Project Path="src/Tests/Moryx.AspNetCore.Mqtt.Tests/Moryx.AspNetCore.Mqtt.Tests.csproj" />

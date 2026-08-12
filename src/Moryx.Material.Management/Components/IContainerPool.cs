@@ -1,6 +1,8 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Moryx.Logging;
+using Moryx.Material.Facade;
 using Moryx.Modules;
 
 namespace Moryx.Material.Management.Components;
@@ -8,7 +10,7 @@ namespace Moryx.Material.Management.Components;
 /// <summary>
 /// Internal pool of <see cref="IMaterialContainer"/> instances tracked by the module.
 /// </summary>
-internal interface IContainerPool : IAsyncPlugin
+internal interface IContainerPool : IAsyncPlugin, ILoggingComponent
 {
     /// <summary>Returns all tracked containers.</summary>
     IReadOnlyList<IMaterialContainer> GetAll();
@@ -19,15 +21,9 @@ internal interface IContainerPool : IAsyncPlugin
     /// <summary>Returns a container by resource id.</summary>
     IMaterialContainer? Get(long id);
 
-    /// <summary>Adds a container created via <see cref="IResourceManagement"/>.</summary>
-    void Track(IMaterialContainer container);
+    /// <summary>Raised a material was updated.</summary>
+    event EventHandler<ContainerUpdatedEventArgs>? ContainerUpdated;
 
-    /// <summary>Removes a container from the pool.</summary>
-    void Untrack(IMaterialContainer container);
-
-    /// <summary>Raised when a container is added.</summary>
-    event EventHandler<IMaterialContainer>? ContainerAdded;
-
-    /// <summary>Raised when a container is removed.</summary>
-    event EventHandler<IMaterialContainer>? ContainerRemoved;
+    /// <summary>Raised after a transition completed.</summary>
+    event EventHandler<ContainerStateChangedEventArgs>? StateChanged;
 }

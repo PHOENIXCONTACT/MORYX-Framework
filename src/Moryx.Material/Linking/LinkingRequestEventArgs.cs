@@ -6,29 +6,20 @@ namespace Moryx.Material.Linking;
 /// <summary>
 /// Base event args for a linking request raised by a container.
 /// </summary>
-public abstract class LinkingRequestEventArgs : EventArgs
+/// <remarks>
+/// Initializes a new instance of the <see cref="LinkingRequestEventArgs"/> class.
+/// </remarks>
+/// <param name="request">Linking request payload.</param>
+/// <param name="responseCallback">Callback that will be invoked to deliver the <see cref="LinkingResponse"/> back to the sender.</param>
+public abstract class LinkingRequestEventArgs(LinkingRequest request, Func<LinkingResponse, Task> responseCallback) : EventArgs
 {
-    /// <summary>
-    /// Container raising the event.
-    /// </summary>
-    public IMaterialContainer Container { get; }
-
     /// <summary>
     /// Linking request payload.
     /// </summary>
-    public LinkingRequest Request { get; }
+    public LinkingRequest Request { get; } = request;
 
     /// <summary>
-    /// Callback the manager will invoke to deliver the response back to the container.
+    /// Callback that will be invoked to deliver the <see cref="LinkingResponse"/> back to the <see cref="Container"/>
     /// </summary>
-    public Func<LinkingResponse, Task>? ResponseCallback { get; set; }
-
-    /// <summary>
-    /// Creates a new instance.
-    /// </summary>
-    protected LinkingRequestEventArgs(IMaterialContainer container, LinkingRequest request)
-    {
-        Container = container;
-        Request = request;
-    }
+    public Func<LinkingResponse, Task> ResponseCallback { get; } = responseCallback;
 }

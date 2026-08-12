@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Resources;
-using Moryx.Material.Events;
+using Moryx.Factory;
 using Moryx.Material.States;
 using Moryx.Serialization;
 using Moryx.StateMachines;
@@ -20,6 +20,7 @@ namespace Moryx.Material;
 /// Application engineers may extend this class to add custom properties and behavior.
 /// </remarks>
 [DataContract]
+[EntryVisualization("", "inbox")]
 public abstract class MaterialContainer : Resource, IMaterialContainer, IStateContext
 {
     #region IMaterialContainer
@@ -37,31 +38,40 @@ public abstract class MaterialContainer : Resource, IMaterialContainer, IStateCo
     [DataMember]
     [EntrySerialize]
     [Display(Name = "Container Identity", Description = "Optional scannable identity of the physical container (e.g., barcode, QR code). May be null for virtual or unlabelled containers."), PossibleTypes(typeof(IIdentity))]
-    public IIdentity? Identity { get; set; }
+    public virtual IIdentity? Identity { get; set; }
 
     // ToDo: Should we lock modifications in pre-advises and deregistered state?
     /// <inheritdoc />
     [DataMember]
     [EntrySerialize, ReadOnly(true)]
     [Display(Name = "Material", Description = "Material reference contained in this container (e.g., product number).")]
-    public string? Material {  get; private set; }
+    public virtual string? Material {  get; protected set; }
 
     /// <inheritdoc />
     [DataMember]
     [EntrySerialize, ReadOnly(true)]
     [Display(Name = "Quantity", Description = "Current amount of material held by this container.")]
-    public double Quantity { get; private set; }
+    public virtual double Quantity { get; protected set; }
 
     /// <inheritdoc />
     [DataMember]
     [EntrySerialize]
     [Display(Name = "Unit", Description = "Unit of measure for the quantity (e.g., kg, pcs).")]
-    public string? Unit { get; set; }
+    public virtual string? Unit { get; set; }
 
     /// <inheritdoc />
     [EntrySerialize, ReadOnly(true)]
     [Display(Name = "State", Description = "Current lifecycle state classification of the container.")]
     public StateClassification State => _state?.Classification ?? StateClassification.Uninitialized;
+
+    // ToDo: Can this be private set even if written from db?
+    /// <summary>
+    /// Detailed lifecycle state data for the current <see cref="State"/>.
+    /// </summary>
+    [DataMember]
+    [EntrySerialize, ReadOnly(true)]
+    [Display(Name = "State Information", Description = "Information about the current state of the container.")]
+    public StateInformation? StateInformation { get; set; }
 
     /// <inheritdoc />
     public void UpdateMaterial(MaterialUpdate update)
@@ -71,11 +81,13 @@ public abstract class MaterialContainer : Resource, IMaterialContainer, IStateCo
             return;
         }
 
-        var eventArgs = new MaterialUpdatedEventArgs(this) { Kind = update.Kind };
+        var eventArgs = new MaterialUpdatedEventArgs() { Kind = update.Kind };
+        // ToDo: Do we need an extra flag for unit? Is empty unit allowed?
         if (update.Kind.HasFlag(UpdateKind.MaterialType))
         {
             eventArgs.OldMaterial = Material;
             eventArgs.NewMaterial = Material = update.Material;
+            Unit = update.Unit;
         }
 
         if (update.Kind.HasFlag(UpdateKind.FillingLevel)) {
@@ -102,6 +114,21 @@ public abstract class MaterialContainer : Resource, IMaterialContainer, IStateCo
             update.Kind == UpdateKind.FillingLevel && update.Quantity == Quantity;
     }
 
+    /// <inheritdoc/>
+    public void TransitionTo(StateInformation stateInformation)
+    {
+        ArgumentNullException.ThrowIfNull(stateInformation);
+        if (_state == null)
+        {
+            throw new InvalidOperationException("The material container state machine is not initialized.");
+        }
+
+        var oldStateInformation = StateInformation;
+        _state.Advance(stateInformation);
+        StateChanged?.Invoke(this, new StateChangedEventArgs(oldStateInformation, stateInformation));
+        OnStateChanged();
+    }
+
     /// <inheritdoc />
     public event EventHandler<MaterialUpdatedEventArgs>? MaterialUpdated;
 
@@ -125,8 +152,6 @@ public abstract class MaterialContainer : Resource, IMaterialContainer, IStateCo
             return;
         }
 
-        // ToDo: Can we even publish the old information?
-        StateChanged?.Invoke(this, new StateChangedEventArgs(this, default, StateInformation!));
         OnStateChanged();
     }
 
@@ -193,12 +218,4 @@ public abstract class MaterialContainer : Resource, IMaterialContainer, IStateCo
         Quantity = quantity;
         Unit = unit;
     }
-
-    // ToDo: Should this be part of the interface? How do we match requests and announcements otherwise?
-    /// <summary>
-    /// Detailed lifecycle state data for the current <see cref="State"/>.
-    /// </summary>
-    [DataMember]
-    [EntrySerialize, ReadOnly(true)]
-    public StateInformation? StateInformation { get; set; }
 }

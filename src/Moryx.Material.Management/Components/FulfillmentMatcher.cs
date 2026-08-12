@@ -9,23 +9,24 @@ namespace Moryx.Material.Management.Components;
 [Component(LifeCycle.Singleton, typeof(IFulfillmentMatcher))]
 internal class FulfillmentMatcher : IFulfillmentMatcher
 {
-    public IContainerPool Pool { get; set; } = null!;
+    public IContainerPool Pool { get; set; }
 
     public void Start() { }
     public void Stop() { }
 
-    public IMaterialContainer? TryMatchAnnouncement(MaterialAnnouncement announcement)
+    public IMaterialContainer? TryMatch(MaterialAnnouncement announcement)
     {
-        if (announcement == null) throw new ArgumentNullException(nameof(announcement));
-
         // Match by request reference first, then by container identity, then by material.
-        var candidates = Pool.GetAll(c => c.State is RequestedState);
+        var candidates = Pool.GetAll(c => c.State is RequestedStateInformation);
 
-        if (announcement.RequestReference.HasValue)
+        if (string.IsNullOrEmpty(announcement.RequestReference))
         {
             var match = candidates.FirstOrDefault(c =>
-                c.State is RequestedState rs && rs.RequestId == announcement.RequestReference.Value);
-            if (match != null) return match;
+                c.State is StateClassification.Requested); //&& c.RequestId == announcement.RequestReference);
+            if (match != null)
+            {
+                return match;
+            }
         }
 
         if (announcement.ContainerIdentity != null)
@@ -33,7 +34,10 @@ internal class FulfillmentMatcher : IFulfillmentMatcher
             var match = candidates.FirstOrDefault(c =>
                 c.Identity != null &&
                 string.Equals(c.Identity.Identifier, announcement.ContainerIdentity.Identifier, StringComparison.Ordinal));
-            if (match != null) return match;
+            if (match != null)
+            {
+                return match;
+            }
         }
 
         if (!string.IsNullOrEmpty(announcement.Material))
@@ -48,9 +52,12 @@ internal class FulfillmentMatcher : IFulfillmentMatcher
 
     public IMaterialContainer? TryMatchRegistration(IMaterialContainer container)
     {
-        if (container == null) throw new ArgumentNullException(nameof(container));
+        if (container == null)
+        {
+            throw new ArgumentNullException(nameof(container));
+        }
 
-        var candidates = Pool.GetAll(c => c.State is RequestedState or InboundState && !ReferenceEquals(c, container));
+        var candidates = Pool.GetAll(c => c.State is StateClassification.Requested or StateClassification.Inbound && !ReferenceEquals(c, container));
 
         // Match by identity first
         if (container.Identity != null)
@@ -58,7 +65,10 @@ internal class FulfillmentMatcher : IFulfillmentMatcher
             var byIdentity = candidates.FirstOrDefault(c =>
                 c.Identity != null &&
                 string.Equals(c.Identity.Identifier, container.Identity.Identifier, StringComparison.Ordinal));
-            if (byIdentity != null) return byIdentity;
+            if (byIdentity != null)
+            {
+                return byIdentity;
+            }
         }
 
         // Fallback: match by material + sufficient pending quantity

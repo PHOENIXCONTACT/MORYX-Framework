@@ -3,15 +3,15 @@
 
 using Moryx.Material.States;
 
-namespace Moryx.Material.Events;
+namespace Moryx.Material.Facade;
 
 /// <summary>
-/// Event arguments for <see cref="IMaterialContainer.StateChanged"/>.
+/// Event arguments for <see cref="IMaterialManagement.ContainerStateChanged"/>.
 /// </summary>
 /// <param name="container">Container whose lifecycle state changed.</param>
 /// <param name="oldState">Previous state information, or <c>null</c> for the initial transition.</param>
 /// <param name="newState">New state information after the transition.</param>
-public class StateChangedEventArgs(IMaterialContainer container, StateInformation? oldState, StateInformation newState) :
+public class ContainerStateChangedEventArgs(IMaterialContainer container, StateInformation? oldState, StateInformation newState) :
     MaterialContainerEventArgs(container)
 {
     /// <summary>

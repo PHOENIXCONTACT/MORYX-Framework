@@ -15,7 +15,7 @@ internal interface IFulfillmentMatcher : IPlugin
     /// Tries to match the given announcement against an existing request and returns
     /// the matched container (if any).
     /// </summary>
-    IMaterialContainer? TryMatchAnnouncement(MaterialAnnouncement announcement);
+    IMaterialContainer? TryMatch(MaterialAnnouncement announcement);
 
     /// <summary>
     /// Tries to match an incoming registration of <paramref name="container"/> against

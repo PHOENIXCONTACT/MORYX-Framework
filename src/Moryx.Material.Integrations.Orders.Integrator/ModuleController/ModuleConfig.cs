@@ -1,23 +1,23 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using Moryx.Configuration;
+using Moryx.Material.Linking;
+using Moryx.Serialization;
 
 namespace Moryx.Material.Integrations.Orders.Integrator;
 
 /// <summary>
-/// Module configuration listing the <see cref="Linking.LinkingHook"/> plugins that should
+/// Module configuration listing the <see cref="Linking.ILinkingHook"/> plugins that should
 /// be executed by the <c>LinkingHookManager</c>.
 /// </summary>
 [DataContract]
 public class ModuleConfig : ConfigBase
 {
-    /// <summary>
-    /// Ordered list of hook plugin names. Each entry references a registered
-    /// <see cref="Linking.LinkingHook"/> plugin by component name.
-    /// </summary>
-    [DataMember, Description("Ordered list of LinkingHook plugin names to execute.")]
-    public List<string> Hooks { get; set; } = new();
+    [DataMember]
+    [Display(Name = "Linking Hooks", Description = "Ordered list of hook plugins to be executed when an order is linked to a material container.")]
+    [PluginConfigs(typeof(ILinkingHook), exportBaseType: false)]
+    public List<OrderLinkingHookConfig> Hooks { get; set; } = [];
 }

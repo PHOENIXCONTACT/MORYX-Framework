@@ -5,19 +5,10 @@ using Moryx.Material.Linking;
 
 namespace Moryx.Material.Integrations.Orders;
 
-/// <summary>
-/// Event args raised when a container requests an order (un)link.
-/// </summary>
-public class OrderLinkRequestEventArgs : LinkingRequestEventArgs
+/// <inheritdoc/>
+public class OrderLinkRequestEventArgs(OrderLinkingRequest request, Func<LinkingResponse, Task> responseCallback) :
+    LinkingRequestEventArgs(request, responseCallback)
 {
-    /// <summary>
-    /// Creates a new instance.
-    /// </summary>
-    public OrderLinkRequestEventArgs(IOrderLinkedMaterialContainer container, OrderLinkingRequest request)
-        : base(container, request)
-    {
-    }
-
     /// <summary>
     /// Strongly typed access to the order-specific request payload.
     /// </summary>
