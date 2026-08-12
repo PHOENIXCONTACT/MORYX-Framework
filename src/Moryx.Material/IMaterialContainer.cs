@@ -3,10 +3,12 @@
 
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Resources;
+using Moryx.Material.Events;
 using Moryx.Material.States;
 
 namespace Moryx.Material;
 
+// ToDo: Should IIdentifiableObject be part of the interface or only the base class?
 /// <summary>
 /// Resource interface for material containers. A material container is the digital twin
 /// of any physical container holding material in a cyber-physical system.
@@ -15,48 +17,48 @@ namespace Moryx.Material;
 /// Application engineers can extend this interface for domain-specific containers (e.g.,
 /// order-linked, product-linked) without polluting the core abstraction.
 /// </remarks>
-public interface IMaterialContainer : IResource
+public interface IMaterialContainer : IResource, IIdentifiableObject
 {
     /// <summary>
-    /// Optional scannable identity of the physical container (e.g., barcode, QR code).
-    /// May be null for "virtual" containers in <see cref="RequestedState"/>.
+    /// The hosting resource that currently holds or displays this container (e.g. a carrier, machine, shelf slot).
+    /// Implementations should reference a resource that represents the physical or logical host.
     /// </summary>
-    IIdentity? Identity { get; set; }
+    IResource? ContainerHost { get; set; }
 
     /// <summary>
-    /// Reference to the container's content. Subclasses may enrich this with stronger
+    /// Denotes the container's content, subclasses are intended to enrich this with stronger
     /// typing (e.g., linking to a <c>ProductType</c>).
     /// </summary>
-    string? Material { get; set; }
+    string? Material { get; }
 
     /// <summary>
     /// Current filling level / amount of material held by this container.
     /// </summary>
-    decimal Quantity { get; set; }
+    double Quantity { get; }
 
     /// <summary>
-    /// Optional unit of <see cref="Quantity"/> (e.g. "kg", "pcs"). Free-form to keep
-    /// the core lightweight; application engineers can constrain via custom hooks.
+    /// Optional unit of <see cref="Quantity"/> (e.g. "kg", "pcs").
     /// </summary>
-    string? Unit { get; set; }
+    string? Unit { get; }
 
     /// <summary>
-    /// Current lifecycle state of the container.
+    /// Current lifecycle state classification of the container.
     /// </summary>
-    MaterialContainerStateBase State { get; }
+    StateClassification State { get; }
 
     /// <summary>
-    /// Raised when <see cref="Material"/> changes.
+    /// Applies a material update to this container and raises <see cref="MaterialUpdated"/> when a value changes.
     /// </summary>
-    event EventHandler<MaterialChangedEventArgs>? MaterialChanged;
+    /// <param name="update">Update describing the material properties to change.</param>
+    void UpdateMaterial(MaterialUpdate update);
 
     /// <summary>
-    /// Raised when <see cref="Quantity"/> changes.
+    /// Raised when <see cref="Material"/> and/or <see cref="Quantity"/> changes.
     /// </summary>
-    event EventHandler<FillingLevelChangedEventArgs>? FillingLevelChanged;
+    event EventHandler<MaterialUpdatedEventArgs>? MaterialUpdated;
 
     /// <summary>
-    /// Raised when <see cref="State"/> changes.
+    /// Raised when <see cref="StateClassification"/> changes.
     /// </summary>
     event EventHandler<StateChangedEventArgs>? StateChanged;
 }

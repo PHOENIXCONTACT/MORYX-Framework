@@ -1,34 +1,30 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Runtime.Serialization;
-
 namespace Moryx.Material.States;
 
-/// <summary>
-/// State of a "virtual" container created in response to a material request.
-/// </summary>
-[DataContract]
-public class RequestedState : MaterialContainerStateBase
+internal sealed class RequestedState(MaterialContainer context, StateMachines.StateBase.StateMap stateMap) :
+    MaterialContainerState(context, stateMap)
 {
-    /// <inheritdoc />
-    public override MaterialContainerStateClassification Classification => MaterialContainerStateClassification.Requested;
+    public override StateClassification Classification => StateClassification.Requested;
 
-    /// <summary>
-    /// Optional identifier of the underlying request.
-    /// </summary>
-    [DataMember]
-    public Guid? RequestId { get; set; }
-
-    /// <summary>
-    /// Optional expected arrival of the requested material.
-    /// </summary>
-    [DataMember]
-    public DateTime? ExpectedArrival { get; set; }
-
-    /// <summary>
-    /// Indicates whether material related to this request was already (partially) announced or registered.
-    /// </summary>
-    [DataMember]
-    public bool IsPartiallyFulfilled { get; set; }
+    public override void Advance(StateInformation info)
+    {
+        switch (Context.StateInformation)
+        {
+            case InboundStateInformation:
+                NextState(StateInbound);
+                break;
+            case AvailableStateInformation:
+                NextState(StateAvailable);
+                break;
+            case DeregisteredStateInformation:
+                NextState(StateDeregistered);
+                break;
+            default:
+                InvalidState();
+                return;
+        }
+        Context.StateInformation = info;
+    }
 }

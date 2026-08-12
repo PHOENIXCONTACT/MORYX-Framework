@@ -23,6 +23,7 @@
     <ProjectReference Include="..\Moryx.ControlSystem.ProcessEngine\Moryx.ControlSystem.ProcessEngine.csproj" />
     <ProjectReference Include="..\Moryx.ControlSystem.Processes.Endpoints\Moryx.ControlSystem.Processes.Endpoints.csproj" />
     <ProjectReference Include="..\Moryx.ControlSystem.SetupProvider\Moryx.ControlSystem.SetupProvider.csproj" />
+    <ProjectReference Include="..\Moryx.Material\Moryx.Material.csproj" />
     <ProjectReference Include="..\Moryx.Resources.Benchmarking\Moryx.Resources.Benchmarking.csproj" />
     <ProjectReference Include="..\Moryx.Resources.BenchmarkSetup\Moryx.Benchmarking.Setups.csproj" />
     <ProjectReference Include="..\Moryx.VisualInstructions.Endpoints\Moryx.VisualInstructions.Endpoints.csproj" />

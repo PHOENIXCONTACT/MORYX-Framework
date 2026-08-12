@@ -1,40 +1,27 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Runtime.Serialization;
-
 namespace Moryx.Material.States;
 
-/// <summary>
-/// State of a container which has been announced as inbound.
-/// </summary>
-[DataContract]
-public class InboundState : MaterialContainerStateBase
+internal sealed class InboundState(MaterialContainer context, StateMachines.StateBase.StateMap stateMap) :
+    MaterialContainerState(context, stateMap)
 {
-    /// <inheritdoc />
-    public override MaterialContainerStateClassification Classification => MaterialContainerStateClassification.Inbound;
+    public override StateClassification Classification => StateClassification.Inbound;
 
-    /// <summary>
-    /// Optional identifier of the announcement.
-    /// </summary>
-    [DataMember]
-    public Guid? AnnouncementId { get; set; }
-
-    /// <summary>
-    /// Optional expected arrival of the announced material.
-    /// </summary>
-    [DataMember]
-    public DateTime? ExpectedArrival { get; set; }
-
-    /// <summary>
-    /// Indicates whether material related to this announcement was already (partially) registered.
-    /// </summary>
-    [DataMember]
-    public bool IsPartiallyFulfilled { get; set; }
-
-    /// <summary>
-    /// Optional cross-reference to a preceding material request.
-    /// </summary>
-    [DataMember]
-    public Guid? RequestReference { get; set; }
+    public override void Advance(StateInformation info)
+    {
+        switch (info)
+        {
+            case AvailableStateInformation:
+                NextState(StateAvailable);
+                break;
+            case DeregisteredStateInformation:
+                NextState(StateDeregistered);
+                break;
+            default:
+                InvalidState();
+                return;
+        }
+        Context.StateInformation = info;
+    }
 }

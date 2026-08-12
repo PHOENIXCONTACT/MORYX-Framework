@@ -1,43 +1,23 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Runtime.Serialization;
-
 namespace Moryx.Material.States;
 
-/// <summary>
-/// State of a container with an active pre-advice for departure.
-/// </summary>
-[DataContract]
-public class OutboundState : MaterialContainerStateBase
+internal sealed class OutboundState(MaterialContainer context, StateMachines.StateBase.StateMap stateMap)
+      : MaterialContainerState(context, stateMap)
 {
-    /// <inheritdoc />
-    public override MaterialContainerStateClassification Classification => MaterialContainerStateClassification.Outbound;
+    public override StateClassification Classification => StateClassification.Outbound;
 
-    /// <summary>
-    /// Reason for the announced departure.
-    /// </summary>
-    [DataMember]
-    public PreAdviceDepartureReason DepartureReason { get; set; }
-}
-
-/// <summary>
-/// Reason for the departure of a container in <see cref="OutboundState"/>.
-/// </summary>
-public enum PreAdviceDepartureReason
-{
-    /// <summary>Finished goods are leaving the production line.</summary>
-    FinishedGoods = 0,
-
-    /// <summary>Unconsumed material is being returned.</summary>
-    UnusedMaterial = 1,
-
-    /// <summary>Container is being transferred to another location.</summary>
-    Transfer = 2,
-
-    /// <summary>Container content is being scrapped.</summary>
-    Scrap = 3,
-
-    /// <summary>Other / unspecified reason.</summary>
-    Other = 4
+    public override void Advance(StateInformation info)
+    {
+        if (info is DeregisteredStateInformation)
+        {
+            NextState(StateDeregistered);
+            Context.StateInformation = info;
+        }
+        else
+        {
+            InvalidState();
+        }
+    }
 }

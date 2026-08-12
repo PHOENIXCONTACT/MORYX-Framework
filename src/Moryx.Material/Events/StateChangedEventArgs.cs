@@ -3,35 +3,24 @@
 
 using Moryx.Material.States;
 
-namespace Moryx.Material;
+namespace Moryx.Material.Events;
 
 /// <summary>
-/// Event args for <see cref="IMaterialContainer.StateChanged"/>.
+/// Event arguments for <see cref="IMaterialContainer.StateChanged"/>.
 /// </summary>
-public class StateChangedEventArgs : EventArgs
+/// <param name="container">Container whose lifecycle state changed.</param>
+/// <param name="oldState">Previous state information, or <c>null</c> for the initial transition.</param>
+/// <param name="newState">New state information after the transition.</param>
+public class StateChangedEventArgs(IMaterialContainer container, StateInformation? oldState, StateInformation newState) :
+    MaterialContainerEventArgs(container)
 {
     /// <summary>
-    /// The container which changed.
+    /// Previous state information (may be null on initial transition).
     /// </summary>
-    public IMaterialContainer Container { get; }
+    public StateInformation? PreviousStateInformation { get; } = oldState;
 
     /// <summary>
-    /// Previous state (may be null on initial transition).
+    /// New state information.
     /// </summary>
-    public MaterialContainerStateBase? OldState { get; }
-
-    /// <summary>
-    /// New state.
-    /// </summary>
-    public MaterialContainerStateBase NewState { get; }
-
-    /// <summary>
-    /// Creates a new instance of <see cref="StateChangedEventArgs"/>.
-    /// </summary>
-    public StateChangedEventArgs(IMaterialContainer container, MaterialContainerStateBase? oldState, MaterialContainerStateBase newState)
-    {
-        Container = container;
-        OldState = oldState;
-        NewState = newState;
-    }
+    public StateInformation NewStateInformation { get; } = newState;
 }
