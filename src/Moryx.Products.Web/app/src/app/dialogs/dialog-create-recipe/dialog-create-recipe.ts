@@ -6,7 +6,7 @@
 import { Component, computed, effect, inject, signal, untracked, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { TranslatePipe } from '@ngx-translate/core';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/translation-constants';
 import { RecipeDefinitionModel, WorkplanModel } from '../../api/models';
 import { CacheProductsService } from '@app/services/cache-products.service';
 

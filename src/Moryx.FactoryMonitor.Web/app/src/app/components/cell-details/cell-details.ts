@@ -9,7 +9,7 @@ import { CellImageDialog } from '@app/dialogs/cell-image-dialog/cell-image-dialo
 import { CellStoreService } from '@app/services/cell-store.service';
 import { CellSettingsModel } from '@api/models/cell-settings-model';
 import { TranslatePipe } from '@ngx-translate/core';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/translation-constants';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';

@@ -12,7 +12,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { TranslatePipe } from '@ngx-translate/core';
 import { VisualInstructionsService } from '@app/api/services/visual-instructions.service';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/translation-constants';
 
 @Component({
   selector: 'app-configuration-dialog',

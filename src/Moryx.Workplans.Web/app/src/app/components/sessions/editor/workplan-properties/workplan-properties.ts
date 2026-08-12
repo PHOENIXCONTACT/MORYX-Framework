@@ -6,7 +6,7 @@
 import { Component, inject, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { WorkplanState } from '@api/models';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/translation-constants';
 import { EditorStateService } from '@app/services/editor-state.service';
 import { SessionsService } from '@app/services/sessions.service';
 

@@ -5,7 +5,7 @@
 
 import { Component, inject, linkedSignal, ChangeDetectionStrategy } from "@angular/core";
 import { TranslatePipe } from "@ngx-translate/core";
-import { TranslationConstants } from "@app/extensions/translation-constants";
+import { TranslationConstants } from "@app/translation-constants";
 import { ResourceModel } from "../../../api/models";
 import { MatDividerModule } from "@angular/material/divider";
 

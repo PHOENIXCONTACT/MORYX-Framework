@@ -4,12 +4,7 @@
 */
 
 export class TranslationConstants {
-  public static readonly LANGUAGES = {
-    EN: 'en',
-    DE: 'de',
-    IT: 'it',
-    ZH: 'zh'
-  };
+  public static readonly LANGUAGES = ['en', 'de', 'it', 'zh'];
 
   public static readonly APP = {
     PRODUCTS: 'APP.PRODUCTS',
@@ -129,4 +124,3 @@ export class TranslationConstants {
     ADD: 'SIDEBAR_BUTTONS.ADD'
   }
 }
-

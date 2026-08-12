@@ -6,7 +6,7 @@
 import { Component, effect, inject, signal, untracked, ChangeDetectionStrategy } from '@angular/core';
 import { MatTable, MatTableModule } from '@angular/material/table';
 import { TranslatePipe } from '@ngx-translate/core';
-import { TranslationConstants } from '@app/extensions/translation-constants';
+import { TranslationConstants } from '@app/translation-constants';
 import { ReferenceTypeModel, ResourceModel, ResourceReferenceModel, ResourceReferenceRole } from '@api/models';
 import { CacheResourceService } from '@app/services/cache-resource.service';
 import { EditResourceService } from '@app/services/edit-resource.service';

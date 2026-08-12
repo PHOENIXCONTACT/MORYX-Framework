@@ -6,7 +6,7 @@
 import { Component, computed, inject, OnInit, signal, ChangeDetectionStrategy } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from "@angular/material/dialog";
 import { TranslatePipe } from "@ngx-translate/core";
-import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
+import { TranslationConstants } from "@app/translation-constants";
 import { OperationViewModel } from "@app/models/operation-view-model";
 import { ConfirmationType, ReportModel, ReportContext } from '@api/models';
 import { CommonModule } from "@angular/common";
