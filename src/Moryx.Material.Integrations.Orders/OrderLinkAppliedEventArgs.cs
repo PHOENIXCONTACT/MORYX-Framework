@@ -8,23 +8,17 @@ namespace Moryx.Material.Integrations.Orders;
 /// <summary>
 /// Event args raised by a container after the order link has been applied (or unlinking completed).
 /// </summary>
-public class OrderLinkAppliedEventArgs : LinkingAppliedEventArgs
+public class OrderLinkAppliedEventArgs(OrderLinkingRequest request, ValidationContext context, OrderReference? appliedReference)
+    : LinkingAppliedEventArgs(request, context)
 {
+
+    /// <summary>
+    /// Strongly typed access to the order-specific request payload.
+    /// </summary>
+    public OrderLinkingRequest OrderRequest => (OrderLinkingRequest)Request;
+
     /// <summary>
     /// The reference that was applied to the container, or <c>null</c> for an unlink.
     /// </summary>
-    public OrderReference? AppliedReference { get; }
-
-    /// <summary>
-    /// Creates a new instance.
-    /// </summary>
-    public OrderLinkAppliedEventArgs(
-        IOrderLinkedMaterialContainer container,
-        OrderLinkingRequest request,
-        ValidationContext context,
-        OrderReference? appliedReference)
-        : base(container, request, context)
-    {
-        AppliedReference = appliedReference;
-    }
+    public OrderReference? AppliedReference { get; } = appliedReference;
 }

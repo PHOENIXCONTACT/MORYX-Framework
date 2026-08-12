@@ -14,6 +14,7 @@
     <ProjectReference Include="..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj" />
     <ProjectReference Include="..\Moryx.Material\Moryx.Material.csproj" />
     <ProjectReference Include="..\Moryx.Orders\Moryx.Orders.csproj" />
+    <ProjectReference Include="..\Moryx.Runtime\Moryx.Runtime.csproj" />
   </ItemGroup>
 
 </Project>

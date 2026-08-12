@@ -21,12 +21,14 @@ public class LinkingResponse
     /// <summary>
     /// Optional reference object resolved during request handling (subclasses may carry typed payloads).
     /// </summary>
-    public object? Reference { get; }
+    public Reference? Reference { get; }
 
     /// <summary>
-    /// Creates a new <see cref="LinkingResponse"/>.
+    /// Initializes a new instance of the <see cref="LinkingResponse"/> class.
     /// </summary>
-    public LinkingResponse(ValidationContext context, object? reference = null)
+    /// <param name="context">Validation context populated by all hooks.</param>
+    /// <param name="reference">Optional reference object resolved during request handling.</param>
+    public LinkingResponse(ValidationContext context, Reference? reference = null)
     {
         Context = context;
         Reference = reference;
