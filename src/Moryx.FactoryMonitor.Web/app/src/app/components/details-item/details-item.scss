@@ -1,24 +1,20 @@
- :host {
-    background: rgba(255, 255, 255, 0.1);
-    box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.25);
+  :host {
+    background: color-mix(in srgb, var(--mat-sys-surface) 30%, transparent);
     backdrop-filter: blur(2.5px);
-    border-radius: 2px;
-    border: 1px solid rgba(19, 19, 19, 0.10);
-    max-height: 54px;
-    max-width: 285px;
-    padding: 5px;
-    margin-bottom: 5px;
-    height: 54px;
-    width: 285px;
+    border-radius: var(--mat-sys-corner-small);
+    border: 1px solid var(--mat-sys-outline-variant);
+    min-height: 54px;
+    padding: 12px;
+    margin: 0 8px 8px;
+    width: calc(100% - 16px);
     display: flex;
     flex-direction: row;
-    flex: 1 1;
+    flex: 0 0 auto;
     justify-content: space-between;
     align-items: center;
-    box-sizing: content-box !important;
+    box-sizing: border-box;
   }
 
-  
   .property-container {
     display: flex;
     flex-direction: column;
@@ -31,31 +27,23 @@
   }
 
   .property-label {
-    font-style: normal;
-    font-weight: 600;
-    font-size: 10px;
-    line-height: 12px;
+    font: var(--mat-sys-label-medium);
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    color: #585858;
+    color: var(--mat-sys-on-surface-variant);
     margin-top: 0 !important;
   }
-  
+
   .property-unit {
-    font-style: normal;
-    font-weight: 600;
-    font-size: 12px;
-    line-height: 14px;
+    font: var(--mat-sys-body-small);
     text-align: right;
   }
 
   .property-value {
-    font-weight: 600;
-    font-size: 32px;
-    line-height: 38px;
-    color: #585858;
-    font-style: normal;
-    width: 240px;
+    font: var(--mat-sys-headline-small);
+    color: var(--mat-sys-on-surface-variant);
     text-align: right;
+    overflow-wrap: break-word;
+    min-width: 0;
   }

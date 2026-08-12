@@ -227,22 +227,12 @@ export class EditProductsService {
   }
 
   // Creates the name of a product with <identifier>-<revision> <name>. For example: 1234567-01 product
-  createProductNameWithIdentity(
-    product: ProductModel | undefined,
-    shortened: boolean = false,
-    maxLength: number = 40
-  ) {
+  createProductNameWithIdentity(product: ProductModel | undefined) {
     if (!product) {
       return "";
     }
-    let productName =
-      this.createProductIdentity(product.identifier, product.revision) +
-      " " +
-      product.name;
-    if (shortened && productName.length > maxLength) {
-      productName = productName.substring(0, maxLength - 4) + "...";
-    }
-    return productName;
+    return this.createProductIdentity(product.identifier, product.revision) +
+      " " +  product.name;
   }
 
   addRecipe(recipe: RecipeModel) {const currentProduct = this.currentProduct();

@@ -1,0 +1,4 @@
+<h2 class="header-title">{{ selectedVariant().name }}</h2>
+<p class="header-subtitle">
+  {{ selectedVariant().creationDate | date: 'short' }} · {{ (selectedVariant().size ? selectedVariant().size!/1024 : 0) | number: '1.0-2'}} KB
+</p>

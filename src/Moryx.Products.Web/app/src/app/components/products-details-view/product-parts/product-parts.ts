@@ -8,7 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
-import { PartConnector, PartModel, ProductModel } from '@api/models';
+import { PartConnector, PartModel } from '@api/models';
 import { DialogAddPart } from '@app/dialogs/dialog-add-part/dialog-add-part';
 import { EditProductsService } from '@app/services/edit-products.service';
 import { CommonModule } from '@angular/common';
@@ -106,15 +106,13 @@ export class ProductParts {
     }
   }
 
-  private createProductNameWithIdentity(product: ProductModel | undefined, shortened: boolean = false, maxLength: number = 40): string {
-    return this.editProductsService.createProductNameWithIdentity(product, shortened, maxLength);
-  }
-
   protected getConnectorPreview(connector: PartConnector): string {
     if (!connector.parts || connector.parts.length === 0) {
       return '';
     }
-    const partNames = connector.parts.map(p => p.product ? this.createProductNameWithIdentity(p.product, true) : 'Unnamed Product');
+    const partNames = connector.parts.map(p => p.product
+      ? this.editProductsService.createProductNameWithIdentity(p.product) :
+      'Unnamed Product');
     return partNames.join(', ');
   }
 

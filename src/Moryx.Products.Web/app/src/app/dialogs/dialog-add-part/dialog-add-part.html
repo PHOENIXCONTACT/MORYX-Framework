@@ -26,7 +26,7 @@
             (click)="onSelectPart(part)"
             class="add-part-list-item"
             [class.moryx-selected]="selectedPart()?.id === part.id">
-            {{ createProductNameWithIdentity(part, true) }}
+            {{ createProductNameWithIdentity(part) }}
           </mat-list-item>
         }
       </mat-list>
