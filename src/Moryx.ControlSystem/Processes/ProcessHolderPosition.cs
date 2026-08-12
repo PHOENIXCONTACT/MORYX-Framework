@@ -3,13 +3,14 @@
 
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
+using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Constraints;
 using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.ControlSystem.Activities;
 using Moryx.ControlSystem.Cells;
-using Moryx.Serialization;
 using Moryx.ControlSystem.Properties;
+using Moryx.Serialization;
 
 namespace Moryx.ControlSystem.Processes;
 
@@ -60,10 +61,13 @@ public class ProcessHolderPosition : Resource, IProcessHolderPosition
         get;
         set
         {
+            ValidateSessionChange(field, value);
             field = value;
             // Sync process reference with control system kernel
             if (field?.Process?.Id == _processId)
+            {
                 Process = field.Process;
+            }
         }
     }
 
@@ -76,9 +80,13 @@ public class ProcessHolderPosition : Resource, IProcessHolderPosition
         await base.OnInitializeAsync(cancellationToken);
 
         if (_processId == EmptyProcess.ProcessId)
+        {
             Process = new EmptyProcess();
+        }
         else if (_processId != 0) // Everything is unknown until we receive a response from the control system
+        {
             Process = new UnknownProcess(_processId);
+        }
     }
 
     /// <summary>
@@ -94,13 +102,21 @@ public class ProcessHolderPosition : Resource, IProcessHolderPosition
         // Pick the correct over load based on process and constraint
         // It looks big, but reduces the memory impact per carrier and better uses the different overloads on session
         if (Process == null && constraints == null)
+        {
             Session = Session.StartSession(ActivityClassification.Production, ReadyToWorkType.Pull);
+        }
         else if (Process == null && constraints != null)
+        {
             Session = Session.StartSession(ActivityClassification.Production, ReadyToWorkType.Pull, constraints);
+        }
         else if (Process != null && constraints == null)
+        {
             Session = Session.StartSession(ActivityClassification.Production, ReadyToWorkType.Pull, Process.Id);
+        }
         else
+        {
             Session = Session.StartSession(ActivityClassification.Production, ReadyToWorkType.Pull, Process.Id, constraints);
+        }
 
         return (ReadyToWork)Session;
     }
@@ -112,7 +128,9 @@ public class ProcessHolderPosition : Resource, IProcessHolderPosition
     public void AssignProcess(Process process)
     {
         if (Process == process)
+        {
             return;
+        }
 
         Process = process;
         _processId = process?.Id ?? 0;
@@ -128,7 +146,9 @@ public class ProcessHolderPosition : Resource, IProcessHolderPosition
     public ActivityCompleted CompleteActivity(long result)
     {
         if (!(Session is ActivityStart activityStart))
+        {
             throw new InvalidOperationException("Can only complete the activity if the current session is ActivityStart");
+        }
 
         Session = activityStart.CreateResult(result);
         return (ActivityCompleted)Session;
@@ -138,7 +158,9 @@ public class ProcessHolderPosition : Resource, IProcessHolderPosition
     public virtual void Mount(MountInformation mountInformation)
     {
         if (Process != null)
+        {
             throw new InvalidOperationException("Can not mount a position currently holding a process");
+        }
 
         Session = mountInformation.Session;
         AssignProcess(mountInformation.Process);
@@ -178,5 +200,23 @@ public class ProcessHolderPosition : Resource, IProcessHolderPosition
     protected void RaisePositionReset()
     {
         ResetExecuted?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void ValidateSessionChange(Session current, Session next)
+    {
+        // Session identity did not change
+        if (current?.Id == next?.Id)
+        {
+            return;
+        }
+
+        // Previous session is completed
+        if (current is SequenceCompleted or null)
+        {
+            return;
+        }
+
+        Logger.LogWarning("Overriding held {currentType} {currentId} with {newType} {newId} on {holderType} {holderId}-{holderName}",
+            current.GetType().Name, current.Id, next?.GetType().Name, next?.Id, GetType().Name, Id, Name);
     }
 }

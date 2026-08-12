@@ -1,3 +1,7 @@
+:host {
+  display: block;
+}
+
 .dialog-context {
   display: grid;
   grid-template-columns: 1fr;
@@ -7,7 +11,7 @@
 .dialog-context-item {
   margin: 0;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
 
   padding: 10px 12px;
   background: var(--mat-sys-surface-container-low);
@@ -31,15 +35,6 @@
   font-size: 14px;
   font-weight: 500;
   color: var(--mat-sys-on-surface);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  word-break: break-word;
   flex: 1 1 auto;
-  cursor: pointer;
-
-  &.expanded {
-    white-space: normal;
-    word-break: break-word;
-    text-overflow: unset;
-  }
 }

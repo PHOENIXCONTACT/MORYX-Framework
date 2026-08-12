@@ -127,9 +127,8 @@ internal class ConfigBasedComponentSelector : DefaultTypedFactoryComponentSelect
         }
         catch (Exception e)
         {
-            kernel.Logger.ErrorFormat(e, CultureInfo.InvariantCulture,
-                "Error during initialization of component {0} with config {1}: {2}",
-                componentType.FullName, configType.FullName);
+            var invocationException = HandleInitializeInvocationException(componentType, configType, kernel, e);
+            throw invocationException;
         }
     }
 
@@ -153,11 +152,20 @@ internal class ConfigBasedComponentSelector : DefaultTypedFactoryComponentSelect
         }
         catch (Exception e)
         {
-            kernel.Logger.ErrorFormat(e, CultureInfo.InvariantCulture,
-                "Error during async initialization of component {0} with config {1}: {2}",
-                componentType.FullName, configType.FullName);
-            return Task.FromException(e);
+            var invocationException = HandleInitializeInvocationException(componentType, configType, kernel, e);
+            return Task.FromException(invocationException);
         }
+    }
+
+    private static InvalidOperationException HandleInitializeInvocationException(Type componentType, Type configType, IKernelInternal kernel, Exception exception)
+    {
+        var message = string.Format(CultureInfo.InvariantCulture,
+            "Error during initialization of component '{0}' with config '{1}'",
+            componentType.FullName, configType.FullName);
+
+        kernel.Logger.ErrorFormat(exception, message);
+
+        return new InvalidOperationException(message, exception);
     }
 
     private static object ToTypedTask(Type targetComponentType, Task<object> originalTask)

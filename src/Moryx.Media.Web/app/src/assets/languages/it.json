@@ -6,7 +6,7 @@
     "FAILED_LOADING": "Non è stato possibile stabilire la connessione al server. Controllare la connessione di rete o riprovare più tardi."
   },
 
-  "CONTEXT_MENU": {
+  "VARIANT_ACTION": {
     "DELETE": "Elimina",
     "INFO": "Info",
     "DOWNLOAD": "Scarica"
@@ -18,7 +18,9 @@
     "ALREADY_EXISTS_MESSAGE": "Variante con questo nome esiste già in questo contenuto",
     "DELETE_MESSAGE": "Vuoi davvero rimuovere questa variante?",
     "CREATION_DATE": "Data di creazione",
-    "SIZE": "Taglia"
+    "SIZE": "Taglia",
+    "EMPTY_STATE_HEADER": "Nessuna variante selezionata",
+    "EMPTY_STATE_TEXT": "Seleziona una variante dall'elenco per visualizzarne i dettagli."
   },
 
   "ADD_VARIANT_DIALOG": {

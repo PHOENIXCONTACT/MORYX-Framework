@@ -22,9 +22,6 @@ using Moryx.Model.Repositories;
 using Moryx.Products.Management.Model;
 using Moryx.Serialization;
 using NUnit.Framework;
-// ReSharper disable PossibleNullReferenceException
-// ReSharper disable StringLiteralTypo
-// ReSharper disable CommentTypo
 
 namespace Moryx.Products.IntegrationTests;
 
@@ -1014,9 +1011,9 @@ public class ProductStorageTests
 
         // Act
         var loaded = (await _storage.LoadTypesAsync(new ProductQuery
-            {
-                TypeName = typeof(DisplayWatchFaceType).FullName
-            }))
+        {
+            TypeName = typeof(DisplayWatchFaceType).FullName
+        }))
             .OfType<DisplayWatchFaceType>()
             .Single(p => p.Identity.Identifier == "999002");
 

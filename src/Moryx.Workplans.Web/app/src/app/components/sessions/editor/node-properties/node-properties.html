@@ -1,5 +1,5 @@
 @if (node()?.id) {
-  <h1 class="side-sheet-title truncate">{{ node()?.displayName ?? node()?.type }}</h1>
+  <h2 class="side-sheet-title">{{ node()?.displayName ?? node()?.type }}</h2>
   <mat-hint class="side-sheet-subtitle">{{ TranslationConstants.PROPERTIES.TITLE | translate }}</mat-hint>
   @if (node()?.displayName !== undefined) {
     <mat-form-field appearance="outline">

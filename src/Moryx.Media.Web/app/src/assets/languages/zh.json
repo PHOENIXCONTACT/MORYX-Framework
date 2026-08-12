@@ -5,7 +5,7 @@
     "EMPTY_STATE_TEXT": "要添加内容，请点击上传符号并选择文件。",
     "FAILED_LOADING": "无法建立与服务器的连接。请检查您的网络连接或稍后重试。"
   },
-  "CONTEXT_MENU": {
+  "VARIANT_ACTION": {
     "DELETE": "删除",
     "INFO": "信息",
     "DOWNLOAD": "下载"
@@ -17,7 +17,9 @@
     "ALREADY_EXISTS_MESSAGE": "此名称的变体已存在于此内容中",
     "DELETE_MESSAGE": "您确定要删除此变体吗？",
     "CREATION_DATE": "创建日期",
-    "SIZE": "大小"
+    "SIZE": "大小",
+    "EMPTY_STATE_HEADER": "未选择变体",
+    "EMPTY_STATE_TEXT": "从列表中选择一个变体以查看其详细信息。"
   },
 
   "ADD_VARIANT_DIALOG": {

@@ -14,12 +14,13 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
-import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
 import { TranslatePipe } from '@ngx-translate/core';
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
 import { DocumentModel, OperationModel } from "@api/models";
 import { OrderManagementService } from '@api/services/order-management.service';
 import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { DocumentDefaultView } from './document-default-view/document-default-view';
+import { DocumentDetailsHeader } from './document-details-header/document-details-header';
 import { environment } from '../../../environments/environment';
 
 @Component({
@@ -35,10 +36,11 @@ import { environment } from '../../../environments/environment';
     TranslatePipe,
     MatListModule,
     NgxDocViewerModule,
-    EmptyState,
     MatButtonModule,
     RouterLink,
-    MatIconModule
+    MatIconModule,
+    DocumentDefaultView,
+    DocumentDetailsHeader
   ]
 })
 export class OperationDocuments implements OnInit {

@@ -1,5 +1,13 @@
 @use '../expansion-panel';
 
+.reference-table {
+  width: 100%;
+}
+
+.mat-column-type {
+  overflow-wrap: break-word;
+}
+
 .mat-column-delete {
   width: 32px;
   text-align: center;
@@ -72,7 +80,6 @@
 .resource-option-type {
   font: var(--mat-sys-body-medium);
   color: var(--mat-sys-on-surface-variant);
-  white-space: nowrap;
   line-height: 20px;
-  text-overflow: ellipsis;
+  overflow-wrap: break-word;
 }
