@@ -16,10 +16,8 @@ import { CultureService } from './services/culture.service';
 import { AuthService } from './services/auth.service';
 import { ShortcutService } from './services/shortcut.service';
 import { TranslationConstants } from './translation-constants';
-import { MoryxLauncherShell } from './moryx-launcher-shell';
-import { SpotlightSearch } from './spotlight-search/spotlight-search';
-import { SearchService } from './services/search.service';
 
+import { SpotlightSearch } from './spotlight-search/spotlight-search';
 @Component({
   selector: 'app-root',
   imports: [FullLayout, OperatorLayout, FullscreenLayout, SpotlightSearch],
@@ -34,7 +32,6 @@ export class App {
   private cultureService = inject(CultureService);
   private authService = inject(AuthService);
   private shortcutService = inject(ShortcutService);
-  private searchService = inject(SearchService);
   private destroyRef = inject(DestroyRef);
 
   // Web component inputs
@@ -46,8 +43,6 @@ export class App {
   protected layout = this.launcherLayoutService.layout;
 
   constructor() {
-    window.shell = new MoryxLauncherShell(this.cultureService, this.searchService);
-
     this.shortcutService.register(
       {
         key: 'Digit1',
