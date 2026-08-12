@@ -13,7 +13,10 @@ import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { provideApiConfiguration } from '@api/api-configuration';
 import { environment } from '../environments/environment';
+import { MoryxLauncherShell } from './moryx-launcher-shell';
+import { CultureService } from './services/culture.service';
 import { LocationPersistenceService } from './services/location-persistence.service';
+import { SearchService } from './services/search.service';
 import { TranslationConstants } from './translation-constants';
 
 // Register locale data for built-in Angular pipes (date, number, etc.)
@@ -41,6 +44,11 @@ export const appConfig: ApplicationConfig = {
 
     // Provides angular material defaults
     provideMoryxMaterialDefaults(),
+
+    // Set up the shell before localization so LanguageService can read the culture
+    provideAppInitializer(() => {
+      window.shell = new MoryxLauncherShell(inject(CultureService), inject(SearchService));
+    }),
 
     // Provides Angular locale and configures ngx-translate
     provideMoryxLocalization(TranslationConstants.LANGUAGES),

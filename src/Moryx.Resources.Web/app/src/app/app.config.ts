@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { ApplicationConfig, inject, provideAppInitializer, provideEnvironmentInitializer } from "@angular/core";
+import { ApplicationConfig, inject, provideAppInitializer } from "@angular/core";
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideRouter } from "@angular/router";
 
@@ -52,7 +52,7 @@ export const appConfig: ApplicationConfig = {
     provideMoryxLocalization(TranslationConstants.LANGUAGES),
 
     // Additional app initializers
-    provideEnvironmentInitializer(() => inject(SearchService)),
+    provideAppInitializer(() => { inject(SearchService); }),
     provideAppInitializer(async () => {
       const cacheResourceService = inject(CacheResourceService)
       await cacheResourceService.loadResources()
