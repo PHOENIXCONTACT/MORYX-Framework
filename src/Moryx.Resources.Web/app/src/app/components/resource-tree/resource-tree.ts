@@ -60,7 +60,7 @@ export class ResourceTree {
       });
     });
 
-    // Expand ancestor nodes to make the selected resource visible in the tree
+    // Expand nodes to make the selected resource visible in the tree
     effect(() => {
       const selectedId = this.selected()?.id;
       if (selectedId) {

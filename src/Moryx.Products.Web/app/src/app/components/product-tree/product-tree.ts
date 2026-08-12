@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, viewChild, input, output, effect, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, viewChild, input, output, effect, untracked, ChangeDetectionStrategy } from '@angular/core';
 import { MatTree, MatTreeModule } from '@angular/material/tree';
 import { MatIconModule } from '@angular/material/icon';
 import { ProductModel } from '@api/models';
@@ -22,6 +22,7 @@ import { MatIconButton } from '@angular/material/button';
 export class ProductTree {
   private sessionService = inject(SessionService);
   private editProductsService = inject(EditProductsService);
+  private expandedNames = new Set<string>();
 
   // Inputs
   readonly treeData = input.required<ProductNode[]>();
@@ -38,15 +39,34 @@ export class ProductTree {
   protected hasChild = (_: number, node: ProductNode) => !!node.children?.length;
 
   constructor() {
-    // Re-expand saved nodes whenever treeData or tree instance changes
+    // Restore expanded tree state from session when tree data is loaded
     effect(() => {
       const data = this.treeData();
       const tree = this.tree();
       if (!tree) {
         return;
       }
-      const names = this.sessionService.getExpandedNodeNames();
-      this.expandSavedNodes(data, names);
+
+      untracked(() => {
+        for (const name of this.sessionService.getExpandedNodeNames()) {
+          this.expandedNames.add(name);
+        }
+        this.expandToSelected();
+        this.applyExpandedState(data);
+        this.storeState();
+      });
+    });
+
+    // Expand parent nodes to make the selected product visible in the tree
+    effect(() => {
+      const selectedId = this.selected()?.id;
+      if (selectedId) {
+        untracked(() => {
+          this.expandToSelected();
+          this.applyExpandedState(this.treeData());
+          this.storeState();
+        });
+      }
     });
   }
 
@@ -59,20 +79,56 @@ export class ProductTree {
   }
 
   protected onExpandOrCollapseNode(node: ProductNode) {
-    this.sessionService.saveProductTreeExpansion(node, this.tree()!.isExpanded(node));
+    if (this.expandedNames.has(node.name)) {
+      this.expandedNames.delete(node.name);
+    } else {
+      this.expandedNames.add(node.name);
+    }
+    this.storeState();
   }
 
   protected createProductIdentity(identifier: string | undefined | null, revision: number | undefined): string {
     return this.editProductsService.createProductIdentity(identifier, revision);
   }
 
-  private expandSavedNodes(nodes: ProductNode[], expandedNames: string[]) {
+  private storeState() {
+    this.sessionService.storeProductTreeExpansion([...this.expandedNames]);
+  }
+
+  private expandToSelected() {
+    const data = this.treeData();
+    const selectedId = this.selected()?.id;
+    if (!data.length || !selectedId) {
+      return;
+    }
+    for (const name of this.getAncestorNames(selectedId, data)) {
+      this.expandedNames.add(name);
+    }
+  }
+
+  private getAncestorNames(targetId: number, nodes: ProductNode[]): string[] {
     for (const node of nodes) {
-      if (expandedNames.includes(node.name)) {
+      if (node.id === targetId) {
+        return [];
+      }
+      if (node.children) {
+        const path = this.getAncestorNames(targetId, node.children);
+        if (path !== undefined) {
+          path.push(node.name);
+          return path;
+        }
+      }
+    }
+    return undefined!;
+  }
+
+  private applyExpandedState(nodes: ProductNode[]) {
+    for (const node of nodes) {
+      if (this.expandedNames.has(node.name)) {
         this.tree()!.expand(node);
       }
       if (node.children) {
-        this.expandSavedNodes(node.children, expandedNames);
+        this.applyExpandedState(node.children);
       }
     }
   }
