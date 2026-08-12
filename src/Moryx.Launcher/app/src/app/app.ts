@@ -15,8 +15,6 @@ import { ModuleService } from './services/module.service';
 import { CultureService } from './services/culture.service';
 import { AuthService } from './services/auth.service';
 import { ShortcutService } from './services/shortcut.service';
-import { LanguageService } from '@moryx/ngx-web-framework/services';
-import { TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from './translation-constants';
 import { MoryxLauncherShell } from './moryx-launcher-shell';
 import { SpotlightSearch } from './spotlight-search/spotlight-search';
@@ -36,8 +34,6 @@ export class App {
   private cultureService = inject(CultureService);
   private authService = inject(AuthService);
   private shortcutService = inject(ShortcutService);
-  private languageService = inject(LanguageService);
-  private translateService = inject(TranslateService);
   private searchService = inject(SearchService);
   private destroyRef = inject(DestroyRef);
 
@@ -102,15 +98,6 @@ export class App {
       });
     });
 
-    this.translateService.addLangs([
-      TranslationConstants.LANGUAGES.EN,
-      TranslationConstants.LANGUAGES.DE,
-      TranslationConstants.LANGUAGES.IT,
-      TranslationConstants.LANGUAGES.ZH,
-    ]);
-    this.translateService.setFallbackLang("en");
-
-    this.translateService.use(this.languageService.getFallbackLang());
   }
 }
 

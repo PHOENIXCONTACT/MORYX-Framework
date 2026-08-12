@@ -4,11 +4,10 @@
 */
 
 import { Component, computed, inject, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from "@angular/core";
-import { LanguageService } from "@moryx/ngx-web-framework/services";
 import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
-import { TranslatePipe, TranslateService } from "@ngx-translate/core";
+import { TranslatePipe } from "@ngx-translate/core";
 import { environment } from "../environments/environment";
-import { TranslationConstants } from "./extensions/translation-constants.extensions";
+import { TranslationConstants } from "./translation-constants";
 import { NotificationService } from "./services/notification.service";
 
 import ConnectionState from "./models/ConnectionState";
@@ -39,8 +38,6 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
   }
 })
 export class App implements OnInit, OnDestroy {
-  private languageService = inject(LanguageService);
-  private translateService = inject(TranslateService);
   private notificationService = inject(NotificationService);
 
   protected isLoading = computed(() => this.notificationService.state() !== ConnectionState.Connected);
@@ -49,16 +46,6 @@ export class App implements OnInit, OnDestroy {
     environment.assets + "assets/notifications_toolbar.jpg");
 
   protected TranslationConstants = TranslationConstants;
-
-  constructor() {
-    this.translateService.addLangs([
-      TranslationConstants.LANGUAGES.EN,
-      TranslationConstants.LANGUAGES.DE,
-      TranslationConstants.LANGUAGES.IT,
-    ]);
-    this.translateService.setFallbackLang("en");
-    this.translateService.use(this.languageService.getFallbackLang());
-  }
 
   ngOnInit(): void {
     this.notificationService.connect();

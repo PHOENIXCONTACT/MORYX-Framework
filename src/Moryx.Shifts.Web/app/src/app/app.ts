@@ -38,7 +38,7 @@ import { addCalendarDaysToAssignment } from './models/model-converter';
 import { AttendableResourceModel } from '@api/models/attendable-resource-model';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from './translation-constants';
-import { LanguageService, SnackbarService } from '@moryx/ngx-web-framework/services';
+import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
 import {
   CopyShiftAndAssignment,
@@ -86,7 +86,6 @@ export class App {
   private appStore = inject(AppStoreService);
   private translateService = inject(TranslateService);
   private snackbarService = inject(SnackbarService);
-  private languageService = inject(LanguageService);
 
   protected isOperatorFilterPanelOpened = this.appStore.isOperatorFilterPanelOpened;
   protected isResourceFilterPanelOpened = this.appStore.isResourceFilterPanelOpened;
@@ -145,14 +144,6 @@ export class App {
   protected localizedFormatDate = localizedFormatDate;
 
   constructor() {
-    this.translateService.addLangs([
-      TranslationConstants.LANGUAGES.EN,
-      TranslationConstants.LANGUAGES.DE,
-      TranslationConstants.LANGUAGES.IT,
-      TranslationConstants.LANGUAGES.ZH
-    ]);
-    this.translateService.setFallbackLang('en');
-    this.translateService.use(this.languageService.getFallbackLang());
     this.calendarState.set(new CalendarState(this.translateService));
   }
 
