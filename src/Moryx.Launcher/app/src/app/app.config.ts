@@ -6,6 +6,8 @@
 import { provideHttpClient } from '@angular/common/http';
 import { ApplicationConfig, inject, provideAppInitializer, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideMoryxMaterialDefaults } from '@moryx/ngx-web-framework/material';
+import { provideMoryxLocalization } from '@moryx/ngx-web-framework/i18n';
+import { TranslationConstants } from './translation-constants';
 
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -13,6 +15,11 @@ import { environment } from '../environments/environment';
 
 import { LocationPersistenceService } from './services/location-persistence.service';
 import { provideApiConfiguration } from '@api/api-configuration';
+
+// Register locale data for built-in Angular pipes (date, number, etc.)
+import '@angular/common/locales/global/de';
+import '@angular/common/locales/global/it';
+import '@angular/common/locales/global/zh';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -30,11 +37,13 @@ export const appConfig: ApplicationConfig = {
         prefix: environment.assets + 'assets/languages/',
         suffix: '.json'
       }),
-      fallbackLang: 'en'
     }),
 
     // Provides angular material defaults
     provideMoryxMaterialDefaults(),
+
+    // Provides Angular locale and configures ngx-translate
+    provideMoryxLocalization(TranslationConstants.LANGUAGES),
 
     // Additional app initializers
     provideAppInitializer(() => {

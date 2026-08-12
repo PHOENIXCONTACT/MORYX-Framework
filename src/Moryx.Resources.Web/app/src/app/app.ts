@@ -8,17 +8,15 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { ResourceTree } from './components/resource-tree/resource-tree';
 import { Router, RouterOutlet } from '@angular/router';
-import {
-  LanguageService,
-  SnackbarService} from '@moryx/ngx-web-framework/services';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { SnackbarService } from '@moryx/ngx-web-framework/services';
+import { TranslatePipe } from '@ngx-translate/core';
 import { environment } from '../environments/environment';
 import { ResourceModel, ResourceReferenceModel } from './api/models';
 import { ResourceModificationService } from './api/services';
 import { DialogAddResource } from './dialogs/dialog-add-resource/dialog-add-resource';
 import { ResourceConstructionParameters } from './models/ResourceConstructionParameters';
 import './extensions/array.extensions';
-import { TranslationConstants } from './extensions/translation-constants';
+import { TranslationConstants } from './translation-constants';
 import { CacheResourceService } from './services/cache-resource.service';
 import { EditResourceService } from './services/edit-resource.service';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -63,8 +61,6 @@ export class App {
   private cacheResourceService = inject(CacheResourceService);
   private editResourceService = inject(EditResourceService);
   private modificationService = inject(ResourceModificationService);
-  private translateService = inject(TranslateService);
-  private languageService = inject(LanguageService);
   private snackbarService = inject(SnackbarService);
 
   private readonly trigger = viewChild.required(MatMenuTrigger);
@@ -84,14 +80,6 @@ export class App {
   }
 
   constructor() {
-    this.translateService.addLangs([
-      TranslationConstants.LANGUAGES.EN,
-      TranslationConstants.LANGUAGES.DE,
-      TranslationConstants.LANGUAGES.IT,
-      TranslationConstants.LANGUAGES.ZH,
-    ]);
-    this.translateService.setFallbackLang('en');
-    this.translateService.use(this.languageService.getFallbackLang());
     effect(() => {
       const resource = this.editResourceService.activeResource();
       if (this.selected()?.id === resource?.id) {

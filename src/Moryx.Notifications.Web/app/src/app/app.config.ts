@@ -9,12 +9,18 @@ import { environment } from "../environments/environment";
 import { routes } from "./app.routes";
 import { ApplicationConfig } from "@angular/core";
 import { provideMoryxMaterialDefaults } from "@moryx/ngx-web-framework/material";
+import { provideMoryxLocalization } from "@moryx/ngx-web-framework/i18n";
+import { TranslationConstants } from "./translation-constants";
 import { languageInterceptor, apiErrorInterceptor } from "@moryx/ngx-web-framework/interceptors";
 
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { provideApiConfiguration } from '@api/api-configuration';
 import { provideMarkdown } from "ngx-markdown";
+
+// Register locale data for built-in Angular pipes (date, number, etc.)
+import "@angular/common/locales/global/de";
+import "@angular/common/locales/global/it";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -34,14 +40,16 @@ export const appConfig: ApplicationConfig = {
         prefix: environment.assets + 'assets/languages/',
         suffix: '.json'
       }),
-      fallbackLang: 'en'
     }),
 
     // Configure markdown
     provideMarkdown(),
 
     // Provides angular material defaults
-    provideMoryxMaterialDefaults()
+    provideMoryxMaterialDefaults(),
+
+    // Provides Angular locale and configures ngx-translate
+    provideMoryxLocalization(TranslationConstants.LANGUAGES)
   ],
 };
 
