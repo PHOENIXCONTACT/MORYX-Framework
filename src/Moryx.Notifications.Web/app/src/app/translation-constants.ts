@@ -16,7 +16,4 @@ export class TranslationConstants {
   public static readonly DETAILS = {
     ACKNOWLEDGE: 'DETAILS.ACKNOWLEDGE',
   };
-
-  public static readonly DISMISS = 'DISMISS';
-  public static readonly SERVER_NOT_REACHABLE = 'SERVER_NOT_REACHABLE';
 }

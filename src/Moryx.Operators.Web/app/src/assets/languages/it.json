@@ -1,7 +1,4 @@
 {
-    "DISMISS": "CONGEDARE",
-    "DEFAULT_MESSAGE": "Si è verificato un problema sul server.",
-    "SERVER_NOT_REACHABLE": "Il server non è raggiungibile, controlla la tua connessione Internet o le impostazioni del proxy." ,
     "WORKSTATION_OPERATORS":{
         "EMPTY_TITLE": "Postazioni di lavoro",
         "EMPTY_MESSAGE" : "Nessuna stazione attualmente disponibile.",

@@ -56,8 +56,4 @@ export class TranslationConstants {
       RESET_GROUP: "PROCESS_HOLDER_GROUPS.RESET_GROUP",
       EMPTY_STATE_TEXT: "PROCESS_HOLDER_GROUPS.EMPTY_STATE_TEXT"
   };
-
-
-  public static readonly DISMISS = 'DISMISS';
-  public static readonly SERVER_NOT_REACHABLE = 'SERVER_NOT_REACHABLE';
 }

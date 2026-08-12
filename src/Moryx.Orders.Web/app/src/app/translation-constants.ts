@@ -146,7 +146,6 @@ export class TranslationConstants {
     PRODUCT: 'DIALOG_CONTEXT.PRODUCT',
   }
 
-  public static readonly DISMISS = 'DISMISS';
   public static readonly CANCEL = 'CANCEL';
   public static readonly CONFIRM = 'CONFIRM';
 }

@@ -4,7 +4,7 @@
 */
 
 export class TranslationConstants {
-  public static readonly LANGUAGES = ['en', 'de', 'it'];
+  public static readonly LANGUAGES = ['en', 'de', 'it', 'zh'];
 
   public static readonly MEDIA_OVERVIEW = {
     DELETE_MESSAGE: 'MEDIA_OVERVIEW.DELETE_MESSAGE',
@@ -55,7 +55,4 @@ export class TranslationConstants {
     CLOSE: 'VARIANT_INFO_DIALOG.CLOSE',
     COPY_TO_CLIPBOARD: 'VARIANT_INFO_DIALOG.COPY_TO_CLIPBOARD',
   };
-
-  public static readonly DISMISS = 'DISMISS';
-  public static readonly SERVER_NOT_REACHABLE = 'SERVER_NOT_REACHABLE';
 }

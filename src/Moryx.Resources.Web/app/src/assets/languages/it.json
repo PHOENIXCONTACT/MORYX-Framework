@@ -3,9 +3,6 @@
     "RESOURCES": "Risorse",
     "NO_NAME": "Risorsa senza nome"
   },
-  "DISMISS": "RIFIUTARE",
-  "DEFAULT_MESSAGE": "Auf dem Server ist etwas schief gelaufen.",
-  "SERVER_NOT_REACHABLE": "Il server non è raggiungibile, controllare la connessione a Internet o le impostazioni del proxy.",
   "SHARED": {
     "DELETE": "Elimina",
     "EDIT": "Modifica",
