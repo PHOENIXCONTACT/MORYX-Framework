@@ -86,7 +86,7 @@
                     <b>{{ variant.name }}</b>
                   </h3>
                   <p [matTooltip]="TranslationConstants.VARIANT_OVERVIEW.CREATION_DATE | translate" >
-                    {{ variant.creationDate | date: 'dd/MM/yyyy H:mm' }}
+                    {{ variant.creationDate | date: 'short' }}
                   </p>
                   <p [matTooltip]="TranslationConstants.VARIANT_OVERVIEW.SIZE | translate" >
                     {{ (variant.size ? variant.size/1024 : 0) | number: '1.0-2'}} KB
