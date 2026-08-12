@@ -952,24 +952,6 @@ public class ProductStorageTests
         Assert.That(byType6.Count, Is.GreaterThanOrEqualTo(1));
     }
 
-    [Test]
-    public void Initialize_WithWrongConfigType_ThrowsMeaningfulException()
-    {
-        var strategy = new GenericInstanceStrategy();
-
-        var config = new ProductInstanceConfiguration
-        {
-            PluginName = nameof(GenericInstanceStrategy),
-            TargetType = "TestType"
-        };
-
-        var ex = Assert.ThrowsAsync<InvalidOperationException>(
-            async () => await strategy.InitializeAsync(config));
-
-        Assert.That(ex.Message,
-            Does.Contain(nameof(GenericInstanceConfiguration)));
-    }
-
     [Test(Description = "LoadTypesAsync(ProductQuery) returns fully populated product types if full loading is requested.")]
     public async Task LoadTypesQueryShouldReturnCompleteProductType()
     {

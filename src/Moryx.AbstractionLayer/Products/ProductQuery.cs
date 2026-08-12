@@ -78,6 +78,10 @@ public class ProductQuery
     [DataMember]
     public List<PropertyFilter> PropertyFilters { get; set; }
 
+    /// <summary>
+    /// If set to true, product queries return fully populated product types.
+    /// Otherwise only the basic type information is returned.
+    /// </summary>
     [DataMember]
     public bool LoadFullTypeInformation { get; set; }
 }
