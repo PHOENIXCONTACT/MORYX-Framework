@@ -20,8 +20,7 @@ export class TranslationConstants {
     EMPTY_STATE_PARTS_TEXT: 'APP.EMPTY_STATE_PARTS_TEXT',
     FAILED_LOADING: 'APP.FAILED_LOADING',
   };
-  public static readonly DISMISS: 'DISMISS';
-  public static readonly SERVER_NOT_REACHABLE: 'SERVER_NOT_REACHABLE';
+  public static readonly DISMISS = 'DISMISS';
   public static readonly PRODUCT_NOT_FOUND: 'PRODUCT_NOT_FOUND';
   public static readonly SHARED = {
     NAME: 'SHARED.NAME',

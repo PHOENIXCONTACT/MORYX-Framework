@@ -11,9 +11,6 @@ export class TranslationConstants {
     NO_NAME: 'APP.NO_NAME'
   };
 
-  public static readonly DISMISS: 'DISMISS';
-  public static readonly SERVER_NOT_REACHABLE: 'SERVER_NOT_REACHABLE';
-
   public static readonly SHARED = {
     DELETE: 'SHARED.DELETE',
     EDIT: 'SHARED.EDIT',

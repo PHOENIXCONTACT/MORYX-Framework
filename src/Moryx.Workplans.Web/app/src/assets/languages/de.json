@@ -6,9 +6,6 @@
     "NO_SESSION_IS_OPEN": "Es sind noch keine Sitzungen geöffnet"
   },
   "NOT_FOUND": "Wir konnten leider keine Sitzung mit dieser ID  finden",
-  "DISMISS": "OKAY",
-  "DEFAULT_MESSAGE": "Auf dem Server ist etwas schief gelaufen.",
-  "SERVER_NOT_REACHABLE": "Der Server ist nicht erreichbar, bitte überprüfe deine Internetverbindung oder Proxy-Einstellungen.",
   "SESSIONS": {
     "CONFIRM_DIALOG": {
       "TITLE": "Möchtest du diese Sitzung schließen?",

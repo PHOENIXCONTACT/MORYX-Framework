@@ -6,9 +6,6 @@
     "NO_SESSION_IS_OPEN": "No session is open"
   },
   "NOT_FOUND": "The session could not be found",
-  "DISMISS": "DISMISS",
-  "DEFAULT_MESSAGE": "Something went wrong on the server.",
-  "SERVER_NOT_REACHABLE": "The server is unreachable, please check your internet connection or proxy settings.",
   "SESSIONS": {
     "CONFIRM_DIALOG": {
       "TITLE": "Do you want to close this session?",
