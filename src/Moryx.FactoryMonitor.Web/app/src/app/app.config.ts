@@ -3,23 +3,24 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { ApplicationConfig, inject, provideAppInitializer } from '@angular/core';
-import { provideMoryxMaterialDefaults } from '@moryx/ngx-web-framework/material';
-import { provideMoryxLocalization } from '@moryx/ngx-web-framework/i18n';
-import { TranslationConstants } from './translation-constants';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
+
+import { provideMoryxLocalization } from '@moryx/ngx-web-framework/i18n';
+import { languageInterceptor, apiErrorInterceptor } from '@moryx/ngx-web-framework/interceptors';
+import { provideMoryxMaterialDefaults } from '@moryx/ngx-web-framework/material';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { environment } from '../environments/environment';
+import { provideApiConfiguration } from '@api/api-configuration';
 import { FactoryMonitorService } from './api/services';
+import { environment } from '../environments/environment';
 import { routes } from './app.routes';
 import { CellStoreService } from './services/cell-store.service';
 import { FactorySelectionService } from './services/factory-selection.service';
 import { OrderStoreService } from './services/order-store.service';
-import { provideApiConfiguration } from '@api/api-configuration';
-import { languageInterceptor, apiErrorInterceptor } from '@moryx/ngx-web-framework/interceptors';
+import { TranslationConstants } from './translation-constants';
 
 // Register locale data for built-in Angular pipes (date, number, etc.)
 import '@angular/common/locales/global/de';

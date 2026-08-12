@@ -3,19 +3,20 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { ApplicationConfig } from '@angular/core';
-import { provideMoryxMaterialDefaults } from '@moryx/ngx-web-framework/material';
-import { provideMoryxLocalization } from '@moryx/ngx-web-framework/i18n';
-import { TranslationConstants } from './translation-constants';
-import { languageInterceptor, apiErrorInterceptor } from '@moryx/ngx-web-framework/interceptors';
-import { environment } from '../environments/environment';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
-import { routes } from './app.routes';
 
+import { provideMoryxLocalization } from '@moryx/ngx-web-framework/i18n';
+import { languageInterceptor, apiErrorInterceptor } from '@moryx/ngx-web-framework/interceptors';
+import { provideMoryxMaterialDefaults } from '@moryx/ngx-web-framework/material';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+
 import { provideApiConfiguration } from '@api/api-configuration';
+import { environment } from '../environments/environment';
+import { routes } from './app.routes';
+import { TranslationConstants } from './translation-constants';
 
 // Register locale data for built-in Angular pipes (date, number, etc.)
 import '@angular/common/locales/global/de';
