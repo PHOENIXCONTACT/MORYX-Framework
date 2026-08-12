@@ -65,6 +65,7 @@ export class DialogAddPart {
         possibleParts = possibleParts.filter((p) => currentParts[0]?.id !== p.id);
       }
 
+      // TODO: Make possibleParts a resource signal
       this.possibleParts.set(possibleParts);
       this.filteredPossibleParts.set(possibleParts);
     }).catch((e) => this.snackbarService.handleError(e));
