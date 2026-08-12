@@ -19,4 +19,6 @@ public class CellPropertySettings
     public virtual bool IsDisplayed { get; set; }
     [DataMember]
     public virtual object CurrentValue { get; set; }
+    [DataMember]
+    public string DisplayName { get; set; }
 }
