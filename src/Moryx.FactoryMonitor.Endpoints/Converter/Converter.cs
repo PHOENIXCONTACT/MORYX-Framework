@@ -169,6 +169,4 @@ internal class Converter(ICustomSerialization serialization, ILogger<FactoryMoni
             Paths = pathModel.WayPoints
         };
     }
-
-    public static FactoryStateModel ToFactoryStateModel(IManufacturingFactory factory) => new() { Id = factory.Id };
 }
