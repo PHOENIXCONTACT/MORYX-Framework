@@ -4,12 +4,7 @@
 */
 
 export class TranslationConstants {
-  public static readonly LANGUAGES = {
-    EN: 'en',
-    DE: 'de',
-    IT: 'it',
-    ZH: 'zh'
-  };
+  public static readonly LANGUAGES = ['en', 'de', 'it', 'zh'];
 
   public static readonly APP = {
     RESOURCES: 'APP.RESOURCES',
@@ -70,4 +65,3 @@ export class TranslationConstants {
     REMOVE: 'REMOVE_RESOURCE_DIALOG.REMOVE',
   };
 }
-

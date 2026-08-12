@@ -17,7 +17,7 @@ import {
   ConfirmDialog,
   ConfirmDialogData
 } from '@app/dialogs/dialog-confirm/dialog-confirm';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/translation-constants';
 import { SessionsService } from '@app/services/sessions.service';
 import { EditorStateService } from '@app/services/editor-state.service';
 

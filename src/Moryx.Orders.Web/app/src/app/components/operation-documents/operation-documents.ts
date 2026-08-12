@@ -18,7 +18,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
 import { DocumentModel, OperationModel } from "@api/models";
 import { OrderManagementService } from '@api/services/order-management.service';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/translation-constants';
 import { DocumentDefaultView } from './document-default-view/document-default-view';
 import { DocumentDetailsHeader } from './document-details-header/document-details-header';
 import { environment } from '../../../environments/environment';

@@ -8,7 +8,7 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { ReferenceValue, ResourceModel, ResourceTypeModel } from '../api/models';
 import { ResourceModificationService } from '../api/services';
-import { TranslationConstants } from '../extensions/translation-constants';
+import { TranslationConstants } from '../translation-constants';
 
 
 /**

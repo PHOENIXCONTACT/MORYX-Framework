@@ -12,7 +12,7 @@ import {
   RestrictionDescription,
   OperationStateClassification
 } from '@api/models';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/translation-constants';
 import { OperationViewModel } from '@app/models/operation-view-model';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { OperatorsService } from '@app/services/operators.service';

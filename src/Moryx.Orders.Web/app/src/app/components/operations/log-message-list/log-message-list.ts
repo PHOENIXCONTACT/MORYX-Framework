@@ -11,7 +11,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import { LogLevel, OperationLogMessageModel } from '@api/models';
 import { OrderManagementService } from '@api/services';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/translation-constants';
 
 @Component({
   selector: 'app-log-message-list',

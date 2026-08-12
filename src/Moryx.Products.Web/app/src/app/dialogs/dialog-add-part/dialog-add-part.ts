@@ -16,8 +16,8 @@ import {
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { TranslatePipe } from '@ngx-translate/core';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 import { HttpErrorResponse } from '@angular/common/http';
+import { TranslationConstants } from '@app/translation-constants';
 import { PartConnector, ProductModel, ProductQuery, RevisionFilter, Selector } from '../../api/models';
 import { ProductManagementService } from '../../api/services';
 import { EditProductsService } from '@app/services/edit-products.service';

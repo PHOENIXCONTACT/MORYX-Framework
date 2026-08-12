@@ -6,7 +6,7 @@
 import { Component, effect, inject, linkedSignal, signal, untracked, ChangeDetectionStrategy } from '@angular/core';
 import { Event, NavigationCancel, NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { TranslationConstants } from '@app/extensions/translation-constants';
+import { TranslationConstants } from '@app/translation-constants';
 import { ResourceModel } from '../../api/models';
 import { EditResourceService } from '@app/services/edit-resource.service';
 import { MatTabsModule } from '@angular/material/tabs';

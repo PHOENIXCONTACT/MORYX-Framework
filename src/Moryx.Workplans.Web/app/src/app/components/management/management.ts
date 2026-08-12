@@ -17,7 +17,7 @@ import { ConfirmDialogButton, ConfirmDialog, ConfirmDialogData } from '@app/dial
 import '../../extensions/array.extensions';
 
 import { SessionsService } from '@app/services/sessions.service';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/translation-constants';
 
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
