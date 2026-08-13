@@ -1,102 +1,62 @@
 <h2 mat-dialog-title class="dialog-title">
   {{ TranslationConstants.CREATE_DIALOG.TITLE | translate }}
 </h2>
+
 <mat-dialog-content>
   <h3>{{ TranslationConstants.CREATE_DIALOG.ORDER_DETAILS | translate }}</h3>
   <mat-form-field appearance="outline" class="full-width" subscriptSizing="dynamic">
-    <mat-label>{{
-      TranslationConstants.CREATE_DIALOG.ORDER_NUMBER | translate
-    }}</mat-label>
-    <input
-      cdkFocusInitial
-      matInput
-      [(ngModel)]="orderNumber"
-      [disabled]="operations().length > 0 || isLoading()"
-      />
+    <mat-label>{{ TranslationConstants.CREATE_DIALOG.ORDER_NUMBER | translate }}</mat-label>
+    <input cdkFocusInitial matInput [(ngModel)]="orderNumber" [disabled]="operations().length > 0 || isLoading()"/>
   </mat-form-field>
 
-  <h3 class="top-spaced">
-    {{ TranslationConstants.CREATE_DIALOG.OPERATION_DETAILS | translate }}
-  </h3>
+  <h3 class="top-spaced">{{ TranslationConstants.CREATE_DIALOG.OPERATION_DETAILS | translate }}</h3>
+
   <!-- Operation Number -->
   <mat-form-field appearance="outline" class="full-width" subscriptSizing="dynamic">
-    <mat-label>{{
-      TranslationConstants.CREATE_DIALOG.OPERATION_NUMBER | translate
-    }}</mat-label>
-    <input
-      matInput
-      [formControl]="operationNumberFormControl"
-      (keydown)="detailsInputchanged($event)"
-      />
-    @if (
-      operationNumberFormControl.hasError('isOperationNumberNotValid') &&
-      operationNumberFormControl.touched &&
-      operationNumberFormControl.value
-      ) {
-      <mat-error
-        >
-        {{
-        TranslationConstants.CREATE_DIALOG.OPERATION_NUMBER_INVALID | translate
-        }}
-      </mat-error>
+    <mat-label>{{ TranslationConstants.CREATE_DIALOG.OPERATION_NUMBER | translate }}</mat-label>
+    <input matInput [formControl]="operationNumberFormControl" (keydown)="detailsInputchanged($event)"/>
+    @if (operationNumberFormControl.hasError('isOperationNumberNotValid') &&
+         operationNumberFormControl.touched &&
+         operationNumberFormControl.value) {
+      <mat-error>{{ TranslationConstants.CREATE_DIALOG.OPERATION_NUMBER_INVALID | translate }}</mat-error>
     }
   </mat-form-field>
 
   <!-- Product Selection -->
   <mat-form-field appearance="outline" class="full-width top-spaced" subscriptSizing="dynamic">
     <mat-label>{{ TranslationConstants.CREATE_DIALOG.PRODUCT | translate }}</mat-label>
-    <input
-      #productInput
-      type="text"
-      matInput
-      [formControl]="productFormControl"
-      [matAutocomplete]="productAutoComplete"
-      (input)="filterProduct()"
-      (focus)="filterProduct()"
-      (focusout)="filterProduct()">
+    <input #productInput type="text" matInput [formControl]="productFormControl"
+           [matAutocomplete]="productAutoComplete" (input)="filterProduct()"
+           (focus)="filterProduct()" (focusout)="filterProduct()">
     @if (selectedProduct()) {
-      <button
-        matSuffix
-        matIconButton
-        aria-label="Clear"
-        class="suffix-icon"
-        (click)="selectedProduct.set(undefined)">
+      <button matSuffix matIconButton aria-label="Clear" class="suffix-icon"
+              (click)="selectedProduct.set(undefined)">
         <mat-icon>close</mat-icon>
       </button>
     }
-    <mat-autocomplete autoActiveFirstOption requireSelection #productAutoComplete="matAutocomplete" [displayWith]="productToString">
+    <mat-autocomplete autoActiveFirstOption requireSelection
+                      #productAutoComplete="matAutocomplete" [displayWith]="productToString">
       @for (p of filteredProducts(); track p) {
         <mat-option [value]="p">{{ productToString(p) }}</mat-option>
       }
-      <mat-hint class="product-without-recipe-hint">{{
-        TranslationConstants.CREATE_DIALOG.HINT | translate
-      }}</mat-hint>
+      <mat-hint class="product-without-recipe-hint">{{ TranslationConstants.CREATE_DIALOG.HINT | translate }}</mat-hint>
     </mat-autocomplete>
   </mat-form-field>
 
   <!-- Recipe Selection -->
   <mat-form-field appearance="outline" class="full-width top-spaced" subscriptSizing="dynamic">
     <mat-label>{{ TranslationConstants.CREATE_DIALOG.RECIPE | translate }}</mat-label>
-    <input
-      #recipeInput
-      type="text"
-      matInput
-      [formControl]="recipeFormControl"
-      [matAutocomplete]="recipeAutoComplete"
-      (input)="filterRecipe()"
-      (focus)="filterRecipe()"
-      (focusout)="filterRecipe()">
+    <input #recipeInput type="text" matInput [formControl]="recipeFormControl"
+           [matAutocomplete]="recipeAutoComplete" (input)="filterRecipe()"
+           (focus)="filterRecipe()" (focusout)="filterRecipe()">
     @if (selectedRecipe()) {
-      <button
-        matSuffix
-        matIconButton
-        aria-label="Clear"
-        class="suffix-icon"
-        (click)="selectedRecipe.set(undefined)">
+      <button matSuffix matIconButton aria-label="Clear" class="suffix-icon"
+              (click)="selectedRecipe.set(undefined)">
         <mat-icon>close</mat-icon>
       </button>
     }
-    <mat-autocomplete autoActiveFirstOption requireSelection #recipeAutoComplete="matAutocomplete" [displayWith]="recipeToString">
+    <mat-autocomplete autoActiveFirstOption requireSelection
+                      #recipeAutoComplete="matAutocomplete" [displayWith]="recipeToString">
       @for (r of filteredRecipes(); track r) {
         <mat-option [value]="r">{{ recipeToString(r) }}</mat-option>
       }
@@ -108,32 +68,26 @@
     <input type="number" matInput [(ngModel)]="amount" [disabled]="isLoading()"/>
   </mat-form-field>
 
-  @if(operations().length > 0) {
+  @if (operations().length > 0) {
     <h3 class="top-spaced">
-      {{ TranslationConstants.CREATE_DIALOG.ADDED_OPERATIONS | translate }}
-      ({{ operations().length }})
+      {{ TranslationConstants.CREATE_DIALOG.ADDED_OPERATIONS | translate }} ({{ operations().length }})
     </h3>
     <mat-list class="create-dialog-operation-list-container">
       @for (operation of operations(); track operation) {
         <mat-list-item class="operation-list-item">
           <span matListItemTitle>{{ operation.operationNumber }}</span>
-          <span matListItemLine
-            >{{ TranslationConstants.CREATE_DIALOG.PRODUCT | translate }}:
-            {{ operation.productIdentifier }}-{{
-            operation.productRevision | number : "2.0"
-            }}
-            {{ TranslationConstants.CREATE_DIALOG.AMOUNT | translate }}:
-            {{ operation.totalAmount }}</span
-            >
-            <span matListItemMeta>
-              <button mat-icon-button (click)="deleteOperation(operation)">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </span>
-          </mat-list-item>
-        }
-      </mat-list>
-    }
+          <span matListItemLine>{{ TranslationConstants.CREATE_DIALOG.PRODUCT | translate }}:
+            {{ operation.productIdentifier }}-{{ operation.productRevision | number : "2.0" }}
+            {{ TranslationConstants.CREATE_DIALOG.AMOUNT | translate }}: {{ operation.totalAmount }}</span>
+          <span matListItemMeta>
+            <button mat-icon-button (click)="deleteOperation(operation)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </span>
+        </mat-list-item>
+      }
+    </mat-list>
+  }
 </mat-dialog-content>
 
 <div mat-dialog-actions align="end">
@@ -145,36 +99,22 @@
   </button>
 
   <div class="split-button">
-    <button
-      mat-flat-button
-           class="primary"
-      (click)="onPrimaryClick()"
-      [disabled]="!canRun()[primaryAction()]">
+    <button mat-flat-button class="primary" (click)="onPrimaryClick()" [disabled]="!canRun()[primaryAction()]">
       {{ primaryActionLabel() }}
     </button>
 
-    <button
-      mat-flat-button
-           class="dropdown-flat"
-      [matMenuTriggerFor]="actionMenu"
-      [disabled]="dropdownDisabled()">
+    <button mat-flat-button class="dropdown-flat" [matMenuTriggerFor]="actionMenu" [disabled]="dropdownDisabled()">
       <mat-icon>arrow_drop_down</mat-icon>
     </button>
 
     <mat-menu #actionMenu="matMenu">
-      <button
-        mat-menu-item
-        (click)="onSelectAction(Action.AddCreate)"
-        [disabled]="!canRun()[Action.AddCreate]">
+      <button mat-menu-item (click)="onSelectAction(Action.AddCreate)" [disabled]="!canRun()[Action.AddCreate]">
         @if (isSelected(Action.AddCreate)) {
           <mat-icon>check</mat-icon>
         }
         <span>{{ TranslationConstants.CREATE_DIALOG.CREATE | translate }}</span>
       </button>
-      <button
-        mat-menu-item
-        (click)="onSelectAction(Action.AddOnly)"
-        [disabled]="!canRun()[Action.AddOnly]">
+      <button mat-menu-item (click)="onSelectAction(Action.AddOnly)" [disabled]="!canRun()[Action.AddOnly]">
         @if (isSelected(Action.AddOnly)) {
           <mat-icon>check</mat-icon>
         }
