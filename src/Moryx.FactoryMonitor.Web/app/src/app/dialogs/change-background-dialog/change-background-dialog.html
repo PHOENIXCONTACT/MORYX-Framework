@@ -14,7 +14,7 @@
           [placeholder]="TranslationConstants.CHANGE_BACKGROUND_DIALOG.BACKGROUND_URL | translate"
           [formControl]="backgroundUrlFormControl"
           [errorStateMatcher]="matcher"
-          cdkFocusInitial />
+          />
         @if (backgroundUrlFormControl.hasError('required')) {
           <mat-error>{{ TranslationConstants.CHANGE_BACKGROUND_DIALOG.ENTER_URL | translate }}</mat-error>
         }
@@ -28,7 +28,9 @@
   </div>
 </div>
 <div mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close type="button">{{ TranslationConstants.SHARED.CANCEL | translate }}</button>
+  <button mat-button mat-dialog-close type="button" cdkFocusInitial>
+    {{ TranslationConstants.SHARED.CANCEL | translate }}
+  </button>
   <button
     mat-flat-button
        type="button"

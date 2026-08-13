@@ -28,7 +28,6 @@
             mat-button
             mat-dialog-close
             type="button"
-            cdkFocusInitial
             class="transform-to-uppercase"
             >
             {{ TranslationConstants.SHARED.CANCEL | translate }}
@@ -136,9 +135,14 @@
     <ng-container *ngTemplateOutlet="stepper.selectedIndex === 0 ? firstStepButtons : (stepper.selectedIndex === 1 ? secondStepButtons : lastStepButtons) " ></ng-container>
   </mat-dialog-actions>
 } @else {
-  <div class="types-loading">
-    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-  </div>
+  <mat-dialog-content>
+    <div class="types-loading">
+      <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button mat-dialog-close type="button" cdkFocusInitial class="transform-to-uppercase">
+      {{ TranslationConstants.SHARED.CANCEL | translate }}
+    </button>
+  </mat-dialog-actions>
 }
-
-
