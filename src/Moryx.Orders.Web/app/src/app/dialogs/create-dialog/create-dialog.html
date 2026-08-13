@@ -137,18 +137,17 @@
 </mat-dialog-content>
 
 <div mat-dialog-actions align="end">
-  <button mat-button color="primary" type="button" (click)="fullClear()">
+  <button mat-button type="button" (click)="fullClear()">
     {{ TranslationConstants.CREATE_DIALOG.CLEAR | translate }}
   </button>
-  <button mat-button mat-dialog-close color="primary" type="button">
+  <button mat-button mat-dialog-close type="button">
     {{ TranslationConstants.CANCEL | translate }}
   </button>
 
   <div class="split-button">
     <button
       mat-flat-button
-      color="primary"
-      class="primary"
+           class="primary"
       (click)="onPrimaryClick()"
       [disabled]="!canRun()[primaryAction()]">
       {{ primaryActionLabel() }}
@@ -156,8 +155,7 @@
 
     <button
       mat-flat-button
-      color="primary"
-      class="dropdown-flat"
+           class="dropdown-flat"
       [matMenuTriggerFor]="actionMenu"
       [disabled]="dropdownDisabled()">
       <mat-icon>arrow_drop_down</mat-icon>

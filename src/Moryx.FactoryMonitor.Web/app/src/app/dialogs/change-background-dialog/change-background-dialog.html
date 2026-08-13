@@ -28,11 +28,10 @@
   </div>
 </div>
 <div mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close color="primary" type="button">{{ TranslationConstants.SHARED.CANCEL | translate }}</button>
+  <button mat-button mat-dialog-close type="button">{{ TranslationConstants.SHARED.CANCEL | translate }}</button>
   <button
     mat-flat-button
-    color="primary"
-    type="button"
+       type="button"
     (click)="onSave()"
     [disabled]="backgroundUrlFormControl.invalid || !canSave">
     {{ TranslationConstants.SHARED.SAVE | translate }}

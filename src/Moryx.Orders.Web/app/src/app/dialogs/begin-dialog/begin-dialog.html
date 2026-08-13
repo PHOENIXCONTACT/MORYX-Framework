@@ -77,20 +77,16 @@
             class="min-amount-button">
       <mat-icon>align_justify_flex_start</mat-icon>
     </button>
-    <button mat-button type="button" matSuffix mat-stroked-button [disabled]="hasMinimalValue()" color="primary"
-            (click)="changeTargetAmount(-10)" class="content-calculation-button">
+    <button mat-button type="button" matSuffix mat-stroked-button [disabled]="hasMinimalValue()"            (click)="changeTargetAmount(-10)" class="content-calculation-button">
       -10
     </button>
-    <button mat-button type="button" matSuffix mat-stroked-button [disabled]="hasMinimalValue()" color="primary"
-            (click)="changeTargetAmount(-1)" class="content-calculation-button">
+    <button mat-button type="button" matSuffix mat-stroked-button [disabled]="hasMinimalValue()"            (click)="changeTargetAmount(-1)" class="content-calculation-button">
       -1
     </button>
-    <button mat-button type="button" matSuffix mat-stroked-button [disabled]="!canBegin" color="primary"
-            (click)="changeTargetAmount(1)" class="content-calculation-button">
+    <button mat-button type="button" matSuffix mat-stroked-button [disabled]="!canBegin"            (click)="changeTargetAmount(1)" class="content-calculation-button">
       +1
     </button>
-    <button mat-button type="button" matSuffix mat-stroked-button [disabled]="!canBegin" color="primary"
-            (click)="changeTargetAmount(10)" class="content-calculation-button">
+    <button mat-button type="button" matSuffix mat-stroked-button [disabled]="!canBegin"            (click)="changeTargetAmount(10)" class="content-calculation-button">
       +10
     </button>
     @if (hasMinimalValue()) {
@@ -106,10 +102,10 @@
 </mat-dialog-content>
 
 <div mat-dialog-actions align="end">
-  <button mat-button [mat-dialog-close]="undefined" color="primary" type="button">
+  <button mat-button [mat-dialog-close]="undefined" type="button">
     {{ TranslationConstants.CANCEL | translate }}
   </button>
-  <button mat-flat-button (click)="closeDialog()" color="primary" type="button">
+  <button mat-flat-button (click)="closeDialog()" type="button">
     {{
       operation.model.classification !== OperationStateClassification.Running &&
       operation.model.classification !== OperationStateClassification.IsAmountReached

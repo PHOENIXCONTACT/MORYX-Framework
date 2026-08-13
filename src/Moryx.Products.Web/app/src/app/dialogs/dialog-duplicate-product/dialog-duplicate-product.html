@@ -17,7 +17,7 @@
   </mat-form-field>
 </div>
 <div mat-dialog-actions align="end">
-  <button mat-button type="button" color="primary" (click)="onClose()">
+  <button mat-button type="button" (click)="onClose()">
     {{ TranslationConstants.DUPLICATE_PRODUCT_DIALOG.CANCEL | translate }}
   </button>
   <button mat-flat-button type="button" [mat-dialog-close]="duplicateInfos()"
