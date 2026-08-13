@@ -40,11 +40,24 @@ public class ProductIdentity : IIdentity
     /// <returns></returns>
     public static ProductIdentity Parse(string identityString)
     {
-        Regex rx = new Regex(@"(?<identifier>\w+)-(?<revision>\d+)");
-        if (!rx.IsMatch(identityString))
-            throw new FormatException("identityString should consist of <identity>-<revision> instead of " + identityString);
-        var groups = rx.Match(identityString).Groups;
-        return new ProductIdentity(groups["identifier"].Value, Convert.ToInt16(groups["revision"].Value, CultureInfo.InvariantCulture));
+        var separator = identityString.LastIndexOf('-');
+
+        if (separator < 1 || separator == identityString.Length - 1)
+        {
+            throw new FormatException(
+                $"identityString should consist of <identity>-<revision> instead of {identityString}");
+        }
+
+        var identifier = identityString[..separator];
+        var revisionPart = identityString[(separator + 1)..];
+
+        if (!short.TryParse(revisionPart, out var revision))
+        {
+            throw new FormatException(
+                $"identityString should consist of <identity>-<revision> instead of {identityString}");
+        }
+
+        return new ProductIdentity(identifier, revision);
     }
 
     /// <summary>

@@ -16,10 +16,8 @@ public class PrototypeParameters
     /// </summary>
     [DefaultValue("2901234")]
     [Description("Identifier of the new product"), Required]
-    //[StringLength(7, MinimumLength = 7), RegularExpression(@"\d+")]
-    [StringLength(35)]
-    [RegularExpression(@"^\d{7,12}(-[A-Za-z0-9]{1,20})?$")]
-    public string Identifier { get; set; }
+    [StringLength(7, MinimumLength = 7), RegularExpression(@"\d+")]
+    public virtual string Identifier { get; set; }
 
     /// <summary>
     /// Revision of the new product
