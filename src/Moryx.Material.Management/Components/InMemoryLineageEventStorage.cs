@@ -5,6 +5,7 @@ using System.ComponentModel;
 using Moryx.Container;
 using Moryx.Material.Facade;
 using Moryx.Material.Lineage;
+using Moryx.Material.States;
 
 namespace Moryx.Material.Management.Components;
 
