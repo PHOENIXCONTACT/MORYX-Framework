@@ -47,7 +47,7 @@ public class MaterialManagementController(IMaterialManagement materialManagement
     }
 
     [HttpGet("containers/types")]
-    [ProducesResponseType(typeof(MaterialContainerTypeModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(MaterialContainerTypeModel[]), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Policy = MaterialPermissions.CanRead)]
     public ActionResult<MaterialContainerTypeModel[]> GetTypes()
@@ -86,26 +86,26 @@ public class MaterialManagementController(IMaterialManagement materialManagement
 
     #region Delete
     [HttpDelete("containers/{id}")]
-    [ProducesResponseType(typeof(MaterialContainerModel), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Policy = MaterialPermissions.CanDelete)]
-    public async Task<ActionResult<MaterialContainerModel>> Deregister(long containerId, CancellationToken cancellationToken)
+    public async Task<ActionResult<MaterialContainerModel>> Deregister(long id, CancellationToken cancellationToken)
     {
-        if (containerId <= 0)
+        if (id <= 0)
         {
             return BadRequest("Container Id must be a positive number");
         }
 
         try
         {
-            await _materialManagement.DeregisterContainerAsync(containerId, cancellationToken);
+            await _materialManagement.DeregisterContainerAsync(id, cancellationToken);
             return NoContent();
         }
         catch (KeyNotFoundException)
         {
-            return NotFound($"Container with id '{containerId}' could not be found.");
+            return NotFound($"Container with id '{id}' could not be found.");
         }
     }
     #endregion
