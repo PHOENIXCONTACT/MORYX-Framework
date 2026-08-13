@@ -1,12 +1,9 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Moryx.AbstractionLayer.Resources;
 
-namespace Moryx.Resources.Management.Tests;
+namespace Moryx.AbstractionLayer.TestTools.Resources;
 
 public interface IReferenceResource : IResource
 {
@@ -75,7 +72,7 @@ public class ReferenceResource : Resource, IReferenceResource
     public IReferences<ISimpleResource> References { get; set; }
 
     [ReferenceOverride(nameof(Children), AutoSave = true)]
-    internal IReferences<ISimpleResource> ChildReferences { get; set; }
+    public IReferences<ISimpleResource> ChildReferences { get; set; }
 
     IEnumerable<ISimpleResource> IReferenceResource.MoreReferences => References;
 
@@ -103,7 +100,6 @@ public class ReferenceResource : Resource, IReferenceResource
     }
 
     public INonPublicResource NonPublic { get; set; }
-
     public event EventHandler<ISimpleResource> ReferenceChanged;
 
     public event EventHandler<ISimpleResource[]> SomeChanged;

@@ -3,7 +3,7 @@
 
 using Moryx.AbstractionLayer.Resources;
 
-namespace Moryx.Resources.Management.Tests;
+namespace Moryx.AbstractionLayer.TestTools.Resources;
 
 public interface INonPublicResource : IResource
 {

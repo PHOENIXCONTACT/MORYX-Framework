@@ -9,6 +9,7 @@ using Moryx.Container;
 using Moq;
 using NUnit.Framework;
 using Moryx.AbstractionLayer.Capabilities;
+using Moryx.AbstractionLayer.TestTools.Resources;
 
 namespace Moryx.Resources.Management.Tests;
 

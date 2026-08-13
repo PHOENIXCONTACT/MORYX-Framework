@@ -5,7 +5,7 @@ using Moryx.AbstractionLayer.Capabilities;
 using Moryx.AbstractionLayer.Resources;
 using System;
 using System.Collections.Generic;
-
+using Moryx.AbstractionLayer.TestTools.Resources;
 namespace Moryx.Resources.Management.Tests;
 
 public interface IGenericMethodCall : IResource

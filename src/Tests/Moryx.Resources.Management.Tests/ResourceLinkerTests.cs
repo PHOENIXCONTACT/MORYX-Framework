@@ -13,6 +13,7 @@ using NUnit.Framework;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moryx.Logging;
 using Moryx.Resources.Management.Model;
+using Moryx.AbstractionLayer.TestTools.Resources;
 
 namespace Moryx.Resources.Management.Tests;
 
@@ -45,7 +46,7 @@ public class ResourceLinkerTests
     [Test(Description = "Set all reference collections on the test resource including overrides")]
     public void SetReferenceCollection()
     {
-        // Arrange 
+        // Arrange
         var resource = new ReferenceResource();
 
         // Act
@@ -208,7 +209,7 @@ public class ResourceLinkerTests
         // Set single references
         instance.Parent = ref5; // Parent is set and
         // ref5.Children.Add(instance); Bidirectional reference synced --> no longer necessary
-        instance.Reference = ref2; // Reference is changed from ref1 to ref2 
+        instance.Reference = ref2; // Reference is changed from ref1 to ref2
         instance.Reference2 = ref3; // Reference2 is assigned with a new object
         // Fill collections
         instance.References.Add(ref1); // This element remains

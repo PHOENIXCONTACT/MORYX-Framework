@@ -1,11 +1,10 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using Moryx.AbstractionLayer.Capabilities;
 using Moryx.AbstractionLayer.Resources;
 
-namespace Moryx.Resources.Management.Tests;
+namespace Moryx.AbstractionLayer.TestTools.Resources;
 
 public interface IDuplicateFoo : IResource
 {
