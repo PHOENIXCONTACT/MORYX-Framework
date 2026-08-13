@@ -6,7 +6,7 @@
   <h3>{{ TranslationConstants.CREATE_DIALOG.ORDER_DETAILS | translate }}</h3>
   <mat-form-field appearance="outline" class="full-width" subscriptSizing="dynamic">
     <mat-label>{{ TranslationConstants.CREATE_DIALOG.ORDER_NUMBER | translate }}</mat-label>
-    <input cdkFocusInitial matInput [(ngModel)]="orderNumber" [disabled]="operations().length > 0 || isLoading()"/>
+    <input cdkFocusInitial matInput [(ngModel)]="orderNumber" [disabled]="operations().length > 0 || isLoading()" />
   </mat-form-field>
 
   <h3 class="top-spaced">{{ TranslationConstants.CREATE_DIALOG.OPERATION_DETAILS | translate }}</h3>
@@ -14,10 +14,10 @@
   <!-- Operation Number -->
   <mat-form-field appearance="outline" class="full-width" subscriptSizing="dynamic">
     <mat-label>{{ TranslationConstants.CREATE_DIALOG.OPERATION_NUMBER | translate }}</mat-label>
-    <input matInput [formControl]="operationNumberFormControl" (keydown)="detailsInputchanged($event)"/>
+    <input matInput [formControl]="operationNumberFormControl" (keydown)="detailsInputchanged($event)" />
     @if (operationNumberFormControl.hasError('isOperationNumberNotValid') &&
-         operationNumberFormControl.touched &&
-         operationNumberFormControl.value) {
+    operationNumberFormControl.touched &&
+    operationNumberFormControl.value) {
       <mat-error>{{ TranslationConstants.CREATE_DIALOG.OPERATION_NUMBER_INVALID | translate }}</mat-error>
     }
   </mat-form-field>
@@ -26,18 +26,20 @@
   <mat-form-field appearance="outline" class="full-width top-spaced" subscriptSizing="dynamic">
     <mat-label>{{ TranslationConstants.CREATE_DIALOG.PRODUCT | translate }}</mat-label>
     <input #productInput type="text" matInput [formControl]="productFormControl"
-           [matAutocomplete]="productAutoComplete" (input)="filterProduct()"
-           (focus)="filterProduct()" (focusout)="filterProduct()">
+      [matAutocomplete]="productAutoComplete" (input)="filterProduct()"
+      (focus)="filterProduct()" (focusout)="filterProduct()">
     @if (selectedProduct()) {
       <button matSuffix matIconButton aria-label="Clear" class="suffix-icon"
-              (click)="selectedProduct.set(undefined)">
+        (click)="selectedProduct.set(undefined)">
         <mat-icon>close</mat-icon>
       </button>
     }
     <mat-autocomplete autoActiveFirstOption requireSelection
-                      #productAutoComplete="matAutocomplete" [displayWith]="productToString">
+      #productAutoComplete="matAutocomplete" [displayWith]="productToString">
       @for (p of filteredProducts(); track p) {
-        <mat-option [value]="p">{{ productToString(p) }}</mat-option>
+        <mat-option [value]="p">
+          {{ productToString(p) }}
+        </mat-option>
       }
       <mat-hint class="product-without-recipe-hint">{{ TranslationConstants.CREATE_DIALOG.HINT | translate }}</mat-hint>
     </mat-autocomplete>
@@ -47,25 +49,27 @@
   <mat-form-field appearance="outline" class="full-width top-spaced" subscriptSizing="dynamic">
     <mat-label>{{ TranslationConstants.CREATE_DIALOG.RECIPE | translate }}</mat-label>
     <input #recipeInput type="text" matInput [formControl]="recipeFormControl"
-           [matAutocomplete]="recipeAutoComplete" (input)="filterRecipe()"
-           (focus)="filterRecipe()" (focusout)="filterRecipe()">
+      [matAutocomplete]="recipeAutoComplete" (input)="filterRecipe()"
+      (focus)="filterRecipe()" (focusout)="filterRecipe()">
     @if (selectedRecipe()) {
       <button matSuffix matIconButton aria-label="Clear" class="suffix-icon"
-              (click)="selectedRecipe.set(undefined)">
+        (click)="selectedRecipe.set(undefined)">
         <mat-icon>close</mat-icon>
       </button>
     }
     <mat-autocomplete autoActiveFirstOption requireSelection
-                      #recipeAutoComplete="matAutocomplete" [displayWith]="recipeToString">
+      #recipeAutoComplete="matAutocomplete" [displayWith]="recipeToString">
       @for (r of filteredRecipes(); track r) {
-        <mat-option [value]="r">{{ recipeToString(r) }}</mat-option>
+        <mat-option [value]="r">
+          {{ recipeToString(r) }}
+        </mat-option>
       }
     </mat-autocomplete>
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="full-width top-spaced" subscriptSizing="dynamic">
     <mat-label>{{ TranslationConstants.CREATE_DIALOG.AMOUNT | translate }}</mat-label>
-    <input type="number" matInput [(ngModel)]="amount" [disabled]="isLoading()"/>
+    <input type="number" matInput [(ngModel)]="amount" [disabled]="isLoading()" />
   </mat-form-field>
 
   @if (operations().length > 0) {
@@ -124,6 +128,6 @@
   </div>
 
   @if (isLoading()) {
-    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    <mat-progress-bar mode="indeterminate" />
   }
 </div>

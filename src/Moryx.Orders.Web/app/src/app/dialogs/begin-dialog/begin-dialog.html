@@ -28,7 +28,7 @@
     </div>
   }
 
-  <app-dialog-context class="full-width dialog-context" [operationModel]="operation.model"></app-dialog-context>
+  <app-dialog-context class="full-width dialog-context" [operationModel]="operation.model" />
 
   <div class="data-grid">
     <div class="content-data-entry">
@@ -61,32 +61,33 @@
     </div>
     <div class="progress-bar-entry">
       <app-multi-progress-bar [totalAmount]="estimatedTotal()" [successCount]="successCount"
-                              [scrapCount]="scrapCount" [activeCount]="partialCount()"
-                              [activeLabel]="TranslationConstants.OPERATIONS.PARTIAL" variant="forecast"/>
+        [scrapCount]="scrapCount" [activeCount]="partialCount()"
+        [activeLabel]="TranslationConstants.OPERATIONS.PARTIAL" variant="forecast" />
     </div>
   </div>
 
   <mat-form-field appearance="outline">
     <mat-label>{{ TranslationConstants.BEGIN_DIALOG.PARTIAL_AMOUNT | translate }}</mat-label>
-    <input matInput type="number" [formControl]="targetAmountControl" (blur)="limitTargetAmount()" cdkFocusInitial/>
+    <input matInput type="number" [formControl]="targetAmountControl"
+      (blur)="limitTargetAmount()" cdkFocusInitial />
     <button mat-icon-button type="button" matPrefix [disabled]="hasMinimalValue()"
-            (click)="setMinTargetAmount()" class="min-amount-button">
+      (click)="setMinTargetAmount()" class="min-amount-button">
       <mat-icon>align_justify_flex_start</mat-icon>
     </button>
     <button mat-button type="button" matSuffix mat-stroked-button [disabled]="hasMinimalValue()"
-            (click)="changeTargetAmount(-10)" class="content-calculation-button">
+      (click)="changeTargetAmount(-10)" class="content-calculation-button">
       -10
     </button>
     <button mat-button type="button" matSuffix mat-stroked-button [disabled]="hasMinimalValue()"
-            (click)="changeTargetAmount(-1)" class="content-calculation-button">
+      (click)="changeTargetAmount(-1)" class="content-calculation-button">
       -1
     </button>
     <button mat-button type="button" matSuffix mat-stroked-button [disabled]="!canBegin"
-            (click)="changeTargetAmount(1)" class="content-calculation-button">
+      (click)="changeTargetAmount(1)" class="content-calculation-button">
       +1
     </button>
     <button mat-button type="button" matSuffix mat-stroked-button [disabled]="!canBegin"
-            (click)="changeTargetAmount(10)" class="content-calculation-button">
+      (click)="changeTargetAmount(10)" class="content-calculation-button">
       +10
     </button>
     @if (hasMinimalValue()) {
@@ -95,8 +96,8 @@
   </mat-form-field>
 
   <app-operator-selector class="full-width top-spaced" [isEnabled]="canBegin"
-                         [(selectedOperatorId)]="selectedOperatorId"
-                         (creatingOperatorFailed)="creatingOperatorFailed.set($event)"/>
+    [(selectedOperatorId)]="selectedOperatorId"
+    (creatingOperatorFailed)="creatingOperatorFailed.set($event)" />
 </mat-dialog-content>
 
 <div mat-dialog-actions align="end">
