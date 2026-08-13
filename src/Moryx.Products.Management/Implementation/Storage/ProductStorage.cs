@@ -375,7 +375,8 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
         {
             var transformed = products
                 .Where(p => _typeInformation.ContainsKey(p.TypeName))
-                .Select(p => Transform(uow, p, true, cancellationToken));
+                .Select(p => Transform(uow, p, true, cancellationToken))
+                .ToArray();
 
             return await Task.WhenAll(transformed);
         }

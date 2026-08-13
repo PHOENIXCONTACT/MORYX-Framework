@@ -134,7 +134,7 @@ public class ProductStorageTests
                     TargetType = typeof(WatchPackageType).FullName,
                     JsonColumn = nameof(IGenericColumns.Text8),
                     PropertyConfigs = []
-                },
+                }
             ],
             InstanceStrategies =
             [
