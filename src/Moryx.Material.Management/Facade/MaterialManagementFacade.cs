@@ -270,7 +270,7 @@ internal class MaterialManagementFacade : FacadeBase, IMaterialManagement
         await MaterialFlowHandler.DeregisterContainerAsync(container, cancellationToken);
         await LineageStorage.RecordAsync(new DeregisterLineageEvent
         {
-            ContainerId = container.Id,
+            ContainerId = id,
             FinalQuantity = finalQuantity
         }, cancellationToken);
     }
