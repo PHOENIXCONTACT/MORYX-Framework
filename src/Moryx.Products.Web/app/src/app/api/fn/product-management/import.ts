@@ -14,7 +14,6 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-
 import { ProductModel } from '../../models/product-model';
 
 export interface Import$Params {
