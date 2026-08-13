@@ -1,28 +1,21 @@
 @if (providesOperatorSelection()) {
   <mat-form-field class="outer-field" appearance="outline" subscriptSizing="dynamic">
-    <mat-label>
-      {{ TranslationConstants.OPERATOR_SELECTOR.OPERATOR_SELECTOR_LABEL | translate }}
-    </mat-label>
+    <mat-label>{{ TranslationConstants.OPERATOR_SELECTOR.OPERATOR_SELECTOR_LABEL | translate }}</mat-label>
 
-    <input type="text"
+    <input type="text" matInput
       placeholder="{{ TranslationConstants.OPERATOR_SELECTOR.OPERATOR_SELECTOR_PLACEHOLDER | translate }}"
-      aria-label="Operator"
-      matInput
-      [formControl]="operatorFormControl"
-      [matAutocomplete]="auto">
+      aria-label="Operator" [formControl]="operatorFormControl" [matAutocomplete]="auto">
 
     <mat-autocomplete #auto="matAutocomplete">
       @for (operator of filteredOperators | async; track operator) {
-        <mat-option [value]="operator.identifier">{{ operator.pseudonym ?? "-" }} ({{ operator.identifier }})
+        <mat-option [value]="operator.identifier">
+          {{ operator.pseudonym ?? "-" }} ({{ operator.identifier }})
         </mat-option>
       }
     </mat-autocomplete>
 
     @if (operatorFormControl.hasError('failed')) {
-      <mat-error>{{
-          operatorFormControl.getError("failed")
-        }}
-      </mat-error>
+      <mat-error>{{ operatorFormControl.getError("failed") }}</mat-error>
     }
   </mat-form-field>
 }

@@ -1,24 +1,21 @@
-<h2 mat-dialog-title class="dialog-title">
-  {{ TranslationConstants.INTERRUPT_DIALOG.TITLE | translate }}
-</h2>
-<mat-dialog-content>
-  <app-dialog-context class="full-width dialog-context" [operationModel]="data.operation.model"></app-dialog-context>
+<h2 mat-dialog-title class="dialog-title">{{ TranslationConstants.INTERRUPT_DIALOG.TITLE | translate }}</h2>
 
-  <p>
-    {{ TranslationConstants.INTERRUPT_DIALOG.PROMPT | translate }}
-  </p>
+<mat-dialog-content>
+  <app-dialog-context class="full-width dialog-context" [operationModel]="data.operation.model" />
+
+  <p>{{ TranslationConstants.INTERRUPT_DIALOG.PROMPT | translate }}</p>
 
   @if (isLoading()) {
-  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    <mat-progress-bar mode="indeterminate" />
   }
   <!-- TODO: Add optional operator selection for the interrupt action -->
 </mat-dialog-content>
 
 <div mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close color="primary">
+  <button mat-button mat-dialog-close type="button" cdkFocusInitial>
     {{ TranslationConstants.CANCEL | translate }}
   </button>
-  <button mat-flat-button [disabled]="isLoading()" (click)="submit()">
+  <button mat-flat-button [disabled]="isLoading()" (click)="submit()" type="button">
     {{ TranslationConstants.INTERRUPT_DIALOG.INTERRUPT | translate }}
   </button>
 </div>

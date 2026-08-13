@@ -1,5 +1,5 @@
 @if (isLoading()) {
-  <mat-progress-bar mode="indeterminate" class="loading-bar"></mat-progress-bar>
+  <mat-progress-bar mode="indeterminate" class="loading-bar" />
 }
 <mat-sidenav-container class="container">
   <mat-sidenav opened mode="side" position="start" class="sidenav">
@@ -12,18 +12,14 @@
           </a>
         </mat-toolbar-row>
         <mat-toolbar-row class="toolbar-title">
-          <div>
-            {{ TranslationConstants.DOCUMENTS.DOCUMENTS_OF | translate }}
-          </div>
+          <div>{{ TranslationConstants.DOCUMENTS.DOCUMENTS_OF | translate }}</div>
           <div>{{ operation().order }} - {{ operation().number }}</div>
         </mat-toolbar-row>
       </mat-toolbar>
       <mat-nav-list class="document-list">
         @for (document of documents(); track document) {
-          <mat-list-item
-            [activated]="selectedDocument()?.identifier === document.identifier"
-            class="document-list-item"
-            (click)="onSelect(document)">
+          <mat-list-item [activated]="selectedDocument()?.identifier === document.identifier"
+            class="document-list-item" (click)="onSelect(document)">
             <span matListItemTitle>{{ document.type }}</span>
             <span matListItemLine>{{ document.number }}-{{ document.revision }}</span>
           </mat-list-item>
@@ -33,21 +29,19 @@
   </mat-sidenav>
   <mat-sidenav-content class="content">
     @if (selectedDocument(); as document) {
-      <app-document-details-header [selectedDocument]="document"/>
-      <mat-divider/>
+      <app-document-details-header [selectedDocument]="document" />
+      <mat-divider />
       <div class="document-viewer">
         @if (isImage()) {
-          <img src="{{ path() }}" class="document-image" [alt]="TranslationConstants.DOCUMENTS.IMAGE_ALT | translate"/>
+          <img src="{{ path() }}" class="document-image"
+            [alt]="TranslationConstants.DOCUMENTS.IMAGE_ALT | translate" />
         }
         @if (url() && !isImage()) {
-          <ngx-doc-viewer
-            class="document-pdf"
-            viewer="url"
-            [url]="url()!"></ngx-doc-viewer>
+          <ngx-doc-viewer class="document-pdf" viewer="url" [url]="url()!" />
         }
       </div>
     } @else {
-      <app-document-default-view/>
+      <app-document-default-view />
     }
   </mat-sidenav-content>
 </mat-sidenav-container>

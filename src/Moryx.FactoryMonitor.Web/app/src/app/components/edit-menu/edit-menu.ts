@@ -10,8 +10,8 @@ import { ChangeBackgroundDialog } from '@app/dialogs/change-background-dialog/ch
 import { CellStoreService } from '@app/services/cell-store.service';
 import { EditMenuService } from '@app/services/edit-menu.service';
 import { EditMenuState } from '@app/services/EditMenutState';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
-import { TranslateService, TranslatePipe } from '@ngx-translate/core';
+import { TranslationConstants } from '@app/translation-constants';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FactorySelectionService } from '@app/services/factory-selection.service';
 import { FactoryMonitorService } from '@api/services';
 import { ChangeBackgroundService } from '@app/services/change-background.service';
@@ -30,12 +30,11 @@ import { MatIconModule } from '@angular/material/icon';
     MatIconModule,
     MatButtonModule,
     TranslatePipe
-]
+  ]
 })
 export class EditMenu {
   private editMenuService = inject(EditMenuService);
   private matDialog = inject(MatDialog);
-  private translateService = inject(TranslateService);
   private router = inject(Router);
   private factorySelectionService = inject(FactorySelectionService);
   private factoryMonitorService = inject(FactoryMonitorService);
@@ -61,13 +60,6 @@ export class EditMenu {
   private goBackToFactory!: number;
 
   constructor() {
-    this.translateService.addLangs([
-      TranslationConstants.LANGUAGES.EN,
-      TranslationConstants.LANGUAGES.DE,
-      TranslationConstants.LANGUAGES.IT,
-    ]);
-    this.translateService.setFallbackLang('en');
-
     effect(() => {
       const factory = this.factorySelectionService.factorySelected();
       if (!factory) {
@@ -75,7 +67,7 @@ export class EditMenu {
         return;
       }
 
-      this.factoryMonitorService.getNavigation({ factoryId: factory }).then(navigation => {
+      this.factoryMonitorService.getNavigation({factoryId: factory}).then(navigation => {
         this.backgroundService.updateBackground(navigation.backgroundURL);
 
         if (!navigation.parentId) {

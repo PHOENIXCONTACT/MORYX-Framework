@@ -10,13 +10,8 @@
       <mat-label>{{
         TranslationConstants.ADD_DIALOG.SEARCH | translate
       }}</mat-label>
-      <input
-        type="text"
-        placeholder="Search"
-        aria-label="Search"
-        matInput
-        [(ngModel)]="searchText"
-        />
+      <input type="text" placeholder="Search" aria-label="Search" matInput
+             [(ngModel)]="searchText" />
     </mat-form-field>
     <div class="add-part-list">
       <mat-list>
@@ -36,13 +31,13 @@
 </div>
 
 <div mat-dialog-actions align="end">
-  <button mat-button type="submit" color="primary" (click)="onClose()">
+  <button mat-button type="button" cdkFocusInitial (click)="onClose()">
     {{ TranslationConstants.ADD_DIALOG.CANCEL | translate }}
   </button>
   <button
     mat-flat-button
     [disabled]="!selectedPart()"
-    type="submit"
+    type="button"
     [mat-dialog-close]="selectedPart()"
     >
     {{ TranslationConstants.ADD_DIALOG.SELECT | translate }}

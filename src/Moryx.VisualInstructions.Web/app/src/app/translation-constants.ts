@@ -4,11 +4,7 @@
 */
 
 export class TranslationConstants {
-  public static readonly LANGUAGES = {
-    EN: 'en',
-    DE: 'de',
-    IT: 'it',
-  };
+  public static readonly LANGUAGES = ['en', 'de', 'it', 'zh'];
 
   public static readonly APP = {
     TITLE: 'APP.TITLE',
@@ -25,4 +21,3 @@ export class TranslationConstants {
 
   public static readonly DISMISS = 'DISMISS';
 }
-

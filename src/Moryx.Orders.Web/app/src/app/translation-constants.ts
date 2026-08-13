@@ -4,12 +4,7 @@
 */
 
 export class TranslationConstants {
-  public static readonly LANGUAGES = {
-    EN: 'en',
-    DE: 'de',
-    IT: 'it',
-    ZH: 'zh',
-  };
+  public static readonly LANGUAGES = ['en', 'de', 'it', 'zh'];
 
   public static readonly APP = {
     TITLE: 'APP.TITLE',
@@ -145,14 +140,12 @@ export class TranslationConstants {
     OPERATOR_SELECTOR_LABEL: 'OPERATOR_SELECTOR.OPERATOR_SELECTOR_LABEL',
     OPERATOR_SELECTOR_PLACEHOLDER: 'OPERATOR_SELECTOR.OPERATOR_SELECTOR_PLACEHOLDER'
   }
-  
+
   public static readonly DIALOG_CONTEXT = {
     ORDER: 'DIALOG_CONTEXT.ORDER',
     PRODUCT: 'DIALOG_CONTEXT.PRODUCT',
   }
 
-  public static readonly DISMISS = 'DISMISS';
   public static readonly CANCEL = 'CANCEL';
   public static readonly CONFIRM = 'CONFIRM';
 }
-

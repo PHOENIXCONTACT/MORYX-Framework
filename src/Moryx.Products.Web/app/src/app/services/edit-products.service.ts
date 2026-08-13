@@ -12,7 +12,7 @@ import { PrototypeToEntryConverter } from "@moryx/ngx-web-framework/entry-editor
 
 import { PartConnector, PartModel, ProductModel, RecipeModel } from "../api/models";
 import { ProductManagementService } from "@api/services/product-management.service";
-import { TranslationConstants } from "../extensions/translation-constants.extensions";
+import { TranslationConstants } from "../translation-constants";
 import { DuplicateProductInfos } from "../models/DuplicateProductInfos";
 import { CacheProductsService } from "./cache-products.service";
 import { ProductStorageObject } from "./session.service";

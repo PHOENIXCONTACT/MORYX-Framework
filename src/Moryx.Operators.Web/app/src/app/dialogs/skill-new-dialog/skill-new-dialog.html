@@ -3,7 +3,7 @@
   <section class="full-width">
     <mat-form-field class="full-width field-spacing" appearance="outline">
       <mat-label>{{ TranslationConstants.SKILL_NEW_DIALOG.SKILL_TYPE | translate  }}</mat-label>
-      <mat-select required [(ngModel)]="data.typeId">
+      <mat-select required [(ngModel)]="data.typeId" cdkFocusInitial>
         @for (skillType of skillTypes(); track skillType) {
           <mat-option [value]="skillType.id">
             {{ skillType.name }}
@@ -22,10 +22,10 @@
   </section>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-button (click)="cancel()">
+  <button mat-button type="button" (click)="cancel()">
     {{ TranslationConstants.SKILL_NEW_DIALOG.CANCEL| translate  }}
   </button>
-  <button mat-flat-button cdkFocusInitial (click)="save()">
+  <button mat-flat-button type="button" (click)="save()">
     {{ TranslationConstants.SKILL_NEW_DIALOG.SAVE| translate  }}
   </button>
 </mat-dialog-actions>

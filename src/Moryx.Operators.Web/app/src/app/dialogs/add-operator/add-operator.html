@@ -4,7 +4,7 @@
 
     <mat-form-field class="full-width field-spacing" appearance="outline">
       <mat-label>{{ TranslationConstants.ADD_OPERATOR_DIALOG.IDENTIFIER| translate }}</mat-label>
-      <input matInput placeholder="1012" formControlName="identifier"/>
+      <input matInput placeholder="1012" formControlName="identifier" cdkFocusInitial/>
       @if (!isValid(operatorForm.controls.identifier)) {
         <mat-error>{{ getError(operatorForm.controls.identifier) }}</mat-error>
       }
@@ -36,12 +36,10 @@
   </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>{{ TranslationConstants.ADD_OPERATOR_DIALOG.CANCEL| translate }}</button>
-  <button
-    mat-flat-button
-    (click)="save()"
-    [disabled]="!operatorForm.valid"
-    cdkFocusInitial>
+  <button mat-button mat-dialog-close type="button">
+    {{ TranslationConstants.ADD_OPERATOR_DIALOG.CANCEL| translate }}
+  </button>
+  <button mat-flat-button type="button" (click)="save()" [disabled]="!operatorForm.valid">
     {{ TranslationConstants.ADD_OPERATOR_DIALOG.SAVE| translate }}
   </button>
 </mat-dialog-actions>

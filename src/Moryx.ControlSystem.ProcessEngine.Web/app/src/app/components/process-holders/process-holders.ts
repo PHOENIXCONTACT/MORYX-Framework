@@ -17,7 +17,7 @@ import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
-import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
+import { TranslationConstants } from "@app/translation-constants";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { firstValueFrom } from "rxjs";
 import { ProcessEngineService } from "@api/services";

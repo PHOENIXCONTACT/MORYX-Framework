@@ -22,7 +22,7 @@ import { SearchBarService, SearchRequest, SnackbarService } from '@moryx/ngx-web
 import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/translation-constants';
 import { OperationService } from '@app/services/operation.service';
 import { OrderManagementService } from '@api/services/order-management.service';
 import { BeginDialog, BeginDialogData } from '@app/dialogs/begin-dialog/begin-dialog';

@@ -11,19 +11,14 @@
     <mat-label>{{
       TranslationConstants.CREATE_REVISION_DIALOG.REVISION | translate
     }}</mat-label>
-    <input matInput [(ngModel)]="revision" />
+    <input matInput [(ngModel)]="revision" cdkFocusInitial />
   </mat-form-field>
 </div>
 <div mat-dialog-actions align="end">
-  <button mat-button type="submit" color="primary" (click)="onClose()">
+  <button mat-button type="button" (click)="onClose()">
     {{ TranslationConstants.CREATE_REVISION_DIALOG.CANCEL | translate }}
   </button>
-  <button
-    mat-flat-button
-    type="submit"
-    [disabled]="revision === undefined"
-    (click)="onCreate()"
-  >
+  <button mat-flat-button type="button" [disabled]="revision === undefined" (click)="onCreate()">
     {{ TranslationConstants.CREATE_REVISION_DIALOG.CREATE | translate }}
   </button>
 </div>

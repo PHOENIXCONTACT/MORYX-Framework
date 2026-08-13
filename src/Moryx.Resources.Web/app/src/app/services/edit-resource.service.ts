@@ -10,7 +10,7 @@ import { ResourceModificationService } from '../api/services';
 import { StrictHttpResponse } from '@api/strict-http-response';
 import { CacheResourceService } from './cache-resource.service';
 import { ResourceStorageDetails, ResourceStorageObject, SessionService } from './session.service';
-import { TranslationConstants } from '../extensions/translation-constants';
+import { TranslationConstants } from '../translation-constants';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { PrototypeToEntryConverter } from '@moryx/ngx-web-framework/entry-editor';

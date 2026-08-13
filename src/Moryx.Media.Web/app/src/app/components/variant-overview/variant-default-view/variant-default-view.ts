@@ -5,7 +5,7 @@
 
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/translation-constants';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
