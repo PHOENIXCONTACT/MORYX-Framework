@@ -119,6 +119,7 @@
   </Folder>
     <Folder Name="/Tests/IntegrationTests/">
       <Project Path="src/Tests/Moryx.Communication.Sockets.IntegrationTests/Moryx.Communication.Sockets.IntegrationTests.csproj" />
+      <Project Path="src/Tests/Moryx.Material.Integrations.Orders.Integrator.Tests/Moryx.Material.Integrations.Orders.Integrator.Tests.csproj" />
       <Project Path="src/Tests/Moryx.Material.IntegrationTests/Moryx.Material.IntegrationTests.csproj" />
       <Project Path="src/Tests/Moryx.Operators.Management.Integration.Tests/Moryx.Operators.Management.Integration.Tests.csproj" />
       <Project Path="src/Tests/Moryx.Products.IntegrationTests/Moryx.Products.IntegrationTests.csproj" />

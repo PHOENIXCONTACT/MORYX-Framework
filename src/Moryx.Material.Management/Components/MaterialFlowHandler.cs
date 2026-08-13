@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
 using Moryx.Logging;
@@ -11,15 +12,24 @@ namespace Moryx.Material.Management.Components;
 [Component(LifeCycle.Singleton, typeof(IMaterialFlowHandler))]
 internal class MaterialFlowHandler : IMaterialFlowHandler, ILoggingComponent
 {
+    #region Dependencies
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
     public IModuleLogger Logger { get; set; }
 
     public IContainerPool Pool { get; set; }
 
     public IResourceManagement ResourceManagement { get; set; }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+    #endregion
+
+    #region Lifecycle
 
     public void Start() { }
     public void Stop() { }
 
+    #endregion
+
+    #region IMaterialFlowHandler
     public async Task<IMaterialContainer> RequestMaterialAsync(MaterialRequest request, Type targetContainerType)
     {
         request.Id ??= Guid.NewGuid().ToString();
@@ -77,17 +87,33 @@ internal class MaterialFlowHandler : IMaterialFlowHandler, ILoggingComponent
         throw new NotImplementedException();
     }
 
-    public Task<IMaterialContainer> PreAdviceMaterialAsync(IMaterialContainer container, PreAdviceDepartureReason departureReason)
+    public static Task<IMaterialContainer> PreAdviceMaterialAsync(IMaterialContainer container, PreAdviceDepartureReason departureReason, CancellationToken cancellationToken)
     {
         var outbound = new OutboundStateInformation { DepartureReason = departureReason };
+        cancellationToken.ThrowIfCancellationRequested();
         container.TransitionTo(outbound);
         return Task.FromResult(container);
     }
 
-    public Task DeregisterContainerAsync(IMaterialContainer container, CancellationToken cancellationToken = default)
+    public async Task DeregisterContainerAsync(IMaterialContainer container, CancellationToken cancellationToken = default)
+    {
+        var deregistration = new DeregisteredStateInformation();
+        cancellationToken.ThrowIfCancellationRequested();
+        container.TransitionTo(deregistration);
+        var isDeleted = await ResourceManagement.DeleteAsync(container.Id, CancellationToken.None);
+        if (!isDeleted)
+        {
+            Logger.LogWarning("Material container {id}-{name} was deregisted, but failed to be deleted from the underlying {resources}",
+                container.Id, container.Name, nameof(IResourceManagement));
+        }
+    }
+
+    public Task<IMaterialContainer> PreAdviceMaterialAsync(IMaterialContainer container, PreAdviceDepartureReason reason)
     {
         throw new NotImplementedException();
     }
 
     public event EventHandler<StateChangedEventArgs>? StateChanged;
+
+    #endregion
 }
