@@ -27,7 +27,7 @@
       matTreeNodeToggle
       type="button"
       [attr.aria-label]="'Toggle ' + node.name"
-      (click)="onExpandOrCollapseNode()">
+      (click)="onExpandOrCollapseNode(node)">
       <mat-icon class="mat-icon-rtl-mirror">
         {{ treeNode.isExpanded ? "expand_more" : "chevron_right" }}
       </mat-icon>
