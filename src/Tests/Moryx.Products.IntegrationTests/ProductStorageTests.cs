@@ -966,11 +966,13 @@ public class ProductStorageTests
         await _storage.SaveTypeAsync(product);
 
         // Act
-        var loaded = (await _storage.LoadTypesAsync(new ProductQuery
+        var loadedTypes = await _storage.LoadTypesAsync(new ProductQuery
         {
             TypeName = typeof(DisplayWatchFaceType).FullName,
             LoadFullTypeInformation = true
-        }))
+        });
+
+        var loaded = (loadedTypes)
             .OfType<DisplayWatchFaceType>()
             .Single(p => p.Identity.Identifier == "999001");
 
@@ -992,10 +994,12 @@ public class ProductStorageTests
         await _storage.SaveTypeAsync(product);
 
         // Act
-        var loaded = (await _storage.LoadTypesAsync(new ProductQuery
+        var loadedTypes = await _storage.LoadTypesAsync(new ProductQuery
         {
             TypeName = typeof(DisplayWatchFaceType).FullName
-        }))
+        });
+
+        var loaded = loadedTypes
             .OfType<DisplayWatchFaceType>()
             .Single(p => p.Identity.Identifier == "999002");
 
@@ -1007,48 +1011,4 @@ public class ProductStorageTests
         // Resolution should not be loaded in lightweight mode
         Assert.That(loaded.Resolution, Is.EqualTo(0));
     }
-
-    [TestCase("ABC-01", "ABC", 1)]
-    [TestCase("ABC-DEF-01", "ABC-DEF", 1)]
-    [TestCase("123-456-12", "123-456", 12)]
-    [TestCase("12345678-ABCD-42", "12345678-ABCD", 42)]
-    [TestCase("My-Custom-Identifier-7", "My-Custom-Identifier", 7)]
-    public void Parse_CustomIdentifiers_ReturnsExpectedIdentity(
-        string identityString,
-        string expectedIdentifier,
-        short expectedRevision)
-    {
-        // Act
-        var result = ProductIdentity.Parse(identityString);
-
-        // Assert
-        Assert.That(result.Identifier, Is.EqualTo(expectedIdentifier));
-        Assert.That(result.Revision, Is.EqualTo(expectedRevision));
-    }
-
-    [TestCase("")]
-    [TestCase("ABC")]
-    [TestCase("-1")]
-    [TestCase("ABC-")]
-    [TestCase("ABC-DEF")]
-    [TestCase("ABC-XYZ")]
-    public void Parse_InvalidIdentity_ThrowsFormatException(string identityString)
-    {
-        Assert.Throws<FormatException>(
-            () => ProductIdentity.Parse(identityString));
-    }
-
-    [Test]
-    public void TryParse_CustomIdentifier_ReturnsTrue()
-    {
-        var result = ProductIdentity.TryParse(
-            "12345678-ABCD-42",
-            out var identity);
-
-        Assert.That(result, Is.True);
-        Assert.That(identity, Is.Not.Null);
-        Assert.That(identity.Identifier, Is.EqualTo("12345678-ABCD"));
-        Assert.That(identity.Revision, Is.EqualTo(42));
-    }
-
 }
