@@ -1,4 +1,8 @@
 {
+  "CONFIRM_DIALOG": {
+    "CANCEL": "CANCEL",
+    "CONFIRM": "CONFIRM"
+  },
   "APP": {
     "TITLE": "Workplans",
     "OPEN_WORKPLAN_MANAGEMENT": "Open workplan management",
@@ -9,9 +13,7 @@
   "SESSIONS": {
     "CONFIRM_DIALOG": {
       "TITLE": "Do you want to close this session?",
-      "MESSAGE": "If you haven't saved, your changes will be lost. Are you sure you want to close the session?",
-      "CONFIRM": "CONFIRM",
-      "CANCEL": "CANCEL"
+      "MESSAGE": "If you haven't saved, your changes will be lost. Are you sure you want to close the session?"
     },
     "CLOSE": "Close"
   },
@@ -54,8 +56,7 @@
       "TITLE": "Delete Workplan",
       "MESSAGE_FIRST_PART": "The workplan session",
       "MESSAGE_SECOND_PART": "will also be closed, are you sure",
-      "MESSAGE": "Are you sure you want to delete?",
-      "CANCEL": "CANCEL"
+      "MESSAGE": "Are you sure you want to delete?"
     },
     "SNACK_BAR": {
       "SUCCESS_FIRST_PART": "Workplan",

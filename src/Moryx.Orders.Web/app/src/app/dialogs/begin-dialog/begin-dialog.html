@@ -72,7 +72,7 @@
         TranslationConstants.BEGIN_DIALOG.PARTIAL_AMOUNT | translate
       }}
     </mat-label>
-    <input matInput type="number" [formControl]="targetAmountControl" (blur)="limitTargetAmount()"/>
+    <input matInput type="number" [formControl]="targetAmountControl" (blur)="limitTargetAmount()" cdkFocusInitial/>
     <button mat-icon-button type="button" matPrefix [disabled]="hasMinimalValue()" (click)="setMinTargetAmount()"
             class="min-amount-button">
       <mat-icon>align_justify_flex_start</mat-icon>
@@ -106,10 +106,10 @@
 </mat-dialog-content>
 
 <div mat-dialog-actions align="end">
-  <button mat-button [mat-dialog-close]="undefined" color="primary">
+  <button mat-button [mat-dialog-close]="undefined" color="primary" type="button">
     {{ TranslationConstants.CANCEL | translate }}
   </button>
-  <button mat-flat-button (click)="closeDialog()" color="primary">
+  <button mat-flat-button (click)="closeDialog()" color="primary" type="button">
     {{
       operation.model.classification !== OperationStateClassification.Running &&
       operation.model.classification !== OperationStateClassification.IsAmountReached

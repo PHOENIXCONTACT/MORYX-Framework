@@ -9,6 +9,7 @@
     <mat-select
       [(ngModel)]="result()!.selectedRecipe"
       (selectionChange)="onSelectedRecipeTypeChanged()"
+      cdkFocusInitial
       >
       @for (recipe of possibleRecipes(); track recipe) {
         <mat-option [value]="recipe">
@@ -39,12 +40,12 @@
   }
 </div>
 <div mat-dialog-actions align="end">
-  <button mat-button type="submit" color="primary" (click)="onClose()">
+  <button mat-button type="button" color="primary" (click)="onClose()">
     {{ TranslationConstants.CREATE_RECIPE_DIALOG.CANCEL | translate }}
   </button>
   <button
     mat-flat-button
-    type="submit"
+    type="button"
     [disabled]="
       !result()!.recipeName ||
       !result()!.selectedRecipe ||

@@ -1,4 +1,8 @@
 {
+  "CONFIRM_DIALOG": {
+    "CANCEL": "ABBRECHEN",
+    "CONFIRM": "FORTFAHREN"
+  },
   "APP": {
     "TITLE": "Arbeitspläne",
     "OPEN_WORKPLAN_MANAGEMENT": "Öffne Verwaltungsansicht",
@@ -9,9 +13,7 @@
   "SESSIONS": {
     "CONFIRM_DIALOG": {
       "TITLE": "Möchtest du diese Sitzung schließen?",
-      "MESSAGE": "Wenn du die Sitzung schließt gehen alle nicht gespeicherten Änderungen verloren. Möchtest du die Sitzung wirklich schließen?",
-      "CONFIRM": "FORTFAHREN",
-      "CANCEL": "ABBRECHEN"
+      "MESSAGE": "Wenn du die Sitzung schließt gehen alle nicht gespeicherten Änderungen verloren. Möchtest du die Sitzung wirklich schließen?"
     },
     "CLOSE": "Schließen"
   },
@@ -54,8 +56,7 @@
       "TITLE": "Arbeitsplan Löschen",
       "MESSAGE_FIRST_PART": "Der Arbeitsplan",
       "MESSAGE_SECOND_PART": "wird im Zuge des Löschvorgangs geschlossen",
-      "MESSAGE": "Bist du sicher dass du mit dem Löschvorgang fortfahren möchtest?",
-      "CANCEL": "ABBRECHEN"
+      "MESSAGE": "Bist du sicher dass du mit dem Löschvorgang fortfahren möchtest?"
     },
     "SNACK_BAR": {
       "SUCCESS_FIRST_PART": "Arbeitsplan",

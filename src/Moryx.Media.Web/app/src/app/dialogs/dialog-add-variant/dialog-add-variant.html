@@ -12,6 +12,7 @@
         placeholder="{{
           TranslationConstants.ADD_VARIANT_DIALOG.NAME_PLACEHOLDER | translate
         }}"
+        cdkFocusInitial
       />
     </mat-form-field>
 
@@ -35,10 +36,10 @@
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">
-    <button mat-button type="submit" color="primary" mat-dialog-close>
+    <button mat-button type="button" color="primary" mat-dialog-close>
       {{ TranslationConstants.ADD_VARIANT_DIALOG.CANCEL | translate }}
     </button>
-    <button mat-flat-button type="submit" [mat-dialog-close]="resultData()"
+    <button mat-flat-button type="button" [mat-dialog-close]="resultData()"
             [disabled]="!selectedFileLoaded() || !resultData().variantName.length">
       {{ TranslationConstants.ADD_VARIANT_DIALOG.UPLOAD | translate }}
     </button>

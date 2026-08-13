@@ -13,7 +13,8 @@
           matInput
           [placeholder]="TranslationConstants.CHANGE_BACKGROUND_DIALOG.BACKGROUND_URL | translate"
           [formControl]="backgroundUrlFormControl"
-          [errorStateMatcher]="matcher" />
+          [errorStateMatcher]="matcher"
+          cdkFocusInitial />
         @if (backgroundUrlFormControl.hasError('required')) {
           <mat-error>{{ TranslationConstants.CHANGE_BACKGROUND_DIALOG.ENTER_URL | translate }}</mat-error>
         }
@@ -27,10 +28,11 @@
   </div>
 </div>
 <div mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close color="primary">  {{ TranslationConstants.SHARED.CANCEL | translate }}</button>
+  <button mat-button mat-dialog-close color="primary" type="button">{{ TranslationConstants.SHARED.CANCEL | translate }}</button>
   <button
     mat-flat-button
     color="primary"
+    type="button"
     (click)="onSave()"
     [disabled]="backgroundUrlFormControl.invalid || !canSave">
     {{ TranslationConstants.SHARED.SAVE | translate }}

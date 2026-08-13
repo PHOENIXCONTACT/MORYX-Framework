@@ -2,7 +2,7 @@
 <mat-dialog-content>
   <mat-form-field appearance="outline" class="full-width">
     <mat-label>{{ TranslationConstants.DIALOGS.SHIFT_TYPE_DIALOG.NAME | translate }}</mat-label>
-    <input matInput type="text" [formControl]="form.controls.name"/>
+    <input matInput type="text" [formControl]="form.controls.name" cdkFocusInitial/>
     @if (form.controls.name.hasError('required')) {
       <mat-error>{{ TranslationConstants.DIALOGS.SHIFT_TYPE_DIALOG.NAME_ERROR | translate }}</mat-error>
     }
@@ -35,10 +35,10 @@
   </div>
 </mat-dialog-content>
 <div mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>
+  <button mat-button mat-dialog-close type="button">
     {{ TranslationConstants.DIALOGS.SHIFT_TYPE_DIALOG.CANCEL | translate }}
   </button>
-  <button mat-flat-button color="primary" (click)="submit()" cdkFocusInitial>
+  <button mat-flat-button color="primary" type="button" (click)="submit()">
     {{ TranslationConstants.DIALOGS.SHIFT_TYPE_DIALOG.SAVE | translate }}
   </button>
 </div>

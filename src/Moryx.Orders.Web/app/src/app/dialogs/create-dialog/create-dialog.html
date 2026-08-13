@@ -137,10 +137,10 @@
 </mat-dialog-content>
 
 <div mat-dialog-actions align="end">
-  <button mat-button color="primary" (click)="fullClear()">
+  <button mat-button color="primary" type="button" (click)="fullClear()">
     {{ TranslationConstants.CREATE_DIALOG.CLEAR | translate }}
   </button>
-  <button mat-button mat-dialog-close color="primary">
+  <button mat-button mat-dialog-close color="primary" type="button">
     {{ TranslationConstants.CANCEL | translate }}
   </button>
 
