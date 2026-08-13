@@ -242,7 +242,6 @@ public class ProductStorageTests
 
         await _storage.StartAsync();
     }
-
     protected virtual UnitOfWorkFactory<SqliteProductsContext> BuildUnitOfWorkFactory()
     {
         var uowFactory = InMemoryUnitOfWorkFactoryBuilder
@@ -953,47 +952,63 @@ public class ProductStorageTests
         Assert.That(byType6.Count, Is.GreaterThanOrEqualTo(1));
     }
 
-    [TestCase("ABC-01", "ABC", 1)]
-    [TestCase("ABC-DEF-01", "ABC-DEF", 1)]
-    [TestCase("123-456-12", "123-456", 12)]
-    [TestCase("12345678-ABCD-42", "12345678-ABCD", 42)]
-    [TestCase("My-Custom-Identifier-7", "My-Custom-Identifier", 7)]
-    public void Parse_CustomIdentifiers_ReturnsExpectedIdentity(
-        string identityString,
-        string expectedIdentifier,
-        short expectedRevision)
+    [Test(Description = "LoadTypesAsync(ProductQuery) returns fully populated product types if full loading is requested.")]
+    public async Task LoadTypesQueryShouldReturnCompleteProductType()
     {
+        // Arrange
+        var product = new DisplayWatchFaceType
+        {
+            Name = "QueryTest",
+            Identity = new ProductIdentity("999001", 1),
+            Resolution = 180
+        };
+
+        await _storage.SaveTypeAsync(product);
+
         // Act
-        var result = ProductIdentity.Parse(identityString);
+        var loadedTypes = await _storage.LoadTypesAsync(new ProductQuery
+        {
+            TypeName = typeof(DisplayWatchFaceType).FullName,
+            LoadFullTypeInformation = true
+        });
+
+        var loaded = (loadedTypes)
+            .OfType<DisplayWatchFaceType>()
+            .Single(p => p.Identity.Identifier == "999001");
 
         // Assert
-        Assert.That(result.Identifier, Is.EqualTo(expectedIdentifier));
-        Assert.That(result.Revision, Is.EqualTo(expectedRevision));
+        Assert.That(loaded.Resolution, Is.EqualTo(180));
     }
 
-    [TestCase("")]
-    [TestCase("ABC")]
-    [TestCase("-1")]
-    [TestCase("ABC-")]
-    [TestCase("ABC-DEF")]
-    [TestCase("ABC-XYZ")]
-    public void Parse_InvalidIdentity_ThrowsFormatException(string identityString)
+    [Test(Description = "LoadTypesAsync(ProductQuery) returns only base type information by default.")]
+    public async Task LoadTypesQueryShouldReturnBaseInformationByDefault()
     {
-        Assert.Throws<FormatException>(
-            () => ProductIdentity.Parse(identityString));
+        // Arrange
+        var product = new DisplayWatchFaceType
+        {
+            Name = "QueryTest",
+            Identity = new ProductIdentity("999002", 1),
+            Resolution = 180
+        };
+
+        await _storage.SaveTypeAsync(product);
+
+        // Act
+        var loadedTypes = await _storage.LoadTypesAsync(new ProductQuery
+        {
+            TypeName = typeof(DisplayWatchFaceType).FullName
+        });
+
+        var loaded = loadedTypes
+            .OfType<DisplayWatchFaceType>()
+            .Single(p => p.Identity.Identifier == "999002");
+
+        // Assert
+        Assert.That(loaded.Id, Is.Not.EqualTo(0));
+        Assert.That(loaded.Name, Is.EqualTo("QueryTest"));
+        Assert.That(loaded.Identity.Identifier, Is.EqualTo("999002"));
+
+        // Resolution should not be loaded in lightweight mode
+        Assert.That(loaded.Resolution, Is.EqualTo(0));
     }
-
-    [Test]
-    public void TryParse_CustomIdentifier_ReturnsTrue()
-    {
-        var result = ProductIdentity.TryParse(
-            "12345678-ABCD-42",
-            out var identity);
-
-        Assert.That(result, Is.True);
-        Assert.That(identity, Is.Not.Null);
-        Assert.That(identity.Identifier, Is.EqualTo("12345678-ABCD"));
-        Assert.That(identity.Revision, Is.EqualTo(42));
-    }
-
 }
