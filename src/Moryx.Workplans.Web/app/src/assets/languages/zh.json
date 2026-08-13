@@ -1,4 +1,8 @@
 {
+  "CONFIRM_DIALOG": {
+    "CANCEL": "取消",
+    "CONFIRM": "确认"
+  },
   "APP": {
     "TITLE": "工作计划",
     "OPEN_WORKPLAN_MANAGEMENT": "打开工作计划管理",
@@ -9,9 +13,7 @@
   "SESSIONS": {
     "CONFIRM_DIALOG": {
       "TITLE": "您是否要关闭此会话？",
-      "MESSAGE": "如果您未保存，您的更改将丢失。您确定要关闭会话吗？",
-      "CONFIRM": "确认",
-      "CANCEL": "取消"
+      "MESSAGE": "如果您未保存，您的更改将丢失。您确定要关闭会话吗？"
     },
     "CLOSE": "关闭"
   },
@@ -54,8 +56,7 @@
       "TITLE": "删除工作计划",
       "MESSAGE_FIRST_PART": "工作计划会话",
       "MESSAGE_SECOND_PART": "也将被关闭，您确定",
-      "MESSAGE": "您确定要删除吗？",
-      "CANCEL": "取消"
+      "MESSAGE": "您确定要删除吗？"
     },
     "SNACK_BAR": {
       "SUCCESS_FIRST_PART": "工作计划",

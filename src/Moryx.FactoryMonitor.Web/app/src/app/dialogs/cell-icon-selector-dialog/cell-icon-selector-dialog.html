@@ -11,7 +11,8 @@
         matInput
         [placeholder]="TranslationConstants.CELL_ICON_SELECTOR_DIALOG.ICON_NAME | translate"
         [formControl]="iconControl"
-        [errorStateMatcher]="matcher" />
+        [errorStateMatcher]="matcher"
+        cdkFocusInitial />
       @if (iconControl.hasError('required')) {
         <mat-error>
           {{ TranslationConstants.CELL_ICON_SELECTOR_DIALOG.ICON_NAME_REQUIRED | translate }}
@@ -24,8 +25,8 @@
   </div>
 </div>
 <div mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close color="primary">{{ TranslationConstants.SHARED.CANCEL | translate }}</button>
-  <button mat-flat-button (click)="saveIcon()" color="primary" [disabled]="!canSave">
+  <button mat-button mat-dialog-close color="primary" type="button">{{ TranslationConstants.SHARED.CANCEL | translate }}</button>
+  <button mat-flat-button (click)="saveIcon()" color="primary" type="button" [disabled]="!canSave">
     {{ TranslationConstants.SHARED.SAVE | translate }}
   </button>
 </div>

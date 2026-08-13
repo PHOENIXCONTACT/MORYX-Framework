@@ -4,7 +4,7 @@
 <mat-dialog-content>
   <mat-form-field appearance="outline" class="full-width">
     <mat-label>{{ TranslationConstants.DIALOGS.WEEK_ASSIGNMENT_DIALOG.RESOURCE | translate }}</mat-label>
-    <mat-select [formControl]="form.controls.resourceId">
+    <mat-select [formControl]="form.controls.resourceId" cdkFocusInitial>
       @for (resource of resources(); track resource.id) {
         <mat-option [value]="resource.id">{{ resource.name }}</mat-option>
       }
@@ -71,10 +71,10 @@
   </mat-form-field>
 </mat-dialog-content>
 <div mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>
+  <button mat-button mat-dialog-close type="button">
     {{ TranslationConstants.DIALOGS.WEEK_ASSIGNMENT_DIALOG.CANCEL | translate }}
   </button>
-  <button mat-flat-button (click)="submit()" color="primary" cdkFocusInitial>
+  <button mat-flat-button (click)="submit()" color="primary" type="button">
     {{ TranslationConstants.DIALOGS.WEEK_ASSIGNMENT_DIALOG.ASSIGN | translate }}
   </button>
 </div>

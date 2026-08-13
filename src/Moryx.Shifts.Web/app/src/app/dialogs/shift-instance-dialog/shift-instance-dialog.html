@@ -5,7 +5,7 @@
   <mat-form-field appearance="outline" class="full-width">
     <mat-label>{{ TranslationConstants.DIALOGS.SHIFT_INSTANCE_DIALOG.START_DATE | translate }}</mat-label>
     <input matInput [matDatepicker]="picker" [formControl]="form.controls.startDate"
-           (ngModelChange)="onStartDateChanged($event)"/>
+           (ngModelChange)="onStartDateChanged($event)" cdkFocusInitial/>
     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker></mat-datepicker>
   </mat-form-field>
@@ -15,10 +15,10 @@
   </mat-form-field>
 </mat-dialog-content>
 <div mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>
+  <button mat-button mat-dialog-close type="button">
     {{ TranslationConstants.DIALOGS.SHIFT_INSTANCE_DIALOG.CANCEL | translate }}
   </button>
-  <button mat-flat-button color="primary" (click)="submit()" cdkFocusInitial>
+  <button mat-flat-button color="primary" type="button" (click)="submit()">
     {{ TranslationConstants.DIALOGS.SHIFT_INSTANCE_DIALOG.SAVE | translate }}
   </button>
 </div>

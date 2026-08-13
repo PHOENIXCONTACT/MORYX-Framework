@@ -28,6 +28,7 @@
             mat-button
             mat-dialog-close
             type="button"
+            cdkFocusInitial
             class="transform-to-uppercase"
             >
             {{ TranslationConstants.SHARED.CANCEL | translate }}
@@ -122,7 +123,7 @@
           <button
             mat-flat-button
             [mat-dialog-close]="true"
-            type="submit"
+            type="button"
             [mat-dialog-close]="createResult()"
             class="transform-to-uppercase"
             >
