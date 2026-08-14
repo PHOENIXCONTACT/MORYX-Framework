@@ -45,7 +45,10 @@ export function getModulesReducer(state: ModulesState = initialModulesState, act
     }
     case UPDATE_NOTIFICATIONS: {
       const { moduleName, notifications } = action.payload as { moduleName: string; notifications: NotificationModel[] };
-      return updateModule(state, moduleName, { notifications });
+      const sorted = notifications.sort((a, b) =>
+        new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+      );
+      return updateModule(state, moduleName, { notifications: sorted });
     }
     case UPDATE_START_BEHAVIOUR: {
       const { moduleName, startBehaviour } = action.payload as { moduleName: string; startBehaviour: ModuleStartBehaviour };
