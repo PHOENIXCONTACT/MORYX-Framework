@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, DestroyRef, effect, ElementRef, inject, signal, viewChild } from '@angular/core';
+import { afterNextRender, Component, DestroyRef, effect, ElementRef, inject, Injector, signal, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -27,13 +27,14 @@ export class SpotlightSearch {
   private searchService = inject(SearchService);
   private shortcutService = inject(ShortcutService);
   private destroyRef = inject(DestroyRef);
+  private injector = inject(Injector);
 
   protected readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
   protected readonly resultsList = viewChild<ElementRef<HTMLUListElement>>('resultsList');
 
   protected TranslationConstants = TranslationConstants;
 
-  protected isOpen = this.searchService.isOpen;
+  protected isOpen = this.searchService.isSpotlightOpen;
   protected query = signal('');
   protected activeIndex = signal(0);
 
@@ -57,7 +58,12 @@ export class SpotlightSearch {
       if (this.isOpen()) {
         this.query.set('');
         this.activeIndex.set(0);
-        setTimeout(() => this.searchInput()?.nativeElement.focus(), 0);
+
+        // The input is inside @if(isOpen()), so it doesn't exist in the DOM yet.
+        // Wait for Angular to render the view before focusing.
+        afterNextRender(() => {
+          this.searchInput()?.nativeElement.focus()
+        }, { injector: this.injector });
       }
     });
   }

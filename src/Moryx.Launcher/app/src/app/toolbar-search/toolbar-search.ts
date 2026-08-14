@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, effect, ElementRef, inject, signal, viewChild } from '@angular/core';
+import { afterNextRender, Component, effect, ElementRef, inject, Injector, signal, viewChild } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
@@ -20,6 +20,7 @@ import { TranslationConstants } from '../translation-constants';
 })
 export class ToolbarSearch {
   private searchService = inject(SearchService);
+  private injector = inject(Injector);
 
   protected readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
 
@@ -34,7 +35,7 @@ export class ToolbarSearch {
 
   constructor() {
     effect(() => {
-      if (this.searchService.isOpen() && this.expanded()) {
+      if (this.searchService.isSpotlightOpen() && this.expanded()) {
         this.collapse();
       }
     });
@@ -42,7 +43,12 @@ export class ToolbarSearch {
 
   protected expand(): void {
     this.expanded.set(true);
-    setTimeout(() => this.searchInput()?.nativeElement.focus(), 0);
+
+    // The expanded class makes the input visible via CSS transition.
+    // Wait for Angular to apply the class and re-render before focusing.
+    afterNextRender(() => {
+      this.searchInput()?.nativeElement.focus()
+    }, { injector: this.injector });
   }
 
   protected collapse(): void {
