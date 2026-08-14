@@ -260,6 +260,7 @@ internal class ResourceManager : IResourceManager
     private void RegisterEvents(Resource instance)
     {
         instance.Changed += OnResourceChanged;
+        instance.Notified += OnResourceNotified;
         instance.CapabilitiesChanged += RaiseCapabilitiesChanged;
 
         foreach (var autoSaveCollection in ResourceReferenceTools.GetAutoSaveCollections(instance))
@@ -272,6 +273,7 @@ internal class ResourceManager : IResourceManager
     private void UnregisterEvents(Resource instance)
     {
         instance.Changed -= OnResourceChanged;
+        instance.Notified -= OnResourceNotified;
         instance.CapabilitiesChanged -= RaiseCapabilitiesChanged;
 
         foreach (var autoSaveCollection in ResourceReferenceTools.GetAutoSaveCollections(instance))
@@ -285,6 +287,14 @@ internal class ResourceManager : IResourceManager
     private void OnResourceChanged(object sender, EventArgs eventArgs)
     {
         _ = Task.Run(() => SaveAsync((Resource)sender));
+    }
+
+    /// <summary>
+    /// Event handler when a resource notifies of a change without requiring persistence
+    /// </summary>
+    private void OnResourceNotified(object sender, ResourceChangedEventArgs eventArgs)
+    {
+        _ = Task.Run(() => RaiseResourceChanged((IResource)sender));
     }
 
     /// <summary>

@@ -84,3 +84,25 @@ public class DynamicTree : Resource
 ```
 
 The `Shrink`-method shows the two alternatives for destroying resource instances. The caller can specify whether to remove the object by ﬂagging it as deleted or actually deleting the entry from the database. The call with a single argument is a shortcut for the second one with permanent = false. In both cases the object is removed from the resource graph and all references it occurs in to allow proper garbage collection.
+
+### Notify without saving
+
+In some cases a resource property changes frequently at runtime but does not need to be persisted — for example, a counter or a current temperature. For these transient changes, `RaiseResourceChanged(false)` raises the `ResourceChanged` event on the `IResourceManagement` facade without triggering a database persistence.
+An optional property name is captured automatically when called from a property setter via `[CallerMemberName]`.
+
+```cs
+public class MonitoredCell : Resource
+{
+    private int _partCount;
+
+    public int PartCount
+    {
+        get => _partCount;
+        set
+        {
+            _partCount = value;
+            RaiseResourceChanged(save: false); // PropertyName = "PartCount"
+        }
+    }
+}
+```
