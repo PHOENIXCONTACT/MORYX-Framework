@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, ElementRef, inject, signal, viewChild } from '@angular/core';
+import { Component, effect, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
@@ -31,6 +31,14 @@ export class ToolbarSearch {
   protected suggestions = this.searchService.suggestions;
   protected hasProvider = this.searchService.hasProvider;
   protected disableSearchBox = this.searchService.disableSearchBox;
+
+  constructor() {
+    effect(() => {
+      if (this.searchService.isOpen() && this.expanded()) {
+        this.collapse();
+      }
+    });
+  }
 
   protected expand(): void {
     this.expanded.set(true);
