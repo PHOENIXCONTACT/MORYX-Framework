@@ -1,4 +1,8 @@
 {
+  "CONFIRM_DIALOG": {
+    "CANCEL": "ANNULLA",
+    "CONFIRM": "CONFERMA"
+  },
   "APP": {
     "TITLE": "Piani di lavoro",
     "OPEN_WORKPLAN_MANAGEMENT": "Apri gestione piano di lavoro",
@@ -9,9 +13,7 @@
   "SESSIONS": {
     "CONFIRM_DIALOG": {
       "TITLE": "Vuoi chiudere la sessione corrente?",
-      "MESSAGE": "Se non hai salvato, le tue modifiche andranno perse. Sei sicuro di voler chiudere la sessione?",
-      "CONFIRM": "CONFERMA",
-      "CANCEL": "ANNULLA"
+      "MESSAGE": "Se non hai salvato, le tue modifiche andranno perse. Sei sicuro di voler chiudere la sessione?"
     },
     "CLOSE": "Chiudi"
   },
@@ -54,8 +56,7 @@
       "TITLE": "Cancella piano di lavoro",
       "MESSAGE_FIRST_PART": "La sessione corrente del piano di lavoro",
       "MESSAGE_SECOND_PART": "anche questo verrá chiuso, sei sicuro?",
-      "MESSAGE": "Sei sicuro di continuare con l'eliminazione?",
-      "CANCEL": "ANNULLA"
+      "MESSAGE": "Sei sicuro di continuare con l'eliminazione?"
     },
     "SNACK_BAR": {
       "SUCCESS_FIRST_PART": "Piano di lavoro",

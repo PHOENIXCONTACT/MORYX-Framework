@@ -80,10 +80,10 @@
 </mat-dialog-content>
 
 <div mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close color="primary">
+  <button mat-button mat-dialog-close type="button" cdkFocusInitial>
     {{ TranslationConstants.CANCEL | translate }}
   </button>
-  <button mat-flat-button (click)="submit()" [disabled]="!canReport() && !isLoading()">
+  <button mat-flat-button (click)="submit()" [disabled]="!canReport() && !isLoading()" type="button">
     {{ TranslationConstants.REPORT_DIALOG.REPORT | translate }}
   </button>
   @if (isLoading()) {

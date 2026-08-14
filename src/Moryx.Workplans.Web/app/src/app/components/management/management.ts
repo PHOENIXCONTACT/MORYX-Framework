@@ -13,7 +13,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import { WorkplanModel, WorkplanSessionModel } from '@api/models';
 import { WorkplanService } from '@api/services';
-import { ConfirmDialogButton, ConfirmDialog, ConfirmDialogData } from '@app/dialogs/dialog-confirm/dialog-confirm';
+import { ConfirmDialog, ConfirmDialogData } from '@app/dialogs/dialog-confirm/dialog-confirm';
 import '../../extensions/array.extensions';
 
 import { SessionsService } from '@app/services/sessions.service';
@@ -133,7 +133,6 @@ export class Management implements OnInit, OnDestroy {
         TranslationConstants.MANAGEMENT.CONFRIM_DIALOG.MESSAGE_SECOND_PART,
         TranslationConstants.MANAGEMENT.CONFRIM_DIALOG.MESSAGE,
         TranslationConstants.MANAGEMENT.CONFRIM_DIALOG.TITLE,
-        TranslationConstants.MANAGEMENT.CONFRIM_DIALOG.CANCEL,
         TranslationConstants.MANAGEMENT.SNACK_BAR.SUCCESS_FIRST_PART,
         TranslationConstants.MANAGEMENT.SNACK_BAR.SUCCESS_SECOND_PART
       ]));
@@ -156,21 +155,14 @@ export class Management implements OnInit, OnDestroy {
       data: <ConfirmDialogData>{
         title: translations[TranslationConstants.MANAGEMENT.CONFRIM_DIALOG.TITLE],
         message: dialogMessage,
-        buttons: [
-          <ConfirmDialogButton>{
-            text: translations[TranslationConstants.MANAGEMENT.CONFRIM_DIALOG.CANCEL],
-            action: () => confirmDialog.close()
-          },
-          <ConfirmDialogButton>{
-            text: 'Ok', // ToDo: internationalize
-            action: () => {
-              this.workplanService.deleteWorkplan({id: workplan?.id ?? 0}).then(() => {
-                this.completeTheDeletion(session, workplan, translations);
-                confirmDialog.close();
-              }).catch((err: HttpErrorResponse) => this.snackbarService.handleError(err));
-            }
-          }
-        ]
+      }
+    });
+
+    confirmDialog.afterClosed().subscribe(async (confirmed) => {
+      if (confirmed) {
+        await this.workplanService.deleteWorkplan({id: workplan?.id ?? 0}).then(() => {
+          this.completeTheDeletion(session, workplan, translations);
+        }).catch((err: HttpErrorResponse) => this.snackbarService.handleError(err));
       }
     });
   }
