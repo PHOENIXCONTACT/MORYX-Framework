@@ -62,22 +62,18 @@ internal static class FactoryMonitorHelper
         broadcast(Cell_State_Event_Type_Key, cellStateChangedModel);
     }
 
-    public static void ResourceUpdated(IResourceManagement resourceManager,
-        Func<IEnumerable<IMachineLocation>, Dictionary<IMachineLocation, ICell>> mapCellsTo,
+    public static void ResourceUpdated(IResource changedResource,
+        Dictionary<IMachineLocation, ICell> locationToCellMappings,
         Converter.Converter converter,
+        IResourceManagement resourceManager,
         Action<string, object> broadcast)
     {
-        var locations = resourceManager.GetResources<IMachineLocation>();
-        // ToDo: Added and removed resources not reflected
-        var locationToCellMappings = mapCellsTo(locations);
+        var mapping = locationToCellMappings.FirstOrDefault(l2c => l2c.Value.Id == changedResource.Id);
+        if (mapping.Key is null)
+            return;
 
-        foreach (var l2cMapping in locationToCellMappings)
-        {
-            var cell = l2cMapping.Value;
-            var location = l2cMapping.Key;
-            var resourceChangedModel = cell.GetResourceChangedModel(converter, resourceManager, location);
-            broadcast(Recource_Event_Type_Key, resourceChangedModel);
-        }
+        var resourceChangedModel = mapping.Value.GetResourceChangedModel(converter, resourceManager, mapping.Key);
+        broadcast(Recource_Event_Type_Key, resourceChangedModel);
     }
 
     public static List<TransportRouteModel> CreateRoutes(IReadOnlyList<IMachineLocation> locations)

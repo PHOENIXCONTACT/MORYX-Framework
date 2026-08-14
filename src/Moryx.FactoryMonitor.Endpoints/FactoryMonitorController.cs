@@ -8,7 +8,6 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Channels;
-using System.Timers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -24,7 +23,6 @@ using Moryx.FactoryMonitor.Endpoints.Extensions;
 using Moryx.FactoryMonitor.Endpoints.Models;
 using Moryx.FactoryMonitor.Endpoints.Properties;
 using Moryx.Orders;
-using Timer = System.Timers.Timer;
 
 namespace Moryx.FactoryMonitor.Endpoints;
 
@@ -51,7 +49,6 @@ public class FactoryMonitorController : ControllerBase
     };
 
     private Dictionary<IMachineLocation, ICell> _locationToCellMappings;
-    private Timer _resourceChangedTimer;
     private readonly ILogger<FactoryMonitorController> _logger;
 
     public FactoryMonitorController(IResourceManagement resourceManager, IProcessControl processControl, IOrderManagement orderManagement, ILogger<FactoryMonitorController> logger = null)
@@ -246,8 +243,8 @@ public class FactoryMonitorController : ControllerBase
         var converter = new Converter.Converter(_serialization, _logger);
 
         // Define event handlers using helper methods
-        var resourceEventHandler = new ElapsedEventHandler((_, _) =>
-            FactoryMonitorHelper.ResourceUpdated(_resourceManager, l => MapCellsTo(l), converter, Broadcast));
+        var resourceChangedEventHandler = new EventHandler<IResource>((_, resource) =>
+            FactoryMonitorHelper.ResourceUpdated(resource, _locationToCellMappings, converter, _resourceManager, Broadcast));
 
         var capabilitiesEventHandler = new EventHandler<ICapabilities>((sender, _) =>
             FactoryMonitorHelper.PublishCellUpdate((sender as ICell)?.GetCellStateChangedModel(), Broadcast));
@@ -263,12 +260,6 @@ public class FactoryMonitorController : ControllerBase
             FactoryMonitorHelper.ActivityUpdated(eventArgs, [.. _locationToCellMappings.Values],
                 TryGetOrders(), Broadcast));
 
-        // Setup timer
-        _resourceChangedTimer = new();
-        _resourceChangedTimer.Interval = 5000;
-        _resourceChangedTimer.AutoReset = true;
-        _resourceChangedTimer.Enabled = true;
-
         try
         {
             var result = TypedResults.ServerSentEvents(Subscribe(cancellationToken));
@@ -279,10 +270,10 @@ public class FactoryMonitorController : ControllerBase
                 l2cMapping.Value.CapabilitiesChanged += capabilitiesEventHandler;
             }
 
+            _resourceManager.ResourceChanged += resourceChangedEventHandler;
             _orderManager.OperationStarted += orderStartedEventHandler;
             _orderManager.OperationUpdated += orderEventHandler;
             _processControl.ActivityUpdated += activityEventHandler;
-            _resourceChangedTimer.Elapsed += resourceEventHandler;
 
             await result.ExecuteAsync(HttpContext);
         }
@@ -298,11 +289,10 @@ public class FactoryMonitorController : ControllerBase
                 l2cMapping.Value.CapabilitiesChanged -= capabilitiesEventHandler;
             }
 
+            _resourceManager.ResourceChanged -= resourceChangedEventHandler;
             _orderManager.OperationStarted -= orderStartedEventHandler;
             _orderManager.OperationUpdated -= orderEventHandler;
             _processControl.ActivityUpdated -= activityEventHandler;
-            _resourceChangedTimer.Elapsed -= resourceEventHandler;
-            _resourceChangedTimer?.Dispose();
         }
 
         return;
