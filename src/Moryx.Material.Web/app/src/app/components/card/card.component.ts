@@ -18,12 +18,25 @@ export class CardComponent {
   links = input<string[]>([]);
   container = input.required<MaterialContainerModel>();
   private dialog = inject(MatDialog);
-
+  private materialApi = inject(MaterialManagementService)
+  private snackbarService = inject(SnackbarService);
 
   preAdvice() {
-    this.dialog.open(DialogPreAdviceComponent, {
+    const dialogRef = this.dialog.open(DialogPreAdviceComponent, {
       data: this.container()
     });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        const request = result as PreAdvideModel;
+        const response = firstValueFrom(this.materialApi.preAdviceAsync({ body: request }));
+        response.catch((e: HttpErrorResponse) => {
+          this.snackbarService.processStatusCodes(e);
+        })
+          .then(() => {
+            this.snackbarService.showSuccess("Advice done!");
+          })
+      }
+    })
   }
 
   link() {

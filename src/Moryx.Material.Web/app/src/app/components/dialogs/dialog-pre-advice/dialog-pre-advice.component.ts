@@ -19,8 +19,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class DialogPreAdviceComponent {
   private data = inject<ResourceModel>(MAT_DIALOG_DATA);
   private dialogRef = inject(MatDialogRef<DialogPreAdviceComponent>);
-  private materialApi = inject(MaterialManagementService)
-  private snackbarService = inject(SnackbarService);
 
   reason = signal<PreAdviceDepartureReasonModel | undefined>(undefined);
 
@@ -33,13 +31,6 @@ export class DialogPreAdviceComponent {
       containerId: this.data.id,
       departureReason: this.reason()
     };
-    const response = firstValueFrom(this.materialApi.preAdviceAsync({ body: request }));
-    response.catch((e: HttpErrorResponse) => {
-      this.snackbarService.processStatusCodes(e);
-    })
-    .then(() => {
-      this.snackbarService.showSuccess("Advice done!");
-      this.dialogRef.close();
-    })
+    this.dialogRef.close(request);
   }
 }
