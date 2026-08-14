@@ -12,14 +12,14 @@ namespace Moryx.Material.Management.Components;
 [Component(LifeCycle.Singleton, typeof(ILineageEventStorage))]
 internal class InMemoryLineageEventStorage : ILineageEventStorage
 {
-    private readonly List<ILineageEvent> _events = new();
+    private readonly List<ILineageEvent> _events = [];
     private readonly Lock _lock = new();
 
-    public IContainerPool Pool { get; set; }
+    public required IContainerPool Pool { get; set; }
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        Pool.StateChanged += OnContainerStateChanged;
+        // TODO: Read when lineage storage is correctly implemented Pool.StateChanged += OnContainerStateChanged;
         return Task.CompletedTask;
     }
 
