@@ -103,6 +103,8 @@ export class SpotlightSearch {
   }
 
   protected close(): void {
+    this.query.set('');
+    this.searchService.search('', false);
     this.searchService.close();
   }
 
