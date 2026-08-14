@@ -14,7 +14,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { MediaServerService } from '@app/api/services';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/translation-constants';
 import { environment } from '../../../environments/environment';
 import { AddVariantResultData, DialogAddVariant } from '@app/dialogs/dialog-add-variant/dialog-add-variant';
 import { DialogDelete } from '@app/dialogs/dialog-delete/dialog-delete';

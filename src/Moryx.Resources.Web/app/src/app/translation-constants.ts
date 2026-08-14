@@ -4,20 +4,12 @@
 */
 
 export class TranslationConstants {
-  public static readonly LANGUAGES = {
-    EN: 'en',
-    DE: 'de',
-    IT: 'it',
-    ZH: 'zh'
-  };
+  public static readonly LANGUAGES = ['en', 'de', 'it', 'zh'];
 
   public static readonly APP = {
     RESOURCES: 'APP.RESOURCES',
     NO_NAME: 'APP.NO_NAME'
   };
-
-  public static readonly DISMISS: 'DISMISS';
-  public static readonly SERVER_NOT_REACHABLE: 'SERVER_NOT_REACHABLE';
 
   public static readonly SHARED = {
     DELETE: 'SHARED.DELETE',
@@ -70,4 +62,3 @@ export class TranslationConstants {
     REMOVE: 'REMOVE_RESOURCE_DIALOG.REMOVE',
   };
 }
-

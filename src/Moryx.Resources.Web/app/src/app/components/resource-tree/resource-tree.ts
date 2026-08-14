@@ -10,7 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ResourceModel } from '../../api/models';
 import { SessionService } from '@app/services/session.service';
-import { TranslationConstants } from '@app/extensions/translation-constants';
+import { TranslationConstants } from '@app/translation-constants';
 import { getHierarchieLineFor } from '@app/models/TypeTree';
 
 @Component({

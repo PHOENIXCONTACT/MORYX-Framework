@@ -46,9 +46,5 @@
     "LINK": "Link",
     "CLOSE": "CLOSE",
     "COPY_TO_CLIPBOARD": "Copy to clipboard"
-  },
-
-  "DISMISS":"DISMISS",
-  "DEFAULT_MESSAGE": "Something went wrong on the server.",
-  "SERVER_NOT_REACHABLE": "Der Server ist nicht erreichbar, bitte überprüfen Sie Ihre Internetverbindung oder Proxy-Einstellungen."
+  }
 }

@@ -4,11 +4,7 @@
 */
 
 export class TranslationConstants {
-  public static readonly LANGUAGES = {
-    EN: 'en',
-    DE: 'de',
-    IT: 'it',
-  };
+  public static readonly LANGUAGES = ['en', 'de', 'it', 'zh'];
 
   public static readonly PROCESSES = {
     ACTIVITIES: 'PROCESSES.ACTIVITIES',
@@ -60,9 +56,4 @@ export class TranslationConstants {
       RESET_GROUP: "PROCESS_HOLDER_GROUPS.RESET_GROUP",
       EMPTY_STATE_TEXT: "PROCESS_HOLDER_GROUPS.EMPTY_STATE_TEXT"
   };
-
-
-  public static readonly DISMISS = 'DISMISS';
-  public static readonly SERVER_NOT_REACHABLE = 'SERVER_NOT_REACHABLE';
 }
-

@@ -6,7 +6,7 @@
 import { Component, effect, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TranslatePipe } from '@ngx-translate/core';
-import { TranslationConstants } from '@app/extensions/translation-constants';
+import { TranslationConstants } from '@app/translation-constants';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatButtonModule } from '@angular/material/button';
 import { EditResourceService } from '@app/services/edit-resource.service';

@@ -4,12 +4,7 @@
 */
 
 export class TranslationConstants {
-  public static readonly LANGUAGES = {
-    EN: 'en',
-    DE: 'de',
-    IT: 'it',
-    ZH: 'zh'
-  };
+  public static readonly LANGUAGES = ['en', 'de', 'it', 'zh'];
 
   public static readonly APP = {
     PRODUCTS: 'APP.PRODUCTS',
@@ -25,8 +20,7 @@ export class TranslationConstants {
     EMPTY_STATE_PARTS_TEXT: 'APP.EMPTY_STATE_PARTS_TEXT',
     FAILED_LOADING: 'APP.FAILED_LOADING',
   };
-  public static readonly DISMISS: 'DISMISS';
-  public static readonly SERVER_NOT_REACHABLE: 'SERVER_NOT_REACHABLE';
+  public static readonly DISMISS = 'DISMISS';
   public static readonly PRODUCT_NOT_FOUND: 'PRODUCT_NOT_FOUND';
   public static readonly SHARED = {
     NAME: 'SHARED.NAME',
@@ -129,4 +123,3 @@ export class TranslationConstants {
     ADD: 'SIDEBAR_BUTTONS.ADD'
   }
 }
-

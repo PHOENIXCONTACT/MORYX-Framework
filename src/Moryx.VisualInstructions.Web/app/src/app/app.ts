@@ -6,12 +6,11 @@
 import { Component, inject, OnInit, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { LanguageService } from '@moryx/ngx-web-framework/services';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../environments/environment';
 import { ConfigurationDialog, DialogData } from './dialogs/configuration-dialog/configuration-dialog';
-import { TranslationConstants } from './extensions/translation-constants.extensions';
+import { TranslationConstants } from './translation-constants';
 import { CookieService } from './services/cookie.service';
 import { InstructionService } from './services/instruction.service';
 import { WorkerInstructions } from './components/worker-instructions/worker-instructions';
@@ -38,7 +37,6 @@ export class App implements OnInit {
   private translateService = inject(TranslateService);
   private cookieService = inject(CookieService);
   private instructionService = inject(InstructionService);
-  private languageService = inject(LanguageService);
   private destroyRef = inject(DestroyRef);
 
   protected environment = environment;
@@ -56,13 +54,6 @@ export class App implements OnInit {
       this.openConfigDialog();
     }
 
-    this.translateService.addLangs([
-      TranslationConstants.LANGUAGES.EN,
-      TranslationConstants.LANGUAGES.DE,
-      TranslationConstants.LANGUAGES.IT,
-    ]);
-    this.translateService.setFallbackLang('en');
-    this.translateService.use(this.languageService.getFallbackLang());
     this.destroyRef.onDestroy(() => this.disconnectEvents());
   }
 

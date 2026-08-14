@@ -7,7 +7,7 @@ import { Component, inject, linkedSignal, ChangeDetectionStrategy } from '@angul
 import { MatDialog } from '@angular/material/dialog';
 import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/translation-constants';
 import { PartConnector, PartModel } from '@api/models';
 import { DialogAddPart } from '@app/dialogs/dialog-add-part/dialog-add-part';
 import { EditProductsService } from '@app/services/edit-products.service';
