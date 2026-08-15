@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Identity;
-using Moryx.AbstractionLayer.Resources;
 using Moryx.Material.Lineage;
 
 namespace Moryx.Material.Facade;
@@ -51,6 +50,7 @@ public interface IMaterialManagement
     /// Records a material request, creating a virtual container in <see cref="States.RequestedStateInformation"/>.
     /// </summary>
     /// <param name="request">Material request to record.</param>
+    /// <param name="targetContainerType"></param>
     /// <param name="cancellationToken">Token used to cancel the asynchronous operation.</param>
     /// <returns>The requested virtual container.</returns>
     Task<IMaterialContainer> RequestMaterialAsync(MaterialRequest request, Type targetContainerType, CancellationToken cancellationToken = default);
@@ -94,11 +94,11 @@ public interface IMaterialManagement
     Task<IMaterialContainer> PreAdviceMaterialAsync(MaterialPreAdvice preAdvice, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Deregisters a container, transitioning it into <see cref="States.DeregisteredStateInformation"/>.
+    /// Deregisters a container using its <see cref="IPersistentObject.Id"/>, transitioning it into <see cref="States.DeregisteredStateInformation"/>.
     /// </summary>
-    /// <param name="container">Container to deregister.</param>
+    /// <param name="id">Id of the container to be deregistered</param>
     /// <param name="cancellationToken">Token used to cancel the asynchronous operation.</param>
-    Task DeregisterContainerAsync(IMaterialContainer container, CancellationToken cancellationToken = default);
+    Task DeregisterContainerAsync(long id, CancellationToken cancellationToken = default);
     #endregion
 
     // TODO: Decide whether we should map DELETE actions for container from resource facade to here
