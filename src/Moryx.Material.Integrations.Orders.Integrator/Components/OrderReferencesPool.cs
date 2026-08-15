@@ -75,6 +75,7 @@ internal class OrderReferencesPool : IOrderReferencesPool
     #endregion
 
     #region IOrderReferencesPool
+
     public InternalOrderReference? Get(OrderReference? reference)
     {
         if (reference is null)
@@ -98,6 +99,8 @@ internal class OrderReferencesPool : IOrderReferencesPool
             State = ReferenceState.Unavailable
         });
     }
-    #endregion
 
+    public IReadOnlyList<OrderReference> GetAll() => [.. _operationReferences.Values];
+
+    #endregion
 }
