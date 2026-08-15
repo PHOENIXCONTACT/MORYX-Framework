@@ -3,12 +3,13 @@
 
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Factory;
+using Moryx.Material.Integrations.Orders;
 using Moryx.Material.States;
 using Moryx.Tools;
 
 namespace Moryx.Material.Endpoints.Model;
 
-internal static class Converter
+internal static class MaterialManagementConverter
 {
     #region ToModel
     public static MaterialContainerTypeModel ToModel(this Type type) => new()
@@ -57,9 +58,12 @@ internal static class Converter
         _ => PreAdviceDepartureReasonModel.Other
     };
 
+    public static IReadOnlyList<MaterialContainerModel> ToModels(this IEnumerable<IMaterialContainer> containers)
+        => containers.Select(c => c.ToModel()).ToArray();
+
     public static MaterialContainerModel ToModel(this IMaterialContainer container)
     {
-        return new MaterialContainerModel
+        var containerModel = new MaterialContainerModel
         {
             Id = container.Id,
             Name = container.Name,
@@ -71,12 +75,16 @@ internal static class Converter
             State = container.State.ToModel(),
             Type = container.GetType().ToModel(),
         };
+
+        if (container is IOrderLinkedMaterialContainer { LinkedOrder: not null } orderLinkedContainer)
+        {
+            containerModel.References.Add(orderLinkedContainer.LinkedOrder.ToModel());
+        }
+
+        return containerModel;
     }
 
-    public static IReadOnlyList<MaterialContainerModel> ToModels(this IEnumerable<IMaterialContainer> containers)
-        => containers.Select(c => c.ToModel()).ToArray();
-
-    public static PreAdvideModel ToModel(this MaterialPreAdvice preAdvice) => new()
+    public static PreAdviceModel ToModel(this MaterialPreAdvice preAdvice) => new()
     {
         ContainerId = preAdvice.ContainerId,
         DepartureReason = preAdvice.DepartureReason.ToModel()
@@ -94,7 +102,7 @@ internal static class Converter
         _ => PreAdviceDepartureReason.Other
     };
 
-    public static MaterialPreAdvice ToBusiness(this PreAdvideModel model) => new()
+    public static MaterialPreAdvice ToBusiness(this PreAdviceModel model) => new()
     {
         ContainerId = model.ContainerId,
         DepartureReason = model.DepartureReason.ToBusiness()
