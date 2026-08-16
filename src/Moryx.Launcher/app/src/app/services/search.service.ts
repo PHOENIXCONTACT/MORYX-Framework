@@ -14,8 +14,8 @@ export class SearchService {
   private callback: SearchRequestCallback | null = null;
 
   /** Whether the spotlight search overlay is currently open. */
-  private readonly _isOpen = signal(false);
-  readonly isOpen = this._isOpen.asReadonly();
+  private readonly _isSpotlightOpen = signal(false);
+  readonly isSpotlightOpen = this._isSpotlightOpen.asReadonly();
 
   /** Whether a module has registered a search provider. */
   private readonly _hasProvider = signal(false);
@@ -43,12 +43,12 @@ export class SearchService {
   /** Opens the spotlight search overlay. */
   open(): void {
     this.clearSuggestions();
-    this._isOpen.set(true);
+    this._isSpotlightOpen.set(true);
   }
 
   /** Closes the spotlight search overlay and clears suggestions. */
   close(): void {
-    this._isOpen.set(false);
+    this._isSpotlightOpen.set(false);
     this.clearSuggestions();
   }
 
