@@ -6,21 +6,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Moryx.AbstractionLayer.Products;
-using Moryx.AbstractionLayer.Recipes;
-using Moryx.Products.Management;
-using Moryx.Products.Management.NullStrategies;
-using Moryx.Products.Samples;
-using Moryx.Products.Samples.Recipe;
-using Moryx.Tools;
-using Moryx.Workplans;
 using Moq;
 using Moryx.AbstractionLayer.Identity;
+using Moryx.AbstractionLayer.Products;
+using Moryx.AbstractionLayer.Recipes;
 using Moryx.AbstractionLayer.TestTools;
 using Moryx.AbstractionLayer.Workplans;
 using Moryx.Model.Repositories;
+using Moryx.Products.Management;
 using Moryx.Products.Management.Model;
+using Moryx.Products.Management.NullStrategies;
+using Moryx.Products.Samples;
+using Moryx.Products.Samples.Recipe;
+using Moryx.Products.TestProducts;
 using Moryx.Serialization;
+using Moryx.Tools;
+using Moryx.Workplans;
 using NUnit.Framework;
 
 namespace Moryx.Products.IntegrationTests;
@@ -42,7 +43,7 @@ public class ProductStorageTests
         // Enable test mode
         ReflectionTool.TestMode = true;
         // This call is necessary for NUnit to load the type
-        var someType = new WatchType();
+        _ = new WatchType();
     }
 
     [SetUp]
@@ -134,7 +135,38 @@ public class ProductStorageTests
                     TargetType = typeof(WatchPackageType).FullName,
                     JsonColumn = nameof(IGenericColumns.Text8),
                     PropertyConfigs = []
-                }
+                },
+
+                new GenericTypeConfiguration
+                {
+                    TargetType = typeof(GenericJsonTestProductType).FullName,
+                    JsonColumn = nameof(IGenericColumns.Text8),
+                    PropertyConfigs = []
+                },
+
+                new GenericTypeConfiguration
+                {
+                    TargetType = typeof(TextColumnMapperTestProductType).FullName,
+
+                    JsonColumn = nameof(IGenericColumns.Text8),
+
+                    PropertyConfigs =
+                    [
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(TextColumnMapperTestProductType.Integer1),
+                            Column = nameof(IGenericColumns.Integer1),
+                            PluginName = nameof(IntegerColumnMapper)
+                        },
+
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(TextColumnMapperTestProductType.MyText1),
+                            Column = nameof(IGenericColumns.Text1),
+                            PluginName = nameof(TextColumnMapper)
+                        }
+                    ]
+                },
             ],
             InstanceStrategies =
             [
@@ -867,14 +899,20 @@ public class ProductStorageTests
         // Act
         bool result;
         if (stillUsed)
+        {
             result = await productMgr.DeleteType(watch.WatchFace.Product.Id);
+        }
         else
+        {
             result = await productMgr.DeleteType(watch.Id);
+        }
 
         // Assert
         Assert.That(!result, Is.EqualTo(stillUsed));
         if (stillUsed)
+        {
             return;
+        }
 
         var matches = await productMgr.LoadTypes(new ProductQuery
         {
@@ -950,6 +988,169 @@ public class ProductStorageTests
         Assert.That(byType4.Count, Is.GreaterThanOrEqualTo(1));
         Assert.That(byType5.Count, Is.GreaterThanOrEqualTo(1));
         Assert.That(byType6.Count, Is.GreaterThanOrEqualTo(1));
+    }
+
+    [Test(Description = "Additional properties that exceed the configured generic columns must be stored in the JsonColumn and restored correctly.")]
+    public async Task SaveAndLoadGenericJsonType()
+    {
+        // Arrange
+        var product = new GenericJsonTestProductType
+        {
+            Name = "JsonTest",
+            Identity = new ProductIdentity("900001", 1),
+
+            Integer9 = 99,
+            Integer10 = 100,
+
+            Float9 = 9.9,
+            Float10 = 10.1f,
+
+            Text8 = "Text8Value",
+            Text9 = "Text9Value",
+            Text10 = "Text10Value"
+        };
+
+        // Act
+        var id = await _storage.SaveTypeAsync(product);
+        var loaded = (GenericJsonTestProductType)await _storage.LoadTypeAsync(id);
+
+        // Assert
+        Assert.That(loaded.Integer9, Is.EqualTo(product.Integer9));
+        Assert.That(loaded.Integer10, Is.EqualTo(product.Integer10));
+
+        Assert.That(loaded.Float9, Is.EqualTo(product.Float9));
+        Assert.That(loaded.Float10, Is.EqualTo(product.Float10));
+
+        Assert.That(loaded.Text8, Is.EqualTo(product.Text8));
+        Assert.That(loaded.Text9, Is.EqualTo(product.Text9));
+        Assert.That(loaded.Text10, Is.EqualTo(product.Text10));
+    }
+
+    [Test(Description = "Complex properties mapped through TextColumnMapper must be serialized and restored correctly.")]
+    public async Task SaveAndLoadComplexProperty()
+    {
+        // Arrange
+        var product = new TextColumnMapperTestProductType
+        {
+            Name = "ComplexDataTest",
+            Identity = new ProductIdentity("900002", 1),
+
+            Integer1 = 42,
+            Float1 = 123.456,
+            MyText1 = "RootText",
+
+            ComplexData1 = new ComplexData
+            {
+                Content = "Content1",
+                PropertyName = "Property1",
+                Number = 11,
+                Weight = 12.5f
+            },
+
+            ProdDataAdded = new TestProdData
+            {
+                TotalAmount = 12,
+                WorkerName = "Worker1"
+            }
+        };
+
+        // Act
+        var id = await _storage.SaveTypeAsync(product);
+        var loaded = (TextColumnMapperTestProductType)await _storage.LoadTypeAsync(id);
+
+        // Assert
+        Assert.That(loaded.ComplexData1, Is.Not.Null);
+        Assert.That(loaded.ComplexData1.Content, Is.EqualTo(product.ComplexData1.Content));
+        Assert.That(loaded.ComplexData1.PropertyName, Is.EqualTo(product.ComplexData1.PropertyName));
+        Assert.That(loaded.ComplexData1.Number, Is.EqualTo(product.ComplexData1.Number));
+        Assert.That(loaded.ComplexData1.Weight, Is.EqualTo(product.ComplexData1.Weight));
+    }
+
+    [Test(Description = "Loading products with null complex properties must not throw an ArgumentNullException.")]
+    public async Task SaveAndLoadTypeWithNullComplexProperty()
+    {
+        // Arrange
+        var product = new TextColumnMapperTestProductType
+        {
+            Name = "NullComplex",
+            Identity = new ProductIdentity("900003", 1),
+
+            ComplexData1 = null,
+            ProdDataAdded = null
+        };
+
+        var id = await _storage.SaveTypeAsync(product);
+
+        // Act
+        var loaded = (TextColumnMapperTestProductType)await _storage.LoadTypeAsync(id);
+
+        // Assert
+        Assert.That(loaded.ComplexData1, Is.Null);
+        Assert.That(loaded.ProdDataAdded, Is.Null);
+    }
+
+    /// <summary>
+    /// Should be obsolete in Moryx 12 because the double use of TEXT8-Column should be eliminated
+    /// </summary>
+    /// <returns></returns>
+    [Test(Description = "If Text8 column contains plain text no exception should be thrown")]
+    public async Task LoadTypeWithPlainTextInJsonColumn()
+    {
+        // Arrange
+        var product = new GenericJsonTestProductType
+        {
+            Name = "Legacy",
+            Identity = new ProductIdentity("900004", 1),
+
+            Text8 = "H"
+        };
+
+        var id = await _storage.SaveTypeAsync(product);
+
+        // Manipulation like older systems:
+        // Text8 just contains Plain Text
+
+        // Act / Assert
+        Assert.DoesNotThrowAsync(async () =>
+        {
+            await _storage.LoadTypeAsync(id);
+        });
+    }
+
+    /// <summary>
+    /// Should be obsolete in Moryx 12 because the double use of TEXT8-Column should be eliminated
+    /// </summary>
+    /// <returns></returns>
+    [Test(Description = "Loading a type with an empty JSON object in the JsonColumn must not fail. This reproduces the documented customer workaround using '{}'.")]
+    public async Task LoadTypeWithEmptyJsonObject()
+    {
+        // Arrange
+        var product = new TextColumnMapperTestProductType
+        {
+            Name = "EmptyJson",
+            Identity = new ProductIdentity("900004", 1)
+        };
+
+        var id = await _storage.SaveTypeAsync(product);
+
+        // simulate legacy database content
+        using (var uow = _factory.Create())
+        {
+            var repo = uow.GetRepository<IProductTypeRepository>();
+
+            var entity = repo.GetByKey(id);
+
+            entity.CurrentVersion.Text8 = "{}";
+
+            await uow.SaveChangesAsync();
+        }
+
+        // Act
+        var loaded = (TextColumnMapperTestProductType)
+            await _storage.LoadTypeAsync(id);
+
+        // Assert
+        Assert.That(loaded, Is.Not.Null);
     }
 
     [Test(Description = "LoadTypesAsync(ProductQuery) returns fully populated product types if full loading is requested.")]
