@@ -150,6 +150,7 @@
     <Project Path="src/Tests/Moryx.Workplans.Editing.Tests/Moryx.Workplans.Editing.Tests.csproj" />
     <Project Path="src/Tests/Moryx.VisualInstructions.Controller.Tests/Moryx.VisualInstructions.Controller.Tests.csproj" />
     <Project Path="src/Tests/Moryx.VisualInstructions.Endpoints.Tests/Moryx.VisualInstructions.Endpoints.Tests.csproj" />
+    <Project Path="src/Tests/Moryx.AbstractionLayer.Resources.Endpoints.Tests/Moryx.AbstractionLayer.Resources.Endpoints.Tests.csproj" />
   </Folder>
   <Folder Name="/TestTools/">
     <Project Path="src/Moryx.AbstractionLayer.TestTools/Moryx.AbstractionLayer.TestTools.csproj" />
