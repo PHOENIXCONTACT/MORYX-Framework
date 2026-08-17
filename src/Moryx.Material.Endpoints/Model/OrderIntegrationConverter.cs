@@ -23,6 +23,7 @@ internal static class OrderIntegrationConverter
                 StatusDisplayName = status?.GetDisplayName(),
                 ReferenceStateKey = (int)r.State,
                 ReferenceStateDisplayName = r.State.GetDisplayName(),
+                OperationSourceType = r.Source?.GetType().GetDisplayName()
             };
         }).ToArray();
     }
