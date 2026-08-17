@@ -16,4 +16,6 @@ public class OrderReferenceModel
     public int StatusKey { get; set; }
 
     public string? StatusDisplayName { get; set; }
+
+    public string? OperationSourceType { get; internal set; }
 }

@@ -43,6 +43,7 @@ internal class OrderReferencesPool : IOrderReferencesPool
         _ = _operationReferences.AddOrUpdate(operation.Identifier, operation.ToReference(), (key, current) =>
         {
             current.Status = operation.State;
+            current.Source = operation.Source;
             current.State = ReferenceState.Active;
             return current;
         });
@@ -51,8 +52,9 @@ internal class OrderReferencesPool : IOrderReferencesPool
     private void OnOperationCompleted(object? sender, OperationReportEventArgs e)
     {
         _ = _operationReferences.TryRemove(e.Operation.Identifier, out var completedOperation);
-        _ = (completedOperation?.State = ReferenceState.Inactive);
-        _ = (completedOperation?.Status = e.Operation.State);
+        completedOperation?.State = ReferenceState.Inactive;
+        completedOperation?.Status = e.Operation.State;
+        completedOperation?.Source = e.Operation.Source;
     }
 
     private static void Deactivate(KeyValuePair<Guid, InternalOrderReference> pair)
@@ -60,6 +62,7 @@ internal class OrderReferencesPool : IOrderReferencesPool
         var operation = pair.Value;
         operation.State = ReferenceState.Inactive;
         operation.Status = null;
+        operation.Source = null;
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
