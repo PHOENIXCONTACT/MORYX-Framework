@@ -3,8 +3,7 @@
 
 using Moq;
 using Moryx.AbstractionLayer.Resources.Endpoints.Models;
-using Moryx.AbstractionLayer.TestTools;
-using Moryx.AbstractionLayer.TestTools.Resources;
+using Moryx.AbstractionLayer.Resources.Endpoints.Tests.Mocks;
 using Moryx.Runtime.Modules;
 using NUnit.Framework;
 
@@ -13,58 +12,49 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints.Tests;
 [TestFixture]
 internal class ResourceModificationControllerTests
 {
-    private Mock<IResourceManagement> _resourceManagementMock;
-    private Mock<IResourceTypeTree> _resourceTypeTreeMock;
-    private Mock<IModuleManager> _moduleManagerMock;
-    private Mock<IServiceProvider> _serviceProviderMock;
-    private Mock<IResourceTypeNode> _nodeMock;
-    private ResourceModificationController _controller;
-    private ReferenceResource _resource;
-    private ResourceQuery _query;
-    private ReferenceCollectionMock<ISimpleResource> _references;
+    private Mock<IResourceManagement>? _resourceManagementMock;
+    private Mock<IResourceTypeTree>? _resourceTypeTreeMock;
+    private Mock<IModuleManager>? _moduleManagerMock;
+    private Mock<IServiceProvider>? _serviceProviderMock;
+    private Mock<IResourceTypeNode>? _nodeMock;
+    private ResourceModificationController? _controller;
+    private ReferencingResource? _resource;
+    private ResourceQuery? _query;
 
     [SetUp]
     public void SetUp()
     {
-        _resourceManagementMock = new Mock<IResourceManagement>();
-        _resourceTypeTreeMock = new Mock<IResourceTypeTree>();
-        _moduleManagerMock = new Mock<IModuleManager>();
-        _serviceProviderMock = new Mock<IServiceProvider>();
-        _nodeMock = new Mock<IResourceTypeNode>();
-        _references = new ReferenceCollectionMock<ISimpleResource>();
-
-        _resource = new ReferenceResource
-        {
-            References = _references,
-        };
+        _resource = new ReferencingResource();
 
         _query = new ResourceQuery();
+
+        _nodeMock = new Mock<IResourceTypeNode>();
         _nodeMock.SetupGet(node => node.ResourceType)
-            .Returns(typeof(ReferenceResource));
+            .Returns(typeof(ReferencingResource));
         _nodeMock.SetupGet(node => node.PropertiesOfResourceType)
-            .Returns(typeof(ReferenceResource).GetProperties());
-        _resourceTypeTreeMock.Setup(tree => tree[typeof(ReferenceResource).FullName])
+            .Returns(typeof(ReferencingResource).GetProperties());
+
+        _resourceTypeTreeMock = new Mock<IResourceTypeTree>();
+        _resourceTypeTreeMock.Setup(tree => tree[typeof(ReferencingResource).FullName])
             .Returns(_nodeMock.Object);
+
+        _resourceManagementMock = new Mock<IResourceManagement>();
+        _resourceManagementMock.Setup(management => management.GetResourcesUnsafe(It.IsAny<Func<IResource, bool>>()))
+            .Returns((Func<IResource, bool> predicate) => predicate(_resource) ? [_resource] : Array.Empty<IResource>());
         _resourceManagementMock
-            .Setup(management => management.GetResourcesUnsafe<IResource>(
-                       It.IsAny<Func<IResource, bool>>()))
-            .Returns((Func<IResource, bool> predicate) =>
-                         predicate(_resource) ? new IResource[] { _resource }
-                                              : Array.Empty<IResource>());
-        _resourceManagementMock
-            .Setup(management => management.ReadUnsafe<ResourceModel>(
-                       It.IsAny<long>(), It.IsAny<Func<Resource, ResourceModel>>()))
-            .Returns((long _,
-                      Func<Resource, ResourceModel> converter) => converter(_resource));
+            .Setup(management => management.ReadUnsafe(It.IsAny<long>(), It.IsAny<Func<Resource, ResourceModel>>()))
+            .Returns((long _, Func<Resource, ResourceModel> converter) => converter(_resource));
+
         var facadeContainerMock = new Mock<IServerModule>();
-        facadeContainerMock.As<IFacadeContainer<IResourceManagement>>()
-            .Setup(container => container.Facade)
+        facadeContainerMock.As<IFacadeContainer<IResourceManagement>>().Setup(container => container.Facade)
             .Returns(_resourceManagementMock.Object);
-        _moduleManagerMock
-            .Setup(manager => manager.AllModules)
-            .Returns(new[] { facadeContainerMock.Object });
-        _controller = new ResourceModificationController(
-            _resourceManagementMock.Object, _resourceTypeTreeMock.Object,
+
+        _moduleManagerMock = new Mock<IModuleManager>();
+        _moduleManagerMock.Setup(manager => manager.AllModules).Returns([facadeContainerMock.Object]);
+
+        _serviceProviderMock = new Mock<IServiceProvider>();
+
+        _controller = new ResourceModificationController(_resourceManagementMock.Object, _resourceTypeTreeMock.Object,
             _moduleManagerMock.Object, _serviceProviderMock.Object);
     }
 
@@ -90,7 +80,7 @@ internal class ResourceModificationControllerTests
         // Arrange
         _query.ReferenceCondition = new ReferenceFilter
         {
-            Name = nameof(ReferenceResource.References),
+            Name = nameof(ReferencingResource.References),
             ValueConstraint = ReferenceValue.NotEmpty
         };
         // Act
@@ -103,10 +93,10 @@ internal class ResourceModificationControllerTests
     public void GetResources_ReferenceCollectionIsNotEmptyAndConstraintIsNotEmpty_ReturnsResources()
     {
         // Arrange
-        _references.Add(new SimpleResource());
+        _resource.References.Add(new ReferencedResource());
         _query.ReferenceCondition = new ReferenceFilter
         {
-            Name = nameof(ReferenceResource.References),
+            Name = nameof(ReferencingResource.References),
             ValueConstraint = ReferenceValue.NotEmpty
         };
         // Act
@@ -123,7 +113,7 @@ internal class ResourceModificationControllerTests
         // Arrange
         _query.ReferenceCondition = new ReferenceFilter
         {
-            Name = nameof(ReferenceResource.References),
+            Name = nameof(ReferencingResource.References),
             ValueConstraint = ReferenceValue.NullOrEmpty
         };
         // Act
@@ -138,10 +128,10 @@ internal class ResourceModificationControllerTests
     public void GetResources_ReferenceCollectionIsNotEmptyAndConstraintIsNullOrEmpty_ReturnsEmpty()
     {
         // Arrange
-        _references.Add(new SimpleResource());
+        _resource.References.Add(new ReferencedResource());
         _query.ReferenceCondition = new ReferenceFilter
         {
-            Name = nameof(ReferenceResource.References),
+            Name = nameof(ReferencingResource.References),
             ValueConstraint = ReferenceValue.NullOrEmpty
         };
         // Act
@@ -149,5 +139,4 @@ internal class ResourceModificationControllerTests
         // Assert
         Assert.That(result.Value, Is.Empty);
     }
-
 }

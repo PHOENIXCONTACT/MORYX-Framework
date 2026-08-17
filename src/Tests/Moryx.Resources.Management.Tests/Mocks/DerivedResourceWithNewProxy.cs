@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Resources;
-using Moryx.AbstractionLayer.TestTools.Resources;
 
 namespace Moryx.Resources.Management.Tests;
 
