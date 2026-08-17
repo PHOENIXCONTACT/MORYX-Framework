@@ -28,10 +28,12 @@
     <Project Path="src/Moryx.Identity.AccessManagement/Moryx.Identity.AccessManagement.csproj" />
     <Project Path="src/Moryx.Identity/Moryx.Identity.csproj" />
   </Folder>
-  <Folder Name="/Material/">
+    <Folder Name="/Material/">
     <Project Path="src/Moryx.Material.Endpoints/Moryx.Material.Endpoints.csproj" />
     <Project Path="src/Moryx.Material.Integrations.Orders.Integrator/Moryx.Material.Integrations.Orders.Integrator.csproj" />
     <Project Path="src/Moryx.Material.Integrations.Orders/Moryx.Material.Integrations.Orders.csproj" Id="d57e85db-8cee-4567-bd80-8fd8fece2c71" />
+    <Project Path="src/Moryx.Material.Integrations.Products.Integrator/Moryx.Material.Integrations.Products.Integrator.csproj" />
+    <Project Path="src/Moryx.Material.Integrations.Products/Moryx.Material.Integrations.Products.csproj" />
     <Project Path="src/Moryx.Material.Management/Moryx.Material.Management.csproj" Id="5934fd23-97b6-424f-916d-aea4741b36ef" />
     <Project Path="src/Moryx.Material/Moryx.Material.csproj" Id="644a3746-01f6-4cf0-a5be-7380559edc16" />
   </Folder>

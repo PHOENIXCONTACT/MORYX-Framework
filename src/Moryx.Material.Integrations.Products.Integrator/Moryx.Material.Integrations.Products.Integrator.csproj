@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Description>Integrator module wiring Moryx.Material.Integrations.Products into the runtime.</Description>
+    <PackageTags>MORYX;Manufacturing;Industrial</PackageTags>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj" />
+    <ProjectReference Include="..\Moryx.Material\Moryx.Material.csproj" />
+    <ProjectReference Include="..\Moryx.Material.Integrations.Products\Moryx.Material.Integrations.Products.csproj" />
+    <ProjectReference Include="..\Moryx.Runtime\Moryx.Runtime.csproj" />
+  </ItemGroup>
+
+</Project>
