@@ -15,6 +15,7 @@ using Moryx.AbstractionLayer.Workplans;
 using Moryx.Model.Repositories;
 using Moryx.Products.Management;
 using Moryx.Products.Management.Model;
+using System.Numerics;
 using Moryx.Products.Management.NullStrategies;
 using Moryx.Products.Samples;
 using Moryx.Products.Samples.Recipe;
@@ -167,6 +168,27 @@ public class ProductStorageTests
                         }
                     ]
                 },
+
+                new GenericTypeConfiguration
+                {
+                    TargetType = typeof(VectorProductType).FullName,
+                    PropertyConfigs =
+                    [
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(VectorProductType.Position),
+                            Column = nameof(IGenericColumns.Text1),
+                            PluginName = nameof(TextColumnMapper)
+                        },
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(VectorProductType.Orientation),
+                            Column = nameof(IGenericColumns.Text2),
+                            PluginName = nameof(TextColumnMapper)
+                        }
+                    ],
+                    JsonColumn = nameof(IGenericColumns.Text8)
+                }
             ],
             InstanceStrategies =
             [
@@ -1211,5 +1233,43 @@ public class ProductStorageTests
 
         // Resolution should not be loaded in lightweight mode
         Assert.That(loaded.Resolution, Is.EqualTo(0));
+    }
+
+    [Test]
+    public async Task SaveAndLoadTypeWithVector3()
+    {
+        // Arrange
+        var product = new VectorProductType
+        {
+            Name = "Vector Product",
+            Identity = new ProductIdentity("VEC001", 1),
+            Position = new Vector3(1.5f, 2.5f, 3.5f)
+        };
+
+        // Act
+        var savedId = await _storage.SaveTypeAsync(product);
+        var loaded = (VectorProductType)await _storage.LoadTypeAsync(savedId);
+
+        // Assert
+        Assert.That(loaded.Position, Is.EqualTo(new Vector3(1.5f, 2.5f, 3.5f)));
+    }
+
+    [Test]
+    public async Task SaveAndLoadTypeWithQuaternion()
+    {
+        // Arrange
+        var product = new VectorProductType
+        {
+            Name = "Quaternion Product",
+            Identity = new ProductIdentity("QUAT001", 1),
+            Orientation = new Quaternion(0.1f, 0.2f, 0.3f, 0.9f)
+        };
+
+        // Act
+        var savedId = await _storage.SaveTypeAsync(product);
+        var loaded = (VectorProductType)await _storage.LoadTypeAsync(savedId);
+
+        // Assert
+        Assert.That(loaded.Orientation, Is.EqualTo(new Quaternion(0.1f, 0.2f, 0.3f, 0.9f)));
     }
 }
