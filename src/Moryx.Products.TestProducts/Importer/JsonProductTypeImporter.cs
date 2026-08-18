@@ -5,19 +5,19 @@ using Moryx.Modules;
 
 namespace Moryx.Products.TestProducts;
 
-[ExpectedConfig(typeof(GenericJsonTestProductTypeImporterConfig))]
-[ProductImporter(nameof(GenericJsonTestProductTypeImporter))]
-public class GenericJsonTestProductTypeImporter : ProductImporterBase<GenericJsonTestProductTypeImporterConfig, SpecializedJsonTestProductTypeParameters>
+[ExpectedConfig(typeof(JsonProductTypeImporterConfig))]
+[ProductImporter(nameof(JsonProductTypeImporter))]
+public class JsonProductTypeImporter : ProductImporterBase<JsonProductTypeImporterConfig, SpecializedJsonTestProductTypeParameters>
 {
     protected override Task<ProductImporterResult> ImportAsync(ProductImportContext context, SpecializedJsonTestProductTypeParameters parameters,
         CancellationToken cancellationToken)
     {
-        var product = new GenericJsonTestProductType()
+        var product = new JsonProductType()
         {
             Name = parameters.Name,
             Identity = new ProductIdentity(parameters.Identifier, parameters.Revision),
 
-            //Text1 = "T1",
+            Text1 = "T1",
             Text2 = "T2",
             Text3 = "T3",
             Text4 = "T4",

@@ -8,8 +8,6 @@ namespace Moryx.Products.TestProducts;
 /// </summary>
 public class ComplexData
 {
-    // ToDo: Property name "Name" is reserved and is covered by Parent class property so it can not be used here
-
     public string Content { get; set; }
 
     public string PropertyName { get; set; }

@@ -7,7 +7,7 @@ using Moryx.AbstractionLayer.Products;
 namespace Moryx.Products.TestProducts;
 
 [DataContract]
-public class TextColumnMapperTestProductTypeImporterConfig : ProductImporterConfig
+public class CompositeProductTypeImporterConfig : ProductImporterConfig
 {
-    public override string PluginName => nameof(TextColumnMapperTestProductTypeImporter);
+    public override string PluginName => nameof(CompositeProductTypeImporter);
 }
