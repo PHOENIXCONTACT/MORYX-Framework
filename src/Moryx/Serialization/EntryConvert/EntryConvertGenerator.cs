@@ -67,6 +67,18 @@ public static partial class EntryConvert
         {
             valueType = EntryValueType.Stream;
         }
+        else if (propertyType == typeof(DateOnly))
+        {
+            valueType = EntryValueType.Date;
+        }
+        else if (propertyType == typeof(TimeOnly))
+        {
+            valueType = EntryValueType.Time;
+        }
+        else if (propertyType == typeof(TimeSpan))
+        {
+            valueType = EntryValueType.TimeSpan;
+        }
         else if (typeof(IEnumerable).IsAssignableFrom(propertyType) && propertyType != typeof(string))
         {
             valueType = EntryValueType.Collection;
@@ -148,9 +160,22 @@ public static partial class EntryConvert
         {
             result = Enum.Parse(type, value);
         }
+        // TODO: Add EntryValueType.DateTime in next major version
         else if (type == typeof(DateTime))
         {
             result = ConvertToUtc(DateTime.Parse(value, formatProvider));
+        }
+        else if (type == typeof(DateOnly))
+        {
+            result = DateOnly.Parse(value, formatProvider);
+        }
+        else if (type == typeof(TimeOnly))
+        {
+            result = TimeOnly.Parse(value, formatProvider);
+        }
+        else if (type == typeof(TimeSpan))
+        {
+            result = TimeSpan.Parse(value, formatProvider);
         }
 
         return result;
@@ -251,6 +276,18 @@ public static partial class EntryConvert
                 result = ParseWithFallback<double>(
                     value, formatProvider, NumberStyles.Float,
                     double.TryParse);
+                break;
+
+            case EntryValueType.Date:
+                result = DateOnly.Parse(value, formatProvider);
+                break;
+
+            case EntryValueType.Time:
+                result = TimeOnly.Parse(value, formatProvider);
+                break;
+
+            case EntryValueType.TimeSpan:
+                result = TimeSpan.Parse(value, formatProvider);
                 break;
         }
         return result;

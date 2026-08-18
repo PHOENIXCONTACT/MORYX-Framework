@@ -71,5 +71,17 @@ public enum EntryValueType
     /// <summary>
     /// Value type stream
     /// </summary>
-    Stream
+    Stream,
+    /// <summary>
+    /// Value type DateOnly
+    /// </summary>
+    Date,
+    /// <summary>
+    /// Value type TimeOnly
+    /// </summary>
+    Time,
+    /// <summary>
+    /// Value type TimeSpan
+    /// </summary>
+    TimeSpan
 }
