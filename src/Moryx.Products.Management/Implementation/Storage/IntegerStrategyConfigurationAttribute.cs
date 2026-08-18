@@ -21,10 +21,13 @@ public class IntegerStrategyConfigurationAttribute : PropertyStrategyConfigurati
             typeof(ulong),
             typeof(Enum),
             typeof(DateTime),
+            typeof(DateOnly),
+            typeof(TimeOnly),
             typeof(bool)
         ];
     }
 
+    /// <inheritdoc />
     public override int TypeCompliance(Type targetType)
     {
         if (targetType.IsEnum)
