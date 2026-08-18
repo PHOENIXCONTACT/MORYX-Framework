@@ -235,6 +235,8 @@ public class DefaultSerialization : ICustomSerialization
 
                 return targetStream;
 
+            case EntryValueType.Struct:
+                return currentValue ?? Activator.CreateInstance(memberType);
             case EntryValueType.Class:
                 return currentValue ?? Activator.CreateInstance(memberType);
             case EntryValueType.Collection:

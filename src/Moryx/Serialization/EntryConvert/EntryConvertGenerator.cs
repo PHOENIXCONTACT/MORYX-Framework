@@ -79,6 +79,10 @@ public static partial class EntryConvert
         {
             valueType = EntryValueType.TimeSpan;
         }
+        else if (_structSerializers.ContainsKey(propertyType))
+        {
+            valueType = EntryValueType.Struct;
+        }
         else if (typeof(IEnumerable).IsAssignableFrom(propertyType) && propertyType != typeof(string))
         {
             valueType = EntryValueType.Collection;

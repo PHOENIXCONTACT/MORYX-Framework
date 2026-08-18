@@ -4,6 +4,7 @@
 using System;
 using System.Globalization;
 using System.Linq;
+using System.Numerics;
 using System.Threading;
 using Moryx.Serialization;
 using NUnit.Framework;
@@ -128,7 +129,122 @@ public class EntryConvertSerializationTests
         Assert.That(singleWithProvider, Is.EqualTo(3.14f).Within(1e-5));
         Assert.That(doubleWithFallback, Is.EqualTo(3.14d).Within(1e-10));
     }
-     
+
+    [Test]
+    public void EncodesVector3AsStructWithSubEntries()
+    {
+        // Arrange
+        var obj = new StructPropertiesClass { Position3D = new Vector3(1.5f, 2.5f, 3.5f) };
+
+        // Act
+        var entry = EntryConvert.EncodeObject(obj);
+        var vectorEntry = entry.SubEntries.First(e => e.Identifier == nameof(StructPropertiesClass.Position3D));
+
+        // Assert
+        Assert.That(vectorEntry.Value.Type, Is.EqualTo(EntryValueType.Struct));
+        Assert.That(vectorEntry.SubEntries, Has.Count.EqualTo(3));
+        Assert.That(vectorEntry.SubEntries.Select(e => e.Identifier), Is.EquivalentTo(new[] { "X", "Y", "Z" }));
+        Assert.That(vectorEntry.SubEntries.All(e => e.Value.Type == EntryValueType.Single), Is.True);
+    }
+
+    [Test]
+    public void EncodesVector2AsStructWithSubEntries()
+    {
+        // Arrange
+        var obj = new StructPropertiesClass { Position2D = new Vector2(10f, 20f) };
+
+        // Act
+        var entry = EntryConvert.EncodeObject(obj);
+        var vectorEntry = entry.SubEntries.First(e => e.Identifier == nameof(StructPropertiesClass.Position2D));
+
+        // Assert
+        Assert.That(vectorEntry.Value.Type, Is.EqualTo(EntryValueType.Struct));
+        Assert.That(vectorEntry.SubEntries, Has.Count.EqualTo(2));
+        Assert.That(vectorEntry.SubEntries.Select(e => e.Identifier), Is.EquivalentTo(new[] { "X", "Y" }));
+    }
+
+    [Test]
+    public void EncodesQuaternionAsStructWithSubEntries()
+    {
+        // Arrange
+        var obj = new StructPropertiesClass { Rotation = new Quaternion(1f, 2f, 3f, 4f) };
+
+        // Act
+        var entry = EntryConvert.EncodeObject(obj);
+        var quatEntry = entry.SubEntries.First(e => e.Identifier == nameof(StructPropertiesClass.Rotation));
+
+        // Assert
+        Assert.That(quatEntry.Value.Type, Is.EqualTo(EntryValueType.Struct));
+        Assert.That(quatEntry.SubEntries, Has.Count.EqualTo(4));
+        Assert.That(quatEntry.SubEntries.Select(e => e.Identifier), Is.EquivalentTo(new[] { "X", "Y", "Z", "W" }));
+    }
+
+    [Test]
+    public void Vector3ValuesOnRoundTripPreserved()
+    {
+        // Arrange
+        var original = new StructPropertiesClass
+        {
+            Position3D = new Vector3(1.5f, 2.5f, 3.5f)
+        };
+
+        // Act
+        var entry = EntryConvert.EncodeObject(original);
+        var restored = new StructPropertiesClass();
+        EntryConvert.UpdateInstance(restored, entry);
+
+        // Assert
+        Assert.That(restored.Position3D, Is.EqualTo(original.Position3D));
+    }
+
+    [Test]
+    public void Vector2ValuesOnRoundTripPreserved()
+    {
+        // Arrange
+        var original = new StructPropertiesClass
+        {
+            Position2D = new Vector2(10f, 20f)
+        };
+
+        // Act
+        var entry = EntryConvert.EncodeObject(original);
+        var restored = new StructPropertiesClass();
+        EntryConvert.UpdateInstance(restored, entry);
+
+        // Assert
+        Assert.That(restored.Position2D, Is.EqualTo(original.Position2D));
+    }
+
+    [Test]
+    public void QuaternionValuesOnRoundTripPreserved()
+    {
+        // Arrange
+        var original = new StructPropertiesClass
+        {
+            Rotation = new Quaternion(1f, 2f, 3f, 4f)
+        };
+
+        // Act
+        var entry = EntryConvert.EncodeObject(original);
+        var restored = new StructPropertiesClass();
+        EntryConvert.UpdateInstance(restored, entry);
+
+        // Assert
+        Assert.That(restored.Rotation, Is.EqualTo(original.Rotation));
+    }
+
+    [Test]
+    public void CreatesDefaultSubEntriesForVector3OnEncodeClass()
+    {
+        // Act
+        var entry = EntryConvert.EncodeClass(typeof(StructPropertiesClass));
+        var vectorEntry = entry.SubEntries.First(e => e.Identifier == nameof(StructPropertiesClass.Position3D));
+
+        // Assert
+        Assert.That(vectorEntry.Value.Type, Is.EqualTo(EntryValueType.Struct));
+        Assert.That(vectorEntry.SubEntries, Has.Count.EqualTo(3));
+    }
+
     [Test]
     public void ParametersShouldRespectRequiredAttribute()
     {
@@ -138,7 +254,7 @@ public class EntryConvertSerializationTests
 
         // Act
         var entry = EntryConvert.EncodeMethod(method);
-      
+
         var plainParameterValidation = entry.Parameters.SubEntries.First(x => x.DisplayName == "plainParameter").Validation;
         var requiredParameterValidation = entry.Parameters.SubEntries.First(x => x.DisplayName == "requiredParameter").Validation;
         var nullableValidation = entry.Parameters.SubEntries.First(x => x.DisplayName == "nullableString").Validation;

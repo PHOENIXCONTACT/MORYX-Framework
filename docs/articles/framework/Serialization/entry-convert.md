@@ -17,7 +17,7 @@ The `EntryConvert` API can convert objects and types as long as they comply with
 
 * Properties not fields: All attributes of a type must be defined as properties, not public fields. Therefor `public int Foo { get; set; }` instead of `public int Foo;`
 * Public parameter-less constructor: All types within the class hierarchy need to offer a public constructor without parameters. In Generics this would be defined as `new()` or in code `public Foo() { }`. For the root object `EntryConvert` can extract Constructors as `MethodEntry`, which can be exchanged with a client and used to create instances. 
-* Primitives or classes: The reflection approach used to deserialize the entry tree to objects requires reference access. Otherwise the modifications will only take part on a copy. Therefor properties need to be either of a primitive type like int, string, enum or a another class.
+* Primitives, classes or supported structs: The reflection approach used to deserialize the entry tree to objects requires reference access. Otherwise the modifications will only take part on a copy. Therefor properties need to be either of a primitive type like int, string, enum, a class, or a supported struct (`Vector2`, `Vector3`, `Quaternion`). Supported structs are automatically decomposed into editable sub-entries.
 * Dictionaries of `<Primitive, Class`: Dictionaries are only supported if the key is a primitive type like `int` or `string` and the value is a class.
 
 ## Serialize Objects
@@ -138,6 +138,37 @@ public void Deserialize(Entry entry, FileStreamDummy dummy)
 {
     // Apply entry data
     EntryConvert.UpdateInstance(dummy, entry);
+}
+````
+
+## Serialize Structs
+
+`EntryConvert` supports decomposed serialization for the following `System.Numerics` struct types: `Vector2`, `Vector3` and `Quaternion`. Instead of displaying unparseable strings like `<1.5, 2.5, 3.5>`, these structs are encoded as `Struct` entries with editable sub-entries for each component (X, Y, Z, W). The UI renders them as expandable entries with individual number fields — no UI changes required.
+
+````cs
+public class RobotPosition
+{
+    public Vector3 Position { get; set; }
+    public Quaternion Orientation { get; set; }
+}
+
+public void Serialize()
+{
+    var pos = new RobotPosition
+    {
+        Position = new Vector3(1.5f, 2.5f, 3.5f),
+        Orientation = new Quaternion(0, 0, 0, 1)
+    };
+    var entry = EntryConvert.EncodeObject(pos);
+    // entry.SubEntries[0] (Position) has SubEntries: X=1.5, Y=2.5, Z=3.5
+    // entry.SubEntries[1] (Orientation) has SubEntries: X=0, Y=0, Z=0, W=1
+}
+
+public void Deserialize(Entry entry)
+{
+    var pos = new RobotPosition();
+    EntryConvert.UpdateInstance(pos, entry);
+    // pos.Position and pos.Orientation are reconstructed from sub-entry values
 }
 ````
 

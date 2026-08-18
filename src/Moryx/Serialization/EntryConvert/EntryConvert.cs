@@ -15,6 +15,16 @@ namespace Moryx.Serialization;
 public static partial class EntryConvert
 {
     /// <summary>
+    /// Registry of serializers for structs that are decomposed into sub-entries
+    /// </summary>
+    private static readonly Dictionary<Type, IStructSerializer> _structSerializers = new IStructSerializer[]
+    {
+        new Vector2EntrySerializer(),
+        new Vector3EntrySerializer(),
+        new QuaternionEntrySerializer()
+    }.ToDictionary(s => s.TargetType);
+
+    /// <summary>
     /// Default strategy instance
     /// </summary>
     internal static ICustomSerialization Serialization = new DefaultSerialization();
@@ -125,15 +135,15 @@ public static partial class EntryConvert
             entryValue.Default = defaultAttribute.Value.ToString();
         else if (entryValue.Possible != null && entryValue.Possible.Length >= 1)
             entryValue.Default = entryValue.Possible[0].Key;
-        else if (property.PropertyType.IsValueType)
+        else if (property.PropertyType.IsValueType && entryValue.Type != EntryValueType.Struct)
         {
             var underlyingType = Nullable.GetUnderlyingType(property.PropertyType);
             entryValue.Default = underlyingType != null
                 ? Activator.CreateInstance(underlyingType).ToString()
                 : Activator.CreateInstance(property.PropertyType).ToString();
         }
-        // Value types should have the default value as current value
-        if (ValueOrStringType(property.PropertyType))
+        // Value types should have the default value as current value (except decomposed structs)
+        if (ValueOrStringType(property.PropertyType) && entryValue.Type != EntryValueType.Struct)
             entryValue.Current = ConvertToString(entryValue.Default, customSerialization.FormatProvider);
 
         return entryValue;
@@ -225,6 +235,12 @@ public static partial class EntryConvert
                 var subentry = EncodeClass(property.PropertyType, customSerialization);
                 converted.SubEntries.AddRange(subentry.SubEntries);
             }
+            // Decomposed structs use the serializer to create default sub-entries
+            else if (converted.Value.Type == EntryValueType.Struct && TryGetSerializer(property.PropertyType, out var serializer))
+            {
+                var structEntry = serializer.Encode(Activator.CreateInstance(property.PropertyType), customSerialization.FormatProvider);
+                converted.SubEntries.AddRange(structEntry.SubEntries);
+            }
 
             encodedClass.SubEntries.Add(converted);
         }
@@ -249,6 +265,14 @@ public static partial class EntryConvert
         var isValueType = ValueOrStringType(instanceType);
 
         var converted = CreateFromType(instanceType, customSerialization);
+
+        // Structs with registered serializers are encoded via sub-entries
+        if (converted.Value.Type == EntryValueType.Struct && TryGetSerializer(instanceType, out var serializer))
+        {
+            var structEntry = serializer.Encode(instance, customSerialization.FormatProvider);
+            converted.SubEntries = structEntry.SubEntries;
+            return converted;
+        }
 
         // Value or string are easily value encoded
         if (isValueType)
@@ -306,6 +330,13 @@ public static partial class EntryConvert
                     {
                         entry.Value.Possible = possibleElementValues;
                         convertedProperty.SubEntries.Add(entry);
+                    }
+                    break;
+                case EntryValueType.Struct:
+                    if (value != null && TryGetSerializer(propertyType, out var structSerializer))
+                    {
+                        var structEntry = structSerializer.Encode(value, customSerialization.FormatProvider);
+                        convertedProperty.SubEntries = structEntry.SubEntries;
                     }
                     break;
                 case EntryValueType.Class:
@@ -484,7 +515,7 @@ public static partial class EntryConvert
         };
 
         // mark the parameter as required when there is no default value
-        parameterModel.Validation.IsRequired = parameter.HasDefaultValue ? false : true;
+        parameterModel.Validation.IsRequired = !parameter.HasDefaultValue;
 
         switch (parameterModel.Value.Type)
         {
@@ -602,9 +633,14 @@ public static partial class EntryConvert
                 : customSerialization.ConvertValue(propertyType, property, mapped.Entry, currentValue);
 
             // Value types, strings and streams do not need recursion
-            if (ValueOrStringType(propertyType) || typeof(Stream).IsAssignableFrom(propertyType))
+            if (ValueOrStringType(propertyType) && !TryGetSerializer(propertyType, out _) || typeof(Stream).IsAssignableFrom(propertyType))
             {
 
+            }
+            // Structs with registered serializers are reconstructed from sub-entries
+            else if (TryGetSerializer(propertyType, out var structSerializer) && mapped.Entry != null)
+            {
+                value = structSerializer.Decode(mapped.Entry, customSerialization.FormatProvider);
             }
             // Update collection from entry
             else if (IsCollection(propertyType) && mapped.Entry != null)
@@ -881,7 +917,16 @@ public static partial class EntryConvert
     /// <returns></returns>
     internal static string ConvertToString(object value, IFormatProvider formatProvider)
     {
-        var convertible = value as IConvertible;
-        return convertible != null ? convertible.ToString(formatProvider) : value?.ToString();
+        return value is IConvertible convertible
+            ? convertible.ToString(formatProvider)
+            : value?.ToString();
+    }
+
+    /// <summary>
+    /// Try to find a registered <see cref="IStructSerializer"/> for the given type
+    /// </summary>
+    private static bool TryGetSerializer(Type type, out IStructSerializer serializer)
+    {
+        return _structSerializers.TryGetValue(type, out serializer);
     }
 }

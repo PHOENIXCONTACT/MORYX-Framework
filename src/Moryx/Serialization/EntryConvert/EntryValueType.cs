@@ -83,5 +83,9 @@ public enum EntryValueType
     /// <summary>
     /// Value type TimeSpan
     /// </summary>
-    TimeSpan
+    TimeSpan,
+    /// <summary>
+    /// Decomposed struct with sub-entries (e.g. Vector2, Vector3, Quaternion)
+    /// </summary>
+    Struct
 }
