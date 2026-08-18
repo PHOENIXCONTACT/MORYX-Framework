@@ -79,6 +79,10 @@ public static partial class EntryConvert
         {
             valueType = EntryValueType.TimeSpan;
         }
+        else if (propertyType == typeof(DateTime))
+        {
+            valueType = EntryValueType.DateTime;
+        }
         else if (_structSerializers.ContainsKey(propertyType))
         {
             valueType = EntryValueType.Struct;
@@ -164,7 +168,6 @@ public static partial class EntryConvert
         {
             result = Enum.Parse(type, value);
         }
-        // TODO: Add EntryValueType.DateTime in next major version
         else if (type == typeof(DateTime))
         {
             result = ConvertToUtc(DateTime.Parse(value, formatProvider));
@@ -292,6 +295,10 @@ public static partial class EntryConvert
 
             case EntryValueType.TimeSpan:
                 result = TimeSpan.Parse(value, formatProvider);
+                break;
+
+            case EntryValueType.DateTime:
+                result = ConvertToUtc(DateTime.Parse(value, formatProvider));
                 break;
         }
         return result;
