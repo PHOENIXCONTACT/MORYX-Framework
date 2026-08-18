@@ -23,11 +23,6 @@ internal abstract class NumericStructEntrySerializer : IStructSerializer
                 Type = EntryValueType.Single,
                 Current = str,
                 Default = EntryConvert.ConvertToString(0f, formatProvider)
-            },
-            Validation = new EntryValidation
-            {
-                Minimum = float.MinValue,
-                Maximum = float.MaxValue
             }
         };
     }

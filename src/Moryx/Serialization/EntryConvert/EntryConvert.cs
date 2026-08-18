@@ -138,9 +138,8 @@ public static partial class EntryConvert
         else if (property.PropertyType.IsValueType && entryValue.Type != EntryValueType.Struct)
         {
             var underlyingType = Nullable.GetUnderlyingType(property.PropertyType);
-            entryValue.Default = underlyingType != null
-                ? Activator.CreateInstance(underlyingType).ToString()
-                : Activator.CreateInstance(property.PropertyType).ToString();
+            var defaultInstance = Activator.CreateInstance(underlyingType ?? property.PropertyType);
+            entryValue.Default = ConvertToString(defaultInstance, customSerialization.FormatProvider);
         }
         // Value types should have the default value as current value (except decomposed structs)
         if (ValueOrStringType(property.PropertyType) && entryValue.Type != EntryValueType.Struct)
@@ -917,9 +916,15 @@ public static partial class EntryConvert
     /// <returns></returns>
     internal static string ConvertToString(object value, IFormatProvider formatProvider)
     {
-        return value is IConvertible convertible
-            ? convertible.ToString(formatProvider)
-            : value?.ToString();
+        return value switch
+        {
+            DateTime dt => dt.ToUniversalTime().ToString("O", formatProvider),
+            DateOnly d => d.ToString("O", formatProvider),
+            TimeOnly t => t.ToString("O", formatProvider),
+            TimeSpan ts => ts.ToString("c", formatProvider),
+            IConvertible convertible => convertible.ToString(formatProvider),
+            _ => value?.ToString()
+        };
     }
 
     /// <summary>
