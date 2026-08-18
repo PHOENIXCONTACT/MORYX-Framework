@@ -4,7 +4,7 @@
 using System.ComponentModel;
 using Moryx.AbstractionLayer.Products;
 
-namespace Moryx.Products.TestProducts;
+namespace Moryx.Products.Samples;
 
 /// <summary>
 /// Product type used for integration tests of JSON column mappings.

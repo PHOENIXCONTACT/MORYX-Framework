@@ -3,7 +3,7 @@
 
 using Moryx.AbstractionLayer.Products;
 
-namespace Moryx.Products.TestProducts;
+namespace Moryx.Products.Samples;
 
 public class CompositeProductTypeImporter : ProductImporterBase<CompositeProductTypeImporterConfig, CompositeProductTypeParameters>
 {

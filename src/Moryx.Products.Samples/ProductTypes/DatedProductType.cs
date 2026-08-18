@@ -3,7 +3,7 @@
 
 using Moryx.AbstractionLayer.Products;
 
-namespace Moryx.Products.TestProducts;
+namespace Moryx.Products.Samples;
 
 /// <summary>
 /// Test product type for DateOnly, TimeOnly and DateTimeOffset serialization.

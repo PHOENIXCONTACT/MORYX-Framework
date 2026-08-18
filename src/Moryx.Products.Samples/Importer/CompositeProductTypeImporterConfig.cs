@@ -4,7 +4,7 @@
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Products;
 
-namespace Moryx.Products.TestProducts;
+namespace Moryx.Products.Samples;
 
 [DataContract]
 public class CompositeProductTypeImporterConfig : ProductImporterConfig

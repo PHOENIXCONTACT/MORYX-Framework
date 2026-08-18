@@ -1,18 +1,19 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.ComponentModel;
+using System.Numerics;
 using Moryx.AbstractionLayer.Products;
 
-namespace Moryx.Products.TestProducts;
+namespace Moryx.Products.Samples;
 
 /// <summary>
-/// Product type used for integration tests of property-to-column mappings.
+/// Test product type for Vector3 and Quaternion serialization.
 /// </summary>
-[DisplayName("Composite Test Type")]
-public class CompositeProductType : ProductType
+public class VectorProductType : ProductType
 {
-    public ComplexData ComplexData1 { get; set; }
+    public Vector3 Position { get; set; }
+
+    public Quaternion Orientation { get; set; }
 
     protected override ProductInstance Instantiate()
     {

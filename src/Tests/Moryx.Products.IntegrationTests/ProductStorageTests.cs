@@ -19,7 +19,6 @@ using System.Numerics;
 using Moryx.Products.Management.NullStrategies;
 using Moryx.Products.Samples;
 using Moryx.Products.Samples.Recipe;
-using Moryx.Products.TestProducts;
 using Moryx.Serialization;
 using Moryx.Tools;
 using Moryx.Workplans;

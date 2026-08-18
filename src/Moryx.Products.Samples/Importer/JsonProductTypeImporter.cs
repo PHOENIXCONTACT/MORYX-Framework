@@ -1,9 +1,10 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
+
 using Moryx.AbstractionLayer.Products;
 using Moryx.Modules;
 
-namespace Moryx.Products.TestProducts;
+namespace Moryx.Products.Samples;
 
 [ExpectedConfig(typeof(JsonProductTypeImporterConfig))]
 [ProductImporter(nameof(JsonProductTypeImporter))]

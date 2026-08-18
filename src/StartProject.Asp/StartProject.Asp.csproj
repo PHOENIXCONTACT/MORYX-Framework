@@ -65,8 +65,6 @@
     <ProjectReference Include="..\Moryx.ControlSystem.Simulator\Moryx.ControlSystem.Simulator.csproj" />
     <ProjectReference Include="..\Moryx.Workplans.Editing\Moryx.Workplans.Editing.csproj" />
     <ProjectReference Include="..\Moryx.Workplans.Web\Moryx.Workplans.Web.csproj" />
-
-    <ProjectReference Include="..\Moryx.Products.TestProducts\Moryx.Products.TestProducts.csproj" />
   </ItemGroup>
 
 </Project>
