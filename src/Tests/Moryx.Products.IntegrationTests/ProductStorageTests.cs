@@ -188,6 +188,33 @@ public class ProductStorageTests
                         }
                     ],
                     JsonColumn = nameof(IGenericColumns.Text8)
+                },
+
+                new GenericTypeConfiguration
+                {
+                    TargetType = typeof(DatedProductType).FullName,
+                    PropertyConfigs =
+                    [
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(DatedProductType.ValidFrom),
+                            Column = nameof(IGenericColumns.Integer1),
+                            PluginName = nameof(IntegerColumnMapper)
+                        },
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(DatedProductType.ProductionTime),
+                            Column = nameof(IGenericColumns.Integer2),
+                            PluginName = nameof(IntegerColumnMapper)
+                        },
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(DatedProductType.CreatedAt),
+                            Column = nameof(IGenericColumns.Text1),
+                            PluginName = nameof(TextColumnMapper)
+                        }
+                    ],
+                    JsonColumn = nameof(IGenericColumns.Text8)
                 }
             ],
             InstanceStrategies =
@@ -1271,5 +1298,63 @@ public class ProductStorageTests
 
         // Assert
         Assert.That(loaded.Orientation, Is.EqualTo(new Quaternion(0.1f, 0.2f, 0.3f, 0.9f)));
+    }
+
+    [Test]
+    public async Task SaveAndLoadTypeWithDateOnly()
+    {
+        // Arrange
+        var product = new DatedProductType
+        {
+            Name = "DateOnly Product",
+            Identity = new ProductIdentity("DATE001", 1),
+            ValidFrom = new DateOnly(2026, 8, 18)
+        };
+
+        // Act
+        var savedId = await _storage.SaveTypeAsync(product);
+        var loaded = (DatedProductType)await _storage.LoadTypeAsync(savedId);
+
+        // Assert
+        Assert.That(loaded.ValidFrom, Is.EqualTo(new DateOnly(2026, 8, 18)));
+    }
+
+    [Test]
+    public async Task SaveAndLoadTypeWithTimeOnly()
+    {
+        // Arrange
+        var product = new DatedProductType
+        {
+            Name = "TimeOnly Product",
+            Identity = new ProductIdentity("TIME001", 1),
+            ProductionTime = new TimeOnly(14, 30, 45)
+        };
+
+        // Act
+        var savedId = await _storage.SaveTypeAsync(product);
+        var loaded = (DatedProductType)await _storage.LoadTypeAsync(savedId);
+
+        // Assert
+        Assert.That(loaded.ProductionTime, Is.EqualTo(new TimeOnly(14, 30, 45)));
+    }
+
+    [Test]
+    public async Task SaveAndLoadTypeWithDateTimeOffset()
+    {
+        // Arrange
+        var createdAt = new DateTimeOffset(2026, 8, 18, 14, 30, 0, TimeSpan.FromHours(2));
+        var product = new DatedProductType
+        {
+            Name = "DateTimeOffset Product",
+            Identity = new ProductIdentity("DTO001", 1),
+            CreatedAt = createdAt
+        };
+
+        // Act
+        var savedId = await _storage.SaveTypeAsync(product);
+        var loaded = (DatedProductType)await _storage.LoadTypeAsync(savedId);
+
+        // Assert
+        Assert.That(loaded.CreatedAt, Is.EqualTo(createdAt));
     }
 }
