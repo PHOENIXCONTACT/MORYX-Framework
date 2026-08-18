@@ -11,6 +11,11 @@ namespace Moryx.Serialization;
 /// </summary>
 public static class JsonSettings
 {
+    private static readonly StringEnumConverter _stringEnum = new();
+    private static readonly Vector2Converter _vector2 = new();
+    private static readonly Vector3Converter _vector3 = new();
+    private static readonly QuaternionConverter _quaternion = new();
+
     /// <summary>
     /// Json settings for optimal performance and minimal number of characters
     /// </summary>
@@ -20,6 +25,7 @@ public static class JsonSettings
         DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate,
         NullValueHandling = NullValueHandling.Ignore,
         ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
+        Converters = { _vector2, _vector3, _quaternion },
     };
 
     /// <summary>
@@ -31,7 +37,7 @@ public static class JsonSettings
         TypeNameHandling = TypeNameHandling.Auto,
         DefaultValueHandling = DefaultValueHandling.Include,
         NullValueHandling = NullValueHandling.Include,
-        Converters = [new StringEnumConverter()]
+        Converters = [_stringEnum, _vector2, _vector3, _quaternion]
     };
 
     /// <summary>
