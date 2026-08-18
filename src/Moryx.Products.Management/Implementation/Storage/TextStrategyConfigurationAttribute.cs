@@ -19,6 +19,10 @@ public class TextStrategyConfigurationAttribute : PropertyStrategyConfigurationA
         if (targetType.IsInterface)
             return BadCompliance - 1;
 
+        // Non-primitive structs like Vector3 are JSON-serialized into a text column
+        if (targetType.IsValueType && !targetType.IsPrimitive && !targetType.IsEnum)
+            return PerfectMatch + 1;
+
         return base.TypeCompliance(targetType);
     }
 }
