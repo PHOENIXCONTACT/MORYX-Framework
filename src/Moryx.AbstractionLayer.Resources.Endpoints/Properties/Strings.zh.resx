@@ -118,45 +118,45 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ResourceModificationController_MethodFailed_Title" xml:space="preserve">
-    <value>Methodenaufruf fehlgeschlagen</value>
+    <value>方法执行失败</value>
   </data>
   <data name="ResourceModificationController_MethodNotFound_Message" xml:space="preserve">
-    <value>Die Methode '{0}' existiert für die Ressource {1} nicht. Bitte prüfen Sie die Schreibweise sowie den Zugriffsmodifizierer (public oder internal).</value>
+    <value>资源 {1} 中不存在方法“{0}”。请检查拼写和访问修饰符（必须为 public 或 internal）。</value>
   </data>
   <data name="ResourceModificationController_MethodNotFound_Title" xml:space="preserve">
-    <value>Methode nicht gefunden</value>
+    <value>未找到方法</value>
   </data>
   <data name="ResourceModificationController_ResourceConflict_Title" xml:space="preserve">
-    <value>Ressourcenkonflikt</value>
+    <value>资源冲突</value>
   </data>
   <data name="ResourceModificationController_ResourceNotFoundException_ById_Message" xml:space="preserve">
-    <value>Ressource mit der Id '{0}' nicht gefunden!</value>
+    <value>未找到 ID 为 {0} 的资源。</value>
   </data>
   <data name="ResourceModificationController_ResourceNotFound_Title" xml:space="preserve">
-    <value>Ressource nicht gefunden</value>
+    <value>未找到资源</value>
   </data>
   <data name="ResourceModificationController_InvalidArgument_Title" xml:space="preserve">
-    <value>Ungültiges Argument</value>
+    <value>无效参数</value>
   </data>
   <data name="ResourceModificationController_MethodFailed_Message" xml:space="preserve">
-    <value>Der Methodenaufruf '{0}' ist fehlgeschlagen: {1}.</value>
+    <value>方法“{0}”执行失败：{1}。</value>
   </data>
   <data name="ResourceModificationController_ResourceAlreadyExists_Title" xml:space="preserve">
-    <value>Ressource existiert bereits</value>
+    <value>资源已存在</value>
   </data>
   <data name="ResourceModificationController_ResourceAlreadyExists_Message" xml:space="preserve">
-    <value>Die Ressource '{0}' existiert bereits. Verwenden Sie PUT /{0}, um sie zu aktualisieren.</value>
+    <value>资源“{0}”已存在。请使用 PUT /{0} 进行更新。</value>
   </data>
   <data name="ResourceModificationController_ResourceConflict_Message" xml:space="preserve">
-    <value>Die Ressource {0} kann nicht gelöscht werden, solange sie noch von anderen Ressourcen referenziert wird.</value>
+    <value>无法删除资源 {0}，因为它仍被其他资源引用。</value>
   </data>
   <data name="ResourceModificationController_InvalidArgument_Message" xml:space="preserve">
-    <value>Das übergebene Argument ist ungültig: {0}</value>
+    <value>提供的参数无效：{0}。</value>
   </data>
   <data name="ResourceModificationController_ResourceTypeNotFound_Message" xml:space="preserve">
-    <value>Ressourcentyp „{0}“ wurde nicht gefunden.</value>
+    <value>未找到资源类型“{0}”。</value>
   </data>
   <data name="ResourceModificationController_ResourceTypeNotFound_Title" xml:space="preserve">
-    <value>Ressourcentyp nicht gefunden</value>
+    <value>未找到资源类型</value>
   </data>
 </root>

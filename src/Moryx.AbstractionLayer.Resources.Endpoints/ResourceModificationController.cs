@@ -15,7 +15,7 @@ using System.Runtime.Serialization;
 using System.ComponentModel.DataAnnotations;
 using Moryx.AbstractionLayer.Resources.Endpoints.Models;
 using Moryx.AbstractionLayer.Resources.Endpoints.Properties;
-using Moryx.AspNetCore;
+using System.Globalization;
 
 namespace Moryx.AbstractionLayer.Resources.Endpoints;
 
@@ -89,7 +89,7 @@ public class ResourceModificationController : ControllerBase
     /// <returns>An array of resource models.</returns>
     [HttpGet("query")]
     [ProducesResponseType(typeof(ResourceModel[]), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Policy = ResourcePermissions.CanViewTree)]
     public ActionResult<ResourceModel[]> GetResources([FromQuery] ResourceQuery query)
@@ -109,7 +109,7 @@ public class ResourceModificationController : ControllerBase
     /// <returns>The full model of the requested resource.</returns>
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(ResourceModel), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Policy = ResourcePermissions.CanViewDetails)]
     public ActionResult<ResourceModel> GetDetails(long id)
@@ -117,7 +117,15 @@ public class ResourceModificationController : ControllerBase
         var converter = new ResourceToModelConverter(_resourceTypeTree, _serialization);
         var resourceModel = _resourceManagement.ReadUnsafe(id, r => converter.GetDetails(r));
         if (resourceModel is null)
-            return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ResourceNotFoundException_ById_Message, id) });
+
+            return NotFound(new ProblemDetails
+            {
+                Type = "https://www.rfc-editor.org/rfc/rfc9110.html#name-404-not-found",
+                Title = Strings.ResourceModificationController_ResourceNotFound_Title,
+                Status = StatusCodes.Status404NotFound,
+                Detail = string.Format(CultureInfo.CurrentCulture, Strings.ResourceModificationController_ResourceNotFoundException_ById_Message, id),
+                Instance = HttpContext.Request.Path
+            });
 
         return resourceModel;
     }
@@ -139,13 +147,20 @@ public class ResourceModificationController : ControllerBase
     [HttpPost("{id}/invoke/{method}")]
     [ProducesResponseType(typeof(Entry), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
     [Authorize(Policy = ResourcePermissions.CanInvokeMethod)]
     public async Task<ActionResult<Entry>> InvokeMethod(long id, string method, Entry parameters)
     {
         if (!_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == id).Any())
-            return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ResourceNotFoundException_ById_Message, id) });
+            return NotFound(new ProblemDetails
+            {
+                Type = "https://www.rfc-editor.org/rfc/rfc9110.html#name-404-not-found",
+                Title = Strings.ResourceModificationController_ResourceNotFound_Title,
+                Status = StatusCodes.Status404NotFound,
+                Detail = string.Format(CultureInfo.CurrentCulture, Strings.ResourceModificationController_ResourceNotFoundException_ById_Message, id),
+                Instance = HttpContext.Request.Path
+            });
 
         Entry entry = null;
         try
@@ -158,11 +173,25 @@ public class ResourceModificationController : ControllerBase
         }
         catch (MissingMethodException)
         {
-            return NotFound(new MoryxExceptionResponse { Title = $"Method '{method}' does not exist on resource {id}. Please check spelling and access modifier (has to be `public` or `internal`)." });
+            return NotFound(new ProblemDetails
+            {
+                Type = "https://www.rfc-editor.org/rfc/rfc9110.html#name-404-not-found",
+                Title = Strings.ResourceModificationController_MethodNotFound_Title,
+                Status = StatusCodes.Status404NotFound,
+                Detail = string.Format(CultureInfo.CurrentCulture, Strings.ResourceModificationController_MethodNotFound_Message, method, id),
+                Instance = HttpContext.Request.Path
+            });
         }
         catch (Exception e)
         {
-            return UnprocessableEntity(new MoryxExceptionResponse { Title = $"Method '{method}' failed: {e.Message}." });
+            return UnprocessableEntity(new ProblemDetails
+            {
+                Type = "https://www.rfc-editor.org/rfc/rfc9110.html#name-422-unprocessable-content",
+                Title = Strings.ResourceModificationController_MethodFailed_Title,
+                Status = StatusCodes.Status422UnprocessableEntity,
+                Detail = string.Format(CultureInfo.CurrentCulture, Strings.ResourceModificationController_MethodFailed_Message, method, e.Message),
+                Instance = HttpContext.Request.Path
+            });
         }
 
         return entry is null ? NoContent() : Ok(entry);
@@ -191,8 +220,8 @@ public class ResourceModificationController : ControllerBase
     /// </returns>
     [HttpPost("types/{type}")]
     [ProducesResponseType(typeof(ResourceModel), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Policy = ResourcePermissions.CanAdd)]
     public Task<ActionResult<ResourceModel>> ConstructWithParameters(string type, string method = null, [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] Entry arguments = null)
@@ -213,9 +242,13 @@ public class ResourceModificationController : ControllerBase
         }
         catch (Exception)
         {
-            return NotFound(new MoryxExceptionResponse
+            return NotFound(new ProblemDetails
             {
-                Title = Strings.ResourceManagementController_ResourceNotFound
+                Type = "https://www.rfc-editor.org/rfc/rfc9110.html#name-404-not-found",
+                Title = Strings.ResourceModificationController_ResourceTypeNotFound_Title,
+                Status = StatusCodes.Status404NotFound,
+                Detail = string.Format(CultureInfo.CurrentCulture, Strings.ResourceModificationController_ResourceTypeNotFound_Message, type),
+                Instance = HttpContext.Request.Path
             });
         }
 
@@ -242,7 +275,14 @@ public class ResourceModificationController : ControllerBase
         catch (Exception e)
         {
             if (e is ArgumentException or SerializationException or ValidationException)
-                return BadRequest(new MoryxExceptionResponse { Title = e.Message });
+                return BadRequest(new ProblemDetails
+                {
+                    Type = "https://www.rfc-editor.org/rfc/rfc9110.html#name-400-bad-request",
+                    Title = Strings.ResourceModificationController_InvalidArgument_Title,
+                    Status = StatusCodes.Status400BadRequest,
+                    Detail = string.Format(CultureInfo.CurrentCulture, Strings.ResourceModificationController_InvalidArgument_Message, e.Message),
+                    Instance = HttpContext.Request.Path
+                });
             throw;
         }
     }
@@ -258,14 +298,21 @@ public class ResourceModificationController : ControllerBase
     /// <returns>The saved resource model with its assigned ID.</returns>
     [HttpPost]
     [ProducesResponseType(typeof(ResourceModel), StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status409Conflict)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Policy = ResourcePermissions.CanAdd)]
     public async Task<ActionResult<ResourceModel>> Save(ResourceModel model)
     {
         if (_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == model.Id).Any())
-            return Conflict(new MoryxExceptionResponse { Title = $"Resource '{model.Id}' already exists. Use PUT /{model.Id} to update it." });
+            return Conflict(new ProblemDetails
+            {
+                Type = "https://www.rfc-editor.org/rfc/rfc9110.html#name-409-conflict",
+                Title = Strings.ResourceModificationController_ResourceAlreadyExists_Title,
+                Status = StatusCodes.Status409Conflict,
+                Detail = string.Format(CultureInfo.CurrentCulture, Strings.ResourceModificationController_ResourceAlreadyExists_Message, model.Id),
+                Instance = HttpContext.Request.Path + "/" + model.Id
+            });
         try
         {
             var id = await _resourceManagement.CreateUnsafeAsync(_resourceTypeTree[model.Type].ResourceType, async (r) =>
@@ -285,7 +332,14 @@ public class ResourceModificationController : ControllerBase
         catch (Exception e)
         {
             if (e is ArgumentException or SerializationException or ValidationException)
-                return BadRequest(new MoryxExceptionResponse { Title = e.Message });
+                return BadRequest(new ProblemDetails
+                {
+                    Type = "https://www.rfc-editor.org/rfc/rfc9110.html#name-400-bad-request",
+                    Title = Strings.ResourceModificationController_InvalidArgument_Title,
+                    Status = StatusCodes.Status400BadRequest,
+                    Detail = string.Format(CultureInfo.CurrentCulture, Strings.ResourceModificationController_InvalidArgument_Message, e.Message),
+                    Instance = HttpContext.Request.Path
+                });
             throw;
         }
     }
@@ -419,14 +473,21 @@ public class ResourceModificationController : ControllerBase
     /// <returns>The resource model as it exists in the database after the update.</returns>
     [HttpPut("{id}")]
     [ProducesResponseType(typeof(ResourceModel), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Policy = ResourcePermissions.CanEdit)]
     public async Task<ActionResult<ResourceModel>> Update(long id, ResourceModel model)
     {
         if (!_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == id).Any())
-            return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ResourceNotFoundException_ById_Message, id) });
+            return NotFound(new ProblemDetails
+            {
+                Type = "https://www.rfc-editor.org/rfc/rfc9110.html#name-404-not-found",
+                Title = Strings.ResourceModificationController_ResourceNotFound_Title,
+                Status = StatusCodes.Status404NotFound,
+                Detail = string.Format(CultureInfo.CurrentCulture, Strings.ResourceModificationController_ResourceNotFoundException_ById_Message, id),
+                Instance = HttpContext.Request.Path
+            });
 
         try
         {
@@ -445,7 +506,14 @@ public class ResourceModificationController : ControllerBase
         catch (Exception e)
         {
             if (e is ArgumentException or SerializationException or ValidationException)
-                return BadRequest(new MoryxExceptionResponse { Title = e.Message });
+                return BadRequest(new ProblemDetails
+                {
+                    Type = "https://www.rfc-editor.org/rfc/rfc9110.html#name-400-bad-request",
+                    Title = Strings.ResourceModificationController_InvalidArgument_Title,
+                    Status = StatusCodes.Status400BadRequest,
+                    Detail = string.Format(CultureInfo.CurrentCulture, Strings.ResourceModificationController_InvalidArgument_Message, e.Message),
+                    Instance = HttpContext.Request.Path
+                });
             throw;
         }
 
@@ -462,18 +530,32 @@ public class ResourceModificationController : ControllerBase
     /// </returns>
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status409Conflict)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Policy = ResourcePermissions.CanDelete)]
     public async Task<ActionResult> Remove(long id)
     {
         if (!_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == id).Any())
-            return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ResourceNotFoundException_ById_Message, id) });
+            return NotFound(new ProblemDetails
+            {
+                Type = "https://www.rfc-editor.org/rfc/rfc9110.html#name-404-not-found",
+                Title = Strings.ResourceModificationController_ResourceNotFound_Title,
+                Status = StatusCodes.Status404NotFound,
+                Detail = string.Format(CultureInfo.CurrentCulture, Strings.ResourceModificationController_ResourceNotFoundException_ById_Message, id),
+                Instance = HttpContext.Request.Path
+            });
 
         var deleted = await _resourceManagement.DeleteAsync(id);
         if (!deleted)
-            return Conflict(new MoryxExceptionResponse { Title = $"Resource {id} cannot be deleted while it is still referenced by other resources."});
+            return Conflict(new ProblemDetails
+            {
+                Type = "https://www.rfc-editor.org/rfc/rfc9110.html#name-409-conflict",
+                Title = Strings.ResourceModificationController_ResourceConflict_Title,
+                Status = StatusCodes.Status409Conflict,
+                Detail = string.Format(CultureInfo.CurrentCulture, Strings.ResourceModificationController_ResourceConflict_Message, id),
+                Instance = HttpContext.Request.Path
+            });
 
         return NoContent();
     }
