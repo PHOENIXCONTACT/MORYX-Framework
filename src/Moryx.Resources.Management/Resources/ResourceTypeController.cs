@@ -4,7 +4,7 @@
 using System.Reflection;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
-using Moryx.Resources.Management.CastleProxy;
+using Moryx.Resources.Management.Proxies;
 using Moryx.Tools;
 
 namespace Moryx.Resources.Management;

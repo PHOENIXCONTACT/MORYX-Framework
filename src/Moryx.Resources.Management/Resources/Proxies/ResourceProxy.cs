@@ -4,7 +4,7 @@
 using Moryx.AbstractionLayer.Capabilities;
 using Moryx.AbstractionLayer.Resources;
 
-namespace Moryx.Resources.Management.CastleProxy;
+namespace Moryx.Resources.Management.Proxies;
 
 /// <summary>
 /// Mixin that Castle adds to every generated proxy via <see cref="ResourceProxyBuilder"/>.
@@ -93,9 +93,9 @@ internal class ResourceProxy : IResourceProxy
             return null;
         }
 
-        if (instance is IResourceProxy castleProxy)
+        if (instance is IResourceProxy proxy)
         {
-            return castleProxy.ProxyTarget;
+            return proxy.ProxyTarget;
         }
 
         return instance;

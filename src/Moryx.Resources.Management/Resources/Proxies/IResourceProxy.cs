@@ -3,7 +3,7 @@
 
 using Moryx.AbstractionLayer.Resources;
 
-namespace Moryx.Resources.Management.CastleProxy;
+namespace Moryx.Resources.Management.Proxies;
 
 /// <summary>
 /// Interface applied to Castle-generated proxies as a mixin.

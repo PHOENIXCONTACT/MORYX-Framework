@@ -5,7 +5,7 @@ using System.Reflection;
 using Castle.DynamicProxy;
 using Moryx.AbstractionLayer.Resources;
 
-namespace Moryx.Resources.Management.CastleProxy;
+namespace Moryx.Resources.Management.Proxies;
 
 /// <summary>
 /// Castle interceptor that forwards all interface calls to the real resource target.
@@ -14,6 +14,9 @@ namespace Moryx.Resources.Management.CastleProxy;
 internal class ResourceInterceptor : IInterceptor
 {
     private readonly ResourceProxy _mixin;
+
+    // Cache for resolved target methods to avoid repeated GetInterfaceMap calls
+    private readonly Dictionary<MethodInfo, MethodInfo> _methodCache = new();
 
     // Event delegate fields: eventName -> multicast delegate
     private readonly Dictionary<string, Delegate> _eventDelegates = new();
@@ -86,8 +89,13 @@ internal class ResourceInterceptor : IInterceptor
         invocation.ReturnValue = result;
     }
 
-    private static MethodInfo ResolveTargetMethod(Type targetType, MethodInfo interfaceMethod)
+    private MethodInfo ResolveTargetMethod(Type targetType, MethodInfo interfaceMethod)
     {
+        if (_methodCache.TryGetValue(interfaceMethod, out var cached))
+        {
+            return cached;
+        }
+
         // Try interface mapping first for explicit implementations
         var declaringType = interfaceMethod.DeclaringType;
         if (declaringType is { IsInterface: true })
@@ -97,6 +105,7 @@ internal class ResourceInterceptor : IInterceptor
             {
                 if (map.InterfaceMethods[i] == interfaceMethod)
                 {
+                    _methodCache[interfaceMethod] = map.TargetMethods[i];
                     return map.TargetMethods[i];
                 }
             }
@@ -104,8 +113,10 @@ internal class ResourceInterceptor : IInterceptor
 
         // Fallback: find by name and parameter types
         var paramTypes = interfaceMethod.GetParameters().Select(p => p.ParameterType).ToArray();
-        return targetType.GetMethod(interfaceMethod.Name,
+        var resolved = targetType.GetMethod(interfaceMethod.Name,
             BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null, paramTypes, null);
+        _methodCache[interfaceMethod] = resolved;
+        return resolved;
     }
 
     #region Event Handling

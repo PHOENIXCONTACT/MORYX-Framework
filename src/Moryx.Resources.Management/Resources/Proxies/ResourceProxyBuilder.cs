@@ -5,7 +5,7 @@ using System.Reflection;
 using Castle.DynamicProxy;
 using Moryx.AbstractionLayer.Resources;
 
-namespace Moryx.Resources.Management.CastleProxy;
+namespace Moryx.Resources.Management.Proxies;
 
 /// <summary>
 /// Builds resource proxies using Castle.DynamicProxy instead of IL emit.
