@@ -27,12 +27,13 @@ internal class FloatColumnMapper : ColumnMapper<double>
     // these values are unlikely to collide with any real-world data.
     //
     // The sentinel values are stored as their raw long bit representation to ensure exact bit-level matching.
-    private static readonly long _sentinelNaNBits =
-        BitConverter.DoubleToInt64Bits(double.BitIncrement(double.MinValue));
-    private static readonly long _sentinelPositiveInfinityBits =
-        BitConverter.DoubleToInt64Bits(double.BitIncrement(double.BitIncrement(double.MinValue)));
-    private static readonly long _sentinelNegativeInfinityBits =
-        BitConverter.DoubleToInt64Bits(double.BitIncrement(double.BitIncrement(double.BitIncrement(double.MinValue))));
+    private static readonly double _sentinelNaN = double.BitIncrement(double.MinValue);
+    private static readonly double _sentinelPositiveInfinity = double.BitIncrement(_sentinelNaN);
+    private static readonly double _sentinelNegativeInfinity = double.BitIncrement(_sentinelPositiveInfinity);
+
+    private static readonly long _sentinelNaNBits = BitConverter.DoubleToInt64Bits(_sentinelNaN);
+    private static readonly long _sentinelPositiveInfinityBits = BitConverter.DoubleToInt64Bits(_sentinelPositiveInfinity);
+    private static readonly long _sentinelNegativeInfinityBits = BitConverter.DoubleToInt64Bits(_sentinelNegativeInfinity);
 
     public FloatColumnMapper(Type targetType) : base(targetType)
     {
@@ -53,17 +54,17 @@ internal class FloatColumnMapper : ColumnMapper<double>
     {
         if (double.IsNaN(value))
         {
-            return BitConverter.Int64BitsToDouble(_sentinelNaNBits);
+            return _sentinelNaN;
         }
 
         if (double.IsPositiveInfinity(value))
         {
-            return BitConverter.Int64BitsToDouble(_sentinelPositiveInfinityBits);
+            return _sentinelPositiveInfinity;
         }
 
         if (double.IsNegativeInfinity(value))
         {
-            return BitConverter.Int64BitsToDouble(_sentinelNegativeInfinityBits);
+            return _sentinelNegativeInfinity;
         }
 
         return value;
