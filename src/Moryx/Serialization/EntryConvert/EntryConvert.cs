@@ -17,7 +17,7 @@ public static partial class EntryConvert
     /// <summary>
     /// Default strategy instance
     /// </summary>
-    internal static ICustomSerialization Serialization = new DefaultSerialization();
+    private static readonly ICustomSerialization _serialization = new DefaultSerialization();
 
     /// <summary>
     /// Check if a certain type is what we consider a collection
@@ -65,10 +65,10 @@ public static partial class EntryConvert
     /// <summary>
     /// Convert a single property into a simple entry
     /// </summary>
-    /// <returns>Covnerted property</returns>
+    /// <returns>Converted property</returns>
     public static Entry EncodeProperty(PropertyInfo property)
     {
-        return EncodeProperty(property, Serialization);
+        return EncodeProperty(property, _serialization);
     }
 
     /// <summary>
@@ -162,7 +162,7 @@ public static partial class EntryConvert
     /// </summary>
     public static Entry Prototype(EntryPrototype prototype)
     {
-        return Prototype(prototype, Serialization);
+        return Prototype(prototype, _serialization);
     }
 
     /// <summary>
@@ -201,7 +201,7 @@ public static partial class EntryConvert
     /// </summary>
     public static Entry EncodeClass(Type objType)
     {
-        return EncodeClass(objType, Serialization);
+        return EncodeClass(objType, _serialization);
     }
     /// <summary>
     /// Convert class into a list of generic entries using custom strategy
@@ -242,7 +242,7 @@ public static partial class EntryConvert
     /// </summary>
     public static Entry EncodeObject(object instance)
     {
-        return EncodeObject(instance, Serialization);
+        return EncodeObject(instance, _serialization);
     }
 
     /// <summary>
@@ -393,11 +393,11 @@ public static partial class EntryConvert
     /// Encode a <see cref="MethodBase"/> to the transmittable <see cref="MethodEntry"/>
     /// using <see cref="DefaultSerialization"/>
     /// </summary>
-    /// <param name="method"></param>
-    /// <returns></returns>
+    /// <param name="method">Method to encode</param>
+    /// <returns>Encoded method entry</returns>
     public static MethodEntry EncodeMethod(MethodBase method)
     {
-        return EncodeMethod(method, Serialization);
+        return EncodeMethod(method, _serialization);
     }
 
     /// <summary>
@@ -434,7 +434,7 @@ public static partial class EntryConvert
     /// </summary>
     public static IEnumerable<MethodEntry> EncodeMethods(object source)
     {
-        return EncodeMethods(source.GetType(), Serialization);
+        return EncodeMethods(source.GetType(), _serialization);
     }
 
     /// <summary>
@@ -450,7 +450,7 @@ public static partial class EntryConvert
     /// </summary>
     public static IEnumerable<MethodEntry> EncodeMethods(Type objType)
     {
-        return EncodeMethods(objType, Serialization);
+        return EncodeMethods(objType, _serialization);
     }
 
     /// <summary>
@@ -467,7 +467,7 @@ public static partial class EntryConvert
     /// </summary>
     public static IEnumerable<MethodEntry> EncodeConstructors(Type objType)
     {
-        return EncodeConstructors(objType, Serialization);
+        return EncodeConstructors(objType, _serialization);
     }
 
     /// <summary>
@@ -534,7 +534,7 @@ public static partial class EntryConvert
         where T : class, new()
     {
         var instance = new T();
-        UpdateInstance(instance, encoded, Serialization);
+        UpdateInstance(instance, encoded, _serialization);
         return instance;
     }
 
@@ -554,7 +554,7 @@ public static partial class EntryConvert
     /// </summary>
     public static object CreateInstance(Type type, Entry encoded)
     {
-        return CreateInstance(type, encoded, Serialization);
+        return CreateInstance(type, encoded, _serialization);
     }
 
     /// <summary>
@@ -571,7 +571,7 @@ public static partial class EntryConvert
     /// </summary>
     public static object CreateInstance(Type type, MethodEntry encodedConstructor)
     {
-        return CreateInstance(type, encodedConstructor, Serialization);
+        return CreateInstance(type, encodedConstructor, _serialization);
     }
 
     /// <summary>
@@ -595,7 +595,7 @@ public static partial class EntryConvert
     /// </summary>
     public static object UpdateInstance(object instance, Entry encoded)
     {
-        return UpdateInstance(instance, encoded, Serialization);
+        return UpdateInstance(instance, encoded, _serialization);
     }
 
     /// <summary>
@@ -777,7 +777,7 @@ public static partial class EntryConvert
     /// </summary>
     public static Entry InvokeMethod(object target, MethodEntry methodEntry)
     {
-        return InvokeMethod(target, methodEntry, Serialization);
+        return InvokeMethod(target, methodEntry, _serialization);
     }
 
     /// <summary>
@@ -786,7 +786,7 @@ public static partial class EntryConvert
     /// </summary>
     public static Task<Entry> InvokeMethodAsync(object target, MethodEntry methodEntry, CancellationToken cancellationToken = default)
     {
-        return InvokeMethodAsync(target, methodEntry, Serialization, cancellationToken);
+        return InvokeMethodAsync(target, methodEntry, _serialization, cancellationToken);
     }
 
     /// <summary>

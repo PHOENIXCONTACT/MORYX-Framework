@@ -34,7 +34,7 @@ public static partial class EntryConvert
     /// </summary>
     /// <param name="value">Value to convert</param>
     /// <param name="formatProvider">Format provider used to convert the value to string</param>
-    /// <returns></returns>
+    /// <returns>Formatted string representation</returns>
     internal static string ConvertToString(object value, IFormatProvider formatProvider)
     {
         return value switch
