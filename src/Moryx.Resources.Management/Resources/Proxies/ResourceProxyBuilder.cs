@@ -66,7 +66,8 @@ internal class ResourceProxyBuilder
                     continue;
                 }
 
-                var targetEvent = targetType.GetEvent(eventInfo.Name);
+                var targetEvent = targetType.GetEvent(eventInfo.Name,
+                    BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
                 if (targetEvent is null)
                 {
                     continue;
@@ -78,7 +79,7 @@ internal class ResourceProxyBuilder
                     continue;
                 }
 
-                targetEvent.AddEventHandler(target, handler);
+                targetEvent.GetAddMethod(nonPublic: true)!.Invoke(target, [handler]);
                 mixin.RegisterEventHandler(eventInfo.Name, handler);
             }
         }

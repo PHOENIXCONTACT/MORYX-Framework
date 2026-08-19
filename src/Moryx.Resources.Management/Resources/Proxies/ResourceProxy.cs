@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Reflection;
 using Moryx.AbstractionLayer.Capabilities;
 using Moryx.AbstractionLayer.Resources;
 
@@ -61,8 +62,9 @@ internal class ResourceProxy : IResourceProxy
         var targetType = ProxyTarget.GetType();
         foreach (var (eventName, handler) in _eventHandlers)
         {
-            var eventInfo = targetType.GetEvent(eventName);
-            eventInfo?.RemoveEventHandler(ProxyTarget, handler);
+            var eventInfo = targetType.GetEvent(eventName,
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            eventInfo?.GetRemoveMethod(nonPublic: true)?.Invoke(ProxyTarget, [handler]);
         }
         _eventHandlers.Clear();
 

@@ -29,7 +29,8 @@ public class TypeControllerTests
                 typeof(DerivedResource),
                 typeof(ReferenceResource),
                 typeof(NonPublicResource),
-                typeof(ResourceWithImplicitApi)
+                typeof(ResourceWithImplicitApi),
+                typeof(ExplicitEventResource)
             ]);
 
         _typeController = new ResourceTypeController
@@ -257,6 +258,60 @@ public class TypeControllerTests
 
         // Assert
         Assert.Throws<NotSupportedException>(() => ResourceExtensions.Proxify<IGenericMethodCall>(driver, _typeController));
+    }
+
+    [Test(Description = "Explicit interface property get/set should work through proxy")]
+    public void ReadAndWriteExplicitInterfaceProperty()
+    {
+        // Arrange
+        var instance = new ExplicitEventResource { Id = 20 };
+
+        // Act
+        var proxy = (IExplicitEventResource)_typeController.GetProxy(instance);
+        proxy.Bar = 42;
+
+        // Assert
+        Assert.That(proxy.Bar, Is.EqualTo(42));
+    }
+
+    [Test(Description = "Explicit interface method should work through proxy")]
+    public void CallExplicitInterfaceMethodOnProxy()
+    {
+        // Arrange
+        var instance = new ExplicitEventResource { Id = 21 };
+        var proxy = (IExplicitEventResource)_typeController.GetProxy(instance);
+        proxy.Bar = 5;
+
+        // Act
+        var result = proxy.DoubleBar();
+
+        // Assert
+        Assert.That(result, Is.EqualTo(10));
+        Assert.That(proxy.Bar, Is.EqualTo(10));
+    }
+
+    [Test(Description = "Explicit interface event should be forwarded through proxy")]
+    public void ForwardExplicitInterfaceEventFromProxy()
+    {
+        // Arrange
+        var instance = new ExplicitEventResource { Id = 22 };
+        var proxy = (IExplicitEventResource)_typeController.GetProxy(instance);
+
+        object eventSender = null;
+        var eventValue = 0;
+        proxy.BarChanged += (sender, value) =>
+        {
+            eventSender = sender;
+            eventValue = value;
+        };
+
+        // Act
+        proxy.Bar = 99;
+
+        // Assert
+        Assert.That(eventSender, Is.Not.Null);
+        Assert.That(eventSender, Is.EqualTo(proxy));
+        Assert.That(eventValue, Is.EqualTo(99));
     }
 
     [Test]
