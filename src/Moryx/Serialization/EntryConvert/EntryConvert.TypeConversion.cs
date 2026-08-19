@@ -7,10 +7,47 @@ using System.Globalization;
 namespace Moryx.Serialization;
 
 /// <summary>
-/// Helper class to converts types to enum and vice versa
+/// Type conversion, struct serializer registry and string formatting for EntryConvert
 /// </summary>
 public static partial class EntryConvert
 {
+    /// <summary>
+    /// Registry of serializers for structs that are decomposed into sub-entries
+    /// </summary>
+    private static readonly Dictionary<Type, IStructSerializer> _structSerializers = new IStructSerializer[]
+    {
+        new Vector2EntrySerializer(),
+        new Vector3EntrySerializer(),
+        new QuaternionEntrySerializer()
+    }.ToDictionary(s => s.TargetType);
+
+    /// <summary>
+    /// Try to find a registered <see cref="IStructSerializer"/> for the given type
+    /// </summary>
+    private static bool TryGetSerializer(Type type, out IStructSerializer serializer)
+    {
+        return _structSerializers.TryGetValue(type, out serializer);
+    }
+
+    /// <summary>
+    /// Converts given value typed instance to a string with the given <see cref="IFormatProvider"/>
+    /// </summary>
+    /// <param name="value">Value to convert</param>
+    /// <param name="formatProvider">Format provider used to convert the value to string</param>
+    /// <returns></returns>
+    internal static string ConvertToString(object value, IFormatProvider formatProvider)
+    {
+        return value switch
+        {
+            DateTime dt => dt.ToUniversalTime().ToString("O", formatProvider),
+            DateOnly d => d.ToString("O", formatProvider),
+            TimeOnly t => t.ToString("O", formatProvider),
+            TimeSpan ts => ts.ToString("c", formatProvider),
+            IConvertible convertible => convertible.ToString(formatProvider),
+            _ => value?.ToString()
+        };
+    }
+
     /// <summary>
     /// Transform type of entry
     /// </summary>
