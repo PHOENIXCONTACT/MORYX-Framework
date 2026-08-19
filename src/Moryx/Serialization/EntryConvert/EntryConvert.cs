@@ -385,7 +385,7 @@ public static partial class EntryConvert
     private static string ConvertToBase64(Stream stream)
     {
         var bytes = new byte[stream.Length];
-        stream.Read(bytes, 0, (int)stream.Length);
+        stream.ReadExactly(bytes, 0, (int)stream.Length);
         return Convert.ToBase64String(bytes);
     }
 
