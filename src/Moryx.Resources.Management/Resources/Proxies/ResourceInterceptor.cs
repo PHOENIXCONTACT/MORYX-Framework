@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Reflection;
+using System.Runtime.ExceptionServices;
 using Castle.DynamicProxy;
 using Moryx.AbstractionLayer.Resources;
 
@@ -84,12 +85,13 @@ internal class ResourceInterceptor : IInterceptor
         catch (TargetInvocationException ex) when (ex.InnerException is not null)
         {
             // Rethrow the original exception preserving its stack trace.
-            System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+            ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
             return; // unreachable
         }
 
         // Convert resource-typed return values to proxies
-        if (result is not null && IsResourceReference(method.ReturnType))
+        // Check both declared return type and actual runtime type for generic methods
+        if (result is not null && (IsResourceReference(method.ReturnType) || result is IResource))
         {
             result = ConvertResult(result, method.ReturnType);
         }
@@ -206,7 +208,7 @@ internal class ResourceInterceptor : IInterceptor
         // Convert resource-typed event args to proxies
         if (args is IEnumerable<IResource> resourceArgs and not IResource)
         {
-            var converted = resourceArgs.Select(r => ConvertToProxy(r)).ToArray();
+            var converted = resourceArgs.Select(ConvertToProxy).ToArray();
             args = CastCollection(converted, expectedArgType);
         }
         else if (args is IResource resource)
@@ -241,7 +243,7 @@ internal class ResourceInterceptor : IInterceptor
     {
         if (result is IEnumerable<IResource> collection and not IResource)
         {
-            return CastCollection(collection.Select(r => ConvertToProxy(r)).ToArray(), returnType);
+            return CastCollection(collection.Select(ConvertToProxy).ToArray(), returnType);
         }
 
         if (result is IResource singleResource)
@@ -256,7 +258,7 @@ internal class ResourceInterceptor : IInterceptor
     {
         if (arg is IEnumerable<IResource> collection and not IResource)
         {
-            var extracted = collection.Select(r => (IResource)ExtractFromProxy(r)).ToArray();
+            var extracted = collection.Select(ExtractFromProxy).ToArray();
             return CastCollection(extracted, parameterType);
         }
 

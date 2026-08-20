@@ -249,10 +249,10 @@ public class TypeControllerTests
     public void ProxySupportsGenericInterfaces()
     {
         // Arrange
-        var driver = new ResourceWithGenericMethod { Id = 2, Name = "Some other Resource" };
+        var resource = new ResourceWithGenericMethod { Id = 2, Name = "Some other Resource" };
 
         // Act
-        var proxy = _typeController.GetProxy(driver);
+        var proxy = _typeController.GetProxy(resource);
 
         // Assert
         Assert.That(proxy, Is.Not.Null);
@@ -264,8 +264,8 @@ public class TypeControllerTests
     public void CallGenericMethodOnProxy()
     {
         // Arrange
-        var driver = new ResourceWithGenericMethod { Id = 2, Name = "Some other Resource" };
-        var proxy = (IGenericMethodCall)_typeController.GetProxy(driver);
+        var resource = new ResourceWithGenericMethod { Id = 2, Name = "Some other Resource" };
+        var proxy = (IGenericMethodCall)_typeController.GetProxy(resource);
 
         // Act
         var stringResult = proxy.GenericMethod("hello");
@@ -276,14 +276,31 @@ public class TypeControllerTests
         Assert.That(intResult, Is.EqualTo(42));
     }
 
+    [Test(Description = "Generic method returning a resource wraps it in a proxy")]
+    public void GenericMethodReturningResourceIsProxied()
+    {
+        // Arrange
+        var inner = new SimpleResource { Id = 50, Foo = 99 };
+        var resource = new ResourceWithGenericMethod { Id = 2, Name = "Some other Resource" };
+        var proxy = (IGenericMethodCall)_typeController.GetProxy(resource);
+
+        // Act
+        var result = proxy.GenericMethod<IResource>(inner);
+
+        // Assert: result should be a proxy, not the raw resource
+        Assert.That(result, Is.Not.SameAs(inner));
+        Assert.That(result, Is.Not.InstanceOf<Resource>());
+        Assert.That(result.Id, Is.EqualTo(50));
+    }
+
     [Test(Description = "Exceptions thrown by the resource are not wrapped in TargetInvocationException")]
     public void ProxyUnwrapsTargetExceptions()
     {
         // Arrange
-        var instance = new SimpleResource { Id = 33, Foo = 0 };
-        var proxy = (ISimpleResource)_typeController.GetProxy(instance);
+        var resource = new SimpleResource { Id = 33, Foo = 0 };
+        var proxy = (ISimpleResource)_typeController.GetProxy(resource);
 
-        // Act & Assert: division by zero in MultiplyFoo should surface directly
+        // Act & Assert
         Assert.Throws<InvalidOperationException>(() => proxy.ThrowingMethod());
     }
 
@@ -291,10 +308,10 @@ public class TypeControllerTests
     public void ProxyBuilderSkipsGenericBaseTypes()
     {
         // Arrange
-        var driver = new InheritingFromGenericResource { Id = 42, Name = "A non generic resource inheriting from a generic base type" };
+        var resource = new InheritingFromGenericResource { Id = 42, Name = "A non generic resource inheriting from a generic base type" };
 
         // Act
-        var proxy = _typeController.GetProxy(driver);
+        var proxy = _typeController.GetProxy(resource);
 
         // Assert
         Assert.That(proxy, Is.Not.Null);
@@ -305,10 +322,10 @@ public class TypeControllerTests
     public void ProxifyGenericInterfaceFromFacade()
     {
         // Arrange
-        var driver = new ResourceWithGenericMethod { Id = 2, Name = "Some other Resource" };
+        var resource = new ResourceWithGenericMethod { Id = 2, Name = "Some other Resource" };
 
         // Act
-        var proxy = driver.Proxify<IGenericMethodCall>(_typeController);
+        var proxy = resource.Proxify<IGenericMethodCall>(_typeController);
 
         // Assert
         Assert.That(proxy, Is.Not.Null);
