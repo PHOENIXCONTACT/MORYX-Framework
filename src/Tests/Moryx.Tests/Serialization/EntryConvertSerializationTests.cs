@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
@@ -130,119 +131,136 @@ public class EntryConvertSerializationTests
         Assert.That(doubleWithFallback, Is.EqualTo(3.14d).Within(1e-10));
     }
 
-    [Test]
-    public void EncodesVector3AsStructWithSubEntries()
+    [TestCase(nameof(StructPropertiesClass.Position2D), 2, new[] { "X", "Y" })]
+    [TestCase(nameof(StructPropertiesClass.Position3D), 3, new[] { "X", "Y", "Z" })]
+    [TestCase(nameof(StructPropertiesClass.Position4D), 4, new[] { "X", "Y", "Z", "W" })]
+    [TestCase(nameof(StructPropertiesClass.Rotation), 4, new[] { "X", "Y", "Z", "W" })]
+    [TestCase(nameof(StructPropertiesClass.Surface), 4, new[] { "X", "Y", "Z", "D" })]
+    public void EncodesStructWithSubEntries(string propertyName, int expectedCount, string[] expectedIdentifiers)
     {
         // Arrange
-        var obj = new StructPropertiesClass { Position3D = new Vector3(1.5f, 2.5f, 3.5f) };
-
-        // Act
-        var entry = EntryConvert.EncodeObject(obj);
-        var vectorEntry = entry.SubEntries.First(e => e.Identifier == nameof(StructPropertiesClass.Position3D));
-
-        // Assert
-        Assert.That(vectorEntry.Value.Type, Is.EqualTo(EntryValueType.Struct));
-        Assert.That(vectorEntry.SubEntries, Has.Count.EqualTo(3));
-        Assert.That(vectorEntry.SubEntries.Select(e => e.Identifier), Is.EquivalentTo(new[] { "X", "Y", "Z" }));
-        Assert.That(vectorEntry.SubEntries.All(e => e.Value.Type == EntryValueType.Single), Is.True);
-    }
-
-    [Test]
-    public void EncodesVector2AsStructWithSubEntries()
-    {
-        // Arrange
-        var obj = new StructPropertiesClass { Position2D = new Vector2(10f, 20f) };
-
-        // Act
-        var entry = EntryConvert.EncodeObject(obj);
-        var vectorEntry = entry.SubEntries.First(e => e.Identifier == nameof(StructPropertiesClass.Position2D));
-
-        // Assert
-        Assert.That(vectorEntry.Value.Type, Is.EqualTo(EntryValueType.Struct));
-        Assert.That(vectorEntry.SubEntries, Has.Count.EqualTo(2));
-        Assert.That(vectorEntry.SubEntries.Select(e => e.Identifier), Is.EquivalentTo(new[] { "X", "Y" }));
-    }
-
-    [Test]
-    public void EncodesQuaternionAsStructWithSubEntries()
-    {
-        // Arrange
-        var obj = new StructPropertiesClass { Rotation = new Quaternion(1f, 2f, 3f, 4f) };
-
-        // Act
-        var entry = EntryConvert.EncodeObject(obj);
-        var quatEntry = entry.SubEntries.First(e => e.Identifier == nameof(StructPropertiesClass.Rotation));
-
-        // Assert
-        Assert.That(quatEntry.Value.Type, Is.EqualTo(EntryValueType.Struct));
-        Assert.That(quatEntry.SubEntries, Has.Count.EqualTo(4));
-        Assert.That(quatEntry.SubEntries.Select(e => e.Identifier), Is.EquivalentTo(new[] { "X", "Y", "Z", "W" }));
-    }
-
-    [Test]
-    public void Vector3ValuesOnRoundTripPreserved()
-    {
-        // Arrange
-        var original = new StructPropertiesClass
+        var obj = new StructPropertiesClass
         {
-            Position3D = new Vector3(1.5f, 2.5f, 3.5f)
+            Position2D = new Vector2(10f, 20f),
+            Position3D = new Vector3(1.5f, 2.5f, 3.5f),
+            Position4D = new Vector4(1f, 2f, 3f, 4f),
+            Rotation = new Quaternion(1f, 2f, 3f, 4f),
+            Surface = new Plane(new Vector3(0f, 1f, 0f), 5f)
         };
 
+        // Act
+        var entry = EntryConvert.EncodeObject(obj);
+        var structEntry = entry.SubEntries.First(e => e.Identifier == propertyName);
+
+        // Assert
+        Assert.That(structEntry.Value.Type, Is.EqualTo(EntryValueType.Struct));
+        Assert.That(structEntry.SubEntries, Has.Count.EqualTo(expectedCount));
+        Assert.That(structEntry.SubEntries.Select(e => e.Identifier), Is.EquivalentTo(expectedIdentifiers));
+        Assert.That(structEntry.SubEntries.All(e => e.Value.Type == EntryValueType.Single), Is.True);
+    }
+
+    private static IEnumerable<TestCaseData> StructRoundTripCases()
+    {
+        yield return new TestCaseData(new StructPropertiesClass { Position2D = new Vector2(10f, 20f) }, nameof(StructPropertiesClass.Position2D))
+            .SetName(nameof(StructValuesOnRoundTripPreserved) + "(Vector2)");
+        yield return new TestCaseData(new StructPropertiesClass { Position3D = new Vector3(1.5f, 2.5f, 3.5f) }, nameof(StructPropertiesClass.Position3D))
+            .SetName(nameof(StructValuesOnRoundTripPreserved) + "(Vector3)");
+        yield return new TestCaseData(new StructPropertiesClass { Position4D = new Vector4(1f, 2f, 3f, 4f) }, nameof(StructPropertiesClass.Position4D))
+            .SetName(nameof(StructValuesOnRoundTripPreserved) + "(Vector4)");
+        yield return new TestCaseData(new StructPropertiesClass { Rotation = new Quaternion(1f, 2f, 3f, 4f) }, nameof(StructPropertiesClass.Rotation))
+            .SetName(nameof(StructValuesOnRoundTripPreserved) + "(Quaternion)");
+        yield return new TestCaseData(new StructPropertiesClass { Surface = new Plane(new Vector3(0f, 1f, 0f), 5f) }, nameof(StructPropertiesClass.Surface))
+            .SetName(nameof(StructValuesOnRoundTripPreserved) + "(Plane)");
+    }
+
+    [TestCaseSource(nameof(StructRoundTripCases))]
+    public void StructValuesOnRoundTripPreserved(StructPropertiesClass original, string propertyName)
+    {
         // Act
         var entry = EntryConvert.EncodeObject(original);
         var restored = new StructPropertiesClass();
         EntryConvert.UpdateInstance(restored, entry);
 
         // Assert
-        Assert.That(restored.Position3D, Is.EqualTo(original.Position3D));
+        var property = typeof(StructPropertiesClass).GetProperty(propertyName)!;
+        var originalValue = property.GetValue(original);
+        var restoredValue = property.GetValue(restored);
+
+        Assert.That(restoredValue, Is.EqualTo(originalValue));
     }
 
-    [Test]
-    public void Vector2ValuesOnRoundTripPreserved()
-    {
-        // Arrange
-        var original = new StructPropertiesClass
-        {
-            Position2D = new Vector2(10f, 20f)
-        };
-
-        // Act
-        var entry = EntryConvert.EncodeObject(original);
-        var restored = new StructPropertiesClass();
-        EntryConvert.UpdateInstance(restored, entry);
-
-        // Assert
-        Assert.That(restored.Position2D, Is.EqualTo(original.Position2D));
-    }
-
-    [Test]
-    public void QuaternionValuesOnRoundTripPreserved()
-    {
-        // Arrange
-        var original = new StructPropertiesClass
-        {
-            Rotation = new Quaternion(1f, 2f, 3f, 4f)
-        };
-
-        // Act
-        var entry = EntryConvert.EncodeObject(original);
-        var restored = new StructPropertiesClass();
-        EntryConvert.UpdateInstance(restored, entry);
-
-        // Assert
-        Assert.That(restored.Rotation, Is.EqualTo(original.Rotation));
-    }
-
-    [Test]
-    public void CreatesDefaultSubEntriesForVector3OnEncodeClass()
+    [TestCase(nameof(StructPropertiesClass.Position2D), 2)]
+    [TestCase(nameof(StructPropertiesClass.Position3D), 3)]
+    [TestCase(nameof(StructPropertiesClass.Position4D), 4)]
+    [TestCase(nameof(StructPropertiesClass.Rotation), 4)]
+    [TestCase(nameof(StructPropertiesClass.Surface), 4)]
+    public void CreatesDefaultSubEntriesOnEncodeClass(string propertyName, int expectedCount)
     {
         // Act
         var entry = EntryConvert.EncodeClass(typeof(StructPropertiesClass));
-        var vectorEntry = entry.SubEntries.First(e => e.Identifier == nameof(StructPropertiesClass.Position3D));
+        var structEntry = entry.SubEntries.First(e => e.Identifier == propertyName);
 
         // Assert
-        Assert.That(vectorEntry.Value.Type, Is.EqualTo(EntryValueType.Struct));
-        Assert.That(vectorEntry.SubEntries, Has.Count.EqualTo(3));
+        Assert.That(structEntry.Value.Type, Is.EqualTo(EntryValueType.Struct));
+        Assert.That(structEntry.SubEntries, Has.Count.EqualTo(expectedCount));
+    }
+
+    [Test(Description = "DateTime maps to EntryValueType.DateTime.")]
+    public void DateTimeMapsToDateTimeValueType()
+    {
+        // Act
+        var valueType = EntryConvert.TransformType(typeof(DateTime));
+
+        // Assert
+        Assert.That(valueType, Is.EqualTo(EntryValueType.DateTime));
+    }
+
+    [Test(Description = "DateTime values are converted to UTC and preserved on round-trip.")]
+    public void DateTimeValuesOnRoundTripPreservedAsUtc()
+    {
+        // Arrange
+        var original = new DummyClass
+        {
+            ModifiedAt = new DateTime(2026, 8, 18, 14, 30, 0, DateTimeKind.Utc)
+        };
+
+        // Act
+        var entry = EntryConvert.EncodeObject(original);
+        var restored = new DummyClass();
+        EntryConvert.UpdateInstance(restored, entry);
+
+        // Assert
+        Assert.That(restored.ModifiedAt, Is.EqualTo(original.ModifiedAt));
+        Assert.That(restored.ModifiedAt.Kind, Is.EqualTo(DateTimeKind.Utc));
+    }
+
+    [Test(Description = "DateTimeOffset maps to EntryValueType.DateTime, same as DateTime.")]
+    public void DateTimeOffsetMapsToDateTimeValueType()
+    {
+        // Act
+        var valueType = EntryConvert.TransformType(typeof(DateTimeOffset));
+
+        // Assert
+        Assert.That(valueType, Is.EqualTo(EntryValueType.DateTime));
+    }
+
+    [Test(Description = "DateTimeOffset UTC instant is preserved on round-trip, but the original offset is lost.")]
+    public void DateTimeOffsetValuesOnRoundTripPreserved()
+    {
+        // Arrange
+        var original = new DummyClass
+        {
+            CreatedAt = new DateTimeOffset(2026, 8, 18, 14, 30, 0, TimeSpan.FromHours(2))
+        };
+
+        // Act
+        var entry = EntryConvert.EncodeObject(original);
+        var restored = new DummyClass();
+        EntryConvert.UpdateInstance(restored, entry);
+
+        // Assert
+        // Offset is lost, but the UTC instant is preserved
+        Assert.That(restored.CreatedAt.UtcDateTime, Is.EqualTo(original.CreatedAt.UtcDateTime));
     }
 
     [Test]

@@ -11,5 +11,9 @@ public class StructPropertiesClass
 
     public Vector3 Position3D { get; set; }
 
+    public Vector4 Position4D { get; set; }
+
     public Quaternion Rotation { get; set; }
+
+    public Plane Surface { get; set; }
 }

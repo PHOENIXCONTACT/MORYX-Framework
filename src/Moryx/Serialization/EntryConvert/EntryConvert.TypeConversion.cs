@@ -41,6 +41,7 @@ public static partial class EntryConvert
     {
         return value switch
         {
+            DateTimeOffset dto => dto.UtcDateTime.ToString("O", formatProvider),
             DateTime dt => dt.ToUniversalTime().ToString("O", formatProvider),
             DateOnly d => d.ToString("O", formatProvider),
             TimeOnly t => t.ToString("O", formatProvider),
@@ -118,7 +119,7 @@ public static partial class EntryConvert
         {
             valueType = EntryValueType.TimeSpan;
         }
-        else if (propertyType == typeof(DateTime))
+        else if (propertyType == typeof(DateTime) || propertyType == typeof(DateTimeOffset))
         {
             valueType = EntryValueType.DateTime;
         }
@@ -210,6 +211,10 @@ public static partial class EntryConvert
         else if (type == typeof(DateTime))
         {
             result = ConvertToUtc(DateTime.Parse(value, formatProvider));
+        }
+        else if (type == typeof(DateTimeOffset))
+        {
+            result = new DateTimeOffset(DateTime.Parse(value, formatProvider, DateTimeStyles.AdjustToUniversal));
         }
         else if (type == typeof(DateOnly))
         {
