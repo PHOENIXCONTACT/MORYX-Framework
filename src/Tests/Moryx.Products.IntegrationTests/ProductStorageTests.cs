@@ -167,6 +167,18 @@ public class ProductStorageTests
                             PropertyName = nameof(VectorProductType.Orientation),
                             Column = nameof(IGenericColumns.Text2),
                             PluginName = nameof(TextColumnMapper)
+                        },
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(VectorProductType.Dimensions),
+                            Column = nameof(IGenericColumns.Text3),
+                            PluginName = nameof(TextColumnMapper)
+                        },
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(VectorProductType.Surface),
+                            Column = nameof(IGenericColumns.Text4),
+                            PluginName = nameof(TextColumnMapper)
                         }
                     ],
                     JsonColumn = nameof(IGenericColumns.Text8)
@@ -1268,6 +1280,46 @@ public class ProductStorageTests
 
         // Assert
         Assert.That(loaded.Orientation, Is.EqualTo(new Quaternion(0.1f, 0.2f, 0.3f, 0.9f)));
+    }
+
+    [Test]
+    public async Task SaveAndLoadTypeWithVector4()
+    {
+        // Arrange
+        var expectedDimensions = new Vector4(1.0f, 2.0f, 3.0f, 4.0f);
+        var product = new VectorProductType
+        {
+            Name = "Vector4 Product",
+            Identity = new ProductIdentity("VEC4001", 1),
+            Dimensions = expectedDimensions
+        };
+
+        // Act
+        var savedId = await _storage.SaveTypeAsync(product);
+        var loaded = (VectorProductType)await _storage.LoadTypeAsync(savedId);
+
+        // Assert
+        Assert.That(loaded.Dimensions, Is.EqualTo(expectedDimensions));
+    }
+
+    [Test]
+    public async Task SaveAndLoadTypeWithPlane()
+    {
+        // Arrange
+        var expectedSurface = new Plane(new Vector3(0f, 1f, 0f), 5.5f);
+        var product = new VectorProductType
+        {
+            Name = "Plane Product",
+            Identity = new ProductIdentity("PLN001", 1),
+            Surface = expectedSurface
+        };
+
+        // Act
+        var savedId = await _storage.SaveTypeAsync(product);
+        var loaded = (VectorProductType)await _storage.LoadTypeAsync(savedId);
+
+        // Assert
+        Assert.That(loaded.Surface, Is.EqualTo(expectedSurface));
     }
 
     [Test]

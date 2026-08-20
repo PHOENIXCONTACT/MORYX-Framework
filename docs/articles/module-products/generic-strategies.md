@@ -13,7 +13,7 @@ Property mappers are strategies to map a single property to a database column an
 |---|---|---|
 | [IntegerColumnMapper](/src/Moryx.Products.Management/Plugins/GenericStrategies/IntegerColumnMapper.cs) | long | Int16 - UInt64, Enum, DateTime, DateOnly, TimeOnly, bool |
 | [FloatColumnMapper](/src/Moryx.Products.Management/Plugins/GenericStrategies/FloatColumnMapper.cs) | double | float, double, decimal |
-| [TextColumnMapper](/src/Moryx.Products.Management/Plugins/GenericStrategies/TextColumnMapper.cs) | string | string (plain), Guid, classes/interfaces (JSON), non-primitive structs like Vector3, Quaternion, DateTimeOffset (JSON) |
+| [TextColumnMapper](/src/Moryx.Products.Management/Plugins/GenericStrategies/TextColumnMapper.cs) | string | string (plain), Guid, classes/interfaces (JSON), non-primitive structs like Vector2, Vector3, Vector4, Quaternion, Plane, DateTimeOffset (JSON) |
 
 ### IntegerColumnMapper
 
@@ -36,7 +36,7 @@ The `TextColumnMapper` stores values as `string` in the database.
 
 - `string` is stored directly
 - `Guid` is converted to its string representation
-- Classes, interfaces and non-primitive structs (e.g. `Vector3`, `Quaternion`, `DateTimeOffset`) are serialized as JSON
+- Classes, interfaces and non-primitive structs (e.g. `Vector2`, `Vector3`, `Vector4`, `Quaternion`, `Plane`, `DateTimeOffset`) are serialized as JSON
 
 ## Configuration
 
