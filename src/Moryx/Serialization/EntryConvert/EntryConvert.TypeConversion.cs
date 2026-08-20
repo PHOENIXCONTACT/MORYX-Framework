@@ -99,6 +99,11 @@ public static partial class EntryConvert
         {
             valueType = EntryValueType.Double;
         }
+        // TODO: Consider adding a dedicated EntryValueType.Decimal for higher precision
+        else if (propertyType == typeof(decimal))
+        {
+            valueType = EntryValueType.Double;
+        }
         else if (propertyType.IsEnum)
         {
             valueType = EntryValueType.Enum;

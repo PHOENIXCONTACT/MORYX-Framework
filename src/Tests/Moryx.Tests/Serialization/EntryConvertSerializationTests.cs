@@ -205,6 +205,16 @@ public class EntryConvertSerializationTests
         Assert.That(structEntry.SubEntries, Has.Count.EqualTo(expectedCount));
     }
 
+    [Test(Description = "Decimal maps to EntryValueType.Double.")]
+    public void DecimalMapsToDoubleValueType()
+    {
+        // Act
+        var valueType = EntryConvert.TransformType(typeof(decimal));
+
+        // Assert
+        Assert.That(valueType, Is.EqualTo(EntryValueType.Double));
+    }
+
     [Test(Description = "DateTime maps to EntryValueType.DateTime.")]
     public void DateTimeMapsToDateTimeValueType()
     {
