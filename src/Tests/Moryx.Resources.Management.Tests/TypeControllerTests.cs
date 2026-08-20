@@ -246,17 +246,45 @@ public class TypeControllerTests
     }
 
     [Test]
-    public void ProxyBuilderFiltersGenericInterfaces()
+    public void ProxySupportsGenericInterfaces()
     {
         // Arrange
         var driver = new ResourceWithGenericMethod { Id = 2, Name = "Some other Resource" };
 
         // Act
-        var proxy = (ISimpleResource)_typeController.GetProxy(driver);
+        var proxy = _typeController.GetProxy(driver);
 
         // Assert
         Assert.That(proxy, Is.Not.Null);
-        Assert.That(typeof(IGenericMethodCall).IsAssignableFrom(proxy.GetType()), Is.False);
+        Assert.That(proxy, Is.InstanceOf<ISimpleResource>());
+        Assert.That(proxy, Is.InstanceOf<IGenericMethodCall>());
+    }
+
+    [Test(Description = "Generic methods on resource interfaces are forwarded through the proxy")]
+    public void CallGenericMethodOnProxy()
+    {
+        // Arrange
+        var driver = new ResourceWithGenericMethod { Id = 2, Name = "Some other Resource" };
+        var proxy = (IGenericMethodCall)_typeController.GetProxy(driver);
+
+        // Act
+        var stringResult = proxy.GenericMethod("hello");
+        var intResult = proxy.GenericMethod(42);
+
+        // Assert
+        Assert.That(stringResult, Is.EqualTo("hello"));
+        Assert.That(intResult, Is.EqualTo(42));
+    }
+
+    [Test(Description = "Exceptions thrown by the resource are not wrapped in TargetInvocationException")]
+    public void ProxyUnwrapsTargetExceptions()
+    {
+        // Arrange
+        var instance = new SimpleResource { Id = 33, Foo = 0 };
+        var proxy = (ISimpleResource)_typeController.GetProxy(instance);
+
+        // Act & Assert: division by zero in MultiplyFoo should surface directly
+        Assert.Throws<InvalidOperationException>(() => proxy.ThrowingMethod());
     }
 
     [Test]
@@ -274,13 +302,17 @@ public class TypeControllerTests
     }
 
     [Test]
-    public void FacadeExceptionForGenericProxy()
+    public void ProxifyGenericInterfaceFromFacade()
     {
         // Arrange
         var driver = new ResourceWithGenericMethod { Id = 2, Name = "Some other Resource" };
 
+        // Act
+        var proxy = driver.Proxify<IGenericMethodCall>(_typeController);
+
         // Assert
-        Assert.Throws<NotSupportedException>(() => ResourceExtensions.Proxify<IGenericMethodCall>(driver, _typeController));
+        Assert.That(proxy, Is.Not.Null);
+        Assert.That(proxy, Is.InstanceOf<IGenericMethodCall>());
     }
 
     [Test(Description = "Explicit interface property get/set should work through proxy")]

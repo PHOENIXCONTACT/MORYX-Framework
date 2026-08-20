@@ -240,24 +240,9 @@ internal class ResourceTypeController : IResourceTypeController, IResourceTypeTr
                   && relevantInterfaces.Any(generalInterface.IsAssignableFrom) // It is a base type of a relevant interface
             select generalInterface);
 
-        // Filter all interfaces that are generic OR contain generic methods
-        relevantInterfaces = relevantInterfaces.Where(candidate => !IsGenericResourceInterface(candidate)).ToList();
+        // Filter open generic interfaces (e.g. IFoo<>) that Castle cannot proxy
+        relevantInterfaces = relevantInterfaces.Where(candidate => !candidate.IsGenericTypeDefinition).ToList();
 
         return relevantInterfaces;
-    }
-
-    internal static bool IsGenericResourceInterface(Type resourceInterface)
-    {
-        if (resourceInterface.IsGenericType || resourceInterface.IsGenericTypeDefinition)
-            return true;
-
-        if (resourceInterface.GetMethods().Any(method => method.IsGenericMethod || method.ContainsGenericParameters))
-            return true;
-
-        // We also need to filter all interfaces that contain/inherit generic interfaces
-        if (resourceInterface.GetInterfaces().Any(IsGenericResourceInterface))
-            return true;
-
-        return false;
     }
 }

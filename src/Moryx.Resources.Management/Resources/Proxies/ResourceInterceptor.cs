@@ -74,8 +74,19 @@ internal class ResourceInterceptor : IInterceptor
             }
         }
 
-        // Invoke on real target
-        var result = targetMethod.Invoke(target, arguments);
+        // MethodInfo.Invoke wraps any target exception in TargetInvocationException.
+        // Unwrap it so callers see the original exception with its stack trace.
+        object result;
+        try
+        {
+            result = targetMethod.Invoke(target, arguments);
+        }
+        catch (TargetInvocationException ex) when (ex.InnerException is not null)
+        {
+            // Rethrow the original exception preserving its stack trace.
+            System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+            return; // unreachable
+        }
 
         // Convert resource-typed return values to proxies
         if (result is not null && IsResourceReference(method.ReturnType))
@@ -93,6 +104,14 @@ internal class ResourceInterceptor : IInterceptor
 
     private MethodInfo ResolveTargetMethod(Type targetType, MethodInfo interfaceMethod)
     {
+        // For constructed generic methods, resolve the definition and then construct with the type arguments
+        if (interfaceMethod.IsGenericMethod && !interfaceMethod.IsGenericMethodDefinition)
+        {
+            var definition = interfaceMethod.GetGenericMethodDefinition();
+            var targetDefinition = ResolveTargetMethod(targetType, definition);
+            return targetDefinition.MakeGenericMethod(interfaceMethod.GetGenericArguments());
+        }
+
         if (_methodCache.TryGetValue(interfaceMethod, out var cached))
         {
             return cached;
