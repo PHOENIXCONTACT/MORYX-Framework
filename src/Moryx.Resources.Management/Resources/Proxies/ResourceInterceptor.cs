@@ -84,6 +84,11 @@ internal class ResourceInterceptor : IInterceptor
         invocation.ReturnValue = result;
     }
 
+    /// <summary>
+    /// Display name used by <see cref="ResourceProxyBase.ToString"/>
+    /// </summary>
+    public string GetDisplayName() => _mixin.ToString();
+
     private MethodInfo ResolveTargetMethod(Type targetType, MethodInfo interfaceMethod)
     {
         if (_methodCache.TryGetValue(interfaceMethod, out var cached))
@@ -183,9 +188,9 @@ internal class ResourceInterceptor : IInterceptor
             var converted = resourceArgs.Select(r => _mixin.ConvertToProxy(r)).ToArray();
             args = CastCollection(converted, expectedArgType);
         }
-        else if (args is IResource)
+        else if (args is IResource resource)
         {
-            args = _mixin.ConvertToProxy((IResource)args);
+            args = _mixin.ConvertToProxy(resource);
         }
 
         handler.DynamicInvoke(_mixin.ProxyReference, args);
@@ -250,4 +255,5 @@ internal class ResourceInterceptor : IInterceptor
     }
 
     #endregion
+
 }

@@ -24,6 +24,7 @@ internal class ResourceProxyBuilder
         // Build proxy options with the mixin providing IResource + IResourceProxy
         var options = new ProxyGenerationOptions();
         options.AddMixinInstance(mixin);
+        options.BaseTypeForInterfaceProxy = typeof(ResourceProxyBase);
 
         // Separate primary and additional interfaces
         var primaryInterface = interfaces[0];
