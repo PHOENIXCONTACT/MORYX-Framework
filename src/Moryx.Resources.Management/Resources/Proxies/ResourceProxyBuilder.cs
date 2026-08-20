@@ -8,9 +8,7 @@ using Moryx.AbstractionLayer.Resources;
 namespace Moryx.Resources.Management.Proxies;
 
 /// <summary>
-/// Builds resource proxies using Castle.DynamicProxy instead of IL emit.
-/// Generates interface proxies without target, using a mixin for <see cref="IResource"/>
-/// base members and an interceptor for forwarding.
+/// Builds resource proxies using Castle.DynamicProxy.
 /// </summary>
 internal class ResourceProxyBuilder
 {
@@ -38,7 +36,6 @@ internal class ResourceProxyBuilder
             primaryInterface, additionalInterfaces, options, interceptor);
 
         // Complete initialization: set proxy reference for sender replacement in events
-        interceptor.ProxyReference = proxy;
         mixin.ProxyReference = proxy;
 
         // Wire up target events to forward through the interceptor
@@ -86,7 +83,7 @@ internal class ResourceProxyBuilder
     }
 
     /// <summary>
-    /// Create a delegate that forwards an event from the target to the interceptor's RaiseEvent
+    /// Create a delegate that forwards an event from the target to the interceptors RaiseEvent
     /// </summary>
     private static Delegate CreateEventForwarder(EventInfo targetEvent, string eventName, ResourceInterceptor interceptor)
     {

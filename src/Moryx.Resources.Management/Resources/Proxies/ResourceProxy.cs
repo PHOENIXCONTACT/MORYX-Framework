@@ -23,6 +23,9 @@ internal class ResourceProxy : IResourceProxy
     /// </summary>
     public IResource ProxyReference { get; set; }
 
+    /// <summary>
+    /// The real resource instance this proxy represents.
+    /// </summary>
     public Resource ProxyTarget { get; private set; }
 
     public ResourceProxy(Resource target, IResourceTypeController typeController)
@@ -62,10 +65,10 @@ internal class ResourceProxy : IResourceProxy
         var targetType = ProxyTarget.GetType();
         foreach (var (eventName, handler) in _eventHandlers)
         {
-            var eventInfo = targetType.GetEvent(eventName,
-                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            var eventInfo = targetType.GetEvent(eventName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             eventInfo?.GetRemoveMethod(nonPublic: true)?.Invoke(ProxyTarget, [handler]);
         }
+
         _eventHandlers.Clear();
 
         _typeController = null;

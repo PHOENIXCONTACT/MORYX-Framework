@@ -21,12 +21,6 @@ internal class ResourceInterceptor : IInterceptor
     // Event delegate fields: eventName -> multicast delegate
     private readonly Dictionary<string, Delegate> _eventDelegates = new();
 
-    /// <summary>
-    /// Reference to the Castle-generated proxy. Set after proxy creation
-    /// so that event senders are replaced with the proxy identity.
-    /// </summary>
-    public IResource ProxyReference { get; set; }
-
     public ResourceInterceptor(ResourceProxy mixin)
     {
         _mixin = mixin;
@@ -39,7 +33,7 @@ internal class ResourceInterceptor : IInterceptor
         // Forward mixin-handled methods directly (IResource, ICastleResourceProxy)
         var declaringType = method.DeclaringType;
         if (declaringType != null && (typeof(IResourceProxy).IsAssignableFrom(declaringType)
-                                     || declaringType == typeof(IResource)))
+                                      || declaringType == typeof(IResource)))
         {
             invocation.ReturnValue = method.Invoke(_mixin, invocation.Arguments);
             return;
@@ -53,6 +47,7 @@ internal class ResourceInterceptor : IInterceptor
                 HandleEventAdd(method.Name[4..], invocation.Arguments[0] as Delegate);
                 return;
             }
+
             if (method.Name.StartsWith("remove_"))
             {
                 HandleEventRemove(method.Name[7..], invocation.Arguments[0] as Delegate);
@@ -193,7 +188,7 @@ internal class ResourceInterceptor : IInterceptor
             args = _mixin.ConvertToProxy((IResource)args);
         }
 
-        handler.DynamicInvoke(ProxyReference, args);
+        handler.DynamicInvoke(_mixin.ProxyReference, args);
     }
 
     #endregion
@@ -203,7 +198,7 @@ internal class ResourceInterceptor : IInterceptor
     private static bool IsResourceReference(Type type)
     {
         return typeof(IResource).IsAssignableFrom(type)
-            || typeof(IEnumerable<IResource>).IsAssignableFrom(type);
+               || typeof(IEnumerable<IResource>).IsAssignableFrom(type);
     }
 
     private object ConvertResult(object result, Type returnType)
