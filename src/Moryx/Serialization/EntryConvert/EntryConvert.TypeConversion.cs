@@ -18,7 +18,9 @@ public static partial class EntryConvert
     {
         new Vector2EntrySerializer(),
         new Vector3EntrySerializer(),
-        new QuaternionEntrySerializer()
+        new Vector4EntrySerializer(),
+        new QuaternionEntrySerializer(),
+        new PlaneEntrySerializer()
     }.ToDictionary(s => s.TargetType);
 
     /// <summary>

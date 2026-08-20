@@ -17,7 +17,7 @@ The `EntryConvert` API can convert objects and types as long as they comply with
 
 * Properties not fields: All attributes of a type must be defined as properties, not public fields. Therefor `public int Foo { get; set; }` instead of `public int Foo;`
 * Public parameter-less constructor: All types within the class hierarchy need to offer a public constructor without parameters. In Generics this would be defined as `new()` or in code `public Foo() { }`. For the root object `EntryConvert` can extract Constructors as `MethodEntry`, which can be exchanged with a client and used to create instances.
-* Primitives, classes or supported structs: The reflection approach used to deserialize the entry tree to objects requires reference access. Otherwise the modifications will only take part on a copy. Therefor properties need to be either of a primitive type like int, string, enum, a class, or a supported struct (`Vector2`, `Vector3`, `Quaternion`). Supported structs are automatically decomposed into editable sub-entries.
+* Primitives, classes or supported structs: The reflection approach used to deserialize the entry tree to objects requires reference access. Otherwise the modifications will only take part on a copy. Therefor properties need to be either of a primitive type like int, string, enum, a class, or a supported struct (`Vector2`, `Vector3`, `Vector4`, `Quaternion`, `Plane`). Supported structs are automatically decomposed into editable sub-entries.
 * Dictionaries of `<Primitive, Class`: Dictionaries are only supported if the key is a primitive type like `int` or `string` and the value is a class.
 
 ## Serialize Objects
@@ -143,7 +143,7 @@ public void Deserialize(Entry entry, FileStreamDummy dummy)
 
 ## Serialize Structs
 
-`EntryConvert` supports decomposed serialization for the following `System.Numerics` struct types: `Vector2`, `Vector3` and `Quaternion`. Instead of displaying unparseable strings like `<1.5, 2.5, 3.5>`, these structs are encoded as `Struct` entries with editable sub-entries for each component (X, Y, Z, W). When you serialize a class containing one of these types, the resulting entry will have sub-entries for each component of the struct.
+`EntryConvert` supports decomposed serialization for the following `System.Numerics` struct types: `Vector2`, `Vector3`, `Vector4`, `Quaternion` and `Plane`. Instead of displaying unparseable strings like `<1.5, 2.5, 3.5>`, these structs are encoded as `Struct` entries with editable sub-entries for each component (X, Y, Z, W). When you serialize a class containing one of these types, the resulting entry will have sub-entries for each component of the struct.
 
 ````cs
 public class RobotPosition
