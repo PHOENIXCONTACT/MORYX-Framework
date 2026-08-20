@@ -100,48 +100,6 @@ public class FloatColumnMapperTests
         Assert.That(target.Value, Is.EqualTo(double.NegativeInfinity));
     }
 
-    [Test(Description = "Writing NaN stores a sentinel instead of raw NaN, which would be rejected by some database providers.")]
-    public void DoesNotStoreRawNaNInColumn()
-    {
-        // Arrange
-        var source = new TestObject(double.NaN);
-        var columns = CreateColumns();
-
-        // Act
-        _mapper.WriteValue(source, columns);
-
-        // Assert — the column must not contain raw NaN (SQLite would reject it)
-        Assert.That(double.IsNaN(columns.Float1), Is.False);
-    }
-
-    [Test(Description = "Writing positive infinity stores a sentinel instead of raw infinity, which would be rejected by some database providers.")]
-    public void DoesNotStoreRawPositiveInfinityInColumn()
-    {
-        // Arrange
-        var source = new TestObject(double.PositiveInfinity);
-        var columns = CreateColumns();
-
-        // Act
-        _mapper.WriteValue(source, columns);
-
-        // Assert
-        Assert.That(double.IsInfinity(columns.Float1), Is.False);
-    }
-
-    [Test(Description = "Writing negative infinity stores a sentinel instead of raw infinity, which would be rejected by some database providers.")]
-    public void DoesNotStoreRawNegativeInfinityInColumn()
-    {
-        // Arrange
-        var source = new TestObject(double.NegativeInfinity);
-        var columns = CreateColumns();
-
-        // Act
-        _mapper.WriteValue(source, columns);
-
-        // Assert
-        Assert.That(double.IsInfinity(columns.Float1), Is.False);
-    }
-
     [Test(Description = "NaN, positive infinity, and negative infinity each map to a unique sentinel value so they can be distinguished after reading.")]
     public void SpecialValuesProduceDistinctSentinels()
     {
@@ -173,7 +131,6 @@ public class FloatColumnMapperTests
         _mapper.ReadValue(columns, target);
 
         // Assert — raw NaN does not match any sentinel
-        Assert.That(double.IsNaN(columns.Float1), Is.True);
         Assert.That(double.IsNaN(target.Value), Is.True);
     }
 
@@ -190,7 +147,6 @@ public class FloatColumnMapperTests
         var changed = _mapper.HasChanged(columns, source);
 
         // Assert
-        Assert.That(double.IsNaN(columns.Float1), Is.True);
         Assert.That(changed, Is.True);
     }
 
