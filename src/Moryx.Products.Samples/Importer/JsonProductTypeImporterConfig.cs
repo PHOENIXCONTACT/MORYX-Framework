@@ -4,16 +4,16 @@
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Products;
 
-namespace Moryx.Products.TestProducts;
+namespace Moryx.Products.Samples;
 
 /// <summary>
-/// Importer config for testing GenericJsonTestProductType
+/// Importer config for testing JsonProductType
 /// </summary>
 [DataContract]
-public class GenericJsonTestProductTypeImporterConfig : ProductImporterConfig
+public class JsonProductTypeImporterConfig : ProductImporterConfig
 {
     /// <summary>
     /// Name of the component represented by this entry
     /// </summary>
-    public override string PluginName => nameof(GenericJsonTestProductTypeImporter);
+    public override string PluginName => nameof(JsonProductTypeImporter);
 }

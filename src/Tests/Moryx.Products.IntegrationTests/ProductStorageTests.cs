@@ -15,10 +15,10 @@ using Moryx.AbstractionLayer.Workplans;
 using Moryx.Model.Repositories;
 using Moryx.Products.Management;
 using Moryx.Products.Management.Model;
+using System.Numerics;
 using Moryx.Products.Management.NullStrategies;
 using Moryx.Products.Samples;
 using Moryx.Products.Samples.Recipe;
-using Moryx.Products.TestProducts;
 using Moryx.Serialization;
 using Moryx.Tools;
 using Moryx.Workplans;
@@ -139,34 +139,65 @@ public class ProductStorageTests
 
                 new GenericTypeConfiguration
                 {
-                    TargetType = typeof(GenericJsonTestProductType).FullName,
+                    TargetType = typeof(JsonProductType).FullName,
                     JsonColumn = nameof(IGenericColumns.Text8),
                     PropertyConfigs = []
                 },
 
                 new GenericTypeConfiguration
                 {
-                    TargetType = typeof(TextColumnMapperTestProductType).FullName,
-
+                    TargetType = typeof(CompositeProductType).FullName,
                     JsonColumn = nameof(IGenericColumns.Text8),
+                    PropertyConfigs = []
+                },
 
+                new GenericTypeConfiguration
+                {
+                    TargetType = typeof(VectorProductType).FullName,
                     PropertyConfigs =
                     [
                         new PropertyMapperConfig
                         {
-                            PropertyName = nameof(TextColumnMapperTestProductType.Integer1),
+                            PropertyName = nameof(VectorProductType.Position),
+                            Column = nameof(IGenericColumns.Text1),
+                            PluginName = nameof(TextColumnMapper)
+                        },
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(VectorProductType.Orientation),
+                            Column = nameof(IGenericColumns.Text2),
+                            PluginName = nameof(TextColumnMapper)
+                        }
+                    ],
+                    JsonColumn = nameof(IGenericColumns.Text8)
+                },
+
+                new GenericTypeConfiguration
+                {
+                    TargetType = typeof(DatedProductType).FullName,
+                    PropertyConfigs =
+                    [
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(DatedProductType.ValidFrom),
                             Column = nameof(IGenericColumns.Integer1),
                             PluginName = nameof(IntegerColumnMapper)
                         },
-
                         new PropertyMapperConfig
                         {
-                            PropertyName = nameof(TextColumnMapperTestProductType.MyText1),
+                            PropertyName = nameof(DatedProductType.ProductionTime),
+                            Column = nameof(IGenericColumns.Integer2),
+                            PluginName = nameof(IntegerColumnMapper)
+                        },
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(DatedProductType.CreatedAt),
                             Column = nameof(IGenericColumns.Text1),
                             PluginName = nameof(TextColumnMapper)
                         }
-                    ]
-                },
+                    ],
+                    JsonColumn = nameof(IGenericColumns.Text8)
+                }
             ],
             InstanceStrategies =
             [
@@ -994,7 +1025,7 @@ public class ProductStorageTests
     public async Task SaveAndLoadGenericJsonType()
     {
         // Arrange
-        var product = new GenericJsonTestProductType
+        var product = new JsonProductType
         {
             Name = "JsonTest",
             Identity = new ProductIdentity("900001", 1),
@@ -1012,7 +1043,7 @@ public class ProductStorageTests
 
         // Act
         var id = await _storage.SaveTypeAsync(product);
-        var loaded = (GenericJsonTestProductType)await _storage.LoadTypeAsync(id);
+        var loaded = (JsonProductType)await _storage.LoadTypeAsync(id);
 
         // Assert
         Assert.That(loaded.Integer9, Is.EqualTo(product.Integer9));
@@ -1030,14 +1061,10 @@ public class ProductStorageTests
     public async Task SaveAndLoadComplexProperty()
     {
         // Arrange
-        var product = new TextColumnMapperTestProductType
+        var product = new CompositeProductType
         {
             Name = "ComplexDataTest",
             Identity = new ProductIdentity("900002", 1),
-
-            Integer1 = 42,
-            Float1 = 123.456,
-            MyText1 = "RootText",
 
             ComplexData1 = new ComplexData
             {
@@ -1045,18 +1072,12 @@ public class ProductStorageTests
                 PropertyName = "Property1",
                 Number = 11,
                 Weight = 12.5f
-            },
-
-            ProdDataAdded = new TestProdData
-            {
-                TotalAmount = 12,
-                WorkerName = "Worker1"
             }
         };
 
         // Act
         var id = await _storage.SaveTypeAsync(product);
-        var loaded = (TextColumnMapperTestProductType)await _storage.LoadTypeAsync(id);
+        var loaded = (CompositeProductType)await _storage.LoadTypeAsync(id);
 
         // Assert
         Assert.That(loaded.ComplexData1, Is.Not.Null);
@@ -1070,23 +1091,21 @@ public class ProductStorageTests
     public async Task SaveAndLoadTypeWithNullComplexProperty()
     {
         // Arrange
-        var product = new TextColumnMapperTestProductType
+        var product = new CompositeProductType
         {
             Name = "NullComplex",
             Identity = new ProductIdentity("900003", 1),
 
-            ComplexData1 = null,
-            ProdDataAdded = null
+            ComplexData1 = null
         };
 
         var id = await _storage.SaveTypeAsync(product);
 
         // Act
-        var loaded = (TextColumnMapperTestProductType)await _storage.LoadTypeAsync(id);
+        var loaded = (CompositeProductType)await _storage.LoadTypeAsync(id);
 
         // Assert
         Assert.That(loaded.ComplexData1, Is.Null);
-        Assert.That(loaded.ProdDataAdded, Is.Null);
     }
 
     /// <summary>
@@ -1097,7 +1116,7 @@ public class ProductStorageTests
     public async Task LoadTypeWithPlainTextInJsonColumn()
     {
         // Arrange
-        var product = new GenericJsonTestProductType
+        var product = new JsonProductType
         {
             Name = "Legacy",
             Identity = new ProductIdentity("900004", 1),
@@ -1125,7 +1144,7 @@ public class ProductStorageTests
     public async Task LoadTypeWithEmptyJsonObject()
     {
         // Arrange
-        var product = new TextColumnMapperTestProductType
+        var product = new CompositeProductType
         {
             Name = "EmptyJson",
             Identity = new ProductIdentity("900004", 1)
@@ -1146,7 +1165,7 @@ public class ProductStorageTests
         }
 
         // Act
-        var loaded = (TextColumnMapperTestProductType)
+        var loaded = (CompositeProductType)
             await _storage.LoadTypeAsync(id);
 
         // Assert
@@ -1211,5 +1230,101 @@ public class ProductStorageTests
 
         // Resolution should not be loaded in lightweight mode
         Assert.That(loaded.Resolution, Is.EqualTo(0));
+    }
+
+    [Test]
+    public async Task SaveAndLoadTypeWithVector3()
+    {
+        // Arrange
+        var product = new VectorProductType
+        {
+            Name = "Vector Product",
+            Identity = new ProductIdentity("VEC001", 1),
+            Position = new Vector3(1.5f, 2.5f, 3.5f)
+        };
+
+        // Act
+        var savedId = await _storage.SaveTypeAsync(product);
+        var loaded = (VectorProductType)await _storage.LoadTypeAsync(savedId);
+
+        // Assert
+        Assert.That(loaded.Position, Is.EqualTo(new Vector3(1.5f, 2.5f, 3.5f)));
+    }
+
+    [Test]
+    public async Task SaveAndLoadTypeWithQuaternion()
+    {
+        // Arrange
+        var product = new VectorProductType
+        {
+            Name = "Quaternion Product",
+            Identity = new ProductIdentity("QUAT001", 1),
+            Orientation = new Quaternion(0.1f, 0.2f, 0.3f, 0.9f)
+        };
+
+        // Act
+        var savedId = await _storage.SaveTypeAsync(product);
+        var loaded = (VectorProductType)await _storage.LoadTypeAsync(savedId);
+
+        // Assert
+        Assert.That(loaded.Orientation, Is.EqualTo(new Quaternion(0.1f, 0.2f, 0.3f, 0.9f)));
+    }
+
+    [Test]
+    public async Task SaveAndLoadTypeWithDateOnly()
+    {
+        // Arrange
+        var product = new DatedProductType
+        {
+            Name = "DateOnly Product",
+            Identity = new ProductIdentity("DATE001", 1),
+            ValidFrom = new DateOnly(2026, 8, 18)
+        };
+
+        // Act
+        var savedId = await _storage.SaveTypeAsync(product);
+        var loaded = (DatedProductType)await _storage.LoadTypeAsync(savedId);
+
+        // Assert
+        Assert.That(loaded.ValidFrom, Is.EqualTo(new DateOnly(2026, 8, 18)));
+    }
+
+    [Test]
+    public async Task SaveAndLoadTypeWithTimeOnly()
+    {
+        // Arrange
+        var product = new DatedProductType
+        {
+            Name = "TimeOnly Product",
+            Identity = new ProductIdentity("TIME001", 1),
+            ProductionTime = new TimeOnly(14, 30, 45)
+        };
+
+        // Act
+        var savedId = await _storage.SaveTypeAsync(product);
+        var loaded = (DatedProductType)await _storage.LoadTypeAsync(savedId);
+
+        // Assert
+        Assert.That(loaded.ProductionTime, Is.EqualTo(new TimeOnly(14, 30, 45)));
+    }
+
+    [Test]
+    public async Task SaveAndLoadTypeWithDateTimeOffset()
+    {
+        // Arrange
+        var createdAt = new DateTimeOffset(2026, 8, 18, 14, 30, 0, TimeSpan.FromHours(2));
+        var product = new DatedProductType
+        {
+            Name = "DateTimeOffset Product",
+            Identity = new ProductIdentity("DTO001", 1),
+            CreatedAt = createdAt
+        };
+
+        // Act
+        var savedId = await _storage.SaveTypeAsync(product);
+        var loaded = (DatedProductType)await _storage.LoadTypeAsync(savedId);
+
+        // Assert
+        Assert.That(loaded.CreatedAt, Is.EqualTo(createdAt));
     }
 }

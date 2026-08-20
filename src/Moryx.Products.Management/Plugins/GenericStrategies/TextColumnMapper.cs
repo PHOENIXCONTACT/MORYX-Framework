@@ -33,8 +33,8 @@ internal class TextColumnMapper : ColumnMapper<string>
                 str => !string.IsNullOrEmpty(str) ? Guid.Parse(str) : Guid.Empty);
         }
 
-        // Complex reference types -> JSON
-        if ((propType.IsClass || propType.IsInterface) && propType != typeof(string))
+        // Complex reference types and non-primitive structs (e.g. Vector3) -> JSON
+        if (propType != typeof(string) && (propType.IsClass || propType.IsInterface || (propType.IsValueType && !propType.IsPrimitive && !propType.IsEnum)))
         {
             return new ConversionAccessor<string, object>(
                 objectProp,
@@ -69,8 +69,8 @@ internal class TextColumnMapper : ColumnMapper<string>
             return ((Guid)value).ToString();
         }
 
-        // Complex reference types -> JSON
-        if ((propType.IsClass || propType.IsInterface) && propType != typeof(string))
+        // Complex reference types and non-primitive structs (e.g. Vector3) -> JSON
+        if (propType != typeof(string) && (propType.IsClass || propType.IsInterface || (propType.IsValueType && !propType.IsPrimitive && !propType.IsEnum)))
         {
             return value == null ? null : JsonConvert.SerializeObject(value, Property.PropertyType, JsonSettings.Minimal);
         }
