@@ -14,6 +14,7 @@ namespace Moryx.Resources.Management.Proxies;
 internal class ResourceInterceptor : IInterceptor
 {
     private readonly ResourceProxy _mixin;
+    private readonly IResourceTypeController _typeController;
 
     // Cache for resolved target methods to avoid repeated GetInterfaceMap calls
     private readonly Dictionary<MethodInfo, MethodInfo> _methodCache = new();
@@ -21,9 +22,10 @@ internal class ResourceInterceptor : IInterceptor
     // Event delegate fields: eventName -> multicast delegate
     private readonly Dictionary<string, Delegate> _eventDelegates = new();
 
-    public ResourceInterceptor(ResourceProxy mixin)
+    public ResourceInterceptor(ResourceProxy mixin, IResourceTypeController typeController)
     {
         _mixin = mixin;
+        _typeController = typeController;
     }
 
     public void Intercept(IInvocation invocation)
@@ -185,12 +187,12 @@ internal class ResourceInterceptor : IInterceptor
         // Convert resource-typed event args to proxies
         if (args is IEnumerable<IResource> resourceArgs and not IResource)
         {
-            var converted = resourceArgs.Select(r => _mixin.ConvertToProxy(r)).ToArray();
+            var converted = resourceArgs.Select(r => ConvertToProxy(r)).ToArray();
             args = CastCollection(converted, expectedArgType);
         }
         else if (args is IResource resource)
         {
-            args = _mixin.ConvertToProxy(resource);
+            args = ConvertToProxy(resource);
         }
 
         handler.DynamicInvoke(_mixin.ProxyReference, args);
@@ -199,6 +201,16 @@ internal class ResourceInterceptor : IInterceptor
     #endregion
 
     #region Resource Reference Conversion
+
+    private IResource ConvertToProxy(IResource instance)
+    {
+        if (instance is null)
+        {
+            return null;
+        }
+
+        return _typeController.GetProxy((Resource)instance);
+    }
 
     private static bool IsResourceReference(Type type)
     {
@@ -210,12 +222,12 @@ internal class ResourceInterceptor : IInterceptor
     {
         if (result is IEnumerable<IResource> collection and not IResource)
         {
-            return CastCollection(collection.Select(r => _mixin.ConvertToProxy(r)).ToArray(), returnType);
+            return CastCollection(collection.Select(r => ConvertToProxy(r)).ToArray(), returnType);
         }
 
         if (result is IResource singleResource)
         {
-            return _mixin.ConvertToProxy(singleResource);
+            return ConvertToProxy(singleResource);
         }
 
         return result;
@@ -225,16 +237,26 @@ internal class ResourceInterceptor : IInterceptor
     {
         if (arg is IEnumerable<IResource> collection and not IResource)
         {
-            var extracted = collection.Select(r => (IResource)ResourceProxy.ExtractFromProxy(r)).ToArray();
+            var extracted = collection.Select(r => (IResource)ExtractFromProxy(r)).ToArray();
             return CastCollection(extracted, parameterType);
         }
 
         if (arg is IResource resource)
         {
-            return ResourceProxy.ExtractFromProxy(resource);
+            return ExtractFromProxy(resource);
         }
 
         return arg;
+    }
+
+    private static IResource ExtractFromProxy(IResource instance)
+    {
+        if (instance is IResourceProxy proxy)
+        {
+            return proxy.ProxyTarget;
+        }
+
+        return instance;
     }
 
     private static Array CastCollection(IResource[] items, Type targetType)

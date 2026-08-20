@@ -19,7 +19,7 @@ internal class ResourceProxyBuilder
     /// </summary>
     public static IResourceProxy Build(Resource target, IReadOnlyList<Type> interfaces, IResourceTypeController typeController)
     {
-        var mixin = new ResourceProxy(target, typeController);
+        var mixin = new ResourceProxy(target);
 
         // Build proxy options with the mixin providing IResource + IResourceProxy
         var options = new ProxyGenerationOptions();
@@ -31,7 +31,7 @@ internal class ResourceProxyBuilder
         var additionalInterfaces = interfaces.Skip(1).ToArray();
 
         // Create interceptor with deferred proxy reference
-        var interceptor = new ResourceInterceptor(mixin);
+        var interceptor = new ResourceInterceptor(mixin, typeController);
 
         var proxy = (IResourceProxy)_generator.CreateInterfaceProxyWithoutTarget(
             primaryInterface, additionalInterfaces, options, interceptor);

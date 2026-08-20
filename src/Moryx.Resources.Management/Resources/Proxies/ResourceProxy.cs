@@ -14,7 +14,6 @@ namespace Moryx.Resources.Management.Proxies;
 /// </summary>
 internal class ResourceProxy : IResourceProxy
 {
-    private IResourceTypeController _typeController;
     private readonly Dictionary<string, Delegate> _eventHandlers = new();
 
     /// <summary>
@@ -28,10 +27,9 @@ internal class ResourceProxy : IResourceProxy
     /// </summary>
     public Resource ProxyTarget { get; private set; }
 
-    public ResourceProxy(Resource target, IResourceTypeController typeController)
+    public ResourceProxy(Resource target)
     {
         ProxyTarget = target;
-        _typeController = typeController;
         ProxyTarget.CapabilitiesChanged += OnCapabilitiesChanged;
     }
 
@@ -71,39 +69,7 @@ internal class ResourceProxy : IResourceProxy
 
         _eventHandlers.Clear();
 
-        _typeController = null;
         ProxyTarget = null;
-    }
-
-    /// <summary>
-    /// Convert a resource reference to its proxy
-    /// </summary>
-    public IResource ConvertToProxy(IResource instance)
-    {
-        if (instance is null || _typeController is null)
-        {
-            return null;
-        }
-
-        return _typeController.GetProxy((Resource)instance);
-    }
-
-    /// <summary>
-    /// Extract the real resource from a proxy
-    /// </summary>
-    public static IResource ExtractFromProxy(IResource instance)
-    {
-        if (instance is null)
-        {
-            return null;
-        }
-
-        if (instance is IResourceProxy proxy)
-        {
-            return proxy.ProxyTarget;
-        }
-
-        return instance;
     }
 
     private void OnCapabilitiesChanged(object sender, ICapabilities e)
