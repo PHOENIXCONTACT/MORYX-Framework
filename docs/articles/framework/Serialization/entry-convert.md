@@ -11,6 +11,33 @@ Because the `EntryConvert`-API can be confusing on first sight, we will split it
 * **Deserialize:** The encoded entry tree can be converted into objects after modification by the client with the overloads of `CreateInstance` and `UpdateInstance`
 * **Customization:** The behavior of both encoding and decoding can be customized to specific needs by providing a strategy implementing `ICustomSerialization`
 
+## Supported Types
+
+| .NET Type | EntryValueType | Format | Limitations |
+|-----------|---------------|--------|-------------|
+| `byte` | Byte | — | — |
+| `bool` | Boolean | — | — |
+| `short`, `ushort` | Int16, UInt16 | — | — |
+| `int`, `uint` | Int32, UInt32 | — | — |
+| `long`, `ulong` | Int64, UInt64 | — | — |
+| `float` | Single | Culture-aware with invariant fallback | — |
+| `double` | Double | Culture-aware with invariant fallback | — |
+| `decimal` | Double | Culture-aware with invariant fallback | Mapped to `Double; may lose precision beyond ~15 significant digits |
+| `string` | String | — | — |
+| `enum` | Enum | String name | — |
+| `DateTime` | DateTime | ISO 8601 round-trip (`"O"`) | Converted to UTC; original `DateTimeKind` is lost |
+| `DateTimeOffset` | DateTime | ISO 8601 round-trip (`"O"`) | Converted to UTC; original timezone offset is lost |
+| `DateOnly` | Date | ISO 8601 round-trip (`"O"`) | — |
+| `TimeOnly` | Time | ISO 8601 round-trip (`"O"`) | — |
+| `TimeSpan` | TimeSpan | Constant format (`"c"`) | — |
+| `Stream` | Stream | Base64 encoded | Limited by available memory |
+| `Vector2`, `Vector3`, `Vector4` | Struct | Decomposed into sub-entries (X, Y, Z, W) | — |
+| `Quaternion` | Struct | Decomposed into sub-entries (X, Y, Z, W) | — |
+| `Plane` | Struct | Decomposed into sub-entries (X, Y, Z, D) | — |
+| Classes | Class | Recursive sub-entries | Requires public parameter-less constructor |
+| Collections | Collection | Recursive sub-entries | — |
+| Dictionaries | Collection | Recursive sub-entries | Key must be a type supported by `ToObject` |
+
 ## Limitations
 
 The `EntryConvert` API can convert objects and types as long as they comply with a few basic rules:
@@ -18,7 +45,7 @@ The `EntryConvert` API can convert objects and types as long as they comply with
 * Properties not fields: All attributes of a type must be defined as properties, not public fields. Therefor `public int Foo { get; set; }` instead of `public int Foo;`
 * Public parameter-less constructor: All types within the class hierarchy need to offer a public constructor without parameters. In Generics this would be defined as `new()` or in code `public Foo() { }`. For the root object `EntryConvert` can extract Constructors as `MethodEntry`, which can be exchanged with a client and used to create instances.
 * Primitives, classes or supported structs: The reflection approach used to deserialize the entry tree to objects requires reference access. Otherwise the modifications will only take part on a copy. Therefor properties need to be either of a primitive type like int, string, enum, a class, or a supported struct (`Vector2`, `Vector3`, `Vector4`, `Quaternion`, `Plane`). Supported structs are automatically decomposed into editable sub-entries.
-* Dictionaries of `<Primitive, Class`: Dictionaries are only supported if the key is a primitive type like `int` or `string` and the value is a class.
+* Dictionary keys: Dictionary keys must be a type supported by `ToObject`, i.e. any type that can be converted to and from a string representation.
 
 ## Serialize Objects
 
