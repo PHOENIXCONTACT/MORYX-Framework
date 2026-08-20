@@ -82,6 +82,34 @@ public class JsonConverterTests
         Assert.That(restored, Is.EqualTo(original));
     }
 
+    [Test(Description = "Vector4 values are preserved.")]
+    public void Vector4PreservesValues()
+    {
+        // Arrange
+        var original = new Vector4(1.5f, 2.5f, 3.5f, 4.5f);
+
+        // Act
+        var json = JsonConvert.SerializeObject(original, new Vector4Converter());
+        var restored = JsonConvert.DeserializeObject<Vector4>(json, new Vector4Converter());
+
+        // Assert
+        Assert.That(restored, Is.EqualTo(original));
+    }
+
+    [Test(Description = "Plane values are preserved.")]
+    public void PlanePreservesValues()
+    {
+        // Arrange
+        var original = new Plane(new Vector3(0f, 1f, 0f), 5.5f);
+
+        // Act
+        var json = JsonConvert.SerializeObject(original, new PlaneConverter(), new Vector3Converter());
+        var restored = JsonConvert.DeserializeObject<Plane>(json, new PlaneConverter(), new Vector3Converter());
+
+        // Assert
+        Assert.That(restored, Is.EqualTo(original));
+    }
+
     [Test(Description = "Vector3.Zero is preserved and not lost as a default value.")]
     public void Vector3ZeroPreservesDefault()
     {

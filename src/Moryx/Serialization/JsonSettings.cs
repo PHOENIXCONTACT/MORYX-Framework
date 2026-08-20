@@ -15,6 +15,8 @@ public static class JsonSettings
     private static readonly Vector2Converter _vector2 = new();
     private static readonly Vector3Converter _vector3 = new();
     private static readonly QuaternionConverter _quaternion = new();
+    private static readonly Vector4Converter _vector4 = new();
+    private static readonly PlaneConverter _plane = new();
     private static readonly DateOnlyConverter _dateOnly = new();
     private static readonly TimeOnlyConverter _timeOnly = new();
 
@@ -27,7 +29,7 @@ public static class JsonSettings
         DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate,
         NullValueHandling = NullValueHandling.Ignore,
         ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
-        Converters = { _vector2, _vector3, _quaternion, _dateOnly, _timeOnly },
+        Converters = { _vector2, _vector3, _quaternion, _vector4, _plane, _dateOnly, _timeOnly },
     };
 
     /// <summary>
@@ -39,7 +41,7 @@ public static class JsonSettings
         TypeNameHandling = TypeNameHandling.Auto,
         DefaultValueHandling = DefaultValueHandling.Include,
         NullValueHandling = NullValueHandling.Include,
-        Converters = [_stringEnum, _vector2, _vector3, _quaternion, _dateOnly, _timeOnly]
+        Converters = [_stringEnum, _vector2, _vector3, _quaternion, _vector4, _plane, _dateOnly, _timeOnly]
     };
 
     /// <summary>
