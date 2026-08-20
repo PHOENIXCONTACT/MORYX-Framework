@@ -314,6 +314,20 @@ public class TypeControllerTests
         Assert.That(eventValue, Is.EqualTo(99));
     }
 
+    [Test(Description = "Proxy returns null for Name and Capabilities without throwing ProxyDetachedException")]
+    public void NullPropertiesDoNotThrowDetached()
+    {
+        // Arrange
+        var instance = new SimpleResource { Id = 30, Name = null };
+        instance.UpdateCapabilities(null);
+        var proxy = _typeController.GetProxy(instance);
+
+        // Assert
+        // Null values are returned, not a ProxyDetachedException
+        Assert.That(proxy.Name, Is.Null);
+        Assert.That(proxy.Capabilities, Is.Null);
+    }
+
     [Test]
     public void ReplaceWithProxy()
     {

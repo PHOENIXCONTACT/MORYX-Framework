@@ -35,11 +35,11 @@ internal class ResourceProxy : IResourceProxy
         ProxyTarget.CapabilitiesChanged += OnCapabilitiesChanged;
     }
 
-    long IResource.Id => ProxyTarget?.Id ?? throw new ProxyDetachedException();
+    long IResource.Id => (ProxyTarget ?? throw new ProxyDetachedException()).Id;
 
-    string IResource.Name => ProxyTarget?.Name ?? throw new ProxyDetachedException();
+    string IResource.Name => (ProxyTarget ?? throw new ProxyDetachedException()).Name;
 
-    public ICapabilities Capabilities => ProxyTarget?.Capabilities ?? throw new ProxyDetachedException();
+    public ICapabilities Capabilities => (ProxyTarget ?? throw new ProxyDetachedException()).Capabilities;
 
     /// <summary>
     /// Register an event handler subscribed on the target, so it can be unsubscribed on detach.
