@@ -201,10 +201,10 @@ public class TypeControllerTests
         Assert.That(finallyEven);
     }
 
-    [Test]
-    public void AfterDisposeTheProxyIsDetached()
+    [Test(Description = "Events are unsubscribed from target after detach")]
+    public void DetachedProxyStopsForwardingEvents()
     {
-        // Arrange: Create a proxy and register to an event
+        // Arrange
         var instance = new SimpleResource { Id = 7 };
         var proxy = (ISimpleResource)_typeController.GetProxy(instance);
         var called = false;
@@ -212,14 +212,37 @@ public class TypeControllerTests
         instance.Foo = 10;
         Assert.That(called);
 
-        // Act: Dispose the type controller and use the proxy again
+        // Act
         called = false;
         _typeController.Stop();
-        instance.Foo = 10;
+        instance.Foo = 20;
 
-        // Assert: Event was not raised and proxy can no longer be used
+        // Assert
         Assert.That(called, Is.False);
+    }
+
+    [Test(Description = "Calling a method on a detached proxy throws ProxyDetachedException")]
+    public void DetachedProxyThrowsOnMethodCall()
+    {
+        // Arrange
+        var instance = new SimpleResource { Id = 31, Foo = 5 };
+        var proxy = (ISimpleResource)_typeController.GetProxy(instance);
+        _typeController.Stop();
+
+        // Assert
         Assert.Throws<ProxyDetachedException>(() => proxy.MultiplyFoo(2));
+    }
+
+    [Test(Description = "Accessing a property on a detached proxy throws ProxyDetachedException")]
+    public void DetachedProxyThrowsOnPropertyAccess()
+    {
+        // Arrange
+        var instance = new SimpleResource { Id = 32, Foo = 5 };
+        var proxy = (ISimpleResource)_typeController.GetProxy(instance);
+        _typeController.Stop();
+
+        // Assert
+        Assert.Throws<ProxyDetachedException>(() => _ = proxy.Foo);
     }
 
     [Test]
