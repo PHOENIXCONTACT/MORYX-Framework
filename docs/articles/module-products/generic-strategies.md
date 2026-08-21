@@ -30,6 +30,8 @@ The `IntegerColumnMapper` stores values as `long` in the database.
 
 The `FloatColumnMapper` stores values as `double` in the database. Supports `float`, `double` and `decimal` properties.
 
+> **Note:** IEEE 754 special values (`NaN`, `+Infinity`, `-Infinity`) are not supported by all databases. PostgreSQL stores them natively in `float8`, but SQLite throws on `REAL` columns. The `SqliteProductsContext` registers an [Ieee754ValueConverter](/src/Moryx.Products.Management/Model/Ieee754ValueConverter.cs) that encodes these as sentinel values before writing and decodes them back when reading.
+
 ### TextColumnMapper
 
 The `TextColumnMapper` stores values as `string` in the database.
