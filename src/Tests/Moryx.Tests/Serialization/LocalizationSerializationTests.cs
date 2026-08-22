@@ -55,8 +55,8 @@ public class LocalizationSerializationTests
         var entriesGerman = EntryConvert.EncodeObject(dummyClass);
 
         // Assert
-        Assert.That(entriesGerman.SubEntries[14].DisplayName, Is.EqualTo(nameof(DummyClass.SingleClassNonLocalized)));
-        Assert.That(entriesGerman.SubEntries[14].Description, Is.Null);
+        Assert.That(entriesGerman.SubEntries[16].DisplayName, Is.EqualTo(nameof(DummyClass.SingleClassNonLocalized)));
+        Assert.That(entriesGerman.SubEntries[16].Description, Is.Null);
     }
 
     [Test]

@@ -1248,11 +1248,12 @@ public class ProductStorageTests
     public async Task SaveAndLoadTypeWithVector3()
     {
         // Arrange
+        var expectedPosition = new Vector3(1.5f, 2.5f, 3.5f);
         var product = new VectorProductType
         {
             Name = "Vector Product",
             Identity = new ProductIdentity("VEC001", 1),
-            Position = new Vector3(1.5f, 2.5f, 3.5f)
+            Position = expectedPosition
         };
 
         // Act
@@ -1260,18 +1261,19 @@ public class ProductStorageTests
         var loaded = (VectorProductType)await _storage.LoadTypeAsync(savedId);
 
         // Assert
-        Assert.That(loaded.Position, Is.EqualTo(new Vector3(1.5f, 2.5f, 3.5f)));
+        Assert.That(loaded.Position, Is.EqualTo(expectedPosition));
     }
 
     [Test]
     public async Task SaveAndLoadTypeWithQuaternion()
     {
         // Arrange
+        var expectedOrientation = new Quaternion(0.1f, 0.2f, 0.3f, 0.9f);
         var product = new VectorProductType
         {
             Name = "Quaternion Product",
             Identity = new ProductIdentity("QUAT001", 1),
-            Orientation = new Quaternion(0.1f, 0.2f, 0.3f, 0.9f)
+            Orientation = expectedOrientation
         };
 
         // Act
@@ -1279,7 +1281,7 @@ public class ProductStorageTests
         var loaded = (VectorProductType)await _storage.LoadTypeAsync(savedId);
 
         // Assert
-        Assert.That(loaded.Orientation, Is.EqualTo(new Quaternion(0.1f, 0.2f, 0.3f, 0.9f)));
+        Assert.That(loaded.Orientation, Is.EqualTo(expectedOrientation));
     }
 
     [Test]
@@ -1326,11 +1328,12 @@ public class ProductStorageTests
     public async Task SaveAndLoadTypeWithDateOnly()
     {
         // Arrange
+        var expectedDate = new DateOnly(2026, 8, 18);
         var product = new DatedProductType
         {
             Name = "DateOnly Product",
             Identity = new ProductIdentity("DATE001", 1),
-            ValidFrom = new DateOnly(2026, 8, 18)
+            ValidFrom = expectedDate
         };
 
         // Act
@@ -1338,18 +1341,19 @@ public class ProductStorageTests
         var loaded = (DatedProductType)await _storage.LoadTypeAsync(savedId);
 
         // Assert
-        Assert.That(loaded.ValidFrom, Is.EqualTo(new DateOnly(2026, 8, 18)));
+        Assert.That(loaded.ValidFrom, Is.EqualTo(expectedDate));
     }
 
     [Test]
     public async Task SaveAndLoadTypeWithTimeOnly()
     {
         // Arrange
+        var expectedTime = new TimeOnly(14, 30, 45);
         var product = new DatedProductType
         {
             Name = "TimeOnly Product",
             Identity = new ProductIdentity("TIME001", 1),
-            ProductionTime = new TimeOnly(14, 30, 45)
+            ProductionTime = expectedTime
         };
 
         // Act
@@ -1357,7 +1361,7 @@ public class ProductStorageTests
         var loaded = (DatedProductType)await _storage.LoadTypeAsync(savedId);
 
         // Assert
-        Assert.That(loaded.ProductionTime, Is.EqualTo(new TimeOnly(14, 30, 45)));
+        Assert.That(loaded.ProductionTime, Is.EqualTo(expectedTime));
     }
 
     [Test]

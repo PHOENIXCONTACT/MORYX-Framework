@@ -7,10 +7,50 @@ using System.Globalization;
 namespace Moryx.Serialization;
 
 /// <summary>
-/// Helper class to converts types to enum and vice versa
+/// Type conversion, struct serializer registry and string formatting for EntryConvert
 /// </summary>
 public static partial class EntryConvert
 {
+    /// <summary>
+    /// Registry of serializers for structs that are decomposed into sub-entries
+    /// </summary>
+    private static readonly Dictionary<Type, IStructSerializer> _structSerializers = new IStructSerializer[]
+    {
+        new Vector2EntrySerializer(),
+        new Vector3EntrySerializer(),
+        new Vector4EntrySerializer(),
+        new QuaternionEntrySerializer(),
+        new PlaneEntrySerializer()
+    }.ToDictionary(s => s.TargetType);
+
+    /// <summary>
+    /// Try to find a registered <see cref="IStructSerializer"/> for the given type
+    /// </summary>
+    private static bool TryGetSerializer(Type type, out IStructSerializer serializer)
+    {
+        return _structSerializers.TryGetValue(type, out serializer);
+    }
+
+    /// <summary>
+    /// Converts given value typed instance to a string with the given <see cref="IFormatProvider"/>
+    /// </summary>
+    /// <param name="value">Value to convert</param>
+    /// <param name="formatProvider">Format provider used to convert the value to string</param>
+    /// <returns>Formatted string representation</returns>
+    internal static string ConvertToString(object value, IFormatProvider formatProvider)
+    {
+        return value switch
+        {
+            DateTimeOffset dto => dto.UtcDateTime.ToString("O", formatProvider),
+            DateTime dt => dt.ToUniversalTime().ToString("O", formatProvider),
+            DateOnly d => d.ToString("O", formatProvider),
+            TimeOnly t => t.ToString("O", formatProvider),
+            TimeSpan ts => ts.ToString("c", formatProvider),
+            IConvertible convertible => convertible.ToString(formatProvider),
+            _ => value?.ToString()
+        };
+    }
+
     /// <summary>
     /// Transform type of entry
     /// </summary>
@@ -59,6 +99,11 @@ public static partial class EntryConvert
         {
             valueType = EntryValueType.Double;
         }
+        // TODO: Consider adding a dedicated EntryValueType.Decimal for higher precision
+        else if (propertyType == typeof(decimal))
+        {
+            valueType = EntryValueType.Double;
+        }
         else if (propertyType.IsEnum)
         {
             valueType = EntryValueType.Enum;
@@ -66,6 +111,26 @@ public static partial class EntryConvert
         else if (typeof(Stream).IsAssignableFrom(propertyType))
         {
             valueType = EntryValueType.Stream;
+        }
+        else if (propertyType == typeof(DateOnly))
+        {
+            valueType = EntryValueType.Date;
+        }
+        else if (propertyType == typeof(TimeOnly))
+        {
+            valueType = EntryValueType.Time;
+        }
+        else if (propertyType == typeof(TimeSpan))
+        {
+            valueType = EntryValueType.TimeSpan;
+        }
+        else if (propertyType == typeof(DateTime) || propertyType == typeof(DateTimeOffset))
+        {
+            valueType = EntryValueType.DateTime;
+        }
+        else if (_structSerializers.ContainsKey(propertyType))
+        {
+            valueType = EntryValueType.Struct;
         }
         else if (typeof(IEnumerable).IsAssignableFrom(propertyType) && propertyType != typeof(string))
         {
@@ -151,6 +216,22 @@ public static partial class EntryConvert
         else if (type == typeof(DateTime))
         {
             result = ConvertToUtc(DateTime.Parse(value, formatProvider));
+        }
+        else if (type == typeof(DateTimeOffset))
+        {
+            result = new DateTimeOffset(DateTime.Parse(value, formatProvider, DateTimeStyles.AdjustToUniversal));
+        }
+        else if (type == typeof(DateOnly))
+        {
+            result = DateOnly.Parse(value, formatProvider);
+        }
+        else if (type == typeof(TimeOnly))
+        {
+            result = TimeOnly.Parse(value, formatProvider);
+        }
+        else if (type == typeof(TimeSpan))
+        {
+            result = TimeSpan.Parse(value, formatProvider);
         }
 
         return result;
@@ -251,6 +332,22 @@ public static partial class EntryConvert
                 result = ParseWithFallback<double>(
                     value, formatProvider, NumberStyles.Float,
                     double.TryParse);
+                break;
+
+            case EntryValueType.Date:
+                result = DateOnly.Parse(value, formatProvider);
+                break;
+
+            case EntryValueType.Time:
+                result = TimeOnly.Parse(value, formatProvider);
+                break;
+
+            case EntryValueType.TimeSpan:
+                result = TimeSpan.Parse(value, formatProvider);
+                break;
+
+            case EntryValueType.DateTime:
+                result = ConvertToUtc(DateTime.Parse(value, formatProvider));
                 break;
         }
         return result;
