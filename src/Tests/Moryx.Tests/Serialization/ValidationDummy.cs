@@ -10,6 +10,7 @@ public class ValidationDummy
     public const int MinimumLength = 5;
     public const int MaximumLength = 10;
     public const string Regex = ".*";
+    public const string CustomMessage = "Needs at least five characters";
 
     [MinLength(MinimumLength)]
     public string MinLenghtString { get; set; }
@@ -34,4 +35,7 @@ public class ValidationDummy
 
     [Required]
     public bool RequiredBool { get; set; }
+
+    [MinLength(MinimumLength, ErrorMessage = CustomMessage)]
+    public string StringWithCustomMessage { get; set; }
 }

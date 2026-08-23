@@ -145,6 +145,12 @@ public class DefaultSerialization : ICustomSerialization
                     validation.DataType = dataTypeAttribute.DataType;
                     break;
             }
+
+            // The attribute may carry a message explaining what it rejects. Keep
+            // the first one; a member with several attributes has no obvious
+            // winner, and consumers fall back to a generic message when unset.
+            if (validation.ErrorMessage is null && attribute.ErrorMessage is not null)
+                validation.ErrorMessage = attribute.ErrorMessage;
         }
 
         return validation;
