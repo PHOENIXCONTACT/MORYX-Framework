@@ -12,7 +12,15 @@ namespace Moryx.Products.Samples;
 [DisplayName("Composite Test Type")]
 public class CompositeProductType : ProductType
 {
+    /// <summary>
+    /// Complex property with a dedicated column
+    /// </summary>
     public ComplexData ComplexData1 { get; set; }
+
+    /// <summary>
+    /// Complex property without a column, stored within the JsonColumn
+    /// </summary>
+    public ComplexData ComplexData2 { get; set; }
 
     protected override ProductInstance Instantiate()
     {
