@@ -3,16 +3,20 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { mdiFormatText } from "@mdi/js";
+import { mdiEye, mdiEyeOff, mdiFormatText } from "@mdi/js";
+import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import SvgIcon from "@mui/material/SvgIcon";
 import TextField from "@mui/material/TextField";
 import Tooltip from "@mui/material/Tooltip";
 import * as React from "react";
+import { EntryUnitType } from "../../models/EntryUnitType";
 import { InputEditorBasePropModel } from "./InputEditorBase";
 import SelectionEditorBase from "./SelectionEditorBase";
 
 export default class StringEditor extends SelectionEditorBase {
+  private showPassword: boolean = false;
+
   constructor(props: InputEditorBasePropModel) {
     super(props);
   }
@@ -22,12 +26,13 @@ export default class StringEditor extends SelectionEditorBase {
     // Changed inf the future.
     const isLoadError = this.props.Entry.displayName === "LoadError";
     const currentValue = this.props.Entry.value.current;
+    const isPassword = this.props.Entry.value.unitType === EntryUnitType.Password;
 
     return (
       isLoadError && currentValue == null
         ? null
         : <Tooltip title={this.props.Entry.description} placement="right">
-          <TextField type={this.props.Entry.validation.isPassword ? "password" : "text"}
+          <TextField type={isPassword && !this.showPassword ? "password" : "text"}
                      onChange={(e) => this.onValueChange(e.target.value, this.props.Entry)}
                      label={this.props.Entry.displayName}
                      aria-label={this.props.Entry.description}
@@ -43,7 +48,16 @@ export default class StringEditor extends SelectionEditorBase {
                        input: {
                          endAdornment: (
                            <InputAdornment position="end">
-                             <SvgIcon><path d={mdiFormatText} /></SvgIcon>
+                             {isPassword
+                               ? <IconButton
+                                   aria-label="toggle password visibility"
+                                   onClick={() => { this.showPassword = !this.showPassword; this.forceUpdate(); }}
+                                   edge="end"
+                                   size="small">
+                                   <SvgIcon><path d={this.showPassword ? mdiEyeOff : mdiEye} /></SvgIcon>
+                                 </IconButton>
+                               : <SvgIcon><path d={mdiFormatText} /></SvgIcon>
+                             }
                            </InputAdornment>
                          ),
                        },
