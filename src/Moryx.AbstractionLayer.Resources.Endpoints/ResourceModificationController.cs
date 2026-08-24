@@ -367,12 +367,20 @@ public class ResourceModificationController : ControllerBase
             var propertyValue = matches[0].GetValue(instance);
             if (referenceCondition.ValueConstraint == ReferenceValue.NullOrEmpty)
             {
-                return propertyValue == null || (propertyValue as IReferenceCollection)?.UnderlyingCollection.Count == 0;
+                if (propertyValue is IReferenceCollection referenceCollection)
+                {
+                    return referenceCollection.UnderlyingCollection.Count == 0;
+                }
+                return propertyValue == null;
             }
 
             if (referenceCondition.ValueConstraint == ReferenceValue.NotEmpty)
             {
-                return (propertyValue as IReferenceCollection)?.UnderlyingCollection.Count > 0 || propertyValue != null;
+                if (propertyValue is IReferenceCollection referenceCollection)
+                {
+                    return referenceCollection.UnderlyingCollection.Count > 0;
+                }
+                return propertyValue != null;
             }
 
             return true;

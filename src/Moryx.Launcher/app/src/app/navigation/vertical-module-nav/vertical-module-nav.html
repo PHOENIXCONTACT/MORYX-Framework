@@ -7,7 +7,7 @@
           <span matListItemTitle>{{ moduleItem.title }}</span>
         }
       </a>
-      @if (asWeb(moduleItem)?.eventStream; as eventStream) {
+      @if (moduleItem.route !== activeRoute() && asWeb(moduleItem)?.eventStream; as eventStream) {
         <app-notification-badge [eventStream]="eventStream"></app-notification-badge>
       }
     </div>

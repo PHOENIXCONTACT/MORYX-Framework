@@ -3,16 +3,27 @@
     <mat-sidenav opened role="navigation" mode="side" position="start" class="media-sidenav">
       <div class="media-side-bar">
         <div class="toolbar-wrapper">
-        <mat-toolbar
-          color="primary"
-          [style.background-image]="'url(' + mediaImage() + ')'"
-          class="media-toolbar"
-          >
+        <mat-toolbar color="primary" [style.background-image]="'url(' + mediaImage() + ')'" class="media-toolbar">
           <mat-toolbar-row>
             <button mat-icon-button class="media-toolbar-button" [routerLink]="['../../']" aria-label="Back Button">
               <mat-icon>arrow_back</mat-icon>
             </button>
             <span class="toolbar-spacer"></span>
+            @if (selectedVariant(); as variant) {
+              <button mat-icon-button class="media-toolbar-button" (click)="onInfo(variant)" aria-label="Info"
+                [matTooltip]="TranslationConstants.VARIANT_ACTION.INFO | translate" matTooltipShowDelay="500">
+                <mat-icon>info</mat-icon>
+              </button>
+              <button mat-icon-button class="media-toolbar-button" (click)="onDownload(variant)" aria-label="Download"
+                [matTooltip]="TranslationConstants.VARIANT_ACTION.DOWNLOAD | translate" matTooltipShowDelay="500">
+                <mat-icon>download</mat-icon>
+              </button>
+              <button mat-icon-button class="media-toolbar-button" [disabled]="variant.name === 'master'"
+                (click)="onDelete(variant)" aria-label="Delete"
+                [matTooltip]="TranslationConstants.VARIANT_ACTION.DELETE | translate" matTooltipShowDelay="500">
+                <mat-icon>delete_forever</mat-icon>
+              </button>
+            }
           </mat-toolbar-row>
           <mat-toolbar-row>
             <button mat-icon-button aria-label="Spacer" disabled="true">
@@ -21,13 +32,7 @@
             <span>{{ TranslationConstants.MEDIA_FILE_VARIANTS | translate }}</span>
           </mat-toolbar-row>
         </mat-toolbar>
-        <button
-          mat-fab
-          class="upload-button"
-          type="button"
-          aria-label="Upload Media"
-          (click)="onUpload()"
-          >
+        <button mat-fab class="upload-button" type="button" aria-label="Upload Media" (click)="onUpload()">
           <mat-icon>upload</mat-icon>
         </button>
         </div>
@@ -35,36 +40,29 @@
           <ng-template matMenuContent let-variant="variant">
             <button mat-menu-item type="button" (click)="onInfo(variant)">
               <mat-icon>info</mat-icon>
-              <span>{{ TranslationConstants.CONTEXT_MENU.INFO | translate }}</span>
+              <span>{{ TranslationConstants.VARIANT_ACTION.INFO | translate }}</span>
             </button>
             <button mat-menu-item type="button" (click)="onDownload(variant)">
               <mat-icon>download</mat-icon>
-              <span>{{ TranslationConstants.CONTEXT_MENU.DOWNLOAD | translate }}</span>
+              <span>{{ TranslationConstants.VARIANT_ACTION.DOWNLOAD | translate }}</span>
             </button>
             @if (variant.name !== 'master') {
               <button mat-menu-item type="button" (click)="onDelete(variant)">
                 <mat-icon>delete_forever</mat-icon>
-                <span>{{ TranslationConstants.CONTEXT_MENU.DELETE | translate }}</span>
+                <span>{{ TranslationConstants.VARIANT_ACTION.DELETE | translate }}</span>
               </button>
             }
           </ng-template>
         </mat-menu>
         <!-- A hidden div is created to set the position of the menu-->
-        <div
-          style="visibility: hidden; position: fixed"
-          [style.left]="menuTopLeftPosition().x"
-          [style.top]="menuTopLeftPosition().y"
-          [matMenuTriggerFor]="contextMenu"
-        ></div>
+        <div style="visibility: hidden; position: fixed" [style.left]="menuTopLeftPosition().x"
+          [style.top]="menuTopLeftPosition().y" [matMenuTriggerFor]="contextMenu">
+        </div>
         <mat-nav-list class="variant-list">
           @for (variant of content()?.variants; track variant) {
-            <mat-list-item
-              (mousedown)="onMouseDown($event, variant)"
-              (mouseup)="onMouseUp($event, variant)"
-              (contextmenu)="onContext($event, variant)"
-              class="variant-item"
-              [activated]="selectedVariant()?.name === variant.name"
-              >
+            <mat-list-item (mousedown)="onMouseDown($event, variant)" (mouseup)="onMouseUp($event, variant)"
+              (contextmenu)="onContext($event, variant)" class="variant-item"
+              [activated]="selectedVariant()?.name === variant.name">
               <div class="variant-item-content">
                 @if (variant.name) {
                   <img src="{{ previews().get(variant.name) }}" alt="..." />
@@ -73,10 +71,10 @@
                   <h3>
                     <b>{{ variant.name }}</b>
                   </h3>
-                  <p [matTooltip]="TranslationConstants.VARIANT_OVERVIEW.CREATION_DATE | translate" >
-                    {{ variant.creationDate | date: 'dd/MM/yyyy H:mm' }}
+                  <p [matTooltip]="TranslationConstants.VARIANT_OVERVIEW.CREATION_DATE | translate">
+                    {{ variant.creationDate | date: 'short' }}
                   </p>
-                  <p [matTooltip]="TranslationConstants.VARIANT_OVERVIEW.SIZE | translate" >
+                  <p [matTooltip]="TranslationConstants.VARIANT_OVERVIEW.SIZE | translate">
                     {{ (variant.size ? variant.size/1024 : 0) | number: '1.0-2'}} KB
                   </p>
                 </div>
@@ -86,27 +84,27 @@
         </mat-nav-list>
       </div>
     </mat-sidenav>
-    <mat-sidenav-content class="variant-container">
-      @switch (bigPictureLoadingState()) {
-        @case (1) {
-          <mat-spinner></mat-spinner>
-        }
-        @case (2) {
-          @if (!bigPictureIsPdf()) {
-            <img
-              src="{{ bigPictureUrl() }}"
-              alt="Image could not be loaded"
-              class="variant-image"
-              />
+    <mat-sidenav-content class="variant-content">
+      @if (selectedVariant(); as variant) {
+        <app-variant-details-header [selectedVariant]="variant" />
+        <mat-divider />
+        <div class="variant-container">
+          @switch (bigPictureLoadingState()) {
+            @case (1) {
+              <mat-spinner></mat-spinner>
+            }
+            @case (2) {
+              @if (!bigPictureIsPdf()) {
+                <img src="{{ bigPictureUrl() }}" alt="Image could not be loaded" class="variant-image" />
+              }
+              @if (bigPictureIsPdf()) {
+                <ngx-doc-viewer [url]="pdfUrl()!" viewer="url" class="variant-pdf"></ngx-doc-viewer>
+              }
+            }
           }
-          @if (bigPictureIsPdf()) {
-            <ngx-doc-viewer
-              [url]="pdfUrl()!"
-              viewer="url"
-              class="variant-pdf"
-            ></ngx-doc-viewer>
-          }
-        }
+        </div>
+      } @else {
+        <app-variant-default-view />
       }
     </mat-sidenav-content>
   </mat-sidenav-container>

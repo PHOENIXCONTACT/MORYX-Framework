@@ -4,7 +4,7 @@
 */
 
 import { Component, ChangeDetectionStrategy, input } from "@angular/core";
-import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
+import { TranslationConstants } from "@app/translation-constants";
 import { OperationModel } from "@app/api/models";
 import { TranslatePipe } from "@ngx-translate/core";
 import { DecimalPipe } from "@angular/common";

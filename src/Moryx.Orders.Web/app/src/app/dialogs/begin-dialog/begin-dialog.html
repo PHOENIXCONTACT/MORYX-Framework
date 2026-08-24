@@ -1,10 +1,8 @@
 <h2 mat-dialog-title>
-  {{
-    operation.model.classification !== OperationStateClassification.Running &&
-    operation.model.classification !== OperationStateClassification.IsAmountReached
-      ? (TranslationConstants.BEGIN_DIALOG.TITLE | translate)
-      : (TranslationConstants.CHANGE_AMOUNT_DIALOG.TITLE | translate)
-  }}
+  {{ operation.model.classification !== OperationStateClassification.Running &&
+     operation.model.classification !== OperationStateClassification.IsAmountReached
+       ? (TranslationConstants.BEGIN_DIALOG.TITLE | translate)
+       : (TranslationConstants.CHANGE_AMOUNT_DIALOG.TITLE | translate) }}
 </h2>
 
 <mat-dialog-content class="dialog-container">
@@ -13,17 +11,17 @@
       @for (restriction of restrictions; track restriction) {
         @if (restriction.severity === 'Error') {
           <mat-card class="error-restriction" appearance="outlined">
-            <mat-card-content> {{ restriction.text }}</mat-card-content>
+            <mat-card-content>{{ restriction.text }}</mat-card-content>
           </mat-card>
         }
         @if (restriction.severity === 'Warning') {
           <mat-card class="warning-restriction" appearance="outlined">
-            <mat-card-content> {{ restriction.text }}</mat-card-content>
+            <mat-card-content>{{ restriction.text }}</mat-card-content>
           </mat-card>
         }
         @if (restriction.severity === 'Info') {
           <mat-card class="info-restriction" appearance="outlined">
-            <mat-card-content> {{ restriction.text }}</mat-card-content>
+            <mat-card-content>{{ restriction.text }}</mat-card-content>
           </mat-card>
         }
       }
@@ -62,41 +60,37 @@
       <div>{{ scrapCount }}</div>
     </div>
     <div class="progress-bar-entry">
-      <app-multi-progress-bar [totalAmount]="estimatedTotal()" [successCount]="successCount" [scrapCount]="scrapCount"
-                              [activeCount]="partialCount()" [activeLabel]="TranslationConstants.OPERATIONS.PARTIAL"
-                              variant="forecast"/>
+      <app-multi-progress-bar [totalAmount]="estimatedTotal()" [successCount]="successCount"
+                              [scrapCount]="scrapCount" [activeCount]="partialCount()"
+                              [activeLabel]="TranslationConstants.OPERATIONS.PARTIAL" variant="forecast"/>
     </div>
   </div>
+
   <mat-form-field appearance="outline">
-    <mat-label>{{
-        TranslationConstants.BEGIN_DIALOG.PARTIAL_AMOUNT | translate
-      }}
-    </mat-label>
-    <input matInput type="number" [formControl]="targetAmountControl" (blur)="limitTargetAmount()"/>
-    <button mat-icon-button type="button" matPrefix [disabled]="hasMinimalValue()" (click)="setMinTargetAmount()"
-            class="min-amount-button">
+    <mat-label>{{ TranslationConstants.BEGIN_DIALOG.PARTIAL_AMOUNT | translate }}</mat-label>
+    <input matInput type="number" [formControl]="targetAmountControl" (blur)="limitTargetAmount()" cdkFocusInitial/>
+    <button mat-icon-button type="button" matPrefix [disabled]="hasMinimalValue()"
+            (click)="setMinTargetAmount()" class="min-amount-button">
       <mat-icon>align_justify_flex_start</mat-icon>
     </button>
-    <button mat-button type="button" matSuffix mat-stroked-button [disabled]="hasMinimalValue()" color="primary"
+    <button mat-button type="button" matSuffix mat-stroked-button [disabled]="hasMinimalValue()"
             (click)="changeTargetAmount(-10)" class="content-calculation-button">
       -10
     </button>
-    <button mat-button type="button" matSuffix mat-stroked-button [disabled]="hasMinimalValue()" color="primary"
+    <button mat-button type="button" matSuffix mat-stroked-button [disabled]="hasMinimalValue()"
             (click)="changeTargetAmount(-1)" class="content-calculation-button">
       -1
     </button>
-    <button mat-button type="button" matSuffix mat-stroked-button [disabled]="!canBegin" color="primary"
+    <button mat-button type="button" matSuffix mat-stroked-button [disabled]="!canBegin"
             (click)="changeTargetAmount(1)" class="content-calculation-button">
       +1
     </button>
-    <button mat-button type="button" matSuffix mat-stroked-button [disabled]="!canBegin" color="primary"
+    <button mat-button type="button" matSuffix mat-stroked-button [disabled]="!canBegin"
             (click)="changeTargetAmount(10)" class="content-calculation-button">
       +10
     </button>
     @if (hasMinimalValue()) {
-      <mat-hint>
-        {{ TranslationConstants.CHANGE_AMOUNT_DIALOG.CANNOT_REDUCE_TARGET_AMOUNT | translate }}
-      </mat-hint>
+      <mat-hint>{{ TranslationConstants.CHANGE_AMOUNT_DIALOG.CANNOT_REDUCE_TARGET_AMOUNT | translate }}</mat-hint>
     }
   </mat-form-field>
 
@@ -106,15 +100,13 @@
 </mat-dialog-content>
 
 <div mat-dialog-actions align="end">
-  <button mat-button [mat-dialog-close]="undefined" color="primary">
+  <button mat-button [mat-dialog-close]="undefined" type="button">
     {{ TranslationConstants.CANCEL | translate }}
   </button>
-  <button mat-flat-button (click)="closeDialog()" color="primary">
-    {{
-      operation.model.classification !== OperationStateClassification.Running &&
-      operation.model.classification !== OperationStateClassification.IsAmountReached
-        ? (TranslationConstants.BEGIN_DIALOG.BEGIN | translate)
-        : (TranslationConstants.CHANGE_AMOUNT_DIALOG.UPDATE_AMOUNT | translate)
-    }}
+  <button mat-flat-button (click)="closeDialog()" type="button">
+    {{ operation.model.classification !== OperationStateClassification.Running &&
+       operation.model.classification !== OperationStateClassification.IsAmountReached
+         ? (TranslationConstants.BEGIN_DIALOG.BEGIN | translate)
+         : (TranslationConstants.CHANGE_AMOUNT_DIALOG.UPDATE_AMOUNT | translate) }}
   </button>
 </div>

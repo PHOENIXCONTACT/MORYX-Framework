@@ -10,7 +10,7 @@ namespace Moryx.AbstractionLayer.Products;
 /// <summary>
 /// Identity for products consisting of identifier and revision
 /// </summary>
-public class ProductIdentity : IIdentity
+public partial class ProductIdentity : IIdentity
 {
     /// <summary>
     /// Const value representing the latest revision of a product. This is intended for later changes of this constant.
@@ -34,17 +34,25 @@ public class ProductIdentity : IIdentity
     public static ProductIdentity AsLatestRevision(string identifier) => new(identifier, LatestRevision);
 
     /// <summary>
+    /// Pattern for building the identifier and revision
+    /// </summary>
+    /// <returns></returns>
+    [GeneratedRegex(@"^(?<identifier>.+)-(?<revision>\d+)$")]
+    private static partial Regex IdentityPattern();
+
+    /// <summary>
     /// Create a product identity from a string. Counterpart to ToString() method
     /// </summary>
     /// <param name="identityString">the ProductIdentity as string</param>
     /// <returns></returns>
     public static ProductIdentity Parse(string identityString)
     {
-        Regex rx = new Regex(@"(?<identifier>\w+)-(?<revision>\d+)");
-        if (!rx.IsMatch(identityString))
-            throw new FormatException("identityString should consist of <identity>-<revision> instead of " + identityString);
-        var groups = rx.Match(identityString).Groups;
-        return new ProductIdentity(groups["identifier"].Value, Convert.ToInt16(groups["revision"].Value, CultureInfo.InvariantCulture));
+        var match = IdentityPattern().Match(identityString);
+        if (!match.Success || !short.TryParse(match.Groups["revision"].Value,
+                NumberStyles.None, CultureInfo.InvariantCulture, out var revision))
+            throw new FormatException($"identityString should consist of <identity>-<revision> instead of {identityString}");
+
+        return new ProductIdentity(match.Groups["identifier"].Value, revision);
     }
 
     /// <summary>

@@ -8,7 +8,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { WorkplanStepRecipe } from '@api/models';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/translation-constants';
 
 import { NavigableEntryEditor } from '@moryx/ngx-web-framework/entry-editor';
 import { MatSelectModule } from '@angular/material/select';

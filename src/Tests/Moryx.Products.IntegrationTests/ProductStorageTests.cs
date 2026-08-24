@@ -6,25 +6,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Moryx.AbstractionLayer.Products;
-using Moryx.AbstractionLayer.Recipes;
-using Moryx.Products.Management;
-using Moryx.Products.Management.NullStrategies;
-using Moryx.Products.Samples;
-using Moryx.Products.Samples.Recipe;
-using Moryx.Tools;
-using Moryx.Workplans;
 using Moq;
 using Moryx.AbstractionLayer.Identity;
+using Moryx.AbstractionLayer.Products;
+using Moryx.AbstractionLayer.Recipes;
 using Moryx.AbstractionLayer.TestTools;
 using Moryx.AbstractionLayer.Workplans;
 using Moryx.Model.Repositories;
+using Moryx.Products.Management;
 using Moryx.Products.Management.Model;
+using System.Numerics;
+using Moryx.Products.Management.NullStrategies;
+using Moryx.Products.Samples;
+using Moryx.Products.Samples.Recipe;
 using Moryx.Serialization;
+using Moryx.Tools;
+using Moryx.Workplans;
 using NUnit.Framework;
-// ReSharper disable PossibleNullReferenceException
-// ReSharper disable StringLiteralTypo
-// ReSharper disable CommentTypo
 
 namespace Moryx.Products.IntegrationTests;
 
@@ -45,7 +43,7 @@ public class ProductStorageTests
         // Enable test mode
         ReflectionTool.TestMode = true;
         // This call is necessary for NUnit to load the type
-        var someType = new WatchType();
+        _ = new WatchType();
     }
 
     [SetUp]
@@ -69,183 +67,256 @@ public class ProductStorageTests
         _storage = new ProductStorage
         {
             Factory = _factory,
-            StrategyFactory = strategyFactory.Object,
-            Config = new ModuleConfig
-            {
-                TypeStrategies =
-                [
-                    new ProductTypeConfiguration
-                    {
-                        TargetType = typeof(WatchType).FullName,
-                        PluginName = nameof(WatchStrategy)
-                    },
+            StrategyFactory = strategyFactory.Object
+        };
+        _storage.Config = new ModuleConfig
+        {
+            TypeStrategies =
+            [
+                new ProductTypeConfiguration
+                {
+                    TargetType = typeof(WatchType).FullName,
+                    PluginName = nameof(WatchStrategy)
+                },
 
-                    new GenericTypeConfiguration
-                    {
-                        TargetType = typeof(WatchFaceType).FullName,
-                        PropertyConfigs =
-                        [
-                            new PropertyMapperConfig
-                            {
-                                PropertyName = nameof(WatchFaceType.Brand),
-                                Column = nameof(IGenericColumns.Text1),
-                                PluginName = nameof(TextColumnMapper)
-                            },
+                new GenericTypeConfiguration
+                {
+                    TargetType = typeof(WatchFaceType).FullName,
+                    PropertyConfigs =
+                    [
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(WatchFaceType.Brand),
+                            Column = nameof(IGenericColumns.Text1),
+                            PluginName = nameof(TextColumnMapper)
+                        },
 
-                            new PropertyMapperConfig
-                            {
-                                PropertyName = nameof(WatchFaceType.IsDigital),
-                                Column = nameof(IGenericColumns.Integer1),
-                                PluginName = nameof(IntegerColumnMapper)
-                            },
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(WatchFaceType.IsDigital),
+                            Column = nameof(IGenericColumns.Integer1),
+                            PluginName = nameof(IntegerColumnMapper)
+                        },
 
-                            new PropertyMapperConfig
-                            {
-                                PropertyName = nameof(WatchFaceType.Color),
-                                Column = string.Empty,
-                                PluginName = nameof(NullPropertyMapper)
-                            }
-                        ],
-                        JsonColumn = nameof(IGenericColumns.Text8)
-                    },
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(WatchFaceType.Color),
+                            Column = string.Empty,
+                            PluginName = nameof(NullPropertyMapper)
+                        }
+                    ],
+                    JsonColumn = nameof(IGenericColumns.Text8)
+                },
 
-                    new GenericTypeConfiguration
-                    {
-                        TargetType = typeof(DisplayWatchFaceType).FullName,
-                        PropertyConfigs =
-                        [
-                            new PropertyMapperConfig
-                            {
-                                PropertyName = nameof(DisplayWatchFaceType.Resolution),
-                                Column = nameof(IGenericColumns.Integer1),
-                                PluginName = nameof(IntegerColumnMapper)
-                            }
-                        ],
-                        JsonColumn = nameof(IGenericColumns.Text8)
-                    },
+                new GenericTypeConfiguration
+                {
+                    TargetType = typeof(DisplayWatchFaceType).FullName,
+                    PropertyConfigs =
+                    [
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(DisplayWatchFaceType.Resolution),
+                            Column = nameof(IGenericColumns.Integer1),
+                            PluginName = nameof(IntegerColumnMapper)
+                        }
+                    ],
+                    JsonColumn = nameof(IGenericColumns.Text8)
+                },
 
-                    new GenericTypeConfiguration
-                    {
-                        TargetType = typeof(NeedleType).FullName,
-                        PropertyConfigs = [],
-                        JsonColumn = nameof(IGenericColumns.Text8)
-                    },
+                new GenericTypeConfiguration
+                {
+                    TargetType = typeof(NeedleType).FullName,
+                    PropertyConfigs = [],
+                    JsonColumn = nameof(IGenericColumns.Text8)
+                },
 
-                    new GenericTypeConfiguration
-                    {
-                        TargetType = typeof(WatchPackageType).FullName,
-                        JsonColumn = nameof(IGenericColumns.Text8),
-                        PropertyConfigs = []
-                    }
-                ],
-                InstanceStrategies =
-                [
-                    new GenericInstanceConfiguration
-                    {
-                        TargetType = typeof(WatchInstance).FullName,
-                        JsonColumn = nameof(IGenericColumns.Text8),
-                        PropertyConfigs =
-                        [
-                            new PropertyMapperConfig
-                            {
-                                PropertyName = nameof(WatchInstance.DeliveryDate),
-                                Column = nameof(IGenericColumns.Integer1),
-                                PluginName = nameof(IntegerColumnMapper)
-                            },
+                new GenericTypeConfiguration
+                {
+                    TargetType = typeof(WatchPackageType).FullName,
+                    JsonColumn = nameof(IGenericColumns.Text8),
+                    PropertyConfigs = []
+                },
 
-                            new PropertyMapperConfig
-                            {
-                                PropertyName = nameof(WatchInstance.TimeSet),
-                                Column = nameof(IGenericColumns.Integer2),
-                                PluginName = nameof(IntegerColumnMapper)
-                            },
+                new GenericTypeConfiguration
+                {
+                    TargetType = typeof(JsonProductType).FullName,
+                    JsonColumn = nameof(IGenericColumns.Text8),
+                    PropertyConfigs = []
+                },
 
-                            new PropertyMapperConfig
-                            {
-                                PropertyName = nameof(WatchInstance.Identity),
-                                Column = nameof(IGenericColumns.Text1),
-                                PluginName = nameof(TextColumnMapper)
-                            }
-                        ]
-                    },
+                new GenericTypeConfiguration
+                {
+                    TargetType = typeof(CompositeProductType).FullName,
+                    JsonColumn = nameof(IGenericColumns.Text8),
+                    PropertyConfigs = []
+                },
 
-                    new GenericInstanceConfiguration
-                    {
-                        TargetType = typeof(WatchFaceInstance).FullName,
-                        PropertyConfigs =
-                        [
-                            new PropertyMapperConfig
-                            {
-                                PropertyName = nameof(WatchFaceInstance.Identifier),
-                                Column = nameof(IGenericColumns.Text1),
-                                PluginName = nameof(TextColumnMapper)
-                            },
+                new GenericTypeConfiguration
+                {
+                    TargetType = typeof(VectorProductType).FullName,
+                    PropertyConfigs =
+                    [
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(VectorProductType.Position),
+                            Column = nameof(IGenericColumns.Text1),
+                            PluginName = nameof(TextColumnMapper)
+                        },
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(VectorProductType.Orientation),
+                            Column = nameof(IGenericColumns.Text2),
+                            PluginName = nameof(TextColumnMapper)
+                        },
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(VectorProductType.Dimensions),
+                            Column = nameof(IGenericColumns.Text3),
+                            PluginName = nameof(TextColumnMapper)
+                        },
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(VectorProductType.Surface),
+                            Column = nameof(IGenericColumns.Text4),
+                            PluginName = nameof(TextColumnMapper)
+                        }
+                    ],
+                    JsonColumn = nameof(IGenericColumns.Text8)
+                },
 
-                            new PropertyMapperConfig
-                            {
-                                PropertyName = nameof(WatchFaceInstance.Identity),
-                                Column = nameof(IGenericColumns.Text2),
-                                PluginName = nameof(TextColumnMapper)
-                            }
-                        ],
-                        JsonColumn = nameof(IGenericColumns.Text8)
-                    },
+                new GenericTypeConfiguration
+                {
+                    TargetType = typeof(DatedProductType).FullName,
+                    PropertyConfigs =
+                    [
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(DatedProductType.ValidFrom),
+                            Column = nameof(IGenericColumns.Integer1),
+                            PluginName = nameof(IntegerColumnMapper)
+                        },
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(DatedProductType.ProductionTime),
+                            Column = nameof(IGenericColumns.Integer2),
+                            PluginName = nameof(IntegerColumnMapper)
+                        },
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(DatedProductType.CreatedAt),
+                            Column = nameof(IGenericColumns.Text1),
+                            PluginName = nameof(TextColumnMapper)
+                        }
+                    ],
+                    JsonColumn = nameof(IGenericColumns.Text8)
+                }
+            ],
+            InstanceStrategies =
+            [
+                new GenericInstanceConfiguration
+                {
+                    TargetType = typeof(WatchInstance).FullName,
+                    JsonColumn = nameof(IGenericColumns.Text8),
+                    PropertyConfigs =
+                    [
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(WatchInstance.DeliveryDate),
+                            Column = nameof(IGenericColumns.Integer1),
+                            PluginName = nameof(IntegerColumnMapper)
+                        },
 
-                    new ProductInstanceConfiguration()
-                    {
-                        TargetType = typeof(NeedleInstance).FullName,
-                        PluginName = nameof(SkipInstancesStrategy)
-                    }
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(WatchInstance.TimeSet),
+                            Column = nameof(IGenericColumns.Integer2),
+                            PluginName = nameof(IntegerColumnMapper)
+                        },
 
-                ],
-                LinkStrategies =
-                [
-                    new ProductLinkConfiguration()
-                    {
-                        TargetType = typeof(WatchType).FullName,
-                        PartName = nameof(WatchType.WatchFace),
-                        PluginName = nameof(SimpleLinkStrategy)
-                    },
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(WatchInstance.Identity),
+                            Column = nameof(IGenericColumns.Text1),
+                            PluginName = nameof(TextColumnMapper)
+                        }
+                    ]
+                },
 
-                    new GenericLinkConfiguration
-                    {
-                        TargetType = typeof(WatchType).FullName,
-                        PartName = nameof(WatchType.Needles),
-                        JsonColumn = nameof(IGenericColumns.Text8),
-                        PropertyConfigs =
-                        [
-                            new PropertyMapperConfig
-                            {
-                                PropertyName = nameof(NeedlePartLink.Role),
-                                PluginName = nameof(IntegerColumnMapper),
-                                Column = nameof(IGenericColumns.Integer1)
-                            }
-                        ]
-                    },
+                new GenericInstanceConfiguration
+                {
+                    TargetType = typeof(WatchFaceInstance).FullName,
+                    PropertyConfigs =
+                    [
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(WatchFaceInstance.Identifier),
+                            Column = nameof(IGenericColumns.Text1),
+                            PluginName = nameof(TextColumnMapper)
+                        },
 
-                    new ProductLinkConfiguration()
-                    {
-                        TargetType = typeof(WatchPackageType).FullName,
-                        PartName = nameof(WatchPackageType.PossibleWatches),
-                        PluginName = nameof(SimpleLinkStrategy)
-                    }
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(WatchFaceInstance.Identity),
+                            Column = nameof(IGenericColumns.Text2),
+                            PluginName = nameof(TextColumnMapper)
+                        }
+                    ],
+                    JsonColumn = nameof(IGenericColumns.Text8)
+                },
 
-                ],
-                RecipeStrategies =
-                [
-                    new GenericRecipeConfiguration
-                    {
-                        TargetType = typeof(WatchProductRecipe).FullName,
-                        JsonColumn = nameof(IGenericColumns.Text8),
-                        PropertyConfigs = []
-                    }
-                ]
-            }
+                new ProductInstanceConfiguration()
+                {
+                    TargetType = typeof(NeedleInstance).FullName,
+                    PluginName = nameof(SkipInstancesStrategy)
+                }
+
+            ],
+            LinkStrategies =
+            [
+                new ProductLinkConfiguration()
+                {
+                    TargetType = typeof(WatchType).FullName,
+                    PartName = nameof(WatchType.WatchFace),
+                    PluginName = nameof(SimpleLinkStrategy)
+                },
+
+                new GenericLinkConfiguration
+                {
+                    TargetType = typeof(WatchType).FullName,
+                    PartName = nameof(WatchType.Needles),
+                    JsonColumn = nameof(IGenericColumns.Text8),
+                    PropertyConfigs =
+                    [
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(NeedlePartLink.Role),
+                            PluginName = nameof(IntegerColumnMapper),
+                            Column = nameof(IGenericColumns.Integer1)
+                        }
+                    ]
+                },
+
+                new ProductLinkConfiguration()
+                {
+                    TargetType = typeof(WatchPackageType).FullName,
+                    PartName = nameof(WatchPackageType.PossibleWatches),
+                    PluginName = nameof(SimpleLinkStrategy)
+                }
+
+            ],
+            RecipeStrategies =
+            [
+                new GenericRecipeConfiguration
+                {
+                    TargetType = typeof(WatchProductRecipe).FullName,
+                    JsonColumn = nameof(IGenericColumns.Text8),
+                    PropertyConfigs = []
+                }
+            ]
         };
 
         await _storage.StartAsync();
     }
-
     protected virtual UnitOfWorkFactory<SqliteProductsContext> BuildUnitOfWorkFactory()
     {
         var uowFactory = InMemoryUnitOfWorkFactoryBuilder
@@ -871,14 +942,20 @@ public class ProductStorageTests
         // Act
         bool result;
         if (stillUsed)
+        {
             result = await productMgr.DeleteType(watch.WatchFace.Product.Id);
+        }
         else
+        {
             result = await productMgr.DeleteType(watch.Id);
+        }
 
         // Assert
         Assert.That(!result, Is.EqualTo(stillUsed));
         if (stillUsed)
+        {
             return;
+        }
 
         var matches = await productMgr.LoadTypes(new ProductQuery
         {
@@ -956,21 +1033,354 @@ public class ProductStorageTests
         Assert.That(byType6.Count, Is.GreaterThanOrEqualTo(1));
     }
 
-    [Test]
-    public void Initialize_WithWrongConfigType_ThrowsMeaningfulException()
+    [Test(Description = "Additional properties that exceed the configured generic columns must be stored in the JsonColumn and restored correctly.")]
+    public async Task SaveAndLoadGenericJsonType()
     {
-        var strategy = new GenericInstanceStrategy();
-
-        var config = new ProductInstanceConfiguration
+        // Arrange
+        var product = new JsonProductType
         {
-            PluginName = nameof(GenericInstanceStrategy),
-            TargetType = "TestType"
+            Name = "JsonTest",
+            Identity = new ProductIdentity("900001", 1),
+
+            Integer9 = 99,
+            Integer10 = 100,
+
+            Float9 = 9.9,
+            Float10 = 10.1f,
+
+            Text8 = "Text8Value",
+            Text9 = "Text9Value",
+            Text10 = "Text10Value"
         };
 
-        var ex = Assert.ThrowsAsync<InvalidOperationException>(
-            async () => await strategy.InitializeAsync(config));
+        // Act
+        var id = await _storage.SaveTypeAsync(product);
+        var loaded = (JsonProductType)await _storage.LoadTypeAsync(id);
 
-        Assert.That(ex.Message,
-            Does.Contain(nameof(GenericInstanceConfiguration)));
+        // Assert
+        Assert.That(loaded.Integer9, Is.EqualTo(product.Integer9));
+        Assert.That(loaded.Integer10, Is.EqualTo(product.Integer10));
+
+        Assert.That(loaded.Float9, Is.EqualTo(product.Float9));
+        Assert.That(loaded.Float10, Is.EqualTo(product.Float10));
+
+        Assert.That(loaded.Text8, Is.EqualTo(product.Text8));
+        Assert.That(loaded.Text9, Is.EqualTo(product.Text9));
+        Assert.That(loaded.Text10, Is.EqualTo(product.Text10));
+    }
+
+    [Test(Description = "Complex properties mapped through TextColumnMapper must be serialized and restored correctly.")]
+    public async Task SaveAndLoadComplexProperty()
+    {
+        // Arrange
+        var product = new CompositeProductType
+        {
+            Name = "ComplexDataTest",
+            Identity = new ProductIdentity("900002", 1),
+
+            ComplexData1 = new ComplexData
+            {
+                Content = "Content1",
+                PropertyName = "Property1",
+                Number = 11,
+                Weight = 12.5f
+            }
+        };
+
+        // Act
+        var id = await _storage.SaveTypeAsync(product);
+        var loaded = (CompositeProductType)await _storage.LoadTypeAsync(id);
+
+        // Assert
+        Assert.That(loaded.ComplexData1, Is.Not.Null);
+        Assert.That(loaded.ComplexData1.Content, Is.EqualTo(product.ComplexData1.Content));
+        Assert.That(loaded.ComplexData1.PropertyName, Is.EqualTo(product.ComplexData1.PropertyName));
+        Assert.That(loaded.ComplexData1.Number, Is.EqualTo(product.ComplexData1.Number));
+        Assert.That(loaded.ComplexData1.Weight, Is.EqualTo(product.ComplexData1.Weight));
+    }
+
+    [Test(Description = "Loading products with null complex properties must not throw an ArgumentNullException.")]
+    public async Task SaveAndLoadTypeWithNullComplexProperty()
+    {
+        // Arrange
+        var product = new CompositeProductType
+        {
+            Name = "NullComplex",
+            Identity = new ProductIdentity("900003", 1),
+
+            ComplexData1 = null
+        };
+
+        var id = await _storage.SaveTypeAsync(product);
+
+        // Act
+        var loaded = (CompositeProductType)await _storage.LoadTypeAsync(id);
+
+        // Assert
+        Assert.That(loaded.ComplexData1, Is.Null);
+    }
+
+    /// <summary>
+    /// Should be obsolete in Moryx 12 because the double use of TEXT8-Column should be eliminated
+    /// </summary>
+    /// <returns></returns>
+    [Test(Description = "If Text8 column contains plain text no exception should be thrown")]
+    public async Task LoadTypeWithPlainTextInJsonColumn()
+    {
+        // Arrange
+        var product = new JsonProductType
+        {
+            Name = "Legacy",
+            Identity = new ProductIdentity("900004", 1),
+
+            Text8 = "H"
+        };
+
+        var id = await _storage.SaveTypeAsync(product);
+
+        // Manipulation like older systems:
+        // Text8 just contains Plain Text
+
+        // Act / Assert
+        Assert.DoesNotThrowAsync(async () =>
+        {
+            await _storage.LoadTypeAsync(id);
+        });
+    }
+
+    /// <summary>
+    /// Should be obsolete in Moryx 12 because the double use of TEXT8-Column should be eliminated
+    /// </summary>
+    /// <returns></returns>
+    [Test(Description = "Loading a type with an empty JSON object in the JsonColumn must not fail. This reproduces the documented customer workaround using '{}'.")]
+    public async Task LoadTypeWithEmptyJsonObject()
+    {
+        // Arrange
+        var product = new CompositeProductType
+        {
+            Name = "EmptyJson",
+            Identity = new ProductIdentity("900004", 1)
+        };
+
+        var id = await _storage.SaveTypeAsync(product);
+
+        // simulate legacy database content
+        using (var uow = _factory.Create())
+        {
+            var repo = uow.GetRepository<IProductTypeRepository>();
+
+            var entity = repo.GetByKey(id);
+
+            entity.CurrentVersion.Text8 = "{}";
+
+            await uow.SaveChangesAsync();
+        }
+
+        // Act
+        var loaded = (CompositeProductType)
+            await _storage.LoadTypeAsync(id);
+
+        // Assert
+        Assert.That(loaded, Is.Not.Null);
+    }
+
+    [Test(Description = "LoadTypesAsync(ProductQuery) returns fully populated product types if full loading is requested.")]
+    public async Task LoadTypesQueryShouldReturnCompleteProductType()
+    {
+        // Arrange
+        var product = new DisplayWatchFaceType
+        {
+            Name = "QueryTest",
+            Identity = new ProductIdentity("999001", 1),
+            Resolution = 180
+        };
+
+        await _storage.SaveTypeAsync(product);
+
+        // Act
+        var loadedTypes = await _storage.LoadTypesAsync(new ProductQuery
+        {
+            TypeName = typeof(DisplayWatchFaceType).FullName,
+            LoadFullTypeInformation = true
+        });
+
+        var loaded = (loadedTypes)
+            .OfType<DisplayWatchFaceType>()
+            .Single(p => p.Identity.Identifier == "999001");
+
+        // Assert
+        Assert.That(loaded.Resolution, Is.EqualTo(180));
+    }
+
+    [Test(Description = "LoadTypesAsync(ProductQuery) returns only base type information by default.")]
+    public async Task LoadTypesQueryShouldReturnBaseInformationByDefault()
+    {
+        // Arrange
+        var product = new DisplayWatchFaceType
+        {
+            Name = "QueryTest",
+            Identity = new ProductIdentity("999002", 1),
+            Resolution = 180
+        };
+
+        await _storage.SaveTypeAsync(product);
+
+        // Act
+        var loadedTypes = await _storage.LoadTypesAsync(new ProductQuery
+        {
+            TypeName = typeof(DisplayWatchFaceType).FullName
+        });
+
+        var loaded = loadedTypes
+            .OfType<DisplayWatchFaceType>()
+            .Single(p => p.Identity.Identifier == "999002");
+
+        // Assert
+        Assert.That(loaded.Id, Is.Not.EqualTo(0));
+        Assert.That(loaded.Name, Is.EqualTo("QueryTest"));
+        Assert.That(loaded.Identity.Identifier, Is.EqualTo("999002"));
+
+        // Resolution should not be loaded in lightweight mode
+        Assert.That(loaded.Resolution, Is.EqualTo(0));
+    }
+
+    [Test]
+    public async Task SaveAndLoadTypeWithVector3()
+    {
+        // Arrange
+        var expectedPosition = new Vector3(1.5f, 2.5f, 3.5f);
+        var product = new VectorProductType
+        {
+            Name = "Vector Product",
+            Identity = new ProductIdentity("VEC001", 1),
+            Position = expectedPosition
+        };
+
+        // Act
+        var savedId = await _storage.SaveTypeAsync(product);
+        var loaded = (VectorProductType)await _storage.LoadTypeAsync(savedId);
+
+        // Assert
+        Assert.That(loaded.Position, Is.EqualTo(expectedPosition));
+    }
+
+    [Test]
+    public async Task SaveAndLoadTypeWithQuaternion()
+    {
+        // Arrange
+        var expectedOrientation = new Quaternion(0.1f, 0.2f, 0.3f, 0.9f);
+        var product = new VectorProductType
+        {
+            Name = "Quaternion Product",
+            Identity = new ProductIdentity("QUAT001", 1),
+            Orientation = expectedOrientation
+        };
+
+        // Act
+        var savedId = await _storage.SaveTypeAsync(product);
+        var loaded = (VectorProductType)await _storage.LoadTypeAsync(savedId);
+
+        // Assert
+        Assert.That(loaded.Orientation, Is.EqualTo(expectedOrientation));
+    }
+
+    [Test]
+    public async Task SaveAndLoadTypeWithVector4()
+    {
+        // Arrange
+        var expectedDimensions = new Vector4(1.0f, 2.0f, 3.0f, 4.0f);
+        var product = new VectorProductType
+        {
+            Name = "Vector4 Product",
+            Identity = new ProductIdentity("VEC4001", 1),
+            Dimensions = expectedDimensions
+        };
+
+        // Act
+        var savedId = await _storage.SaveTypeAsync(product);
+        var loaded = (VectorProductType)await _storage.LoadTypeAsync(savedId);
+
+        // Assert
+        Assert.That(loaded.Dimensions, Is.EqualTo(expectedDimensions));
+    }
+
+    [Test]
+    public async Task SaveAndLoadTypeWithPlane()
+    {
+        // Arrange
+        var expectedSurface = new Plane(new Vector3(0f, 1f, 0f), 5.5f);
+        var product = new VectorProductType
+        {
+            Name = "Plane Product",
+            Identity = new ProductIdentity("PLN001", 1),
+            Surface = expectedSurface
+        };
+
+        // Act
+        var savedId = await _storage.SaveTypeAsync(product);
+        var loaded = (VectorProductType)await _storage.LoadTypeAsync(savedId);
+
+        // Assert
+        Assert.That(loaded.Surface, Is.EqualTo(expectedSurface));
+    }
+
+    [Test]
+    public async Task SaveAndLoadTypeWithDateOnly()
+    {
+        // Arrange
+        var expectedDate = new DateOnly(2026, 8, 18);
+        var product = new DatedProductType
+        {
+            Name = "DateOnly Product",
+            Identity = new ProductIdentity("DATE001", 1),
+            ValidFrom = expectedDate
+        };
+
+        // Act
+        var savedId = await _storage.SaveTypeAsync(product);
+        var loaded = (DatedProductType)await _storage.LoadTypeAsync(savedId);
+
+        // Assert
+        Assert.That(loaded.ValidFrom, Is.EqualTo(expectedDate));
+    }
+
+    [Test]
+    public async Task SaveAndLoadTypeWithTimeOnly()
+    {
+        // Arrange
+        var expectedTime = new TimeOnly(14, 30, 45);
+        var product = new DatedProductType
+        {
+            Name = "TimeOnly Product",
+            Identity = new ProductIdentity("TIME001", 1),
+            ProductionTime = expectedTime
+        };
+
+        // Act
+        var savedId = await _storage.SaveTypeAsync(product);
+        var loaded = (DatedProductType)await _storage.LoadTypeAsync(savedId);
+
+        // Assert
+        Assert.That(loaded.ProductionTime, Is.EqualTo(expectedTime));
+    }
+
+    [Test]
+    public async Task SaveAndLoadTypeWithDateTimeOffset()
+    {
+        // Arrange
+        var createdAt = new DateTimeOffset(2026, 8, 18, 14, 30, 0, TimeSpan.FromHours(2));
+        var product = new DatedProductType
+        {
+            Name = "DateTimeOffset Product",
+            Identity = new ProductIdentity("DTO001", 1),
+            CreatedAt = createdAt
+        };
+
+        // Act
+        var savedId = await _storage.SaveTypeAsync(product);
+        var loaded = (DatedProductType)await _storage.LoadTypeAsync(savedId);
+
+        // Assert
+        Assert.That(loaded.CreatedAt, Is.EqualTo(createdAt));
     }
 }

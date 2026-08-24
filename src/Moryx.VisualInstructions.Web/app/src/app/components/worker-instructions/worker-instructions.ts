@@ -8,8 +8,8 @@ import { Component, effect, inject, model, signal, untracked, ChangeDetectionStr
 import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
 import { Entry, NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
-import { TranslatePipe, TranslateService } from "@ngx-translate/core";
-import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
+import { TranslatePipe } from "@ngx-translate/core";
+import { TranslationConstants } from "@app/translation-constants";
 import { environment } from "../../../environments/environment";
 import {
   InstructionContentType,
@@ -52,7 +52,6 @@ import { InstructionStateService } from '@app/services/instruction-state.service
 export class WorkerInstructions {
   private visualInstructionsService = inject(VisualInstructionsService);
   private instructionService = inject(InstructionService);
-  private translateService = inject(TranslateService);
   private snackbarService = inject(SnackbarService);
   private instructionStateService = inject(InstructionStateService);
 
@@ -80,11 +79,6 @@ export class WorkerInstructions {
       });
     });
 
-    this.translateService.addLangs([
-      TranslationConstants.LANGUAGES.EN,
-      TranslationConstants.LANGUAGES.DE,
-      TranslationConstants.LANGUAGES.IT,
-    ]);
   }
 
   private async onIndexChange(index: number) {

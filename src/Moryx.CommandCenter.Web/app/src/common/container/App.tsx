@@ -5,6 +5,7 @@
 
 import Container from "@mui/material/Container";
 import * as React from "react";
+import { createPortal } from "react-dom";
 import { connect } from "react-redux";
 import { Navigate, Route, Routes } from "react-router";
 import { ToastContainer } from "react-toastify";
@@ -86,7 +87,7 @@ function App(props: AppPropModel & AppDispatchPropModel) {
   return (
     <div>
       <div>
-        <ToastContainer />
+        {createPortal(<ToastContainer />, document.body)}
 
         <Container id="body">
           <Routes>

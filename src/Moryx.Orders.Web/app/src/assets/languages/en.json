@@ -128,9 +128,6 @@
     "ORDER": "Order",
     "PRODUCT": "Product"
   },
-  "DISMISS": "DISMISS",
   "CANCEL": "CANCEL",
-  "CONFIRM": "CONFIRM",
-  "DEFAULT_MESSAGE": "Something went wrong on the server.",
-  "SERVER_NOT_REACHABLE": "The server is unreachable, please check your internet connection or proxy settings."
+  "CONFIRM": "CONFIRM"
 }
