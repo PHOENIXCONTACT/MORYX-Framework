@@ -22,7 +22,7 @@ public class ValidationTests
 
         // Assert
         Assert.That(encoded, Is.Not.Null);
-        Assert.That(encoded.SubEntries.Count, Is.EqualTo(9));
+        Assert.That(encoded.SubEntries.Count, Is.EqualTo(10));
         _validationDummySubEntries = encoded.SubEntries;
     }
 
@@ -99,6 +99,16 @@ public class ValidationTests
 
         // Assert
         Assert.That(entry.Validation.ErrorMessage, Is.EqualTo(ValidationDummy.CustomMessage));
+    }
+
+    [Test(Description = "A message given as a resource must arrive translated, not as null")]
+    public void ValidateLocalizedErrorMessageIsResolved()
+    {
+        // Arrange / Act
+        var entry = _validationDummySubEntries.Single(e => e.Identifier == nameof(ValidationDummy.StringWithLocalizedMessage));
+
+        // Assert
+        Assert.That(entry.Validation.ErrorMessage, Is.EqualTo(ValidationMessages.TooShort));
     }
 
     [Test(Description = "An attribute without a message must leave ErrorMessage unset so consumers can fall back")]

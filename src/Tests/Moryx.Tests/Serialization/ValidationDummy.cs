@@ -38,4 +38,9 @@ public class ValidationDummy
 
     [MinLength(MinimumLength, ErrorMessage = CustomMessage)]
     public string StringWithCustomMessage { get; set; }
+
+    [MinLength(MinimumLength,
+        ErrorMessageResourceType = typeof(ValidationMessages),
+        ErrorMessageResourceName = nameof(ValidationMessages.TooShort))]
+    public string StringWithLocalizedMessage { get; set; }
 }
