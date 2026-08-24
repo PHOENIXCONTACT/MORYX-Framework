@@ -8,7 +8,6 @@ using Moryx.Products.Management.Model;
 using Moryx.Serialization;
 using Moryx.Tools;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using static Moryx.Products.Management.ProductExpressionHelpers;
 
 namespace Moryx.Products.Management;
@@ -88,7 +87,7 @@ internal class GenericEntityMapper<TBase, TReference> : IGenericMapper
     public bool HasChanged(IGenericColumns storage, object instance)
     {
         // Compare JSON and mappers to entity
-        var json = JsonConvert.SerializeObject(instance, _jsonSettings);
+        var json = SerializeJson(instance);
         return _jsonAccessor.ReadProperty(storage) != json || _configuredMappers.Any(m => m.HasChanged(storage, instance));
     }
 
@@ -163,7 +162,7 @@ internal class GenericEntityMapper<TBase, TReference> : IGenericMapper
         // Older systems may contain plain text in the JsonColumn.
         // In this case simply ignore the content and continue loading
         // the directly mapped properties.
-        if (!(json.StartsWith("{") || json.StartsWith("[")))
+        if (!(json.StartsWith('{') || json.StartsWith('[')))
         {
             Logger.LogWarning("Ignoring non-JSON content in JsonColumn '{Column}'. Value: '{Value}'", _jsonAccessor.Property.Name, json);
             return;
@@ -191,79 +190,22 @@ internal class GenericEntityMapper<TBase, TReference> : IGenericMapper
             mapper.WriteValue(source, target);
         }
 
-        // Generate JSON from the rest of the object
-        var mappedNames = _configuredMappers
-            .Select(m => m.Property.Name)
-            .ToHashSet(StringComparer.OrdinalIgnoreCase);
-
-        // JSON for all other props
-        var jsonObject = new JObject();
-
-        foreach (var prop in source.GetType().GetProperties())
-        {
-            if (!prop.CanRead)
-            {
-                continue;
-            }
-
-            if (!prop.CanWrite)
-            {
-                continue;
-            }
-
-            // Do not include base, read-only, or directly mapped properties in the JSON
-            if (mappedNames.Contains(prop.Name))
-            {
-                continue;
-            }
-
-            // jump Indexer 
-            if (prop.GetIndexParameters().Length > 0)
-            {
-                continue;
-            }
-
-            // jump Read-only Props
-            if (prop.GetSetMethod() == null)
-            {
-                continue;
-            }
-
-            var value = prop.GetValue(source);
-
-            // "Not set yet" -> null in JSON
-            if (IsDefaultOrNull(prop.PropertyType, value))
-            {
-                jsonObject[prop.Name] = JValue.CreateNull();
-            }
-            else
-            {
-                jsonObject[prop.Name] = JToken.FromObject(value, JsonSerializer.Create(_jsonSettings));
-            }
-        }
-
-        // Write JSON to the Json - Column
-        _jsonAccessor.WriteProperty(target, jsonObject.ToString(Formatting.None));
+        // Everything else is written as JSON to the JsonColumn
+        _jsonAccessor.WriteProperty(target, SerializeJson(source));
     }
 
-    private static bool IsDefaultOrNull(Type propertyType, object value)
-    {
-        if (value == null)
-        {
-            return true;
-        }
-
-        var underlyingType = Nullable.GetUnderlyingType(propertyType);
-        var effectiveType = underlyingType ?? propertyType;
-
-        // Reference type
-        if (!effectiveType.IsValueType)
-        {
-            return false;
-        }
-
-        // Value type: handle Default as "not set yet"
-        var defaultValue = Activator.CreateInstance(effectiveType);
-        return Equals(value, defaultValue);
-    }
+    /// <summary>
+    /// Serialize the properties that have no dedicated column. The contract resolver of
+    /// <see cref="_jsonSettings"/> takes care of excluding base, mapped, read-only and
+    /// reference properties.
+    /// </summary>
+    /// <remarks>
+    /// <see cref="WriteValue"/> and <see cref="HasChanged"/> must produce their JSON the very
+    /// same way. Otherwise the comparison in <see cref="HasChanged"/> never matches the stored
+    /// value and every save would create a new version.
+    /// The concrete type is passed explicitly, because <see cref="TypeNameHandling.Auto"/> would
+    /// otherwise add a redundant type name for the root object.
+    /// </remarks>
+    private string SerializeJson(object source)
+        => JsonConvert.SerializeObject(source, source.GetType(), _jsonSettings);
 }
