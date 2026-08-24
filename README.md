@@ -160,3 +160,7 @@ Additionally, all MORYX components are now released under the same major version
 With **version 10** the complete MORYX portfolio aside from Phoenix Contact specific components is released as open source.
 We decided to combine all components into this mono-repository to make it easier to keep everything in sync and to lower the barrier for contributions.
 The previously seperated repository MORYX-Factory as well as the internal repositories will be archived.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md).
