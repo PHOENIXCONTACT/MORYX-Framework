@@ -137,6 +137,14 @@ internal class PropertyCastAccessor<TConcrete, TBase, TProperty, TValue> : Prope
 internal class ConversionAccessor<TConcrete, TBase, TProperty, TValue> : PropertyAccessor<TConcrete, TProperty>, IPropertyAccessor<TBase, TValue>
     where TConcrete : TBase
 {
+    /// <summary>
+    /// Conversion targets for ChangeType. It can not handle
+    /// <see cref="Nullable{T}"/> as target type, but converting to the underlying type and casting
+    /// the result to the nullable type afterward is equivalent.
+    /// </summary>
+    private static readonly Type _valueTarget = Nullable.GetUnderlyingType(typeof(TValue)) ?? typeof(TValue);
+    private static readonly Type _propertyTarget = Nullable.GetUnderlyingType(typeof(TProperty)) ?? typeof(TProperty);
+
     public ConversionAccessor(PropertyInfo property) : base(property)
     {
     }
@@ -144,17 +152,21 @@ internal class ConversionAccessor<TConcrete, TBase, TProperty, TValue> : Propert
     public TValue ReadProperty(TBase instance)
     {
         var value = (object)PropertyGetter((TConcrete)instance);
-        TValue response;
-        if (value is TValue value1)
+
+        // Check if the value can be cast or needs conversion
+        if (value is TValue castable)
         {
-            response = value1;
-        }
-        else
-        {
-            response = (TValue)Convert.ChangeType(value, typeof(TValue));
+            return castable;
         }
 
-        return response;
+        // Convert.ChangeType would throw for value types, so a null value is
+        // represented by the default of the target type
+        if (value == null)
+        {
+            return default;
+        }
+
+        return (TValue)Convert.ChangeType(value, _valueTarget);
     }
 
     public void WriteProperty(TBase instance, TValue value)
@@ -164,9 +176,13 @@ internal class ConversionAccessor<TConcrete, TBase, TProperty, TValue> : Propert
         {
             PropertySetter((TConcrete)instance, (TProperty)(object)value);
         }
+        else if (value is null)
+        {
+            PropertySetter((TConcrete)instance, default);
+        }
         else
         {
-            PropertySetter((TConcrete)instance, (TProperty)Convert.ChangeType(value, typeof(TProperty)));
+            PropertySetter((TConcrete)instance, (TProperty)Convert.ChangeType(value, _propertyTarget));
         }
     }
 }

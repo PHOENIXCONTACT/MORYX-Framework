@@ -36,23 +36,7 @@ internal class TextColumnMapper : ColumnMapper<string>
         // Complex reference types and non-primitive structs (e.g. Vector3) -> JSON
         if (propType != typeof(string) && (propType.IsClass || propType.IsInterface || (propType.IsValueType && !propType.IsPrimitive && !propType.IsEnum)))
         {
-            return new ConversionAccessor<string, object>(
-                objectProp,
-                o => JsonConvert.SerializeObject(o, Property.PropertyType, JsonSettings.Minimal),
-                s =>
-                {
-                    if (string.IsNullOrWhiteSpace(s))
-                    {
-                        var effectiveType = Nullable.GetUnderlyingType(Property.PropertyType) ?? Property.PropertyType;
-
-                        if (!effectiveType.IsValueType)
-                            return null;
-
-                        return Activator.CreateInstance(effectiveType);
-                    }
-
-                    return JsonConvert.DeserializeObject(s, Property.PropertyType, JsonSettings.Minimal);
-                });
+            return new ConversionAccessor<string, object>(objectProp, SerializeToColumn, DeserializeToProperty);
         }
 
         // Normal string property
@@ -72,10 +56,44 @@ internal class TextColumnMapper : ColumnMapper<string>
         // Complex reference types and non-primitive structs (e.g. Vector3) -> JSON
         if (propType != typeof(string) && (propType.IsClass || propType.IsInterface || (propType.IsValueType && !propType.IsPrimitive && !propType.IsEnum)))
         {
-            return value == null ? null : JsonConvert.SerializeObject(value, Property.PropertyType, JsonSettings.Minimal);
+            return SerializeToColumn(value);
         }
 
         // Normal string / primitive conversion
         return base.ToExpressionValue(value);
+    }
+
+    /// <summary>
+    /// Serialize a complex property value into the column
+    /// </summary>
+    /// <remarks>
+    /// An empty value must stay empty in the column, otherwise the string "null"
+    /// would be stored and no longer match a null comparison.
+    /// </remarks>
+    private string SerializeToColumn(object value)
+    {
+        return value != null
+            ? JsonConvert.SerializeObject(value, Property.PropertyType, JsonSettings.Minimal)
+            : null;
+    }
+
+    /// <summary>
+    /// Deserialize the column content back into the complex property
+    /// </summary>
+    private object DeserializeToProperty(string column)
+    {
+        if (!string.IsNullOrWhiteSpace(column))
+        {
+            return JsonConvert.DeserializeObject(column, Property.PropertyType, JsonSettings.Minimal);
+        }
+
+        // Nullable structs can represent the empty column, all other
+        // structs need their default value
+        if (!Property.PropertyType.IsValueType || Nullable.GetUnderlyingType(Property.PropertyType) != null)
+        {
+            return null;
+        }
+
+        return Activator.CreateInstance(Property.PropertyType);
     }
 }

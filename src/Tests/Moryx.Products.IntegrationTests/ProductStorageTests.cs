@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Products;
@@ -148,7 +149,15 @@ public class ProductStorageTests
                 {
                     TargetType = typeof(CompositeProductType).FullName,
                     JsonColumn = nameof(IGenericColumns.Text8),
-                    PropertyConfigs = []
+                    PropertyConfigs =
+                    [
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(CompositeProductType.ComplexData1),
+                            Column = nameof(IGenericColumns.Text1),
+                            PluginName = nameof(TextColumnMapper)
+                        }
+                    ]
                 },
 
                 new GenericTypeConfiguration
@@ -178,6 +187,12 @@ public class ProductStorageTests
                         {
                             PropertyName = nameof(VectorProductType.Surface),
                             Column = nameof(IGenericColumns.Text4),
+                            PluginName = nameof(TextColumnMapper)
+                        },
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(VectorProductType.OptionalPosition),
+                            Column = nameof(IGenericColumns.Text5),
                             PluginName = nameof(TextColumnMapper)
                         }
                     ],
@@ -366,7 +381,8 @@ public class ProductStorageTests
                         {
                             EntityMapper = new GenericEntityMapper<ProductType, ProductPartLink>
                             {
-                                MapperFactory = mapperFactory.Object
+                                MapperFactory = mapperFactory.Object,
+                                Logger = NullLogger.Instance
                             }
                         };
                         break;
@@ -388,7 +404,8 @@ public class ProductStorageTests
                         {
                             EntityMapper = new GenericEntityMapper<ProductInstance, ProductInstance>
                             {
-                                MapperFactory = mapperFactory.Object
+                                MapperFactory = mapperFactory.Object,
+                                Logger = NullLogger.Instance
                             }
                         };
                         break;
@@ -413,7 +430,8 @@ public class ProductStorageTests
                         {
                             EntityMapper = new GenericEntityMapper<ProductPartLink, ProductType>
                             {
-                                MapperFactory = mapperFactory.Object
+                                MapperFactory = mapperFactory.Object,
+                                Logger = NullLogger.Instance
                             }
                         };
                         break;
@@ -434,7 +452,8 @@ public class ProductStorageTests
                 {
                     EntityMapper = new GenericEntityMapper<ProductionRecipe, ProductType>
                     {
-                        MapperFactory = mapperFactory.Object
+                        MapperFactory = mapperFactory.Object,
+                        Logger = NullLogger.Instance
                     }
                 };
 
@@ -1084,6 +1103,13 @@ public class ProductStorageTests
                 PropertyName = "Property1",
                 Number = 11,
                 Weight = 12.5f
+            },
+            ComplexData2 = new ComplexData
+            {
+                Content = "Content2",
+                PropertyName = "Property2",
+                Number = 22,
+                Weight = 23.5f
             }
         };
 
@@ -1092,11 +1118,29 @@ public class ProductStorageTests
         var loaded = (CompositeProductType)await _storage.LoadTypeAsync(id);
 
         // Assert
+        // From mapped property
         Assert.That(loaded.ComplexData1, Is.Not.Null);
         Assert.That(loaded.ComplexData1.Content, Is.EqualTo(product.ComplexData1.Content));
         Assert.That(loaded.ComplexData1.PropertyName, Is.EqualTo(product.ComplexData1.PropertyName));
         Assert.That(loaded.ComplexData1.Number, Is.EqualTo(product.ComplexData1.Number));
         Assert.That(loaded.ComplexData1.Weight, Is.EqualTo(product.ComplexData1.Weight));
+
+        // From json
+        Assert.That(loaded.ComplexData2, Is.Not.Null);
+        Assert.That(loaded.ComplexData2.Content, Is.EqualTo(product.ComplexData2.Content));
+        Assert.That(loaded.ComplexData2.PropertyName, Is.EqualTo(product.ComplexData2.PropertyName));
+        Assert.That(loaded.ComplexData2.Number, Is.EqualTo(product.ComplexData2.Number));
+        Assert.That(loaded.ComplexData2.Weight, Is.EqualTo(product.ComplexData2.Weight));
+
+        // Database
+        using var uow = _factory.Create();
+        var version = (await uow.GetRepository<IProductTypeRepository>().GetByKeyAsync(id)).CurrentVersion;
+        Assert.That(version.Text1, Does.Contain(product.ComplexData1.Content),
+            "A mapped complex property belongs into its own column");
+        Assert.That(version.Text8, Does.Contain(product.ComplexData2.Content),
+            "An unmapped complex property belongs into the JsonColumn");
+        Assert.That(version.Text8, Does.Not.Contain(product.ComplexData1.Content),
+            "A mapped complex property must not be duplicated into the JsonColumn");
     }
 
     [Test(Description = "Loading products with null complex properties must not throw an ArgumentNullException.")]
@@ -1108,7 +1152,8 @@ public class ProductStorageTests
             Name = "NullComplex",
             Identity = new ProductIdentity("900003", 1),
 
-            ComplexData1 = null
+            ComplexData1 = null,
+            ComplexData2 = null
         };
 
         var id = await _storage.SaveTypeAsync(product);
@@ -1118,6 +1163,13 @@ public class ProductStorageTests
 
         // Assert
         Assert.That(loaded.ComplexData1, Is.Null);
+        Assert.That(loaded.ComplexData2, Is.Null);
+
+        using var uow = _factory.Create();
+        var typeEntity = await uow.GetRepository<IProductTypeRepository>().GetByKeyAsync(id);
+        var version = typeEntity.CurrentVersion;
+        Assert.That(version.Text1, Is.Null,
+            "An empty property must leave the column empty instead of storing the string 'null'");
     }
 
     /// <summary>
@@ -1128,24 +1180,41 @@ public class ProductStorageTests
     public async Task LoadTypeWithPlainTextInJsonColumn()
     {
         // Arrange
-        var product = new JsonProductType
+        var product = new CompositeProductType
         {
             Name = "Legacy",
             Identity = new ProductIdentity("900004", 1),
-
-            Text8 = "H"
+            ComplexData1 = new ComplexData
+            {
+                Content = "Content1"
+            }
         };
 
         var id = await _storage.SaveTypeAsync(product);
 
         // Manipulation like older systems:
         // Text8 just contains Plain Text
+        using (var uow = _factory.Create())
+        {
+            var repo = uow.GetRepository<IProductTypeRepository>();
 
-        // Act / Assert
+            var entity = await repo.GetByKeyAsync(id);
+
+            entity.CurrentVersion.Text8 = "H";
+
+            await uow.SaveChangesAsync();
+        }
+
+        // Act
+        CompositeProductType loaded = null;
+
+        // Assert
         Assert.DoesNotThrowAsync(async () =>
         {
-            await _storage.LoadTypeAsync(id);
+            loaded = (CompositeProductType)await _storage.LoadTypeAsync(id);
         });
+        Assert.That(loaded.ComplexData1?.Content, Is.EqualTo(product.ComplexData1.Content),
+            "Properties with a dedicated column must still be loaded");
     }
 
     /// <summary>
@@ -1169,7 +1238,7 @@ public class ProductStorageTests
         {
             var repo = uow.GetRepository<IProductTypeRepository>();
 
-            var entity = repo.GetByKey(id);
+            var entity = await repo.GetByKeyAsync(id);
 
             entity.CurrentVersion.Text8 = "{}";
 
@@ -1182,6 +1251,61 @@ public class ProductStorageTests
 
         // Assert
         Assert.That(loaded, Is.Not.Null);
+    }
+
+    [Test(Description = "Saving a type that was not modified must not create a new version.")]
+    public async Task SaveUnchangedTypeShouldNotCreateNewVersion()
+    {
+        // Arrange
+        var watchface = new WatchFaceType
+        {
+            Name = "Unchanged",
+            Identity = new ProductIdentity("900005", 1),
+            Numbers = [3, 6, 9, 12],
+            Brand = "Jaques Lemans"
+        };
+        var id = await _storage.SaveTypeAsync(watchface);
+        var loaded = (WatchFaceType)await _storage.LoadTypeAsync(id);
+
+        // Act
+        await _storage.SaveTypeAsync(loaded);
+
+        // Assert
+        using var uow = _factory.Create();
+        var entity = await uow.GetRepository<IProductTypeRepository>().GetByKeyAsync(id);
+        Assert.That(entity.OldVersions, Is.Empty, "Saving an unchanged type must not create a new version");
+    }
+
+    [Test(Description = "The JsonColumn must only contain properties without a dedicated column and no base properties.")]
+    public async Task JsonColumnShouldOnlyContainUnmappedProperties()
+    {
+        // Arrange
+        var watchface = new WatchFaceType
+        {
+            Name = "OnlyUnmapped",
+            Identity = new ProductIdentity("900006", 1),
+            Numbers = [3, 6, 9, 12],
+            Brand = "Jaques Lemans"
+        };
+
+        // Act
+        var id = await _storage.SaveTypeAsync(watchface);
+
+        // Assert
+        using var uow = _factory.Create();
+        var json = (await uow.GetRepository<IProductTypeRepository>().GetByKeyAsync(id)).CurrentVersion.Text8;
+        Assert.That(json, Does.Contain(nameof(WatchFaceType.Numbers)),
+            "Properties without a dedicated column belong into the JsonColumn");
+        Assert.That(json, Does.Not.Contain(nameof(WatchFaceType.Brand)),
+            "Properties with a dedicated column must not be duplicated into the JsonColumn");
+        Assert.That(json, Does.Not.Contain(nameof(WatchFaceType.NumbersString)),
+            "Read only properties must not be written to the JsonColumn");
+        Assert.That(json, Does.Not.Contain(nameof(ProductType.Name)),
+            "Base properties have dedicated columns and must not be written to the JsonColumn");
+        Assert.That(json, Does.Not.Contain(nameof(ProductType.Identity)),
+            "Base properties have dedicated columns and must not be written to the JsonColumn");
+        Assert.That(json, Does.Not.Contain(nameof(ProductType.State)),
+            "Base properties have dedicated columns and must not be written to the JsonColumn");
     }
 
     [Test(Description = "LoadTypesAsync(ProductQuery) returns fully populated product types if full loading is requested.")]
@@ -1322,6 +1446,45 @@ public class ProductStorageTests
 
         // Assert
         Assert.That(loaded.Surface, Is.EqualTo(expectedSurface));
+    }
+
+    [Test(Description = "A nullable struct with a value must be restored with the very same value.")]
+    public async Task SaveAndLoadTypeWithNullableVector3()
+    {
+        // Arrange
+        var expectedPosition = new Vector3(4.5f, 5.5f, 6.5f);
+        var product = new VectorProductType
+        {
+            Name = "Nullable Vector Product",
+            Identity = new ProductIdentity("VEC002", 1),
+            OptionalPosition = expectedPosition
+        };
+
+        // Act
+        var savedId = await _storage.SaveTypeAsync(product);
+        var loaded = (VectorProductType)await _storage.LoadTypeAsync(savedId);
+
+        // Assert
+        Assert.That(loaded.OptionalPosition, Is.EqualTo(expectedPosition));
+    }
+
+    [Test(Description = "An empty nullable struct must be restored as null and not as the default value of the struct.")]
+    public async Task SaveAndLoadTypeWithEmptyNullableVector3()
+    {
+        // Arrange
+        var product = new VectorProductType
+        {
+            Name = "Empty Nullable Vector Product",
+            Identity = new ProductIdentity("VEC003", 1),
+            OptionalPosition = null
+        };
+
+        // Act
+        var savedId = await _storage.SaveTypeAsync(product);
+        var loaded = (VectorProductType)await _storage.LoadTypeAsync(savedId);
+
+        // Assert
+        Assert.That(loaded.OptionalPosition, Is.Null);
     }
 
     [Test]
