@@ -1,4 +1,8 @@
 {
+  "CONFIRM_DIALOG": {
+    "CANCEL": "CANCEL",
+    "CONFIRM": "CONFIRM"
+  },
   "APP": {
     "TITLE": "Workplans",
     "OPEN_WORKPLAN_MANAGEMENT": "Open workplan management",
@@ -6,15 +10,10 @@
     "NO_SESSION_IS_OPEN": "No session is open"
   },
   "NOT_FOUND": "The session could not be found",
-  "DISMISS": "DISMISS",
-  "DEFAULT_MESSAGE": "Something went wrong on the server.",
-  "SERVER_NOT_REACHABLE": "The server is unreachable, please check your internet connection or proxy settings.",
   "SESSIONS": {
     "CONFIRM_DIALOG": {
       "TITLE": "Do you want to close this session?",
-      "MESSAGE": "If you haven't saved, your changes will be lost. Are you sure you want to close the session?",
-      "CONFIRM": "CONFIRM",
-      "CANCEL": "CANCEL"
+      "MESSAGE": "If you haven't saved, your changes will be lost. Are you sure you want to close the session?"
     },
     "CLOSE": "Close"
   },
@@ -57,8 +56,7 @@
       "TITLE": "Delete Workplan",
       "MESSAGE_FIRST_PART": "The workplan session",
       "MESSAGE_SECOND_PART": "will also be closed, are you sure",
-      "MESSAGE": "Are you sure you want to delete?",
-      "CANCEL": "CANCEL"
+      "MESSAGE": "Are you sure you want to delete?"
     },
     "SNACK_BAR": {
       "SUCCESS_FIRST_PART": "Workplan",

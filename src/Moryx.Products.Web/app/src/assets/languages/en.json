@@ -15,9 +15,6 @@
       "NO_IMPORTER": "No importer was defined"
     }
   },
-  "DISMISS": "DISMISS",
-  "DEFAULT_MESSAGE": "Something went wrong on the server.",
-  "SERVER_NOT_REACHABLE": "The server is unreachable, please check your internet connection or proxy settings.",
   "PRODUCT_NOT_FOUND": "The requested product was not found",
   "SHARED": {
     "DELETE": "Delete",
@@ -108,5 +105,6 @@
     "REFRESH": "Refresh",
     "FILTER": "Filter",
     "ADD": "Add"
-  }
+  },
+  "DISMISS": "Dismiss"
 }

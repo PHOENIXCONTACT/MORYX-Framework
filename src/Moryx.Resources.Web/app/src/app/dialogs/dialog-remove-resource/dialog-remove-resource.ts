@@ -8,7 +8,7 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/materia
 
 import { MatButtonModule } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
-import { TranslationConstants } from '@app/extensions/translation-constants';
+import { TranslationConstants } from '@app/translation-constants';
 import { ResourceModel } from '@api/models/resource-model';
 
 @Component({

@@ -3,20 +3,27 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { ApplicationConfig, provideEnvironmentInitializer } from "@angular/core";
-import { provideAppInitializer, inject } from '@angular/core';
-import { provideMoryxMaterialDefaults } from '@moryx/ngx-web-framework/material';
-import { languageInterceptor, apiErrorInterceptor } from '@moryx/ngx-web-framework/interceptors';
+import { ApplicationConfig, inject, provideAppInitializer } from "@angular/core";
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { environment } from "../environments/environment";
-import { CacheResourceService } from "./services/cache-resource.service";
-import { SearchService } from "./services/search.service";
 import { provideRouter } from "@angular/router";
-import { routes } from "./app.routes";
 
+import { provideMoryxLocalization } from '@moryx/ngx-web-framework/i18n';
+import { languageInterceptor, apiErrorInterceptor } from '@moryx/ngx-web-framework/interceptors';
+import { provideMoryxMaterialDefaults } from '@moryx/ngx-web-framework/material';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+
 import { provideApiConfiguration } from '@api/api-configuration';
+import { environment } from "../environments/environment";
+import { routes } from "./app.routes";
+import { CacheResourceService } from "./services/cache-resource.service";
+import { SearchService } from "./services/search.service";
+import { TranslationConstants } from './translation-constants';
+
+// Register locale data for built-in Angular pipes (date, number, etc.)
+import '@angular/common/locales/global/de';
+import '@angular/common/locales/global/it';
+import '@angular/common/locales/global/zh';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -36,14 +43,16 @@ export const appConfig: ApplicationConfig = {
         prefix: environment.assets + 'assets/languages/',
         suffix: '.json'
       }),
-      fallbackLang: 'en'
     }),
 
     // Provides angular material defaults
     provideMoryxMaterialDefaults(),
 
+    // Provides Angular locale and configures ngx-translate
+    provideMoryxLocalization(TranslationConstants.LANGUAGES),
+
     // Additional app initializers
-    provideEnvironmentInitializer(() => inject(SearchService)),
+    provideAppInitializer(() => { inject(SearchService); }),
     provideAppInitializer(async () => {
       const cacheResourceService = inject(CacheResourceService)
       await cacheResourceService.loadResources()

@@ -7,9 +7,6 @@ import { Component, computed, inject, OnInit, ChangeDetectionStrategy, DestroyRe
 import { EditMenuService } from './services/edit-menu.service';
 import { EditMenuState } from './services/EditMenutState';
 import { ChangeBackgroundService } from './services/change-background.service';
-import { LanguageService } from '@moryx/ngx-web-framework/services';
-import { TranslateService } from '@ngx-translate/core';
-import { TranslationConstants } from './extensions/translation-constants.extensions';
 import { EditMenu } from './components/edit-menu/edit-menu';
 import { OrdersContainer } from './components/orders-container/orders-container';
 import { CellDetails } from './components/cell-details/cell-details';
@@ -35,8 +32,6 @@ export class App implements OnInit {
   private editMenuService = inject(EditMenuService);
   private changeBackgroundService = inject(ChangeBackgroundService);
   private factoryStateStreamService = inject(FactoryStateStreamService);
-  private languageService = inject(LanguageService);
-  private translateService = inject(TranslateService);
   private destroyRef = inject(DestroyRef);
 
   protected backgroundImage = computed(() => {
@@ -46,13 +41,6 @@ export class App implements OnInit {
   protected isEditMode = computed(() => this.editMenuService.activeState() === EditMenuState.EditingCells);
 
   constructor() {
-    this.translateService.addLangs([
-      TranslationConstants.LANGUAGES.EN,
-      TranslationConstants.LANGUAGES.DE,
-      TranslationConstants.LANGUAGES.IT,
-    ]);
-    this.translateService.setFallbackLang('en');
-    this.translateService.use(this.languageService.getFallbackLang());
     this.destroyRef.onDestroy(() => this.disconnectEvents());
   }
 

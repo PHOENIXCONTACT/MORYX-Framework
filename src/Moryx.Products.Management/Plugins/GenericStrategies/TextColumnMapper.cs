@@ -18,35 +18,64 @@ internal class TextColumnMapper : ColumnMapper<string>
 {
     public TextColumnMapper(Type targetType) : base(targetType)
     {
-
     }
 
     protected override IPropertyAccessor<object, string> CreatePropertyAccessor(PropertyInfo objectProp)
     {
         var propType = objectProp.PropertyType;
-        // Convert return value to string
+
+        // Convert Guid to string
         if (propType == typeof(Guid))
-            return new ConversionAccessor<string, Guid>(objectProp,
+        {
+            return new ConversionAccessor<string, Guid>(
+                objectProp,
                 guid => guid != Guid.Empty ? guid.ToString() : null,
                 str => !string.IsNullOrEmpty(str) ? Guid.Parse(str) : Guid.Empty);
+        }
 
-        if ((propType.IsClass | propType.IsInterface) && propType != typeof(string))
-            return new ConversionAccessor<string, object>(objectProp,
+        // Complex reference types and non-primitive structs (e.g. Vector3) -> JSON
+        if (propType != typeof(string) && (propType.IsClass || propType.IsInterface || (propType.IsValueType && !propType.IsPrimitive && !propType.IsEnum)))
+        {
+            return new ConversionAccessor<string, object>(
+                objectProp,
                 o => JsonConvert.SerializeObject(o, Property.PropertyType, JsonSettings.Minimal),
-                s => JsonConvert.DeserializeObject(s, Property.PropertyType, JsonSettings.Minimal));
+                s =>
+                {
+                    if (string.IsNullOrWhiteSpace(s))
+                    {
+                        var effectiveType = Nullable.GetUnderlyingType(Property.PropertyType) ?? Property.PropertyType;
 
+                        if (!effectiveType.IsValueType)
+                            return null;
+
+                        return Activator.CreateInstance(effectiveType);
+                    }
+
+                    return JsonConvert.DeserializeObject(s, Property.PropertyType, JsonSettings.Minimal);
+                });
+        }
+
+        // Normal string property
         return base.CreatePropertyAccessor(objectProp);
     }
 
     protected override object ToExpressionValue(object value)
     {
         var propType = Property.PropertyType;
+
+        // Guid -> string
         if (propType == typeof(Guid))
+        {
             return ((Guid)value).ToString();
+        }
 
-        if ((propType.IsClass | propType.IsInterface) && propType != typeof(string))
-            return JsonConvert.SerializeObject(value, Property.PropertyType, JsonSettings.Minimal);
+        // Complex reference types and non-primitive structs (e.g. Vector3) -> JSON
+        if (propType != typeof(string) && (propType.IsClass || propType.IsInterface || (propType.IsValueType && !propType.IsPrimitive && !propType.IsEnum)))
+        {
+            return value == null ? null : JsonConvert.SerializeObject(value, Property.PropertyType, JsonSettings.Minimal);
+        }
 
+        // Normal string / primitive conversion
         return base.ToExpressionValue(value);
     }
 }

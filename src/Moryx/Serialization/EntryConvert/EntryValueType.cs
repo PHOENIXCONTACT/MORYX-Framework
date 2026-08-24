@@ -71,5 +71,25 @@ public enum EntryValueType
     /// <summary>
     /// Value type stream
     /// </summary>
-    Stream
+    Stream,
+    /// <summary>
+    /// Decomposed struct with sub-entries
+    /// </summary>
+    Struct,
+    /// <summary>
+    /// Value type DateTime
+    /// </summary>
+    DateTime,
+    /// <summary>
+    /// Value type DateOnly
+    /// </summary>
+    Date,
+    /// <summary>
+    /// Value type TimeOnly
+    /// </summary>
+    Time,
+    /// <summary>
+    /// Value type TimeSpan
+    /// </summary>
+    TimeSpan
 }

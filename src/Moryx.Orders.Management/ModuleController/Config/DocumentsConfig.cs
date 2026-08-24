@@ -18,7 +18,7 @@ public class DocumentsConfig
     /// <summary>
     /// Folder path to save the loaded documents
     /// </summary>
-    [DataMember, DefaultValue(".\\Backups\\Orders")]
+    [DataMember, DefaultValue("./Backups/Orders")]
     [Description("Folder path to save the loaded documents")]
     public string DocumentsPath { get; set; }
 

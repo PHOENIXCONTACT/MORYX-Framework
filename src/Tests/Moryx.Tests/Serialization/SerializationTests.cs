@@ -399,15 +399,13 @@ public class SerializationTests
 
         // Act
         var encoded = EntryConvert.EncodeObject(dummy).SubEntries;
-        var encodedSub = encoded[4].SubEntries[0].SubEntries;
+        var encodedSub = encoded[6].SubEntries[0].SubEntries;
 
         // Assert
         DummyAssert(encoded, encodedSub);
-        var expected = new[] { "10", "Thomas", "10" };
-        for (var i = 0; i < 3; i++)
-        {
-            Assert.That(encoded[i].Value.Current, Is.EqualTo(expected[i]), "Property value missmatch");
-        }
+        Assert.That(encoded[0].Value.Current, Is.EqualTo("10"), "Property value missmatch");
+        Assert.That(encoded[1].Value.Current, Is.EqualTo("Thomas"), "Property value missmatch");
+        Assert.That(encoded[4].Value.Current, Is.EqualTo("10"), "Property value missmatch");
     }
 
     [Test]
@@ -669,11 +667,11 @@ public class SerializationTests
         // Act
         encoded.SubEntries[0].Value.Current = "10";
         encoded.SubEntries[1].Value.Current = "Thomas";
-        encoded.SubEntries[3].SubEntries[1].Value.Current = encoded.SubEntries[3].SubEntries[1].Value.Possible[2].Key;
-        for (var i = 4; i < 7; i++)
+        encoded.SubEntries[5].SubEntries[1].Value.Current = encoded.SubEntries[5].SubEntries[1].Value.Possible[2].Key;
+        for (var i = 6; i < 9; i++)
         {
             var colEntry = encoded.SubEntries[i];
-            for (var j = 0; j < i; j++)
+            for (var j = 0; j < i - 2; j++)
             {
                 var newInstance = colEntry.Prototypes[0].Instantiate();
                 newInstance.SubEntries[0].Value.Current = j.ToString("F2", defaultSerialization.FormatProvider);
@@ -953,7 +951,7 @@ public class SerializationTests
         // Assert
         var buffer = new byte[targetStreamDummy.FileStream.Length];
         targetStreamDummy.FileStream.Seek(0, SeekOrigin.Begin);
-        targetStreamDummy.FileStream.Read(buffer, 0, buffer.Length);
+        targetStreamDummy.FileStream.ReadExactly(buffer, 0, buffer.Length);
 
         var stringValue = Encoding.UTF8.GetString(buffer);
 
@@ -991,7 +989,7 @@ public class SerializationTests
 
         // Assert
         Assert.That(encoded.SubEntries[0].Value.Current, Is.EqualTo(1001.ToString(formatProvider)));
-        Assert.That(encoded.SubEntries[3].SubEntries[0].Value.Current, Is.EqualTo(1.1234f.ToString(formatProvider)));
+        Assert.That(encoded.SubEntries[5].SubEntries[0].Value.Current, Is.EqualTo(1.1234f.ToString(formatProvider)));
 
         Assert.That(dummyDecoded.Number, Is.EqualTo(1001));
         Assert.That(dummyDecoded.SingleClass.Foo, Is.EqualTo(1.1234f));
@@ -1179,30 +1177,31 @@ public class SerializationTests
         // Assert
         var expected = new[]
         {
-            new {Name = "Number", Type = EntryValueType.Int32, ReadOnly = false},
-            new {Name = "Name", Type = EntryValueType.String, ReadOnly = false},
-            new {Name = "ReadOnly", Type = EntryValueType.Int32, ReadOnly = true},
-            new {Name = "SingleClass", Type = EntryValueType.Class, ReadOnly = false},
-            new {Name = "SubArray", Type = EntryValueType.Collection, ReadOnly = false},
-            new {Name = "SubList", Type = EntryValueType.Collection, ReadOnly = false},
-            new {Name = "SubEnumerable", Type = EntryValueType.Collection, ReadOnly = false},
-            new {Name = "SubDictionary", Type = EntryValueType.Collection, ReadOnly = false},
-            new {Name = "EnumArray", Type = EntryValueType.Collection, ReadOnly = false},
-            new {Name = "EnumList", Type = EntryValueType.Collection, ReadOnly = false},
-            new {Name = "EnumEnumerable", Type = EntryValueType.Collection, ReadOnly = false},
-            new {Name = "BoolArray", Type = EntryValueType.Collection, ReadOnly = false},
-            new {Name = "BoolList", Type = EntryValueType.Collection, ReadOnly = false},
-            new {Name = "BoolEnumerable", Type = EntryValueType.Collection, ReadOnly = false},
-            new {Name = "SingleClassNonLocalized", Type = EntryValueType.Class, ReadOnly = false}
+            new { Name = "Number", Type = EntryValueType.Int32, ReadOnly = false }, new { Name = "Name", Type = EntryValueType.String, ReadOnly = false },
+            new { Name = "ModifiedAt", Type = EntryValueType.DateTime, ReadOnly = false },
+            new { Name = "CreatedAt", Type = EntryValueType.DateTime, ReadOnly = false },
+            new { Name = "ReadOnly", Type = EntryValueType.Int32, ReadOnly = true },
+            new { Name = "SingleClass", Type = EntryValueType.Class, ReadOnly = false },
+            new { Name = "SubArray", Type = EntryValueType.Collection, ReadOnly = false },
+            new { Name = "SubList", Type = EntryValueType.Collection, ReadOnly = false },
+            new { Name = "SubEnumerable", Type = EntryValueType.Collection, ReadOnly = false },
+            new { Name = "SubDictionary", Type = EntryValueType.Collection, ReadOnly = false },
+            new { Name = "EnumArray", Type = EntryValueType.Collection, ReadOnly = false },
+            new { Name = "EnumList", Type = EntryValueType.Collection, ReadOnly = false },
+            new { Name = "EnumEnumerable", Type = EntryValueType.Collection, ReadOnly = false },
+            new { Name = "BoolArray", Type = EntryValueType.Collection, ReadOnly = false },
+            new { Name = "BoolList", Type = EntryValueType.Collection, ReadOnly = false },
+            new { Name = "BoolEnumerable", Type = EntryValueType.Collection, ReadOnly = false },
+            new { Name = "SingleClassNonLocalized", Type = EntryValueType.Class, ReadOnly = false }
         };
         Assert.That(encoded.Count, Is.EqualTo(expected.Length), "Number of entries does not match");
         for (var i = 0; i < encoded.Count; i++)
         {
-            Assert.That(encoded[i].Identifier, Is.EqualTo(expected[i].Name), "Property name missmatch");
-            Assert.That(encoded[i].Value.Type, Is.EqualTo(expected[i].Type), "Type missmatch");
-            Assert.That(encoded[i].Value.IsReadOnly, Is.EqualTo(expected[i].ReadOnly), "ReadOnly missmatch");
+            Assert.That(encoded[i].Identifier, Is.EqualTo(expected[i].Name), "Property name mismatch");
+            Assert.That(encoded[i].Value.Type, Is.EqualTo(expected[i].Type), "Type mismatch");
+            Assert.That(encoded[i].Value.IsReadOnly, Is.EqualTo(expected[i].ReadOnly), "ReadOnly mismatch");
         }
-        Assert.That(encodedSub[0].Identifier, Is.EqualTo("Foo"), "Name missmatch");
+        Assert.That(encodedSub[0].Identifier, Is.EqualTo("Foo"), "Name mismatch");
         Assert.That(encodedSub[0].Value.Type, Is.EqualTo(EntryValueType.Single), "Float not detected");
         Assert.That(encodedSub[1].Identifier, Is.EqualTo("Enum"));
         Assert.That(encodedSub[1].Value.Type, Is.EqualTo(EntryValueType.Enum), "Enum not detected");

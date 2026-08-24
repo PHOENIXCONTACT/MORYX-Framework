@@ -8,7 +8,7 @@ import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@ang
 import { Router } from '@angular/router';
 import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
 import { TranslateService } from '@ngx-translate/core';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/translation-constants';
 
 @Component({
   selector: 'app-default-view',

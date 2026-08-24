@@ -46,8 +46,5 @@
       "RESET_POSITION": "Reset position and return to initial state. All mount information is lost.",
       "RESET_GROUP": "Reset the entire group",
       "EMPTY_STATE_TEXT": "No Process holder Groups/Positions. Nothing requires your attention here currently."
-  },
-  "DISMISS": "DISMISS",
-  "DEFAULT_MESSAGE": "Something went wrong on the server.",
-  "SERVER_NOT_REACHABLE": "The server is unreachable, please check your internet connection or proxy settings."
+  }
 }

@@ -17,7 +17,7 @@ public static partial class EntryConvert
     /// <summary>
     /// Default strategy instance
     /// </summary>
-    internal static ICustomSerialization Serialization = new DefaultSerialization();
+    private static readonly ICustomSerialization _serialization = new DefaultSerialization();
 
     /// <summary>
     /// Check if a certain type is what we consider a collection
@@ -65,10 +65,10 @@ public static partial class EntryConvert
     /// <summary>
     /// Convert a single property into a simple entry
     /// </summary>
-    /// <returns>Covnerted property</returns>
+    /// <returns>Converted property</returns>
     public static Entry EncodeProperty(PropertyInfo property)
     {
-        return EncodeProperty(property, Serialization);
+        return EncodeProperty(property, _serialization);
     }
 
     /// <summary>
@@ -125,15 +125,14 @@ public static partial class EntryConvert
             entryValue.Default = defaultAttribute.Value.ToString();
         else if (entryValue.Possible != null && entryValue.Possible.Length >= 1)
             entryValue.Default = entryValue.Possible[0].Key;
-        else if (property.PropertyType.IsValueType)
+        else if (property.PropertyType.IsValueType && entryValue.Type != EntryValueType.Struct)
         {
             var underlyingType = Nullable.GetUnderlyingType(property.PropertyType);
-            entryValue.Default = underlyingType != null
-                ? Activator.CreateInstance(underlyingType).ToString()
-                : Activator.CreateInstance(property.PropertyType).ToString();
+            var defaultInstance = Activator.CreateInstance(underlyingType ?? property.PropertyType);
+            entryValue.Default = ConvertToString(defaultInstance, customSerialization.FormatProvider);
         }
-        // Value types should have the default value as current value
-        if (ValueOrStringType(property.PropertyType))
+        // Value types should have the default value as current value (except decomposed structs)
+        if (ValueOrStringType(property.PropertyType) && entryValue.Type != EntryValueType.Struct)
             entryValue.Current = ConvertToString(entryValue.Default, customSerialization.FormatProvider);
 
         return entryValue;
@@ -163,7 +162,7 @@ public static partial class EntryConvert
     /// </summary>
     public static Entry Prototype(EntryPrototype prototype)
     {
-        return Prototype(prototype, Serialization);
+        return Prototype(prototype, _serialization);
     }
 
     /// <summary>
@@ -202,7 +201,7 @@ public static partial class EntryConvert
     /// </summary>
     public static Entry EncodeClass(Type objType)
     {
-        return EncodeClass(objType, Serialization);
+        return EncodeClass(objType, _serialization);
     }
     /// <summary>
     /// Convert class into a list of generic entries using custom strategy
@@ -225,6 +224,12 @@ public static partial class EntryConvert
                 var subentry = EncodeClass(property.PropertyType, customSerialization);
                 converted.SubEntries.AddRange(subentry.SubEntries);
             }
+            // Decomposed structs use the serializer to create default sub-entries
+            else if (converted.Value.Type == EntryValueType.Struct && TryGetSerializer(property.PropertyType, out var serializer))
+            {
+                var structEntry = serializer.Encode(Activator.CreateInstance(property.PropertyType), customSerialization.FormatProvider);
+                converted.SubEntries.AddRange(structEntry.SubEntries);
+            }
 
             encodedClass.SubEntries.Add(converted);
         }
@@ -237,7 +242,7 @@ public static partial class EntryConvert
     /// </summary>
     public static Entry EncodeObject(object instance)
     {
-        return EncodeObject(instance, Serialization);
+        return EncodeObject(instance, _serialization);
     }
 
     /// <summary>
@@ -249,6 +254,14 @@ public static partial class EntryConvert
         var isValueType = ValueOrStringType(instanceType);
 
         var converted = CreateFromType(instanceType, customSerialization);
+
+        // Structs with registered serializers are encoded via sub-entries
+        if (converted.Value.Type == EntryValueType.Struct && TryGetSerializer(instanceType, out var serializer))
+        {
+            var structEntry = serializer.Encode(instance, customSerialization.FormatProvider);
+            converted.SubEntries = structEntry.SubEntries;
+            return converted;
+        }
 
         // Value or string are easily value encoded
         if (isValueType)
@@ -308,6 +321,13 @@ public static partial class EntryConvert
                         convertedProperty.SubEntries.Add(entry);
                     }
                     break;
+                case EntryValueType.Struct:
+                    if (value != null && TryGetSerializer(propertyType, out var structSerializer))
+                    {
+                        var structEntry = structSerializer.Encode(value, customSerialization.FormatProvider);
+                        convertedProperty.SubEntries = structEntry.SubEntries;
+                    }
+                    break;
                 case EntryValueType.Class:
                     var subEntry = value == null
                         ? EncodeClass(property.PropertyType, customSerialization)
@@ -365,7 +385,7 @@ public static partial class EntryConvert
     private static string ConvertToBase64(Stream stream)
     {
         var bytes = new byte[stream.Length];
-        stream.Read(bytes, 0, (int)stream.Length);
+        stream.ReadExactly(bytes, 0, (int)stream.Length);
         return Convert.ToBase64String(bytes);
     }
 
@@ -373,11 +393,11 @@ public static partial class EntryConvert
     /// Encode a <see cref="MethodBase"/> to the transmittable <see cref="MethodEntry"/>
     /// using <see cref="DefaultSerialization"/>
     /// </summary>
-    /// <param name="method"></param>
-    /// <returns></returns>
+    /// <param name="method">Method to encode</param>
+    /// <returns>Encoded method entry</returns>
     public static MethodEntry EncodeMethod(MethodBase method)
     {
-        return EncodeMethod(method, Serialization);
+        return EncodeMethod(method, _serialization);
     }
 
     /// <summary>
@@ -414,7 +434,7 @@ public static partial class EntryConvert
     /// </summary>
     public static IEnumerable<MethodEntry> EncodeMethods(object source)
     {
-        return EncodeMethods(source.GetType(), Serialization);
+        return EncodeMethods(source.GetType(), _serialization);
     }
 
     /// <summary>
@@ -430,7 +450,7 @@ public static partial class EntryConvert
     /// </summary>
     public static IEnumerable<MethodEntry> EncodeMethods(Type objType)
     {
-        return EncodeMethods(objType, Serialization);
+        return EncodeMethods(objType, _serialization);
     }
 
     /// <summary>
@@ -447,7 +467,7 @@ public static partial class EntryConvert
     /// </summary>
     public static IEnumerable<MethodEntry> EncodeConstructors(Type objType)
     {
-        return EncodeConstructors(objType, Serialization);
+        return EncodeConstructors(objType, _serialization);
     }
 
     /// <summary>
@@ -484,7 +504,7 @@ public static partial class EntryConvert
         };
 
         // mark the parameter as required when there is no default value
-        parameterModel.Validation.IsRequired = parameter.HasDefaultValue ? false : true;
+        parameterModel.Validation.IsRequired = !parameter.HasDefaultValue;
 
         switch (parameterModel.Value.Type)
         {
@@ -514,7 +534,7 @@ public static partial class EntryConvert
         where T : class, new()
     {
         var instance = new T();
-        UpdateInstance(instance, encoded, Serialization);
+        UpdateInstance(instance, encoded, _serialization);
         return instance;
     }
 
@@ -534,7 +554,7 @@ public static partial class EntryConvert
     /// </summary>
     public static object CreateInstance(Type type, Entry encoded)
     {
-        return CreateInstance(type, encoded, Serialization);
+        return CreateInstance(type, encoded, _serialization);
     }
 
     /// <summary>
@@ -551,7 +571,7 @@ public static partial class EntryConvert
     /// </summary>
     public static object CreateInstance(Type type, MethodEntry encodedConstructor)
     {
-        return CreateInstance(type, encodedConstructor, Serialization);
+        return CreateInstance(type, encodedConstructor, _serialization);
     }
 
     /// <summary>
@@ -575,7 +595,7 @@ public static partial class EntryConvert
     /// </summary>
     public static object UpdateInstance(object instance, Entry encoded)
     {
-        return UpdateInstance(instance, encoded, Serialization);
+        return UpdateInstance(instance, encoded, _serialization);
     }
 
     /// <summary>
@@ -602,9 +622,14 @@ public static partial class EntryConvert
                 : customSerialization.ConvertValue(propertyType, property, mapped.Entry, currentValue);
 
             // Value types, strings and streams do not need recursion
-            if (ValueOrStringType(propertyType) || typeof(Stream).IsAssignableFrom(propertyType))
+            if (ValueOrStringType(propertyType) && !TryGetSerializer(propertyType, out _) || typeof(Stream).IsAssignableFrom(propertyType))
             {
 
+            }
+            // Structs with registered serializers are reconstructed from sub-entries
+            else if (TryGetSerializer(propertyType, out var structSerializer) && mapped.Entry != null)
+            {
+                value = structSerializer.Decode(mapped.Entry, customSerialization.FormatProvider);
             }
             // Update collection from entry
             else if (IsCollection(propertyType) && mapped.Entry != null)
@@ -752,7 +777,7 @@ public static partial class EntryConvert
     /// </summary>
     public static Entry InvokeMethod(object target, MethodEntry methodEntry)
     {
-        return InvokeMethod(target, methodEntry, Serialization);
+        return InvokeMethod(target, methodEntry, _serialization);
     }
 
     /// <summary>
@@ -761,7 +786,7 @@ public static partial class EntryConvert
     /// </summary>
     public static Task<Entry> InvokeMethodAsync(object target, MethodEntry methodEntry, CancellationToken cancellationToken = default)
     {
-        return InvokeMethodAsync(target, methodEntry, Serialization, cancellationToken);
+        return InvokeMethodAsync(target, methodEntry, _serialization, cancellationToken);
     }
 
     /// <summary>
@@ -873,15 +898,4 @@ public static partial class EntryConvert
 
     #endregion
 
-    /// <summary>
-    /// Converts given value typed instance to a string with the given <see cref="IFormatProvider"/>
-    /// </summary>
-    /// <param name="value">Value to convert</param>
-    /// <param name="formatProvider">Format provider used to convert the value to string</param>
-    /// <returns></returns>
-    internal static string ConvertToString(object value, IFormatProvider formatProvider)
-    {
-        var convertible = value as IConvertible;
-        return convertible != null ? convertible.ToString(formatProvider) : value?.ToString();
-    }
 }

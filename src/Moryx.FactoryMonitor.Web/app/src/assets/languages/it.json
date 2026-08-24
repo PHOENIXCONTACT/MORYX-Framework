@@ -34,9 +34,6 @@
   "APP": {
     "DEFAULT_BACKGROUND_URL": "We could not find a background URL. Until you provide it, we will use the default image."
   },
-  "DISMISS": "DISMISS",
-  "DEFAULT_MESSAGE": "Something went wrong on the server.",
-  "SERVER_NOT_REACHABLE": "The server is unreachable, please check your internet connection or proxy settings.",
   "EDIT_MENU": {
     "EDIT": "Modifica",
     "CONFIRM": "Conferma",

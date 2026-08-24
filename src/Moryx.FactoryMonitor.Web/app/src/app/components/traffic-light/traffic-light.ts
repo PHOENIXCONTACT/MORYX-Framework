@@ -7,7 +7,7 @@ import { Component, effect, inject, signal, ChangeDetectionStrategy } from '@ang
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import { CellState } from '@api/models/cell-state';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/translation-constants';
 import CellModel from '@app/models/cellModel';
 import { CellStoreService } from '@app/services/cell-store.service';
 

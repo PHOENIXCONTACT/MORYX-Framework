@@ -10,7 +10,7 @@ import {
   MatDialogModule,
 } from '@angular/material/dialog';
 import { ChangeBackgroundService } from '@app/services/change-background.service';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/translation-constants';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MyErrorStateMatcher } from '../MyErrorStateMatcher';
 import { CommonModule } from '@angular/common';

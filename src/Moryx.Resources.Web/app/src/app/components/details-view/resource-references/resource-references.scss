@@ -80,7 +80,6 @@
 .resource-option-type {
   font: var(--mat-sys-body-medium);
   color: var(--mat-sys-on-surface-variant);
-  white-space: nowrap;
   line-height: 20px;
-  text-overflow: ellipsis;
+  overflow-wrap: break-word;
 }
