@@ -76,7 +76,7 @@ internal static class MaterialManagementConverter
     public static IReadOnlyList<MaterialContainerModel> ToModels(this IEnumerable<IMaterialContainer> containers)
         => containers.Select(c => c.ToModel()).ToArray();
 
-    public static PreAdvideModel ToModel(this MaterialPreAdvice preAdvice) => new()
+    public static PreAdviceModel ToModel(this MaterialPreAdvice preAdvice) => new()
     {
         ContainerId = preAdvice.ContainerId,
         DepartureReason = preAdvice.DepartureReason.ToModel()
@@ -94,7 +94,7 @@ internal static class MaterialManagementConverter
         _ => PreAdviceDepartureReason.Other
     };
 
-    public static MaterialPreAdvice ToBusiness(this PreAdvideModel model) => new()
+    public static MaterialPreAdvice ToBusiness(this PreAdviceModel model) => new()
     {
         ContainerId = model.ContainerId,
         DepartureReason = model.DepartureReason.ToBusiness()

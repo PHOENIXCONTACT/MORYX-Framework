@@ -29,7 +29,7 @@ namespace Moryx.Material.Endpoints;
 public class MaterialManagementController(IMaterialManagement materialManagement, IOrderIntegration? orderIntegration, ILogger<MaterialManagementController> logger) : ControllerBase
 {
     private readonly IMaterialManagement _materialManagement = materialManagement ?? throw new ArgumentNullException(nameof(materialManagement));
-    private readonly IOrderIntegration _orderIntegration = orderIntegration;
+    private readonly IOrderIntegration? _orderIntegration = orderIntegration;
 
     private static readonly JsonSerializerOptions _serializerOptions = new()
     {
@@ -69,7 +69,7 @@ public class MaterialManagementController(IMaterialManagement materialManagement
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Policy = MaterialPermissions.CanUpdate)]
-    public async Task<ActionResult<MaterialContainerModel>> PreAdviceAsync(PreAdvideModel preAdvice, CancellationToken cancellationToken)
+    public async Task<ActionResult<MaterialContainerModel>> PreAdviceAsync(PreAdviceModel preAdvice, CancellationToken cancellationToken)
     {
         if (preAdvice.ContainerId <= 0)
         {
@@ -181,14 +181,21 @@ public class MaterialManagementController(IMaterialManagement materialManagement
     [HttpGet("integrations/orders/available")]
     [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
     [Authorize(Policy = MaterialPermissions.CanRead)]
-    public ActionResult<bool> HasOrderIntegration() => Ok(_orderIntegration is null);
+    public ActionResult<bool> HasOrderIntegration() => Ok(_orderIntegration is not null);
 
     [HttpGet("integrations/orders")]
     [ProducesResponseType(typeof(OrderReferenceModel[]), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound, Description = $"Send if {nameof(HasOrderIntegration)} returns false.")]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Policy = MaterialPermissions.CanRead)]
     public ActionResult<OrderReference[]> GetOrderReferences()
     {
+        // ToDo: Fully fill problem detail responses
+        if (_orderIntegration is null)
+        {
+            return Problem("Order Integration is unavailable in this application", statusCode: StatusCodes.Status404NotFound);
+        }
+
         var references = _orderIntegration.GetOrderReferences();
         return Ok(references.ToModels());
     }

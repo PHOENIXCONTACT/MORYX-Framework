@@ -25,7 +25,7 @@ public enum PreAdviceDepartureReasonModel
 }
 
 [DataContract]
-public class PreAdvideModel
+public class PreAdviceModel
 {
     [DataMember]
     public long ContainerId { get; set; }
