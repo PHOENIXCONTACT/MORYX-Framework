@@ -1184,6 +1184,61 @@ public class ProductStorageTests
         Assert.That(loaded, Is.Not.Null);
     }
 
+    [Test(Description = "Saving a type that was not modified must not create a new version.")]
+    public async Task SaveUnchangedTypeShouldNotCreateNewVersion()
+    {
+        // Arrange
+        var watchface = new WatchFaceType
+        {
+            Name = "Unchanged",
+            Identity = new ProductIdentity("900005", 1),
+            Numbers = [3, 6, 9, 12],
+            Brand = "Jaques Lemans"
+        };
+        var id = await _storage.SaveTypeAsync(watchface);
+        var loaded = (WatchFaceType)await _storage.LoadTypeAsync(id);
+
+        // Act
+        await _storage.SaveTypeAsync(loaded);
+
+        // Assert
+        using var uow = _factory.Create();
+        var entity = await uow.GetRepository<IProductTypeRepository>().GetByKeyAsync(id);
+        Assert.That(entity.OldVersions, Is.Empty, "Saving an unchanged type must not create a new version");
+    }
+
+    [Test(Description = "The JsonColumn must only contain properties without a dedicated column and no base properties.")]
+    public async Task JsonColumnShouldOnlyContainUnmappedProperties()
+    {
+        // Arrange
+        var watchface = new WatchFaceType
+        {
+            Name = "OnlyUnmapped",
+            Identity = new ProductIdentity("900006", 1),
+            Numbers = [3, 6, 9, 12],
+            Brand = "Jaques Lemans"
+        };
+
+        // Act
+        var id = await _storage.SaveTypeAsync(watchface);
+
+        // Assert
+        using var uow = _factory.Create();
+        var json = (await uow.GetRepository<IProductTypeRepository>().GetByKeyAsync(id)).CurrentVersion.Text8;
+        Assert.That(json, Does.Contain(nameof(WatchFaceType.Numbers)),
+            "Properties without a dedicated column belong into the JsonColumn");
+        Assert.That(json, Does.Not.Contain(nameof(WatchFaceType.Brand)),
+            "Properties with a dedicated column must not be duplicated into the JsonColumn");
+        Assert.That(json, Does.Not.Contain(nameof(WatchFaceType.NumbersString)),
+            "Read only properties must not be written to the JsonColumn");
+        Assert.That(json, Does.Not.Contain(nameof(ProductType.Name)),
+            "Base properties have dedicated columns and must not be written to the JsonColumn");
+        Assert.That(json, Does.Not.Contain(nameof(ProductType.Identity)),
+            "Base properties have dedicated columns and must not be written to the JsonColumn");
+        Assert.That(json, Does.Not.Contain(nameof(ProductType.State)),
+            "Base properties have dedicated columns and must not be written to the JsonColumn");
+    }
+
     [Test(Description = "LoadTypesAsync(ProductQuery) returns fully populated product types if full loading is requested.")]
     public async Task LoadTypesQueryShouldReturnCompleteProductType()
     {
