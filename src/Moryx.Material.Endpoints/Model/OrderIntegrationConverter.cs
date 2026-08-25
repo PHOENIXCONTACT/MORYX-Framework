@@ -28,5 +28,22 @@ internal static class OrderIntegrationConverter
         }).ToArray();
     }
 
+    public static OrderReferenceModel ToModel(this OrderReference reference)
+    {
+        var status = reference.Status;
+        return new OrderReferenceModel()
+        {
+            FullName = typeof(OrderReference).FullName,
+            DisplayName = typeof(OrderReference).GetDisplayName(),
+            OrderNumber = reference.OrderNumber,
+            OperationNumber = reference.OperationNumber,
+            StatusKey = status is null ? -1 : (int)status,
+            StatusDisplayName = status?.GetDisplayName(),
+            ReferenceStateKey = (int)reference.State,
+            ReferenceStateDisplayName = reference.State.GetDisplayName(),
+            OperationSourceType = reference.Source?.GetType().GetDisplayName()
+        };
+    }
+
     #endregion
 }

@@ -33,5 +33,7 @@ public class MaterialContainerModel
     public MaterialStateClassificationModel State { get; set; }
 
     [DataMember]
-    public MaterialContainerTypeModel Type { get; set; }
+    public required MaterialContainerTypeModel Type { get; set; }
+
+    public List<ReferenceModel> References { get; set; } = [];
 }

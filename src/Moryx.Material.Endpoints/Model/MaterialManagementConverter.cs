@@ -3,6 +3,7 @@
 
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Factory;
+using Moryx.Material.Integrations.Orders;
 using Moryx.Material.States;
 using Moryx.Tools;
 
@@ -57,9 +58,12 @@ internal static class MaterialManagementConverter
         _ => PreAdviceDepartureReasonModel.Other
     };
 
+    public static IReadOnlyList<MaterialContainerModel> ToModels(this IEnumerable<IMaterialContainer> containers)
+        => containers.Select(c => c.ToModel()).ToArray();
+
     public static MaterialContainerModel ToModel(this IMaterialContainer container)
     {
-        return new MaterialContainerModel
+        var containerModel = new MaterialContainerModel
         {
             Id = container.Id,
             Name = container.Name,
@@ -71,10 +75,14 @@ internal static class MaterialManagementConverter
             State = container.State.ToModel(),
             Type = container.GetResourceType().ToModel()
         };
-    }
 
-    public static IReadOnlyList<MaterialContainerModel> ToModels(this IEnumerable<IMaterialContainer> containers)
-        => containers.Select(c => c.ToModel()).ToArray();
+        if (container is IOrderLinkedMaterialContainer { LinkedOrder: not null } orderLinkedContainer)
+        {
+            containerModel.References.Add(orderLinkedContainer.LinkedOrder.ToModel());
+        }
+
+        return containerModel;
+    }
 
     public static PreAdviceModel ToModel(this MaterialPreAdvice preAdvice) => new()
     {
