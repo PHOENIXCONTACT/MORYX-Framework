@@ -1,8 +1,8 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Processes;
+using Moryx.AbstractionLayer.Products;
 using Moryx.ControlSystem.Recipes;
 
 namespace Moryx.ControlSystem.Processes;
@@ -32,14 +32,21 @@ public static class IProcessExtensions
         /// not hold a product instance of type <typeparamref name="TInstance"/></exception>
         /// <exception cref="InvalidOperationException">Thrown if the given <paramref name="process"/>
         /// is no <see cref="ProductionProcess"/></exception>
+        [Obsolete("Use 'Moryx.AbstractionLayer.Processes.ProcessExtensions.Modify<TInstance>(Action<TInstance> setter)' instead")]
         public TInstance ModifyProductInstance<TInstance>(Action<TInstance> setter)
             where TInstance : ProductInstance
         {
             if (process is not ProductionProcess productionProcess)
+            {
                 throw new InvalidOperationException($"Cannot modify an {nameof(ProductInstance)} on a process of type {process.GetType()}");
+            }
+
             if (productionProcess.ProductInstance is not TInstance instance)
+            {
                 throw new InvalidCastException($"Cannot cast {nameof(ProductionProcess.ProductInstance)} of type " +
                                                $"{productionProcess?.ProductInstance?.GetType()} to {typeof(TInstance)}");
+            }
+
             setter.Invoke(instance);
             return instance;
         }
@@ -58,13 +65,20 @@ public static class IProcessExtensions
         /// ]]>
         /// </code>
         /// </example>
+        [Obsolete("Use 'Moryx.AbstractionLayer.Processes.ProcessExtensions.TryModify<TInstance>(Action<TInstance> setter)' instead")]
         public bool TryModifyProductInstance<TInstance>(Action<TInstance> setter)
             where TInstance : ProductInstance
         {
             if (process is not ProductionProcess productionProcess)
+            {
                 return false;
+            }
+
             if (productionProcess.ProductInstance is not TInstance instance)
+            {
                 return false;
+            }
+
             setter.Invoke(instance);
             return true;
         }
