@@ -5,8 +5,10 @@ using System.Drawing;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Moryx.AbstractionLayer.Products.Endpoints;
+using Moryx.AbstractionLayer.Workplans;
 using Moryx.AspNetCore;
 using Moryx.Serialization;
+using Moryx.Workplans.Validation;
 using Moryx.Workplans.Web.Models;
 using Moryx.Workplans.Web.Properties;
 
@@ -31,6 +33,7 @@ public class WorkplanEditingController : ControllerBase
         var workplans = await _workplans.LoadAllWorkplansAsync();
 
         var recipeSteps = _workplanEditing.AvailableSteps
+
             .Where(step => ModelConverter.ToClassification(step) != WorkplanNodeClassification.Subworkplan)
             .Select(WorkplanStepRecipe.FromStepType);
 
@@ -50,6 +53,7 @@ public class WorkplanEditingController : ControllerBase
 
         return recipeSteps.Concat(subWorkplans).ToArray();
     }
+
 
     [HttpPost("sessions")]
     [Authorize(Policy = WorkplanPermissions.CanEdit)]
@@ -137,8 +141,32 @@ public class WorkplanEditingController : ControllerBase
         [FromBody] WorkplanSessionModel sessionModel)
     {
         var session = _workplanEditing.OpenSession(sessionId);
+
+        if (session == null)
+        {
+            return NotFound(new MoryxExceptionResponse
+            {
+                Title = Strings.WorkplanEditingController_SessionNotFound
+            });
+        }
+
         UpdateSession(sessionModel, session);
+
+        var validation = WorkplanInstance.Validate(
+            session.Workplan,
+            ValidationAspect.DeadEnd | ValidationAspect.LoneWolf);
+
+        if (!validation.Success)
+        {
+            var errors = validation.Errors
+                .Select(error => error.Print(session.Workplan))
+                .ToArray();
+
+            return BadRequest(errors);
+        }
+
         await _workplans.SaveWorkplanAsync(session.Workplan);
+
         return ModelConverter.ConvertSession(session);
     }
 
