@@ -18,6 +18,7 @@ export type { MaterialContainerModel } from './models/material-container-model';
 export type { MaterialContainerTypeModel } from './models/material-container-type-model';
 export { MaterialStateClassificationModel } from './models/material-state-classification-model';
 export type { MethodEntry } from './models/method-entry';
+export type { OrderReferenceModel } from './models/order-reference-model';
 export { PreAdviceDepartureReasonModel } from './models/pre-advice-departure-reason-model';
 export type { PreAdvideModel } from './models/pre-advide-model';
 export type { ProblemDetails } from './models/problem-details';

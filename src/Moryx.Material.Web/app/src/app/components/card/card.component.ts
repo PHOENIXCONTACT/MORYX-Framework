@@ -19,6 +19,7 @@ export class CardComponent {
   container = input.required<MaterialContainerModel>();
   private dialog = inject(MatDialog);
   private materialApi = inject(MaterialManagementService)
+  private materialFlow = inject(MaterialFlowService);
   private snackbarService = inject(SnackbarService);
 
   preAdvice() {

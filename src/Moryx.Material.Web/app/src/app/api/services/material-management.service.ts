@@ -21,8 +21,11 @@ import { getAll } from '../fn/material-management/get-all';
 import { GetAll$Params } from '../fn/material-management/get-all';
 import { getTypes } from '../fn/material-management/get-types';
 import { GetTypes$Params } from '../fn/material-management/get-types';
+import { hasOrderIntegration } from '../fn/material-management/has-order-integration';
+import { HasOrderIntegration$Params } from '../fn/material-management/has-order-integration';
 import { MaterialContainerModel } from '../models/material-container-model';
 import { MaterialContainerTypeModel } from '../models/material-container-type-model';
+import { OrderReferenceModel } from '../models/order-reference-model';
 import { preAdviceAsync } from '../fn/material-management/pre-advice-async';
 import { PreAdviceAsync$Params } from '../fn/material-management/pre-advice-async';
 
@@ -32,28 +35,28 @@ export class MaterialManagementService extends BaseService {
     super(config, http);
   }
 
-  /** Path part for operation `getAll()` */
-  static readonly GetAllPath = '/api/moryx/materials/containers';
+  /** Path part for operation `getContainers()` */
+  static readonly GetContainersPath = '/api/moryx/materials/containers';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getAll()` instead.
+   * To access only the response body, use `getContainers()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getAll$Response(params?: GetAll$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<MaterialContainerModel>>> {
-    const obs = getAll(this.http, this.rootUrl, params, context);
+  getContainers$Response(params?: GetContainers$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<MaterialContainerModel>>> {
+    const obs = getContainers(this.http, this.rootUrl, params, context);
     return obs;
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getAll$Response()` instead.
+   * To access the full response (for headers, for example), `getContainers$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getAll(params?: GetAll$Params, context?: HttpContext): Observable<Array<MaterialContainerModel>> {
-    const resp = this.getAll$Response(params, context);
+  getContainers(params?: GetContainers$Params, context?: HttpContext): Observable<Array<MaterialContainerModel>> {
+    const resp = this.getContainers$Response(params, context);
     return resp.pipe(
       map((r: StrictHttpResponse<Array<MaterialContainerModel>>): Array<MaterialContainerModel> => r.body)
     );
@@ -137,6 +140,60 @@ export class MaterialManagementService extends BaseService {
     const resp = this.containerChanges$Response(params, context);
     return resp.pipe(
       map((r: StrictHttpResponse<MaterialContainerModel>): MaterialContainerModel => r.body)
+    );
+  }
+
+  /** Path part for operation `hasOrderIntegration()` */
+  static readonly HasOrderIntegrationPath = '/api/moryx/materials/integrations/orders/available';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `hasOrderIntegration()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  hasOrderIntegration$Response(params?: HasOrderIntegration$Params, context?: HttpContext): Observable<StrictHttpResponse<boolean>> {
+    const obs = hasOrderIntegration(this.http, this.rootUrl, params, context);
+    return obs;
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `hasOrderIntegration$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  hasOrderIntegration(params?: HasOrderIntegration$Params, context?: HttpContext): Observable<boolean> {
+    const resp = this.hasOrderIntegration$Response(params, context);
+    return resp.pipe(
+      map((r: StrictHttpResponse<boolean>): boolean => r.body)
+    );
+  }
+
+  /** Path part for operation `getOrderReferences()` */
+  static readonly GetOrderReferencesPath = '/api/moryx/materials/integrations/orders';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getOrderReferences()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getOrderReferences$Response(params?: GetOrderReferences$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<OrderReferenceModel>>> {
+    const obs = getOrderReferences(this.http, this.rootUrl, params, context);
+    return obs;
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getOrderReferences$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getOrderReferences(params?: GetOrderReferences$Params, context?: HttpContext): Observable<Array<OrderReferenceModel>> {
+    const resp = this.getOrderReferences$Response(params, context);
+    return resp.pipe(
+      map((r: StrictHttpResponse<Array<OrderReferenceModel>>): Array<OrderReferenceModel> => r.body)
     );
   }
 

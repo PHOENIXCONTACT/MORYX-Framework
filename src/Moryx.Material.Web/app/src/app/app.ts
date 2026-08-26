@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, computed, effect, inject, OnInit, resource, signal } from '@angular/core';
+import { Component, computed, effect, inject, OnDestroy, OnInit, resource, Signal, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
     LanguageService,
@@ -16,13 +16,13 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
-import { filter, firstValueFrom, lastValueFrom } from 'rxjs';
+import { filter, firstValueFrom, lastValueFrom, SubscriptionLike } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DialogAddMaterialContainerComponent } from './components/dialogs/dialog-add-material-container/dialog-add-material-container.component';
 import { MaterialFlowService } from './services/material-flow.service';
 import { MaterialManagementService, ResourceModificationService } from './api/services';
-import { MaterialContainerModel } from './api/models';
+import { MaterialContainerModel, OrderReferenceModel } from './api/models';
 
 @Component({
     selector: 'app-root',
@@ -39,7 +39,7 @@ import { MaterialContainerModel } from './api/models';
         MatTabsModule
     ]
 })
-export class App {
+export class App implements OnInit, OnDestroy {
     private route = inject(Router);
     private routeEvent = toSignal(this.route.events.pipe(filter(x => x && x.type === EventType.NavigationEnd)));
     private dialog = inject(MatDialog);
@@ -51,17 +51,21 @@ export class App {
     });
     private resourceApi = inject(ResourceModificationService);
     private snackbarService = inject(SnackbarService);
-    view = computed(() => {
+    views = Views;
+    private subscriptions: SubscriptionLike[] = [];
+
+    protected view = computed(() => {
         const event = this.routeEvent();
         const url = event?.urlAfterRedirects ?? "";
         return url.includes(Views.history) ? Views.history :
             url.includes(Views.summary) ? Views.summary :
                 Views.cards;
     });
-    views = Views;
-    selectedOrders = signal<string[]>([]);
-    selectedProducts = signal<string[]>([]);
-    
+    protected selectedOrders = signal<string[]>([]);
+    protected selectedProducts = signal<string[]>([]);
+    protected ordersSource = signal<OrderReferenceModel[]>([]);
+    protected hasOrderIntegration = signal<boolean>(false);
+
     constructor() {
         effect(() => {
             const filters = [];
@@ -73,7 +77,27 @@ export class App {
             }
             this.materialFlow.executeFilter(filters);
         })
+    }
 
+    ngOnInit(): void {
+        const sub = this.materialApi.hasOrderIntegration().subscribe(response => {
+            if (response) {
+                this.hasOrderIntegration.set(true);
+                this.fetchLinkedOrders();
+            }
+        })
+        this.subscriptions.push(sub);
+    }
+
+    fetchLinkedOrders() {
+        const orderSub = this.materialApi.getOrderReferences().subscribe(orders => {
+            this.ordersSource.set(orders);
+        });
+        this.subscriptions.push(orderSub);
+    }
+
+    ngOnDestroy(): void {
+        this.subscriptions.forEach(sub => sub.unsubscribe());
     }
 
     products() {
@@ -102,6 +126,9 @@ export class App {
                 return;
             }
             this.snackbarService.showSuccess("Material Container Created!");
+            if (this.hasOrderIntegration()) {
+                this.fetchLinkedOrders();
+            }
         }
         )
     }

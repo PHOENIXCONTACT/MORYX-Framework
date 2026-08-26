@@ -2,22 +2,19 @@
     <main class="main-container">
         <section class="topbar-container">
             <section class="topbar-filter-section">
+                @if(hasOrderIntegration()){
                 <mat-form-field floatLabel="always" class="full-width" appearance="outline">
                     <mat-label>Orders</mat-label>
-                    <mat-select (valueChange)="selectedOrders.set($event)" value="" multiple placeholder="Filter by order">
-                        <mat-option value="order1">Order 1000</mat-option>
-                        <mat-option value="order2">Order 1001</mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <mat-form-field floatLabel="always" class="full-width" appearance="outline">
-                    <mat-label>Products</mat-label>
-                    <mat-select [(value)]="selectedProducts" multiple placeholder="Filter by products">
-                        @for (product of products(); track $index)
+                    <mat-select (valueChange)="selectedOrders.set($event)" value="" multiple
+                        placeholder="Filter by order">
+                        @for (order of ordersSource() ; track $index)
                         {
-                        <mat-option [value]="product">{{product}}</mat-option>
+                        <mat-option [value]="order.orderNumber">{{ order.orderNumber
+                            }}</mat-option>
                         }
                     </mat-select>
                 </mat-form-field>
+                }
             </section>
             <section class="topbar-view-section">
                 <nav mat-tab-nav-bar [tabPanel]="tabPanel">

@@ -12,13 +12,13 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { MaterialContainerModel } from '../../models/material-container-model';
+import { OrderReferenceModel } from '../../models/order-reference-model';
 
-export interface GetAll$Params {
+export interface GetOrderReferences$Params {
 }
 
-export function getAll(http: HttpClient, rootUrl: string, params?: GetAll$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<MaterialContainerModel>>> {
-  const rb = new RequestBuilder(rootUrl, getAll.PATH, 'get');
+export function getOrderReferences(http: HttpClient, rootUrl: string, params?: GetOrderReferences$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<OrderReferenceModel>>> {
+  const rb = new RequestBuilder(rootUrl, getOrderReferences.PATH, 'get');
   if (params) {
   }
 
@@ -27,9 +27,9 @@ export function getAll(http: HttpClient, rootUrl: string, params?: GetAll$Params
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<MaterialContainerModel>>;
+      return r as StrictHttpResponse<Array<OrderReferenceModel>>;
     })
   );
 }
 
-getAll.PATH = '/api/moryx/materials/containers';
+getOrderReferences.PATH = '/api/moryx/materials/integrations/orders';
