@@ -410,7 +410,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver, IOpcUaDriverAddSubscription
     /// <inheritdoc />
     public IMessageChannel Channel(string identifier)
     {
-        return State.GetNode(identifier);
+        return State.GetNode(identifier).GetAwaiter().GetResult();
     }
 
     /// <inheritdoc/>
@@ -510,7 +510,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver, IOpcUaDriverAddSubscription
         //Subscribe default Nodes
         foreach (var nodeId in DefaultSubscriptions ?? [])
         {
-            var node = State.GetNode(nodeId);
+            var node = await State.GetNode(nodeId);
             if (node == null)
             {
                 Logger.Log(LogLevel.Warning, "Node with the id {nodeId} was not found", nodeId);
@@ -618,7 +618,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver, IOpcUaDriverAddSubscription
         }
 
         var innerNodeId = new NodeId(nodeId.Identifier, nodeId.NamespaceIndex);
-        var node = State.GetNode(innerNodeId.ExpandedNodeIdString());
+        var node = State.GetNode(innerNodeId.ExpandedNodeIdString()).GetAwaiter().GetResult();
         if (node != null && node.Subscribed)
         {
             node.ReceivedMessage(value);
@@ -637,15 +637,15 @@ public class OpcUaDriver : Driver, IOpcUaDriver, IOpcUaDriverAddSubscription
     /// <inheritdoc/>
     public void WriteNode(string nodeId, object payload)
     {
-        var node = State.GetNode(nodeId);
+        var node = State.GetNode(nodeId).GetAwaiter().GetResult();
         WriteNode(node, payload).GetAwaiter().GetResult();
     }
 
     /// <inheritdoc />
-    public Task WriteNodeAsync(string nodeId, object payload, CancellationToken cancellationToken = default)
+    public async Task WriteNodeAsync(string nodeId, object payload, CancellationToken cancellationToken = default)
     {
-        var node = State.GetNode(nodeId);
-        return State.WriteNodeAsync(node, payload, cancellationToken);
+        var node = await State.GetNode(nodeId);
+        await State.WriteNodeAsync(node, payload, cancellationToken);
     }
 
     internal async Task OnWriteNode(OpcUaNode node, object payload, CancellationToken cancellationToken = default)
@@ -700,7 +700,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver, IOpcUaDriverAddSubscription
 
     internal async Task<DataValueResult> OnReadValueOfNode(string identifier, CancellationToken cancellationToken)
     {
-        var node = State.GetNode(identifier);
+        var node = await State.GetNode(identifier);
         if (node == null)
         {
             return DataValueResult.WithError($"The node \"{identifier}\" was not found");
@@ -735,7 +735,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver, IOpcUaDriverAddSubscription
             return;
         }
 
-        var node = State.GetNode(msg.Identifier);
+        var node = State.GetNode(msg.Identifier).GetAwaiter().GetResult();
         const string errorMsg = "When trying to read the value of the node, ";
         if (node == null)
         {
@@ -803,7 +803,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver, IOpcUaDriverAddSubscription
     [EntrySerialize]
     internal async Task WriteNode(string identifier, string valueString, CancellationToken cancellationToken)
     {
-        var node = State.GetNode(identifier);
+        var node = await State.GetNode(identifier);
         var errormsg = "When trying to read the value of the node, ";
         if (node == null)
         {

@@ -14,9 +14,9 @@ internal class RunningState(OpcUaDriver context, StateMachines.StateBase.StateMa
         await base.OnEnterAsync(cancellationToken);
     }
 
-    internal override OpcUaNode GetNode(string identifier)
+    internal override Task<OpcUaNode> GetNode(string identifier)
     {
-        return Context.GetNodeAsync(identifier).GetAwaiter().GetResult();
+        return Context.GetNodeAsync(identifier);
     }
 
     internal override Task<DataValueResult> ReadValueAsync(string identifier, CancellationToken cancellationToken)
@@ -24,10 +24,10 @@ internal class RunningState(OpcUaDriver context, StateMachines.StateBase.StateMa
         return Context.OnReadValueOfNode(identifier, cancellationToken);
     }
 
-    internal override void AddSubscription(string nodeId)
+    internal override async Task AddSubscription(string nodeId)
     {
-        var node = GetNode(nodeId);
-        Context.AddSubscriptionToSession(node);
+        var node = await GetNode(nodeId);
+        await Context.AddSubscriptionToSession(node);
     }
 
     internal override Task WriteNodeAsync(OpcUaNode node, object payload, CancellationToken cancellationToken)

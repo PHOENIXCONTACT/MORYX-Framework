@@ -148,7 +148,6 @@ public class OpcUaTestBase
         nodeReaderMock.Setup(nr => nr.ReadNodeAsync(It.IsAny<string>(), It.IsAny<NamespaceTable>(), It.IsAny<ISession>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((string nodeId, NamespaceTable _, ISession __, CancellationToken ___) =>
             {
-                //var nodeIdObj =;
                 var referenceDescription = nodes
                     .FirstOrDefault((kv) => kv.Key.ToString() == ExpandedNodeId.Parse(nodeId, _namespaceTable).ToString())
                     .Value;

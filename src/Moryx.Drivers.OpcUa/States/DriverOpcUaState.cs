@@ -40,14 +40,15 @@ internal abstract class DriverOpcUaState(OpcUaDriver context, StateBase.StateMap
         Context.Reconnect(e);
     }
 
-    internal virtual OpcUaNode GetNode(string identifier)
+    internal virtual Task<OpcUaNode> GetNode(string identifier)
     {
-        return null;
+        return Task.FromResult<OpcUaNode>(null);
     }
 
-    internal virtual void AddSubscription(string nodeId)
+    internal virtual Task AddSubscription(string nodeId)
     {
         Context.SaveSubscriptionToBeAdded(nodeId);
+        return Task.CompletedTask;
     }
 
     internal virtual Task<DataValueResult> ReadValueAsync(string identifier, CancellationToken cancellationToken)
@@ -58,11 +59,6 @@ internal abstract class DriverOpcUaState(OpcUaDriver context, StateBase.StateMap
     internal virtual Task WriteNodeAsync(OpcUaNode node, object payload, CancellationToken cancellationToken)
     {
         return InvalidStateAsync();
-    }
-
-    internal virtual void Send()
-    {
-        InvalidState();
     }
 
     [StateDefinition(typeof(DisconnectedState), IsInitial = true)]
