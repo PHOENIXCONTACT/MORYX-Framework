@@ -141,6 +141,7 @@ internal class ResourceInterceptor : IInterceptor
         }
 
         // Fallback: find by name and parameter types
+        // NonPublic is required because explicit interface implementations compile as private methods
         var paramTypes = interfaceMethod.GetParameters().Select(p => p.ParameterType).ToArray();
         var resolved = targetType.GetMethod(interfaceMethod.Name,
             BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null, paramTypes, null);
@@ -205,15 +206,14 @@ internal class ResourceInterceptor : IInterceptor
             }
         }
 
-        // Determine expected argument type from the delegate signature
-        var handlerType = handler.GetType();
-        var expectedArgType = handlerType.IsGenericType
-            ? handlerType.GetGenericArguments()[0]
-            : typeof(EventArgs);
-
         // Convert resource-typed event args to proxies
         if (args is IEnumerable<IResource> resourceArgs and not IResource)
         {
+            // Determine expected argument type from the delegate signature for collection casting
+            var handlerType = handler.GetType();
+            var expectedArgType = handlerType.IsGenericType
+                ? handlerType.GetGenericArguments()[0]
+                : typeof(EventArgs);
             var converted = resourceArgs.Select(ConvertToProxy).ToArray();
             args = CastCollection(converted, expectedArgType);
         }
