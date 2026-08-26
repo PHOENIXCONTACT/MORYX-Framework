@@ -12,7 +12,6 @@ internal class InitializingSubscriptionsState(OpcUaDriver context, StateMachines
     public override async Task OnEnterAsync(CancellationToken cancellationToken)
     {
         await base.OnEnterAsync(cancellationToken);
-        Context.RemoveSubscription();
         await Context.SubscribeSavedNodesAsync(cancellationToken);
     }
 
@@ -22,14 +21,14 @@ internal class InitializingSubscriptionsState(OpcUaDriver context, StateMachines
         await Context.ReadDeviceSetAsync(cancellationToken);
     }
 
-    internal override OpcUaNode GetNode(string identifier)
+    internal override Task<OpcUaNode> GetNode(string identifier)
     {
-        return Context.GetNodeAsync(identifier).GetAwaiter().GetResult();
+        return Context.GetNodeAsync(identifier);
     }
 
-    internal override void AddSubscription(string nodeId)
+    internal override async Task AddSubscription(string nodeId)
     {
-        var node = GetNode(nodeId);
-        Context.AddSubscriptionToSession(node);
+        var node = await GetNode(nodeId);
+        await Context.AddSubscriptionToSession(node);
     }
 }
