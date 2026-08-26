@@ -19,7 +19,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { filter, firstValueFrom, lastValueFrom, SubscriptionLike } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { HttpErrorResponse } from '@angular/common/http';
-import { DialogAddMaterialContainerComponent } from './components/dialogs/dialog-add-material-container/dialog-add-material-container.component';
+import { DialogAddMaterialContainerComponent } from './dialogs/dialog-add-material-container/dialog-add-material-container.component';
 import { MaterialFlowService } from './services/material-flow.service';
 import { MaterialManagementService, ResourceModificationService } from './api/services';
 import { MaterialContainerModel, OrderReferenceModel } from './api/models';

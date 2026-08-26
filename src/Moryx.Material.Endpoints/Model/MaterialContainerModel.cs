@@ -35,5 +35,6 @@ public class MaterialContainerModel
     [DataMember]
     public required MaterialContainerTypeModel Type { get; set; }
 
+    [DataMember]
     public List<ReferenceModel> References { get; set; } = [];
 }

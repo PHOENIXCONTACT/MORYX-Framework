@@ -9,6 +9,7 @@
 import { ContainerHostModel } from '../models/container-host-model';
 import { MaterialContainerTypeModel } from '../models/material-container-type-model';
 import { MaterialStateClassificationModel } from '../models/material-state-classification-model';
+import { ReferenceModel } from '../models/reference-model';
 export interface MaterialContainerModel {
   containerHost?: ContainerHostModel;
   id?: number;
@@ -16,7 +17,8 @@ export interface MaterialContainerModel {
   material?: string | null;
   name?: string | null;
   quantity?: number;
+  references?: Array<ReferenceModel> | null;
   state?: MaterialStateClassificationModel;
-  type?: MaterialContainerTypeModel;
+  type: MaterialContainerTypeModel;
   unit?: string | null;
 }

@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
-import { PreAdviceDepartureReasonModel, PreAdvideModel, ResourceModel } from 'src/app/api/models';
+import { PreAdviceDepartureReasonModel, PreAdviceModel, ResourceModel } from 'src/app/api/models';
 import { MaterialManagementService } from 'src/app/api/services';
 import { MatFormField, MatInputModule, MatLabel } from "@angular/material/input";
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -27,7 +27,7 @@ export class DialogPreAdviceComponent {
   }
 
   advice() {
-    const request: PreAdvideModel = {
+    const request: PreAdviceModel = {
       containerId: this.data.id,
       departureReason: this.reason()
     };

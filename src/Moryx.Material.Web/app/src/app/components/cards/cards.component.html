@@ -1,4 +1,4 @@
 @for (container of containers(); track container)
 {
-<app-card [links]="[]" [container]="container"/>
+<app-card [container]="container" (delete)="(deleteContainer($event))"/>
 }

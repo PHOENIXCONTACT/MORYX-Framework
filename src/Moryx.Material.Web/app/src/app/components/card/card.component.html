@@ -12,9 +12,9 @@
             <div class="card-chips">
                 <mat-chip-set aria-label="Material links">
                     <mat-chip>State: {{container().state}}</mat-chip>
-                    @for (link of links(); track $index)
+                    @for (reference of container().references; track $index)
                     {
-                    <mat-chip>{{link}}</mat-chip>
+                    <mat-chip>{{ materialReferenceToString(reference) }}</mat-chip>
                     }
                 </mat-chip-set>
             </div>

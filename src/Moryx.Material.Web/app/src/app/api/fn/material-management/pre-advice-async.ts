@@ -13,10 +13,10 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 import { MaterialContainerModel } from '../../models/material-container-model';
-import { PreAdvideModel } from '../../models/pre-advide-model';
+import { PreAdviceModel } from '../../models/pre-advice-model';
 
 export interface PreAdviceAsync$Params {
-      body?: PreAdvideModel
+      body?: PreAdviceModel
 }
 
 export function preAdviceAsync(http: HttpClient, rootUrl: string, params?: PreAdviceAsync$Params, context?: HttpContext): Observable<StrictHttpResponse<MaterialContainerModel>> {

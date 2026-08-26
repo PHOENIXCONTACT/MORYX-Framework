@@ -20,9 +20,10 @@ export { MaterialStateClassificationModel } from './models/material-state-classi
 export type { MethodEntry } from './models/method-entry';
 export type { OrderReferenceModel } from './models/order-reference-model';
 export { PreAdviceDepartureReasonModel } from './models/pre-advice-departure-reason-model';
-export type { PreAdvideModel } from './models/pre-advide-model';
+export type { PreAdviceModel } from './models/pre-advice-model';
 export type { ProblemDetails } from './models/problem-details';
 export type { ReferenceFilter } from './models/reference-filter';
+export type { ReferenceModel } from './models/reference-model';
 export type { ReferenceTypeModel } from './models/reference-type-model';
 export { ReferenceValue } from './models/reference-value';
 export type { ResourceModel } from './models/resource-model';
