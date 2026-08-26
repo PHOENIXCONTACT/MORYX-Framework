@@ -53,6 +53,18 @@ jobs:
 
       - name: Generate SBOMs
         shell: bash
+        env:
+          METADATA_TEMPLATE: |
+            <?xml version="1.0" encoding="utf-8"?>
+            <bom xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                xmlns="http://cyclonedx.org/schema/bom/1.6">
+              <metadata>
+                <component type="${INNER_PROJECT_TYPE}" bom-ref="${PROJECT_GIT_PURL}">
+                  <purl>${PROJECT_PURL}</purl>
+                </component>
+              </metadata>
+            </bom>
         run: |
           product_version=$(tr -d '[:space:]' < VERSION)
 
@@ -65,16 +77,6 @@ jobs:
           output_path=$(pwd)/sboms
           mkdir -p "$output_path"
 
-          metadata_template='<?xml version="1.0" encoding="utf-8"?>
-<bom xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-    xmlns="http://cyclonedx.org/schema/bom/1.6">
-  <metadata>
-    <component type="${INNER_PROJECT_TYPE}" bom-ref="${PROJECT_GIT_PURL}">
-      <purl>${PROJECT_PURL}</purl>
-    </component>
-  </metadata>
-</bom>'
           metadata_template_name="bom-metadata-template.xml"
           metadata_name="bom-metadata.xml"
 
@@ -117,7 +119,7 @@ jobs:
             export PROJECT_GIT_PURL
 
             if [[ ! -f "$project_dir/$metadata_template_name" ]]; then
-              printf '%s\n' "$metadata_template" > "$project_dir/$metadata_template_name"
+              printf '%s\n' "$METADATA_TEMPLATE" > "$project_dir/$metadata_template_name"
               echo "Created $metadata_template_name"
             else
               echo "$project_dir/$metadata_template_name already exists"
