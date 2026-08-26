@@ -9,7 +9,10 @@ using Moryx.Logging;
 using Opc.Ua;
 using Opc.Ua.Client;
 
-namespace Moryx.Drivers.OpcUa.Nodes;
+// Ignore warning until next major version
+#pragma warning disable IDE0130 // Namespace does not match folder structure
+namespace Moryx.Drivers.OpcUa;
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 
 /// <summary>
 /// MessageChannel representing an Opc Ua node
@@ -60,7 +63,7 @@ public class OpcUaNode : IMessageChannel
     public string Description { get; set; }
 
     /// <summary>
-    /// List of all Subnodes. This list will be empty, when the node is no object node
+    /// List of all Subnodes. This property is null, when the node is no object node
     /// </summary>
     public List<OpcUaNode> Nodes { get; set; } = [];
 
@@ -118,6 +121,14 @@ public class OpcUaNode : IMessageChannel
         Driver = driver;
         _logger = logger;
 
+    }
+
+    /// <inheritdoc />
+    [Obsolete("Not needed, as there doesn't seem to be any use for this variant.")]
+    public OpcUaNode(IOpcUaDriver driver, IModuleLogger logger, string namespaceUri, string nodeIdValue)
+        : this(driver, logger)
+    {
+        NodeId = new ExpandedNodeId(nodeIdValue, namespaceUri);
     }
 
     /// <inheritdoc />
