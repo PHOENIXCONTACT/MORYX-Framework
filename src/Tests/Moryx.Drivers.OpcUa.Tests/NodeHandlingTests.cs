@@ -3,7 +3,6 @@
 
 using Moq;
 using Moryx.AbstractionLayer.Drivers;
-using Moryx.Drivers.OpcUa.Nodes;
 using Moryx.Modules;
 using NUnit.Framework;
 using Opc.Ua;
@@ -138,7 +137,7 @@ public class NodeHandlingTests : OpcUaTestBase
         //Arrange
         var wait = new AutoResetEvent(false);
         const string alias = "nodeAlias";
-        var nodeId = NodeId.ToExpandedNodeId(_rootNodes.First().Key, _namespaceTable);
+        var nodeId = NodeId.ToExpandedNodeId(_rootNodes.First().Key, NamespaceTable);
         _driver._nodeIdAliasDictionary.Add(alias, nodeId.ToString());
         _driver.StateChanged += (sender, e) =>
         {

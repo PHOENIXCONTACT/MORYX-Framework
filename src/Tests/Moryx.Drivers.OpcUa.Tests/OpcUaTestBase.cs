@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moryx.AbstractionLayer.Drivers;
 using Moryx.Drivers.OpcUa.Factories;
-using Moryx.Drivers.OpcUa.Nodes;
 using Moryx.Drivers.OpcUa.Tests.Mocks;
 using Moryx.Logging;
 using Moryx.Modules;
@@ -24,10 +23,9 @@ public class OpcUaTestBase
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
     protected Mock<ISession> _sessionMock;
     protected Dictionary<NodeId, ReferenceDescription> _rootNodes;
-    protected ReferenceDescription _root;
     protected OpcUaDriver _driver;
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
-    protected NamespaceTable _namespaceTable = CreateNamespaceTable();
+    protected NamespaceTable NamespaceTable { get => CreateNamespaceTable(); }
 
     protected static NamespaceTable CreateNamespaceTable()
     {
@@ -75,11 +73,11 @@ public class OpcUaTestBase
     public async Task BasicSetup()
     {
         ReflectionTool.TestMode = true;
-        var nextRefs = CreateNodes(_namespaceTable);
+        var nextRefs = CreateNodes(NamespaceTable);
         var rootRefs = new ReferenceDescriptionCollection { nextRefs[0], nextRefs[2] };
         var ns1Level1Refs = new ReferenceDescriptionCollection { nextRefs[1] };
         _sessionMock = new Mock<ISession>();
-        _sessionMock.Setup(s => s.NamespaceUris).Returns(_namespaceTable);
+        _sessionMock.Setup(s => s.NamespaceUris).Returns(NamespaceTable);
         _sessionMock.Setup(s => s.AddSubscription(It.IsAny<Subscription>()))
             .Returns(true);
 
@@ -149,12 +147,12 @@ public class OpcUaTestBase
             .ReturnsAsync((string nodeId, NamespaceTable _, ISession __, CancellationToken ___) =>
             {
                 var referenceDescription = nodes
-                    .FirstOrDefault((kv) => kv.Key.ToString() == ExpandedNodeId.Parse(nodeId, _namespaceTable).ToString())
+                    .FirstOrDefault((kv) => kv.Key.ToString() == ExpandedNodeId.Parse(nodeId, NamespaceTable).ToString())
                     .Value;
 
                 if (referenceDescription is not null)
                 {
-                    var node = new OpcUaNode(_driver, null, referenceDescription.NodeId, _namespaceTable)
+                    var node = new OpcUaNode(_driver, null, referenceDescription.NodeId, NamespaceTable)
                     {
                         DisplayName = referenceDescription.DisplayName.ToString(),
                         BrowseName = referenceDescription.BrowseName,
