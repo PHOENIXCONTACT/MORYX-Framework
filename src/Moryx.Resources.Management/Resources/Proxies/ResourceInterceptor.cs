@@ -20,7 +20,7 @@ internal class ResourceInterceptor : IInterceptor
     // Cache for resolved target methods to avoid repeated GetInterfaceMap calls
     private readonly Dictionary<MethodInfo, MethodInfo> _methodCache = new();
 
-    // Event delegate fields: eventName -> multicast delegate
+    // Event delegate fields: qualified event key -> multicast delegate
     private readonly Dictionary<string, Delegate> _eventDelegates = new();
 
     public ResourceInterceptor(ResourceProxy mixin, IResourceTypeController typeController)
@@ -42,18 +42,18 @@ internal class ResourceInterceptor : IInterceptor
             return;
         }
 
-        // Event add/remove
+        // Event add/remove - use qualified key to support same-named events on different interfaces
         if (method.IsSpecialName)
         {
             if (method.Name.StartsWith("add_"))
             {
-                HandleEventAdd(method.Name[4..], invocation.Arguments[0] as Delegate);
+                HandleEventAdd(CreateEventKey(declaringType!, method.Name[4..]), invocation.Arguments[0] as Delegate);
                 return;
             }
 
             if (method.Name.StartsWith("remove_"))
             {
-                HandleEventRemove(method.Name[7..], invocation.Arguments[0] as Delegate);
+                HandleEventRemove(CreateEventKey(declaringType!, method.Name[7..]), invocation.Arguments[0] as Delegate);
                 return;
             }
         }
@@ -103,6 +103,12 @@ internal class ResourceInterceptor : IInterceptor
     /// Display name used by <see cref="ResourceProxyBase.ToString"/>
     /// </summary>
     public string GetDisplayName() => _mixin.ToString();
+
+    /// <summary>
+    /// Qualified event key to distinguish same-named events on different interfaces
+    /// </summary>
+    public static string CreateEventKey(Type declaringType, string eventName) =>
+        $"{declaringType.FullName}.{eventName}";
 
     private MethodInfo ResolveTargetMethod(Type targetType, MethodInfo interfaceMethod)
     {

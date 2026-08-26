@@ -57,13 +57,16 @@ internal class ResourceProxyBuilder
         {
             foreach (var eventInfo in iface.GetEvents(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public))
             {
-                // Skip if already processed (same event on multiple interfaces)
-                if (!processedEvents.Add(eventInfo.Name))
+                // Use qualified key to support same-named events on different interfaces
+                var eventKey = ResourceInterceptor.CreateEventKey(iface, eventInfo.Name);
+
+                // Skip if already processed (same event inherited on multiple interfaces)
+                if (!processedEvents.Add(eventKey))
                 {
                     continue;
                 }
 
-                var handler = CreateEventForwarder(eventInfo, eventInfo.Name, interceptor);
+                var handler = CreateEventForwarder(eventInfo, eventKey, interceptor);
                 if (handler is null)
                 {
                     continue;

@@ -30,7 +30,8 @@ public class TypeControllerTests
                 typeof(ReferenceResource),
                 typeof(NonPublicResource),
                 typeof(ResourceWithImplicitApi),
-                typeof(ExplicitEventResource)
+                typeof(ExplicitEventResource),
+                typeof(SharedEventNameResource)
             ]);
 
         _typeController = new ResourceTypeController
@@ -384,6 +385,34 @@ public class TypeControllerTests
         Assert.That(eventSender, Is.Not.Null);
         Assert.That(eventSender, Is.EqualTo(proxy));
         Assert.That(eventValue, Is.EqualTo(99));
+    }
+
+    [Test(Description = "Two interfaces with the same event name are forwarded independently")]
+    public void ForwardSameNamedEventsFromDifferentInterfaces()
+    {
+        // Arrange
+        var instance = new SharedEventNameResource { Id = 40 };
+        var proxy = _typeController.GetProxy(instance);
+        var firstProxy = (IFirstEventSource)proxy;
+        var secondProxy = (ISecondEventSource)proxy;
+
+        int firstValue = 0, secondValue = 0;
+        firstProxy.StatusChanged += (_, v) => firstValue = v;
+        secondProxy.StatusChanged += (_, v) => secondValue = v;
+
+        // Act: raise only the first event
+        instance.RaiseFirst(42);
+
+        // Assert: only the first handler fires
+        Assert.That(firstValue, Is.EqualTo(42));
+        Assert.That(secondValue, Is.EqualTo(0));
+
+        // Act: raise only the second event
+        instance.RaiseSecond(99);
+
+        // Assert: only the second handler fires
+        Assert.That(secondValue, Is.EqualTo(99));
+        Assert.That(firstValue, Is.EqualTo(42));
     }
 
     [Test(Description = "Proxy returns null for Name and Capabilities without throwing ProxyDetachedException")]
