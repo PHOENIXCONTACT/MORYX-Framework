@@ -31,7 +31,8 @@ public class TypeControllerTests
                 typeof(NonPublicResource),
                 typeof(ResourceWithImplicitApi),
                 typeof(ExplicitEventResource),
-                typeof(SharedEventNameResource)
+                typeof(SharedEventNameResource),
+                typeof(CustomDelegateResource)
             ]);
 
         _typeController = new ResourceTypeController
@@ -413,6 +414,17 @@ public class TypeControllerTests
         // Assert: only the second handler fires
         Assert.That(secondValue, Is.EqualTo(99));
         Assert.That(firstValue, Is.EqualTo(42));
+    }
+
+    [Test(Description = "Events with custom delegate types throw NotSupportedException during proxy creation")]
+    public void ThrowOnCustomDelegateEvent()
+    {
+        // Arrange
+        var instance = new CustomDelegateResource { Id = 41 };
+
+        // Act & Assert
+        var ex = Assert.Throws<NotSupportedException>(() => _typeController.GetProxy(instance));
+        Assert.That(ex!.Message, Does.Contain(nameof(ICustomDelegateResource.StatusReport)));
     }
 
     [Test(Description = "Proxy returns null for Name and Capabilities without throwing ProxyDetachedException")]

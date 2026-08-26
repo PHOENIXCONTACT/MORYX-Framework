@@ -67,10 +67,6 @@ internal class ResourceProxyBuilder
                 }
 
                 var handler = CreateEventForwarder(eventInfo, eventKey, interceptor);
-                if (handler is null)
-                {
-                    continue;
-                }
 
                 // Use the add-method of the interface - the runtime resolves to the correct
                 // implementation, including explicit interface implementations.
@@ -99,7 +95,8 @@ internal class ResourceProxyBuilder
             return CreateGenericForwarder(argType, eventName, interceptor);
         }
 
-        return null;
+        throw new NotSupportedException($"Event '{targetEvent.Name}' uses unsupported delegate type '{handlerType}'. " +
+                                        "Only EventHandler and EventHandler<T> are supported.");
     }
 
     private static Delegate CreateGenericForwarder(Type argType, string eventName, ResourceInterceptor interceptor)
