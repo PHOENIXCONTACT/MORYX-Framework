@@ -14,7 +14,7 @@ namespace Moryx.Resources.Management.Proxies;
 /// </summary>
 internal class ResourceProxy : IResourceProxy
 {
-    private readonly Dictionary<string, Delegate> _eventHandlers = new();
+    private readonly List<(EventInfo Event, Delegate Handler)> _eventHandlers = new();
 
     /// <summary>
     /// Back-reference to the Castle-generated proxy object, set after creation
@@ -43,9 +43,9 @@ internal class ResourceProxy : IResourceProxy
     /// Register an event handler subscribed on the target, so it can be unsubscribed on detach.
     /// Called by <see cref="ResourceProxyBuilder"/> during proxy creation.
     /// </summary>
-    public void RegisterEventHandler(string eventName, Delegate handler)
+    public void RegisterEventHandler(EventInfo eventInfo, Delegate handler)
     {
-        _eventHandlers[eventName] = handler;
+        _eventHandlers.Add((eventInfo, handler));
     }
 
     /// <summary>
@@ -60,11 +60,9 @@ internal class ResourceProxy : IResourceProxy
 
         ProxyTarget.CapabilitiesChanged -= OnCapabilitiesChanged;
 
-        var targetType = ProxyTarget.GetType();
-        foreach (var (eventName, handler) in _eventHandlers)
+        foreach (var (eventInfo, handler) in _eventHandlers)
         {
-            var eventInfo = targetType.GetEvent(eventName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-            eventInfo?.GetRemoveMethod(nonPublic: true)?.Invoke(ProxyTarget, [handler]);
+            eventInfo.GetRemoveMethod(nonPublic: true)?.Invoke(ProxyTarget, [handler]);
         }
 
         _eventHandlers.Clear();

@@ -51,7 +51,6 @@ internal class ResourceProxyBuilder
     private static void WireTargetEvents(Resource target, IReadOnlyList<Type> interfaces,
         ResourceProxy mixin, ResourceInterceptor interceptor)
     {
-        var targetType = target.GetType();
         var processedEvents = new HashSet<string>();
 
         foreach (var iface in interfaces)
@@ -64,21 +63,16 @@ internal class ResourceProxyBuilder
                     continue;
                 }
 
-                var targetEvent = targetType.GetEvent(eventInfo.Name,
-                    BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                if (targetEvent is null)
-                {
-                    continue;
-                }
-
-                var handler = CreateEventForwarder(targetEvent, eventInfo.Name, interceptor);
+                var handler = CreateEventForwarder(eventInfo, eventInfo.Name, interceptor);
                 if (handler is null)
                 {
                     continue;
                 }
 
-                targetEvent.GetAddMethod(nonPublic: true)!.Invoke(target, [handler]);
-                mixin.RegisterEventHandler(eventInfo.Name, handler);
+                // Use the add-method of the interface - the runtime resolves to the correct
+                // implementation, including explicit interface implementations.
+                eventInfo.GetAddMethod(nonPublic: true)!.Invoke(target, [handler]);
+                mixin.RegisterEventHandler(eventInfo, handler);
             }
         }
     }
