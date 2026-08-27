@@ -272,7 +272,7 @@ internal class MaterialManagementFacade : FacadeBase, IMaterialManagement
         await LineageStorage.RecordAsync(new DeregisterLineageEvent
         {
             ContainerId = id,
-            FinalQuantity = finalQuantity
+            FinalQuantity = (decimal)finalQuantity
         }, cancellationToken);
     }
 
