@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { OrderByInstanceItem, OrderNumber } from '../summaries/summaries.component';
 
 @Component({
   selector: 'app-summary',
@@ -9,5 +10,4 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './summary.component.scss',
 })
 export class SummaryComponent {
- 
 }

@@ -1,1 +1,19 @@
-<app-summary/>
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>Summary</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <section class="summary-row">
+            @for (summaryMap of generateSummaries(); track $index)
+            {
+            <dl>
+                <dt class="order-number"> Order : {{ summaryMap[0] }}</dt>
+                @for (sum of summaryMap[1]; track $index)
+                {
+                <dd> {{ sum.material }} - <b> {{ sum.materialInstanceCount }} </b></dd>
+                }
+            </dl>
+            }
+        </section>
+    </mat-card-content>
+</mat-card>
