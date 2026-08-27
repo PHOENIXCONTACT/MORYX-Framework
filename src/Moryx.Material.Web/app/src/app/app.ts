@@ -45,9 +45,9 @@ export class App implements OnInit, OnDestroy {
     private dialog = inject(MatDialog);
     private materialFlow = inject(MaterialFlowService);
     private materialApi = inject(MaterialManagementService);
-    private containersSource = toSignal(this.materialApi.getAll());
+    private containersSource = toSignal(this.materialApi.getContainers());
     private containerResource = resource({
-        loader: () : Promise<MaterialContainerModel[]> => firstValueFrom(this.materialApi.getAll())
+        loader: () : Promise<MaterialContainerModel[]> => firstValueFrom(this.materialApi.getContainers())
     });
     private resourceApi = inject(ResourceModificationService);
     private snackbarService = inject(SnackbarService);

@@ -17,8 +17,12 @@ import { StrictHttpResponse } from '../strict-http-response';
 
 import { containerChanges } from '../fn/material-management/container-changes';
 import { ContainerChanges$Params } from '../fn/material-management/container-changes';
-import { getAll } from '../fn/material-management/get-all';
-import { GetAll$Params } from '../fn/material-management/get-all';
+import { deregister } from '../fn/material-management/deregister';
+import { Deregister$Params } from '../fn/material-management/deregister';
+import { getContainers } from '../fn/material-management/get-containers';
+import { GetContainers$Params } from '../fn/material-management/get-containers';
+import { getOrderReferences } from '../fn/material-management/get-order-references';
+import { GetOrderReferences$Params } from '../fn/material-management/get-order-references';
 import { getTypes } from '../fn/material-management/get-types';
 import { GetTypes$Params } from '../fn/material-management/get-types';
 import { hasOrderIntegration } from '../fn/material-management/has-order-integration';
@@ -113,6 +117,33 @@ export class MaterialManagementService extends BaseService {
     const resp = this.preAdviceAsync$Response(params, context);
     return resp.pipe(
       map((r: StrictHttpResponse<MaterialContainerModel>): MaterialContainerModel => r.body)
+    );
+  }
+
+  /** Path part for operation `deregister()` */
+  static readonly DeregisterPath = '/api/moryx/materials/containers/{id}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `deregister()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  deregister$Response(params: Deregister$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    const obs = deregister(this.http, this.rootUrl, params, context);
+    return obs;
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `deregister$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  deregister(params: Deregister$Params, context?: HttpContext): Observable<void> {
+    const resp = this.deregister$Response(params, context);
+    return resp.pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 

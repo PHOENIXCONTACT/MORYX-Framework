@@ -22,6 +22,7 @@ import { MaterialFlowService } from 'src/app/services/material-flow.service';
 })
 export class CardComponent {
   container = input.required<MaterialContainerModel>();
+  delete = output<number>();
   private dialog = inject(MatDialog);
   private materialApi = inject(MaterialManagementService)
   private materialFlow = inject(MaterialFlowService);

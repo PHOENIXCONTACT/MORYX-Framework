@@ -12,6 +12,8 @@ export type { GetTypes$Params as GetTypes$Params } from './fn/material-managemen
 export { getTypes as getTypes } from './fn/material-management/get-types';
 export type { PreAdviceAsync$Params as PreAdviceAsync$Params } from './fn/material-management/pre-advice-async';
 export { preAdviceAsync as preAdviceAsync } from './fn/material-management/pre-advice-async';
+export type { Deregister$Params as Deregister$Params } from './fn/material-management/deregister';
+export { deregister as deregister } from './fn/material-management/deregister';
 export type { ContainerChanges$Params as ContainerChanges$Params } from './fn/material-management/container-changes';
 export { containerChanges as containerChanges } from './fn/material-management/container-changes';
 export type { HasOrderIntegration$Params as HasOrderIntegration$Params } from './fn/material-management/has-order-integration';

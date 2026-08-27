@@ -2,7 +2,7 @@ import { Component, computed, effect, inject, OnDestroy, OnInit, resource, signa
 import { CardComponent } from "../card/card.component";
 import { MaterialContainer } from 'src/app/models/material-container';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { filter, SubscriptionLike } from 'rxjs';
+import { filter, firstValueFrom, SubscriptionLike } from 'rxjs';
 import { MaterialFlowService } from 'src/app/services/material-flow.service';
 import { MaterialManagementService } from 'src/app/api/services';
 import { MaterialContainerModel, OrderReferenceModel, ResourceTypeModel } from 'src/app/api/models';
@@ -23,8 +23,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class CardsComponent implements OnInit, OnDestroy {
   private materialFlow = inject(MaterialFlowService);
   private containerApi = inject(MaterialManagementService);
-  private containersSource = toSignal(this.containerApi.getAll());
-  containers = signal<MaterialContainerModel[]>([]);
+  private containersResource = resource({
+    loader: () => firstValueFrom(this.containerApi.getContainers())
+  })
   private stream$ = fromEventStream<MaterialContainerModel>(environment.rootUrl + MaterialManagementService.ContainerChangesPath);
   private subscriptions: SubscriptionLike[] = [];
   private snackbarService = inject(SnackbarService);
@@ -78,5 +79,3 @@ export class CardsComponent implements OnInit, OnDestroy {
     return container.references?.some(reference => reference.fullName?.toLowerCase().includes("orders") && (reference as OrderReferenceModel).orderNumber == keyword) ?? false;
   }
 }
-
-
