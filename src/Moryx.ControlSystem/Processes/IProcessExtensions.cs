@@ -41,12 +41,7 @@ public static class IProcessExtensions
                 throw new InvalidOperationException($"Cannot modify an {nameof(ProductInstance)} on a process of type {process.GetType()}.");
             }
 
-            if (productionProcess.ProductInstance is not TInstance instance)
-            {
-                throw new InvalidCastException($"Cannot cast {nameof(ProductionProcess.ProductInstance)} of type " +
-                                               $"{productionProcess?.ProductInstance?.GetType()} to {typeof(TInstance)}");
-            }
-
+            var instance = (TInstance)productionProcess.ProductInstance;
             setter.Invoke(instance);
             return instance;
         }
