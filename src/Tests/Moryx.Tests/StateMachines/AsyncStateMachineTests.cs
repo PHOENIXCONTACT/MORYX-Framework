@@ -78,25 +78,17 @@ public class AsyncStateMachineTests
     [Test(Description = "Create a StateMachine with a specific initial state key.")]
     public async Task CreateWithSpecificInitialState()
     {
-        // Assert
+        // Arrange
         var context = new MyAsyncContext();
-        await StateMachine.ForAsyncContext(context).WithAsync<MyAsyncStateBase>();
-        await context.State.AtoBAsync();
+        var bkey = MyAsyncStateBase.StateB;
 
         // Act
-        var reloadedContext = new MyAsyncContext();
-        var bkey = context.State.Key;
-        await StateMachine.ForAsyncContext(reloadedContext).WithAsync<MyAsyncStateBase>(bkey);
+        await StateMachine.ForAsyncContext(context).WithAsync<MyAsyncStateBase>(bkey);
 
         // Assert
-        Assert.ThrowsAsync<InvalidOperationException>(() => reloadedContext.State.InitialAsync());
-
-        // Act
-        await context.State.BtoCAsync();
-
-        // Assert
-        Assert.That(context.BtoCTriggered);
-        Assert.That(context.CtoATriggered, Is.False);
+        using var _ = Assert.EnterMultipleScope();
+        Assert.That(context.State.Key == bkey);
+        Assert.ThrowsAsync<InvalidOperationException>(() => context.State.InitialAsync());
     }
 
     [Test(Description = "Brings the StateMachine to B and force to A without exit the current or enter the forced state.")]

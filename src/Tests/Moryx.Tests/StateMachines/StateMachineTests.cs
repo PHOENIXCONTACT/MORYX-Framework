@@ -89,25 +89,17 @@ public class StateMachineTests
     [Test(Description = "Create a StateMachine with a specific initial state key.")]
     public void CreateWithSpecificInitialState()
     {
-        // Assert
+        // Arrange
         var context = new MyContext();
-        StateMachine.ForContext(context).With<MyStateBase>();
-        context.State.AtoB();
+        var bkey = MyStateBase.StateB;
 
         // Act
-        var reloadedContext = new MyContext();
-        var bkey = context.State.Key;
-        StateMachine.ForContext(reloadedContext).With<MyStateBase>(bkey);
+        StateMachine.ForContext(context).With<MyStateBase>(bkey);
 
         // Assert
-        Assert.Throws<InvalidOperationException>(() => reloadedContext.State.Initial());
-
-        // Act
-        context.State.BtoC();
-
-        // Assert
-        Assert.That(context.BtoCTriggered);
-        Assert.That(context.CtoATriggered, Is.False);
+        using var _ = Assert.EnterMultipleScope();
+        Assert.That(context.State.Key == bkey);
+        Assert.Throws<InvalidOperationException>(() => context.State.Initial());
     }
 
     [Test(Description = "Create a StateMachine with an unknown initial state key.")]
