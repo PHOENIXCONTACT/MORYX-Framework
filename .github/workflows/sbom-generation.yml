@@ -51,6 +51,21 @@ jobs:
         run: |
           dotnet restore
 
+      - name: Determine version
+        run: |
+          base_version=$(tr -d '[:space:]' < VERSION)
+          if [ -z "$base_version" ]; then
+            echo "VERSION file is empty"
+            exit 1
+          fi
+          if [[ "$GITHUB_REF" =~ ^refs/tags/v([0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
+            product_version="${BASH_REMATCH[1]}"
+          else
+            product_version="${base_version}-dev.${GITHUB_SHA:0:8}"
+          fi
+          echo "PRODUCT_VERSION=$product_version" >> "$GITHUB_ENV"
+          echo "Version: $product_version"
+
       - name: Generate SBOMs
         shell: bash
         env:
@@ -66,13 +81,7 @@ jobs:
               </metadata>
             </bom>
         run: |
-          product_version=$(tr -d '[:space:]' < VERSION)
-
-          if [ -z "$product_version" ]; then
-            echo "VERSION file is empty"
-            exit 1
-          fi
-
+          product_version="$PRODUCT_VERSION"
           GLOBAL_GIT_PURL="pkg:git/${GITHUB_SERVER_URL#https://}/$GITHUB_REPOSITORY@${GITHUB_SHA:0:8}"
           output_path=$(pwd)/sboms
           mkdir -p "$output_path"
@@ -241,13 +250,7 @@ jobs:
       - name: Merge all product SBOMs
         shell: bash
         run: |
-          product_version=$(tr -d '[:space:]' < VERSION)
-
-          if [ -z "$product_version" ]; then
-            echo "VERSION file is empty"
-            exit 1
-          fi
-
+          product_version="$PRODUCT_VERSION"
           GLOBAL_GIT_PURL="pkg:git/${GITHUB_SERVER_URL#https://}/$GITHUB_REPOSITORY@${GITHUB_SHA:0:8}"
           output_path=$(pwd)/sboms
           project_name="${GITHUB_REPOSITORY##*/}"
