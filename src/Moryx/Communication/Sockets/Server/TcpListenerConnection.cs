@@ -260,7 +260,8 @@ public class TcpListenerConnection : IBinaryConnection, IStateContext
         if (!Validator.Validate(message))
         {
             // If you send us crap we shut you off!
-            Reconnect();
+            Logger.LogWarning("Validation of received message failed. Reconnecting in {delayMs}ms.", _config.RetryWaitMs);
+            Reconnect(_config.RetryWaitMs);
             return;
         }
 
