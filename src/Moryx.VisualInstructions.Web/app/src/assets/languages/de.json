@@ -1,15 +1,23 @@
 {
-    "APP": {
-      "TITLE": "Anweisungen",
-      "INSTRUCTIONS": "Anweisungen",
-      "SELECT_INSTRUCTOR": "Anzeige auswählen",
-      "NO_INSTRUCTOR_MESSAGE": "Du hast leider keine Anzeige für diesen Browser ausgewählt. Dadurch wirst du hier auch keine Anweisungen angezeigt bekommen."
-    },
-    "VISUAL_INSTRUCTIONS": {
-      "FAILED_LOADING": "Die Verbindung zum Server ist leider fehlgeschlagen. Bitte überprüfe deine Netzwerkverbindung oder versuch es später nochmal.",
-      "EMPTY_STATE_HEADER": "Keine Anweisungen",
-      "EMPTY_STATE_TEXT": "Fertig! Wir melden uns wieder hier, wenn es etwas zu tun gibt."
-    },
-    "DISMISS": "Okay"
-  }
-  
+  "APP": {
+"NO_INSTRUCTOR_MESSAGE": "Du hast leider keine Anzeige für diesen Browser ausgewählt. Dadurch wirst du hier auch keine Anweisungen angezeigt bekommen."
+  },
+  "SETTINGS_DIALOG": {
+    "TITLE": "Einstellungen",
+    "SELECT_INSTRUCTOR": "Anzeige auswählen",
+    "FOCUS_MODE": "Fokusmodus",
+    "FOCUS_MODE_NEWEST": "Neueste nach vorne",
+    "FOCUS_MODE_NEWEST_DESCRIPTION": "Immer zur neuesten Anweisung wechseln, wenn sie eintrifft.",
+    "FOCUS_MODE_STAY": "Aktuelle beibehalten",
+    "FOCUS_MODE_STAY_DESCRIPTION": "Immer bei der aktuellen Anweisung bleiben, neue erscheinen im Hintergrund.",
+    "FOCUS_MODE_INPUT": "Eingabe beibehalten",
+    "FOCUS_MODE_INPUT_DESCRIPTION": "Nur bei der aktuellen Anweisung bleiben, solange Eingaben bearbeitet werden, sonst zur neuesten wechseln."
+  },
+  "VISUAL_INSTRUCTIONS": {
+"EMPTY_STATE_HEADER": "Keine Anweisungen",
+    "EMPTY_STATE_TEXT": "Fertig! Wir melden uns wieder hier, wenn es etwas zu tun gibt."
+  },
+  "DISMISS": "Okay",
+  "CANCEL": "ABBRECHEN",
+  "SAVE": "SPEICHERN"
+}

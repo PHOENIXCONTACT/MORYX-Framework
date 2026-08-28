@@ -35,8 +35,7 @@
           </div>
         }
       </div>
-      <mat-card-actions class="card-action-buttons"
-        >
+      <mat-card-actions class="card-action-buttons">
         @if ((instructions().length > 1)) {
           <div class="carousel-buttons">
             <button class="previous-instruction hover-button" mat-mini-fab
@@ -45,7 +44,7 @@
               <mat-icon>keyboard_double_arrow_left</mat-icon>
             </button>
             <span class="instruction-counter">{{activeInstructionIndex()+1}}/{{instructions().length}}</span>
-            <button  mat-mini-fab class="previous-instruction hover-button" aria-label="next instruction"
+            <button mat-mini-fab class="previous-instruction hover-button" aria-label="next instruction"
               (click)="onSwipeLeft()" [disabled]="activeInstructionIndex() >= instructions().length -1">
               <mat-icon>keyboard_double_arrow_right</mat-icon>
             </button>
