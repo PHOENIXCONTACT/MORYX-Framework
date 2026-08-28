@@ -139,7 +139,7 @@ internal class WorkplanEditingSession : IWorkplanEditingSession
         if (sourceNode is IConnector start)
         {
             if (targetNode is IConnector)
-                throw new InvalidOperationException("Cannot connect start to End or Failed");
+                throw new InvalidOperationException("Cannot connect start to End or Failed.");
 
             if (start == ((IWorkplanStep)targetNode).Inputs[targetIndex])
                 return;

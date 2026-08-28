@@ -171,7 +171,7 @@ internal class OrderManagementFacade : IOrderManagement, IFacadeControl
             }
             catch
             {
-                throw new ArgumentException("Operation source must be serializable", nameof(source));
+                throw new ArgumentException("Operation source must be serializable.", nameof(source));
             }
         }
 
@@ -253,7 +253,7 @@ internal class OrderManagementFacade : IOrderManagement, IFacadeControl
     {
         var operationData = OperationDataPool.Get(operation);
         if (operationData == null)
-            throw new ArgumentException($"Operation with identifier {operation.Identifier} not found");
+            throw new ArgumentException($"Operation with identifier {operation.Identifier} not found.");
 
         return operationData.UpdateAsync(update, cancellationToken);
     }
@@ -262,7 +262,7 @@ internal class OrderManagementFacade : IOrderManagement, IFacadeControl
     {
         var operationData = OperationDataPool.Get(operation);
         if (operationData == null)
-            throw new ArgumentException($"Operation with identifier {operation.Identifier} not found");
+            throw new ArgumentException($"Operation with identifier {operation.Identifier} not found.");
 
         return operationData;
     }

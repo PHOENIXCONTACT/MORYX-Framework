@@ -143,7 +143,7 @@ internal class ResourceManagementFacade : FacadeBase, IResourceManagement
 
         var resource = ResourceGraph.Get(id);
         if (resource == null)
-            throw new KeyNotFoundException($"No resource with Id {id} found!");
+            throw new KeyNotFoundException($"No resource with Id {id} found.");
 
         var result = await modifier(resource);
         if (result)
