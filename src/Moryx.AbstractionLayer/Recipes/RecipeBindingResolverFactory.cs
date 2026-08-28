@@ -64,7 +64,7 @@ public class RecipeBindingResolverFactory : BindingResolverFactory
 
         protected override bool Update(object source, object value)
         {
-            throw new InvalidOperationException("Workplan can not be updated!");
+            throw new InvalidOperationException("Workplan can not be updated.");
         }
     }
 
@@ -86,7 +86,7 @@ public class RecipeBindingResolverFactory : BindingResolverFactory
 
         protected override bool Update(object source, object value)
         {
-            throw new InvalidOperationException("Step can not be updated!");
+            throw new InvalidOperationException("Step can not be updated.");
         }
     }
 }

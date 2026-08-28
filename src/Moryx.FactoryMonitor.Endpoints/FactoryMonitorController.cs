@@ -476,7 +476,7 @@ public class FactoryMonitorController : ControllerBase
 
         if (resource is not IMachineLocation locationResource)
         {
-            throw new ArgumentException($"This cannot happen, unless there is a bug in the {_resourceManager}", nameof(location));
+            throw new ArgumentException($"This cannot happen, unless there is a bug in the {_resourceManager}.", nameof(location));
         }
 
         // Location is referencing a cell directly

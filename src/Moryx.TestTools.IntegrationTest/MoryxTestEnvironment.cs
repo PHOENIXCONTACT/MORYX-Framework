@@ -44,7 +44,7 @@ public class MoryxTestEnvironment
         _moduleType = serverModuleType;
 
         if (!serverModuleType.IsAssignableTo(typeof(IServerModule)))
-            throw new ArgumentException("Provided parameter is no server module", nameof(serverModuleType));
+            throw new ArgumentException("Provided parameter is no server module.", nameof(serverModuleType));
 
         var dependencyTypes = serverModuleType.GetProperties()
             .Where(p => p.GetCustomAttribute<RequiredModuleApiAttribute>() is not null)
@@ -54,7 +54,7 @@ public class MoryxTestEnvironment
         foreach (var type in dependencyTypes)
         {
             var mock = dependencyMocks.SingleOrDefault(m => type.IsAssignableFrom(m.Object.GetType())) ??
-                       throw new ArgumentException($"Missing {nameof(Mock)} for dependency of type {type} of facade type {serverModuleType}", nameof(dependencyMocks));
+                       throw new ArgumentException($"Missing {nameof(Mock)} for dependency of type {type} of facade type {serverModuleType}.", nameof(dependencyMocks));
             services.AddSingleton(type, mock.Object);
             services.AddSingleton(typeof(IServerModule), mock.Object);
         }

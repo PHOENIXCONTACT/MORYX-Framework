@@ -126,7 +126,7 @@ public static class ContainerLoadComponentsExtension
             return;
 
         if (!typeof(ISubInitializer).IsAssignableFrom(att.Initializer))
-            throw new InvalidCastException($"SubInitializer {att.Initializer.Name} of component {implementation.Name} does not implement interface ISubInitializer");
+            throw new InvalidCastException($"SubInitializer {att.Initializer.Name} of component {implementation.Name} does not implement interface ISubInitializer.");
 
         container.Register(att.Initializer, [typeof(ISubInitializer), att.Initializer], null, LifeCycle.Singleton);
     }

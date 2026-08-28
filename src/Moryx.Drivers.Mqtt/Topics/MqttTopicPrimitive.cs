@@ -159,7 +159,7 @@ public class MqttTopicPrimitive : MqttTopic<IConvertible>
             TypeCode.UInt32 => "System.UInt32",
             TypeCode.UInt64 => "System.UInt64",
             TypeCode.String => "System.String",
-            _ => throw new NotImplementedException("This MessageType is not implemented"),
+            _ => throw new NotImplementedException("This MessageType is not implemented."),
         };
     }
     #endregion

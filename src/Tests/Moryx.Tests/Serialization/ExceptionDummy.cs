@@ -9,6 +9,6 @@ public class ExceptionDummy
 {
     public int ThrowsException
     {
-        get { throw new Exception("BAM!"); }
+        get { throw new Exception("BAM."); }
     }
 }

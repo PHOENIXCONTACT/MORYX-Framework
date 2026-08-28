@@ -84,7 +84,7 @@ internal sealed class ManagedMqttClient : IManagedMqttClient
 
         if (_internalClient.Options == null)
         {
-            throw new InvalidOperationException("call StartAsync before publishing messages");
+            throw new InvalidOperationException("call StartAsync before publishing messages.");
         }
 
         MqttTopicValidator.ThrowIfInvalid(applicationMessage.Topic);

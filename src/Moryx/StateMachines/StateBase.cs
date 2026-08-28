@@ -87,18 +87,18 @@ public abstract class StateBase
         // Check the base type
         if (!stateBaseType.IsAbstract)
         {
-            throw new ArgumentException("The state base class must be abstract!");
+            throw new ArgumentException("The state base class must be abstract.");
         }
 
         if (!typeof(StateBase).IsAssignableFrom(stateBaseType))
         {
-            throw new ArgumentException($"'{stateBaseType.Name}' class is not a valid 'StateBase'!");
+            throw new ArgumentException($"'{stateBaseType.Name}' class is not a valid 'StateBase'.");
         }
 
         // Load all fields
         // 1. Get all fields which are static constant with the attribute
         // 2. let attribute and create an anonymous array
-        StateDefinition[] definedStates =
+        var definedStates =
             (from stateField in GetStateFields(stateBaseType)
              let att = stateField.GetCustomAttribute<StateDefinitionAttribute>()
              select new StateDefinition((int)stateField.GetValue(null), att.IsInitial, att.Type)).ToArray();
@@ -110,7 +110,7 @@ public abstract class StateBase
         foreach (var definedState in definedStates)
         {
             var instance = Activator.CreateInstance(definedState.Type, context, stateMap) as StateBase
-                ?? throw new InvalidOperationException($"Could not create instance of State type {definedState.Type.Name}");
+                ?? throw new InvalidOperationException($"Could not create instance of State type {definedState.Type.Name}.");
 
             instance.Key = definedState.Key;
 
@@ -139,7 +139,7 @@ public abstract class StateBase
             // If an initial key is set, we check if it exists
             if (definedStates.All(s => s.Key != initialKey.Value))
             {
-                throw new InvalidOperationException($"There was no state defined with key: {initialKey}");
+                throw new InvalidOperationException($"There was no state defined with key: {initialKey}.");
             }
         }
         else
@@ -148,12 +148,15 @@ public abstract class StateBase
             var initialStates = definedStates.Where(s => s.IsInitial).ToArray();
             if (initialStates.Length == 0)
             {
-                throw new InvalidOperationException($"No state is marked as initial. Set one using the {nameof(StateDefinitionAttribute)} or pass an initial key explicitly");
+                throw new InvalidOperationException($"No state is marked as initial. " +
+                                                    $"Set one using the {nameof(StateDefinitionAttribute)} or pass an initial key explicitly.");
             }
-            else if (initialStates.Length > 1)
+
+            if (initialStates.Length > 1)
             {
                 var initialStateString = string.Join(", ", initialStates.Select(i => i.Type.Name));
-                throw new InvalidOperationException($"Multiple states are marked as initial: '{initialStateString}'. Define exactly one or set an initial state explicitly");
+                throw new InvalidOperationException($"Multiple states are marked as initial: '{initialStateString}'. " +
+                                                    $"Define exactly one or set an initial state explicitly.");
             }
         }
 
@@ -162,14 +165,15 @@ public abstract class StateBase
         if (duplicateStates.Count != 0)
         {
             var typeNames = string.Join(", ", duplicateStates.Select(type => type.Name));
-            throw new InvalidOperationException($"State types are only allowed once: {typeNames}");
+            throw new InvalidOperationException($"State types are only allowed once: {typeNames}.");
         }
+
         // Group by key to find statemachine keys that are used multiple times
         var duplicateKeys = FindDuplicates(definedStates, s => s.Key);
         if (duplicateKeys.Count != 0)
         {
             var stateKeys = string.Join(", ", duplicateKeys);
-            throw new InvalidOperationException($"State keys are only allowed once: {stateKeys}");
+            throw new InvalidOperationException($"State keys are only allowed once: {stateKeys}.");
         }
     }
 
@@ -225,7 +229,7 @@ public abstract class StateBase
     public sealed class StateMap : Dictionary<int, StateBase>;
 
     /// <summary>
-    /// Temporary container for state metadata 
+    /// Temporary container for state metadata
     /// </summary>
     private record StateDefinition(int Key, bool IsInitial, Type Type);
 }

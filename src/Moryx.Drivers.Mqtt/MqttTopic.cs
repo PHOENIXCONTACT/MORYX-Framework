@@ -62,7 +62,7 @@ public abstract class MqttTopic : Resource, IMessageChannel
                     // $ to match end of string
                     pattern += "$";
                     RegexTopic = new Regex(pattern);
-                    
+
                     var subscribeTopic = value.Replace(".", "__");
                     subscribeTopic = new Regex(@"\{\w+\|#\}").Replace(subscribeTopic, "#");
                     SubscribedTopic = new Regex(@"({\w*})").Replace(subscribeTopic, "+");
@@ -351,7 +351,7 @@ public abstract class MqttTopic<TMessage> : MqttTopic, IMessageChannel
         {
             Logger.Log(LogLevel.Error, "Message {0} has the wrong Type. It is {1} instead of {2}",
                 payload, payload.GetType(), typeof(TMessage));
-            throw new ArgumentException("Message " + payload + " has the wrong Type. It is " + payload.GetType() + " instead of " + typeof(TMessage));
+            throw new ArgumentException("Message " + payload + " has the wrong Type. It is " + payload.GetType() + " instead of " + typeof(TMessage) + ".");
         }
 
         await MqttDriver.SendInternalAsync(this, payload, cancellationToken);
@@ -366,13 +366,13 @@ public abstract class MqttTopic<TMessage> : MqttTopic, IMessageChannel
             topic = identifierMessage.Identifier;
             if (topic.Contains('{'))
             {
-                throw new ArgumentException("Topic " + topic + " of a IdentifierMessage contains placeholders");
+                throw new ArgumentException("Topic " + topic + " of a IdentifierMessage contains placeholders.");
             }
 
             if (!Matches(topic))
             {
                 throw new ArgumentException("Topic " + topic + " of the IdentifierMessage" +
-                                            " does not match the topic defined in the Resource");
+                                            " does not match the topic defined in the Resource.");
             }
         }
         else
@@ -382,7 +382,7 @@ public abstract class MqttTopic<TMessage> : MqttTopic, IMessageChannel
         }
         if (topic.Contains('#') || topic.Contains('+'))
         {
-            throw new ArgumentException("Topic to be published on contains wildcards: " + topic);
+            throw new ArgumentException("Topic to be published on contains wildcards: " + topic + ".");
         }
 
         if (topic.Contains('{'))

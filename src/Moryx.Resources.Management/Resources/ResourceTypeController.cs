@@ -120,7 +120,7 @@ internal class ResourceTypeController : IResourceTypeController, IResourceTypeTr
     public Resource Create(string type)
     {
         if (!_typeCache.TryGetValue(type, out var linker))
-            throw new KeyNotFoundException($"No resource of type {type} found!");
+            throw new KeyNotFoundException($"No resource of type {type} found.");
         if (!linker.Creatable)
             throw new InvalidOperationException($"The resource of type {type} is not creatable.");
 

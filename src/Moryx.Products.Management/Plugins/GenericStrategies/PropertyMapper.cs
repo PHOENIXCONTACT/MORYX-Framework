@@ -49,14 +49,14 @@ public abstract class ColumnMapper<TColumn> : IPropertyMapper
         // Create accessor for the column property
         Column = typeof(IGenericColumns).GetProperty(config.Column);
         if (Column == null || Column.PropertyType != typeof(TColumn))
-            throw new ArgumentException($"Column not found or type mismatch {config.PropertyName}");
+            throw new ArgumentException($"Column not found or type mismatch {config.PropertyName}.");
 
         ColumnAccessor = ReflectionTool.PropertyAccessor<IGenericColumns, TColumn>(Column);
 
         // Retrieve and validate properties
         Property = TargetType.GetProperty(config.PropertyName);
         if (Property == null)
-            throw new ArgumentException($"Target type {TargetType.Name} does not have a property {config.PropertyName}");
+            throw new ArgumentException($"Target type {TargetType.Name} does not have a property {config.PropertyName}.");
 
         // Create delegates for the object property as well
         ObjectAccessor = CreatePropertyAccessor(Property);

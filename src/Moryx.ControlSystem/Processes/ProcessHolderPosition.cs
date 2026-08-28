@@ -147,7 +147,7 @@ public class ProcessHolderPosition : Resource, IProcessHolderPosition
     {
         if (!(Session is ActivityStart activityStart))
         {
-            throw new InvalidOperationException("Can only complete the activity if the current session is ActivityStart");
+            throw new InvalidOperationException("Can only complete the activity if the current session is ActivityStart.");
         }
 
         Session = activityStart.CreateResult(result);
@@ -159,7 +159,7 @@ public class ProcessHolderPosition : Resource, IProcessHolderPosition
     {
         if (Process != null)
         {
-            throw new InvalidOperationException("Can not mount a position currently holding a process");
+            throw new InvalidOperationException("Can not mount a position currently holding a process.");
         }
 
         Session = mountInformation.Session;

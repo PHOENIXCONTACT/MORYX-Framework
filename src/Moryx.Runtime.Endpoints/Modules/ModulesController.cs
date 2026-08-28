@@ -257,7 +257,7 @@ public class ModulesController : ControllerBase
         }
         catch (Exception e)
         {
-            throw new Exception($"Error while invoking function: {method.DisplayName}", e);
+            throw new Exception($"Error while invoking function: {method.DisplayName}.", e);
         }
     }
 

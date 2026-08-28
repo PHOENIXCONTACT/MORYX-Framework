@@ -142,7 +142,7 @@ internal class ProductConverter
         var partLinkBase = FindGenericBaseDefinition(linkType, typeof(ProductPartLink<>));
         if (partLinkBase == null)
         {
-            throw new InvalidOperationException($"Cannot find product type for {linkType.FullName}");
+            throw new InvalidOperationException($"Cannot find product type for {linkType.FullName}.");
         }
 
         var prodType = partLinkBase.GetGenericArguments()[0];
