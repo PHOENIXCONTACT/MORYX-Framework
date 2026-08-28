@@ -5,7 +5,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { filter, firstValueFrom, SubscriptionLike } from 'rxjs';
 import { MaterialFlowService } from 'src/app/services/material-flow.service';
 import { MaterialManagementService } from 'src/app/api/services';
-import { MaterialContainerModel, OrderReferenceModel, ResourceTypeModel } from 'src/app/api/models';
+import { MaterialContainerModel, MaterialStateClassificationModel, OrderReferenceModel, ResourceTypeModel } from 'src/app/api/models';
 import { fromEventStream, ServerSentEventMessage } from 'src/app/utilities/server-sent-event';
 import { environment } from 'src/environments/environment';
 import { MatDialog } from '@angular/material/dialog';
@@ -13,10 +13,13 @@ import { DialogPreAdviceComponent } from 'src/app/dialogs/dialog-pre-advice/dial
 import { Deregister$Params } from 'src/app/api/functions';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { HttpErrorResponse } from '@angular/common/http';
+import { MatDivider } from "@angular/material/divider";
+import { MatButtonModule } from '@angular/material/button';
+import { MatIcon } from "@angular/material/icon";
 
 @Component({
   selector: 'app-cards',
-  imports: [CardComponent],
+  imports: [CardComponent, MatDivider, MatButtonModule, MatIcon],
   templateUrl: './cards.component.html',
   styleUrl: './cards.component.scss',
 })
@@ -30,7 +33,8 @@ export class CardsComponent implements OnInit, OnDestroy {
   private subscriptions: SubscriptionLike[] = [];
   private snackbarService = inject(SnackbarService);
   private filterEvents = toSignal(this.materialFlow.$filter);
-  
+  protected sectionState = signal(Object.values(MaterialStateClassificationModel).sort().map(x => <SectionState>{ section: x, isExpanded: false }))
+
   types = signal<ResourceTypeModel[]>([]);
   protected containers = computed(() => {
     const fetchedContainers = this.containersResource.value() ?? [];
@@ -78,4 +82,10 @@ export class CardsComponent implements OnInit, OnDestroy {
   matchOrder(container: MaterialContainerModel, keyword: string): boolean {
     return container.references?.some(reference => reference.fullName?.toLowerCase().includes("orders") && (reference as OrderReferenceModel).orderNumber == keyword) ?? false;
   }
+
+}
+
+export interface SectionState {
+  section: MaterialStateClassificationModel;
+  isExpanded: boolean;
 }

@@ -1,4 +1,31 @@
-@for (container of containers(); track container)
-{
-<app-card [container]="container" (delete)="(deleteContainer($event))"/>
-}
+<div class="section-container">
+    @for (classification of sectionState(); track $index)
+    {
+    <section class="classification-section-container">
+        <mat-divider class="classification-section-divider" />
+        <div class="section-header" (click)="classification.isExpanded = !classification.isExpanded">
+            @if(classification.isExpanded){
+            <button mat-icon-button aria-label="collapse section">
+                <mat-icon>keyboard_arrow_down</mat-icon>
+            </button>
+            }@else{
+            <button mat-icon-button aria-label="collapse section">
+                <mat-icon>keyboard_arrow_right</mat-icon>
+            </button>
+            }
+            <label>{{ classification.section }}</label>
+        </div>
+        @if(classification.isExpanded){
+        <div class="classification-section-content">
+            @for (container of containers().filter(x => x.state === classification.section); track container)
+            {
+            <app-card [container]="container" (delete)="(deleteContainer($event))" />
+            }
+            @if(!containers().filter(x => x.state === classification.section).length){
+            <p class="no-item">No items</p>
+            }
+        </div>
+        }
+    </section>
+    }
+</div>

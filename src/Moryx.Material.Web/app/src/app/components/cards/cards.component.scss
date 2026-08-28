@@ -3,3 +3,37 @@
     flex-wrap: wrap;
     gap: 15px;
 }
+
+.section-container{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.classification-section-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.section-header {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 5px;
+    label {
+        font-weight:500;
+    }
+}
+
+.classification-section-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.no-item {
+    margin-top: -5px;
+    margin: 0 auto;
+    font-style: italic;
+}
