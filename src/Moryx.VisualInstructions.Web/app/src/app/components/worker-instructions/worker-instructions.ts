@@ -29,7 +29,7 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MarkdownComponent } from "ngx-markdown";
-import { InstructionStateService } from '@app/services/instruction-state.service';
+import { FocusMode, InstructionStateService } from '@app/services/instruction-state.service';
 
 @Component({
   selector: "app-worker-instructions",
@@ -125,12 +125,27 @@ export class WorkerInstructions {
     const updatedIndex = this.instructions().findIndex(
       (i) => i.id === this.displayedInstruction()?.id
     );
-    if (updatedIndex < 0 || !this.inputs || !this.inputsChanged(this.inputs())) {
+
+    if (updatedIndex < 0) {
       this.onIndexChange(this.instructions().length - 1);
       return;
     }
 
-    this.activeInstructionIndex.set(updatedIndex);
+    switch (this.instructionStateService.focusMode()) {
+      case FocusMode.Newest:
+        this.onIndexChange(this.instructions().length - 1);
+        break;
+      case FocusMode.Stay:
+        this.activeInstructionIndex.set(updatedIndex);
+        break;
+      case FocusMode.Input:
+        if (this.inputsChanged(this.inputs())) {
+          this.activeInstructionIndex.set(updatedIndex);
+        } else {
+          this.onIndexChange(this.instructions().length - 1);
+        }
+        break;
+    }
   }
 
   private inputsChanged(entry: Entry | undefined): boolean {

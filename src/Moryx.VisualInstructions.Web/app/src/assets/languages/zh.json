@@ -1,14 +1,23 @@
 {
   "APP": {
-    "TITLE": "工人支持",
-    "INSTRUCTIONS": "说明",
+"NO_INSTRUCTOR_MESSAGE": "您尚未为此浏览器选择任何显示屏。这意味着我们无法在此屏幕上显示任何说明。"
+  },
+  "SETTINGS_DIALOG": {
+    "TITLE": "设置",
     "SELECT_INSTRUCTOR": "选择显示",
-    "NO_INSTRUCTOR_MESSAGE": "您尚未为此浏览器选择任何显示屏。这意味着我们无法在此屏幕上显示任何说明。"
+    "FOCUS_MODE": "焦点模式",
+    "FOCUS_MODE_NEWEST": "显示最新",
+    "FOCUS_MODE_NEWEST_DESCRIPTION": "新指令到达时始终切换到最新指令。",
+    "FOCUS_MODE_STAY": "保持当前",
+    "FOCUS_MODE_STAY_DESCRIPTION": "始终保持在当前指令上，新指令在后台显示。",
+    "FOCUS_MODE_INPUT": "输入时保持",
+    "FOCUS_MODE_INPUT_DESCRIPTION": "仅在编辑输入时保持当前指令，否则切换到最新指令。"
   },
   "VISUAL_INSTRUCTIONS": {
-    "FAILED_LOADING": "无法连接到服务器。请检查您的网络连接或稍后重试。",
-    "EMPTY_STATE_HEADER": "没有说明",
+"EMPTY_STATE_HEADER": "没有说明",
     "EMPTY_STATE_TEXT": "完成！当有任务需要完成时，我们会再次联系您。"
   },
-  "DISMISS": "忽略"
+  "DISMISS": "忽略",
+  "CANCEL": "取消",
+  "SAVE": "保存"
 }

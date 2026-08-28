@@ -1,0 +1,48 @@
+<h2 mat-dialog-title>{{ TranslationConstants.SETTINGS_DIALOG.TITLE | translate }}</h2>
+
+<mat-dialog-content class="dialog-container">
+  <h3 class="intermediate-header">{{ TranslationConstants.SETTINGS_DIALOG.FOCUS_MODE | translate }}</h3>
+
+  <mat-radio-group class="focus-mode-group" [value]="selectedFocusMode()" (change)="selectFocusMode($event.value)">
+    <mat-radio-button [value]="FocusMode.Input">
+      <span class="radio-label">{{ TranslationConstants.SETTINGS_DIALOG.FOCUS_MODE_INPUT | translate }}</span>
+      <span class="radio-description">{{ TranslationConstants.SETTINGS_DIALOG.FOCUS_MODE_INPUT_DESCRIPTION | translate }}</span>
+    </mat-radio-button>
+    <mat-radio-button [value]="FocusMode.Newest">
+      <span class="radio-label">{{ TranslationConstants.SETTINGS_DIALOG.FOCUS_MODE_NEWEST | translate }}</span>
+      <span class="radio-description">{{ TranslationConstants.SETTINGS_DIALOG.FOCUS_MODE_NEWEST_DESCRIPTION | translate }}</span>
+    </mat-radio-button>
+    <mat-radio-button [value]="FocusMode.Stay">
+      <span class="radio-label">{{ TranslationConstants.SETTINGS_DIALOG.FOCUS_MODE_STAY | translate }}</span>
+      <span class="radio-description">{{ TranslationConstants.SETTINGS_DIALOG.FOCUS_MODE_STAY_DESCRIPTION | translate }}</span>
+    </mat-radio-button>
+  </mat-radio-group>
+
+  <h3>{{ TranslationConstants.SETTINGS_DIALOG.SELECT_INSTRUCTOR | translate }}</h3>
+
+  @if (instructors()) {
+    <mat-selection-list #instructorList [multiple]="false">
+      @for (instructor of instructors(); track instructor) {
+        <mat-list-option
+          [value]="instructor"
+          [selected]="instructor === selectedInstructor()"
+          (click)="selectInstructor(instructor)">
+          {{instructor}}
+        </mat-list-option>
+      }
+    </mat-selection-list>
+  } @else {
+    <div class="loading-spinner">
+      <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+    </div>
+  }
+</mat-dialog-content>
+
+<div mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]="undefined" type="button">
+    {{ TranslationConstants.CANCEL | translate }}
+  </button>
+  <button mat-flat-button (click)="apply()" type="button">
+    {{ TranslationConstants.SAVE | translate }}
+  </button>
+</div>
