@@ -50,7 +50,7 @@ public partial class ProductIdentity : IIdentity
         var match = IdentityPattern().Match(identityString);
         if (!match.Success || !short.TryParse(match.Groups["revision"].Value,
                 NumberStyles.None, CultureInfo.InvariantCulture, out var revision))
-            throw new FormatException($"identityString should consist of <identity>-<revision> instead of {identityString}.");
+            throw new FormatException($"'{identityString}' does not match the expected pattern '{IdentityPattern()}'.");
 
         return new ProductIdentity(match.Groups["identifier"].Value, revision);
     }

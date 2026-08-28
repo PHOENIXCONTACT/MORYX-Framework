@@ -145,7 +145,7 @@ internal class OperationAssignment : IOperationAssignment
             if (result)
                 continue;
 
-            throw new InvalidOperationException($"{restoreStep.GetType().Name} was failed.");
+            throw new InvalidOperationException($"{restoreStep.GetType().Name} has failed.");
         }
     }
 }
