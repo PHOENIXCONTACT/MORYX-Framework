@@ -201,22 +201,22 @@ internal class MaterialManagementFacade : FacadeBase, IMaterialManagement
 
             //await MaterialFlowHandler.TransitionAsync(match, new AvailableStateInformation(), cancellationToken);
 
-            await LineageStorage.RecordAsync(new RegisterLineageEvent
-            {
-                ContainerId = match.Id,
-                Material = match.Material,
-                Quantity = match.Quantity
-            }, cancellationToken);
+            //await LineageStorage.RecordAsync(new RegisterLineageEvent
+            //{
+            //    ContainerId = match.Id,
+            //    Material = match.Material,
+            //    Quantity = match.Quantity
+            //}, cancellationToken);
             return;
         }
 
         //await MaterialFlowHandler.TransitionAsync(container, new AvailableStateInformation(), cancellationToken);
-        await LineageStorage.RecordAsync(new RegisterLineageEvent
-        {
-            ContainerId = container.Id,
-            Material = container.Material,
-            Quantity = container.Quantity
-        }, cancellationToken);
+        //await LineageStorage.RecordAsync(new RegisterLineageEvent
+        //{
+        //    ContainerId = container.Id,
+        //    Material = container.Material,
+        //    Quantity = container.Quantity
+        //}, cancellationToken);
     }
 
     public async Task<IMaterialContainer> PreAdviceMaterialAsync(MaterialPreAdvice preAdvice, CancellationToken cancellationToken = default)
@@ -268,11 +268,11 @@ internal class MaterialManagementFacade : FacadeBase, IMaterialManagement
 
         var finalQuantity = container.Quantity;
         await MaterialFlowHandler.DeregisterContainerAsync(container, cancellationToken);
-        await LineageStorage.RecordAsync(new DeregisterLineageEvent
-        {
-            ContainerId = id,
-            FinalQuantity = finalQuantity
-        }, cancellationToken);
+        //await LineageStorage.RecordAsync(new DeregisterLineageEvent
+        //{
+        //    ContainerId = id,
+        //    FinalQuantity = finalQuantity
+        //}, cancellationToken);
     }
 
     #endregion

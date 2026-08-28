@@ -23,22 +23,22 @@ internal class InMemoryLineageEventStorage : ILineageEventStorage
         return Task.CompletedTask;
     }
 
-    private void OnContainerStateChanged(object? sender, ContainerStateChangedEventArgs e)
-    {
-        var lineage = new StateTransitionLineageEvent
-        {
-            ContainerId = e.Container.Id,
-            FromClassification = e.PreviousStateInformation,
-            ToClassification = e.NewStateInformation
-        };
+    //private void OnContainerStateChanged(object? sender, ContainerStateChangedEventArgs e)
+    //{
+    //    var lineage = new StateTransitionLineageEvent
+    //    {
+    //        ContainerId = e.Container.Id,
+    //        FromClassification = e.PreviousStateInformation,
+    //        ToClassification = e.NewStateInformation
+    //    };
 
-        // Fire and forget lineage recording
-        RecordAsync(lineage, CancellationToken.None);
-    }
+    //    // Fire and forget lineage recording
+    //    RecordAsync(lineage, CancellationToken.None);
+    //}
 
     public Task StopAsync(CancellationToken cancellationToken)
     {
-        Pool.StateChanged -= OnContainerStateChanged;
+        // Pool.StateChanged -= OnContainerStateChanged;
         lock (_lock)
         {
             _events.Clear();
