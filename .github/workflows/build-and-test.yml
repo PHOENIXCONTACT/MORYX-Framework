@@ -54,6 +54,7 @@ jobs:
       dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
       node_version: ${{ needs.EnvVar.outputs.node_version }}
       REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
+      runsettings: CodeCoverage.runsettings
 
   IntegrationTests:
     name: Integration Tests
@@ -63,6 +64,7 @@ jobs:
       dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
       node_version: ${{ needs.EnvVar.outputs.node_version }}
       REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
+      runsettings: CodeCoverage.runsettings
 
   Codecov:
     name: Codecov

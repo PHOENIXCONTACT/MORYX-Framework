@@ -101,6 +101,7 @@
   <Folder Name="/Solution Items/">
     <File Path=".build/Common.props" />
     <File Path=".editorconfig" />
+    <File Path="CodeCoverage.runsettings" />
     <File Path="Directory.Build.props" />
     <File Path="Directory.Build.targets" />
     <File Path="Directory.Packages.props" />
