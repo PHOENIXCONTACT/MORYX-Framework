@@ -37,15 +37,25 @@ internal static class MaterialManagementConverter
         };
     }
 
-    public static MaterialStateClassificationModel ToModel(this StateClassification state) => state switch
+    public static StateClassificationModel ToModel(this StateClassification state) => state switch
     {
-        StateClassification.Uninitialized => MaterialStateClassificationModel.Uninitialized,
-        StateClassification.Requested => MaterialStateClassificationModel.Requested,
-        StateClassification.Inbound => MaterialStateClassificationModel.Inbound,
-        StateClassification.Available => MaterialStateClassificationModel.Available,
-        StateClassification.Outbound => MaterialStateClassificationModel.Outbound,
-        StateClassification.Deregistered => MaterialStateClassificationModel.Deregistered,
-        _ => MaterialStateClassificationModel.Uninitialized
+        StateClassification.Uninitialized => StateClassificationModel.Uninitialized,
+        StateClassification.Requested => StateClassificationModel.Requested,
+        StateClassification.Inbound => StateClassificationModel.Inbound,
+        StateClassification.Available => StateClassificationModel.Available,
+        StateClassification.Outbound => StateClassificationModel.Outbound,
+        StateClassification.Deregistered => StateClassificationModel.Deregistered,
+        _ => StateClassificationModel.Uninitialized
+    };
+
+    public static IReadOnlyList<StateClassificationDescriptorModel> ToModels(this IEnumerable<StateClassificationModel> classifications)
+        => classifications.Select(c => c.ToModel()).ToArray();
+
+    public static StateClassificationDescriptorModel ToModel(this StateClassificationModel classification) => new()
+    {
+        State = classification,
+        StateDisplayName = classification.GetDisplayName(),
+        StateDescription = classification.GetDescription()
     };
 
     public static PreAdviceDepartureReasonModel ToModel(this PreAdviceDepartureReason reason) => reason switch

@@ -60,6 +60,15 @@ public class MaterialManagementController(IMaterialManagement materialManagement
         return Ok(types.Select(t => t.ToModel()).ToArray());
     }
 
+    [HttpGet("containers/states")]
+    [ProducesResponseType(typeof(StateClassificationDescriptorModel[]), StatusCodes.Status200OK)]
+    [Authorize(Policy = MaterialPermissions.CanRead)]
+    public ActionResult<StateClassificationDescriptorModel[]> GetStates()
+    {
+        var models = Enum.GetValues<StateClassificationModel>().Select(e => e.ToModel()).ToArray();
+        return models;
+    }
+
     #endregion
 
     #region POST
