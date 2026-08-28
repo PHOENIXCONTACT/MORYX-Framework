@@ -19,10 +19,5 @@
     <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
     <PackageReference Include="Microsoft.Sbom.Targets" PrivateAssets="All" />
   </ItemGroup>
-  
-	<ItemGroup>
-		<!-- Asp.Net Core Framework dependency -->
-		<FrameworkReference Update="Microsoft.AspNetCore.App" Version="$(dotnetVersion)" />
-	</ItemGroup>
 
 </Project>

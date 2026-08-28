@@ -1,14 +1,17 @@
-<Project>  
+<Project>
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
-	<GenerateSBOM>true</GenerateSBOM>
+  </PropertyGroup>
+
+  <PropertyGroup Label="SBOM">
+    <GenerateSBOM>true</GenerateSBOM>
     <SbomGenerationManifestInfo>SPDX:3.0</SbomGenerationManifestInfo>
     <SbomGenerationFetchLicenseInformation>true</SbomGenerationFetchLicenseInformation>
-	<SbomGenerationEnablePackageMetadataParsing>true</SbomGenerationEnablePackageMetadataParsing>
+    <SbomGenerationEnablePackageMetadataParsing>true</SbomGenerationEnablePackageMetadataParsing>
     <SbomGenerationPackageSupplier>Phoenix Contact GmbH &amp; Co. KG</SbomGenerationPackageSupplier>
     <SbomGenerationPackageName>$(MSBuildProjectName)</SbomGenerationPackageName>
-	<SbomGenerationNamespaceBaseUri>https://sbom.moryx-industry.net</SbomGenerationNamespaceBaseUri>
+    <SbomGenerationNamespaceBaseUri>https://sbom.moryx-industry.net</SbomGenerationNamespaceBaseUri>
   </PropertyGroup>
 
 	<PropertyGroup>
@@ -19,8 +22,6 @@
 
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-
-		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
 
 </Project>
