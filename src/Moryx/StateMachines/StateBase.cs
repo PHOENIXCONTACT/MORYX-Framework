@@ -86,60 +86,91 @@ public abstract class StateBase
     {
         // Check the base type
         if (!stateBaseType.IsAbstract)
+        {
             throw new ArgumentException("The state base class must be abstract!");
+        }
 
         if (!typeof(StateBase).IsAssignableFrom(stateBaseType))
+        {
             throw new ArgumentException($"'{stateBaseType.Name}' class is not a valid 'StateBase'!");
+        }
 
         // Load all fields
         // 1. Get all fields which are static constant with the attribute
         // 2. let attribute and create an anonymous array
-        var definedStates = (from stateField in GetStateFields(stateBaseType)
-            let att = stateField.GetCustomAttribute<StateDefinitionAttribute>()
-            select new { Key = (int)stateField.GetValue(null), att.IsInitial, att.Type }).ToArray();
+        StateDefinition[] definedStates =
+            (from stateField in GetStateFields(stateBaseType)
+             let att = stateField.GetCustomAttribute<StateDefinitionAttribute>()
+             select new StateDefinition((int)stateField.GetValue(null), att.IsInitial, att.Type)).ToArray();
 
-        if (definedStates.Length == 0)
-            throw new InvalidOperationException("There was no state constant defined in the given base type." +
-                                                $"There must be at least one constant integer attributed with the {nameof(StateDefinitionAttribute)}.");
-
-        // If an initial key is set, we check if it exists
-        if (initialKey.HasValue && definedStates.All(s => s.Key != initialKey.Value))
-            throw new InvalidOperationException($"There was no state defined with key: {initialKey}");
-
-        // Group by type to find multiple defined state types
-        var duplicates = definedStates.GroupBy(state => state.Type).Where(g => g.Count() > 1).Select(g => g.Key).ToArray();
-        if (duplicates.Any())
-        {
-            var typeNames = string.Join(", ", duplicates.Select(type => type.Name));
-            throw new InvalidOperationException($"State types are only allowed once: {typeNames}");
-        }
+        ValidateStateDefinitions(definedStates, initialKey);
 
         var stateMap = new StateMap();
         StateBase initialState = null;
         foreach (var definedState in definedStates)
         {
-            var instance = Activator.CreateInstance(definedState.Type, context, stateMap) as StateBase;
-            if (instance == null)
-                throw new InvalidOperationException($"Could not create instance of State type {definedState.Type.Name}");
+            var instance = Activator.CreateInstance(definedState.Type, context, stateMap) as StateBase
+                ?? throw new InvalidOperationException($"Could not create instance of State type {definedState.Type.Name}");
 
             instance.Key = definedState.Key;
 
-            if (initialKey.HasValue && initialKey.Value == definedState.Key)
+            if ((initialKey.HasValue && initialKey.Value == definedState.Key)
+                || (!initialKey.HasValue && definedState.IsInitial))
+            {
                 initialState = instance;
-            else if (definedState.IsInitial && initialState == null)
-                initialState = instance;
-            else if (definedState.IsInitial && initialState != null)
-                throw new InvalidOperationException("At least one state must be flagged as '" +
-                                                    $"{nameof(StateDefinitionAttribute.IsInitial)} = true'.");
+            }
 
             stateMap.Add(definedState.Key, instance);
         }
 
-        if (initialState == null)
-            throw new InvalidOperationException("There is no state flagged with " +
-                                                $"'{nameof(StateDefinitionAttribute.IsInitial)} = true'.");
-
         return initialState;
+    }
+
+    private static void ValidateStateDefinitions(StateDefinition[] definedStates, int? initialKey)
+    {
+        if (definedStates.Length == 0)
+        {
+            throw new InvalidOperationException("There was no state constant defined in the given base type. " +
+                                                $"There must be at least one constant integer attributed with the {nameof(StateDefinitionAttribute)}.");
+        }
+
+        if (initialKey.HasValue)
+        {
+            // If an initial key is set, we check if it exists
+            if (definedStates.All(s => s.Key != initialKey.Value))
+            {
+                throw new InvalidOperationException($"There was no state defined with key: {initialKey}");
+            }
+        }
+        else
+        {
+            // Otherwise we check that exactly one key is marked as initial
+            var initialStates = definedStates.Where(s => s.IsInitial).ToArray();
+            if (initialStates.Length == 0)
+            {
+                throw new InvalidOperationException($"No state is marked as initial. Set one using the {nameof(StateDefinitionAttribute)} or pass an initial key explicitly");
+            }
+            else if (initialStates.Length > 1)
+            {
+                var initialStateString = string.Join(", ", initialStates.Select(i => i.Type.Name));
+                throw new InvalidOperationException($"Multiple states are marked as initial: '{initialStateString}'. Define exactly one or set an initial state explicitly");
+            }
+        }
+
+        // Group by type to find states types that are used multiple times
+        var duplicateStates = FindDuplicates(definedStates, (s) => s.Type);
+        if (duplicateStates.Count != 0)
+        {
+            var typeNames = string.Join(", ", duplicateStates.Select(type => type.Name));
+            throw new InvalidOperationException($"State types are only allowed once: {typeNames}");
+        }
+        // Group by key to find statemachine keys that are used multiple times
+        var duplicateKeys = FindDuplicates(definedStates, s => s.Key);
+        if (duplicateKeys.Count != 0)
+        {
+            var stateKeys = string.Join(", ", duplicateKeys);
+            throw new InvalidOperationException($"State keys are only allowed once: {stateKeys}");
+        }
     }
 
     /// <summary>
@@ -147,14 +178,14 @@ public abstract class StateBase
     /// </summary>
     internal static IEnumerable<FieldInfo> GetStateFields(Type stateBaseType)
     {
-        var stateFields = from field in stateBaseType.GetFields(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.FlattenHierarchy)
+        var stateFields =
+            from field in stateBaseType.GetFields(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.FlattenHierarchy)
             where field.IsLiteral && !field.IsInitOnly &&
                   field.FieldType.IsAssignableFrom(typeof(int)) &&
                   field.GetCustomAttribute<StateDefinitionAttribute>() != null
             select field;
         return stateFields;
     }
-
 
     /// <summary>
     /// Will return the protected map.
@@ -173,8 +204,28 @@ public abstract class StateBase
         return $"{GetType().Name} ({Key})";
     }
 
+    private static HashSet<T> FindDuplicates<T>(StateDefinition[] states, Func<StateDefinition, T> selector)
+    {
+        var seen = new HashSet<T>();
+        var duplicates = new HashSet<T>();
+        foreach (var state in states)
+        {
+            var elem = selector(state);
+            if (!seen.Add(elem))
+            {
+                duplicates.Add(elem);
+            }
+        }
+        return duplicates;
+    }
+
     /// <summary>
     /// Shortcut class for the stateMap dictionary
     /// </summary>
     public sealed class StateMap : Dictionary<int, StateBase>;
+
+    /// <summary>
+    /// Temporary container for state metadata 
+    /// </summary>
+    private record StateDefinition(int Key, bool IsInitial, Type Type);
 }

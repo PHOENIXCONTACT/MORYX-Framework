@@ -34,11 +34,14 @@ public abstract class MyAsyncStateBase : AsyncStateBase<MyAsyncContext>
         return InvalidStateAsync();
     }
 
-    [StateDefinition(typeof(AAsyncState), IsInitial = true)]
-    public const int StateA = 10;
-
+    // StateDefinitions A and B are out of the expected order.
+    // This enures that the statemachine can't rely on the assumption that the
+    // initial state is first
     [StateDefinition(typeof(BAsyncState))]
     public const int StateB = 20;
+
+    [StateDefinition(typeof(AAsyncState), IsInitial = true)]
+    public const int StateA = 10;
 
     [StateDefinition(typeof(CAsyncState))]
     public const int StateC = 30;
