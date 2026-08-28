@@ -201,22 +201,22 @@ internal class MaterialManagementFacade : FacadeBase, IMaterialManagement
 
             //await MaterialFlowHandler.TransitionAsync(match, new AvailableStateInformation(), cancellationToken);
 
-            await LineageStorage.RecordAsync(new RegisterLineageEvent
-            {
-                ContainerId = match.Id,
-                Material = match.Material,
-                Quantity = (decimal)match.Quantity
-            }, cancellationToken);
+            //await LineageStorage.RecordAsync(new RegisterLineageEvent
+            //{
+            //    ContainerId = match.Id,
+            //    Material = match.Material,
+            //    Quantity = match.Quantity
+            //}, cancellationToken);
             return;
         }
 
         //await MaterialFlowHandler.TransitionAsync(container, new AvailableStateInformation(), cancellationToken);
-        await LineageStorage.RecordAsync(new RegisterLineageEvent
-        {
-            ContainerId = container.Id,
-            Material = container.Material,
-            Quantity = (decimal)container.Quantity
-        }, cancellationToken);
+        //await LineageStorage.RecordAsync(new RegisterLineageEvent
+        //{
+        //    ContainerId = container.Id,
+        //    Material = container.Material,
+        //    Quantity = container.Quantity
+        //}, cancellationToken);
     }
 
     // TODO: Should this method take the container object in the pre advice?
@@ -228,7 +228,7 @@ internal class MaterialManagementFacade : FacadeBase, IMaterialManagement
             throw new KeyNotFoundException("Material container for pre-advice could not be found.");
         cancellationToken.ThrowIfCancellationRequested();
 
-        return await MaterialFlowHandler.PreAdviceMaterialAsync(container, preAdvice.DepartureReason);
+        return await MaterialFlowHandler.PreAdviceMaterialAsync(container, preAdvice.DepartureReason, cancellationToken);
     }
 
     public async Task CancelMaterialRequestAsync(Guid requestId, CancellationToken cancellationToken = default)
@@ -269,11 +269,11 @@ internal class MaterialManagementFacade : FacadeBase, IMaterialManagement
 
         var finalQuantity = container.Quantity;
         await MaterialFlowHandler.DeregisterContainerAsync(container, cancellationToken);
-        await LineageStorage.RecordAsync(new DeregisterLineageEvent
-        {
-            ContainerId = id,
-            FinalQuantity = (decimal)finalQuantity
-        }, cancellationToken);
+        //await LineageStorage.RecordAsync(new DeregisterLineageEvent
+        //{
+        //    ContainerId = id,
+        //    FinalQuantity = finalQuantity
+        //}, cancellationToken);
     }
 
     #endregion

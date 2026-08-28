@@ -87,7 +87,7 @@ internal class MaterialFlowHandler : IMaterialFlowHandler, ILoggingComponent
         throw new NotImplementedException();
     }
 
-    public static Task<IMaterialContainer> PreAdviceMaterialAsync(IMaterialContainer container, PreAdviceDepartureReason departureReason, CancellationToken cancellationToken)
+    public Task<IMaterialContainer> PreAdviceMaterialAsync(IMaterialContainer container, PreAdviceDepartureReason departureReason, CancellationToken cancellationToken)
     {
         var outbound = new OutboundStateInformation { DepartureReason = departureReason };
         cancellationToken.ThrowIfCancellationRequested();
@@ -106,11 +106,6 @@ internal class MaterialFlowHandler : IMaterialFlowHandler, ILoggingComponent
             Logger.LogWarning("Material container {id}-{name} was deregisted, but failed to be deleted from the underlying {resources}",
                 container.Id, container.Name, nameof(IResourceManagement));
         }
-    }
-
-    public Task<IMaterialContainer> PreAdviceMaterialAsync(IMaterialContainer container, PreAdviceDepartureReason reason)
-    {
-        throw new NotImplementedException();
     }
 
     public event EventHandler<StateChangedEventArgs>? StateChanged;
