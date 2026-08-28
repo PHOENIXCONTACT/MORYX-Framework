@@ -79,8 +79,6 @@ public abstract class StateBase
         return new InvalidOperationException(error);
     }
 
-
-    private record StateDefinition(int Key, bool IsInitial, Type Type);
     /// <summary>
     /// Create a state machine of the given base type. Returns the initial state after initialization.
     /// </summary>
@@ -132,7 +130,7 @@ public abstract class StateBase
     {
         if (definedStates.Length == 0)
         {
-            throw new InvalidOperationException("There was no state constant defined in the given base type." +
+            throw new InvalidOperationException("There was no state constant defined in the given base type. " +
                                                 $"There must be at least one constant integer attributed with the {nameof(StateDefinitionAttribute)}.");
         }
 
@@ -150,33 +148,25 @@ public abstract class StateBase
             var initialStates = definedStates.Where(s => s.IsInitial).ToArray();
             if (initialStates.Length == 0)
             {
-                throw new InvalidOperationException("No state is marked as initial. Set one explicitly using the StateDefinitionAttribute or the ");
+                throw new InvalidOperationException("No state is marked as initial. Set one explicitly using the StateDefinitionAttribute or set it explicitly ");
             }
             else if (initialStates.Length > 1)
             {
                 var initialStateString = string.Join(", ", initialStates.Select(i => i.Type.Name));
-                throw new InvalidOperationException($"Multipe states are marked as initial: '{initialStateString}'. Define exactly one or set an initial state explicitly");
+                throw new InvalidOperationException($"Multiple states are marked as initial: '{initialStateString}'. Define exactly one or set an initial state explicitly");
             }
         }
 
         // Group by type to find states types that are used multiple times
-        var duplicateStates = definedStates
-            .GroupBy(state => state.Type)
-            .Where(g => g.Count() > 1)
-            .Select(g => g.Key)
-            .ToArray();
-        if (duplicateStates.Any())
+        var duplicateStates = FindDuplicates(definedStates, (s) => s.Type);
+        if (duplicateStates.Count != 0)
         {
             var typeNames = string.Join(", ", duplicateStates.Select(type => type.Name));
             throw new InvalidOperationException($"State types are only allowed once: {typeNames}");
         }
         // Group by key to find statemachine keys that are used multiple times
-        var duplicateKeys = definedStates
-            .GroupBy(state => state.Key)
-            .Where(g => g.Count() > 1)
-            .Select(g => g.Key)
-            .ToArray();
-        if (duplicateKeys.Any())
+        var duplicateKeys = FindDuplicates(definedStates, s => s.Key);
+        if (duplicateKeys.Count != 0)
         {
             var stateKeys = string.Join(", ", duplicateKeys);
             throw new InvalidOperationException($"State keys are only allowed once: {stateKeys}");
@@ -214,8 +204,28 @@ public abstract class StateBase
         return $"{GetType().Name} ({Key})";
     }
 
+    private static HashSet<T> FindDuplicates<T>(StateDefinition[] states, Func<StateDefinition, T> selector)
+    {
+        var seen = new HashSet<T>();
+        var duplicates = new HashSet<T>();
+        foreach (var state in states)
+        {
+            var elem = selector(state);
+            if (!seen.Add(elem))
+            {
+                duplicates.Add(elem);
+            }
+        }
+        return duplicates;
+    }
+
     /// <summary>
     /// Shortcut class for the stateMap dictionary
     /// </summary>
     public sealed class StateMap : Dictionary<int, StateBase>;
+
+    /// <summary>
+    /// Temporary container for state metadata 
+    /// </summary>
+    private record StateDefinition(int Key, bool IsInitial, Type Type);
 }
