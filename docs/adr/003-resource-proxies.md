@@ -15,7 +15,7 @@ This pattern allows external consumers to interact with resource interfaces with
 1. **Keep Module Lifecycle**
    - Ensures that the module’s lifecycle remains self-contained and stable.
    - When a module restarts or shuts down, all internal components are safely disposed.
-   - The proxy detaches from the target resource during shutdown (`Detach`), preventing stale references.
+   - The proxy detaches from the target resource during shutdown (`DetachProxy`), preventing stale references.
 
 2. **Automatic Proxy Generator**
    - Reduces developer overhead by generating proxy classes dynamically at runtime.
