@@ -173,7 +173,7 @@ internal class ResourceLinker : IResourceLinker
         // Validate if object assigned to the property is a resource
         if (value != null && referencedResource == null)
         {
-            throw new ArgumentException($"Value of property {referenceProperty.Name} on resource {resource.Id}:{resource.GetType().Name} must be a Resource.");
+            throw new ArgumentException($"Value of property {referenceProperty.Name} on resource {resource.Id}: {resource.GetType().Name} must be a {nameof(Resource)}.");
         }
 
         var referenceAtt = referenceProperty.GetCustomAttribute<ResourceReferenceAttribute>();

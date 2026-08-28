@@ -173,7 +173,7 @@ internal class JobManagementFacade : IJobManagement, IFacadeControl
             throw new ArgumentException("Origin must not be null on recipe.", nameof(recipe));
 
         var productionRecipe = recipe as ProductionRecipe
-                               ?? throw new NotSupportedException("Process engine only supports 'ProductionRecipe'.");
+                               ?? throw new NotSupportedException($"Process engine only supports '{nameof(ProductionRecipe)}'.");
 
         var errors = WorkplanValidation.Validate(productionRecipe.Workplan);
         if (errors.Count > 0)

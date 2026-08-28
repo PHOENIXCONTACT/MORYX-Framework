@@ -32,7 +32,7 @@ internal sealed class MqttEndpointService(IManagedMqttClient client, MqttRouteBu
 
     public IManagedMqttClient Client { get; }
         = client
-          ?? throw new ArgumentNullException("No 'IHostedMqttClient' found. Make sure your added 'services.AddMqttClient()' to your program.cs.");
+          ?? throw new ArgumentNullException($"No '{nameof(IManagedMqttClient)}' found. Make sure your added 'services.AddMqttClient()' to your program.cs.");
     #endregion
 
     #region Hosted Service

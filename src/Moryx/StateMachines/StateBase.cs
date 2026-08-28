@@ -92,7 +92,7 @@ public abstract class StateBase
 
         if (!typeof(StateBase).IsAssignableFrom(stateBaseType))
         {
-            throw new ArgumentException($"'{stateBaseType.Name}' class is not a valid 'StateBase'.");
+            throw new ArgumentException($"'{stateBaseType.Name}' class is not a valid '{nameof(StateBase)}'.");
         }
 
         // Load all fields

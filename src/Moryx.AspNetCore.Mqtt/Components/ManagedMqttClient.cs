@@ -84,7 +84,7 @@ internal sealed class ManagedMqttClient : IManagedMqttClient
 
         if (_internalClient.Options == null)
         {
-            throw new InvalidOperationException("call StartAsync before publishing messages.");
+            throw new InvalidOperationException($"Call {nameof(StartAsync)} before publishing messages.");
         }
 
         MqttTopicValidator.ThrowIfInvalid(applicationMessage.Topic);
@@ -235,7 +235,7 @@ internal sealed class ManagedMqttClient : IManagedMqttClient
 
         if (_internalClient.Options == null)
         {
-            throw new InvalidOperationException("Client is not started. Call StartAsync first.");
+            throw new InvalidOperationException($"Client is not started. Call {nameof(StartAsync)} first.");
         }
 
         var filterList = topicFilters.ToList();
@@ -282,7 +282,7 @@ internal sealed class ManagedMqttClient : IManagedMqttClient
 
         if (_internalClient.Options == null)
         {
-            throw new InvalidOperationException("Client is not started. Call StartAsync first.");
+            throw new InvalidOperationException($"Client is not started. Call {nameof(StartAsync)} first.");
         }
 
         var topicList = topics.ToList();
