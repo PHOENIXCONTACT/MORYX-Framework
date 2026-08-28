@@ -5,7 +5,6 @@
 
 using NUnit.Framework;
 using Moryx.Tests.Workplans;
-using System.Linq;
 
 namespace Moryx.Workplans.Editing.Tests;
 

@@ -112,6 +112,7 @@
   </Folder>
   <Folder Name="/Tests/">
     <File Path="src/Tests/Directory.Build.props" />
+    <File Path="src/Tests/Directory.Build.targets" />
   </Folder>
   <Folder Name="/Tests/IntegrationTests/">
     <Project Path="src/Tests/Moryx.Communication.Sockets.IntegrationTests/Moryx.Communication.Sockets.IntegrationTests.csproj" />
