@@ -39,8 +39,8 @@ public abstract class DesignTimeDbContextFactory<TContext> : IDesignTimeDbContex
 
         if (string.IsNullOrEmpty(connectionString))
         {
-            throw new InvalidOperationException("The connection string was not set " +
-                                                "in the 'EFCORETOOLSDB' environment variable nor by arguments -- --connection \"connectionString\".");
+            throw new InvalidOperationException("The connection string was not set in the 'EFCORETOOLSDB' environment variable " +
+                                                "nor by arguments -- --connection \"connectionString\".");
         }
 
         return connectionString;

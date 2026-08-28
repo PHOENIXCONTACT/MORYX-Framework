@@ -179,7 +179,7 @@ internal class JobManagementFacade : IJobManagement, IFacadeControl
         if (errors.Count > 0)
         {
             var msg = string.Join("\n", errors);
-            throw new ValidationException("Workplan validation failed. Errors:\n" + msg);
+            throw new ValidationException($"Workplan validation failed. Errors:\n{msg}");
         }
     }
 

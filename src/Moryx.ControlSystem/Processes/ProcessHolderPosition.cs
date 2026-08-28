@@ -147,7 +147,7 @@ public class ProcessHolderPosition : Resource, IProcessHolderPosition
     {
         if (!(Session is ActivityStart activityStart))
         {
-            throw new InvalidOperationException("Can only complete the activity if the current session is ActivityStart.");
+            throw new InvalidOperationException($"Can only complete the activity if the current session is {nameof(ActivityStart)}.");
         }
 
         Session = activityStart.CreateResult(result);
