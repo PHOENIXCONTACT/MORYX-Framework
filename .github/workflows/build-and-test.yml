@@ -76,10 +76,14 @@ jobs:
         with:
           name: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}-test-results
           path: artifacts/test-results
+      - uses: actions/download-artifact@v8
+        with:
+          name: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}-integration-test-results
+          path: artifacts/integration-test-results
       - uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: artifacts/test-results/**/coverage.cobertura.xml
+          files: artifacts/**/coverage.cobertura.xml
           fail_ci_if_error: false
 
   # Documentation:
