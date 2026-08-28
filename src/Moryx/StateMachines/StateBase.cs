@@ -148,7 +148,7 @@ public abstract class StateBase
             var initialStates = definedStates.Where(s => s.IsInitial).ToArray();
             if (initialStates.Length == 0)
             {
-                throw new InvalidOperationException("No state is marked as initial. Set one explicitly using the StateDefinitionAttribute or set it explicitly ");
+                 throw new InvalidOperationException($"No state is marked as initial. Set one using the {nameof(StateDefinitionAttribute)} or pass an initial key explicitly");
             }
             else if (initialStates.Length > 1)
             {
