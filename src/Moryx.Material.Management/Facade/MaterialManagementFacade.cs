@@ -227,7 +227,7 @@ internal class MaterialManagementFacade : FacadeBase, IMaterialManagement
             throw new KeyNotFoundException("Material container for pre-advice could not be found.");
         cancellationToken.ThrowIfCancellationRequested();
 
-        return await MaterialFlowHandler.PreAdviceMaterialAsync(container, preAdvice.DepartureReason);
+        return await MaterialFlowHandler.PreAdviceMaterialAsync(container, preAdvice.DepartureReason, cancellationToken);
     }
 
     public async Task CancelMaterialRequestAsync(Guid requestId, CancellationToken cancellationToken = default)

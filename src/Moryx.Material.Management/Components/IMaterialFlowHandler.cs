@@ -22,7 +22,7 @@ internal interface IMaterialFlowHandler : IPlugin
 
     Task RegisterContainerAsync(IMaterialContainer container, CancellationToken cancellationToken = default);
 
-    Task<IMaterialContainer> PreAdviceMaterialAsync(IMaterialContainer container, PreAdviceDepartureReason reason);
+    Task<IMaterialContainer> PreAdviceMaterialAsync(IMaterialContainer container, PreAdviceDepartureReason reason, CancellationToken cancellationToken);
 
     Task DeregisterContainerAsync(IMaterialContainer container, CancellationToken cancellationToken = default);
 }
