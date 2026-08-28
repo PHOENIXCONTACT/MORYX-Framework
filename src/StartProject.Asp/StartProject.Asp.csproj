@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -24,6 +24,7 @@
     <ProjectReference Include="..\Moryx.ControlSystem.Processes.Endpoints\Moryx.ControlSystem.Processes.Endpoints.csproj" />
     <ProjectReference Include="..\Moryx.ControlSystem.SetupProvider\Moryx.ControlSystem.SetupProvider.csproj" />
     <ProjectReference Include="..\Moryx.Material.Endpoints\Moryx.Material.Endpoints.csproj" />
+    <ProjectReference Include="..\Moryx.Material.Integrations.Orders.Integrator\Moryx.Material.Integrations.Orders.Integrator.csproj" />
     <ProjectReference Include="..\Moryx.Material.Management\Moryx.Material.Management.csproj" />
     <ProjectReference Include="..\Moryx.Material\Moryx.Material.csproj" />
     <ProjectReference Include="..\Moryx.Resources.Benchmarking\Moryx.Resources.Benchmarking.csproj" />
@@ -34,8 +35,6 @@
     <ProjectReference Include="..\Moryx.Drivers.Mqtt\Moryx.Drivers.Mqtt.csproj" />
     <ProjectReference Include="..\Moryx.Drivers.OpcUa\Moryx.Drivers.OpcUa.csproj" />
     <ProjectReference Include="..\Moryx.Drivers.Simulation\Moryx.Drivers.Simulation.csproj" />
-    <ProjectReference Include="..\Moryx.FactoryMonitor.Endpoints\Moryx.FactoryMonitor.Endpoints.csproj" />
-    <ProjectReference Include="..\Moryx.FactoryMonitor.Web\Moryx.FactoryMonitor.Web.csproj" />
     <ProjectReference Include="..\Moryx.Launcher\Moryx.Launcher.csproj" />
     <ProjectReference Include="..\Moryx.Media.Endpoints\Moryx.Media.Endpoints.csproj" />
     <ProjectReference Include="..\Moryx.Media.Server\Moryx.Media.Server.csproj" />
