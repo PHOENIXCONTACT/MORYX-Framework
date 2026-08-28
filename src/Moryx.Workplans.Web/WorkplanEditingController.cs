@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Drawing;
+using System.Reflection;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -34,6 +35,7 @@ public class WorkplanEditingController : ControllerBase
         var workplans = await _workplans.LoadAllWorkplansAsync();
 
         var recipeSteps = _workplanEditing.AvailableSteps
+            .Where(step => !IsSetupStep(step))
             .Where(step => ModelConverter.ToClassification(step) != WorkplanNodeClassification.Subworkplan)
             .Select(WorkplanStepRecipe.FromStepType);
 
@@ -52,6 +54,52 @@ public class WorkplanEditingController : ControllerBase
             });
 
         return recipeSteps.Concat(subWorkplans).ToArray();
+    }
+
+    private static bool IsSetupStep(Type stepType)
+    {
+        var currentType = stepType;
+
+        while (currentType != null)
+        {
+            if (currentType.IsGenericType)
+            {
+                var genericDefinition = currentType.GetGenericTypeDefinition();
+
+                if (genericDefinition == typeof(TaskStep<,>) ||
+                    genericDefinition == typeof(TaskStep<,,>))
+                {
+                    var activityType = currentType.GetGenericArguments()[0];
+
+                    var classificationProperty = activityType.GetProperty(
+                        "Classification",
+                        BindingFlags.Public | BindingFlags.Instance);
+
+                    if (classificationProperty == null)
+                    {
+                        return false;
+                    }
+
+                    var activity = Activator.CreateInstance(activityType);
+
+                    if (activity == null)
+                    {
+                        return false;
+                    }
+
+                    var classification = classificationProperty.GetValue(activity);
+
+                    return string.Equals(
+                        classification?.ToString(),
+                        "Setup",
+                        StringComparison.Ordinal);
+                }
+            }
+
+            currentType = currentType.BaseType;
+        }
+
+        return false;
     }
 
     [HttpPost("sessions")]
