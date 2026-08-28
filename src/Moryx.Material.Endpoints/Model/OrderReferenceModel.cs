@@ -17,5 +17,5 @@ public class OrderReferenceModel : ReferenceModel
 
     public string? StatusDisplayName { get; set; }
 
-    public string? OperationSourceType { get; internal set; }
+    public string? OperationSourceType { get; set; }
 }

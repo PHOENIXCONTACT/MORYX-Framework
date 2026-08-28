@@ -33,7 +33,6 @@ internal static class OrderIntegrationConverter
         var status = reference.Status;
         return new OrderReferenceModel()
         {
-            FullName = typeof(OrderReference).FullName,
             DisplayName = typeof(OrderReference).GetDisplayName(),
             OrderNumber = reference.OrderNumber,
             OperationNumber = reference.OperationNumber,
