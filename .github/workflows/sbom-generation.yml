@@ -51,22 +51,12 @@ jobs:
         run: |
           dotnet restore
 
-      - name: Determine version
-        run: |
-          base_version=$(tr -d '[:space:]' < VERSION)
-          if [ -z "$base_version" ]; then
-            echo "VERSION file is empty"
-            exit 1
-          fi
-          if [[ "$GITHUB_REF" =~ ^refs/tags/v([0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
-            product_version="${BASH_REMATCH[1]}"
-          else
-            branch_name="${GITHUB_REF#refs/heads/}"
-            branch_slug="${branch_name//[^[:alnum:]-]/-}"
-            product_version="${base_version}-${branch_slug}.${GITHUB_RUN_NUMBER}"
-          fi
-          echo "PRODUCT_VERSION=$product_version" >> "$GITHUB_ENV"
-          echo "Version: $product_version"
+      - name: Compute version
+        id: version
+        uses: phoenixcontact/tools/.github/actions/compute-version@feature/determine-version-action
+
+      - name: Set PRODUCT_VERSION
+        run: echo "PRODUCT_VERSION=${{ steps.version.outputs.version }}" >> "$GITHUB_ENV"
 
       - name: Generate SBOMs
         shell: bash
