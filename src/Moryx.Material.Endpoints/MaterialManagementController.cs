@@ -1,4 +1,4 @@
-// Copyright (channel) 2026 Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Concurrent;
@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moryx.Material.Endpoints.Model;
 using Moryx.Material.Facade;
+using Moryx.Material.Integrations.Orders;
 using Moryx.Tools;
 
 namespace Moryx.Material.Endpoints;
@@ -25,10 +26,10 @@ namespace Moryx.Material.Endpoints;
 [ApiController]
 [Route("api/moryx/materials/")]
 [Produces("application/json")]
-public class MaterialManagementController(IMaterialManagement materialManagement, ILogger<MaterialManagementController> logger) : ControllerBase
+public class MaterialManagementController(IMaterialManagement materialManagement, IOrderIntegration? orderIntegration, ILogger<MaterialManagementController> logger) : ControllerBase
 {
     private readonly IMaterialManagement _materialManagement = materialManagement ?? throw new ArgumentNullException(nameof(materialManagement));
-    private readonly ILogger<MaterialManagementController> _logger = logger ?? throw new ArgumentNullException(nameof(materialManagement));
+    private readonly IOrderIntegration? _orderIntegration = orderIntegration;
 
     private static readonly JsonSerializerOptions _serializerOptions = new()
     {
@@ -36,26 +37,36 @@ public class MaterialManagementController(IMaterialManagement materialManagement
         Converters = { new JsonStringEnumConverter() }
     };
 
+    #region Material Containers
     #region GET
 
     [HttpGet("containers")]
-    [ProducesResponseType(typeof(MaterialContainerModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(MaterialContainerModel[]), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Policy = MaterialPermissions.CanRead)]
-    public ActionResult<MaterialContainerModel[]> GetAll()
+    public ActionResult<MaterialContainerModel[]> GetContainers()
     {
         var containers = _materialManagement.GetContainers();
         return Ok(containers.ToModels());
     }
 
     [HttpGet("containers/types")]
-    [ProducesResponseType(typeof(MaterialContainerTypeModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(MaterialContainerTypeModel[]), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Policy = MaterialPermissions.CanRead)]
     public ActionResult<MaterialContainerTypeModel[]> GetTypes()
     {
         var types = _materialManagement.GetContainerTypes();
         return Ok(types.Select(t => t.ToModel()).ToArray());
+    }
+
+    [HttpGet("containers/states")]
+    [ProducesResponseType(typeof(StateClassificationDescriptorModel[]), StatusCodes.Status200OK)]
+    [Authorize(Policy = MaterialPermissions.CanRead)]
+    public ActionResult<StateClassificationDescriptorModel[]> GetStates()
+    {
+        var models = Enum.GetValues<StateClassificationModel>().Select(e => e.ToModel()).ToArray();
+        return models;
     }
 
     #endregion
@@ -67,7 +78,7 @@ public class MaterialManagementController(IMaterialManagement materialManagement
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Policy = MaterialPermissions.CanUpdate)]
-    public async Task<ActionResult<MaterialContainerModel>> PreAdviceAsync(PreAdvideModel preAdvice)
+    public async Task<ActionResult<MaterialContainerModel>> PreAdviceAsync(PreAdviceModel preAdvice, CancellationToken cancellationToken)
     {
         if (preAdvice.ContainerId <= 0)
         {
@@ -76,12 +87,38 @@ public class MaterialManagementController(IMaterialManagement materialManagement
 
         try
         {
-            var updatedContainer = await _materialManagement.PreAdviceMaterialAsync(preAdvice.ToBusiness());
+            var updatedContainer = await _materialManagement.PreAdviceMaterialAsync(preAdvice.ToBusiness(), cancellationToken);
             return Ok(updatedContainer.ToModel());
         }
         catch (KeyNotFoundException)
         {
-            return NotFound($"Container {preAdvice.ContainerId} could not be found.");
+            return NotFound($"Container id '{preAdvice.ContainerId}' could not be found.");
+        }
+    }
+    #endregion
+
+    #region Delete
+    [HttpDelete("containers/{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize(Policy = MaterialPermissions.CanDelete)]
+    public async Task<ActionResult> Deregister(long id, CancellationToken cancellationToken)
+    {
+        if (id <= 0)
+        {
+            return BadRequest("Container Id must be a positive number");
+        }
+
+        try
+        {
+            await _materialManagement.DeregisterContainerAsync(id, cancellationToken);
+            return NoContent();
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound($"Container with id '{id}' could not be found.");
         }
     }
     #endregion
@@ -144,5 +181,33 @@ public class MaterialManagementController(IMaterialManagement materialManagement
         void Broadcast(IMaterialContainer container) => _containerStreamSubscribers.Values.ForEach(channel =>
             channel.Writer.TryWrite(JsonSerializer.Serialize(container.ToModel(), _serializerOptions)));
     }
+    #endregion
+    #endregion
+
+    #region Order References
+    #region GET
+
+    [HttpGet("integrations/orders/available")]
+    [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+    [Authorize(Policy = MaterialPermissions.CanRead)]
+    public ActionResult<bool> HasOrderIntegration() => Ok(_orderIntegration is not null);
+
+    [HttpGet("integrations/orders")]
+    [ProducesResponseType(typeof(OrderReferenceModel[]), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound, Description = $"Send if {nameof(HasOrderIntegration)} returns false.")]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize(Policy = MaterialPermissions.CanRead)]
+    public ActionResult<OrderReference[]> GetOrderReferences()
+    {
+        // ToDo: Fully fill problem detail responses
+        if (_orderIntegration is null)
+        {
+            return Problem("Order Integration is unavailable in this application", statusCode: StatusCodes.Status404NotFound);
+        }
+
+        var references = _orderIntegration.GetOrderReferences();
+        return Ok(references.ToModels());
+    }
+    #endregion
     #endregion
 }

@@ -17,4 +17,6 @@ internal interface IOrderReferencesPool : IAsyncPlugin
     InternalOrderReference? Get(OrderReference? reference);
 
     InternalOrderReference? GetOrCreate(string orderNumber, string? operationNumber);
+
+    IReadOnlyList<OrderReference> GetAll();
 }

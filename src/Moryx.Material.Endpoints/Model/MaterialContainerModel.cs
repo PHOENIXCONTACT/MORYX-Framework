@@ -30,8 +30,10 @@ public class MaterialContainerModel
     public string? Unit { get; set; }
 
     [DataMember]
-    public MaterialStateClassificationModel State { get; set; }
-
+    public StateClassificationModel State { get; set; }
+    
     [DataMember]
-    public MaterialContainerTypeModel Type { get; set; }
+    public required MaterialContainerTypeModel Type { get; set; }
+
+    public List<ReferenceModel> References { get; set; } = [];
 }

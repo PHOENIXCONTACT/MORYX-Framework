@@ -31,6 +31,7 @@ internal sealed class OrderIntegrationTests
     private Mock<IMaterialManagement> _materialManagement = null!;
     private Mock<IOrderManagement> _orderManagement = null!;
     private MoryxTestEnvironment _env = null!;
+    private IOrderIntegration _orderIntegration = null!; // ToDo: Remove null!
 
     [SetUp]
     public async Task SetUp()
@@ -39,20 +40,16 @@ internal sealed class OrderIntegrationTests
         _containers.Clear();
         _operations.Clear();
 
-        _materialManagement = MoryxTestEnvironment.CreateModuleMock<IMaterialManagement>();
-        _orderManagement = MoryxTestEnvironment.CreateModuleMock<IOrderManagement>();
         SetupMaterialManagementMock();
         SetupOrderManagementMock();
+        await SetupEnvironment();
 
-        var config = new IntegratorModuleConfig();
-        config.Initialize();
-        _env = new MoryxTestEnvironment(typeof(IntegratorModuleController), [_materialManagement, _orderManagement], config);
-
-        await _env.StartTestModuleAsync();
+        _orderIntegration = _env.GetTestModule<IOrderIntegration>();
     }
 
     private void SetupMaterialManagementMock()
     {
+        _materialManagement = MoryxTestEnvironment.CreateModuleMock<IMaterialManagement>();
         _materialManagement.Setup(m => m.GetContainers()).Returns([.. _containers]);
         _materialManagement.Setup(m => m.GetContainers(It.IsAny<Func<IMaterialContainer, bool>>()))
             .Returns((Func<IMaterialContainer, bool> filter) => [.. _containers.Where(filter)]);
@@ -60,11 +57,21 @@ internal sealed class OrderIntegrationTests
 
     private void SetupOrderManagementMock()
     {
+        _orderManagement = MoryxTestEnvironment.CreateModuleMock<IOrderManagement>();
         _orderManagement.Setup(m => m.GetOperations(It.IsAny<Func<Operation, bool>>()))
             .Returns((Func<Operation, bool> filter) => [.. _operations.Where(filter)]);
         _orderManagement.Setup(m => m.LoadOperationAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((string orderNumber, string operationNumber, CancellationToken _) =>
                 _operations.SingleOrDefault(o => o.Order.Number == orderNumber && o.Number == operationNumber));
+    }
+
+    private async Task SetupEnvironment()
+    {
+        var config = new IntegratorModuleConfig();
+        config.Initialize();
+        _env = new MoryxTestEnvironment(typeof(IntegratorModuleController), [_materialManagement, _orderManagement], config);
+
+        await _env.StartTestModuleAsync();
     }
 
     [TearDown]
@@ -77,7 +84,7 @@ internal sealed class OrderIntegrationTests
         var originalReference = new OrderReference(OrderNumber, OperationNumber);
         var container = await CreateAndAddContainer(originalReference);
         var operation = CreateAndAddOperation(OrderNumber, OperationNumber, OperationStateClassification.Ready);
-        
+
         // Act
         await RestartModuleAsync();
 
@@ -90,6 +97,7 @@ internal sealed class OrderIntegrationTests
             Assert.That(container.LinkedOrder.OperationNumber, Is.EqualTo(OperationNumber));
             Assert.That(container.LinkedOrder.State, Is.EqualTo(ReferenceState.Active));
             Assert.That(container.LinkedOrder.Status, Is.EqualTo(OperationStateClassification.Ready));
+            Assert.That(container.LinkedOrder.Source, Is.TypeOf<TestOperationSource>());
         });
     }
 
@@ -100,7 +108,7 @@ internal sealed class OrderIntegrationTests
         var originalReference = new OrderReference("UNKNOWN-ORDER", "9999");
         var container = await CreateAndAddContainer(originalReference);
         var operation = CreateAndAddOperation(OrderNumber, OperationNumber, OperationStateClassification.Ready);
-        
+
         // Act
         await RestartModuleAsync();
 
@@ -113,6 +121,7 @@ internal sealed class OrderIntegrationTests
             Assert.That(container.LinkedOrder.OperationNumber, Is.EqualTo("9999"));
             Assert.That(container.LinkedOrder.State, Is.EqualTo(ReferenceState.Unavailable));
             Assert.That(container.LinkedOrder.Status, Is.Null);
+            Assert.That(container.LinkedOrder.Source, Is.Null);
         });
     }
 
@@ -136,8 +145,9 @@ internal sealed class OrderIntegrationTests
             Assert.That(container.LinkedOrder, Is.Not.SameAs(originalReference));
             Assert.That(container.LinkedOrder!.OrderNumber, Is.EqualTo(OrderNumber));
             Assert.That(container.LinkedOrder.OperationNumber, Is.EqualTo(OperationNumber));
-            Assert.That(container.LinkedOrder.State, Is.EqualTo(ReferenceState.Active));
             Assert.That(container.LinkedOrder.Status, Is.EqualTo(OperationStateClassification.Running));
+            Assert.That(container.LinkedOrder.Source, Is.TypeOf<TestOperationSource>());
+            Assert.That(container.LinkedOrder.State, Is.EqualTo(ReferenceState.Active));
         });
     }
 
@@ -162,6 +172,7 @@ internal sealed class OrderIntegrationTests
             Assert.That(container.LinkedOrder.OperationNumber, Is.EqualTo(OperationNumber));
             Assert.That(container.LinkedOrder.State, Is.EqualTo(ReferenceState.Active));
             Assert.That(container.LinkedOrder.Status, Is.EqualTo(OperationStateClassification.Running));
+            Assert.That(container.LinkedOrder.Source, Is.TypeOf<TestOperationSource>());
             Assert.That(container.ValidationErrorHandlingCount, Is.Zero);
         });
     }
@@ -204,6 +215,25 @@ internal sealed class OrderIntegrationTests
         });
     }
 
+    [Test]
+    public async Task GetOrderReferences_WithRunningOperation_ReturnsReferences()
+    {
+        // Arrange
+        var operation = CreateAndAddOperation(OrderNumber, OperationNumber, OperationStateClassification.Ready);
+        RaiseOperationUpdatedToRunning(operation);
+
+        // Act
+        var references = _orderIntegration.GetOrderReferences();
+
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(references, Has.Count.EqualTo(1));
+            Assert.That(references.Single().OrderNumber, Is.EqualTo(OrderNumber));
+            Assert.That(references.Single().OperationNumber, Is.EqualTo(OperationNumber));
+        });
+    }
+
     private async Task RestartModuleAsync()
     {
         await _env.StopTestModuleAsync();
@@ -225,7 +255,7 @@ internal sealed class OrderIntegrationTests
         return container;
     }
 
-    private Operation CreateAndAddOperation(string orderNumber, string operationNumber, OperationStateClassification state)
+    private MockOperation CreateAndAddOperation(string orderNumber, string operationNumber, OperationStateClassification state)
     {
         var order = new MockOrder(orderNumber);
         var operation = new MockOperation(order, operationNumber, state);
@@ -269,6 +299,7 @@ internal sealed class OrderIntegrationTests
             Order = order;
             Number = number;
             Name = number;
+            Source = new TestOperationSource();
             SetState(state);
         }
 
@@ -277,5 +308,10 @@ internal sealed class OrderIntegrationTests
             State = state;
             StateDisplayName = state.ToString();
         }
+    }
+
+    private sealed class TestOperationSource : IOperationSource
+    {
+        public string Type => nameof(TestOperationSource);
     }
 }

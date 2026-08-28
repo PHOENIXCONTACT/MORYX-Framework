@@ -14,6 +14,8 @@ namespace Moryx.Material.Management;
 
 internal class MaterialManagementFacade : FacadeBase, IMaterialManagement
 {
+
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
     public IContainerPool Pool { get; set; }
 
     public IMaterialFlowHandler MaterialFlowHandler { get; set; }
@@ -25,6 +27,7 @@ internal class MaterialManagementFacade : FacadeBase, IMaterialManagement
     public IResourceManagement ResourceManagement { get; set; }
 
     public IResourceTypeTree ResourceTypes { get; set; }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
     public override void Activate()
     {
@@ -122,10 +125,7 @@ internal class MaterialManagementFacade : FacadeBase, IMaterialManagement
     public async Task<IMaterialContainer> AnnounceMaterialAsync(MaterialAnnouncement announcement, CancellationToken cancellationToken = default)
     {
         ValidateHealthState();
-        if (announcement == null)
-        {
-            throw new ArgumentNullException(nameof(announcement));
-        }
+        ArgumentNullException.ThrowIfNull(announcement);
 
         announcement.Id ??= Guid.NewGuid().ToString();
 
@@ -188,10 +188,7 @@ internal class MaterialManagementFacade : FacadeBase, IMaterialManagement
     public async Task RegisterContainerAsync(IMaterialContainer container, CancellationToken cancellationToken = default)
     {
         ValidateHealthState();
-        if (container == null)
-        {
-            throw new ArgumentNullException(nameof(container));
-        }
+        ArgumentNullException.ThrowIfNull(container);
 
         // If a matching virtual container exists (Requested or Inbound), apply identity to it instead
         var match = Matcher.TryMatchRegistration(container);
@@ -204,25 +201,24 @@ internal class MaterialManagementFacade : FacadeBase, IMaterialManagement
 
             //await MaterialFlowHandler.TransitionAsync(match, new AvailableStateInformation(), cancellationToken);
 
-            await LineageStorage.RecordAsync(new RegisterLineageEvent
-            {
-                ContainerId = match.Id,
-                Material = match.Material,
-                Quantity = match.Quantity
-            }, cancellationToken);
+            //await LineageStorage.RecordAsync(new RegisterLineageEvent
+            //{
+            //    ContainerId = match.Id,
+            //    Material = match.Material,
+            //    Quantity = match.Quantity
+            //}, cancellationToken);
             return;
         }
 
         //await MaterialFlowHandler.TransitionAsync(container, new AvailableStateInformation(), cancellationToken);
-        await LineageStorage.RecordAsync(new RegisterLineageEvent
-        {
-            ContainerId = container.Id,
-            Material = container.Material,
-            Quantity = container.Quantity
-        }, cancellationToken);
+        //await LineageStorage.RecordAsync(new RegisterLineageEvent
+        //{
+        //    ContainerId = container.Id,
+        //    Material = container.Material,
+        //    Quantity = container.Quantity
+        //}, cancellationToken);
     }
 
-    // TODO: Should this method take the container object in the pre advice?
     public async Task<IMaterialContainer> PreAdviceMaterialAsync(MaterialPreAdvice preAdvice, CancellationToken cancellationToken = default)
     {
         ValidateHealthState();
@@ -231,7 +227,7 @@ internal class MaterialManagementFacade : FacadeBase, IMaterialManagement
             throw new KeyNotFoundException("Material container for pre-advice could not be found.");
         cancellationToken.ThrowIfCancellationRequested();
 
-        return await MaterialFlowHandler.PreAdviceMaterialAsync(container, preAdvice.DepartureReason);
+        return await MaterialFlowHandler.PreAdviceMaterialAsync(container, preAdvice.DepartureReason, cancellationToken);
     }
 
     public async Task CancelMaterialRequestAsync(Guid requestId, CancellationToken cancellationToken = default)
@@ -264,21 +260,19 @@ internal class MaterialManagementFacade : FacadeBase, IMaterialManagement
 
     #region Delete
 
-    public async Task DeregisterContainerAsync(IMaterialContainer container, CancellationToken cancellationToken = default)
+    public async Task DeregisterContainerAsync(long id, CancellationToken cancellationToken = default)
     {
         ValidateHealthState();
-        if (container == null)
-        {
-            throw new ArgumentNullException(nameof(container));
-        }
+        var container = Pool.Get(id) ??
+            throw new KeyNotFoundException($"Could not find an {nameof(IMaterialContainer)} with {nameof(IPersistentObject.Id)} '{id}'");
 
         var finalQuantity = container.Quantity;
-        //await MaterialFlowHandler.TransitionAsync(container, new DeregisteredStateInformation(), cancellationToken);
-        await LineageStorage.RecordAsync(new DeregisterLineageEvent
-        {
-            ContainerId = container.Id,
-            FinalQuantity = finalQuantity
-        }, cancellationToken);
+        await MaterialFlowHandler.DeregisterContainerAsync(container, cancellationToken);
+        //await LineageStorage.RecordAsync(new DeregisterLineageEvent
+        //{
+        //    ContainerId = id,
+        //    FinalQuantity = finalQuantity
+        //}, cancellationToken);
     }
 
     #endregion
@@ -314,5 +308,5 @@ internal class MaterialManagementFacade : FacadeBase, IMaterialManagement
     #endregion
 
     private static StateInformation? GetStateInformation(IMaterialContainer container) =>
-        (container as MaterialContainer)?.StateInformation;
+    (container as MaterialContainer)?.StateInformation;
 }

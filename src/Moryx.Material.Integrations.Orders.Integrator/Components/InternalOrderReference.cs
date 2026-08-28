@@ -32,6 +32,13 @@ internal class InternalOrderReference : OrderReference
     }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    public new IOperationSource? Source
+    {
+        get;
+        set => base.Source = field = value;
+    }
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     public new ReferenceState State
     {
         get;
@@ -53,6 +60,7 @@ internal static class ReferenceExtensions
         public InternalOrderReference ToReference() => new(operation.Order.Number, operation.Number)
         {
             Status = operation.State,
+            Source = operation.Source,
             State = ReferenceState.Active
         };
     }
