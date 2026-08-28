@@ -3,6 +3,7 @@
 
 using System.Drawing;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moryx.AbstractionLayer.Products.Endpoints;
 using Moryx.AbstractionLayer.Workplans;
@@ -33,7 +34,6 @@ public class WorkplanEditingController : ControllerBase
         var workplans = await _workplans.LoadAllWorkplansAsync();
 
         var recipeSteps = _workplanEditing.AvailableSteps
-
             .Where(step => ModelConverter.ToClassification(step) != WorkplanNodeClassification.Subworkplan)
             .Select(WorkplanStepRecipe.FromStepType);
 
@@ -53,7 +53,6 @@ public class WorkplanEditingController : ControllerBase
 
         return recipeSteps.Concat(subWorkplans).ToArray();
     }
-
 
     [HttpPost("sessions")]
     [Authorize(Policy = WorkplanPermissions.CanEdit)]
@@ -136,6 +135,9 @@ public class WorkplanEditingController : ControllerBase
 
     [HttpPost("sessions/{sessionId}/save")]
     [Authorize(Policy = WorkplanPermissions.CanEdit)]
+    [ProducesResponseType(typeof(WorkplanSessionModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<WorkplanSessionModel>> SaveSession(
         [FromRoute] string sessionId,
         [FromBody] WorkplanSessionModel sessionModel)
@@ -154,15 +156,18 @@ public class WorkplanEditingController : ControllerBase
 
         var validation = WorkplanInstance.Validate(
             session.Workplan,
-            ValidationAspect.DeadEnd | ValidationAspect.LoneWolf);
+            ValidationAspect.DeadEnd | ValidationAspect.LoneWolf | ValidationAspect.InfiniteLoop | ValidationAspect.LuckyStreak);
 
         if (!validation.Success)
         {
             var errors = validation.Errors
-                .Select(error => error.Print(session.Workplan))
-                .ToArray();
-
-            return BadRequest(errors);
+                .Select(error => error.Print(session.Workplan));
+     
+            return BadRequest(new MoryxExceptionResponse
+            {
+                Title = "Workplan validation failed",
+                Exception = string.Join(Environment.NewLine, errors)
+            });
         }
 
         await _workplans.SaveWorkplanAsync(session.Workplan);
