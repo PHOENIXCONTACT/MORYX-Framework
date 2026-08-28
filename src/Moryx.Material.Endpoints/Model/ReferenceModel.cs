@@ -5,11 +5,9 @@ using System.Text.Json.Serialization;
 
 namespace Moryx.Material.Endpoints.Model;
 
-[JsonPolymorphic(TypeDiscriminatorPropertyName = "ReferenceModel")]
-[JsonDerivedType(typeof(OrderReferenceModel), "OrderReference")]
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
+[JsonDerivedType(typeof(OrderReferenceModel), nameof(OrderReferenceModel))]
 public class ReferenceModel
 {
-    public string? FullName { get; set; }
-
     public string? DisplayName { get; set; }
 }
