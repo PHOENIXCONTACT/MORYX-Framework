@@ -71,12 +71,12 @@ jobs:
     needs: [EnvVar, UnitTests, IntegrationTests]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/download-artifact@v4
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
         with:
           name: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}-test-results
           path: artifacts/test-results
-      - uses: codecov/codecov-action@v5
+      - uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: artifacts/test-results/**/coverage.cobertura.xml
