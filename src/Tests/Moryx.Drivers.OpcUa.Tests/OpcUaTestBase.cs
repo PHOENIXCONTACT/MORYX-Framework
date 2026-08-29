@@ -7,6 +7,7 @@ using Moryx.Drivers.OpcUa.Factories;
 using Moryx.Drivers.OpcUa.Tests.Mocks;
 using Moryx.Logging;
 using Moryx.Modules;
+using Moryx.Notifications;
 using Moryx.Tools;
 using Opc.Ua;
 using Opc.Ua.Client;
@@ -149,7 +150,8 @@ public class OpcUaTestBase
         {
             PublishingInterval = 1000,
             SamplingInterval = 1000,
-            Logger = new ModuleLogger("Dummy", new NullLoggerFactory())
+            Logger = new ModuleLogger("Dummy", new NullLoggerFactory()),
+            NotificationAdapter = new Mock<INotificationAdapter>().Object,
         };
         await ((IAsyncInitializablePlugin)driver).InitializeAsync();
         driver.SubscriptionFactory = subscriptionFactory;

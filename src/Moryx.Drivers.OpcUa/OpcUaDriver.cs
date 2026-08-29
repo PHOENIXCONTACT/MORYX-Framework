@@ -19,6 +19,8 @@ using Moryx.StateMachines;
 using Moryx.Threading;
 using Opc.Ua;
 using Opc.Ua.Client;
+using Moryx.Notifications;
+using Moryx.Drivers.OpcUa.Properties;
 
 namespace Moryx.Drivers.OpcUa;
 
@@ -28,7 +30,7 @@ namespace Moryx.Drivers.OpcUa;
 /// </summary>
 [ResourceRegistration]
 [Display(Name = nameof(Strings.OpcUaDriver_DisplayName), Description = nameof(Strings.OpcUaDriver_Description), ResourceType = typeof(Strings))]
-public class OpcUaDriver : Driver, IOpcUaDriver
+public class OpcUaDriver : Driver, IOpcUaDriver, INotificationSender
 {
     private const int NodeLayersShown = 5;
 
@@ -266,8 +268,8 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     #endregion
 
     #region Connection Handling
-
-    private void Connect()
+    [EntrySerialize]
+    internal void Connect()
     {
         lock (_stateLock)
         {
@@ -436,7 +438,16 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     /// <summary>
     /// Disconnect from the OPC UA server
     /// </summary>
+    [EntrySerialize]
     internal void Disconnect()
+    {
+        lock (_stateLock)
+        {
+            State.Disconnect();
+        }
+    }
+
+    internal void HandleDisconnect()
     {
         RemoveSubscription();
         if (_session == null)
@@ -1140,7 +1151,82 @@ public class OpcUaDriver : Driver, IOpcUaDriver
             DeviceSet.Add(deviceType);
         }
     }
-
+        
     /// <inheritdoc/>
     public event EventHandler<object> Received;
+
+    #region INotificationSender
+
+    /// <summary>
+    /// Injected component to publish notifications
+    /// </summary>
+    public INotificationAdapter NotificationAdapter { get; set; }
+
+    /// <inheritdoc />
+    public void Acknowledge(Notification notification, object tag)
+    {
+        NotificationAdapter.Acknowledge(this, notification);
+    }
+
+    /// <summary>
+    /// Show a Notification that the driver is disconnected
+    /// </summary>
+    internal void PublishDisconnectedNotification()
+    {
+        var existing = NotificationAdapter.GetPublished(this, NotificationTags.Disconnected);
+        if (existing != null)
+        {
+            return;
+        }
+
+        NotificationAdapter.Publish(this, new Notification()
+        {
+            Title = string.Format(CultureInfo.InvariantCulture, Strings.OpcUaDriver_DisconnectedNotification_Title, Name),
+            Message = string.Format(CultureInfo.InvariantCulture, Strings.OpcUaDriver_DisconnectedNotification_Message, Name),
+            IsAcknowledgable = false,
+            Severity = Severity.Warning
+        }, NotificationTags.Disconnected);
+    }
+
+    /// <summary>
+    /// Close the disconnected notification
+    /// </summary>
+    internal void AcknowledgeDisconnectedNotification()
+    {
+        NotificationAdapter.AcknowledgeAll(this, NotificationTags.Disconnected);
+    }
+
+    /// <summary>
+    /// Show a Notification that the driver is connecting
+    /// </summary>
+    internal void PublishConnectingNotification()
+    {
+        var existing = NotificationAdapter.GetPublished(this, NotificationTags.Connecting);
+        if (existing != null)
+            return;
+
+        NotificationAdapter.Publish(this, new Notification()
+        {
+            Title = string.Format(CultureInfo.InvariantCulture, Strings.OpcUaDriver_ConnectingNotification_Title,Name),
+            Message = string.Format(CultureInfo.InvariantCulture, Strings.OpcUaDriver_ConnectingNotification_Message,Name),
+            IsAcknowledgable = false,
+            Severity = Severity.Warning
+        }, NotificationTags.Connecting);
+    }
+
+    /// <summary>
+    /// Close the connecting notification
+    /// </summary>
+    internal void AcknowledgeConnectingNotification()
+    {
+        NotificationAdapter.AcknowledgeAll(this, NotificationTags.Connecting);
+    }
+
+    internal enum NotificationTags
+    {
+        Disconnected,
+        Connecting
+    }
+
+    #endregion
 }

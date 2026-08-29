@@ -8,6 +8,18 @@ namespace Moryx.Drivers.OpcUa.States;
 
 internal class DisconnectedState(OpcUaDriver context, StateMachines.StateBase.StateMap stateMap) : DriverOpcUaState(context, stateMap, StateClassification.Offline)
 {
+    public override void OnEnter()
+    {
+        base.OnEnter();
+        Context.PublishDisconnectedNotification();
+    }
+
+    public override void OnExit()
+    {
+        Context.AcknowledgeDisconnectedNotification();
+        base.OnExit();
+    }
+
     public override void Connect()
     {
         NextState(StateConnecting);
