@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Capabilities;
@@ -138,10 +139,27 @@ public abstract class Resource : ILoggingComponent, IResource, IAsyncInitializab
     /// Inform the resource management, that this instance was modified
     /// and trigger saving the current state to storage
     /// </summary>
-    protected void RaiseResourceChanged()
+    protected void RaiseResourceChanged() => RaiseResourceChanged(true);
+
+    /// <summary>
+    /// Inform the resource management, that this instance was modified
+    /// </summary>
+    /// <param name="save">If true, the change is persisted to storage.</param>
+    /// <param name="propertyName">Name of the property that changed.</param>
+    protected void RaiseResourceChanged(bool save, [CallerMemberName] string propertyName = null)
     {
-        // This is only null during boot, when the resource manager populates the object
-        Changed?.Invoke(this, EventArgs.Empty);
+        if (save)
+        {
+            Changed?.Invoke(this, EventArgs.Empty);
+        }
+        else
+        {
+            Notified?.Invoke(this, new ResourceChangedEventArgs
+            {
+                Save = save,
+                PropertyName = propertyName
+            });
+        }
     }
 
     /// <summary>
@@ -169,9 +187,16 @@ public abstract class Resource : ILoggingComponent, IResource, IAsyncInitializab
     /// </summary>
     public event EventHandler<ICapabilities> CapabilitiesChanged;
 
+    // TODO: In next major, merge Changed and Notified into a single event using ResourceChangedEventArgs
     /// <summary>
     /// Event raised when the resource was modified and the changes should be
     /// written to the data storage
     /// </summary>
     public event EventHandler Changed;
+
+    /// <summary>
+    /// Event raised when the resource wants to notify listeners of a change
+    /// without triggering persistence
+    /// </summary>
+    public event EventHandler<ResourceChangedEventArgs> Notified;
 }

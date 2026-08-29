@@ -62,6 +62,21 @@ internal static class FactoryMonitorHelper
         broadcast(Cell_State_Event_Type_Key, cellStateChangedModel);
     }
 
+    // ToDo: Added and removed resources not reflected
+    public static void ResourceUpdated(IResource changedResource,
+        Dictionary<IMachineLocation, ICell> locationToCellMappings,
+        Converter.Converter converter,
+        IResourceManagement resourceManager,
+        Action<string, object> broadcast)
+    {
+        var mapping = locationToCellMappings.FirstOrDefault(l2c => l2c.Value.Id == changedResource.Id);
+        if (mapping.Key is null)
+            return;
+
+        var resourceChangedModel = mapping.Value.GetResourceChangedModel(converter, resourceManager, mapping.Key);
+        broadcast(Recource_Event_Type_Key, resourceChangedModel);
+    }
+
     public static void ResourceUpdated(IResourceManagement resourceManager,
         Func<IEnumerable<IMachineLocation>, Dictionary<IMachineLocation, ICell>> mapCellsTo,
         Converter.Converter converter,

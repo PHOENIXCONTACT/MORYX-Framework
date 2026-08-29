@@ -246,7 +246,10 @@ public class FactoryMonitorController : ControllerBase
         var converter = new Converter.Converter(_serialization, _logger);
 
         // Define event handlers using helper methods
-        var resourceEventHandler = new ElapsedEventHandler((_, _) =>
+        var resourceChangedEventHandler = new EventHandler<IResource>((_, resource) =>
+            FactoryMonitorHelper.ResourceUpdated(resource, _locationToCellMappings, converter, _resourceManager, Broadcast));
+
+        var resourceTimerEventHandler = new ElapsedEventHandler((_, _) =>
             FactoryMonitorHelper.ResourceUpdated(_resourceManager, l => MapCellsTo(l), converter, Broadcast));
 
         var capabilitiesEventHandler = new EventHandler<ICapabilities>((sender, _) =>
@@ -263,7 +266,7 @@ public class FactoryMonitorController : ControllerBase
             FactoryMonitorHelper.ActivityUpdated(eventArgs, [.. _locationToCellMappings.Values],
                 TryGetOrders(), Broadcast));
 
-        // Setup timer
+        // TODO: Remove timer in next major when resources use RaiseResourceChanged
         _resourceChangedTimer = new();
         _resourceChangedTimer.Interval = 5000;
         _resourceChangedTimer.AutoReset = true;
@@ -279,10 +282,11 @@ public class FactoryMonitorController : ControllerBase
                 l2cMapping.Value.CapabilitiesChanged += capabilitiesEventHandler;
             }
 
+            _resourceManager.ResourceChanged += resourceChangedEventHandler;
+            _resourceChangedTimer.Elapsed += resourceTimerEventHandler;
             _orderManager.OperationStarted += orderStartedEventHandler;
             _orderManager.OperationUpdated += orderEventHandler;
             _processControl.ActivityUpdated += activityEventHandler;
-            _resourceChangedTimer.Elapsed += resourceEventHandler;
 
             await result.ExecuteAsync(HttpContext);
         }
@@ -298,10 +302,11 @@ public class FactoryMonitorController : ControllerBase
                 l2cMapping.Value.CapabilitiesChanged -= capabilitiesEventHandler;
             }
 
+            _resourceManager.ResourceChanged -= resourceChangedEventHandler;
+            _resourceChangedTimer.Elapsed -= resourceTimerEventHandler;
             _orderManager.OperationStarted -= orderStartedEventHandler;
             _orderManager.OperationUpdated -= orderEventHandler;
             _processControl.ActivityUpdated -= activityEventHandler;
-            _resourceChangedTimer.Elapsed -= resourceEventHandler;
             _resourceChangedTimer?.Dispose();
         }
 
