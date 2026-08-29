@@ -13,7 +13,7 @@ using Newtonsoft.Json;
 
 namespace Moryx.Orders.Management;
 
-internal class OrderManagementFacade : IOrderManagement, IFacadeControl
+internal class OrderManagementFacade : FacadeBase, IOrderManagement
 {
     public IOperationDataPool OperationDataPool { get; set; }
 
@@ -27,9 +27,7 @@ internal class OrderManagementFacade : IOrderManagement, IFacadeControl
 
     public IAdviceManager AdviceManager { get; set; }
 
-    public Action ValidateHealthState { get; set; }
-
-    public void Activate()
+    public override void Activate()
     {
         OperationDataPool.OperationStarted += OnOperationStarted;
         OperationDataPool.OperationInterrupted += OnOperationInterrupted;
@@ -43,10 +41,14 @@ internal class OrderManagementFacade : IOrderManagement, IFacadeControl
 
         OperationManager.BeginRequest += OnOperationBeginRequest;
         OperationManager.ReportRequest += OnOperationReportRequest;
+
+        base.Activate();
     }
 
-    public void Deactivate()
+    public override void Deactivate()
     {
+        base.Deactivate();
+
         OperationDataPool.OperationStarted -= OnOperationStarted;
         OperationDataPool.OperationInterrupted -= OnOperationInterrupted;
         OperationDataPool.OperationCompleted -= OnOperationCompleted;
