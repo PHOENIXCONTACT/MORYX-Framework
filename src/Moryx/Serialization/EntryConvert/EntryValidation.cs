@@ -43,6 +43,17 @@ public class EntryValidation : ICloneable
     public bool IsRequired { get; set; }
 
     /// <summary>
+    /// Message to show when the entry violates one of the rules above, resolved from
+    /// <see cref="System.ComponentModel.DataAnnotations.ValidationAttribute"/> through
+    /// <see cref="System.ComponentModel.DataAnnotations.ValidationAttribute.FormatErrorMessage"/>,
+    /// so a message given as a resource is returned translated.
+    /// Null when the attribute did not define one, in which case the consumer is
+    /// expected to fall back to a generic message.
+    /// </summary>
+    [DataMember]
+    public string ErrorMessage { get; set; }
+
+    /// <summary>
     /// Creates a new <see cref="EntryValidation"/> instance initializing <see cref="EntryValidation.Maximum"/>
     /// and <see cref="EntryValidation.Minimum"/> validation to the largest possible range.
     /// </summary>
@@ -70,7 +81,8 @@ public class EntryValidation : ICloneable
             Maximum = Maximum,
             Regex = Regex,
             IsRequired = IsRequired,
-            DataType = DataType
+            DataType = DataType,
+            ErrorMessage = ErrorMessage
         };
         return copy;
     }

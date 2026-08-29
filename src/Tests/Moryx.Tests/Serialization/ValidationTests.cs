@@ -22,7 +22,7 @@ public class ValidationTests
 
         // Assert
         Assert.That(encoded, Is.Not.Null);
-        Assert.That(encoded.SubEntries.Count, Is.EqualTo(8));
+        Assert.That(encoded.SubEntries.Count, Is.EqualTo(10));
         _validationDummySubEntries = encoded.SubEntries;
     }
 
@@ -89,5 +89,35 @@ public class ValidationTests
     {
         var validation = _validationDummySubEntries.Single(e => e.Identifier == identifier).Validation;
         return validation;
+    }
+
+    [Test(Description = "ErrorMessage of a validation attribute must reach EntryValidation")]
+    public void ValidateErrorMessageIsForwarded()
+    {
+        // Arrange / Act
+        var entry = _validationDummySubEntries.Single(e => e.Identifier == nameof(ValidationDummy.StringWithCustomMessage));
+
+        // Assert
+        Assert.That(entry.Validation.ErrorMessage, Is.EqualTo(ValidationDummy.CustomMessage));
+    }
+
+    [Test(Description = "A message given as a resource must arrive translated, not as null")]
+    public void ValidateLocalizedErrorMessageIsResolved()
+    {
+        // Arrange / Act
+        var entry = _validationDummySubEntries.Single(e => e.Identifier == nameof(ValidationDummy.StringWithLocalizedMessage));
+
+        // Assert
+        Assert.That(entry.Validation.ErrorMessage, Is.EqualTo(ValidationMessages.TooShort));
+    }
+
+    [Test(Description = "An attribute without a message must leave ErrorMessage unset so consumers can fall back")]
+    public void ValidateErrorMessageStaysNullWhenNotGiven()
+    {
+        // Arrange / Act
+        var entry = _validationDummySubEntries.Single(e => e.Identifier == nameof(ValidationDummy.MinLenghtString));
+
+        // Assert
+        Assert.That(entry.Validation.ErrorMessage, Is.Null);
     }
 }
