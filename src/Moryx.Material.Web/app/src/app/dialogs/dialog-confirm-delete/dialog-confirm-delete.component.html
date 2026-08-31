@@ -1,6 +1,6 @@
-<h2 mat-dialog-title>Delete Container?</h2>
-<mat-dialog-content>This will delete the current container and cannot be undone.</mat-dialog-content>
+<h2 mat-dialog-title>{{ translationConstants.CONFIRM_DELETE_DIALOG.TITLE| translate}}</h2>
+<mat-dialog-content>{{ translationConstants.CONFIRM_DELETE_DIALOG.MESSAGE| translate}}</mat-dialog-content>
 <mat-dialog-actions>
-  <button matButton [mat-dialog-close]="false" type="button" cdkFocusInitial>Cancel</button>
-  <button matButton [mat-dialog-close]="true" type="button" >Delete</button>
+  <button matButton [mat-dialog-close]="false" type="button" cdkFocusInitial>{{ translationConstants.CONFIRM_DELETE_DIALOG.CANCEL| translate}}</button>
+  <button matButton [mat-dialog-close]="true" type="button">{{ translationConstants.CONFIRM_DELETE_DIALOG.DELETE| translate}}</button>
 </mat-dialog-actions>

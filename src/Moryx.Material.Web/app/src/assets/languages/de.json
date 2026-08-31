@@ -5,7 +5,7 @@
     "APP": {
         "CREATED": "Materialbehälter erstellt!",
         "FILTER_BY_ORDER": "Nach Bestellnummer filtern",
-        "ORDERS": "Bestellungen",
+        "ORDERS": "Aufträge",
         "CARD": "Karte",
         "SUMMARY": "Zusammenfassung",
         "HISTORY": "Geschichte",
@@ -22,11 +22,11 @@
     },
     "SUMMARIES": {
         "SUMMARY": "Zusammenfassung",
-        "ORDER": "Befehl"
+        "ORDER": "Auftrag"
     },
     "ADD_MATERIAL_CONTAINER_DIALOG": {
         "CREATE_MATERIAL_CONTAINER": "Materialbehälter erstellen",
-        "CANCEL": "Stornieren",
+        "CANCEL": "Abbrechen",
         "NEXT": "Nächste",
         "CONSTRUCTOR": "Konstruktor",
         "PARAMETERS": "Parameter",
@@ -35,13 +35,13 @@
     "CONFIRM_DELETE_DIALOG": {
         "TITLE": "Container löschen",
         "MESSAGE": "Dadurch wird der aktuelle Container gelöscht; dieser Vorgang kann nicht rückgängig gemacht werden.",
-        "CANCEL": "Stornieren",
+        "CANCEL": "Abbrechen",
         "DELETE": "Löschen"
     },
     "PRE_ADVICE_DIALOG": {
         "TITLE": "Anfrage zur Vorabinformation",
         "REASON": "Grund",
-        "CANCEL": "Stornieren",
+        "CANCEL": "Abbrechen",
         "DONE": "Erledigt"
     }
 }

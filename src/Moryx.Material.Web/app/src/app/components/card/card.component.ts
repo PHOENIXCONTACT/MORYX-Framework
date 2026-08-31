@@ -1,5 +1,5 @@
 
-import { Component, inject, Input, input, OnInit, output } from '@angular/core';
+import { Component, inject, Input, input, OnInit, output, signal } from '@angular/core';
 import { MatAnchor, MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,23 +10,30 @@ import { MaterialContainerModel, OrderReferenceModel, PreAdviceModel, ReferenceM
 import { DialogContainerLinkingComponent } from 'src/app/dialogs/dialog-container-linking/dialog-container-linking.component';
 import { DialogConfirmDeleteComponent } from 'src/app/dialogs/dialog-confirm-delete/dialog-confirm-delete.component';
 import { MaterialManagementService } from 'src/app/api/services';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, lastValueFrom } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { MaterialFlowService } from 'src/app/services/material-flow.service';
+import { ReferenceType } from 'src/app/models/material-container';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
+import { CommonModule } from '@angular/common';
+import { toSignal } from '@angular/core/rxjs-interop';
 @Component({
   selector: 'app-card',
-  imports: [MatAnchor, MatIconModule, MatButtonModule, MatCardModule, MatChipsModule],
+  imports: [MatAnchor, MatIconModule, MatButtonModule, MatCardModule, MatChipsModule, TranslateModule, CommonModule],
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss',
 })
-export class CardComponent {
+export class CardComponent implements OnInit{
   container = input.required<MaterialContainerModel>();
   delete = output<number>();
   private dialog = inject(MatDialog);
   private materialApi = inject(MaterialManagementService)
-  private materialFlow = inject(MaterialFlowService);
   private snackbarService = inject(SnackbarService);
+  private translateService = inject(TranslateService);
+  protected translationConstants = TranslationConstants;
+  private translations  = signal<{ [key: string]: string }>({});
 
   preAdvice() {
     const dialogRef = this.dialog.open(DialogPreAdviceComponent, {
@@ -39,11 +46,16 @@ export class CardComponent {
         response.catch((e: HttpErrorResponse) => {
           this.snackbarService.processStatusCodes(e);
         })
-          .then(() => {
-            this.snackbarService.showSuccess("Advice done!");
+          .then(async () => {
+            const translations = await this.getTranslations();
+            this.snackbarService.showSuccess(translations[TranslationConstants.CARD.ADVISED]);
           })
       }
     })
+  }
+
+  ngOnInit(): void {
+    this.getTranslations().then(result => this.translations.set(result)); 
   }
 
   link() {
@@ -52,6 +64,14 @@ export class CardComponent {
       if (data) {
       }
     })
+  }
+
+  async getTranslations(): Promise<{ [key: string]: string }> {
+    return await lastValueFrom(this.translateService
+      .get([
+        TranslationConstants.CARDS.DELETED,
+        TranslationConstants.SUMMARIES.ORDER
+      ]));
   }
 
   onDelete() {
@@ -64,8 +84,10 @@ export class CardComponent {
   }
 
   materialReferenceToString(reference: ReferenceModel): string {
-    if (reference.fullName?.toLowerCase().includes("orders")) {
-      return 'Order : ' + ((reference as OrderReferenceModel).orderNumber ?? 'NA');
+    if ((reference as any).type?.toLowerCase().includes(ReferenceType.Order.toLowerCase())) {
+      const result=   this.translations()[TranslationConstants.SUMMARIES.ORDER] + ' : ' + ((reference as OrderReferenceModel).orderNumber ?? 'NA');
+      console.log("reesult",result);
+      return result;
     }
     return "?";
   }

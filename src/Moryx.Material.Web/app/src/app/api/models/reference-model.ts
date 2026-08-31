@@ -8,5 +8,4 @@
 
 export interface ReferenceModel {
   displayName?: string | null;
-  fullName?: string | null;
 }

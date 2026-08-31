@@ -23,6 +23,8 @@ import { DialogAddMaterialContainerComponent } from './dialogs/dialog-add-materi
 import { MaterialFlowService } from './services/material-flow.service';
 import { MaterialManagementService, ResourceModificationService } from './api/services';
 import { MaterialContainerModel, OrderReferenceModel } from './api/models';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslationConstants } from './extensions/translation-constants.extensions';
 
 @Component({
     selector: 'app-root',
@@ -36,7 +38,8 @@ import { MaterialContainerModel, OrderReferenceModel } from './api/models';
         MatSelectModule,
         RouterOutlet,
         RouterLink,
-        MatTabsModule
+        MatTabsModule,
+        TranslateModule
     ]
 })
 export class App implements OnInit, OnDestroy {
@@ -46,9 +49,6 @@ export class App implements OnInit, OnDestroy {
     private materialFlow = inject(MaterialFlowService);
     private materialApi = inject(MaterialManagementService);
     private containersSource = toSignal(this.materialApi.getContainers());
-    private containerResource = resource({
-        loader: () : Promise<MaterialContainerModel[]> => firstValueFrom(this.materialApi.getContainers())
-    });
     private resourceApi = inject(ResourceModificationService);
     private snackbarService = inject(SnackbarService);
     views = Views;
@@ -65,6 +65,9 @@ export class App implements OnInit, OnDestroy {
     protected selectedProducts = signal<string[]>([]);
     protected ordersSource = signal<OrderReferenceModel[]>([]);
     protected hasOrderIntegration = signal<boolean>(false);
+    private languageService = inject(LanguageService);
+    private translateService = inject(TranslateService);
+    protected translationConstants = TranslationConstants;
 
     constructor() {
         effect(() => {
@@ -77,6 +80,14 @@ export class App implements OnInit, OnDestroy {
             }
             this.materialFlow.executeFilter(filters);
         })
+
+        this.translateService.addLangs([
+            TranslationConstants.LANGUAGES.EN,
+            TranslationConstants.LANGUAGES.DE,
+            TranslationConstants.LANGUAGES.IT,
+        ]);
+        this.translateService.setFallbackLang('en');
+        this.translateService.use(this.languageService.getDefaultLanguage());
     }
 
     ngOnInit(): void {
@@ -104,6 +115,13 @@ export class App implements OnInit, OnDestroy {
         return this.containersSource()?.map(x => x.material) ?? [];
     }
 
+    async getTranslations(): Promise<{ [key: string]: string }> {
+        return await lastValueFrom(this.translateService
+            .get([
+                TranslationConstants.APP.CREATED,
+            ]));
+    }
+
     onAdd() {
         const dialogRef = this.dialog.open(DialogAddMaterialContainerComponent, {
             height: '560px',
@@ -125,7 +143,8 @@ export class App implements OnInit, OnDestroy {
             if (!constructed) {
                 return;
             }
-            this.snackbarService.showSuccess("Material Container Created!");
+            const translation = await this.getTranslations(); 
+            this.snackbarService.showSuccess(translation[TranslationConstants.APP.CREATED]);
             if (this.hasOrderIntegration()) {
                 this.fetchLinkedOrders();
             }

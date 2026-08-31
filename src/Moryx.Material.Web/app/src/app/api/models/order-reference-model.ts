@@ -8,7 +8,6 @@
 
 export interface OrderReferenceModel {
   displayName?: string | null;
-  fullName?: string | null;
   operationNumber?: string | null;
   operationSourceType?: string | null;
   orderNumber: string | null;

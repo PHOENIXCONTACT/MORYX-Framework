@@ -1,6 +1,7 @@
 <div class="section-container">
     @for (classification of sectionState(); track $index)
     {
+    @if(containers().filter(x => x.state === classification.section).length){
     <section class="classification-section-container">
         <mat-divider class="classification-section-divider" />
         <div class="section-header" (click)="classification.isExpanded = !classification.isExpanded">
@@ -9,11 +10,11 @@
                 <mat-icon>keyboard_arrow_down</mat-icon>
             </button>
             }@else{
-            <button mat-icon-button aria-label="collapse section">
+            <button mat-icon-button aria-label="expand section">
                 <mat-icon>keyboard_arrow_right</mat-icon>
             </button>
             }
-            <label>{{ classification.section }}</label>
+            <label>{{ findStateName(classification.section) }}</label>
         </div>
         @if(classification.isExpanded){
         <div class="classification-section-content">
@@ -21,11 +22,9 @@
             {
             <app-card [container]="container" (delete)="(deleteContainer($event))" />
             }
-            @if(!containers().filter(x => x.state === classification.section).length){
-            <p class="no-item">No items</p>
-            }
         </div>
         }
     </section>
+    }
     }
 </div>

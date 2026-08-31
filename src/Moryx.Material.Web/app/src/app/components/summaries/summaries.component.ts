@@ -1,15 +1,17 @@
 import { Component, inject, OnDestroy, OnInit, resource } from '@angular/core';
-import { SummaryComponent } from "../summary/summary.component";
 import { firstValueFrom, SubscriptionLike } from 'rxjs';
 import { MaterialManagementService } from 'src/app/api/services';
 import { environment } from 'src/environments/environment';
 import { MaterialContainerModel, OrderReferenceModel } from 'src/app/api/models';
 import { fromEventStream } from 'src/app/utilities/server-sent-event';
 import { MatCardModule } from '@angular/material/card';
+import { ReferenceType } from 'src/app/models/material-container';
+import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-summaries',
-  imports: [MatCardModule],
+  imports: [MatCardModule, TranslateModule],
   templateUrl: './summaries.component.html',
   styleUrl: './summaries.component.scss',
 })
@@ -20,6 +22,7 @@ export class SummariesComponent implements OnInit, OnDestroy {
   })
   private subscriptions: SubscriptionLike[] = [];
   private stream$ = fromEventStream<MaterialContainerModel>(environment.rootUrl + MaterialManagementService.ContainerChangesPath);
+  protected translationConstants = TranslationConstants;
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(sub => sub.unsubscribe());
@@ -39,10 +42,11 @@ export class SummariesComponent implements OnInit, OnDestroy {
         id: container.id,
         material: container.material,
         quantity: container.quantity,
-        isOrderReference: r.fullName?.toLowerCase().includes("order"),
+        isOrderReference: (r as TypedReference).type.toLowerCase().includes(ReferenceType.Order.toLowerCase()),
         orderNumber: (r as OrderReferenceModel)?.orderNumber
       }) ?? []);
-    const orderByMaterialInstanceMap: Map<OrderNumber, OrderByInstanceItem[]> = new Map<string, OrderByInstanceItem[]>();
+
+    const orderByMaterialInstanceMap: Map<OrderNumber, OrderByInstanceItem[]> = new Map<OrderNumber, OrderByInstanceItem[]>();
     flatList.forEach(item => {
       if (item.isOrderReference) {
         if (orderByMaterialInstanceMap.get(item.orderNumber!)) {
@@ -73,6 +77,9 @@ export class SummariesComponent implements OnInit, OnDestroy {
 }
 
 export type OrderNumber = string;
+export interface TypedReference {
+  type: string
+}
 export interface FlatContainerReferenceItem {
   id: number,
   material: string,

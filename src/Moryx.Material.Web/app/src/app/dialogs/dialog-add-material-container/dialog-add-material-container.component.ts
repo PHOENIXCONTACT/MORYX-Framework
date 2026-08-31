@@ -9,9 +9,11 @@ import { MatListModule, MatSelectionListChange } from '@angular/material/list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { MethodEntry, NavigableEntryEditor } from '@moryx/ngx-web-framework/entry-editor';
+import { TranslateModule } from '@ngx-translate/core';
 import { firstValueFrom, Observable, SubscriptionLike } from 'rxjs';
 import { MaterialContainerTypeModel, ResourceTypeModel } from 'src/app/api/models';
 import { MaterialManagementService, ResourceModificationService } from 'src/app/api/services';
+import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 
 @Component({
   selector: 'app-dialog-add-material-container',
@@ -23,22 +25,23 @@ import { MaterialManagementService, ResourceModificationService } from 'src/app/
     MatProgressSpinnerModule,
     MatIconModule,
     MatDialogModule,
-    NavigableEntryEditor],
+    NavigableEntryEditor,
+    TranslateModule],
   templateUrl: './dialog-add-material-container.component.html',
   styleUrl: './dialog-add-material-container.component.scss',
 })
-export class DialogAddMaterialContainerComponent implements OnDestroy{
+export class DialogAddMaterialContainerComponent implements OnDestroy {
   types = signal<ResourceTypeModel[]>([]);
   resourceType = signal<ResourceTypeModel | undefined>(undefined);
   selectedCtor = signal<MethodEntry | undefined>(undefined);
-
+  protected translationConstants = TranslationConstants;
   private materialApi = inject(MaterialManagementService);
   private resourceApi = inject(ResourceModificationService);
   private subscriptions: SubscriptionLike[] = [];
 
   constructor() {
     const sub = this.materialApi.getTypes().subscribe(materialTypes => {
-      const promises =  materialTypes.map(x => x.fullName).map(t => firstValueFrom(this.resourceApi.getType({name : t ?? ''})));
+      const promises = materialTypes.map(x => x.fullName).map(t => firstValueFrom(this.resourceApi.getType({ name: t ?? '' })));
       Promise.all(promises).then(types => {
         this.types.set(types);
       })

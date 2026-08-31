@@ -1,5 +1,5 @@
 <h2 mat-dialog-title>
-  Add Material Container
+  {{ translationConstants.ADD_MATERIAL_CONTAINER_DIALOG.CREATE_MATERIAL_CONTAINER | translate}}
 </h2>
 
 @if (types()) {
@@ -22,12 +22,12 @@
       </mat-selection-list>
       <ng-template #firstStepButtons>
         <button mat-button mat-dialog-close type="button" class="transform-to-uppercase">
-          Cancel
+          {{ translationConstants.ADD_MATERIAL_CONTAINER_DIALOG.CANCEL| translate}}
         </button>
         <button mat-flat-button (click)="typeSelected(stepper)" type="button" class="transform-to-uppercase" [disabled]="
               resourceType() === undefined || resourceType()?.creatable !== true
             ">
-          Next
+          {{ translationConstants.ADD_MATERIAL_CONTAINER_DIALOG.NEXT| translate}}
         </button>
       </ng-template>
     </mat-step>
@@ -52,11 +52,11 @@
       }
       <ng-template #secondStepButtons>
         <button mat-button matDialogClose type="button" class="transform-to-uppercase">
-          Cancel
+          {{ translationConstants.ADD_MATERIAL_CONTAINER_DIALOG.CANCEL| translate}}
         </button>
         <button mat-flat-button matStepperNext type="button" [disabled]="!secondStepComplete()"
           class="transform-to-uppercase">
-          Next
+          {{ translationConstants.ADD_MATERIAL_CONTAINER_DIALOG.NEXT| translate}}
         </button>
       </ng-template>
     </mat-step>
@@ -77,12 +77,13 @@
       </div>
       }
       <ng-template #lastStepButtons>
-        <button mat-button mat-dialog-close cdkFocusInitial type="button" color="primary" class="transform-to-uppercase">
-          Cancel
+        <button mat-button mat-dialog-close cdkFocusInitial type="button" color="primary"
+          class="transform-to-uppercase">
+          {{ translationConstants.ADD_MATERIAL_CONTAINER_DIALOG.CANCEL| translate}}
         </button>
         <button mat-button [mat-dialog-close]="true" type="button" [mat-dialog-close]="createResult()"
           class="transform-to-uppercase">
-          Create
+          {{ translationConstants.ADD_MATERIAL_CONTAINER_DIALOG.CREATE| translate}}
         </button>
       </ng-template>
     </mat-step>

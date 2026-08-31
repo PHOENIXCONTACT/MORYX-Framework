@@ -4,10 +4,59 @@
 */
 
 export class TranslationConstants {
-    public static readonly LANGUAGES = {
-      EN: 'en',
-      DE: 'de',
-      IT: 'it',
-      ZH: 'zh'
-    };
+  public static readonly LANGUAGES = {
+    EN: 'en',
+    DE: 'de',
+    IT: 'it',
+    ZH: 'zh'
+  };
+
+  public static readonly APP = {
+    CREATED: 'APP.CREATED',
+    FILTER_BY_ORDER: 'APP.FILTER_BY_ORDER',
+    ORDERS: 'APP.ORDERS',
+    CARD: 'APP.CARD',
+    SUMMARY: 'APP.SUMMARY',
+    HISTORY: 'APP.HISTORY',
+    CREATE: 'APP.CREATE'
+  }
+
+  public static readonly CARDS = {
+    DELETED: 'CARDS.DELETED'
+  }
+
+  public static readonly CARD = {
+    ADVISED: 'CARD.ADVISED',
+    PRE_ADVICE: 'CARD.PRE_ADVICE',
+    DELETE: 'CARD.DELETE',
+    STATE: 'CARD.STATE'
+  }
+
+  public static readonly SUMMARIES = {
+    SUMMARY: 'SUMMARIES.SUMMARY',
+    ORDER: 'SUMMARIES.ORDER',
+  }
+
+  public static readonly ADD_MATERIAL_CONTAINER_DIALOG = {
+    CREATE_MATERIAL_CONTAINER: 'ADD_MATERIAL_CONTAINER_DIALOG.CREATE_MATERIAL_CONTAINER',
+    CANCEL: 'ADD_MATERIAL_CONTAINER_DIALOG.CANCEL',
+    NEXT: 'ADD_MATERIAL_CONTAINER_DIALOG.NEXT',
+    CONSTRUCTOR: 'ADD_MATERIAL_CONTAINER_DIALOG.CONSTRUCTOR',
+    PARAMETERS: 'ADD_MATERIAL_CONTAINER_DIALOG.PARAMETERS',
+    CREATE: 'ADD_MATERIAL_CONTAINER_DIALOG.CREATE'
+  }
+
+  public static readonly CONFIRM_DELETE_DIALOG = {
+    TITLE : 'CONFIRM_DELETE_DIALOG.TITLE',
+    MESSAGE : 'CONFIRM_DELETE_DIALOG.MESSAGE',
+    CANCEL: 'CONFIRM_DELETE_DIALOG.CANCEL',
+    DELETE: 'CONFIRM_DELETE_DIALOG.DELETE',
+  }
+
+  public static readonly PRE_ADVICE_DIALOG = {
+    TITLE: 'PRE_ADVICE_DIALOG.TITLE',
+    REASON: 'PRE_ADVICE_DIALOG.REASON',
+    CANCEL: 'PRE_ADVICE_DIALOG.CANCEL',
+    DONE: 'PRE_ADVICE_DIALOG.DONE'
+  }
 }

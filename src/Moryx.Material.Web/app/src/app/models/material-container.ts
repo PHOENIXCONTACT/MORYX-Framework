@@ -1,7 +1,4 @@
-export interface MaterialContainer {
-  icon: string,
-  type: string,
-  links: string[],
-  instanceCount: number,
-  resource: string,
+export enum ReferenceType{
+  Order = "Order",
+  Product = "Product"
 }

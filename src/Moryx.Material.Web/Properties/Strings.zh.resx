@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -118,9 +118,9 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Module_Description" xml:space="preserve">
-    <value>通过该模块，您可以管理操作员、他们的技能和可用（不可用）时间段。使用该模块可以创建、更新或删除技能和技能类型，并将其分配给操作员。让操作员处理资源，并在他们离开资源时签出。</value>
+    <value>物料管理模块负责在整个制造过程中，对原材料、零部件、半成品及成品的流转进行跟踪、控制与优化。</value>
   </data>
   <data name="Module_Title" xml:space="preserve">
-    <value>操作员</value>
+    <value>材料</value>
   </data>
 </root>

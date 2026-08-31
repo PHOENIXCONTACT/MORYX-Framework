@@ -4,9 +4,8 @@
             <section class="topbar-filter-section">
                 @if(hasOrderIntegration()){
                 <mat-form-field floatLabel="always" class="full-width" appearance="outline">
-                    <mat-label>Orders</mat-label>
-                    <mat-select (valueChange)="selectedOrders.set($event)" value="" multiple
-                        placeholder="Filter by order">
+                    <mat-label>{{ translationConstants.APP.ORDERS | translate }}</mat-label>
+                    <mat-select (valueChange)="selectedOrders.set($event)" value="" multiple>
                         @for (order of ordersSource() ; track $index)
                         {
                         <mat-option [value]="order.orderNumber">{{ order.orderNumber
@@ -18,9 +17,8 @@
             </section>
             <section class="topbar-view-section">
                 <nav mat-tab-nav-bar [tabPanel]="tabPanel">
-                    <a mat-tab-link routerLink="cards" [active]="view() === views.cards">Card</a>
-                    <a mat-tab-link routerLink="summary" [active]="view() === views.summary">Summary</a>
-                    <a mat-tab-link routerLink="history" [active]="view() === views.history">History</a>
+                    <a mat-tab-link routerLink="cards" [active]="view() === views.cards">{{ translationConstants.APP.CARD | translate }}</a>
+                    <a mat-tab-link routerLink="summary" [active]="view() === views.summary">{{ translationConstants.APP.SUMMARY | translate }}</a>
                 </nav>
             </section>
         </section>
@@ -35,7 +33,7 @@
             <div class="side-container-item">
                 <a class="sidenav-toolbar-item" (click)="onAdd()">
                     <span class="material-symbols-outlined">add</span>
-                    <div class="label">Create</div>
+                    <div class="label">{{ translationConstants.APP.CREATE | translate }}</div>
                 </a>
             </div>
         </div>

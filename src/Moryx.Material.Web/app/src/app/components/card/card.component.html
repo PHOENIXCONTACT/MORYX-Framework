@@ -1,7 +1,7 @@
 <mat-card>
     <mat-card-header>
         <mat-icon mat-card-avatar class="container-icon">
-            {{ container().type?.icon ?? 'home' }}
+            {{ container().type.icon }}
         </mat-icon>
         <mat-card-title>{{ container().material }}</mat-card-title>
         <mat-card-subtitle>{{ container().name }}</mat-card-subtitle>
@@ -10,8 +10,8 @@
         <section>
             <label>{{ container().quantity+'x '+container().unit }}</label>
             <div class="card-chips">
-                <mat-chip-set aria-label="Material links">
-                    <mat-chip>State: {{container().state}}</mat-chip>
+                <mat-chip-set aria-label="References">
+                    <mat-chip> {{ translationConstants.CARD.STATE | translate }}: {{container().state}}</mat-chip>
                     @for (reference of container().references; track $index)
                     {
                     <mat-chip>{{ materialReferenceToString(reference) }}</mat-chip>
@@ -21,9 +21,7 @@
         </section>
     </mat-card-content>
     <mat-card-actions>
-        <button mat-button (click)="preAdvice()">Advice</button>
-        <button mat-button>Change Count</button>
-        <button mat-button>Delete</button>
-        <button mat-button (click)="link()">Link</button>
+        <button mat-button (click)="preAdvice()">{{ translationConstants.CARD.PRE_ADVICE | translate }}</button>
+        <button mat-button (click)="onDelete()" >{{ translationConstants.CARD.DELETE | translate }}</button>
     </mat-card-actions>
 </mat-card>

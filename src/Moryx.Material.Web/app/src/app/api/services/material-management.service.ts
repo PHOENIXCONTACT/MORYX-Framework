@@ -23,6 +23,8 @@ import { getContainers } from '../fn/material-management/get-containers';
 import { GetContainers$Params } from '../fn/material-management/get-containers';
 import { getOrderReferences } from '../fn/material-management/get-order-references';
 import { GetOrderReferences$Params } from '../fn/material-management/get-order-references';
+import { getStates } from '../fn/material-management/get-states';
+import { GetStates$Params } from '../fn/material-management/get-states';
 import { getTypes } from '../fn/material-management/get-types';
 import { GetTypes$Params } from '../fn/material-management/get-types';
 import { hasOrderIntegration } from '../fn/material-management/has-order-integration';
@@ -32,6 +34,7 @@ import { MaterialContainerTypeModel } from '../models/material-container-type-mo
 import { OrderReferenceModel } from '../models/order-reference-model';
 import { preAdviceAsync } from '../fn/material-management/pre-advice-async';
 import { PreAdviceAsync$Params } from '../fn/material-management/pre-advice-async';
+import { StateClassificationDescriptorModel } from '../models/state-classification-descriptor-model';
 
 @Injectable({ providedIn: 'root' })
 export class MaterialManagementService extends BaseService {
@@ -90,6 +93,33 @@ export class MaterialManagementService extends BaseService {
     const resp = this.getTypes$Response(params, context);
     return resp.pipe(
       map((r: StrictHttpResponse<Array<MaterialContainerTypeModel>>): Array<MaterialContainerTypeModel> => r.body)
+    );
+  }
+
+  /** Path part for operation `getStates()` */
+  static readonly GetStatesPath = '/api/moryx/materials/containers/states';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getStates()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getStates$Response(params?: GetStates$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<StateClassificationDescriptorModel>>> {
+    const obs = getStates(this.http, this.rootUrl, params, context);
+    return obs;
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getStates$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getStates(params?: GetStates$Params, context?: HttpContext): Observable<Array<StateClassificationDescriptorModel>> {
+    const resp = this.getStates$Response(params, context);
+    return resp.pipe(
+      map((r: StrictHttpResponse<Array<StateClassificationDescriptorModel>>): Array<StateClassificationDescriptorModel> => r.body)
     );
   }
 

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -118,9 +118,9 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Module_Description" xml:space="preserve">
-    <value>Mit diesem Modul können Sie Bediener, ihre Fähigkeiten und Zeiten der (Nicht-)Verfügbarkeit verwalten. Verwenden Sie das Modul, um Fähigkeiten und Fähigkeitstypen zu erstellen, zu aktualisieren oder zu löschen und sie Ihren Bedienern zuzuweisen. Lassen Sie Bediener sich an Ressourcen an- und wieder abmelden, wenn sie die Ressource wieder verlassen.</value>
+    <value>Das Materialwirtschaftsmodul ist für die Nachverfolgung, Steuerung und Optimierung des Flusses von Rohstoffen, Komponenten, Halbfertig- und Fertigprodukten im gesamten Fertigungsprozess verantwortlich.</value>
   </data>
   <data name="Module_Title" xml:space="preserve">
-    <value>Bediener</value>
+    <value>Material</value>
   </data>
 </root>

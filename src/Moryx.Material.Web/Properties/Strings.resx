@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Module_Description" xml:space="preserve">
-    <value>Some description.</value>
+    <value>Material Management Module is responsible for tracking, controlling, and optimizing the flow of raw materials, components, semi-finished products, and finished goods throughout the manufacturing process.</value>
   </data>
   <data name="Module_Title" xml:space="preserve">
     <value>Material</value>
