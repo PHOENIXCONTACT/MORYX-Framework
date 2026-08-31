@@ -1,5 +1,47 @@
 {
     "DISMISS": "CONGEDARE",
     "DEFAULT_MESSAGE": "Si è verificato un problema sul server.",
-    "SERVER_NOT_REACHABLE": "Il server non è raggiungibile, controlla la tua connessione Internet o le impostazioni del proxy." 
+    "SERVER_NOT_REACHABLE": "Il server non è raggiungibile, controlla la tua connessione Internet o le impostazioni del proxy.",
+    "APP": {
+        "CREATED": "Contenitore di materiale creato!",
+        "FILTER_BY_ORDER": "Filtra per numero d'ordine",
+        "ORDERS": "Ordini",
+        "CARD": "Carta",
+        "SUMMARY": "Riepilogo",
+        "HISTORY": "Storia",
+        "CREATE": "Creare"
+    },
+    "CARDS": {
+        "DELETED": "Contenitore del materiale eliminato!"
+    },
+    "CARD": {
+        "ADVISED": "Richiesta di pre-avviso inviata!",
+        "PRE_ADVICE": "Preavviso",
+        "DELETE": "Eliminare",
+        "STATE": "Stato"
+    },
+    "SUMMARIES": {
+        "SUMMARY": "Riepilogo",
+        "ORDER": "Ordine"
+    },
+    "ADD_MATERIAL_CONTAINER_DIALOG": {
+        "CREATE_MATERIAL_CONTAINER": "Crea contenitore Material",
+        "CANCEL": "Cancellare",
+        "NEXT": "Prossimo",
+        "CONSTRUCTOR": "Costruttore",
+        "PARAMETERS": "Parametri",
+        "CREATE": "Creare"
+    },
+    "CONFIRM_DELETE_DIALOG": {
+        "TITLE": "Elimina contenitore",
+        "MESSAGE": "Questa operazione eliminerà il contenitore corrente e non potrà essere annullata.",
+        "CANCEL": "Cancellare",
+        "DELETE": "Eliminare"
+    },
+    "PRE_ADVICE_DIALOG": {
+        "TITLE": "Richiesta di pre-avviso",
+        "REASON": "Motivo",
+        "CANCEL": "Cancellare",
+        "DONE": "Fatto"
+    }
 }

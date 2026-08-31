@@ -1,5 +1,47 @@
 {
     "DISMISS": "DISMISS",
     "DEFAULT_MESSAGE": "Something went wrong on the server.",
-    "SERVER_NOT_REACHABLE": "The server is unreachable, please check your internet connection or proxy settings." 
+    "SERVER_NOT_REACHABLE": "The server is unreachable, please check your internet connection or proxy settings.",
+    "APP": {
+        "CREATED": "Material container created!",
+        "FILTER_BY_ORDER": "Filter by Order Number",
+        "ORDERS": "Orders",
+        "CARD": "Card",
+        "SUMMARY": "Summary",
+        "HISTORY": "History",
+        "CREATE": "Create"
+    },
+    "CARDS": {
+        "DELETED": "Material container deleted!"
+    },
+    "CARD": {
+        "ADVISED": "Pre-advice request sent!",
+        "PRE_ADVICE": "Pre-Advice",
+        "DELETE": "Delete",
+        "STATE": "State"
+    },
+    "SUMMARIES": {
+        "SUMMARY": "Summary",
+        "ORDER": "Order"
+    },
+    "ADD_MATERIAL_CONTAINER_DIALOG": {
+        "CREATE_MATERIAL_CONTAINER": "Create Material container",
+        "CANCEL": "Cancel",
+        "NEXT": "Next",
+        "CONSTRUCTOR": "Constructor",
+        "PARAMETERS": "Parameters",
+        "CREATE": "Create"
+    },
+    "CONFIRM_DELETE_DIALOG": {
+        "TITLE": "Delete Container",
+        "MESSAGE": "This will delete the current container and cannot be undone.",
+        "CANCEL": "Cancel",
+        "DELETE": "Delete"
+    },
+    "PRE_ADVICE_DIALOG": {
+        "TITLE": "Pre-Advice Request",
+        "REASON": "Reason",
+        "CANCEL": "Cancel",
+        "DONE": "Done"
+    }
 }

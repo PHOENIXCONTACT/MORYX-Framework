@@ -1,5 +1,47 @@
 {
     "DISMISS": "VERWERFEN",
     "DEFAULT_MESSAGE": "Auf dem Server ist etwas schief gelaufen.",
-    "SERVER_NOT_REACHABLE": "Der Server ist nicht erreichbar, bitte überprüfe deine Netzwerkverbindung oder Proxy-Einstellungen."
+    "SERVER_NOT_REACHABLE": "Der Server ist nicht erreichbar, bitte überprüfe deine Netzwerkverbindung oder Proxy-Einstellungen.",
+    "APP": {
+        "CREATED": "Materialbehälter erstellt!",
+        "FILTER_BY_ORDER": "Nach Bestellnummer filtern",
+        "ORDERS": "Bestellungen",
+        "CARD": "Karte",
+        "SUMMARY": "Zusammenfassung",
+        "HISTORY": "Geschichte",
+        "CREATE": "Erstellen"
+    },
+    "CARDS": {
+        "DELETED": "Materialbehälter gelöscht!"
+    },
+    "CARD": {
+        "ADVISED": "Anfrage zur Vorabmitteilung gesendet!",
+        "PRE_ADVICE": "Vorabmitteilung",
+        "DELETE": "Löschen",
+        "STATE": "Zustand"
+    },
+    "SUMMARIES": {
+        "SUMMARY": "Zusammenfassung",
+        "ORDER": "Befehl"
+    },
+    "ADD_MATERIAL_CONTAINER_DIALOG": {
+        "CREATE_MATERIAL_CONTAINER": "Materialbehälter erstellen",
+        "CANCEL": "Stornieren",
+        "NEXT": "Nächste",
+        "CONSTRUCTOR": "Konstruktor",
+        "PARAMETERS": "Parameter",
+        "CREATE": "Erstellen"
+    },
+    "CONFIRM_DELETE_DIALOG": {
+        "TITLE": "Container löschen",
+        "MESSAGE": "Dadurch wird der aktuelle Container gelöscht; dieser Vorgang kann nicht rückgängig gemacht werden.",
+        "CANCEL": "Stornieren",
+        "DELETE": "Löschen"
+    },
+    "PRE_ADVICE_DIALOG": {
+        "TITLE": "Anfrage zur Vorabinformation",
+        "REASON": "Grund",
+        "CANCEL": "Stornieren",
+        "DONE": "Erledigt"
+    }
 }
