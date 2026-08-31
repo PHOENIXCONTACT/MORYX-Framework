@@ -63,6 +63,6 @@ export class SettingsDialog implements OnInit {
   protected apply(): void {
     this.instructionStateService.setFocusMode(this.selectedFocusMode());
     this.instructionStateService.setInstructor(this.selectedInstructor());
-    this.dialogRef.close(true);
+    this.dialogRef.close();
   }
 }

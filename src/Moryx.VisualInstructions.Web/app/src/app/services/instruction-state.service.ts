@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Injectable, signal } from '@angular/core';
+import { Injectable, Signal, signal, WritableSignal } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { FocusMode } from '@app/services/focus-mode';
 
@@ -33,14 +33,14 @@ export class InstructionStateService {
 
   private settings: InstructionSettings;
 
-  private _fullscreen;
-  readonly fullscreen;
+  private _fullscreen: WritableSignal<boolean>;
+  readonly fullscreen: Signal<boolean>;
 
-  private _focusMode;
-  readonly focusMode;
+  private _focusMode: WritableSignal<FocusMode>;
+  readonly focusMode: Signal<FocusMode>;
 
-  private _instructor;
-  readonly instructor;
+  private _instructor: WritableSignal<string>;
+  readonly instructor: Signal<string>;
 
   constructor() {
     this.settings = this.load();

@@ -1,6 +1,6 @@
 <h2 mat-dialog-title>{{ TranslationConstants.SETTINGS_DIALOG.TITLE | translate }}</h2>
 
-<mat-dialog-content class="dialog-container">
+<mat-dialog-content>
   <h3 class="intermediate-header">{{ TranslationConstants.SETTINGS_DIALOG.FOCUS_MODE | translate }}</h3>
 
   <mat-radio-group class="focus-mode-group" [value]="selectedFocusMode()" (change)="selectFocusMode($event.value)">

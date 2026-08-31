@@ -63,10 +63,10 @@ export class App {
 
     dialogRef
       .afterClosed()
-      .subscribe(result => this.handleDialogResult(result));
+      .subscribe(() => this.handleDialogResult());
   }
 
-  private async handleDialogResult(result: boolean | undefined) {
+  private async handleDialogResult() {
     if (!this.clientIdentifier()) {
       await this.showNoInstructorWarning();
     }
