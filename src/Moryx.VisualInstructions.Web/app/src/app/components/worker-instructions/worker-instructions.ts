@@ -4,13 +4,12 @@
 */
 
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, effect, inject, model, signal, untracked, ChangeDetectionStrategy } from "@angular/core";
+import { Component, computed, effect, inject, signal, untracked, ChangeDetectionStrategy } from "@angular/core";
 import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
 import { Entry, NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
 import { TranslatePipe } from "@ngx-translate/core";
 import { TranslationConstants } from "@app/translation-constants";
-import { environment } from "../../../environments/environment";
 import {
   InstructionContentType,
   InstructionItemModel,
@@ -23,8 +22,8 @@ import { InstructionService } from "@app/services/instruction.service";
 import { InstructionResponseModel } from "@app/api/models/instruction-response-model";
 import { DisplayedMediaContent } from "../media-contents/displayed-media-content";
 
-import { MatCardModule } from "@angular/material/card";
 import { MediaContents } from "../media-contents/media-contents";
+import { ActionBar } from "../action-bar/action-bar";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
@@ -37,15 +36,14 @@ import { FocusMode, InstructionStateService } from '@app/services/instruction-st
   styleUrls: ["./worker-instructions.scss"],
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
-    MatCardModule,
     MediaContents,
+    ActionBar,
     MatDividerModule,
     NavigableEntryEditor,
     EmptyState,
     TranslatePipe,
     MatButtonModule,
     MatIconModule,
-    MatCardModule,
     MarkdownComponent
   ]
 })
@@ -55,7 +53,6 @@ export class WorkerInstructions {
   private snackbarService = inject(SnackbarService);
   private instructionStateService = inject(InstructionStateService);
 
-  readonly clientIdentifier = model.required<string>();
   protected fullscreen = this.instructionStateService.fullscreen;
 
   protected instructions = signal<InstructionModel[]>([]);
@@ -66,9 +63,15 @@ export class WorkerInstructions {
   protected mediaItemsContent = signal<DisplayedMediaContent[]>([]);
   protected textItems = signal<InstructionItemModel[]>([]);
 
-  protected InstructionType = InstructionType;
-  protected InstructionContentType = InstructionContentType;
-  protected environment = environment;
+  protected possibleInstructionResults = computed(() => {
+    const instruction = this.displayedInstruction();
+    return instruction?.type === InstructionType.Execute ? instruction?.results ?? [] : [];
+  });
+
+  protected showActionBar = computed(() => {
+    return this.instructions().length > 1 || this.possibleInstructionResults().length > 0;
+  });
+
   protected TranslationConstants = TranslationConstants;
 
   constructor() {
@@ -194,7 +197,7 @@ export class WorkerInstructions {
     };
     this.visualInstructionsService
       .completeInstruction$Response({
-        identifier: this.clientIdentifier(),
+        identifier: this.instructionStateService.instructor(),
         body: response
       })
       .then(() => this.clearCurrentViewOf(target))
@@ -213,6 +216,10 @@ export class WorkerInstructions {
     this.mediaItemsContent.set([]);
     this.textItems.set([]);
     this.inputs.set(undefined);
+  }
+
+  protected async viewNewest() {
+    await this.onIndexChange(this.instructions().length - 1);
   }
 
   protected toggleFullscreen() {

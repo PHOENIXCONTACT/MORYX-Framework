@@ -4,6 +4,6 @@
 */
 
 export interface DisplayedMediaContent {
-    type: string;
-    url: string;
-  }
+  type: string;
+  url: string;
+}

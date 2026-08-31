@@ -1,0 +1,40 @@
+:host {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  border-radius: var(--mat-sys-corner-large) var(--mat-sys-corner-large) 0 0;
+  background-color: color-mix(in srgb, var(--mat-sys-surface-container) 85%, transparent);
+  backdrop-filter: blur(8px);
+}
+
+.bar-button {
+  height: 80px;
+  font-size: 28px;
+
+  .bar-icon {
+    font-size: 36px;
+    width: 36px;
+    height: 36px;
+    margin: 0;
+  }
+}
+
+.action-bar-navigation, .action-bar-results {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.instruction-counter {
+  text-align: center;
+  font-size: 28px;
+  font-weight: 400;
+  min-width: 48px;
+}
+
+.result-button {
+  text-transform: uppercase;
+}
