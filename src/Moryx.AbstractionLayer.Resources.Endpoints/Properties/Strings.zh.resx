@@ -129,7 +129,7 @@
   <data name="ResourceModificationController_ResourceConflict_Title" xml:space="preserve">
     <value>资源冲突</value>
   </data>
-  <data name="ResourceModificationController_ResourceNotFoundException_ById_Message" xml:space="preserve">
+  <data name="ResourceModificationController_ResourceNotFound_ById_Message" xml:space="preserve">
     <value>未找到 ID 为 {0} 的资源。</value>
   </data>
   <data name="ResourceModificationController_ResourceNotFound_Title" xml:space="preserve">
@@ -139,7 +139,7 @@
     <value>无效参数</value>
   </data>
   <data name="ResourceModificationController_MethodFailed_Message" xml:space="preserve">
-    <value>方法“{0}”执行失败：{1}。</value>
+    <value>方法“{0}”执行失败。详细信息请参见服务器日志（可通过 traceId 关联）。</value>
   </data>
   <data name="ResourceModificationController_ResourceAlreadyExists_Title" xml:space="preserve">
     <value>资源已存在</value>
@@ -151,7 +151,7 @@
     <value>无法删除资源 {0}，因为它仍被其他资源引用。</value>
   </data>
   <data name="ResourceModificationController_InvalidArgument_Message" xml:space="preserve">
-    <value>提供的参数无效：{0}。</value>
+    <value>提供的参数无效。详细信息请参见服务器日志（可通过 traceId 关联）。</value>
   </data>
   <data name="ResourceModificationController_ResourceTypeNotFound_Message" xml:space="preserve">
     <value>未找到资源类型“{0}”。</value>

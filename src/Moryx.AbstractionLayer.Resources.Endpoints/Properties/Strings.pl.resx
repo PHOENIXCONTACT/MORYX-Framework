@@ -129,7 +129,7 @@
   <data name="ResourceModificationController_ResourceConflict_Title" xml:space="preserve">
     <value>Konflikt zasobu</value>
   </data>
-  <data name="ResourceModificationController_ResourceNotFoundException_ById_Message" xml:space="preserve">
+  <data name="ResourceModificationController_ResourceNotFound_ById_Message" xml:space="preserve">
     <value>Nie znaleziono zasobu o identyfikatorze {0}!</value>
   </data>
   <data name="ResourceModificationController_ResourceNotFound_Title" xml:space="preserve">
@@ -139,7 +139,7 @@
     <value>Nieprawidłowy argument</value>
   </data>
   <data name="ResourceModificationController_MethodFailed_Message" xml:space="preserve">
-    <value>Wykonanie metody „{0}” zakończyło się niepowodzeniem: {1}.</value>
+    <value>Wykonanie metody „{0}” zakończyło się niepowodzeniem. Szczegóły znajdują się w logach serwera (korelacja poprzez traceId).</value>
   </data>
   <data name="ResourceModificationController_ResourceAlreadyExists_Title" xml:space="preserve">
     <value>Zasób już istnieje</value>
@@ -151,7 +151,7 @@
     <value>Zasób {0} nie może zostać usunięty, ponieważ jest nadal używany przez inne zasoby.</value>
   </data>
   <data name="ResourceModificationController_InvalidArgument_Message" xml:space="preserve">
-    <value>Podany argument jest nieprawidłowy: {0}.</value>
+    <value>Podany argument jest nieprawidłowy. Szczegóły znajdują się w logach serwera (korelacja poprzez traceId).</value>
   </data>
     <data name="ResourceModificationController_ResourceTypeNotFound_Message" xml:space="preserve">
     <value>Nie znaleziono typu zasobu „{0}”.</value>

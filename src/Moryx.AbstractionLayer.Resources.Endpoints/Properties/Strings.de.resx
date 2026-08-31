@@ -129,7 +129,7 @@
   <data name="ResourceModificationController_ResourceConflict_Title" xml:space="preserve">
     <value>Ressourcenkonflikt</value>
   </data>
-  <data name="ResourceModificationController_ResourceNotFoundException_ById_Message" xml:space="preserve">
+  <data name="ResourceModificationController_ResourceNotFound_ById_Message" xml:space="preserve">
     <value>Ressource mit der Id '{0}' nicht gefunden!</value>
   </data>
   <data name="ResourceModificationController_ResourceNotFound_Title" xml:space="preserve">
@@ -139,7 +139,7 @@
     <value>Ungültiges Argument</value>
   </data>
   <data name="ResourceModificationController_MethodFailed_Message" xml:space="preserve">
-    <value>Der Methodenaufruf '{0}' ist fehlgeschlagen: {1}.</value>
+    <value>Der Methodenaufruf '{0}' ist fehlgeschlagen. Details siehe Server-Log (Korrelation über traceId).</value>
   </data>
   <data name="ResourceModificationController_ResourceAlreadyExists_Title" xml:space="preserve">
     <value>Ressource existiert bereits</value>
@@ -151,7 +151,7 @@
     <value>Die Ressource {0} kann nicht gelöscht werden, solange sie noch von anderen Ressourcen referenziert wird.</value>
   </data>
   <data name="ResourceModificationController_InvalidArgument_Message" xml:space="preserve">
-    <value>Das übergebene Argument ist ungültig: {0}</value>
+    <value>Das übergebene Argument ist ungültig. Details siehe Server-Log (Korrelation über traceId).</value>
   </data>
   <data name="ResourceModificationController_ResourceTypeNotFound_Message" xml:space="preserve">
     <value>Ressourcentyp „{0}“ wurde nicht gefunden.</value>

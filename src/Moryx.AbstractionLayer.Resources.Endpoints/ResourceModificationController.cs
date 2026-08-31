@@ -1,12 +1,14 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Diagnostics;
 using System.Net;
 using System.Reflection;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.Logging;
 using Moryx.Serialization;
 using Moryx.Tools;
 using Moryx.Runtime.Modules;
@@ -14,8 +16,7 @@ using Moryx.Configuration;
 using System.Runtime.Serialization;
 using System.ComponentModel.DataAnnotations;
 using Moryx.AbstractionLayer.Resources.Endpoints.Models;
-using Moryx.AbstractionLayer.Resources.Endpoints.Properties;
-using System.Globalization;
+using Moryx.AspNetCore;
 
 namespace Moryx.AbstractionLayer.Resources.Endpoints;
 
@@ -31,19 +32,30 @@ public class ResourceModificationController : ControllerBase
     private readonly IResourceManagement _resourceManagement;
     private readonly IResourceTypeTree _resourceTypeTree;
     private readonly ResourceSerialization _serialization;
+    private readonly ILogger<ResourceModificationController> _logger;
 
     public ResourceModificationController(IResourceManagement resourceManagement,
         IResourceTypeTree resourceTypeTree,
         IModuleManager moduleManager,
-        IServiceProvider serviceProvider)
+        IServiceProvider serviceProvider,
+        ILogger<ResourceModificationController> logger)
     {
         _resourceManagement = resourceManagement ?? throw new ArgumentNullException(nameof(resourceManagement));
         _resourceTypeTree = resourceTypeTree ?? throw new ArgumentNullException(nameof(resourceTypeTree));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         ArgumentNullException.ThrowIfNull(moduleManager);
         ArgumentNullException.ThrowIfNull(serviceProvider);
         var module = moduleManager.AllModules.FirstOrDefault(module => module is IFacadeContainer<IResourceManagement>);
         _serialization = new ResourceSerialization(module.Container, serviceProvider);
     }
+
+    /// <summary>
+    /// Returns the current request's trace id, using the same source
+    /// (<see cref="Activity"/> with fallback to <see cref="HttpContext.TraceIdentifier"/>)
+    /// that <c>AddMoryxProblemDetails</c> writes into the response, so log entries and
+    /// client responses can be correlated.
+    /// </summary>
+    private string GetTraceId() => ProblemDetailsExtensions.GetTraceId(HttpContext);
 
     /// <summary>
     /// Returns the full resource type tree
@@ -117,15 +129,7 @@ public class ResourceModificationController : ControllerBase
         var converter = new ResourceToModelConverter(_resourceTypeTree, _serialization);
         var resourceModel = _resourceManagement.ReadUnsafe(id, r => converter.GetDetails(r));
         if (resourceModel is null)
-
-            return NotFound(new ProblemDetails
-            {
-                Type = "https://www.rfc-editor.org/rfc/rfc9110.html#name-404-not-found",
-                Title = Strings.ResourceModificationController_ResourceNotFound_Title,
-                Status = StatusCodes.Status404NotFound,
-                Detail = string.Format(CultureInfo.CurrentCulture, Strings.ResourceModificationController_ResourceNotFoundException_ById_Message, id),
-                Instance = HttpContext.Request.Path
-            });
+            return Problem().ResourceNotFound(id);
 
         return resourceModel;
     }
@@ -153,14 +157,7 @@ public class ResourceModificationController : ControllerBase
     public async Task<ActionResult<Entry>> InvokeMethod(long id, string method, Entry parameters)
     {
         if (!_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == id).Any())
-            return NotFound(new ProblemDetails
-            {
-                Type = "https://www.rfc-editor.org/rfc/rfc9110.html#name-404-not-found",
-                Title = Strings.ResourceModificationController_ResourceNotFound_Title,
-                Status = StatusCodes.Status404NotFound,
-                Detail = string.Format(CultureInfo.CurrentCulture, Strings.ResourceModificationController_ResourceNotFoundException_ById_Message, id),
-                Instance = HttpContext.Request.Path
-            });
+            return Problem().ResourceNotFound(id);
 
         Entry entry = null;
         try
@@ -173,25 +170,14 @@ public class ResourceModificationController : ControllerBase
         }
         catch (MissingMethodException)
         {
-            return NotFound(new ProblemDetails
-            {
-                Type = "https://www.rfc-editor.org/rfc/rfc9110.html#name-404-not-found",
-                Title = Strings.ResourceModificationController_MethodNotFound_Title,
-                Status = StatusCodes.Status404NotFound,
-                Detail = string.Format(CultureInfo.CurrentCulture, Strings.ResourceModificationController_MethodNotFound_Message, method, id),
-                Instance = HttpContext.Request.Path
-            });
+            return Problem().MethodNotFound(method, id);
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            return UnprocessableEntity(new ProblemDetails
-            {
-                Type = "https://www.rfc-editor.org/rfc/rfc9110.html#name-422-unprocessable-content",
-                Title = Strings.ResourceModificationController_MethodFailed_Title,
-                Status = StatusCodes.Status422UnprocessableEntity,
-                Detail = string.Format(CultureInfo.CurrentCulture, Strings.ResourceModificationController_MethodFailed_Message, method, e.Message),
-                Instance = HttpContext.Request.Path
-            });
+            _logger.LogError(ex,
+                "Unhandled exception while invoking method {Method} on resource {ResourceId}. TraceId: {TraceId}",
+                method, id, GetTraceId());
+            return Problem().MethodFailed(method);
         }
 
         return entry is null ? NoContent() : Ok(entry);
@@ -240,16 +226,12 @@ public class ResourceModificationController : ControllerBase
         {
             resource = (Resource)Activator.CreateInstance(_resourceTypeTree[type].ResourceType);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            return NotFound(new ProblemDetails
-            {
-                Type = "https://www.rfc-editor.org/rfc/rfc9110.html#name-404-not-found",
-                Title = Strings.ResourceModificationController_ResourceTypeNotFound_Title,
-                Status = StatusCodes.Status404NotFound,
-                Detail = string.Format(CultureInfo.CurrentCulture, Strings.ResourceModificationController_ResourceTypeNotFound_Message, type),
-                Instance = HttpContext.Request.Path
-            });
+            _logger.LogError(ex,
+                "Failed to construct resource of type {Type}. TraceId: {TraceId}",
+                type, GetTraceId());
+            return Problem().ResourceTypeNotFound(type);
         }
 
         ValueProviderExecutor.Execute(resource, new ValueProviderExecutorSettings()
@@ -274,15 +256,17 @@ public class ResourceModificationController : ControllerBase
         }
         catch (Exception e)
         {
+            var traceId = GetTraceId();
             if (e is ArgumentException or SerializationException or ValidationException)
-                return BadRequest(new ProblemDetails
-                {
-                    Type = "https://www.rfc-editor.org/rfc/rfc9110.html#name-400-bad-request",
-                    Title = Strings.ResourceModificationController_InvalidArgument_Title,
-                    Status = StatusCodes.Status400BadRequest,
-                    Detail = string.Format(CultureInfo.CurrentCulture, Strings.ResourceModificationController_InvalidArgument_Message, e.Message),
-                    Instance = HttpContext.Request.Path
-                });
+            {
+                _logger.LogWarning(e,
+                    "Invalid argument while constructing resource of type {Type} via method {Method}. TraceId: {TraceId}",
+                    type, method?.Name, traceId);
+                return Problem().InvalidArgument();
+            }
+            _logger.LogError(e,
+                "Unhandled exception while constructing resource of type {Type} via method {Method}. TraceId: {TraceId}",
+                type, method?.Name, traceId);
             throw;
         }
     }
@@ -305,14 +289,7 @@ public class ResourceModificationController : ControllerBase
     public async Task<ActionResult<ResourceModel>> Save(ResourceModel model)
     {
         if (_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == model.Id).Any())
-            return Conflict(new ProblemDetails
-            {
-                Type = "https://www.rfc-editor.org/rfc/rfc9110.html#name-409-conflict",
-                Title = Strings.ResourceModificationController_ResourceAlreadyExists_Title,
-                Status = StatusCodes.Status409Conflict,
-                Detail = string.Format(CultureInfo.CurrentCulture, Strings.ResourceModificationController_ResourceAlreadyExists_Message, model.Id),
-                Instance = HttpContext.Request.Path + "/" + model.Id
-            });
+            return Problem().ResourceAlreadyExists(model.Id);
         try
         {
             var id = await _resourceManagement.CreateUnsafeAsync(_resourceTypeTree[model.Type].ResourceType, async (r) =>
@@ -331,15 +308,17 @@ public class ResourceModificationController : ControllerBase
         }
         catch (Exception e)
         {
+            var traceId = GetTraceId();
             if (e is ArgumentException or SerializationException or ValidationException)
-                return BadRequest(new ProblemDetails
-                {
-                    Type = "https://www.rfc-editor.org/rfc/rfc9110.html#name-400-bad-request",
-                    Title = Strings.ResourceModificationController_InvalidArgument_Title,
-                    Status = StatusCodes.Status400BadRequest,
-                    Detail = string.Format(CultureInfo.CurrentCulture, Strings.ResourceModificationController_InvalidArgument_Message, e.Message),
-                    Instance = HttpContext.Request.Path
-                });
+            {
+                _logger.LogWarning(e,
+                    "Invalid argument while saving resource of type {Type}. TraceId: {TraceId}",
+                    model?.Type, traceId);
+                return Problem().InvalidArgument();
+            }
+            _logger.LogError(e,
+                "Unhandled exception while saving resource of type {Type}. TraceId: {TraceId}",
+                model?.Type, traceId);
             throw;
         }
     }
@@ -480,14 +459,7 @@ public class ResourceModificationController : ControllerBase
     public async Task<ActionResult<ResourceModel>> Update(long id, ResourceModel model)
     {
         if (!_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == id).Any())
-            return NotFound(new ProblemDetails
-            {
-                Type = "https://www.rfc-editor.org/rfc/rfc9110.html#name-404-not-found",
-                Title = Strings.ResourceModificationController_ResourceNotFound_Title,
-                Status = StatusCodes.Status404NotFound,
-                Detail = string.Format(CultureInfo.CurrentCulture, Strings.ResourceModificationController_ResourceNotFoundException_ById_Message, id),
-                Instance = HttpContext.Request.Path
-            });
+            return Problem().ResourceNotFound(id);
 
         try
         {
@@ -505,15 +477,17 @@ public class ResourceModificationController : ControllerBase
         }
         catch (Exception e)
         {
+            var traceId = GetTraceId();
             if (e is ArgumentException or SerializationException or ValidationException)
-                return BadRequest(new ProblemDetails
-                {
-                    Type = "https://www.rfc-editor.org/rfc/rfc9110.html#name-400-bad-request",
-                    Title = Strings.ResourceModificationController_InvalidArgument_Title,
-                    Status = StatusCodes.Status400BadRequest,
-                    Detail = string.Format(CultureInfo.CurrentCulture, Strings.ResourceModificationController_InvalidArgument_Message, e.Message),
-                    Instance = HttpContext.Request.Path
-                });
+            {
+                _logger.LogWarning(e,
+                    "Invalid argument while updating resource with id {ResourceId}. TraceId: {TraceId}",
+                    id, traceId);
+                return Problem().InvalidArgument();
+            }
+            _logger.LogError(e,
+                "Unhandled exception while updating resource with id {ResourceId}. TraceId: {TraceId}",
+                id, traceId);
             throw;
         }
 
@@ -537,25 +511,11 @@ public class ResourceModificationController : ControllerBase
     public async Task<ActionResult> Remove(long id)
     {
         if (!_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == id).Any())
-            return NotFound(new ProblemDetails
-            {
-                Type = "https://www.rfc-editor.org/rfc/rfc9110.html#name-404-not-found",
-                Title = Strings.ResourceModificationController_ResourceNotFound_Title,
-                Status = StatusCodes.Status404NotFound,
-                Detail = string.Format(CultureInfo.CurrentCulture, Strings.ResourceModificationController_ResourceNotFoundException_ById_Message, id),
-                Instance = HttpContext.Request.Path
-            });
+            return Problem().ResourceNotFound(id);
 
         var deleted = await _resourceManagement.DeleteAsync(id);
         if (!deleted)
-            return Conflict(new ProblemDetails
-            {
-                Type = "https://www.rfc-editor.org/rfc/rfc9110.html#name-409-conflict",
-                Title = Strings.ResourceModificationController_ResourceConflict_Title,
-                Status = StatusCodes.Status409Conflict,
-                Detail = string.Format(CultureInfo.CurrentCulture, Strings.ResourceModificationController_ResourceConflict_Message, id),
-                Instance = HttpContext.Request.Path
-            });
+            return Problem().ResourceReferenceConflict(id);
 
         return NoContent();
     }

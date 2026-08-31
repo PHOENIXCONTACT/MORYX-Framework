@@ -129,7 +129,7 @@
   <data name="ResourceModificationController_ResourceConflict_Title" xml:space="preserve">
     <value>Conflitto della risorsa</value>
   </data>
-  <data name="ResourceModificationController_ResourceNotFoundException_ById_Message" xml:space="preserve">
+  <data name="ResourceModificationController_ResourceNotFound_ById_Message" xml:space="preserve">
     <value>Risorsa con ID {0} non trovata.</value>
   </data>
   <data name="ResourceModificationController_ResourceNotFound_Title" xml:space="preserve">
@@ -139,7 +139,7 @@
     <value>Argomento non valido</value>
   </data>
   <data name="ResourceModificationController_MethodFailed_Message" xml:space="preserve">
-    <value>Il metodo '{0}' non è riuscito: {1}.</value>
+    <value>Il metodo '{0}' non è riuscito. Per i dettagli consultare i log del server (correlazione tramite traceId).</value>
   </data>
   <data name="ResourceModificationController_ResourceAlreadyExists_Title" xml:space="preserve">
     <value>La risorsa esiste già</value>
@@ -151,7 +151,7 @@
     <value>La risorsa {0} non può essere eliminata finché è ancora referenziata da altre risorse.</value>
   </data>
   <data name="ResourceModificationController_InvalidArgument_Message" xml:space="preserve">
-    <value>L'argomento fornito non è valido: {0}</value>
+    <value>L'argomento fornito non è valido. Per i dettagli consultare i log del server (correlazione tramite traceId).</value>
   </data>
   <data name="ResourceModificationController_ResourceTypeNotFound_Message" xml:space="preserve">
     <value>Il tipo di risorsa '{0}' non è stato trovato.</value>

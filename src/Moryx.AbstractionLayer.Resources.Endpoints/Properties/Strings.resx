@@ -129,7 +129,7 @@
   <data name="ResourceModificationController_ResourceConflict_Title" xml:space="preserve">
     <value>Resource conflict</value>
   </data>
-  <data name="ResourceModificationController_ResourceNotFoundException_ById_Message" xml:space="preserve">
+  <data name="ResourceModificationController_ResourceNotFound_ById_Message" xml:space="preserve">
     <value>No resource found with id: {0}</value>
   </data>
   <data name="ResourceModificationController_ResourceNotFound_Title" xml:space="preserve">
@@ -139,7 +139,7 @@
     <value>Invalid argument</value>
   </data>
   <data name="ResourceModificationController_MethodFailed_Message" xml:space="preserve">
-    <value>Method '{0}' failed: {1}.</value>
+    <value>Method '{0}' failed. See server logs for details (correlate via traceId).</value>
   </data>
   <data name="ResourceModificationController_ResourceAlreadyExists_Title" xml:space="preserve">
     <value>Resource already exists</value>
@@ -151,7 +151,7 @@
     <value>Resource {0} cannot be deleted while it is still referenced by other resources.</value>
   </data>
   <data name="ResourceModificationController_InvalidArgument_Message" xml:space="preserve">
-    <value>The supplied argument is invalid: {0}</value>
+    <value>The supplied argument is invalid. See server logs for details (correlate via traceId).</value>
   </data>
   <data name="ResourceModificationController_ResourceTypeNotFound_Message" xml:space="preserve">
     <value>Resource type '{0}' was not found.</value>
