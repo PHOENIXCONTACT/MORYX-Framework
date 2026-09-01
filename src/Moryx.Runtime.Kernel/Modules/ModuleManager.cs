@@ -19,6 +19,7 @@ public class ModuleManager : IModuleManager
     private readonly IModuleStarter _moduleStarter;
     private readonly IModuleStopper _moduleStopper;
     private readonly ModuleManagerConfig _config;
+    private readonly IConfigManager _configManager;
 
     #endregion
 
@@ -32,6 +33,7 @@ public class ModuleManager : IModuleManager
         var allModules = modules.ToList();
 
         // Create components
+        _configManager = configManager;
         _config = configManager.GetConfiguration<ModuleManagerConfig>();
 
         // Create dependency manager and build tree of available modules
@@ -133,7 +135,7 @@ public class ModuleManager : IModuleManager
     /// <typeparam name="T">Type of behaviour</typeparam>
     public IBehaviourAccess<T> BehaviourAccess<T>(IServerModule plugin)
     {
-        return ABehaviourAccess.Create<T>(_config, plugin);
+        return ABehaviourAccess.Create<T>(_config, _configManager, plugin);
     }
 
     #endregion
