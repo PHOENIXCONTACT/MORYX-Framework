@@ -27,9 +27,9 @@ internal class VisualInstructionsFacade : FacadeBase, IVisualInstructions
     /// <inheritdoc cref="IFacadeControl"/>
     public override void Activate()
     {
+        base.Activate();
         Controller.InstructionAdded += ParallelOperations.DecoupleListener<InstructionEventArgs>(OnInstructionAdded);
         Controller.InstructionCleared += ParallelOperations.DecoupleListener<InstructionEventArgs>(OnInstructionCleared);
-        base.Activate();
     }
 
     /// <inheritdoc cref="IFacadeControl"/>
