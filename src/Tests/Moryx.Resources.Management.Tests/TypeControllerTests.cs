@@ -32,7 +32,8 @@ public class TypeControllerTests
                 typeof(ResourceWithImplicitApi),
                 typeof(ExplicitEventResource),
                 typeof(SharedEventNameResource),
-                typeof(CustomDelegateResource)
+                typeof(CustomDelegateResource),
+                typeof(PlainResource)
             ]);
 
         _typeController = new ResourceTypeController
@@ -425,6 +426,22 @@ public class TypeControllerTests
         // Act & Assert
         var ex = Assert.Throws<NotSupportedException>(() => _typeController.GetProxy(instance));
         Assert.That(ex!.Message, Does.Contain(nameof(ICustomDelegateResource.StatusReport)));
+    }
+
+    [Test(Description = "Resource without any IResource-derived interface can be proxified as IResource")]
+    public void ProxifyResourceWithOnlyIResource()
+    {
+        // Arrange
+        var instance = new PlainResource { Id = 50, Name = "Plain" };
+
+        // Act
+        var proxy = _typeController.GetProxy(instance);
+
+        // Assert
+        Assert.That(proxy, Is.Not.Null);
+        Assert.That(proxy, Is.InstanceOf<IResource>());
+        Assert.That(proxy.Id, Is.EqualTo(50));
+        Assert.That(proxy.Name, Is.EqualTo("Plain"));
     }
 
     [Test(Description = "Proxy returns null for Name and Capabilities without throwing ProxyDetachedException")]

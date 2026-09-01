@@ -26,9 +26,13 @@ internal class ResourceProxyBuilder
         options.AddMixinInstance(mixin);
         options.BaseTypeForInterfaceProxy = typeof(ResourceProxyBase);
 
-        // Separate primary and additional interfaces
-        var primaryInterface = interfaces[0];
-        var additionalInterfaces = interfaces.Skip(1).ToArray();
+        // Use the most specific IResource-derived interface as primary, fall back to IResource itself.
+        // Most specific means no other candidate in the list derives from it.
+        // This ensures the generated proxy type name reflects the most specific interface (e.g. "IAssemblyCellProxy" instead of "IResourceProxy_3").
+        var resourceInterfaces = interfaces.Where(i => typeof(IResource).IsAssignableFrom(i) && i != typeof(IResource)).ToList();
+        var primaryInterface = resourceInterfaces.FirstOrDefault(candidate => !resourceInterfaces.Any(other => other != candidate && candidate.IsAssignableFrom(other)))
+                               ?? typeof(IResource);
+        var additionalInterfaces = interfaces.Where(i => i != primaryInterface).ToArray();
 
         // Create interceptor with deferred proxy reference
         var interceptor = new ResourceInterceptor(mixin, typeController);

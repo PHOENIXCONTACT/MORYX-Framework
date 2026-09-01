@@ -225,11 +225,10 @@ internal class ResourceTypeController : IResourceTypeController, IResourceTypeTr
         var additionalPublicInterfaces = node.ResourceType.GetCustomAttributes<ResourceAvailableAsAttribute>()
             .SelectMany(a => a.AvailableAs).Distinct();
 
-        // Add all resources derived from IResource, but not IResource itself
+        // Add all interfaces derived from IResource, including IResource itself
         relevantInterfaces.AddRange(from resourceInterface in interfaces
             where resourceInterface.IsPublic
-                  && ((typeof(IResource).IsAssignableFrom(resourceInterface)
-                       && !resourceInterface.IsAssignableFrom(typeof(IResource)))
+                  && (typeof(IResource).IsAssignableFrom(resourceInterface)
                       || additionalPublicInterfaces.Contains(resourceInterface))
             select resourceInterface);
 
