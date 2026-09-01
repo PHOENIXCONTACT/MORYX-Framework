@@ -118,45 +118,45 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ResourceModificationController_MethodFailed_Title" xml:space="preserve">
-    <value>Method failed</value>
+    <value>方法执行失败</value>
   </data>
   <data name="ResourceModificationController_MethodNotFound_Message" xml:space="preserve">
-    <value>Method '{0}' does not exist on resource {1}. Please check spelling and access modifier (has to be public or internal).</value>
+    <value>资源 {1} 中不存在方法“{0}”。请检查拼写和访问修饰符（必须为 public 或 internal）。</value>
   </data>
   <data name="ResourceModificationController_MethodNotFound_Title" xml:space="preserve">
-    <value>Method not found</value>
+    <value>未找到方法</value>
   </data>
   <data name="ResourceModificationController_ResourceConflict_Title" xml:space="preserve">
-    <value>Resource conflict</value>
+    <value>资源冲突</value>
   </data>
   <data name="ResourceModificationController_ResourceNotFound_ById_Message" xml:space="preserve">
-    <value>No resource found with id: {0}</value>
+    <value>未找到 ID 为 {0} 的资源。</value>
   </data>
   <data name="ResourceModificationController_ResourceNotFound_Title" xml:space="preserve">
-    <value>Resource not found</value>
+    <value>未找到资源</value>
   </data>
   <data name="ResourceModificationController_InvalidArgument_Title" xml:space="preserve">
-    <value>Invalid argument</value>
+    <value>无效参数</value>
   </data>
   <data name="ResourceModificationController_MethodFailed_Message" xml:space="preserve">
-    <value>Method '{0}' failed. See server logs for details (correlate via traceId).</value>
+    <value>方法“{0}”执行失败。详细信息请参见服务器日志（可通过 traceId 关联）。</value>
   </data>
   <data name="ResourceModificationController_ResourceAlreadyExists_Title" xml:space="preserve">
-    <value>Resource already exists</value>
+    <value>资源已存在</value>
   </data>
   <data name="ResourceModificationController_ResourceAlreadyExists_Message" xml:space="preserve">
-    <value>Ressource '{0}' already exists. Use PUT /{0} to update it.</value>
+    <value>资源“{0}”已存在。请使用 PUT /{0} 进行更新。</value>
   </data>
   <data name="ResourceModificationController_ResourceConflict_Message" xml:space="preserve">
-    <value>Resource {0} cannot be deleted while it is still referenced by other resources.</value>
+    <value>无法删除资源 {0}，因为它仍被其他资源引用。</value>
   </data>
   <data name="ResourceModificationController_InvalidArgument_Message" xml:space="preserve">
-    <value>The supplied argument is invalid. See server logs for details (correlate via traceId).</value>
+    <value>提供的参数无效。详细信息请参见服务器日志（可通过 traceId 关联）。</value>
   </data>
   <data name="ResourceModificationController_ResourceTypeNotFound_Message" xml:space="preserve">
-    <value>Resource type '{0}' was not found.</value>
+    <value>未找到资源类型“{0}”。</value>
   </data>
   <data name="ResourceModificationController_ResourceTypeNotFound_Title" xml:space="preserve">
-    <value>Resource type not found</value>
+    <value>未找到资源类型</value>
   </data>
 </root>

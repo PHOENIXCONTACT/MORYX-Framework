@@ -118,45 +118,45 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ResourceModificationController_MethodFailed_Title" xml:space="preserve">
-    <value>Method failed</value>
+    <value>Wywołanie metody nie powiodło się</value>
   </data>
   <data name="ResourceModificationController_MethodNotFound_Message" xml:space="preserve">
-    <value>Method '{0}' does not exist on resource {1}. Please check spelling and access modifier (has to be public or internal).</value>
+    <value>Metoda „{0}” nie istnieje dla zasobu {1}. Sprawdź pisownię oraz modyfikator dostępu (musi być publiczny lub wewnętrzny).</value>
   </data>
   <data name="ResourceModificationController_MethodNotFound_Title" xml:space="preserve">
-    <value>Method not found</value>
+    <value>Nie znaleziono metody</value>
   </data>
   <data name="ResourceModificationController_ResourceConflict_Title" xml:space="preserve">
-    <value>Resource conflict</value>
+    <value>Konflikt zasobu</value>
   </data>
   <data name="ResourceModificationController_ResourceNotFound_ById_Message" xml:space="preserve">
-    <value>No resource found with id: {0}</value>
+    <value>Nie znaleziono zasobu o identyfikatorze {0}!</value>
   </data>
   <data name="ResourceModificationController_ResourceNotFound_Title" xml:space="preserve">
-    <value>Resource not found</value>
+    <value>Nie znaleziono zasobu</value>
   </data>
   <data name="ResourceModificationController_InvalidArgument_Title" xml:space="preserve">
-    <value>Invalid argument</value>
+    <value>Nieprawidłowy argument</value>
   </data>
   <data name="ResourceModificationController_MethodFailed_Message" xml:space="preserve">
-    <value>Method '{0}' failed. See server logs for details (correlate via traceId).</value>
+    <value>Wykonanie metody „{0}” zakończyło się niepowodzeniem. Szczegóły znajdują się w logach serwera (korelacja poprzez traceId).</value>
   </data>
   <data name="ResourceModificationController_ResourceAlreadyExists_Title" xml:space="preserve">
-    <value>Resource already exists</value>
+    <value>Zasób już istnieje</value>
   </data>
   <data name="ResourceModificationController_ResourceAlreadyExists_Message" xml:space="preserve">
-    <value>Ressource '{0}' already exists. Use PUT /{0} to update it.</value>
+    <value>Zasób „{0}” już istnieje. Użyj PUT /{0}, aby go zaktualizować.</value>
   </data>
   <data name="ResourceModificationController_ResourceConflict_Message" xml:space="preserve">
-    <value>Resource {0} cannot be deleted while it is still referenced by other resources.</value>
+    <value>Zasób {0} nie może zostać usunięty, ponieważ jest nadal używany przez inne zasoby.</value>
   </data>
   <data name="ResourceModificationController_InvalidArgument_Message" xml:space="preserve">
-    <value>The supplied argument is invalid. See server logs for details (correlate via traceId).</value>
+    <value>Podany argument jest nieprawidłowy. Szczegóły znajdują się w logach serwera (korelacja poprzez traceId).</value>
   </data>
-  <data name="ResourceModificationController_ResourceTypeNotFound_Message" xml:space="preserve">
-    <value>Resource type '{0}' was not found.</value>
+    <data name="ResourceModificationController_ResourceTypeNotFound_Message" xml:space="preserve">
+    <value>Nie znaleziono typu zasobu „{0}”.</value>
   </data>
   <data name="ResourceModificationController_ResourceTypeNotFound_Title" xml:space="preserve">
-    <value>Resource type not found</value>
+    <value>Nie znaleziono typu zasobu</value>
   </data>
 </root>

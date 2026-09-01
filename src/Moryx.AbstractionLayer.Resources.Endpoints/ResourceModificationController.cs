@@ -1,12 +1,14 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Diagnostics;
 using System.Net;
 using System.Reflection;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.Logging;
 using Moryx.Serialization;
 using Moryx.Tools;
 using Moryx.Runtime.Modules;
@@ -14,7 +16,6 @@ using Moryx.Configuration;
 using System.Runtime.Serialization;
 using System.ComponentModel.DataAnnotations;
 using Moryx.AbstractionLayer.Resources.Endpoints.Models;
-using Moryx.AbstractionLayer.Resources.Endpoints.Properties;
 using Moryx.AspNetCore;
 
 namespace Moryx.AbstractionLayer.Resources.Endpoints;
@@ -31,19 +32,30 @@ public class ResourceModificationController : ControllerBase
     private readonly IResourceManagement _resourceManagement;
     private readonly IResourceTypeTree _resourceTypeTree;
     private readonly ResourceSerialization _serialization;
+    private readonly ILogger<ResourceModificationController> _logger;
 
     public ResourceModificationController(IResourceManagement resourceManagement,
         IResourceTypeTree resourceTypeTree,
         IModuleManager moduleManager,
-        IServiceProvider serviceProvider)
+        IServiceProvider serviceProvider,
+        ILogger<ResourceModificationController> logger)
     {
         _resourceManagement = resourceManagement ?? throw new ArgumentNullException(nameof(resourceManagement));
         _resourceTypeTree = resourceTypeTree ?? throw new ArgumentNullException(nameof(resourceTypeTree));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         ArgumentNullException.ThrowIfNull(moduleManager);
         ArgumentNullException.ThrowIfNull(serviceProvider);
         var module = moduleManager.AllModules.FirstOrDefault(module => module is IFacadeContainer<IResourceManagement>);
         _serialization = new ResourceSerialization(module.Container, serviceProvider);
     }
+
+    /// <summary>
+    /// Returns the current request's trace id, using the same source
+    /// (<see cref="Activity"/> with fallback to <see cref="HttpContext.TraceIdentifier"/>)
+    /// that <c>AddMoryxProblemDetails</c> writes into the response, so log entries and
+    /// client responses can be correlated.
+    /// </summary>
+    private string GetTraceId() => ProblemDetailsExtensions.GetTraceId(HttpContext);
 
     /// <summary>
     /// Returns the full resource type tree
@@ -89,7 +101,7 @@ public class ResourceModificationController : ControllerBase
     /// <returns>An array of resource models.</returns>
     [HttpGet("query")]
     [ProducesResponseType(typeof(ResourceModel[]), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Policy = ResourcePermissions.CanViewTree)]
     public ActionResult<ResourceModel[]> GetResources([FromQuery] ResourceQuery query)
@@ -109,7 +121,7 @@ public class ResourceModificationController : ControllerBase
     /// <returns>The full model of the requested resource.</returns>
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(ResourceModel), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Policy = ResourcePermissions.CanViewDetails)]
     public ActionResult<ResourceModel> GetDetails(long id)
@@ -117,7 +129,7 @@ public class ResourceModificationController : ControllerBase
         var converter = new ResourceToModelConverter(_resourceTypeTree, _serialization);
         var resourceModel = _resourceManagement.ReadUnsafe(id, r => converter.GetDetails(r));
         if (resourceModel is null)
-            return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ResourceNotFoundException_ById_Message, id) });
+            return Problem().ResourceNotFound(id);
 
         return resourceModel;
     }
@@ -139,13 +151,13 @@ public class ResourceModificationController : ControllerBase
     [HttpPost("{id}/invoke/{method}")]
     [ProducesResponseType(typeof(Entry), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
     [Authorize(Policy = ResourcePermissions.CanInvokeMethod)]
     public async Task<ActionResult<Entry>> InvokeMethod(long id, string method, Entry parameters)
     {
         if (!_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == id).Any())
-            return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ResourceNotFoundException_ById_Message, id) });
+            return Problem().ResourceNotFound(id);
 
         Entry entry = null;
         try
@@ -158,11 +170,14 @@ public class ResourceModificationController : ControllerBase
         }
         catch (MissingMethodException)
         {
-            return NotFound(new MoryxExceptionResponse { Title = $"Method '{method}' does not exist on resource {id}. Please check spelling and access modifier (has to be `public` or `internal`)." });
+            return Problem().MethodNotFound(method, id);
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            return UnprocessableEntity(new MoryxExceptionResponse { Title = $"Method '{method}' failed: {e.Message}." });
+            _logger.LogError(ex,
+                "Unhandled exception while invoking method {Method} on resource {ResourceId}. TraceId: {TraceId}",
+                method, id, GetTraceId());
+            return Problem().MethodFailed(method);
         }
 
         return entry is null ? NoContent() : Ok(entry);
@@ -191,8 +206,8 @@ public class ResourceModificationController : ControllerBase
     /// </returns>
     [HttpPost("types/{type}")]
     [ProducesResponseType(typeof(ResourceModel), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Policy = ResourcePermissions.CanAdd)]
     public Task<ActionResult<ResourceModel>> ConstructWithParameters(string type, string method = null, [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] Entry arguments = null)
@@ -211,12 +226,12 @@ public class ResourceModificationController : ControllerBase
         {
             resource = (Resource)Activator.CreateInstance(_resourceTypeTree[type].ResourceType);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            return NotFound(new MoryxExceptionResponse
-            {
-                Title = Strings.ResourceManagementController_ResourceNotFound
-            });
+            _logger.LogError(ex,
+                "Failed to construct resource of type {Type}. TraceId: {TraceId}",
+                type, GetTraceId());
+            return Problem().ResourceTypeNotFound(type);
         }
 
         ValueProviderExecutor.Execute(resource, new ValueProviderExecutorSettings()
@@ -241,8 +256,17 @@ public class ResourceModificationController : ControllerBase
         }
         catch (Exception e)
         {
+            var traceId = GetTraceId();
             if (e is ArgumentException or SerializationException or ValidationException)
-                return BadRequest(new MoryxExceptionResponse { Title = e.Message });
+            {
+                _logger.LogWarning(e,
+                    "Invalid argument while constructing resource of type {Type} via method {Method}. TraceId: {TraceId}",
+                    type, method?.Name, traceId);
+                return Problem().InvalidArgument();
+            }
+            _logger.LogError(e,
+                "Unhandled exception while constructing resource of type {Type} via method {Method}. TraceId: {TraceId}",
+                type, method?.Name, traceId);
             throw;
         }
     }
@@ -258,14 +282,14 @@ public class ResourceModificationController : ControllerBase
     /// <returns>The saved resource model with its assigned ID.</returns>
     [HttpPost]
     [ProducesResponseType(typeof(ResourceModel), StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status409Conflict)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Policy = ResourcePermissions.CanAdd)]
     public async Task<ActionResult<ResourceModel>> Save(ResourceModel model)
     {
         if (_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == model.Id).Any())
-            return Conflict(new MoryxExceptionResponse { Title = $"Resource '{model.Id}' already exists. Use PUT /{model.Id} to update it." });
+            return Problem().ResourceAlreadyExists(model.Id);
         try
         {
             var id = await _resourceManagement.CreateUnsafeAsync(_resourceTypeTree[model.Type].ResourceType, async (r) =>
@@ -284,8 +308,17 @@ public class ResourceModificationController : ControllerBase
         }
         catch (Exception e)
         {
+            var traceId = GetTraceId();
             if (e is ArgumentException or SerializationException or ValidationException)
-                return BadRequest(new MoryxExceptionResponse { Title = e.Message });
+            {
+                _logger.LogWarning(e,
+                    "Invalid argument while saving resource of type {Type}. TraceId: {TraceId}",
+                    model?.Type, traceId);
+                return Problem().InvalidArgument();
+            }
+            _logger.LogError(e,
+                "Unhandled exception while saving resource of type {Type}. TraceId: {TraceId}",
+                model?.Type, traceId);
             throw;
         }
     }
@@ -419,14 +452,14 @@ public class ResourceModificationController : ControllerBase
     /// <returns>The resource model as it exists in the database after the update.</returns>
     [HttpPut("{id}")]
     [ProducesResponseType(typeof(ResourceModel), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Policy = ResourcePermissions.CanEdit)]
     public async Task<ActionResult<ResourceModel>> Update(long id, ResourceModel model)
     {
         if (!_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == id).Any())
-            return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ResourceNotFoundException_ById_Message, id) });
+            return Problem().ResourceNotFound(id);
 
         try
         {
@@ -444,8 +477,17 @@ public class ResourceModificationController : ControllerBase
         }
         catch (Exception e)
         {
+            var traceId = GetTraceId();
             if (e is ArgumentException or SerializationException or ValidationException)
-                return BadRequest(new MoryxExceptionResponse { Title = e.Message });
+            {
+                _logger.LogWarning(e,
+                    "Invalid argument while updating resource with id {ResourceId}. TraceId: {TraceId}",
+                    id, traceId);
+                return Problem().InvalidArgument();
+            }
+            _logger.LogError(e,
+                "Unhandled exception while updating resource with id {ResourceId}. TraceId: {TraceId}",
+                id, traceId);
             throw;
         }
 
@@ -462,18 +504,18 @@ public class ResourceModificationController : ControllerBase
     /// </returns>
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status409Conflict)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Policy = ResourcePermissions.CanDelete)]
     public async Task<ActionResult> Remove(long id)
     {
         if (!_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == id).Any())
-            return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ResourceNotFoundException_ById_Message, id) });
+            return Problem().ResourceNotFound(id);
 
         var deleted = await _resourceManagement.DeleteAsync(id);
         if (!deleted)
-            return Conflict(new MoryxExceptionResponse { Title = $"Resource {id} cannot be deleted while it is still referenced by other resources."});
+            return Problem().ResourceReferenceConflict(id);
 
         return NoContent();
     }
