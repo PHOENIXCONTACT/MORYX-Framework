@@ -50,7 +50,9 @@ public class NotificationPublisherController : ControllerBase
     {
         var notification = _notificationPublisher.Get(guid);
         if (notification == null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = Strings.NotificationPublisherController_NotificationNotFound });
+        }
 
         return Converter.ToModel(notification);
     }
@@ -126,8 +128,6 @@ public class NotificationPublisherController : ControllerBase
             }
             yield return new SseItem<string>(JsonSerializer.Serialize(initialNotifications, _serializerOptions));
 
-
-
             await foreach (var data in channel.Reader.ReadAllAsync(cancelToken))
             {
                 yield return data;
@@ -140,9 +140,7 @@ public class NotificationPublisherController : ControllerBase
             var notifications = _notificationPublisher.GetAll()
                 .Select(Converter.ToModel).ToArray();
 
-
             channel.Writer.TryWrite(new SseItem<string>(JsonSerializer.Serialize(notifications, _serializerOptions)));
-
         }
     }
 
@@ -154,7 +152,9 @@ public class NotificationPublisherController : ControllerBase
     {
         var notification = _notificationPublisher.Get(guid);
         if (notification == null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = Strings.NotificationPublisherController_NotificationNotFound });
+        }
 
         _notificationPublisher.Acknowledge(notification);
         return Ok();
