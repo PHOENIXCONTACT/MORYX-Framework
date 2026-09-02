@@ -5,7 +5,11 @@ on:
 
   push:
     branches:
-      - feature/SBOM-evaluation
+      - dev
+      - future
+      - main
+    tags:
+      - "v*"
 
 jobs:
   generate-sboms:
