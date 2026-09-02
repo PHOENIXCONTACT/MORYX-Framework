@@ -53,7 +53,7 @@ jobs:
 
       - name: Compute version
         id: version
-        uses: phoenixcontact/tools/.github/actions/compute-version@feature/determine-version-action
+        uses: phoenixcontact/tools/.github/actions/compute-version@main
 
       - name: Set PRODUCT_VERSION
         run: echo "PRODUCT_VERSION=${{ steps.version.outputs.version }}" >> "$GITHUB_ENV"
