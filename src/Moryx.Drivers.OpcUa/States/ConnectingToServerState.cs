@@ -7,16 +7,21 @@ namespace Moryx.Drivers.OpcUa.States;
 
 internal class ConnectingToServerState(OpcUaDriver context, StateMachines.StateBase.StateMap stateMap) : DriverOpcUaState(context, stateMap, StateClassification.Offline)
 {
-    internal override async Task OnConnectingCompletedAsync(bool successfull)
+    public override async Task OnEnterAsync(CancellationToken cancellationToken)
+    {
+        await base.OnEnterAsync(cancellationToken);
+        await Context.TryConnect(true, cancellationToken);
+    }
+
+    internal override async Task OnConnectingCompletedAsync(bool successfull, CancellationToken cancellationToken)
     {
         if (successfull)
         {
-            NextState(StateBrowsingNodes);
-            await Context.BrowseNodesAsync();
+            await NextStateAsync(StateInitializingSubscriptions, cancellationToken);
         }
         else
         {
-            await Context.TryConnect(false);
+            await Context.TryConnect(false, cancellationToken);
         }
 
     }
