@@ -7,9 +7,8 @@ using Moryx.Threading;
 
 namespace Moryx.VisualInstructions.Controller;
 
-internal class VisualInstructionsFacade : IVisualInstructions, IFacadeControl
+internal class VisualInstructionsFacade : FacadeBase, IVisualInstructions
 {
-    public Action ValidateHealthState { get; set; }
     public VisualInstructionsFacade()
     {
         ValidateHealthState = InitialValidateHealthState;
@@ -26,17 +25,19 @@ internal class VisualInstructionsFacade : IVisualInstructions, IFacadeControl
     #endregion
 
     /// <inheritdoc cref="IFacadeControl"/>
-    public void Activate()
+    public override void Activate()
     {
+        base.Activate();
         Controller.InstructionAdded += ParallelOperations.DecoupleListener<InstructionEventArgs>(OnInstructionAdded);
         Controller.InstructionCleared += ParallelOperations.DecoupleListener<InstructionEventArgs>(OnInstructionCleared);
     }
 
     /// <inheritdoc cref="IFacadeControl"/>
-    public void Deactivate()
+    public override void Deactivate()
     {
         Controller.InstructionCleared -= ParallelOperations.RemoveListener<InstructionEventArgs>(OnInstructionCleared);
         Controller.InstructionAdded -= ParallelOperations.RemoveListener<InstructionEventArgs>(OnInstructionAdded);
+        base.Deactivate();
     }
 
     private void OnInstructionAdded(object sender, InstructionEventArgs e)

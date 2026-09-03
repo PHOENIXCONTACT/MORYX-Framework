@@ -3,6 +3,7 @@
 
 using System;
 using System.Linq;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moryx.Runtime.Modules;
 using NUnit.Framework;
@@ -24,7 +25,7 @@ public class VisualInstructionsControllerTests
         _moduleManagerMock = new Mock<IModuleManager>();
         _serviceProviderMock = new Mock<IServiceProvider>();
         _moduleManagerMock.Setup(x => x.AllModules).Returns([]);
-        _controller = new VisualInstructionsController(_visualInstructionsFacadeMock, _moduleManagerMock.Object, _serviceProviderMock.Object);
+        _controller = new VisualInstructionsController(_visualInstructionsFacadeMock, _moduleManagerMock.Object, _serviceProviderMock.Object, NullLogger<VisualInstructionsController>.Instance);
     }
 
     [Test]

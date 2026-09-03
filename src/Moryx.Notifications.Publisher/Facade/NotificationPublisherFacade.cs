@@ -5,10 +5,8 @@ using Moryx.Runtime.Modules;
 
 namespace Moryx.Notifications.Publisher;
 
-internal class NotificationPublisherFacade : IFacadeControl, INotificationPublisher
+internal class NotificationPublisherFacade : FacadeBase, INotificationPublisher
 {
-    public Action ValidateHealthState { get; set; }
-
     public INotificationManager NotificationManager { get; set; }
 
     public NotificationPublisherFacade()
@@ -16,13 +14,13 @@ internal class NotificationPublisherFacade : IFacadeControl, INotificationPublis
         ValidateHealthState = InitialValidateHealthState;
     }
 
-    public void Activate()
+    public override void Activate()
     {
         NotificationManager.Published += OnPublished;
         NotificationManager.Acknowledged += OnAcknowledged;
     }
 
-    public void Deactivate()
+    public override void Deactivate()
     {
         NotificationManager.Published -= OnPublished;
         NotificationManager.Acknowledged -= OnAcknowledged;

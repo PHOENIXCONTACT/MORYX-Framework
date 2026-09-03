@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { inject, Injectable, signal } from '@angular/core';
+import { effect, inject, Injectable, signal } from '@angular/core';
 import { InstructionItemModel, InstructionModel } from '../api/models';
 import { VisualInstructionsService } from '../api/services';
 import { DisplayedMediaContent } from '../components/media-contents/displayed-media-content';
@@ -26,13 +26,21 @@ export class InstructionService {
 
   private readonly _instructions = signal<InstructionModel[]>([]);
   readonly instructions = this._instructions.asReadonly();
+  
+  private readonly _connected = signal<boolean>(false);
+  readonly connected = this._connected.asReadonly();
 
   public connect() {
     this.eventSource = new EventSource(this.visualInstructionsService.rootUrl + '/api/moryx/instructions/stream', {withCredentials: !environment.production});
     this.eventSource.onmessage = event => {
       const instructions = JSON.parse(event.data);
       this._instructions.set(instructions);
+      this._connected.set(true);
     };
+    this.eventSource.onerror = event => {
+      this._connected.set(false);
+    };
+
   }
 
   async requestMediaContentsAsync(mediaItems: InstructionItemModel[]): Promise<DisplayedMediaContent[]> {
@@ -78,6 +86,7 @@ export class InstructionService {
     if (this.eventSource) {
       this.eventSource.close();
       this.eventSource = undefined;
+      this._connected.set(false);
     }
   }
 }

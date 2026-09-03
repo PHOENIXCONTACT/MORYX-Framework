@@ -30,6 +30,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MarkdownComponent } from "ngx-markdown";
 import { InstructionStateService } from '@app/services/instruction-state.service';
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 @Component({
   selector: "app-worker-instructions",
@@ -46,7 +47,8 @@ import { InstructionStateService } from '@app/services/instruction-state.service
     MatButtonModule,
     MatIconModule,
     MatCardModule,
-    MarkdownComponent
+    MarkdownComponent,
+    MatProgressSpinnerModule,
   ]
 })
 export class WorkerInstructions {
@@ -65,6 +67,7 @@ export class WorkerInstructions {
   protected displayedInstruction = signal<InstructionModel | undefined>(undefined);
   protected mediaItemsContent = signal<DisplayedMediaContent[]>([]);
   protected textItems = signal<InstructionItemModel[]>([]);
+  protected readonly connected = this.instructionService.connected;
 
   protected InstructionType = InstructionType;
   protected InstructionContentType = InstructionContentType;
