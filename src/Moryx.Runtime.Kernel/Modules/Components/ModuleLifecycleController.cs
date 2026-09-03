@@ -53,7 +53,7 @@ internal class ModuleLifecycleController
         var depTree = _dependencyManager.GetDependencyTree();
         foreach (var root in depTree.RootModules.Where(ShouldBeStarted))
         {
-            ConvertBranch(root);
+            await ConvertBranchAsync(root, cancellationToken);
         }
 
         foreach (var module in depTree.RootModules.Where(ShouldBeStarted).Select(branch => branch.RepresentedModule))
@@ -74,7 +74,7 @@ internal class ModuleLifecycleController
                                                                               || dependent.State == ServerModuleState.Starting))
         {
             // We will enqueue the service to make sure it is restarted later on
-            AddWaitingModule(module, dependingService);
+            await AddWaitingModuleAsync(module, dependingService, cancellationToken);
             await StopAsync(dependingService, cancellationToken);
         }
 
@@ -135,29 +135,29 @@ internal class ModuleLifecycleController
             return;
 
         // Now we start every service waiting on this service to return
-        await _waitingModulesSemaphore.ExecuteAsync(async () =>
+        // Extract under semaphore, start outside to avoid re-entrance deadlock
+        ICollection<IServerModule> modulesToStart = null;
+        await _waitingModulesSemaphore.ExecuteAsync(() =>
         {
-            if (!_waitingModules.TryGetValue(module, out var previouslyWaitingModules))
-                return;
+            _waitingModules.Remove(module, out modulesToStart);
+        }, cancellationToken);
 
-            // To increase boot speed we fork module start if more than one dependent was found
-            foreach (var waitingModule in previouslyWaitingModules.ToArray())
+        // To increase boot speed we fork module start if more than one dependent was found
+        if (modulesToStart != null)
+        {
+            foreach (var waitingModule in modulesToStart)
             {
-                previouslyWaitingModules.Remove(waitingModule);
                 await StartModule(waitingModule, cancellationToken);
             }
-
-            // We remove this service for now after we started every dependent
-            _waitingModules.Remove(module);
-        }, cancellationToken);
+        }
     }
 
-    private void ConvertBranch(IModuleDependency branch)
+    private async Task ConvertBranchAsync(IModuleDependency branch, CancellationToken cancellationToken)
     {
         foreach (var dependent in branch.Dependents.Where(ShouldBeStarted))
         {
-            AddWaitingModule(branch.RepresentedModule, dependent.RepresentedModule);
-            ConvertBranch(dependent);
+            await AddWaitingModuleAsync(branch.RepresentedModule, dependent.RepresentedModule, cancellationToken);
+            await ConvertBranchAsync(dependent, cancellationToken);
         }
     }
 
@@ -165,7 +165,7 @@ internal class ModuleLifecycleController
     {
         foreach (var dependency in dependencies)
         {
-            AddWaitingModule(dependency, waitingService);
+            await AddWaitingModuleAsync(dependency, waitingService, cancellationToken);
             await StartAsync(dependency, cancellationToken);
         }
     }
@@ -177,9 +177,9 @@ internal class ModuleLifecycleController
         return result;
     }
 
-    private void AddWaitingModule(IServerModule dependency, IServerModule dependent)
+    private Task AddWaitingModuleAsync(IServerModule dependency, IServerModule dependent, CancellationToken cancellationToken)
     {
-        lock (_waitingModules)
+        return _waitingModulesSemaphore.ExecuteAsync(() =>
         {
             if (_waitingModules.TryGetValue(dependency, out var waitingModules))
             {
@@ -190,6 +190,6 @@ internal class ModuleLifecycleController
             {
                 _waitingModules[dependency] = new List<IServerModule> { dependent };
             }
-        }
+        }, cancellationToken);
     }
 }
