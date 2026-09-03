@@ -92,15 +92,18 @@ internal class ModuleLifecycleController
 
     private async Task StartModule(IServerModule module, CancellationToken cancellationToken)
     {
+        var dependencies = _dependencyManager.GetDependencyBranch(module).Dependencies;
+
         // Check for any failed dependencies
-        var hasFailedDependencies = _dependencyManager.GetDependencyBranch(module).Dependencies
+        var hasFailedDependencies = dependencies
             .Any(item => item.RepresentedModule.State == ServerModuleState.Failure);
+
         // Don't try to start modules which initialization has been failed or for which dependency initializations have failed
         if (module.State == ServerModuleState.Failure || hasFailedDependencies)
             return;
 
         // Now we check for any not running dependencies and start them
-        var awaitingDependencies = _dependencyManager.GetDependencyBranch(module).Dependencies
+        var awaitingDependencies = dependencies
             .Where(item => !item.RepresentedModule.State.HasFlag(ServerModuleState.Running))
             // Filter missing modules if they are optional
             .Where(item => item.RepresentedModule is not MissingServerModule { Optional: true })
