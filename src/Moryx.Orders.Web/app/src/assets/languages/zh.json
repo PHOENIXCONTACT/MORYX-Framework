@@ -59,7 +59,11 @@
     "WORKPLAN": "工作计划",
     "CLASSIFICATION": "分类",
     "PROPERTIES": "属性",
-    "VERSION": "版本"
+    "VERSION": "版本",
+    "GO BACK": "返回",
+    "EDIT": "编辑",
+    "SAVE": "保存",
+    "CANCEL": "取消"
   },
   "DOCUMENTS": {
     "DOCUMENTS_OF": "文档 -",
