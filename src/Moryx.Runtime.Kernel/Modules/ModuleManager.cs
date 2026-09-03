@@ -115,9 +115,9 @@ public class ModuleManager : IModuleManager
     public IModuleDependencyTree DependencyTree => _dependencyManager.GetDependencyTree();
 
     /// <summary>
-    /// Get or set a services behaviour using
+    /// Get or set a services behavior using
     /// </summary>
-    /// <typeparam name="T">Type of behaviour</typeparam>
+    /// <typeparam name="T">Type of behavior</typeparam>
     public IBehaviourAccess<T> BehaviourAccess<T>(IServerModule plugin)
     {
         return ABehaviourAccess.Create<T>(_config, _configManager, plugin);
