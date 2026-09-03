@@ -7,44 +7,44 @@ using Moryx.Tools;
 
 namespace Moryx.Runtime.Kernel;
 
-internal class ModuleStarter : ModuleManagerComponent, IModuleStarter
+internal class ModuleLifecycleController
 {
+    private readonly IReadOnlyList<IServerModule> _availableModules;
     private readonly IModuleDependencyManager _dependencyManager;
     private readonly ILogger _logger;
     private readonly ModuleManagerConfig _config;
     private readonly SemaphoreSlim _waitingModulesSemaphore = new(1, 1);
+    private readonly Dictionary<IServerModule, ICollection<IServerModule>> _waitingModules = new();
 
-    public ModuleStarter(IModuleDependencyManager dependencyManager, ILogger logger, ModuleManagerConfig config)
+    public ModuleLifecycleController(IReadOnlyList<IServerModule> availableModules,
+        IModuleDependencyManager dependencyManager, ILogger logger, ModuleManagerConfig config)
     {
+        _availableModules = availableModules;
         _dependencyManager = dependencyManager;
         _logger = logger;
         _config = config;
     }
 
-    /// <inheritdoc />
     public Task InitializeAsync(IServerModule module, CancellationToken cancellationToken)
     {
-        if (!AvailableModules.Contains(module))
-            return Task.CompletedTask; // Module not executable
+        if (!_availableModules.Contains(module))
+            return Task.CompletedTask;
 
         return module.InitializeAsync(cancellationToken);
     }
 
-    /// <inheritdoc />
     public async Task StartAsync(IServerModule module, CancellationToken cancellationToken)
     {
-        if (!AvailableModules.Contains(module))
-            return; // Module not executable
+        if (!_availableModules.Contains(module))
+            return;
 
         await module.InitializeAsync(cancellationToken);
-
         await StartModule(module, cancellationToken);
     }
 
-    /// <inheritdoc />
     public async Task StartAllAsync(CancellationToken cancellationToken)
     {
-        foreach (var module in AvailableModules)
+        foreach (var module in _availableModules)
         {
             await module.InitializeAsync(cancellationToken);
         }
@@ -59,6 +59,34 @@ internal class ModuleStarter : ModuleManagerComponent, IModuleStarter
         foreach (var module in depTree.RootModules.Where(ShouldBeStarted).Select(branch => branch.RepresentedModule))
         {
             await StartModule(module, cancellationToken);
+        }
+    }
+
+    public async Task StopAsync(IServerModule module, CancellationToken cancellationToken)
+    {
+        if (!_availableModules.Contains(module))
+            return;
+
+        // First we have to find all running modules that depend on this service
+        var dependingServices = _dependencyManager.GetDependencyBranch(module).Dependents.Select(item => item.RepresentedModule);
+        // Now we will stop all of them recursively
+        foreach (var dependingService in dependingServices.Where(dependent => dependent.State.HasFlag(ServerModuleState.Running)
+                                                                              || dependent.State == ServerModuleState.Starting))
+        {
+            // We will enqueue the service to make sure it is restarted later on
+            AddWaitingModule(module, dependingService);
+            await StopAsync(dependingService, cancellationToken);
+        }
+
+        // State machine handles error transitions internally
+        await module.StopAsync(cancellationToken);
+    }
+
+    public async Task StopAllAsync(CancellationToken cancellationToken)
+    {
+        foreach (var module in _availableModules)
+        {
+            await StopAsync(module, cancellationToken);
         }
     }
 
@@ -90,21 +118,12 @@ internal class ModuleStarter : ModuleManagerComponent, IModuleStarter
 
     private async Task ExecuteModuleStart(IServerModule module, CancellationToken cancellationToken)
     {
-        // Should be caught by ServerModuleBase but better be safe than sorry
-        try
-        {
-            await module.InitializeAsync(cancellationToken);
-            await module.StartAsync(cancellationToken);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Failed to start module {name}", module.Name);
-        }
+        // State machine owns initialization and start transitions including error handling
+        await module.StartAsync(cancellationToken);
 
-        // Forward result
+        // Forward result to start waiting dependents
         await ModuleChangedState(module, module.State, cancellationToken);
     }
-
 
     private async Task ModuleChangedState(IServerModule module, ServerModuleState newState, CancellationToken cancellationToken)
     {
@@ -115,7 +134,7 @@ internal class ModuleStarter : ModuleManagerComponent, IModuleStarter
         // Now we start every service waiting on this service to return
         await _waitingModulesSemaphore.ExecuteAsync(async () =>
         {
-            if (!WaitingModules.TryGetValue(module, out var previouslyWaitingModules))
+            if (!_waitingModules.TryGetValue(module, out var previouslyWaitingModules))
                 return;
 
             // To increase boot speed we fork module start if more than one dependent was found
@@ -126,7 +145,7 @@ internal class ModuleStarter : ModuleManagerComponent, IModuleStarter
             }
 
             // We remove this service for now after we started every dependent
-            WaitingModules.Remove(module);
+            _waitingModules.Remove(module);
         }, cancellationToken);
     }
 
@@ -153,5 +172,21 @@ internal class ModuleStarter : ModuleManagerComponent, IModuleStarter
         var conf = _config.GetOrCreate(plugin.RepresentedModule.Name);
         var result = conf.StartBehaviour == ModuleStartBehaviour.Auto || plugin.Dependents.Any(ShouldBeStarted);
         return result;
+    }
+
+    private void AddWaitingModule(IServerModule dependency, IServerModule dependent)
+    {
+        lock (_waitingModules)
+        {
+            if (_waitingModules.TryGetValue(dependency, out var waitingModules))
+            {
+                if (!waitingModules.Contains(dependent))
+                    waitingModules.Add(dependent);
+            }
+            else
+            {
+                _waitingModules[dependency] = new List<IServerModule> { dependent };
+            }
+        }
     }
 }

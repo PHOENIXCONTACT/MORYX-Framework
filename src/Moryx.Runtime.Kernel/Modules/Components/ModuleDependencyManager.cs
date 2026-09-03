@@ -20,7 +20,7 @@ internal class ModuleDependencyManager : IModuleDependencyManager
 {
     private readonly ILogger _logger;
 
-    private PluginDependencyTree _dependencyTree;
+    private ModuleDependencyTree _dependencyTree;
 
     public List<object> Facades { get; private set; }
 
@@ -59,7 +59,7 @@ internal class ModuleDependencyManager : IModuleDependencyManager
 
         // Build dependency tree from available modules
         var dependencyBranches = Convert(availableModules, facadeProviders);
-        _dependencyTree = new PluginDependencyTree(dependencyBranches.Where(c => c.Dependencies.Count == 0)
+        _dependencyTree = new ModuleDependencyTree(dependencyBranches.Where(c => c.Dependencies.Count == 0)
             .ToArray());
 
         // Only return modules that could be propery integrated in the dependency tree
@@ -185,7 +185,7 @@ internal class ModuleDependencyManager : IModuleDependencyManager
                 foreach (var dependency in filteredDependencies)
                 {
                     branch.Dependencies.Add(dependency);
-                    dependency.Dependends.Add(branch);
+                    dependency.Dependents.Add(branch);
                 }
 
                 // check for missing dependencies and add them to the dependencies list
