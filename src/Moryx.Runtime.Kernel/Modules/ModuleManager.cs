@@ -82,13 +82,9 @@ public class ModuleManager : IModuleManager
     }
 
     /// <inheritdoc/>
-    public async Task ReincarnateModuleAsync(IServerModule module, CancellationToken cancellationToken = default)
+    public Task ReincarnateModuleAsync(IServerModule module, CancellationToken cancellationToken = default)
     {
-        // Stop execution
-        await _lifecycleController.StopAsync(module, cancellationToken);
-
-        // Start all desired
-        await _lifecycleController.StartAsync(module, cancellationToken);
+        return _lifecycleController.ReincarnateAsync(module, cancellationToken);
     }
 
     /// <summary>

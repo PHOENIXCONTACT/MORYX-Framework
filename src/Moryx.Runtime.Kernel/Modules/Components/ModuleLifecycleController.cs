@@ -90,6 +90,12 @@ internal class ModuleLifecycleController
         }
     }
 
+    public async Task ReincarnateAsync(IServerModule module, CancellationToken cancellationToken)
+    {
+        await StopAsync(module, cancellationToken);
+        await StartAsync(module, cancellationToken);
+    }
+
     private async Task StartModule(IServerModule module, CancellationToken cancellationToken)
     {
         var dependencies = _dependencyManager.GetDependencyBranch(module).Dependencies;
