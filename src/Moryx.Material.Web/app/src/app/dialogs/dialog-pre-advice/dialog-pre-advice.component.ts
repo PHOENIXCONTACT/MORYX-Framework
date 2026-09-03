@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
-import { PreAdviceDepartureReasonModel, PreAdviceModel, ResourceModel } from 'src/app/api/models';
+import { MaterialContainerModel, PreAdviceDepartureReasonModel, PreAdviceModel, ResourceModel } from 'src/app/api/models';
 import { MaterialManagementService } from 'src/app/api/services';
 import { MatFormField, MatInputModule, MatLabel } from "@angular/material/input";
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -14,13 +14,13 @@ import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-dialog-pre-advice',
-  imports: [MatDialogModule, MatButtonModule, MatLabel, MatSelectModule, TranslateModule],
+  imports: [MatDialogModule, MatButtonModule, MatLabel, MatSelectModule, TranslateModule, MatInputModule],
   templateUrl: './dialog-pre-advice.component.html',
   styleUrl: './dialog-pre-advice.component.scss',
 })
 export class DialogPreAdviceComponent {
-  private data = inject<ResourceModel>(MAT_DIALOG_DATA);
   private dialogRef = inject(MatDialogRef<DialogPreAdviceComponent>);
+  protected data = inject<MaterialContainerModel>(MAT_DIALOG_DATA);
   protected translationConstants = TranslationConstants;
   reason = signal<PreAdviceDepartureReasonModel | undefined>(undefined);
 

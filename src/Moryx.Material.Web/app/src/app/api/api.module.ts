@@ -11,6 +11,7 @@ import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
 import { MaterialManagementService } from './services/material-management.service';
+import { OrderManagementService } from './services/order-management.service';
 import { ResourceModificationService } from './services/resource-modification.service';
 
 /**
@@ -22,6 +23,7 @@ import { ResourceModificationService } from './services/resource-modification.se
   declarations: [],
   providers: [
     MaterialManagementService,
+    OrderManagementService,
     ResourceModificationService,
     ApiConfiguration
   ],
