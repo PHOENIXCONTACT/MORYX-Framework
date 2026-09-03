@@ -33,8 +33,7 @@ public class NullTransition : TransitionBase
     {
         Executing(delegate
         {
-            TakeToken((IPlace)sender, token);
-            PlaceToken(Outputs[_index], token);
+            MoveToken((IPlace)sender, Outputs[_index], token);
         });
     }
 }

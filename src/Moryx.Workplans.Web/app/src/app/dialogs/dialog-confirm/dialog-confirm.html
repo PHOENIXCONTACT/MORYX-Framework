@@ -3,14 +3,10 @@
   {{ data.message }}
 </div>
 <div mat-dialog-actions align="end">
-  @for (button of buttons; track button) {
-    <button
-      #actionButton
-      mat-button
-      color="primary"
-      type="submit"
-      (click)="button.action()">
-      {{ button.text }}
-    </button>
-  }
+  <button mat-button type="button" cdkFocusInitial mat-dialog-close>
+    {{ TranslationConstants.CONFIRM_DIALOG.CANCEL | translate }}
+  </button>
+  <button mat-flat-button type="button" [mat-dialog-close]="true">
+    {{ TranslationConstants.CONFIRM_DIALOG.CONFIRM | translate }}
+  </button>
 </div>

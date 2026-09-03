@@ -225,7 +225,7 @@ internal class ProcessArchive : IProcessArchive
             if (_jobData.TryGetTarget(out var job))
                 return job;
 
-            throw new ObjectDisposedException("Target of the chunk has been disposed!");
+            throw new ObjectDisposedException("Target of the chunk has been disposed.");
         }
 
         /// <summary>

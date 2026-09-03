@@ -27,7 +27,7 @@ public abstract class ProcessReplacement : Process
     public override long Id
     {
         get => _processId;
-        set => throw new NotSupportedException("Changing replacement id is not supported!");
+        set => throw new NotSupportedException("Changing replacement id is not supported.");
     }
 
     /// <inheritdoc />

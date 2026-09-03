@@ -4,6 +4,7 @@
 using System.Reflection;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
+using Moryx.Resources.Management.Proxies;
 using Moryx.Tools;
 
 namespace Moryx.Resources.Management;
@@ -25,22 +26,9 @@ internal class ResourceTypeController : IResourceTypeController, IResourceTypeTr
     public IResourceFactory ResourceFactory { get; set; }
 
     /// <summary>
-    /// Component responsible for proxy creation
+    /// Cache of all proxy instances that were created during the runtime of the ResourceManagement
     /// </summary>
-    public ResourceProxyBuilder ProxyBuilder { get; set; }
-
-    /// <summary>
-    /// Cache of resource type strings and their proxy types. Some type keys may reference the same
-    /// proxy because they do not define any additional public API and can use the same proxy. This
-    /// cache is only built on the first module start and kept after a restart to avoid redundant proxy building
-    /// </summary>
-    private readonly Dictionary<string, string> _proxyTypeCache = new();
-
-    /// <summary>
-    /// Cache of all proxy instances that were created during the runtime of the ResourceManagement. They
-    /// all need to be
-    /// </summary>
-    private readonly Dictionary<long, ResourceProxy> _proxyCache = new();
+    private readonly Dictionary<long, IResourceProxy> _proxyCache = new();
 
     /// <summary>
     /// Cache to directly access a resource type
@@ -62,9 +50,6 @@ internal class ResourceTypeController : IResourceTypeController, IResourceTypeTr
     /// </summary>
     public void Start()
     {
-        // Define module on first start
-        ResourceProxyBuilder.PrepareBuilder();
-
         BuildTypeTree();
     }
 
@@ -73,7 +58,7 @@ internal class ResourceTypeController : IResourceTypeController, IResourceTypeTr
     {
         foreach (var proxy in _proxyCache.Values)
         {
-            proxy.Detach();
+            proxy.DetachProxy();
         }
         _proxyCache.Clear();
     }
@@ -135,7 +120,7 @@ internal class ResourceTypeController : IResourceTypeController, IResourceTypeTr
     public Resource Create(string type)
     {
         if (!_typeCache.TryGetValue(type, out var linker))
-            throw new KeyNotFoundException($"No resource of type {type} found!");
+            throw new KeyNotFoundException($"No resource of type {type} found.");
         if (!linker.Creatable)
             throw new InvalidOperationException($"The resource of type {type} is not creatable.");
 
@@ -162,9 +147,9 @@ internal class ResourceTypeController : IResourceTypeController, IResourceTypeTr
 
         // If there is currently a proxy for this resource detach and destroy it
         var id = instance.Id;
-        if (_proxyCache.TryGetValue(id, out var resourceProxy))
+        if (_proxyCache.TryGetValue(id, out var proxy))
         {
-            resourceProxy.Detach();
+            proxy.DetachProxy();
             _proxyCache.Remove(id);
         }
     }
@@ -213,81 +198,17 @@ internal class ResourceTypeController : IResourceTypeController, IResourceTypeTr
     {
         lock (_proxyCache)
         {
-            lock (_proxyTypeCache)
+            // Did we build a proxy for this instance before?
+            if (_proxyCache.TryGetValue(instance.Id, out var existingProxy))
             {
-                return GetOrCreateProxy(instance);
+                return existingProxy;
             }
-        }
-    }
 
-    /// <summary>
-    /// Thread safe implementation called from <see cref="GetProxy"/>
-    /// </summary>
-    private IResource GetOrCreateProxy(Resource instance)
-    {
-        // Did we build a proxy for this instance before?
-        if (_proxyCache.TryGetValue(instance.Id, out var resourceProxy))
-            return resourceProxy;
-
-        var resourceType = instance.GetType();
-
-        // Did we build a proxy type before, but for a different instance?
-        // ReSharper disable once AssignNullToNotNullAttribute -> FullName should be not null
-        if (_proxyTypeCache.ContainsKey(resourceType.ResourceType()))
-            return _proxyCache[instance.Id] = InstantiateProxy(resourceType.FullName, instance);
-
-        // Build the proxy type for this resource type
-        ProvideProxyType(resourceType);
-        return _proxyCache[instance.Id] = InstantiateProxy(resourceType.ResourceType(), instance);
-    }
-
-    /// <summary>
-    /// Instantiate proxy object for a given resource type name
-    /// </summary>
-    private ResourceProxy InstantiateProxy(string typeName, Resource instance)
-    {
-        var proxyType = ResourceProxyBuilder.GetType(_proxyTypeCache[typeName]);
-        var proxyInstance = (ResourceProxy)Activator.CreateInstance(proxyType, instance, this);
-        proxyInstance.Attach();
-        return proxyInstance;
-    }
-
-    /// <summary>
-    /// Make sure the <see cref="_proxyTypeCache"/> contains an entry for the given type
-    /// </summary>
-    private void ProvideProxyType(Type resourceType)
-    {
-        // Step 1: Find the least specific base type that offers the same amount of interfaces and is not a generic itself
-        // ReSharper disable once AssignNullToNotNullAttribute -> FullName should be not null
-        var targetType = _typeCache[resourceType.ResourceType()];
-        var linker = targetType;
-
-        var interfaces = RelevantInterfaces(linker);
-        // Move up the type tree until the parent offers less interfaces than the current linker, is abstract or a generic
-        while (linker.BaseType != null && !linker.BaseType.ResourceType.IsGenericType
-                                       && interfaces.Count == RelevantInterfaces(linker.BaseType).Count)
-        {
-            linker = linker.BaseType;
-        }
-
-        // Step 2: Check if we already created a proxy for this type. If we already
-        // did use this one for the requested type as well.
-        if (_proxyTypeCache.TryGetValue(linker.Name, out var existingProxyType))
-        {
-            _proxyTypeCache[targetType.Name] = existingProxyType;
-            return;
-        }
-
-        // Step 3: Build a proxy type for the least specific base type
-        var proxyType = ResourceProxyBuilder.Build(linker.ResourceType, interfaces);
-
-        // Step 4: Assign the new proxy type to all derived types from the
-        // match to the originally requested one
-        _proxyTypeCache[linker.Name] = proxyType.ResourceType();
-        while (targetType != null && targetType != linker)
-        {
-            _proxyTypeCache[targetType.Name] = proxyType.ResourceType();
-            targetType = targetType.BaseType;
+            // Build a new proxy using Castle.DynamicProxy
+            var interfaces = RelevantInterfaces(_typeCache[instance.ResourceType()]);
+            var proxy = ResourceProxyBuilder.Build(instance, interfaces, this);
+            _proxyCache[instance.Id] = proxy;
+            return proxy;
         }
     }
 
@@ -295,7 +216,7 @@ internal class ResourceTypeController : IResourceTypeController, IResourceTypeTr
     /// Get all interfaces of a linker that are relevant for the public proxy. This excludes all non-public
     /// interfaces or interfaces that are not derived from IPublicResource.
     /// </summary>
-    private static IReadOnlyList<Type> RelevantInterfaces(ResourceTypeNode node)
+    private static List<Type> RelevantInterfaces(ResourceTypeNode node)
     {
         var interfaces = node.ResourceType.GetInterfaces();
         var relevantInterfaces = new List<Type>(interfaces.Length); // At max all interfaces are relevant
@@ -304,11 +225,10 @@ internal class ResourceTypeController : IResourceTypeController, IResourceTypeTr
         var additionalPublicInterfaces = node.ResourceType.GetCustomAttributes<ResourceAvailableAsAttribute>()
             .SelectMany(a => a.AvailableAs).Distinct();
 
-        // Add all resources derived from IResource, but not IResource itself
+        // Add all interfaces derived from IResource, including IResource itself
         relevantInterfaces.AddRange(from resourceInterface in interfaces
             where resourceInterface.IsPublic
-                  && ((typeof(IResource).IsAssignableFrom(resourceInterface)
-                       && !resourceInterface.IsAssignableFrom(typeof(IResource)))
+                  && (typeof(IResource).IsAssignableFrom(resourceInterface)
                       || additionalPublicInterfaces.Contains(resourceInterface))
             select resourceInterface);
 
@@ -319,24 +239,9 @@ internal class ResourceTypeController : IResourceTypeController, IResourceTypeTr
                   && relevantInterfaces.Any(generalInterface.IsAssignableFrom) // It is a base type of a relevant interface
             select generalInterface);
 
-        // Filter all interfaces that are generic OR contain generic methods
-        relevantInterfaces = relevantInterfaces.Where(candidate => !IsGenericResourceInterface(candidate)).ToList();
+        // Filter open generic interfaces (e.g. IFoo<>) that Castle cannot proxy
+        relevantInterfaces = relevantInterfaces.Where(candidate => !candidate.IsGenericTypeDefinition).ToList();
 
         return relevantInterfaces;
-    }
-
-    internal static bool IsGenericResourceInterface(Type resourceInterface)
-    {
-        if (resourceInterface.IsGenericType || resourceInterface.IsGenericTypeDefinition)
-            return true;
-
-        if (resourceInterface.GetMethods().Any(method => method.IsGenericMethod || method.ContainsGenericParameters))
-            return true;
-
-        // We also need to filter all interfaces that contain/inherit generic interfaces
-        if (resourceInterface.GetInterfaces().Any(IsGenericResourceInterface))
-            return true;
-
-        return false;
     }
 }

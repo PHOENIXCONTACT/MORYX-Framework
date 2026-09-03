@@ -12,14 +12,13 @@ import {
   RestrictionDescription,
   OperationStateClassification
 } from '@api/models';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/translation-constants';
 import { OperationViewModel } from '@app/models/operation-view-model';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { OperatorsService } from '@app/services/operators.service';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
-import { MatGridListModule } from '@angular/material/grid-list';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
@@ -40,7 +39,6 @@ import { blockNonDigitInput } from '@app/dialogs/digit-input-helper';
     MatDialogModule,
     CommonModule,
     TranslatePipe,
-    MatGridListModule,
     MatFormFieldModule,
     ReactiveFormsModule,
     FormsModule,

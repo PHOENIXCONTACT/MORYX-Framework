@@ -4,7 +4,7 @@
 */
 
 import { Component, effect, inject, input, signal, untracked, ChangeDetectionStrategy } from '@angular/core';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/translation-constants';
 import { DisplayedMediaContent } from './displayed-media-content';
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
 import { MatIconModule } from '@angular/material/icon';

@@ -35,9 +35,6 @@
   "APP": {
     "DEFAULT_BACKGROUND_URL": "Wir konnten keine Hintergrund-URL finden. Bis du eine angibst, verwenden wir weiter das Standardbild."
   },
-  "DISMISS": "VERWERFEN",
-  "DEFAULT_MESSAGE": "Auf dem Server ist etwas schief gelaufen.",
-  "SERVER_NOT_REACHABLE": "Der Server ist nicht erreichbar, bitte überprüfe deine Netzwerkverbindung oder Proxy-Einstellungen.",
   "EDIT_MENU": {
     "EDIT": "Editieren",
     "CONFIRM": "Bestätigen",

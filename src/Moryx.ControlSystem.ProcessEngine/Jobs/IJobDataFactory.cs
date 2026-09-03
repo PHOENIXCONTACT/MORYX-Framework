@@ -71,7 +71,7 @@ internal class JobDataFactory : IJobDataFactory
     private static void ValidateCreatedJob(IJobData jobData, IWorkplanRecipe recipe)
     {
         if (jobData == null)
-            throw new InvalidOperationException("Cannot find job type for recipe of type: " + recipe.GetType().FullName);
+            throw new InvalidOperationException($"Cannot find job type for recipe of type: {recipe.GetType().FullName}.");
     }
 
     public void Destroy(IJobData jobData) => InternalFactory.Destroy(jobData);

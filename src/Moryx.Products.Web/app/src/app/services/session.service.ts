@@ -5,7 +5,6 @@
 
 import { Injectable } from '@angular/core';
 import { ProductModel } from '../api/models';
-import { ProductNode } from '../app';
 
 @Injectable({
   providedIn: 'root'
@@ -43,27 +42,8 @@ export class SessionService {
     sessionStorage.setItem(this.PRODUCT_TREE_HIERARCHY, hierarchic ? true.toString() : false.toString());
   }
 
-  saveProductTreeExpansion(node: ProductNode, expanded: boolean) {
-    let expandedNodesString = "";
-    const expandedNodes = sessionStorage.getItem(this.PRODUCT_TREE);
-    const expandedNodesArray = expandedNodes ? expandedNodes.split(',') : [];
-    const nodeName = node.name;
-
-    if (expanded && !expandedNodesArray.includes(nodeName)) {
-      expandedNodesString = expandedNodes ? expandedNodes + ',' + nodeName : nodeName;
-    }
-    else if (!expanded && expandedNodesArray.includes(nodeName)) {
-      const index = expandedNodesArray.indexOf(nodeName, 0);
-      if (index > -1) {
-        expandedNodesArray.splice(index, 1);
-        for (const id of expandedNodesArray) {
-          expandedNodesString += id + ',';
-        }
-        expandedNodesString = expandedNodesString.slice(0, -1);
-      }
-    }
-
-    sessionStorage.setItem(this.PRODUCT_TREE, expandedNodesString);
+  storeProductTreeExpansion(expandedNames: string[]) {
+    sessionStorage.setItem(this.PRODUCT_TREE, expandedNames.join(','));
   }
 
   getExpandedNodeNames(): string[] {

@@ -22,7 +22,7 @@ import { ProductManagementService } from '@api/services/product-management.servi
 import { FilterOptions } from '../models/FilterOptions';
 import { WorkplanService } from '@api/services/workplan.service';
 import { TranslateService } from '@ngx-translate/core';
-import { TranslationConstants } from '../extensions/translation-constants.extensions';
+import { TranslationConstants } from '../translation-constants';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Import$Params } from '@api/functions';
 

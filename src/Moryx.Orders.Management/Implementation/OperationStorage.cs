@@ -264,7 +264,7 @@ internal static class OperationStorage
             case DateTimeKind.Unspecified:
                 return dateTime;
             default:
-                throw new ArgumentOutOfRangeException($"Provided {nameof(DateTime)} for {member} is neither UTC nor Local Time");
+                throw new ArgumentOutOfRangeException($"Provided {nameof(DateTime)} for {member} is neither UTC nor Local Time.");
         }
     }
 }

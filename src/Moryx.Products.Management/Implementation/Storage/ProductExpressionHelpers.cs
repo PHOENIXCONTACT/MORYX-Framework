@@ -24,7 +24,7 @@ internal static class ProductExpressionHelpers
                 return prop.GetValue(container);
         }
 
-        throw new NotSupportedException("Expression type not supported yet");
+        throw new NotSupportedException("Expression type not supported yet.");
     }
 
     public static bool IsTypeQuery<TInstance>(Expression<Func<TInstance, bool>> selector, out MemberInfo typeMember, out object memberValue)

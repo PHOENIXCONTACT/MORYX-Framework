@@ -5,7 +5,7 @@
 
 import { Component, inject, OnInit, ChangeDetectionStrategy, DestroyRef, model, effect, input, output, signal } from "@angular/core";
 import { TranslatePipe } from "@ngx-translate/core";
-import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
+import { TranslationConstants } from "@app/translation-constants";
 import { AssignableOperator } from "@api/models";
 import { FormControl, ReactiveFormsModule, ValidationErrors } from "@angular/forms";
 import { MatError, MatFormField, MatFormFieldModule, MatLabel } from "@angular/material/form-field";

@@ -111,7 +111,7 @@ internal class MicrosoftExtensionsConfigProvider : IValueProvider, IContextAware
             }
             else
             {
-                throw new NotSupportedException("Szenario where prop param is not set and the dict does not contain an int is not supported");
+                throw new NotSupportedException("Szenario where prop param is not set and the dict does not contain an int is not supported.");
             }
         }
         else

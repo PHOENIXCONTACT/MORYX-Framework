@@ -45,18 +45,9 @@
 }
 
 .media-item-title {
-  white-space: nowrap;
-  overflow-x: hidden;
-  text-overflow: ellipsis;
   font-size: 17px;
   color: white;
-}
-
-.truncate {
-  width: 250px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  word-break: break-word;
 }
 
 .media-item-subtitle{

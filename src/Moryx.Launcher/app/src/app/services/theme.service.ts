@@ -27,6 +27,7 @@ export class ThemeService {
       const mode = this._mode();
       const isDark = mode === 'dark' || (mode === 'system' && this.systemDark());
       document.documentElement.classList.toggle('dark-theme', isDark);
+      document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
       window.localStorage.setItem(this.storageKey, mode);
     });
   }

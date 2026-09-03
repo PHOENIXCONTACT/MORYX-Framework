@@ -51,124 +51,102 @@ You can see them being used under the *Pages* folder, the .cshtml file, in the f
 
 ## Front-end
 
-In the root directory of the angular application where the angular.json file exists, run the following console commands:
+### 1. Install dependencies
 
-- npm install @ngx-translate/core --save
-- npm install @ngx-translate/http-loader --save
+In the `app/` directory of the Angular project, install the translation packages:
 
-Afterwards, you need to open the file **app.config.ts** and add the following function before the `export const appConfig`. Importing the missing libraries for it should be easy:
-
-```javascript
-export function httpTranslateLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(
-    http,
-    environment.assets + 'assets/languages/'
-  );
-}
+```bash
+npm install @ngx-translate/core --save
+npm install @ngx-translate/http-loader --save
 ```
 
-Next, you will need to have this piece of a code `TranslateModule.forRoot(....)` in the providers section of **app.config.ts** beside other imported modules separated by comma:
+### 2. Create the TranslationConstants class
 
-```javascript
-{
-  providers: [
-        //other imports
-        importProvidersFrom(
-          TranslateModule.forRoot({
-                loader: {
-                  provide: TranslateLoader,
-                  useFactory: httpTranslateLoaderFactory,
-                  deps: [HttpClient],
-                },
-              }),
-               //other imports
-            ),
-     //other imports
-  ]
-}
-```
+Create a file called **translation-constants.ts** under `src/app/` with the supported languages and your translation keys:
 
-Now, let's initialize your TranslationConstants class that holds your translation strings. Create a class called **translation-constants.extensions.ts** under the extensions folder of the project and then add the following body to it for the supported languages:
-
-```javascript
+```typescript
 export class TranslationConstants {
-  public static readonly LANGUAGES = {
-    EN: 'en',
-    DE: 'de',
-    IT: 'it',
+  public static readonly LANGUAGES = ['en', 'de', 'it', 'zh'];
+
+  public static readonly APP = {
+    TITLE: 'APP.TITLE',
+    // add more keys as needed
   };
 }
 ```
 
-Now, you have the necessary modules and libraries added. You will need to use them! In the **app.component.ts**, inject two services:
+### 3. Register Angular locale data
 
-- TranslateService (*coming from the library you installed earlier*)
-- LanguageService (*coming from moryx-web. If you don't have it, refer to the Readme of moryx-web*)
+In **app.config.ts**, import the [global locale data](https://angular.dev/guide/i18n/import-global-variants) for each non-English language at the top of the file:
 
-Inject them in the constructor simply like:
-
-- private languageSupport: LanguageSupport
-- public translate: TranslateService (*translate should be public to be used in html template*)
-
-And then have the following piece of code in the body of constructor of **app.component.ts**
-
-```javascript
-this.translate.addLangs([
-      TranslationConstants.LANGUAGES.EN,
-      TranslationConstants.LANGUAGES.DE,
-      TranslationConstants.LANGUAGES.IT,
-    ]);
-    this.translate.setFallbackLang(this.languageService.getFallbackLang());
+```typescript
+import "@angular/common/locales/global/de";
+import "@angular/common/locales/global/it";
+import "@angular/common/locales/global/zh";
 ```
 
-Besides, wherever you have defined the variables for this module, add the following variable in the following way. You should be able to import it as you created the class earlier. Notice the equal sign instead of colons:
+### 4. Configure app.config.ts
 
-```javascript
-TranslationConstants = TranslationConstants;
+Set up the providers in **app.config.ts** using `provideMoryxLocalization` from `@moryx/ngx-web-framework/i18n`. This single provider handles Angular locale switching, ngx-translate language registration, and fallback language configuration — no manual setup in `app.ts` is needed.
+
+```typescript
+export const appConfig: ApplicationConfig = {
+  providers: [
+    // ...
+
+    // Configure translation loader
+    provideTranslateService({
+      loader: provideTranslateHttpLoader({
+        prefix: environment.assets + 'assets/languages/',
+        suffix: '.json'
+      }),
+    }),
+
+    // Provides Angular locale and configures ngx-translate
+    provideMoryxLocalization(TranslationConstants.LANGUAGES)
+  ],
+};
 ```
 
-Next stop, the translations! You need to create translations for each string you want to translate using json files. Go to the folder *assets* and then create a folder named *languages* and then create json files for each supported language like:
+### 5. Create translation files
 
-- de.json
-- en.json
-- it.json
+Under `src/assets/languages/`, create a JSON file for each supported language:
 
-Next, fill in the strings that need to be translated for each component within each json file. You may look at the existing files in other projects to have a better understanding.
+- `en.json`
+- `de.json`
+- `it.json`
+- `zh.json`
 
-Next, you will need to have references to the created strings from the last step in the TranslationConstants class. Please have a look at an existing project to see the structure.
+Fill in the translation keys matching the structure in your `TranslationConstants`. For example, `en.json`:
+
+```json
+{
+  "APP": {
+    "TITLE": "My Module"
+  }
+}
+```
+
+Add the corresponding keys to `TranslationConstants` so they can be referenced type-safely in code.
 
 ### How to use
 
-You can either use them in the html templates or the ts files.
+You can use translations in both HTML templates and TypeScript files.
 
-- Html template: you will need to use the translate pipe which you earlier injected. As an example:
+**HTML template** — use the `translate` pipe:
 
-```javascript
-{{ TranslationConstants.APP.APPLY_FILTER | translate }}
+```html
+{{ TranslationConstants.APP.TITLE | translate }}
 ```
 
-- Ts file: First you need to have the observable extensions that has the method of .toAsync(). That is a method internally developed. You can then either make a function with the translations you want at the top if there are several translations like:
+**TypeScript file** — use `firstValueFrom` with `TranslateService.get()`:
 
-```javascript
-async getTranslations(): Promise<{ [key: string]: string }> {
-    return await this.translate.get([
-        TranslationConstants.APP.SNACK_BAR
-        TranslationConstants.APP.SUCCESS])
-    .toAsync();
-  }
-```
+```typescript
+import { firstValueFrom } from 'rxjs';
 
-and then use each of those translations seperately in the following way:
-
-```javascript
-const translations = await this.getTranslations();
-this.snackBar.open(translations[TranslationConstants.APP.SNACK_BAR]);
-```
-
-Or, if it is just one translation, you can mix them both together in the following way:
-
-```javascript
-const translations = await this.translate.get([
-    TranslationConstants.APP.SNACK_BAR]).toAsync();
+const translations = await firstValueFrom(this.translateService.get([
+  TranslationConstants.APP.SNACK_BAR,
+  TranslationConstants.APP.SUCCESS
+]));
 this.snackBar.open(translations[TranslationConstants.APP.SNACK_BAR]);
 ```

@@ -10,7 +10,5 @@
     "EMPTY_STATE_HEADER": "No Instructions",
     "EMPTY_STATE_TEXT": "Done! We reach out to you again, when there is something to be done."
   },
-  "DISMISS": "DISMISS",
-  "DEFAULT_MESSAGE": "Something went wrong on the server.",
-  "SERVER_NOT_REACHABLE": "The server is unreachable, please check your internet connection or proxy settings."
+  "DISMISS": "Dismiss"
 }

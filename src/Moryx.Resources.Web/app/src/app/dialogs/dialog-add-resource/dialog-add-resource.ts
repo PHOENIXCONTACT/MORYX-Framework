@@ -6,7 +6,7 @@
 import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { TranslatePipe } from '@ngx-translate/core';
-import { TranslationConstants } from '@app/extensions/translation-constants';
+import { TranslationConstants } from '@app/translation-constants';
 import { ResourceModel, ResourceTypeModel } from '../../api/models';
 import { MatListModule, MatSelectionListChange } from '@angular/material/list';
 import { CacheResourceService } from '@app/services/cache-resource.service';

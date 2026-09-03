@@ -31,7 +31,7 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
-import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
+import { TranslationConstants } from "@app/translation-constants";
 import { OperationNumberValidations } from "@app/validations/operationNumberValidations";
 import {
   OperationCreationContextModel,

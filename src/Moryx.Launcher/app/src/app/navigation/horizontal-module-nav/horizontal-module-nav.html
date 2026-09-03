@@ -12,7 +12,7 @@
     <a class="nav-item" [href]="resolveHref(module)" [title]="module.description" [class.active]="module.route === activeRoute()">
       <div class="icon-wrapper">
         <mat-icon>{{ module.icon }}</mat-icon>
-        @if (asWeb(module)?.eventStream; as eventStream) {
+        @if (module.route !== activeRoute() && asWeb(module)?.eventStream; as eventStream) {
           <app-notification-badge [eventStream]="eventStream"></app-notification-badge>
         }
       </div>

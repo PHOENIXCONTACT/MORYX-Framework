@@ -43,7 +43,7 @@ internal class TestModule : ServerModuleBase<TestConfig>
             case TestMode.MoryxException:
                 throw new TestException();
             case TestMode.SystemException:
-                throw new Exception("I am done here!");
+                throw new Exception("I am done here.");
         }
 
         return Task.CompletedTask;
@@ -58,7 +58,7 @@ internal class TestModule : ServerModuleBase<TestConfig>
             case TestMode.MoryxException:
                 throw new TestException();
             case TestMode.SystemException:
-                throw new Exception("I am done here!");
+                throw new Exception("I am done here.");
         }
         return Task.CompletedTask;
     }
@@ -71,7 +71,7 @@ internal class TestModule : ServerModuleBase<TestConfig>
             case TestMode.MoryxException:
                 throw new TestException();
             case TestMode.SystemException:
-                throw new Exception("I am done here!");
+                throw new Exception("I am done here.");
         }
         return Task.CompletedTask;
     }

@@ -42,16 +42,15 @@ internal class TracingResourceResolver : BindingResolverBase
         if (tracing == null)
             return null;
 
-        var proxy = _resourceManagement.GetResource<IResource>(tracing.ResourceId);
-        // Dirty hack to extract target
-        var property = proxy.GetType().GetProperties(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
-            .FirstOrDefault(p => p.Name == "Target");
-        var resource = (IResource)property.GetValue(proxy);
+        // Usage of original resource instead of proxy
+        var resource = _resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == tracing.ResourceId)
+            .FirstOrDefault();
+
         return resource;
     }
 
     protected override bool Update(object source, object value)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 }

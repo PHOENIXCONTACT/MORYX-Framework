@@ -1,7 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Concurrent;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +9,6 @@ using Moryx.Orders.Endpoints.Properties;
 using Moryx.Users;
 using System.Net;
 using System.Net.ServerSentEvents;
-using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Channels;
@@ -30,7 +28,6 @@ public class OrderManagementController : ControllerBase
     private readonly IOrderManagement _orderManagement;
     private readonly IUserManagement _userManagement;
 
-    private static readonly ConcurrentDictionary<Guid, Channel<(string, string)>> _operationStreamSubscribers = new();
     private static readonly JsonSerializerOptions _serializerOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -61,43 +58,45 @@ public class OrderManagementController : ControllerBase
     [ProducesResponseType(typeof(OperationChangedModel), StatusCodes.Status200OK)]
     public async Task OperationStream(CancellationToken cancellationToken)
     {
-        // Define event handlers using the broadcast helper
-        var updateEventHandler = new EventHandler<OperationChangedEventArgs>((_, e) =>
-            Broadcast(nameof(OperationTypes.Update), Converter.ToModel(e.Operation)));
+        var channel = Channel.CreateUnbounded<SseItem<string>>();
 
-        var adviceEventHandler = new EventHandler<OperationAdviceEventArgs>((_, e) =>
+        // Define event handlers using the broadcast helper
+        EventHandler<OperationChangedEventArgs> updateEventHandler = (_, e) =>
+            Broadcast(nameof(OperationTypes.Update), Converter.ToModel(e.Operation));
+
+        EventHandler<OperationAdviceEventArgs> adviceEventHandler = (_, e) =>
             Broadcast(nameof(OperationTypes.Advice), new OperationAdvicedModel
             {
                 OperationModel = Converter.ToModel(e.Operation),
                 Advice = Converter.ToModel(e.Advice)
-            }));
+            });
 
-        var reportEventHandler = new EventHandler<OperationReportEventArgs>((_, e) =>
+        EventHandler<OperationReportEventArgs> reportEventHandler = (_, e) =>
             Broadcast(nameof(OperationTypes.Report), new OperationReportedModel
             {
                 OperationModel = Converter.ToModel(e.Operation),
                 Report = Converter.ToModel(e.Report)
-            }));
+            });
 
-        var interruptedEventHandler = new EventHandler<OperationChangedEventArgs>((_, e) =>
-            Broadcast(nameof(OperationTypes.Interrupted), Converter.ToModel(e.Operation)));
+        EventHandler<OperationChangedEventArgs> interruptedEventHandler = (_, e) =>
+            Broadcast(nameof(OperationTypes.Interrupted), Converter.ToModel(e.Operation));
 
-        var completedEventHandler = new EventHandler<OperationReportEventArgs>((_, e) =>
+        EventHandler<OperationReportEventArgs> completedEventHandler = (_, e) =>
             Broadcast(nameof(OperationTypes.Completed), new OperationReportedModel
             {
                 OperationModel = Converter.ToModel(e.Operation),
                 Report = Converter.ToModel(e.Report)
-            }));
+            });
 
-        var startedEventHandler = new EventHandler<OperationStartedEventArgs>((_, e) =>
+        EventHandler<OperationStartedEventArgs> startedEventHandler = (_, e) =>
             Broadcast(nameof(OperationTypes.Start), new OperationStartedModel
             {
                 OperationModel = Converter.ToModel(e.Operation),
                 UserId = e.User.Identifier
-            }));
+            });
 
-        var changedEventHandler = new EventHandler<OperationChangedEventArgs>((_, e) =>
-            Broadcast(nameof(OperationTypes.Progress), Converter.ToModel(e.Operation)));
+        EventHandler<OperationChangedEventArgs> changedEventHandler = (_, e) =>
+            Broadcast(nameof(OperationTypes.Progress), Converter.ToModel(e.Operation));
 
         try
         {
@@ -131,32 +130,15 @@ public class OrderManagementController : ControllerBase
 
         return;
 
-        async IAsyncEnumerable<SseItem<string>> Subscribe([EnumeratorCancellation] CancellationToken cancelToken)
+        IAsyncEnumerable<SseItem<string>> Subscribe(CancellationToken cancelToken)
         {
-            var channel = Channel.CreateUnbounded<(string, string)>();
-            var id = Guid.NewGuid();
-            _operationStreamSubscribers[id] = channel;
-
-            try
-            {
-                await foreach (var evt in channel.Reader.ReadAllAsync(cancelToken))
-                {
-                    yield return new SseItem<string>(evt.Item2, eventType: evt.Item1);
-                }
-            }
-            finally
-            {
-                _operationStreamSubscribers.TryRemove(id, out _);
-            }
+            return channel.Reader.ReadAllAsync(cancelToken);
         }
 
-        // Local helper to broadcast events to all connected clients
-        static void Broadcast(string eventType, object data)
+        // Local helper to push operation events to the client
+        void Broadcast(string eventType, object data)
         {
-            foreach (var channel in _operationStreamSubscribers.Values)
-            {
-                channel.Writer.TryWrite((eventType, JsonSerializer.Serialize(data, _serializerOptions)));
-            }
+            channel.Writer.TryWrite(new SseItem<string>(JsonSerializer.Serialize(data, _serializerOptions), eventType));
         }
     }
 
@@ -490,5 +472,4 @@ public class OrderManagementController : ControllerBase
         return Ok();
     }
     #endregion
-
 }

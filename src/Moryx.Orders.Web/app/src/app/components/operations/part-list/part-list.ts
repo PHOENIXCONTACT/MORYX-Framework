@@ -9,7 +9,7 @@ import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ProductPartModel } from '@api/models';
 import { OrderManagementService } from '@api/services';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/translation-constants';
 
 @Component({
   selector: 'app-part-list',

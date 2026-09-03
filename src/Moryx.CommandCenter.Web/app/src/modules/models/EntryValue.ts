@@ -4,10 +4,12 @@
 */
 
 import EntryPossible from "./EntryPossible";
+import { EntryUnitType } from "./EntryUnitType";
 import { EntryValueType } from "./EntryValueType";
 
 export default class EntryValue {
     public type: EntryValueType;
+    public unitType: EntryUnitType;
     public current: string;
     public default: string;
     public possible: EntryPossible[];

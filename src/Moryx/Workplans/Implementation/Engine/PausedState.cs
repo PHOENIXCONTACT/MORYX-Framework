@@ -20,7 +20,7 @@ internal class PausedState : EngineState
     internal override void Restore(WorkplanSnapshot snapshot)
     {
         if (snapshot != Context.CurrentSnapshot)
-            throw new InvalidOperationException("Can not restore paused engine with different snapshot. Create a new instance instead!");
+            throw new InvalidOperationException("Can not restore paused engine with different snapshot. Create a new instance instead.");
     }
 
     internal override void Start()

@@ -3,9 +3,6 @@
     "RESOURCES": "Resources",
     "NO_NAME": "Unnamed Resource"
   },
-  "DISMISS": "DISMISS",
-  "DEFAULT_MESSAGE": "Something went wrong on the server.",
-  "SERVER_NOT_REACHABLE": "The server is unreachable, please check your internet connection or proxy settings.",
   "SHARED": {
     "DELETE": "Delete",
     "EDIT": "Edit",

@@ -26,6 +26,8 @@ public interface ISimpleResource : IResource
 
     void RaiseEvent();
 
+    void ThrowingMethod();
+
     event EventHandler SomeEvent;
 }
 
@@ -72,6 +74,8 @@ public class SimpleResource : Resource, ISimpleResource, IDuplicateFoo, INonReso
     {
         Capabilities = capabilities;
     }
+    public void ThrowingMethod() => throw new InvalidOperationException("Resource is broken.");
+
     public void Validate()
     {
     }

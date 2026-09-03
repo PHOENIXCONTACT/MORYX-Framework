@@ -29,13 +29,16 @@ public class TypeControllerTests
                 typeof(DerivedResource),
                 typeof(ReferenceResource),
                 typeof(NonPublicResource),
-                typeof(ResourceWithImplicitApi)
+                typeof(ResourceWithImplicitApi),
+                typeof(ExplicitEventResource),
+                typeof(SharedEventNameResource),
+                typeof(CustomDelegateResource),
+                typeof(PlainResource)
             ]);
 
         _typeController = new ResourceTypeController
         {
-            Container = containerMock.Object,
-            ProxyBuilder = new ResourceProxyBuilder()
+            Container = containerMock.Object
         };
         _typeController.Start();
     }
@@ -201,10 +204,10 @@ public class TypeControllerTests
         Assert.That(finallyEven);
     }
 
-    [Test]
-    public void AfterDisposeTheProxyIsDetached()
+    [Test(Description = "Events are unsubscribed from target after detach")]
+    public void DetachedProxyStopsForwardingEvents()
     {
-        // Arrange: Create a proxy and register to an event
+        // Arrange
         var instance = new SimpleResource { Id = 7 };
         var proxy = (ISimpleResource)_typeController.GetProxy(instance);
         var called = false;
@@ -212,38 +215,106 @@ public class TypeControllerTests
         instance.Foo = 10;
         Assert.That(called);
 
-        // Act: Dispose the type controller and use the proxy again
+        // Act
         called = false;
         _typeController.Stop();
-        instance.Foo = 10;
+        instance.Foo = 20;
 
-        // Assert: Event was not raised and proxy can no longer be used
+        // Assert
         Assert.That(called, Is.False);
+    }
+
+    [Test(Description = "Calling a method on a detached proxy throws ProxyDetachedException")]
+    public void DetachedProxyThrowsOnMethodCall()
+    {
+        // Arrange
+        var instance = new SimpleResource { Id = 31, Foo = 5 };
+        var proxy = (ISimpleResource)_typeController.GetProxy(instance);
+        _typeController.Stop();
+
+        // Assert
         Assert.Throws<ProxyDetachedException>(() => proxy.MultiplyFoo(2));
     }
 
-    [Test]
-    public void ProxyBuilderFiltersGenericInterfaces()
+    [Test(Description = "Accessing a property on a detached proxy throws ProxyDetachedException")]
+    public void DetachedProxyThrowsOnPropertyAccess()
     {
         // Arrange
-        var driver = new ResourceWithGenericMethod { Id = 2, Name = "Some other Resource" };
+        var instance = new SimpleResource { Id = 32, Foo = 5 };
+        var proxy = (ISimpleResource)_typeController.GetProxy(instance);
+        _typeController.Stop();
+
+        // Assert
+        Assert.Throws<ProxyDetachedException>(() => _ = proxy.Foo);
+    }
+
+    [Test]
+    public void ProxySupportsGenericInterfaces()
+    {
+        // Arrange
+        var resource = new ResourceWithGenericMethod { Id = 2, Name = "Some other Resource" };
 
         // Act
-        var proxy = (ISimpleResource)_typeController.GetProxy(driver);
+        var proxy = _typeController.GetProxy(resource);
 
         // Assert
         Assert.That(proxy, Is.Not.Null);
-        Assert.That(typeof(IGenericMethodCall).IsAssignableFrom(proxy.GetType()), Is.False);
+        Assert.That(proxy, Is.InstanceOf<ISimpleResource>());
+        Assert.That(proxy, Is.InstanceOf<IGenericMethodCall>());
+    }
+
+    [Test(Description = "Generic methods on resource interfaces are forwarded through the proxy")]
+    public void CallGenericMethodOnProxy()
+    {
+        // Arrange
+        var resource = new ResourceWithGenericMethod { Id = 2, Name = "Some other Resource" };
+        var proxy = (IGenericMethodCall)_typeController.GetProxy(resource);
+
+        // Act
+        var stringResult = proxy.GenericMethod("hello");
+        var intResult = proxy.GenericMethod(42);
+
+        // Assert
+        Assert.That(stringResult, Is.EqualTo("hello"));
+        Assert.That(intResult, Is.EqualTo(42));
+    }
+
+    [Test(Description = "Generic method returning a resource wraps it in a proxy")]
+    public void GenericMethodReturningResourceIsProxied()
+    {
+        // Arrange
+        var inner = new SimpleResource { Id = 50, Foo = 99 };
+        var resource = new ResourceWithGenericMethod { Id = 2, Name = "Some other Resource" };
+        var proxy = (IGenericMethodCall)_typeController.GetProxy(resource);
+
+        // Act
+        var result = proxy.GenericMethod<IResource>(inner);
+
+        // Assert: result should be a proxy, not the raw resource
+        Assert.That(result, Is.Not.SameAs(inner));
+        Assert.That(result, Is.Not.InstanceOf<Resource>());
+        Assert.That(result.Id, Is.EqualTo(50));
+    }
+
+    [Test(Description = "Exceptions thrown by the resource are not wrapped in TargetInvocationException")]
+    public void ProxyUnwrapsTargetExceptions()
+    {
+        // Arrange
+        var resource = new SimpleResource { Id = 33, Foo = 0 };
+        var proxy = (ISimpleResource)_typeController.GetProxy(resource);
+
+        // Act & Assert
+        Assert.Throws<InvalidOperationException>(() => proxy.ThrowingMethod());
     }
 
     [Test]
     public void ProxyBuilderSkipsGenericBaseTypes()
     {
         // Arrange
-        var driver = new InheritingFromGenericResource { Id = 42, Name = "A non generic resource inheriting from a generic base type" };
+        var resource = new InheritingFromGenericResource { Id = 42, Name = "A non generic resource inheriting from a generic base type" };
 
         // Act
-        var proxy = _typeController.GetProxy(driver);
+        var proxy = _typeController.GetProxy(resource);
 
         // Assert
         Assert.That(proxy, Is.Not.Null);
@@ -251,13 +322,140 @@ public class TypeControllerTests
     }
 
     [Test]
-    public void FacadeExceptionForGenericProxy()
+    public void ProxifyGenericInterfaceFromFacade()
     {
         // Arrange
-        var driver = new ResourceWithGenericMethod { Id = 2, Name = "Some other Resource" };
+        var resource = new ResourceWithGenericMethod { Id = 2, Name = "Some other Resource" };
+
+        // Act
+        var proxy = resource.Proxify<IGenericMethodCall>(_typeController);
 
         // Assert
-        Assert.Throws<NotSupportedException>(() => ResourceExtensions.Proxify<IGenericMethodCall>(driver, _typeController));
+        Assert.That(proxy, Is.Not.Null);
+        Assert.That(proxy, Is.InstanceOf<IGenericMethodCall>());
+    }
+
+    [Test(Description = "Explicit interface property get/set should work through proxy")]
+    public void ReadAndWriteExplicitInterfaceProperty()
+    {
+        // Arrange
+        var instance = new ExplicitEventResource { Id = 20 };
+
+        // Act
+        var proxy = (IExplicitEventResource)_typeController.GetProxy(instance);
+        proxy.Bar = 42;
+
+        // Assert
+        Assert.That(proxy.Bar, Is.EqualTo(42));
+    }
+
+    [Test(Description = "Explicit interface method should work through proxy")]
+    public void CallExplicitInterfaceMethodOnProxy()
+    {
+        // Arrange
+        var instance = new ExplicitEventResource { Id = 21 };
+        var proxy = (IExplicitEventResource)_typeController.GetProxy(instance);
+        proxy.Bar = 5;
+
+        // Act
+        var result = proxy.DoubleBar();
+
+        // Assert
+        Assert.That(result, Is.EqualTo(10));
+        Assert.That(proxy.Bar, Is.EqualTo(10));
+    }
+
+    [Test(Description = "Explicit interface event should be forwarded through proxy")]
+    public void ForwardExplicitInterfaceEventFromProxy()
+    {
+        // Arrange
+        var instance = new ExplicitEventResource { Id = 22 };
+        var proxy = (IExplicitEventResource)_typeController.GetProxy(instance);
+
+        object eventSender = null;
+        var eventValue = 0;
+        proxy.BarChanged += (sender, value) =>
+        {
+            eventSender = sender;
+            eventValue = value;
+        };
+
+        // Act
+        proxy.Bar = 99;
+
+        // Assert
+        Assert.That(eventSender, Is.Not.Null);
+        Assert.That(eventSender, Is.EqualTo(proxy));
+        Assert.That(eventValue, Is.EqualTo(99));
+    }
+
+    [Test(Description = "Two interfaces with the same event name are forwarded independently")]
+    public void ForwardSameNamedEventsFromDifferentInterfaces()
+    {
+        // Arrange
+        var instance = new SharedEventNameResource { Id = 40 };
+        var proxy = _typeController.GetProxy(instance);
+        var firstProxy = (IFirstEventSource)proxy;
+        var secondProxy = (ISecondEventSource)proxy;
+
+        int firstValue = 0, secondValue = 0;
+        firstProxy.StatusChanged += (_, v) => firstValue = v;
+        secondProxy.StatusChanged += (_, v) => secondValue = v;
+
+        // Act: raise only the first event
+        instance.RaiseFirst(42);
+
+        // Assert: only the first handler fires
+        Assert.That(firstValue, Is.EqualTo(42));
+        Assert.That(secondValue, Is.EqualTo(0));
+
+        // Act: raise only the second event
+        instance.RaiseSecond(99);
+
+        // Assert: only the second handler fires
+        Assert.That(secondValue, Is.EqualTo(99));
+        Assert.That(firstValue, Is.EqualTo(42));
+    }
+
+    [Test(Description = "Events with custom delegate types throw NotSupportedException during proxy creation")]
+    public void ThrowOnCustomDelegateEvent()
+    {
+        // Arrange
+        var instance = new CustomDelegateResource { Id = 41 };
+
+        // Act & Assert
+        var ex = Assert.Throws<NotSupportedException>(() => _typeController.GetProxy(instance));
+        Assert.That(ex!.Message, Does.Contain(nameof(ICustomDelegateResource.StatusReport)));
+    }
+
+    [Test(Description = "Resource without any IResource-derived interface can be proxified as IResource")]
+    public void ProxifyResourceWithOnlyIResource()
+    {
+        // Arrange
+        var instance = new PlainResource { Id = 50, Name = "Plain" };
+
+        // Act
+        var proxy = _typeController.GetProxy(instance);
+
+        // Assert
+        Assert.That(proxy, Is.Not.Null);
+        Assert.That(proxy, Is.InstanceOf<IResource>());
+        Assert.That(proxy.Id, Is.EqualTo(50));
+        Assert.That(proxy.Name, Is.EqualTo("Plain"));
+    }
+
+    [Test(Description = "Proxy returns null for Name and Capabilities without throwing ProxyDetachedException")]
+    public void NullPropertiesDoNotThrowDetached()
+    {
+        // Arrange
+        var instance = new SimpleResource { Id = 30, Name = null };
+        instance.UpdateCapabilities(null);
+        var proxy = _typeController.GetProxy(instance);
+
+        // Assert
+        // Null values are returned, not a ProxyDetachedException
+        Assert.That(proxy.Name, Is.Null);
+        Assert.That(proxy.Capabilities, Is.Null);
     }
 
     [Test]

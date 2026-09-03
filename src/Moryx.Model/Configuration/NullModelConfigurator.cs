@@ -24,49 +24,49 @@ public sealed class NullModelConfigurator : IModelConfigurator
     /// <inheritdoc />
     public DbContext CreateContext()
     {
-        throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
+        throw new NotSupportedException($"Not supported by {nameof(NullModelConfigurator)}.");
     }
 
     /// <inheritdoc />
     public DbContext CreateContext(DatabaseConfig config)
     {
-        throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
+        throw new NotSupportedException($"Not supported by {nameof(NullModelConfigurator)}.");
     }
 
     /// <inheritdoc />
     public Task<TestConnectionResult> TestConnectionAsync(DatabaseConfig config, CancellationToken cancellationToken = default)
     {
-        throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
+        throw new NotSupportedException($"Not supported by {nameof(NullModelConfigurator)}.");
     }
 
     /// <inheritdoc />
     public Task<bool> CreateDatabaseAsync(DatabaseConfig config, CancellationToken cancellationToken = default)
     {
-        throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
+        throw new NotSupportedException($"Not supported by {nameof(NullModelConfigurator)}.");
     }
 
     /// <inheritdoc />
     public Task<IReadOnlyList<string>> AvailableMigrationsAsync(DatabaseConfig config, CancellationToken cancellationToken = default)
     {
-        throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
+        throw new NotSupportedException($"Not supported by {nameof(NullModelConfigurator)}.");
     }
 
     /// <inheritdoc />
     public Task<IReadOnlyList<string>> AppliedMigrationsAsync(DatabaseConfig config, CancellationToken cancellationToken = default)
     {
-        throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
+        throw new NotSupportedException($"Not supported by {nameof(NullModelConfigurator)}.");
     }
 
     /// <inheritdoc />
     public Task<DatabaseMigrationSummary> MigrateDatabaseAsync(DatabaseConfig config, CancellationToken cancellationToken = default)
     {
-        throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
+        throw new NotSupportedException($"Not supported by {nameof(NullModelConfigurator)}.");
     }
 
     /// <inheritdoc />
     public Task DeleteDatabaseAsync(DatabaseConfig config, CancellationToken cancellationToken = default)
     {
-        throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
+        throw new NotSupportedException($"Not supported by {nameof(NullModelConfigurator)}.");
     }
 
     /// <inheritdoc />

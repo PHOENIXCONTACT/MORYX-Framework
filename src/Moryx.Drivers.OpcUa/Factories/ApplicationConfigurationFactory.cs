@@ -42,7 +42,7 @@ internal class ApplicationConfigurationFactory
         var haveAppCertificate = await application.CheckApplicationInstanceCertificatesAsync(false, 0, cancellationToken);
         if (!haveAppCertificate)
         {
-            throw new InvalidCertificateException("Application instance certificate invalid!");
+            throw new InvalidCertificateException("Application instance certificate invalid.");
         }
         else
         {

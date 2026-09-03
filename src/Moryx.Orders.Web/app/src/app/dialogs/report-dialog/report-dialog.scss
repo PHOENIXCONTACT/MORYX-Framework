@@ -3,6 +3,7 @@
 .report-dialog-amounts-row {
   display: flex;
   width: 100%;
+  margin-top: 8px;
   margin-bottom: 16px;
 }
 
@@ -17,11 +18,11 @@
 }
 
 .radio-group {
-  margin-bottom: 8px;
+  display: block;
 }
 
-.mat-radio-button ~ .mat-radio-button {
-  margin-left: 16px;
+mat-radio-button ~ mat-radio-button {
+  margin-left: 8px;
 }
 
 .report-dialog-form-row {

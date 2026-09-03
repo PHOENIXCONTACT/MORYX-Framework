@@ -127,9 +127,6 @@
     "ORDER": "Auftrag",
     "PRODUCT": "Produkt"
   },
-  "DISMISS": "OKAY",
   "CANCEL": "ABBRECHEN",
-  "CONFIRM": "BESTÄTIGEN",
-  "DEFAULT_MESSAGE": "Auf dem Server ist etwas schief gelaufen.",
-  "SERVER_NOT_REACHABLE": "Der Server ist nicht erreichbar, bitte überprüfe deine Internetverbindung oder Proxy-Einstellungen."
+  "CONFIRM": "BESTÄTIGEN"
 }

@@ -11,7 +11,7 @@ import {
   MatDialogModule,
 } from '@angular/material/dialog';
 import { TranslatePipe } from '@ngx-translate/core';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/translation-constants';
 import { MyErrorStateMatcher } from '../MyErrorStateMatcher';
 import { MatInputModule } from '@angular/material/input';
 
