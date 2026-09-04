@@ -214,10 +214,10 @@ public class ModuleManagerTests
         WaitForTimeboxed(() => mockModule2.Invocations.Any(i => i.Method.Name == nameof(IServerModule.StartAsync)));
 
         // Assert
-        mockModule1.Verify(mock => mock.InitializeAsync(), Times.Exactly(2));
+        mockModule1.Verify(mock => mock.InitializeAsync(), Times.Once);
         mockModule1.Verify(mock => mock.StartAsync());
 
-        mockModule2.Verify(mock => mock.InitializeAsync(), Times.Exactly(2));
+        mockModule2.Verify(mock => mock.InitializeAsync(), Times.Once);
         mockModule2.Verify(mock => mock.StartAsync());
     }
 

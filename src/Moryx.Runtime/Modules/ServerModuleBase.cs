@@ -311,20 +311,21 @@ public abstract class ServerModuleBase<TConf> : IServerModule, IServerModuleStat
         }
 
         // Since event handling may take a while make sure we don't stop module execution
+        var args = new ModuleStateChangedEventArgs { OldState = oldState, NewState = newState };
         foreach (var caller in StateChanged.GetInvocationList())
         {
-            ThreadPool.QueueUserWorkItem(delegate (object callObj)
+            var handler = (EventHandler<ModuleStateChangedEventArgs>)caller;
+            ThreadPool.QueueUserWorkItem(_ =>
             {
                 try
                 {
-                    var callDelegate = (Delegate)callObj;
-                    callDelegate.DynamicInvoke(this, new ModuleStateChangedEventArgs { OldState = oldState, NewState = newState });
+                    handler(this, args);
                 }
                 catch (Exception ex)
                 {
                     Logger.Log(LogLevel.Warning, ex, "Failed to notify listener of state change");
                 }
-            }, caller);
+            });
         }
     }
 

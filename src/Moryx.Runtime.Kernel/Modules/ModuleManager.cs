@@ -16,8 +16,7 @@ public class ModuleManager : IModuleManager
 
     private readonly IModuleDependencyManager _dependencyManager;
 
-    private readonly IModuleStarter _moduleStarter;
-    private readonly IModuleStopper _moduleStopper;
+    private readonly ModuleLifecycleController _lifecycleController;
     private readonly ModuleManagerConfig _config;
     private readonly IConfigManager _configManager;
 
@@ -40,18 +39,8 @@ public class ModuleManager : IModuleManager
         _dependencyManager = new ModuleDependencyManager(logger);
         var availableModules = _dependencyManager.BuildDependencyTree(allModules);
 
-        // Create dedicated components for stopping and starting
-        var waitingModules = new Dictionary<IServerModule, ICollection<IServerModule>>();
-        _moduleStarter = new ModuleStarter(_dependencyManager, logger, _config)
-        {
-            AvailableModules = availableModules,
-            WaitingModules = waitingModules
-        };
-        _moduleStopper = new ModuleStopper(_dependencyManager, logger)
-        {
-            AvailableModules = availableModules,
-            WaitingModules = waitingModules
-        };
+        // Create dedicated component for lifecycle management
+        _lifecycleController = new ModuleLifecycleController(availableModules, _dependencyManager, logger, _config);
 
         // Observe state changed events of modules
         foreach (var module in availableModules)
@@ -65,41 +54,37 @@ public class ModuleManager : IModuleManager
     /// <inheritdoc/>
     public Task StartModulesAsync(CancellationToken cancellationToken = default)
     {
-        return _moduleStarter.StartAllAsync(cancellationToken);
+        return _lifecycleController.StartAllAsync(cancellationToken);
     }
 
     /// <inheritdoc/>
     public Task StopModulesAsync(CancellationToken cancellationToken = default)
     {
-        return _moduleStopper.StopAllAsync(cancellationToken);
+        return _lifecycleController.StopAllAsync(cancellationToken);
     }
 
     /// <inheritdoc/>
     public Task InitializeModuleAsync(IServerModule module, CancellationToken cancellationToken = default)
     {
-        return _moduleStarter.InitializeAsync(module, cancellationToken);
+        return _lifecycleController.InitializeAsync(module, cancellationToken);
     }
 
     /// <inheritdoc/>
     public Task StartModuleAsync(IServerModule module, CancellationToken cancellationToken = default)
     {
-        return _moduleStarter.StartAsync(module, cancellationToken);
+        return _lifecycleController.StartAsync(module, cancellationToken);
     }
 
     /// <inheritdoc/>
     public Task StopModuleAsync(IServerModule module, CancellationToken cancellationToken = default)
     {
-        return _moduleStopper.StopAsync(module, cancellationToken);
+        return _lifecycleController.StopAsync(module, cancellationToken);
     }
 
     /// <inheritdoc/>
-    public async Task ReincarnateModuleAsync(IServerModule module, CancellationToken cancellationToken = default)
+    public Task ReincarnateModuleAsync(IServerModule module, CancellationToken cancellationToken = default)
     {
-        // Stop execution
-        await _moduleStopper.StopAsync(module, cancellationToken);
-
-        // Start all desired
-        await _moduleStarter.StartAsync(module, cancellationToken);
+        return _lifecycleController.ReincarnateAsync(module, cancellationToken);
     }
 
     /// <summary>
@@ -130,9 +115,9 @@ public class ModuleManager : IModuleManager
     public IModuleDependencyTree DependencyTree => _dependencyManager.GetDependencyTree();
 
     /// <summary>
-    /// Get or set a services behaviour using
+    /// Get or set a services behavior using
     /// </summary>
-    /// <typeparam name="T">Type of behaviour</typeparam>
+    /// <typeparam name="T">Type of behavior</typeparam>
     public IBehaviourAccess<T> BehaviourAccess<T>(IServerModule plugin)
     {
         return ABehaviourAccess.Create<T>(_config, _configManager, plugin);
