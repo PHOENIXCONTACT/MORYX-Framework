@@ -1,71 +1,50 @@
 @if (isLoading()) {
-  <mat-progress-bar
-    mode="indeterminate"
-  class="operation-recipe-loading"></mat-progress-bar>
+  <mat-progress-bar mode="indeterminate" class="operation-recipe-loading"></mat-progress-bar>
 }
 <mat-sidenav-container class="operation-recipe-container">
-  <mat-sidenav opened mode="side" position="start">
-    <div class="">
-      <mat-toolbar
-        [style.background-image]="'url(' + operationRecipeToolbarImage + ')'"
-        color="primary"
-        class="operation-recipe-toolbar">
-        <mat-toolbar-row>
-          <a mat-icon-button [routerLink]="['/operations']" mat-icon-button aria-label="Go back to operations">
+  <mat-sidenav opened mode="side" position="start" disableClose="true">
+    <mat-toolbar [style.background-image]="'url(' + operationRecipeToolbarImage + ')'" color="primary"
+      class="operation-recipe-toolbar">
+      <mat-toolbar-row>
+        @if (!isEditMode()) {
+          <button type="button" mat-icon-button aria-label="Go back to operations" [routerLink]="['/operations']"
+            [matTooltip]="TranslationConstants.RECIPES.GO_BACK | translate" matTooltipShowDelay="500">
             <mat-icon>arrow_back</mat-icon>
-          </a>
-        </mat-toolbar-row>
-        <mat-toolbar-row class="operation-recipe-toolbar-details">
-          <div>
-            {{ TranslationConstants.RECIPES.RECIPES_OF | translate }}
-          </div>
-          <div>{{ operation().order }} - {{ operation().number }}</div>
-        </mat-toolbar-row>
-      </mat-toolbar>
-      <mat-list>
-        @for (recipe of recipes(); track recipe) {
-          <mat-list-item
-            [class.moryx-selected]="selectedRecipe()?.id === recipe.id"
-            class="operation-recipes-list-item"
-            (click)="onSelect(recipe)">
-            <span>{{ recipe.name }}</span>
-          </mat-list-item>
+          </button>
+          <span class="spacer"></span>
+          @if (selectedRecipe()) {
+            <button type="button" mat-icon-button aria-label="Start editing the selected product type"
+              (click)="onEdit()" [matTooltip]="TranslationConstants.RECIPES.EDIT | translate" matTooltipShowDelay="500">
+              <mat-icon>edit</mat-icon>
+            </button>
+          }
+        } @else {
+          <span class="spacer"></span>
+          <button type="submit" mat-icon-button aria-label="Save the edited resource" (click)="onSave()"
+            [matTooltip]="TranslationConstants.RECIPES.SAVE | translate" matTooltipShowDelay="500">
+            <mat-icon>save</mat-icon>
+          </button>
+          <button type="reset" mat-icon-button aria-label="Cancel Editing" (click)="onCancel()"
+            [matTooltip]="TranslationConstants.RECIPES.CANCEL | translate" matTooltipShowDelay="500">
+            <mat-icon>cancel</mat-icon>
+          </button>
         }
-      </mat-list>
-    </div>
-  </mat-sidenav>
-  <mat-sidenav [opened]="isEditBarOpened()" mode="side" class="toolbar-nav"  position="end">
-    <div class="operation-recipe-details-container">
-      @if (!isEditMode()) {
-        <button
-          mat-icon-button
-          aria-label="Start editing the selected product type"
-          type="button"
-          (click)="onEdit()">
-          <mat-icon>edit</mat-icon>
-        </button>
+      </mat-toolbar-row>
+      <mat-toolbar-row class="operation-recipe-toolbar-details">
+        <div>
+          {{ TranslationConstants.RECIPES.RECIPES_OF | translate }}
+        </div>
+        <div>{{ operation().order }} - {{ operation().number }}</div>
+      </mat-toolbar-row>
+    </mat-toolbar>
+    <mat-list>
+      @for (recipe of recipes(); track recipe) {
+        <mat-list-item [class.moryx-selected]="selectedRecipe()?.id === recipe.id" class="operation-recipes-list-item"
+          (click)="onSelect(recipe)">
+          <span>{{ recipe.name }}</span>
+        </mat-list-item>
       }
-
-      @if (isEditMode()) {
-        <button
-          mat-icon-button
-          aria-label="Cancel Editing"
-          type="reset"
-          (click)="onCancel()">
-          <mat-icon>cancel</mat-icon>
-        </button>
-      }
-
-      @if (isEditMode()) {
-        <button
-          mat-icon-button
-          aria-label="Save the edited resource"
-          type="submit"
-          (click)="onSave()">
-          <mat-icon>save</mat-icon>
-        </button>
-      }
-    </div>
+    </mat-list>
   </mat-sidenav>
   <mat-sidenav-content>
     @if (selectedRecipe()) {
@@ -73,29 +52,24 @@
         <h2>{{ TranslationConstants.RECIPES.GENERAL | translate }}</h2>
         <mat-form-field appearance="outline">
           <mat-label>{{
-            TranslationConstants.RECIPES.NAME | translate
-          }}</mat-label>
-          <input
-            matInput
-            aria-label="Recipe Name"
-            [disabled]="isEditMode() === false"
-            [(ngModel)]="selectedRecipe()!.name" />
+              TranslationConstants.RECIPES.NAME | translate
+            }}
+          </mat-label>
+          <input matInput aria-label="Recipe Name" [disabled]="isEditMode() === false"
+            [(ngModel)]="selectedRecipe()!.name"/>
         </mat-form-field>
         @if (hasWorkplans()) {
           <mat-form-field appearance="outline">
             <mat-label>{{
-              TranslationConstants.RECIPES.WORKPLAN | translate
-            }}</mat-label>
-            <mat-select
-              [(ngModel)]="selectedWorkplan"
-              [disabled]="isEditMode() === false"
-              required>
+                TranslationConstants.RECIPES.WORKPLAN | translate
+              }}
+            </mat-label>
+            <mat-select [(ngModel)]="selectedWorkplan" [disabled]="isEditMode() === false" required>
               @for (workplan of possibleWorkplans(); track workplan) {
-                <mat-option
-                  [value]="workplan">
+                <mat-option [value]="workplan">
                   {{ workplan.name }} -
                   {{ TranslationConstants.RECIPES.VERSION | translate }}: {{
-                  workplan.version
+                    workplan.version
                   }}
                 </mat-option>
               }
@@ -104,14 +78,12 @@
         }
         <mat-form-field appearance="outline">
           <mat-label>{{
-            TranslationConstants.RECIPES.CLASSIFICATION | translate
-          }}</mat-label>
-          <mat-select
-            [(ngModel)]="selectedRecipe()!.classification"
-            [disabled]="isEditMode() === false">
+              TranslationConstants.RECIPES.CLASSIFICATION | translate
+            }}
+          </mat-label>
+          <mat-select [(ngModel)]="selectedRecipe()!.classification" [disabled]="isEditMode() === false">
             @for (classification of recipeClassifications; track classification) {
-              <mat-option
-                [value]="classification">
+              <mat-option [value]="classification">
                 {{ classification }}
               </mat-option>
             }
@@ -119,11 +91,8 @@
         </mat-form-field>
         <h2>{{ TranslationConstants.RECIPES.PROPERTIES | translate }}</h2>
         @if (selectedRecipe()!.properties !== undefined) {
-          <navigable-entry-editor
-            class="product-recipes-details-properties"
-            queryParam="recipeParameter"
-            [entry]="selectedRecipe()!.properties!"
-          [disabled]="isEditMode() === false"></navigable-entry-editor>
+          <navigable-entry-editor class="product-recipes-details-properties" queryParam="recipeParameter"
+            [entry]="selectedRecipe()!.properties!" [disabled]="isEditMode() === false"></navigable-entry-editor>
         }
       </div>
     }

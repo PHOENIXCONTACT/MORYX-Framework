@@ -25,6 +25,7 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatOptionModule } from "@angular/material/core";
 import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from '@angular/material/select';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
   selector: "app-operation-recipes",
@@ -46,7 +47,8 @@ import { MatSelectModule } from '@angular/material/select';
     MatInputModule,
     MatFormFieldModule,
     ReactiveFormsModule,
-    MatSelectModule
+    MatSelectModule,
+    MatTooltip
   ]
 })
 export class OperationRecipes implements OnInit {
@@ -132,8 +134,17 @@ export class OperationRecipes implements OnInit {
             await this.snackbarService.handleError(e)
         );
     }
-    if (this.selectedRecipe()) {
-      this.selectedRecipe.set(this.recipes().find((r) => r.id === this.selectedRecipe()?.id));
+
+    const selectedRecipe = this.selectedRecipe();
+
+    if (selectedRecipe) {
+      this.selectedRecipe.set(this.recipes().find((r) => r.id === selectedRecipe.id));
+    }
+
+    const updatedSelection = this.selectedRecipe();
+
+    if (!updatedSelection && this.recipes().length > 0) {
+     this.selectedRecipe.set(this.recipes()[0]);
     }
   }
 

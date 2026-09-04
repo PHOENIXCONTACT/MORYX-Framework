@@ -59,7 +59,11 @@
     "WORKPLAN": "Piano di Lavoro",
     "CLASSIFICATION": "Classificazione",
     "PROPERTIES": "Proprietà",
-    "VERSION": "Versione"
+    "VERSION": "Versione",
+    "GO BACK": "Torna indietro",
+    "EDIT": "Modifica",
+    "SAVE": "Salva",
+    "CANCEL": "Cancella"
   },
   "DOCUMENTS": {
     "DOCUMENTS_OF": "Documenti di",
