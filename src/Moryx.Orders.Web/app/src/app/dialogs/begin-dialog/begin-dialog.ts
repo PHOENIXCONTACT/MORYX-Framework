@@ -28,6 +28,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MultiProgressBar } from "@app/multi-progress-bar/multi-progress-bar";
 import { OperatorSelector } from '@app/components/operator-selector/operator-selector';
 import { DialogContext } from "@app/components/dialog-context/dialog-context";
+import { blockNonDigitInput } from '@app/dialogs/digit-input-helper';
 
 @Component({
   selector: 'app-begin-dialog',
@@ -99,6 +100,7 @@ export class BeginDialog {
   protected targetAmountControl: FormControl;
   protected TranslationConstants = TranslationConstants;
   protected OperationStateClassification = OperationStateClassification;
+  protected blockNonDigitInput =  blockNonDigitInput;
 
   protected selectedOperatorId = signal<string|null>(null);
   protected creatingOperatorFailed = signal<boolean>(false);
