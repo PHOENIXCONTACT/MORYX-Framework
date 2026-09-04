@@ -1,0 +1,353 @@
+name: Generate Product SBOMs
+
+on:
+  workflow_dispatch:
+
+  push:
+    branches:
+      - dev
+      - future
+      - main
+    tags:
+      - "v*"
+
+jobs:
+  generate-sboms:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install CycloneDX .NET
+        run: |
+          dotnet tool install --global CycloneDX
+
+      - name: Install CycloneDX npm
+        run: |
+          npm install -g @cyclonedx/cyclonedx-npm
+
+      - name: Install CycloneDX CLI
+        run: |
+          curl -L https://github.com/CycloneDX/cyclonedx-cli/releases/latest/download/cyclonedx-linux-x64 -o cyclonedx
+          chmod +x cyclonedx
+          mkdir -p "$HOME/.local/bin"
+          mv cyclonedx "$HOME/.local/bin/cyclonedx"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Verify installations
+        run: |
+          dotnet-CycloneDX --version
+          cyclonedx-npm --version
+          cyclonedx --version
+
+      - name: Restore solution
+        run: |
+          dotnet restore
+
+      - name: Compute version
+        id: version
+        uses: phoenixcontact/tools/.github/actions/compute-version@main
+
+      - name: Set PRODUCT_VERSION
+        run: echo "PRODUCT_VERSION=${{ steps.version.outputs.version }}" >> "$GITHUB_ENV"
+
+      - name: Generate SBOMs
+        shell: bash
+        env:
+          METADATA_TEMPLATE: |
+            <?xml version="1.0" encoding="utf-8"?>
+            <bom xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                xmlns="http://cyclonedx.org/schema/bom/1.6">
+              <metadata>
+                <component type="${INNER_PROJECT_TYPE}" bom-ref="${PROJECT_GIT_PURL}">
+                  <purl>${PROJECT_PURL}</purl>
+                </component>
+              </metadata>
+            </bom>
+        run: |
+          product_version="$PRODUCT_VERSION"
+          GLOBAL_GIT_PURL="pkg:git/${GITHUB_SERVER_URL#https://}/$GITHUB_REPOSITORY@${GITHUB_SHA:0:8}"
+          output_path=$(pwd)/sboms
+          mkdir -p "$output_path"
+
+          metadata_template_name="bom-metadata-template.xml"
+          metadata_name="bom-metadata.xml"
+
+          while IFS= read -r -d '' project
+          do
+            echo ""
+            echo "Checking project: $project"
+
+            is_packable=$(dotnet msbuild "$project" -getProperty:IsPackable 2>/dev/null | tail -n 1 | tr '[:upper:]' '[:lower:]')
+            is_deployable=$(dotnet msbuild "$project" -getProperty:CreateDeployment 2>/dev/null | tail -n 1 | tr '[:upper:]' '[:lower:]')
+
+            if [ "$is_packable" != "true" ] && [ "$is_deployable" != "true" ]; then
+              echo "Skipping non-packable and non-deployable project"
+              continue
+            fi
+
+            dotnet_project_type=$(dotnet msbuild "$project" -getProperty:OutputType 2>/dev/null | tail -n 1 | tr '[:upper:]' '[:lower:]')
+
+            project_dir=$(dirname "$project")
+            project_dir="${project_dir#./}"
+            project_name=$(basename "$project" .csproj)
+
+            echo "Generating SBOMs for $project_name"
+
+            output_dir="$output_path/$project_name"
+            mkdir -p "$output_dir"
+
+            PROJECT_GIT_PURL="$GLOBAL_GIT_PURL#$project_dir"
+            PROJECT_NUGET_PURL="pkg:nuget/$project_name@$product_version"
+
+            if [ "$dotnet_project_type" = "exe" ]; then
+              echo "Detected project type for $project_name is application"
+              export INNER_PROJECT_TYPE="application"
+              export PROJECT_PURL="$PROJECT_GIT_PURL"
+            else
+              echo "Detected project type for $project_name is library"
+              export INNER_PROJECT_TYPE="library"
+              export PROJECT_PURL="$PROJECT_NUGET_PURL"
+            fi
+            export PROJECT_GIT_PURL
+
+            if [[ ! -f "$project_dir/$metadata_template_name" ]]; then
+              printf '%s\n' "$METADATA_TEMPLATE" > "$project_dir/$metadata_template_name"
+              echo "Created $metadata_template_name"
+            else
+              echo "$project_dir/$metadata_template_name already exists"
+            fi
+            envsubst < "$project_dir/$metadata_template_name" > "$project_dir/$metadata_name"
+            cat "$project_dir/$metadata_name"
+
+            #
+            # .NET SBOM
+            #
+            dotnet-CycloneDX "$project" \
+              -F Json \
+              -ipr \
+              -o "$output_dir" \
+              -fn "bom-dotnet.json" \
+              --set-version "$product_version" \
+              --import-metadata-path "$project_dir/$metadata_name" \
+              --disable-package-restore
+
+            #
+            # npm SBOMs (optional)
+            #
+            while IFS= read -r -d '' package_json
+            do
+              npm_dir=$(dirname "$package_json")
+              echo "Found package.json for $project_name in $npm_dir"
+
+              if [[ ! -f "$npm_dir/package-lock.json" ]]; then
+                echo "Skipping npm SBOM for $project_name because package-lock.json is missing in $npm_dir"
+                continue
+              else
+                echo "Found package-lock.json in $npm_dir"
+              fi
+
+              npm_relative_dir=${npm_dir#"$project_dir"}
+              npm_relative_dir=${npm_relative_dir#/}
+
+              if [ -z "$npm_relative_dir" ]; then
+                npm_bom_name="bom-npm.json"
+              else
+                npm_bom_suffix=${npm_relative_dir//\//-}
+                npm_bom_suffix=${npm_bom_suffix//[^[:alnum:]._-]/-}
+                npm_bom_name="bom-npm-$npm_bom_suffix.json"
+              fi
+
+              pushd "$npm_dir"
+
+              jq \
+                --arg BUILD_VERSION "$product_version" \
+                --arg project_name "$project_name.App" \
+                '.version = $BUILD_VERSION | .name = $project_name' \
+                package.json > package2.json
+              mv package2.json package.json
+
+              npm ci
+
+              echo "Writing npm sbom to '$output_dir/$npm_bom_name'"
+              cyclonedx-npm \
+                --output-format JSON \
+                --ignore-npm-errors \
+                --output-file "$output_dir/$npm_bom_name"
+
+              popd
+            done < <(find "$project_dir" \
+              -path "*/bin" -prune -o \
+              -path "*/obj" -prune -o \
+              -path "*/node_modules" -prune -o \
+              -path "*/.git" -prune -o \
+              -name "package.json" -print0)
+
+            #
+            # Merge .NET and npm SBOMs for the project
+            #
+            echo "Merging SBOMs for $project_name"
+
+            mapfile -d '' bom_files < <(
+              find "$output_dir" \
+                -maxdepth 1 \
+                -type f \
+                -name "bom-*.json" \
+                ! -name "bom-product.json" \
+                -print0
+            )
+
+            if [ "${#bom_files[@]}" -eq 0 ]; then
+              echo "No SBOM files found for $project_name"
+            else
+              echo "Merging ${#bom_files[@]} SBOM files for $project_name into bom-product.json"
+
+              cyclonedx merge \
+                --input-files "${bom_files[@]}" \
+                --input-format json \
+                --output-format json \
+                --output-file "$output_dir/bom-product-raw.json" \
+                --name "$project_name" \
+                --version "$product_version"
+
+              jq \
+                --arg purl "$PROJECT_PURL" \
+                --arg url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" \
+                --arg product_url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/tree/$GITHUB_SHA/$project_dir" \
+                --arg pipeline_url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
+                '.metadata.component.purl = $purl
+                | .metadata.component.externalReferences[0] = {"type": "vcs", "url": $url, "comment": "Project reference"}
+                | .metadata.component.externalReferences[1] = {"type": "vcs", "url": $product_url, "comment": "Folder view"}
+                | .metadata.component.externalReferences[2] = {"type": "build-system", "url": $pipeline_url, "comment": "Build pipeline"}
+                ' \
+                "$output_dir/bom-product-raw.json" > "$output_dir/bom-product.json"
+
+              rm "$output_dir/bom-product-raw.json"
+            fi
+          done < <(find . \
+            -path "*/bin" -prune -o \
+            -path "*/obj" -prune -o \
+            -path "*/node_modules" -prune -o \
+            -path "*/.git" -prune -o \
+            -name "*.csproj" -print0)
+
+      - name: Merge all product SBOMs
+        shell: bash
+        run: |
+          product_version="$PRODUCT_VERSION"
+          GLOBAL_GIT_PURL="pkg:git/${GITHUB_SERVER_URL#https://}/$GITHUB_REPOSITORY@${GITHUB_SHA:0:8}"
+          output_path=$(pwd)/sboms
+          project_name="${GITHUB_REPOSITORY##*/}"
+
+          mapfile -d '' product_boms < <(
+            find "$output_path" \
+              -mindepth 2 \
+              -maxdepth 2 \
+              -type f \
+              -name "bom-product.json" \
+              -print0
+          )
+
+          if [ "${#product_boms[@]}" -eq 0 ]; then
+            echo "No product SBOMs found for global merge"
+            exit 1
+          fi
+
+          enrich_global_sbom() {
+            local input_file="$1"
+            local output_file="$2"
+            jq \
+              --arg purl "$GLOBAL_GIT_PURL" \
+              --arg url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" \
+              --arg product_url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/tree/$GITHUB_SHA" \
+              --arg pipeline_url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
+              '.metadata.component.purl = $purl
+              | .metadata.component.externalReferences[0] = {"type": "vcs", "url": $url, "comment": "Project reference"}
+              | .metadata.component.externalReferences[1] = {"type": "vcs", "url": $product_url, "comment": "Folder view"}
+              | .metadata.component.externalReferences[2] = {"type": "build-system", "url": $pipeline_url, "comment": "Build pipeline"}
+              ' \
+              "$input_file" > "$output_file"
+          }
+
+          if [ "${#product_boms[@]}" -eq 1 ]; then
+            echo "Only one product SBOM found, enriching it as bom-all-products.json"
+            enrich_global_sbom "${product_boms[0]}" "$output_path/bom-all-products.json"
+            exit 0
+          fi
+
+          echo "Merging ${#product_boms[@]} product SBOMs into bom-all-products.json"
+
+          cyclonedx merge \
+            --input-files "${product_boms[@]}" \
+            --input-format json \
+            --output-format json \
+            --output-file "$output_path/bom-all-products-raw.json" \
+            --hierarchical \
+            --name "$project_name" \
+            --version "$product_version"
+
+          enrich_global_sbom "$output_path/bom-all-products-raw.json" "$output_path/bom-all-products.json"
+          rm "$output_path/bom-all-products-raw.json"
+
+      - name: Show generated SBOMs
+        run: |
+          find sboms -type f
+
+      - name: Validate SBOMs
+        shell: bash
+        run: |
+          mapfile -d '' sbom_files < <(find sboms -type f -name "*.json" -print0)
+
+          if [ "${#sbom_files[@]}" -eq 0 ]; then
+            echo "No SBOM files found for validation"
+            exit 1
+          fi
+
+          echo "Found ${#sbom_files[@]} SBOM files for validation"
+
+          for sbom in "${sbom_files[@]}"; do
+            echo "Validating $sbom"
+
+            spec_version=$(jq -r '.specVersion // empty' "$sbom")
+
+            if [ -z "$spec_version" ]; then
+              echo "Missing CycloneDX specVersion in $sbom"
+              exit 1
+            fi
+
+            cyclonedx validate \
+              --input-file "$sbom" \
+              --input-format json \
+              --input-version "v${spec_version//./_}" \
+              --fail-on-errors
+          done
+
+      - name: Upload SBOMs
+        uses: actions/upload-artifact@v4
+        with:
+          name: product-sboms
+          path: sboms/
+          if-no-files-found: warn
+
+      - name: Attach SBOM to GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload "${{ github.ref_name }}" \
+            sboms/bom-all-products.json \
+            --clobber
