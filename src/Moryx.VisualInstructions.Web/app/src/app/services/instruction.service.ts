@@ -40,12 +40,10 @@ export class InstructionService {
   }
 
   async requestMediaContentAsync(mediaItem: InstructionItemModel): Promise<DisplayedMediaContent> {
-    return await firstValueFrom(this.httpClient.request<Blob>(
-      new HttpRequest('GET', mediaItem.content ?? environment.assets + 'assets/moryx_transparent_colored.png', null, {
-        reportProgress: true,
-        responseType: 'blob',
-      })
-    ))
+    return await firstValueFrom(this.httpClient.get(mediaItem.content ?? environment.assets + 'assets/moryx_transparent_colored.png', {
+      observe: 'response',
+      responseType: 'blob',
+    }))
       .then((response) => {
         return this.convertBlobResponse(response);
       })
