@@ -20,11 +20,11 @@
           }
         } @else {
           <span class="spacer"></span>
-          <button type="submit" mat-icon-button aria-label="Save the edited resource" (click)="onSave()"
+          <button type="button" mat-icon-button aria-label="Save the edited resource" (click)="onSave()"
             [matTooltip]="TranslationConstants.RECIPES.SAVE | translate" matTooltipShowDelay="500">
             <mat-icon>save</mat-icon>
           </button>
-          <button type="reset" mat-icon-button aria-label="Cancel Editing" (click)="onCancel()"
+          <button type="button" mat-icon-button aria-label="Cancel Editing" (click)="onCancel()"
             [matTooltip]="TranslationConstants.RECIPES.CANCEL | translate" matTooltipShowDelay="500">
             <mat-icon>cancel</mat-icon>
           </button>
