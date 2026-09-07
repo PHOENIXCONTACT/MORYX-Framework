@@ -45,6 +45,8 @@ public class PartialSerialization<T> : PossibleValuesSerialization
 
     protected bool SimpleProp(PropertyInfo prop)
     {
+        var baseType = prop.DeclaringType;
+
         // Skip reference or domain model properties
         var type = prop.PropertyType;
         if (typeof(ProductType).IsAssignableFrom(type) ||
@@ -53,7 +55,7 @@ public class PartialSerialization<T> : PossibleValuesSerialization
             return false;
 
         // Filter default properties
-        if (FilteredProperties.Contains(prop.Name))
+        if (baseType == typeof(ProductType))
             return false;
 
         return true;
