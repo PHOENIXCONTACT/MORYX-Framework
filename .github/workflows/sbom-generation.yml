@@ -233,6 +233,7 @@ jobs:
                 | .metadata.component.externalReferences[0] = {"type": "vcs", "url": $url, "comment": "Project reference"}
                 | .metadata.component.externalReferences[1] = {"type": "vcs", "url": $product_url, "comment": "Folder view"}
                 | .metadata.component.externalReferences[2] = {"type": "build-system", "url": $pipeline_url, "comment": "Build pipeline"}
+                | .metadata.lifecycles = [{"phase": "build"}]
                 ' \
                 "$output_dir/bom-product-raw.json" > "$output_dir/bom-product.json"
 
@@ -279,6 +280,7 @@ jobs:
               | .metadata.component.externalReferences[0] = {"type": "vcs", "url": $url, "comment": "Project reference"}
               | .metadata.component.externalReferences[1] = {"type": "vcs", "url": $product_url, "comment": "Folder view"}
               | .metadata.component.externalReferences[2] = {"type": "build-system", "url": $pipeline_url, "comment": "Build pipeline"}
+              | .metadata.lifecycles = [{"phase": "build"}]
               ' \
               "$input_file" > "$output_file"
           }
