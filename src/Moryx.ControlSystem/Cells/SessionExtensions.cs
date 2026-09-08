@@ -1,12 +1,11 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.AbstractionLayer.Recipes;
 using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Products;
+using Moryx.AbstractionLayer.Recipes;
 using Moryx.ControlSystem.Recipes;
-using Moryx.ControlSystem.Processes;
 
 namespace Moryx.ControlSystem.Cells;
 
@@ -27,12 +26,8 @@ public static class SessionExtensions
         /// <see cref="ProductionProcess"/> and the <see cref="ProductionProcess"/> holds a <typeparamref name="TProductInstance"/>;
         /// Otherwise returns null
         /// </returns>
-        public TProductInstance GetProductInstance<TProductInstance>() where TProductInstance : ProductInstance
-        {
-            if (session.Process is not ProductionProcess process) return null;
-
-            return process.ProductInstance as TProductInstance;
-        }
+        public TProductInstance GetProductInstance<TProductInstance>() where TProductInstance : ProductInstance =>
+            session.Process.GetProductInstance<TProductInstance>();
 
         /// <summary>
         /// Modifies the <see cref="ProductInstance"/> of type <typeparamref name="TInstance"/>
@@ -54,7 +49,7 @@ public static class SessionExtensions
         /// <exception cref="InvalidOperationException">Thrown if the <see cref="Process"/> of the
         /// <paramref name="session"/> is no <see cref="ProductionProcess"/></exception>
         public TInstance ModifyProductInstance<TInstance>(Action<TInstance> setter)
-            where TInstance : ProductInstance => session.Process.ModifyProductInstance(setter);
+            where TInstance : ProductInstance => session.Process.Modify(setter);
 
         /// <summary>
         /// Tries to modifies the <see cref="ProductInstance"/> of type <typeparamref name="TInstance"/>
@@ -72,7 +67,7 @@ public static class SessionExtensions
         /// </code>
         /// </example>
         public bool TryModifyProductInstance<TInstance>(Action<TInstance> setter)
-            where TInstance : ProductInstance => session.Process.TryModifyProductInstance(setter);
+            where TInstance : ProductInstance => session.Process.TryModify(setter);
 
         /// <summary>
         /// Extension method to get the <see cref="Activity"/> from the <paramref name="session"/>
@@ -85,9 +80,14 @@ public static class SessionExtensions
         public TActivityType GetActivity<TActivityType>() where TActivityType : Activity
         {
             if (session is ActivityCompleted completed)
+            {
                 return completed.CompletedActivity as TActivityType;
+            }
+
             if (session is ActivityStart start)
+            {
                 return start.Activity as TActivityType;
+            }
 
             return null;
         }
@@ -114,10 +114,14 @@ public static class SessionExtensions
         public TProductType GetProductType<TProductType>() where TProductType : ProductType
         {
             if (session.Process.Recipe is SetupRecipe setupRecipe)
+            {
                 return setupRecipe.TargetRecipe.Target as TProductType;
+            }
 
             if (session.Process.Recipe is IProductRecipe prodcutRecipe)
+            {
                 return prodcutRecipe.Target as TProductType;
+            }
 
             return default;
         }
