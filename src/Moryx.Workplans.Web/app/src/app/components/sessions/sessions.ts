@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router, RouterOutlet } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { SnackbarService, SearchBarService, SearchRequest, SearchSuggestion } from '@moryx/ngx-web-framework/services';
+import { PrototypeToEntryConverter } from '@moryx/ngx-web-framework/entry-editor';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { WorkplanSessionModel } from '@api/models';
 import { WorkplanEditingService } from '@api/services';
@@ -224,12 +225,30 @@ export class Sessions implements OnInit, OnDestroy {
     return this.activeSession()?.sessionToken === token;
   }
 
-  protected saveWorkplan() {
+  protected async saveWorkplan() {
     if (!this.activeSession()) {
       return;
     }
 
-    const session = this.activeSession()!;
+    let session = this.activeSession()!;
+    const editingNode = this.editorStateService.isEditingStep();
+
+    if (editingNode?.id != null && session.sessionToken) {
+      if (editingNode.properties) {
+        PrototypeToEntryConverter.convertToEntry(editingNode.properties);
+      }
+      try {
+        const flushedNode = await this.workplanEditingService
+          .updateStep({ sessionId: session.sessionToken, nodeId: editingNode.id, body: editingNode });
+        if (session.nodes) {
+          session = { ...session, nodes: session.nodes.map(n => n.id === flushedNode.id ? flushedNode : n) };
+        }
+      } catch (err) {
+        this.snackbarService.handleError(err as HttpErrorResponse);
+        return;
+      }
+    }
+
     this.sessionService.updateSession(session)
       .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err))
       .then(_ => this.saveSession(session));
@@ -242,7 +261,11 @@ export class Sessions implements OnInit, OnDestroy {
         if (!session) {
           return;
         }
+        const editingNodeId = this.editorStateService.isEditingStep()?.id;
         this.editorStateService.setWorkplan(session);
+        if (editingNodeId != null) {
+          this.editorStateService.startEditingStep(editingNodeId);
+        }
         const translations = await this.getTranslations();
         this.snackbarService.showSuccess(translations[TranslationConstants.EDITOR.SNACK_BAR.SUCCESS]);
       });
