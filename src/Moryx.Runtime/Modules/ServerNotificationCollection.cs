@@ -1,10 +1,11 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Moryx.Modules;
+using System;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using Moryx.Modules;
 
 namespace Moryx.Runtime.Modules;
 
@@ -40,7 +41,7 @@ internal class ServerNotificationCollection : INotificationCollection
             _internalList.Add(item);
             if (_internalList.Count > MaxCollectionSize)
             {
-                removedItem = _internalList.First();
+                removedItem = _internalList[0];
                 _internalList.Remove(removedItem);
             }
         }
@@ -49,7 +50,7 @@ internal class ServerNotificationCollection : INotificationCollection
 
         if (removedItem != null)
         {
-            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item));
+            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removedItem));
         }
     }
 
