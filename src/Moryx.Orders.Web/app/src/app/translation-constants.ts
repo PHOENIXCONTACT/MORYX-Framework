@@ -69,6 +69,10 @@ export class TranslationConstants {
     CLASSIFICATION: 'RECIPES.CLASSIFICATION',
     PROPERTIES: 'RECIPES.PROPERTIES',
     VERSION: 'RECIPES.VERSION',
+    GO_BACK: 'RECIPES.GO_BACK',
+    EDIT: 'RECIPES.EDIT',
+    SAVE: 'RECIPES.SAVE',
+    CANCEL: 'RECIPES.CANCEL'
   };
 
   public static readonly DOCUMENTS = {
