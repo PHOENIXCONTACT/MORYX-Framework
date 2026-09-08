@@ -68,6 +68,9 @@ public abstract class Resource : ILoggingComponent, IResource, IAsyncInitializab
     {
         var loggerName = Name?.Replace(".", "_"); // replace . with _ because of logger child structure
         Logger = Logger?.GetChild(loggerName, GetType());
+        Logger?.TrySetProperty("Id", Id);
+        Logger?.TrySetProperty("Name", Name);
+        Logger?.TrySetProperty("Type", GetType().Name);
         return OnInitializeAsync(cancellationToken);
     }
 
