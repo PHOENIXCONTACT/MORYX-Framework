@@ -19,7 +19,6 @@ namespace Moryx.AbstractionLayer.Resources;
 public abstract class Resource : ILoggingComponent, IResource, IAsyncInitializablePlugin, IDisposable, IPersistentObject
 {
     #region Dependencies
-
     /// <summary>
     /// Logger for this resource
     /// </summary>
@@ -68,6 +67,9 @@ public abstract class Resource : ILoggingComponent, IResource, IAsyncInitializab
     {
         var loggerName = Name?.Replace(".", "_"); // replace . with _ because of logger child structure
         Logger = Logger?.GetChild(loggerName, GetType());
+        Logger?.TrySetProperty("ResourceId", Id);
+        Logger?.TrySetProperty("ResourceName", Name);
+        Logger?.TrySetProperty("ResourceType", GetType().Name);
         return OnInitializeAsync(cancellationToken);
     }
 
