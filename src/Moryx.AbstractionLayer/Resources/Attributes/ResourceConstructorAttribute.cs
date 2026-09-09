@@ -6,7 +6,7 @@ namespace Moryx.AbstractionLayer.Resources;
 /// <summary>
 /// Attribute to decorate methods that can be used to construct a resource instance
 /// </summary>
-[AttributeUsage(AttributeTargets.Method)]
+[AttributeUsage(AttributeTargets.Method, Inherited = false)]
 public class ResourceConstructorAttribute : Attribute
 {
     /// <summary>
