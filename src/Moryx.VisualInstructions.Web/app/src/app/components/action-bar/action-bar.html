@@ -1,0 +1,27 @@
+@if (showNavigation()) {
+  <div class="action-bar-navigation">
+    <button mat-raised-button class="bar-button" [disabled]="!hasPrevious()"
+      (click)="previous.emit()">
+      <mat-icon class="bar-icon">chevron_left</mat-icon>
+    </button>
+    <span class="instruction-counter">{{ activeIndex() + 1 }} / {{ instructionCount() }}</span>
+    <button mat-raised-button class="bar-button" [disabled]="!hasNext()" (click)="next.emit()">
+      <mat-icon class="bar-icon">chevron_right</mat-icon>
+    </button>
+    @if (hasNext()) {
+      <button mat-raised-button class="bar-button" (click)="viewNewest.emit()">
+        <mat-icon class="bar-icon">keyboard_double_arrow_right</mat-icon>
+      </button>
+    }
+  </div>
+}
+@if (results().length) {
+  <div class="action-bar-results">
+    @for (result of results(); track result) {
+      <button mat-raised-button class="bar-button result-button" type="button"
+        (click)="selectResult.emit(result)">
+        {{ result.displayValue }}
+      </button>
+    }
+  </div>
+}
