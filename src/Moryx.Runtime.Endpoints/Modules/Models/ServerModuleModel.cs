@@ -35,11 +35,6 @@ public class ServerModuleModel
     public ModuleStartBehaviour StartBehaviour { get; set; }
 
     /// <summary>
-    /// The failure behavior of the module. The module will do this when an error occured. See <see cref="FailureBehaviour"/> for the behaviors.
-    /// </summary>
-    public FailureBehaviour FailureBehaviour { get; set; }
-
-    /// <summary>
     /// Dependencies for this module.
     /// </summary>
     public List<ServerModuleModel> Dependencies { get; set; }

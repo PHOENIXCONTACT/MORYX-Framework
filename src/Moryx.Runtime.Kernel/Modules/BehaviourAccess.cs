@@ -14,9 +14,6 @@ internal static class ABehaviourAccess
         if (typeof(T) == typeof(ModuleStartBehaviour))
             return new StartBehaviorAccess(config, configManager, module) as ABehaviourAccess<T>;
 
-        if (typeof(T) == typeof(FailureBehaviour))
-            return new FailureBehaviourAccess(config, configManager, module) as ABehaviourAccess<T>;
-
         return null;
     }
 }
@@ -68,22 +65,5 @@ internal class StartBehaviorAccess : ABehaviourAccess<ModuleStartBehaviour>
     protected override void SetBehavior(ModuleStartBehaviour behavior)
     {
         Module.StartBehaviour = behavior;
-    }
-}
-
-internal class FailureBehaviourAccess : ABehaviourAccess<FailureBehaviour>
-{
-    public FailureBehaviourAccess(ModuleManagerConfig config, IConfigManager configManager, IModule module) : base(config, configManager, module)
-    {
-    }
-
-    protected override FailureBehaviour GetBehavior()
-    {
-        return Module.FailureBehaviour;
-    }
-
-    protected override void SetBehavior(FailureBehaviour behavior)
-    {
-        Module.FailureBehaviour = behavior;
     }
 }

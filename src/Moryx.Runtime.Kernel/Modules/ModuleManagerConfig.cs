@@ -66,9 +66,4 @@ public class ManagedModuleConfig
     [DataMember]
     public ModuleStartBehaviour StartBehaviour { get; set; }
 
-    /// <summary>
-    /// Failure behavior of the managed module. See <see cref="FailureBehaviour"/> for behavir information.
-    /// </summary>
-    [DataMember]
-    public FailureBehaviour FailureBehaviour { get; set; }
 }
