@@ -59,7 +59,11 @@
     "WORKPLAN": "Workplan",
     "CLASSIFICATION": "Classification",
     "PROPERTIES": "Properties",
-    "VERSION": "Version"
+    "VERSION": "Version",
+    "GO_BACK": "Go back",
+    "EDIT": "Edit",
+    "SAVE": "Save",
+    "CANCEL": "Cancel"
   },
   "DOCUMENTS": {
     "DOCUMENTS_OF": "Documents of",
@@ -76,7 +80,6 @@
     "UNDERDELIVERY": "Underdelivery",
     "REPORTED": "Reported",
     "SUCCESS": "Success",
-    "ESTIMATED": "Estimated",
     "SCRAP": "Scrap",
     "COMMENT": "Comment",
     "CONFIRMATION": "Confirmation",

@@ -1,14 +1,23 @@
 {
   "APP": {
-    "TITLE": "Instructions",
-    "INSTRUCTIONS": "Instructions",
+"NO_INSTRUCTOR_MESSAGE": "You haven't selected any display for this browser. This meens that we can't show you any instructions on this screen."
+  },
+  "SETTINGS_DIALOG": {
+    "TITLE": "Settings",
     "SELECT_INSTRUCTOR": "Select Display",
-    "NO_INSTRUCTOR_MESSAGE": "You haven't selected any display for this browser. This meens that we can't show you any instructions on this screen."
+    "FOCUS_MODE": "Focus Mode",
+    "FOCUS_MODE_NEWEST": "Push Newest To Front",
+    "FOCUS_MODE_NEWEST_DESCRIPTION": "Always switch to the newest instruction when it arrives.",
+    "FOCUS_MODE_STAY": "Keep Current In Front",
+    "FOCUS_MODE_STAY_DESCRIPTION": "Always stay on the current instruction, new ones appear in the background.",
+    "FOCUS_MODE_INPUT": "Keep Input In Front",
+    "FOCUS_MODE_INPUT_DESCRIPTION": "Stay on the current instruction only while editing inputs, otherwise switch to the newest."
   },
   "VISUAL_INSTRUCTIONS": {
-    "FAILED_LOADING": "The connection to the server could not be established. Please check your network connection or try again later.",
-    "EMPTY_STATE_HEADER": "No Instructions",
+"EMPTY_STATE_HEADER": "No Instructions",
     "EMPTY_STATE_TEXT": "Done! We reach out to you again, when there is something to be done."
   },
-  "DISMISS": "Dismiss"
+  "DISMISS": "Dismiss",
+  "CANCEL": "CANCEL",
+  "SAVE": "SAVE"
 }

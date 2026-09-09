@@ -177,7 +177,7 @@ internal class ProductManagementFacade : FacadeBase, IProductManagement
         ValidateHealthState();
         var wp = await Workplans.LoadWorkplanAsync(workplanId, cancellationToken);
         if (wp == null)
-            throw new KeyNotFoundException($"No workplan with id '{workplanId}' found!");
+            throw new KeyNotFoundException($"No workplan with id '{workplanId}' found.");
         return wp;
     }
 
@@ -286,7 +286,7 @@ internal class ProductManagementFacade : FacadeBase, IProductManagement
     private static void ValidateRecipe(IProductRecipe recipe)
     {
         if (recipe == null)
-            throw new ArgumentException("Recipe could not be found");
+            throw new ArgumentException("Recipe could not be found.");
     }
 
     private void ReplaceOrigin<TRecipe>(TRecipe recipe)

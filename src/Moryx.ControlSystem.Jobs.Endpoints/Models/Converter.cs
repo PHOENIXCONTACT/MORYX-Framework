@@ -69,7 +69,7 @@ internal static class Converter
         }
         else
         {
-            throw new ArgumentException("Unsupported job type", nameof(job));
+            throw new ArgumentException("Unsupported job type.", nameof(job));
         }
 
         return model;

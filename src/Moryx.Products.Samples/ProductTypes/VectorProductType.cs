@@ -19,6 +19,8 @@ public class VectorProductType : ProductType
 
     public Plane Surface { get; set; }
 
+    public Vector3? OptionalPosition { get; set; }
+
     protected override ProductInstance Instantiate()
     {
         throw new NotImplementedException();

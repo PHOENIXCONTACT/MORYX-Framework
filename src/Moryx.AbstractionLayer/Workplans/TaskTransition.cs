@@ -104,7 +104,7 @@ public class TaskTransition<TActivity> : TransitionBase, IObservableTransition, 
 
         if (activity is not Activity castedActivity)
         {
-            throw new InvalidCastException($"Activity type must inherit from Activity");
+            throw new InvalidCastException($"Activity type must inherit from {nameof(Activity)}.");
         }
 
         // Link objects

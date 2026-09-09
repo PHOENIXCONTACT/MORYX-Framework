@@ -200,7 +200,7 @@ internal class OperationData : IOperationData, IAsyncStateContext, ILoggingCompo
         {
             if (update.OperationSource.Type != Operation.Source.Type)
             {
-                throw new InvalidOperationException("Type of the operation source cannot be changed");
+                throw new InvalidOperationException("Type of the operation source cannot be changed.");
             }
 
             Operation.Source = update.OperationSource;
@@ -538,12 +538,12 @@ internal class OperationData : IOperationData, IAsyncStateContext, ILoggingCompo
 
         if (orderAdvice is { Amount: <= 0 })
         {
-            ThrowError("Amount less then or equals zero cannot be adviced!");
+            ThrowError("Amount less then or equals zero cannot be adviced.");
         }
 
         if (pickPartAdvice != null && !Operation.Parts.Contains(pickPartAdvice.Part))
         {
-            ThrowError("The part to advice is not part of the operation!");
+            ThrowError("The part to advice is not part of the operation.");
         }
 
         if (orderAdvice == null && pickPartAdvice == null)

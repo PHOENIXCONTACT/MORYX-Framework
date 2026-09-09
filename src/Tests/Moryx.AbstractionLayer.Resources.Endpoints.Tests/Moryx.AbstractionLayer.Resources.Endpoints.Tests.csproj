@@ -2,24 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <DebugType>full</DebugType>
-    <IsPackable>false</IsPackable>
     <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <IsTestProject>true</IsTestProject>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="coverlet.collector" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="NUnit" />
-    <PackageReference Include="NUnit3TestAdapter" />
     <PackageReference Include="Moq" />
   </ItemGroup>
 
   <ItemGroup>
-
     <ProjectReference Include="..\..\Moryx.AbstractionLayer.Resources.Endpoints\Moryx.AbstractionLayer.Resources.Endpoints.csproj" />
     <ProjectReference Include="..\..\Moryx.AbstractionLayer.TestTools\Moryx.AbstractionLayer.TestTools.csproj" />
     <ProjectReference Include="..\..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj" />

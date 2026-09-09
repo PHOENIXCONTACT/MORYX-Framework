@@ -42,7 +42,7 @@ public static class EnumInstructionResult
         if (response.SelectedResult != null)
             return ResultToEnumValue(resultEnum, response.SelectedResult);
 
-        throw new ArgumentException("No result found on response", nameof(response));
+        throw new ArgumentException("No result found on response.", nameof(response));
     }
 
     /// <summary>
@@ -97,7 +97,7 @@ public static class EnumInstructionResult
             return allValues;
         }
 
-        // Case 3: All values are explicitly hidden => display nothing 
+        // Case 3: All values are explicitly hidden => display nothing
         if (allValues.Count == hiddenValues.Count)
         {
             return displayValues;

@@ -103,7 +103,7 @@ public class ModuleController : ServerModuleBase<ModuleConfig>,
     protected override async Task OnStartAsync(CancellationToken cancellationToken)
     {
         if (Config.Users.UserRequired && UserManagement is NullUserManagement)
-            throw new InvalidOperationException("UserRequired configured but there is no UserManagement module available");
+            throw new InvalidOperationException("UserRequired configured but there is no UserManagement module available.");
 
         await Container.Resolve<ComponentOrchestration>().StartAsync(cancellationToken);
 

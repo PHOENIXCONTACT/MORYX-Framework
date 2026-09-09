@@ -102,7 +102,7 @@ public class ResourceRpcEndpoint(ILogger<ResourceRpcEndpoint> logger, IResourceM
             }
             catch (InvalidCastException ex)
             {
-                throw new InvalidCastException($"Could not convert parameter '{methodToInvokeParameters[i].Name}' to type '{methodToInvokeParameters[i].ParameterType.FullName}'", ex);
+                throw new InvalidCastException($"Could not convert parameter '{methodToInvokeParameters[i].Name}' to type '{methodToInvokeParameters[i].ParameterType.FullName}'.", ex);
             }
         }
         return parameters;

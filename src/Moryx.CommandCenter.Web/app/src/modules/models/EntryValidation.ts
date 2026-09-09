@@ -8,5 +8,4 @@ export default class EntryValidation {
     public maximum: number;
     public regex: string;
     public isRequired: boolean;
-    public isPassword: boolean;
 }

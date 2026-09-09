@@ -30,7 +30,7 @@ jobs:
       - run: echo ""
     outputs:
       dotnet_sdk_version: ${{ env.dotnet_sdk_version }}
-      node_version: ${{ needs.EnvVar.outputs.node_version }}
+      node_version: ${{ env.node_version }}
       REPOSITORY_NAME: ${{ env.REPOSITORY_NAME }}
       MORYX_PACKAGE_TARGET_DEV: ${{ env.MORYX_PACKAGE_TARGET_DEV }}
       MORYX_PACKAGE_TARGET_V3_DEV: ${{ env.MORYX_PACKAGE_TARGET_V3_DEV }}
@@ -54,6 +54,7 @@ jobs:
       dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
       node_version: ${{ needs.EnvVar.outputs.node_version }}
       REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
+      runsettings: CodeCoverage.runsettings
 
   IntegrationTests:
     name: Integration Tests
@@ -63,13 +64,27 @@ jobs:
       dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
       node_version: ${{ needs.EnvVar.outputs.node_version }}
       REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
+      runsettings: CodeCoverage.runsettings
 
-  TestReport:
-    name: Coverage Reports
+  Codecov:
+    name: Codecov
     needs: [EnvVar, UnitTests, IntegrationTests]
-    uses: phoenixcontact/tools/.github/workflows/reportgenerator-tool.yml@main
-    with:
-      REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
+        with:
+          name: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}-test-results
+          path: artifacts/test-results
+      - uses: actions/download-artifact@v8
+        with:
+          name: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}-integration-test-results
+          path: artifacts/integration-test-results
+      - uses: codecov/codecov-action@v7
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: artifacts/**/coverage.cobertura.xml
+          fail_ci_if_error: false
 
   # Documentation:
   #   name: Documentation

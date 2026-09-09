@@ -40,7 +40,7 @@ internal class DelayedExceptionModule : ServerModuleBase<TestConfig>
         Container.Resolve<IParallelOperations>().ExecuteParallel(delegate
         {
             WaitEvent.WaitOne();
-            throw new Exception("Test");
+            throw new Exception("Test.");
         });
         return Task.CompletedTask;
     }

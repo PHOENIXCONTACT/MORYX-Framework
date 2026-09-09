@@ -24,22 +24,20 @@
     <div class="report-dialog-form-row">
       <mat-form-field appearance="outline" class="interrupt-dialog-report-success-count">
         <mat-label>{{ TranslationConstants.REPORT_DIALOG.SUCCESS | translate }}</mat-label>
-        <input matInput [(ngModel)]="success" [disabled]="isLoading()"/>
+        <input matInput type="number" min="0" (beforeinput)="blockNonDigitInput($event)" [(ngModel)]="success"
+          [disabled]="isLoading()" />
         <mat-hint align="start">
-          {{ TranslationConstants.REPORT_DIALOG.REPORTED | translate }}: {{ context.reportedSuccess }}
-        </mat-hint>
-        <mat-hint align="end">
-          {{ TranslationConstants.REPORT_DIALOG.ESTIMATED | translate }}: {{ estimatedSuccess() }}
+          {{ TranslationConstants.REPORT_DIALOG.REPORTED | translate }}: {{ reportContext()?.reportedSuccess }} /
+          {{ estimatedSuccess() }}
         </mat-hint>
       </mat-form-field>
       <mat-form-field appearance="outline" class="interrupt-dialog-report-failure-count">
         <mat-label>{{ TranslationConstants.REPORT_DIALOG.SCRAP | translate }}</mat-label>
-        <input matInput [(ngModel)]="scrap" [disabled]="isLoading()"/>
+        <input matInput type="number" min="0" (beforeinput)="blockNonDigitInput($event)" [(ngModel)]="scrap"
+          [disabled]="isLoading()" />
         <mat-hint align="start">
-          {{ TranslationConstants.REPORT_DIALOG.REPORTED | translate }}: {{ context.reportedFailure }}
-        </mat-hint>
-        <mat-hint align="end">
-          {{ TranslationConstants.REPORT_DIALOG.ESTIMATED | translate }}: {{ estimatedFailure() }}
+          {{ TranslationConstants.REPORT_DIALOG.REPORTED | translate }}: {{ reportContext()?.reportedFailure }} /
+          {{ estimatedFailure() }}
         </mat-hint>
       </mat-form-field>
     </div>

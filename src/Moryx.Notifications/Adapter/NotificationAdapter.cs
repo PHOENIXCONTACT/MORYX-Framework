@@ -59,7 +59,7 @@ public class NotificationAdapter : INotificationAdapter, INotificationSourceAdap
     public void Publish(INotificationSender sender, Notification notification, object tag)
     {
         if (string.IsNullOrEmpty(sender.Identifier))
-            throw new InvalidOperationException("The identifier of the sender must be set");
+            throw new InvalidOperationException("The identifier of the sender must be set.");
 
         if (notification == null)
             throw new ArgumentNullException(nameof(notification), "Notification must be set");
@@ -71,7 +71,7 @@ public class NotificationAdapter : INotificationAdapter, INotificationSourceAdap
                 .Any(n => n.Notification == notification);
 
             if (isPending)
-                throw new InvalidOperationException("Notification cannot be published twice!");
+                throw new InvalidOperationException("Notification cannot be published twice.");
             notification.Created = DateTime.Now;
             notification.Sender = sender.Identifier;
 
@@ -85,7 +85,7 @@ public class NotificationAdapter : INotificationAdapter, INotificationSourceAdap
     public void Acknowledge(INotificationSender sender, Notification notification)
     {
         if (string.IsNullOrEmpty(sender.Identifier))
-            throw new InvalidOperationException("The identifier of the sender must be set");
+            throw new InvalidOperationException("The identifier of the sender must be set.");
 
         if (notification == null)
             throw new ArgumentNullException(nameof(notification), "Notification must be set");
@@ -105,7 +105,7 @@ public class NotificationAdapter : INotificationAdapter, INotificationSourceAdap
 
                 if (published is null)
                     throw new InvalidOperationException("Notification was not managed by the adapter. " +
-                                                        "The sender was not registered on the adapter");
+                                                        "The sender was not registered on the adapter.");
 
                 _pendingPubs.Remove(published);
             }
