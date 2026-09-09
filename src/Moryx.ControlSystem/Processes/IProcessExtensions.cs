@@ -32,7 +32,7 @@ public static class IProcessExtensions
         /// not hold a product instance of type <typeparamref name="TInstance"/></exception>
         /// <exception cref="InvalidOperationException">Thrown if the given <paramref name="process"/>
         /// is no <see cref="ProductionProcess"/></exception>
-        [Obsolete("Use 'Moryx.AbstractionLayer.Processes.ProcessExtensions.Modify<TInstance>(Action<TInstance> setter)' instead")]
+        [Obsolete($"Use '{nameof(ProcessExtensions.GetProductInstance)}' and direct property assignements instead of the delegate for cleaner stack traced during debugging.")]
         public TInstance ModifyProductInstance<TInstance>(Action<TInstance> setter)
             where TInstance : ProductInstance
         {
@@ -60,7 +60,7 @@ public static class IProcessExtensions
         /// ]]>
         /// </code>
         /// </example>
-        [Obsolete("Use 'Moryx.AbstractionLayer.Processes.ProcessExtensions.TryModify<TInstance>(Action<TInstance> setter)' instead")]
+        [Obsolete($"Use '{nameof(ProcessExtensions.GetProductInstance)}' and direct property assignements instead of the delegate for cleaner stack traced during debugging.")]
         public bool TryModifyProductInstance<TInstance>(Action<TInstance> setter)
             where TInstance : ProductInstance
         {

@@ -5,6 +5,7 @@ using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
+using Moryx.ControlSystem.Processes;
 using Moryx.ControlSystem.Recipes;
 
 namespace Moryx.ControlSystem.Cells;
@@ -48,8 +49,9 @@ public static class SessionExtensions
         /// </exception>
         /// <exception cref="InvalidOperationException">Thrown if the <see cref="Process"/> of the
         /// <paramref name="session"/> is no <see cref="ProductionProcess"/></exception>
+        [Obsolete($"Use '{nameof(SessionExtensions.GetProductInstance)}' and direct property assignements instead of the delegate for cleaner stack traced during debugging.")]
         public TInstance ModifyProductInstance<TInstance>(Action<TInstance> setter)
-            where TInstance : ProductInstance => session.Process.Modify(setter);
+            where TInstance : ProductInstance => session.Process.ModifyProductInstance(setter);
 
         /// <summary>
         /// Tries to modifies the <see cref="ProductInstance"/> of type <typeparamref name="TInstance"/>
@@ -66,8 +68,9 @@ public static class SessionExtensions
         /// ]]>
         /// </code>
         /// </example>
+        [Obsolete($"Use '{nameof(ProcessExtensions.GetProductInstance)}' and direct property assignements instead of the delegate for cleaner stack traced during debugging.")]
         public bool TryModifyProductInstance<TInstance>(Action<TInstance> setter)
-            where TInstance : ProductInstance => session.Process.TryModify(setter);
+            where TInstance : ProductInstance => session.Process.TryModifyProductInstance(setter);
 
         /// <summary>
         /// Extension method to get the <see cref="Activity"/> from the <paramref name="session"/>

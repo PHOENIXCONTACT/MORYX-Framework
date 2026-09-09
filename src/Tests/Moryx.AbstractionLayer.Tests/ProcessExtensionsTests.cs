@@ -105,53 +105,6 @@ public class ProcessExtensionsTests
         }
     }
 
-    [Test]
-    public void Modify_WhenProcessContainsExpectedInstance_UpdatesAndReturnsProductInstance()
-    {
-        // Arrange
-        var instance = CreateProductInstance();
-        var process = CreateProductionProcess(instance.Type, instance);
-
-        // Act
-        var modifiedInstance = process.Modify<DummyProductInstance>(product => product.SerialNumber = "12345");
-
-        // Assert
-        Assert.That(modifiedInstance, Is.SameAs(instance));
-        Assert.That(instance.SerialNumber, Is.EqualTo("12345"));
-    }
-
-    [TestCase(ProcessKind.Standard, typeof(InvalidOperationException))]
-    [TestCase(ProcessKind.ProductionWithOtherInstance, typeof(InvalidCastException))]
-    public void Modify_WhenProcessCannotProvideExpectedInstance_ThrowsExpectedException(ProcessKind processKind, Type exceptionType)
-    {
-        // Arrange
-        var process = CreateProcess(processKind);
-
-        // Act & Assert
-        Assert.Throws(exceptionType, () => process.Modify<DummyProductInstance>(_ => { }));
-    }
-
-    [TestCase(ProcessKind.ProductionWithExpectedInstance, true)]
-    [TestCase(ProcessKind.Standard, false)]
-    [TestCase(ProcessKind.ProductionWithOtherInstance, false)]
-    public void TryModify_WhenProcessIsResolved_ReturnsExpectedResult(ProcessKind processKind, bool expectedResult)
-    {
-        // Arrange
-        var process = CreateProcess(processKind);
-        var expectedSerialNumber = "12345";
-
-        // Act
-        var result = process.TryModify<DummyProductInstance>(product =>
-        {
-            product.SerialNumber = expectedSerialNumber;
-        });
-
-        // Assert
-        Assert.That(result, Is.EqualTo(expectedResult));
-        Assert.That(process.GetProductInstance<DummyProductInstance>()?.SerialNumber,
-            Is.EqualTo(expectedResult ? expectedSerialNumber : null));
-    }
-
     [TestCase(ActivityQuery.Next, 4)]
     [TestCase(ActivityQuery.Current, 5)]
     [TestCase(ActivityQuery.LastCompleted, 6)]
