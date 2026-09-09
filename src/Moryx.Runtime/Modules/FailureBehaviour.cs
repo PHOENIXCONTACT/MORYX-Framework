@@ -3,6 +3,8 @@
 
 namespace Moryx.Runtime.Modules;
 
+// TODO: Remove with next major release, as this is not used anymore
+
 /// <summary>
 /// Enum flags: Notify - Reincarnate
 /// </summary>
