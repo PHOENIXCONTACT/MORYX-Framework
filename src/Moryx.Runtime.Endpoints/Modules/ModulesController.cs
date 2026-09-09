@@ -48,7 +48,6 @@ public class ModulesController : ControllerBase
                 Assembly = ConvertAssembly(module),
                 HealthState = module.State,
                 StartBehaviour = _moduleManager.BehaviourAccess<ModuleStartBehaviour>(module).Behaviour,
-                FailureBehaviour = _moduleManager.BehaviourAccess<FailureBehaviour>(module).Behaviour,
                 Notifications = notifications.Select(n => new ModuleNotificationModel(n)).ToArray()
             };
 
@@ -137,10 +136,6 @@ public class ModulesController : ControllerBase
         var startBehaviour = _moduleManager.BehaviourAccess<ModuleStartBehaviour>(serverModule);
         if (startBehaviour.Behaviour != module.StartBehaviour)
             startBehaviour.Behaviour = module.StartBehaviour;
-
-        var failureBehaviour = _moduleManager.BehaviourAccess<FailureBehaviour>(serverModule);
-        if (failureBehaviour.Behaviour != module.FailureBehaviour)
-            failureBehaviour.Behaviour = module.FailureBehaviour;
 
         return Ok();
     }
