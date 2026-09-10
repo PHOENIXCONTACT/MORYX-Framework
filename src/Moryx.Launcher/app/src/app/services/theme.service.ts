@@ -41,6 +41,6 @@ export class ThemeService {
     if (stored === 'light' || stored === 'dark' || stored === 'system') {
       return stored;
     }
-    return 'light'; //TODO change to system in the next major
+    return 'system';
   }
 }
