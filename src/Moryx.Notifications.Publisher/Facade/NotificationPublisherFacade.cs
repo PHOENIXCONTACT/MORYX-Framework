@@ -18,10 +18,12 @@ internal class NotificationPublisherFacade : FacadeBase, INotificationPublisher
     {
         NotificationManager.Published += OnPublished;
         NotificationManager.Acknowledged += OnAcknowledged;
+        base.Activate();
     }
 
     public override void Deactivate()
     {
+        base.Deactivate();
         NotificationManager.Published -= OnPublished;
         NotificationManager.Acknowledged -= OnAcknowledged;
     }

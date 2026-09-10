@@ -9,7 +9,6 @@ using System.Threading.Channels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Runtime.Modules;
 using Moryx.Serialization;
@@ -27,18 +26,19 @@ public class VisualInstructionsController : ControllerBase
 {
     private const string CookieName = "moryx-client-identifier";
     private readonly IVisualInstructions _visualInstructions;
-    private readonly ILogger<VisualInstructionsController> _logger;
     private static readonly JsonSerializerOptions _serializerOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         Converters = { new JsonStringEnumConverter() }
     };
     private readonly Converter _converter;
-    public VisualInstructionsController(IVisualInstructions visualInstructions, IModuleManager moduleManager, IServiceProvider serviceProvider, ILogger<VisualInstructionsController> logger)
+    public VisualInstructionsController(IVisualInstructions visualInstructions, IModuleManager moduleManager, IServiceProvider serviceProvider)
     {
         _visualInstructions = visualInstructions;
-        _logger = logger;
-        _converter = new Converter(new PossibleValuesSerialization(moduleManager.AllModules.FirstOrDefault(module => module is IFacadeContainer<IVisualInstructions>)?.Container, serviceProvider, new EmptyValueProvider())); ; 
+        _converter = new Converter(new PossibleValuesSerialization(
+            moduleManager.AllModules.FirstOrDefault(module =>
+                module is IFacadeContainer<IVisualInstructions>)?.Container, serviceProvider,
+            new EmptyValueProvider()));
     }
 
     [HttpGet("stream")]
@@ -65,7 +65,7 @@ public class VisualInstructionsController : ControllerBase
             }
         };
 
-        EventHandler<bool> stateChangedEventHandler = (args, ready) =>
+        EventHandler<bool> stateChangedEventHandler = (_, ready) =>
         {
             if (ready)
             {
@@ -82,7 +82,7 @@ public class VisualInstructionsController : ControllerBase
             if (_visualInstructions is ILifeCycleBoundFacade lf)
             {
                 lf.StateChanged += stateChangedEventHandler;
-            } 
+            }
 
             await result.ExecuteAsync(HttpContext);
         }
@@ -97,23 +97,21 @@ public class VisualInstructionsController : ControllerBase
             if (_visualInstructions is ILifeCycleBoundFacade lf)
             {
                 lf.StateChanged -= stateChangedEventHandler;
-            } 
+            }
         }
 
         return;
 
         async IAsyncEnumerable<SseItem<string>> Subscribe([EnumeratorCancellation] CancellationToken cancelToken)
         {
-            
             InstructionModel[] initialInstructions = [];
 
             try
             {
-                
                 // Send all instructions as first item
                 initialInstructions = _visualInstructions.GetInstructions(identifier).Select(_converter.ToModel).ToArray();
             }
-            catch(HealthStateException)
+            catch (HealthStateException)
             {
                 // Ignore if module is not ready yet.
             }
@@ -140,7 +138,9 @@ public class VisualInstructionsController : ControllerBase
     public ActionResult<InstructionModel[]> GetAll(string identifier)
     {
         if (string.IsNullOrEmpty(identifier))
+        {
             return BadRequest($"{identifier} is not a valid identifier");
+        }
 
         return _visualInstructions.GetInstructions(identifier).Select(_converter.ToModel).ToArray();
     }
@@ -169,7 +169,9 @@ public class VisualInstructionsController : ControllerBase
     {
         var activeInstruction = _visualInstructions.GetInstructions(identifier)?.FirstOrDefault(ai => ai.Id == response.Id);
         if (activeInstruction is null)
+        {
             NotFound($"There is no active instruction corresponding to response id {response.Id}");
+        }
 
         var instructionResponse = new ActiveInstructionResponse
         {
