@@ -46,13 +46,16 @@ public class ModuleLogger : IModuleLogger
         _loggerFactory = loggerFactory;
     }
 
-    public IModuleLogger GetChild(string name, Type target)
-    {
-        var logger = string.IsNullOrEmpty(name)
-            ? new ModuleLogger(Name, _loggerFactory, _logger, NotificationTarget)
-            : new ModuleLogger($"{Name}.{name}", _loggerFactory, NotificationTarget);
-        return logger;
-    }
+    public IModuleLogger GetChild(string name, Type target) {
+    var notificationTarget = string.IsNullOrEmpty(name)
+                                 ? NotificationTarget
+                                 : (logLevel, message, exception) => NotificationTarget?.Invoke(
+                                       logLevel, $"{message} Resource : {name}", exception);
+    return string.IsNullOrEmpty(name)
+               ? new ModuleLogger(Name, _loggerFactory, _logger, notificationTarget)
+               : new ModuleLogger($"{Name}.{name}", _loggerFactory, notificationTarget);
+}
+
 
     public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
     {
