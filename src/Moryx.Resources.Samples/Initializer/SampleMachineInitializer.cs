@@ -33,12 +33,12 @@ public class SampleMachineInitializer : ResourceInitializerBase<SampleMachineIni
         {
             new() {
                 FirstName = "Max",
-                LastName = "Mustermann",
+                Name = "Mustermann",
                 StaffNumber = 0815
             },
             new() {
                 FirstName = "Flynn",
-                LastName = "Rider",
+                Name = "Rider",
                 StaffNumber = 4711
             }
         };
