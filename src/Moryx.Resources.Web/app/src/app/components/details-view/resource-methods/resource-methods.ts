@@ -11,7 +11,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatButtonModule } from '@angular/material/button';
 import { EditResourceService } from '@app/services/edit-resource.service';
 import { Router } from '@angular/router';
-import { ResourceModificationService } from '@api/services/resource-modification.service';
+import { ResourceManagementService } from '@api/services/resource-management.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import {
@@ -39,7 +39,7 @@ import {
 })
 export class ResourceMethods {
   private router = inject(Router);
-  private resourceModificationService = inject(ResourceModificationService);
+  private resourceManagementService = inject(ResourceManagementService);
   private snackBar = inject(MatSnackBar);
   private snackbarService = inject(SnackbarService);
 
@@ -127,7 +127,7 @@ export class ResourceMethods {
       };
     }
 
-    this.resourceModificationService
+    this.resourceManagementService
       .invokeMethod(param as { id: number; method: string; body?: Entry | undefined })
       .then((result) => {
         const resultEntry = result

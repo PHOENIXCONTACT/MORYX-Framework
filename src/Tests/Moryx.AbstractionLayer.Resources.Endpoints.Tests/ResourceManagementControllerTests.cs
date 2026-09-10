@@ -10,14 +10,14 @@ using NUnit.Framework;
 namespace Moryx.AbstractionLayer.Resources.Endpoints.Tests;
 
 [TestFixture]
-internal class ResourceModificationControllerTests
+internal class ResourceManagementControllerTests
 {
     private Mock<IResourceManagement>? _resourceManagementMock;
     private Mock<IResourceTypeTree>? _resourceTypeTreeMock;
     private Mock<IModuleManager>? _moduleManagerMock;
     private Mock<IServiceProvider>? _serviceProviderMock;
     private Mock<IResourceTypeNode>? _nodeMock;
-    private ResourceModificationController? _controller;
+    private ResourceManagementController? _controller;
     private ReferencingResource? _resource;
     private ResourceQuery? _query;
 
@@ -54,7 +54,7 @@ internal class ResourceModificationControllerTests
 
         _serviceProviderMock = new Mock<IServiceProvider>();
 
-        _controller = new ResourceModificationController(_resourceManagementMock.Object, _resourceTypeTreeMock.Object,
+        _controller = new ResourceManagementController(_resourceManagementMock.Object, _resourceTypeTreeMock.Object,
             _moduleManagerMock.Object, _serviceProviderMock.Object);
     }
 
