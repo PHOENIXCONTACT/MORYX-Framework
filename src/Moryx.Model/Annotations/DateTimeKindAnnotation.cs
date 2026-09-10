@@ -66,7 +66,7 @@ public static class DateTimeKindAnnotation
                     property.SetValueConverter(UnspecifiedConverter);
                     break;
                 default:
-                    throw new NotSupportedException($"Kind \"{kind}\" unsupported");
+                    throw new NotSupportedException($"Kind \"{kind}\" unsupported.");
             }
         }
     }

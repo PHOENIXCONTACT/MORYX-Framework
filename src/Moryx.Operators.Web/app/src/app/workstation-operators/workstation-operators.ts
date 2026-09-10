@@ -9,7 +9,7 @@ import { WorkstationTogglingState } from './WorkstationTogglingState';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Params, Router, RouterLink } from '@angular/router';
 import { AddOperatorDialog } from '../dialogs/add-operator/add-operator';
-import { TranslationConstants } from '../extensions/translation-constants.extensions';
+import { TranslationConstants } from '../translation-constants';
 import { skillTypeToModel } from '../models/model-converter';
 import { OperatorViewModel } from '../models/operator-view-model';
 import { AppStoreService } from '../services/app-store.service';

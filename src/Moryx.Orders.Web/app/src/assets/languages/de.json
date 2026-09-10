@@ -59,7 +59,11 @@
     "WORKPLAN": "Arbeitsplan",
     "CLASSIFICATION": "Klassifikation",
     "PROPERTIES": "Eigenschaften",
-    "VERSION": "Version"
+    "VERSION": "Version",
+    "GO_BACK": "Zurück gehen",
+    "EDIT": "Editieren",
+    "SAVE": "Speichern",
+    "CANCEL": "Abbrechen"
   },
   "DOCUMENTS": {
     "DOCUMENTS_OF": "Dokumente von",
@@ -76,7 +80,6 @@
     "UNDERDELIVERY": "Unterlieferung",
     "REPORTED": "Gemeldet",
     "SUCCESS": "Gutmenge",
-    "ESTIMATED": "Zielmenge",
     "SCRAP": "Ausschuss",
     "COMMENT": "Kommentar",
     "CONFIRMATION": "Rückmeldeart",
@@ -128,9 +131,6 @@
     "ORDER": "Auftrag",
     "PRODUCT": "Produkt"
   },
-  "DISMISS": "OKAY",
   "CANCEL": "ABBRECHEN",
-  "CONFIRM": "BESTÄTIGEN",
-  "DEFAULT_MESSAGE": "Auf dem Server ist etwas schief gelaufen.",
-  "SERVER_NOT_REACHABLE": "Der Server ist nicht erreichbar, bitte überprüfe deine Internetverbindung oder Proxy-Einstellungen."
+  "CONFIRM": "BESTÄTIGEN"
 }

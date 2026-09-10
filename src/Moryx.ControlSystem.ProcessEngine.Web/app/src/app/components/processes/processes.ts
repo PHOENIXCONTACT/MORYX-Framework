@@ -25,7 +25,7 @@ import { TranslatePipe } from "@ngx-translate/core";
 import { JobProcessModel } from "@api/models/job-process-model";
 import { ProcessActivityModel } from "@api/models/process-activity-model";
 import { ProcessEngineService } from "@api/services";
-import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
+import { TranslationConstants } from "@app/translation-constants";
 import { JobViewModel } from "@app/models/job-view-model";
 import { ProcessEngineStreamService } from "@app/services/process-engine-stream.service";
 

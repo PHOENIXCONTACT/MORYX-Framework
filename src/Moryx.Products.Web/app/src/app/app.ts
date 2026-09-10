@@ -21,7 +21,6 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { ProductTree } from "./components/product-tree/product-tree";
 import { Router, RouterOutlet } from "@angular/router";
 import {
-  LanguageService,
   SearchBarService,
   SearchRequest,
   SearchSuggestion,
@@ -39,7 +38,7 @@ import { DialogCreateRevision } from "./dialogs/dialog-create-revision/dialog-cr
 import { DialogDuplicateProduct } from "./dialogs/dialog-duplicate-product/dialog-duplicate-product";
 import { DialogRemoveProduct } from "./dialogs/dialog-remove-product/dialog-remove-product";
 import { DialogShowRevisions } from "./dialogs/dialog-show-revisions/dialog-show-revisions";
-import { TranslationConstants } from "./extensions/translation-constants.extensions";
+import { TranslationConstants } from "./translation-constants";
 import { DuplicateProductInfos } from "./models/DuplicateProductInfos";
 import { CacheProductsService } from "./services/cache-products.service";
 import { EditProductsService } from "./services/edit-products.service";
@@ -88,7 +87,6 @@ export class App implements OnInit, OnDestroy {
   private editService = inject(EditProductsService);
   private snackBar = inject(MatSnackBar);
   private sessionService = inject(SessionService);
-  private languageService = inject(LanguageService);
   private translateService = inject(TranslateService);
 
   protected isEditMode = this.editService.editing;
@@ -108,15 +106,6 @@ export class App implements OnInit, OnDestroy {
     environment.assets + "assets/products_toolbar.jpg";
 
   constructor() {
-    this.translateService.addLangs([
-      TranslationConstants.LANGUAGES.EN,
-      TranslationConstants.LANGUAGES.DE,
-      TranslationConstants.LANGUAGES.IT,
-      TranslationConstants.LANGUAGES.ZH,
-    ]);
-    this.translateService.setFallbackLang("en");
-    this.translateService.use(this.languageService.getFallbackLang());
-
     effect(() => {
       const products = this.cacheService.productsShownInTheTree() ?? [];
       untracked(() => {

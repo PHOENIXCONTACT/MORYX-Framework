@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System;
 using System.Collections.Generic;
 
 namespace Moryx.Tests.Serialization;
@@ -10,6 +11,10 @@ public class DummyClass
     public int Number { get; set; }
 
     public string Name { get; set; }
+
+    public DateTime ModifiedAt { get; set; }
+
+    public DateTimeOffset CreatedAt { get; set; }
 
     public int ReadOnly => 10;
 

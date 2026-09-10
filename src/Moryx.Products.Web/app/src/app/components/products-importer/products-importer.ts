@@ -7,7 +7,7 @@ import { Component, computed, effect, inject, signal, untracked, ChangeDetection
 import { ActivatedRoute, Router } from "@angular/router";
 import { Entry, EntryValueType, NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
 import { TranslatePipe } from "@ngx-translate/core";
-import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
+import { TranslationConstants } from "@app/translation-constants";
 import { ProductImporter } from "@api/models";
 import { CacheProductsService } from "@app/services/cache-products.service";
 

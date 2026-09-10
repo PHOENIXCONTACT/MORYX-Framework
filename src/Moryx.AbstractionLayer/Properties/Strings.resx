@@ -147,4 +147,16 @@
   <data name="Children" xml:space="preserve">
     <value>Children</value>
   </data>
+  <data name="BatchIdentity_Name" xml:space="preserve">
+    <value>Batch Identity</value>
+  </data>
+  <data name="BatchIdentity_Description" xml:space="preserve">
+    <value>Identity used to identify a material or product batch.</value>
+  </data>
+  <data name="BatchIdentity_Identifier_Name" xml:space="preserve">
+    <value>Batch Identifier</value>
+  </data>
+  <data name="BatchIdentity_Identifier_Description" xml:space="preserve">
+    <value>Unique identifier of the batch.</value>
+  </data>
 </root>

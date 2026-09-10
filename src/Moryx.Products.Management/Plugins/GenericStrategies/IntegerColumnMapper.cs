@@ -33,6 +33,12 @@ internal class IntegerColumnMapper : ColumnMapper<long>
         if (objectProp.PropertyType == typeof(DateTime))
             return new ConversionAccessor<long, DateTime>(objectProp, dt => dt.Ticks, DateTime.FromBinary);
 
+        if (objectProp.PropertyType == typeof(DateOnly))
+            return new ConversionAccessor<long, DateOnly>(objectProp, d => d.DayNumber, l => DateOnly.FromDayNumber((int)l));
+
+        if (objectProp.PropertyType == typeof(TimeOnly))
+            return new ConversionAccessor<long, TimeOnly>(objectProp, t => t.Ticks, l => new TimeOnly(l));
+
         if (objectProp.PropertyType == typeof(bool))
             return new ConversionAccessor<long, bool>(objectProp, v => v ? 1 : 0, l => l > 0);
 
@@ -46,6 +52,12 @@ internal class IntegerColumnMapper : ColumnMapper<long>
 
         if (Property.PropertyType == typeof(DateTime))
             return ((DateTime)value).Ticks;
+
+        if (Property.PropertyType == typeof(DateOnly))
+            return (long)((DateOnly)value).DayNumber;
+
+        if (Property.PropertyType == typeof(TimeOnly))
+            return ((TimeOnly)value).Ticks;
 
         if (Property.PropertyType == typeof(bool))
             return (bool)value ? 1L : 0L;

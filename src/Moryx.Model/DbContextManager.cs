@@ -98,7 +98,7 @@ public class DbContextManager : IDbContextManager
             }
 
             if (configuratorType == null || specificDbContextType == null)
-                throw new InvalidOperationException($"No valid configurator found for DbContext '{possibleModel.DbContext.FullName}'");
+                throw new InvalidOperationException($"No valid configurator found for DbContext '{possibleModel.DbContext.FullName}'.");
 
             var configType = configuratorType.BaseType.GenericTypeArguments.First();
 
@@ -189,7 +189,7 @@ public class DbContextManager : IDbContextManager
     {
         var configuredContext = _configuredModels.FirstOrDefault(m => m.BaseDbContextType == contextType);
         if (configuredContext == null)
-            throw new InvalidOperationException($"Context {contextType.FullName} not configured!");
+            throw new InvalidOperationException($"Context {contextType.FullName} not configured.");
 
         var setupExecutorType = typeof(ModelSetupExecutor<>).MakeGenericType(configuredContext.BaseDbContextType);
         return (IModelSetupExecutor)Activator.CreateInstance(setupExecutorType, this);
@@ -204,7 +204,7 @@ public class DbContextManager : IDbContextManager
     {
         var wrapper = _configuredModels.FirstOrDefault(k => k.BaseDbContextType == typeof(TContext));
         if (wrapper == null)
-            throw new InvalidOperationException("Unknown model");
+            throw new InvalidOperationException("Unknown model.");
 
         var configurator = wrapper.Configurator;
 

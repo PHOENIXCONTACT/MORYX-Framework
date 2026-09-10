@@ -15,9 +15,6 @@
       "NO_IMPORTER": "Nessun importatore è stato definito"
     }
   },
-  "DISMISS": "RIFIUTARE",
-  "DEFAULT_MESSAGE": "Qualcosa è andato storto sul server.",
-  "SERVER_NOT_REACHABLE": "Il server non è raggiungibile, controllare la connessione a Internet o le impostazioni del proxy.",
   "SHARED": {
     "DELETE": "Elimina",
     "EDIT": "Modifica",
@@ -107,5 +104,6 @@
     "REFRESH": "Aggiorna",
     "FILTER": "Filtra",
     "ADD": "Aggiungere"
-  }
+  },
+  "DISMISS": "Ok"
 }

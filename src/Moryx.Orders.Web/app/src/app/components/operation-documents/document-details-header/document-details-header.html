@@ -1,0 +1,4 @@
+<h2 class="header-title">{{ selectedDocument().number }}-{{ selectedDocument().revision }}&nbsp;{{ selectedDocument().type }}</h2>
+@if (selectedDocument().description) {
+  <p class="header-subtitle">{{ selectedDocument().description }}</p>
+}

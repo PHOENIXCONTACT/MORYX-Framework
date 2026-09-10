@@ -9,7 +9,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { Router, RouterOutlet } from "@angular/router";
 import { SnackbarService, } from "@moryx/ngx-web-framework/services";
 import { TranslatePipe } from "@ngx-translate/core";
-import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
+import { TranslationConstants } from "@app/translation-constants";
 import { RecipeModel, WorkplanModel } from "../../../api/models";
 import { ProductManagementService } from "../../../api/services";
 import { DialogCreateRecipe } from "@app/dialogs/dialog-create-recipe/dialog-create-recipe";

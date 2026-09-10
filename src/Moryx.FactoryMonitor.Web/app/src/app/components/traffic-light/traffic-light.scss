@@ -4,8 +4,10 @@
   align-items: center;      
 }
 
-h3,h4,h5 {
-  color: #585858;
+h5 {
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-label-medium);
+  margin: 0;
 }
 
 .traffic-light-container {
@@ -24,8 +26,8 @@ h3,h4,h5 {
   height: 8px;
   margin-left: 2px;
   margin-right: 2px;
-  border: 1px solid black;
-  background: #585858;
+  border: 1px solid var(--mat-sys-outline);
+  background: var(--mat-sys-on-surface-variant);
   opacity: 0.5;
 }
 
@@ -49,7 +51,7 @@ h3,h4,h5 {
   height: 0;
   border-top: 4px solid transparent;
   border-bottom: 4px solid transparent;
-  border-right: 4px solid #585858;
+  border-right: 4px solid var(--mat-sys-on-surface-variant);
   visibility: hidden;
 }
 
@@ -58,7 +60,7 @@ h3,h4,h5 {
   height: 0;
   border-top: 4px solid transparent;
   border-bottom: 4px solid transparent;
-  border-left: 4px solid #585858;
+  border-left: 4px solid var(--mat-sys-on-surface-variant);
   visibility: hidden;
 }
 

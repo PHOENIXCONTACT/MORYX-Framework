@@ -5,11 +5,11 @@
 
 import { Component, inject, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
-import { LanguageService, SnackbarService } from '@moryx/ngx-web-framework/services';
+import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { filter, firstValueFrom, Subscription } from 'rxjs';
 import { environment } from '../environments/environment';
-import { TranslationConstants } from './extensions/translation-constants.extensions';
+import { TranslationConstants } from './translation-constants';
 import { SessionsService } from './services/sessions.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -38,7 +38,6 @@ import { MatButtonModule } from '@angular/material/button';
 export class App implements OnInit, OnDestroy {
   protected router = inject(Router);
   private sessionService = inject(SessionsService);
-  private languageService = inject(LanguageService);
   private snackbarService = inject(SnackbarService);
   private translateService = inject(TranslateService);
 
@@ -53,15 +52,6 @@ export class App implements OnInit, OnDestroy {
 
   protected TranslationConstants = TranslationConstants;
 
-  constructor() {
-    this.translateService.addLangs([
-      TranslationConstants.LANGUAGES.EN,
-      TranslationConstants.LANGUAGES.DE,
-      TranslationConstants.LANGUAGES.IT,
-    ]);
-    this.translateService.setFallbackLang('en');
-    this.translateService.use(this.languageService.getFallbackLang());
-  }
 
   private async getTranslations(): Promise<{ [key: string]: string }> {
     return await firstValueFrom(this.translateService

@@ -4,7 +4,7 @@
 */
 
 import { Component, effect, inject, input, signal, untracked, ChangeDetectionStrategy } from "@angular/core";
-import { TranslationConstants } from "../extensions/translation-constants.extensions";
+import { TranslationConstants } from "../translation-constants";
 import { SkillType } from "../models/skill-type-model";
 import { Router, RouterLink } from "@angular/router";
 import { Entry, EntryValueType, NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";

@@ -144,7 +144,7 @@ public class ParallelOperations : IParallelOperations
     {
         // thread safe increment of timer id
         int id = Interlocked.Increment(ref _lastTimerId);
-            
+
         var timer = new Timer(new NonStackingTimerCallback(state =>
         {
             try
@@ -240,7 +240,7 @@ public class ParallelOperations : IParallelOperations
         lock (_eventDecouplers)
         {
             if (!_eventDecouplers.ContainsKey(target))
-                throw new InvalidOperationException("Can not remove a previously unregistered listener!");
+                throw new InvalidOperationException("Can not remove a previously unregistered listener.");
 
             decoupler = (EventDecoupler<TEventArgs>)_eventDecouplers[target];
             _eventDecouplers.Remove(target);

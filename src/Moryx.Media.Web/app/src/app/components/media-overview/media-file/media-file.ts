@@ -7,7 +7,7 @@ import { Component, inject, OnInit, model, signal, output, ChangeDetectionStrate
 import { ContentDescriptorModel } from '@api/models';
 import { MediaService } from '@app/services/media-service/media.service';
 import { environment } from '../../../../environments/environment';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/translation-constants';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';

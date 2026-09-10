@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Linq.Expressions;
+using Microsoft.Extensions.Logging;
 using Moryx.Container;
 using Moryx.Products.Management.Model;
 using Moryx.Serialization;
@@ -24,7 +25,10 @@ internal class GenericEntityMapper<TBase, TReference> : IGenericMapper
     /// </summary>
     public IPropertyMapperFactory MapperFactory { get; set; }
 
+    public ILogger Logger { get; set; }
+
     private IPropertyMapper[] _configuredMappers;
+
 
     private JsonSerializerSettings _jsonSettings;
 
@@ -37,31 +41,53 @@ internal class GenericEntityMapper<TBase, TReference> : IGenericMapper
         _jsonAccessor = ReflectionTool.PropertyAccessor<IGenericColumns, string>(jsonColumn);
 
         var baseProperties = typeof(TBase).GetProperties().Select(p => p.Name).ToArray();
-        var configuredProperties = config.PropertyConfigs.Select(cm => cm.PropertyName);
+
+        // Legacy compatibility:
+        // Historically some configurations used the JsonColumn both as JSON storage
+        // and as a regular property mapping. This remains supported until the next
+        // major release but should no longer be generated automatically.
+        // TODO: MORYX 12: Maybe remove support for using JsonColumn as a regular property mapping.
+        if (config.PropertyConfigs.Any(pc => string.Equals(pc.PropertyName, config.JsonColumn, StringComparison.OrdinalIgnoreCase)))
+        {
+            Logger.LogWarning(
+                "Detected a PropertyConfig for JsonColumn '{JsonColumn}'. " +
+                "This configuration is deprecated and may no longer be supported in a future major release.",
+                config.JsonColumn);
+        }
+
+        var configuredProperties = config.PropertyConfigs
+            .Select(cm => cm.PropertyName)
+            .ToArray();
 
         var readOnlyProperties = concreteType.GetProperties()
-            .Where(p => p.GetSetMethod() == null).Select(p => p.Name).ToArray();
+            .Where(p => p.GetSetMethod() == null)
+            .Select(p => p.Name)
+            .ToArray();
 
-        // The json should not contain base, configured nor readonly properties
         var jsonIgnoredProperties = baseProperties
             .Concat(configuredProperties)
-            .Concat(readOnlyProperties).ToArray();
+            .Concat(readOnlyProperties)
+            .ToArray();
 
         _jsonSettings = JsonSettings.Minimal
-            .Overwrite(j => j.ContractResolver = new DifferentialContractResolver<TReference>(jsonIgnoredProperties));
+            .Overwrite(j => j.ContractResolver =
+                new DifferentialContractResolver<TReference>(jsonIgnoredProperties));
 
         // Properties where no mapper should be created for: base and read only properties
         var mapperIgnoredProperties = baseProperties
-            .Concat(readOnlyProperties).ToArray();
+            .Concat(readOnlyProperties)
+            .ToArray();
 
-        _configuredMappers = config.PropertyConfigs.Where(pc => !mapperIgnoredProperties.Contains(pc.PropertyName))
-            .Select(pc => MapperFactory.Create(pc, concreteType)).ToArray();
+        _configuredMappers = config.PropertyConfigs
+            .Where(pc => !mapperIgnoredProperties.Contains(pc.PropertyName))
+            .Select(pc => MapperFactory.Create(pc, concreteType))
+            .ToArray();
     }
 
     public bool HasChanged(IGenericColumns storage, object instance)
     {
         // Compare JSON and mappers to entity
-        var json = JsonConvert.SerializeObject(instance, _jsonSettings);
+        var json = SerializeJson(instance);
         return _jsonAccessor.ReadProperty(storage) != json || _configuredMappers.Any(m => m.HasChanged(storage, instance));
     }
 
@@ -104,7 +130,7 @@ internal class GenericEntityMapper<TBase, TReference> : IGenericMapper
                 }
                 break;
         }
-        throw new NotSupportedException("Expression type not supported yet");
+        throw new NotSupportedException("Expression type not supported yet.");
     }
 
     private Expression<Func<IGenericColumns, bool>> Convert(string memberName, ExpressionType type, object value)
@@ -116,32 +142,70 @@ internal class GenericEntityMapper<TBase, TReference> : IGenericMapper
         return Expression.Lambda(body, columnParam) as Expression<Func<IGenericColumns, bool>>;
     }
 
+    /// <inheritdoc />
     public void ReadValue(IGenericColumns source, object target)
     {
-        // Use all configured mappers
-        var properties = source;
+        // Read all directly mapped properties
         foreach (var mapper in _configuredMappers)
         {
-            mapper.ReadValue(properties, target);
+            mapper.ReadValue(source, target);
         }
 
-        // Fill the rest from JSON
+        // Reading JSON from the JsonColumn
         var json = _jsonAccessor.ReadProperty(source);
-        if (!string.IsNullOrEmpty(json))
-            JsonConvert.PopulateObject(json, target, _jsonSettings);
+        if (string.IsNullOrEmpty(json))
+        {
+            return;
+        }
 
+        // Legacy compatibility:
+        // Older systems may contain plain text in the JsonColumn.
+        // In this case simply ignore the content and continue loading
+        // the directly mapped properties.
+        if (!(json.StartsWith('{') || json.StartsWith('[')))
+        {
+            Logger.LogWarning("Ignoring non-JSON content in JsonColumn '{Column}'. Value: '{Value}'", _jsonAccessor.Property.Name, json);
+            return;
+        }
+
+        // Populate remaining properties from the JsonColumn JSON payload
+        try
+        {
+            JsonConvert.PopulateObject(json, target, _jsonSettings);
+        }
+        catch (JsonException ex)
+        {
+            throw new InvalidOperationException(
+                $"Failed to deserialize JSON from column '{_jsonAccessor.Property.Name}' for target type '{target.GetType().FullName}'. " +
+                $"Stored value: '{json}'", ex);
+        }
     }
 
+    /// <inheritdoc/>>
     public void WriteValue(object source, IGenericColumns target)
     {
-        // Convert and write JSON
-        var json = JsonConvert.SerializeObject(source, _jsonSettings);
-        _jsonAccessor.WriteProperty(target, json);
-
-        // Execute property mappers
+        // First, write all the directly mapped properties
         foreach (var mapper in _configuredMappers)
         {
             mapper.WriteValue(source, target);
         }
+
+        // Everything else is written as JSON to the JsonColumn
+        _jsonAccessor.WriteProperty(target, SerializeJson(source));
     }
+
+    /// <summary>
+    /// Serialize the properties that have no dedicated column. The contract resolver of
+    /// <see cref="_jsonSettings"/> takes care of excluding base, mapped, read-only and
+    /// reference properties.
+    /// </summary>
+    /// <remarks>
+    /// <see cref="WriteValue"/> and <see cref="HasChanged"/> must produce their JSON the very
+    /// same way. Otherwise the comparison in <see cref="HasChanged"/> never matches the stored
+    /// value and every save would create a new version.
+    /// The concrete type is passed explicitly, because <see cref="TypeNameHandling.Auto"/> would
+    /// otherwise add a redundant type name for the root object.
+    /// </remarks>
+    private string SerializeJson(object source)
+        => JsonConvert.SerializeObject(source, source.GetType(), _jsonSettings);
 }

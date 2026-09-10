@@ -1,8 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Concurrent;
-using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Channels;
@@ -33,8 +31,6 @@ public class ProcessEngineController : ControllerBase // TODO: Rename to Process
     private readonly IResourceManagement _resourceManagement;
     private readonly IJobManagement _jobManagement;
 
-    private static readonly ConcurrentDictionary<Guid, Channel<string>> _processStreamSubscribers = new();
-    private static readonly ConcurrentDictionary<Guid, Channel<string>> _activityStreamSubscribers = new();
     private static readonly JsonSerializerOptions _serializerOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -210,9 +206,11 @@ public class ProcessEngineController : ControllerBase // TODO: Rename to Process
     [ProducesResponseType(typeof(JobProcessModel), StatusCodes.Status200OK)]
     public async Task ProcessUpdatesStream(CancellationToken cancellationToken)
     {
+        var channel = Channel.CreateUnbounded<string>();
+
         // Define event handler using the broadcast helper
-        var eventHandler = new EventHandler<ProcessUpdatedEventArgs>((_, e) =>
-            Broadcast(e));
+        EventHandler<ProcessUpdatedEventArgs> eventHandler = (_, e) =>
+            Broadcast(e);
 
         try
         {
@@ -230,35 +228,17 @@ public class ProcessEngineController : ControllerBase // TODO: Rename to Process
 
         return;
 
-        async IAsyncEnumerable<string> Subscribe([EnumeratorCancellation] CancellationToken cancelToken)
+        IAsyncEnumerable<string> Subscribe(CancellationToken cancelToken)
         {
-            var channel = Channel.CreateUnbounded<string>();
-            var id = Guid.NewGuid();
-            _processStreamSubscribers[id] = channel;
-
-            try
-            {
-                await foreach (var data in channel.Reader.ReadAllAsync(cancelToken))
-                {
-                    yield return data;
-                }
-            }
-            finally
-            {
-                _processStreamSubscribers.TryRemove(id, out _);
-            }
+            return channel.Reader.ReadAllAsync(cancelToken);
         }
 
-        // Local helper to broadcast process updates to all connected clients
+        // Local helper to push process updates to the client
         void Broadcast(ProcessUpdatedEventArgs e)
         {
             var processModel = Converter.ConvertProcess(e.Process, _processControl, _resourceManagement);
             processModel.State = e.Progress;
-
-            foreach (var channel in _processStreamSubscribers.Values)
-            {
-                channel.Writer.TryWrite(JsonSerializer.Serialize(processModel, _serializerOptions));
-            }
+            channel.Writer.TryWrite(JsonSerializer.Serialize(processModel, _serializerOptions));
         }
     }
 
@@ -267,9 +247,11 @@ public class ProcessEngineController : ControllerBase // TODO: Rename to Process
     [ProducesResponseType(typeof(ProcessActivityModel), StatusCodes.Status200OK)]
     public async Task ActivitiesUpdatesStream(CancellationToken cancellationToken)
     {
+        var channel = Channel.CreateUnbounded<string>();
+
         // Define event handler using the broadcast helper
-        var eventHandler = new EventHandler<ActivityUpdatedEventArgs>((_, e) =>
-            Broadcast(e));
+        EventHandler<ActivityUpdatedEventArgs> eventHandler = (_, e) =>
+            Broadcast(e);
 
         try
         {
@@ -291,37 +273,18 @@ public class ProcessEngineController : ControllerBase // TODO: Rename to Process
 
         return;
 
-        async IAsyncEnumerable<string> Subscribe([EnumeratorCancellation] CancellationToken cancelToken)
+        IAsyncEnumerable<string> Subscribe(CancellationToken cancelToken)
         {
-            var channel = Channel.CreateUnbounded<string>();
-            var id = Guid.NewGuid();
-            _activityStreamSubscribers[id] = channel;
-
-            try
-            {
-                await foreach (var data in channel.Reader.ReadAllAsync(cancelToken))
-                {
-                    yield return data;
-                }
-            }
-            finally
-            {
-                _activityStreamSubscribers.TryRemove(id, out _);
-            }
+            return channel.Reader.ReadAllAsync(cancelToken);
         }
 
-        // Local helper to broadcast activity updates to all connected clients
+        // Local helper to push activity updates to the client
         void Broadcast(ActivityUpdatedEventArgs e)
         {
             var activityModel = Converter.ConvertActivity(e.Activity, _processControl, _resourceManagement);
             activityModel.State = e.Progress.ToString();
-
-            foreach (var channel in _activityStreamSubscribers.Values)
-            {
-                channel.Writer.TryWrite(JsonSerializer.Serialize(activityModel, _serializerOptions));
-            }
+            channel.Writer.TryWrite(JsonSerializer.Serialize(activityModel, _serializerOptions));
         }
-
     }
 
     #region Process Holder

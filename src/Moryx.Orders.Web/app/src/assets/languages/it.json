@@ -59,7 +59,11 @@
     "WORKPLAN": "Piano di Lavoro",
     "CLASSIFICATION": "Classificazione",
     "PROPERTIES": "Proprietà",
-    "VERSION": "Versione"
+    "VERSION": "Versione",
+    "GO_BACK": "Torna indietro",
+    "EDIT": "Modifica",
+    "SAVE": "Salva",
+    "CANCEL": "Cancella"
   },
   "DOCUMENTS": {
     "DOCUMENTS_OF": "Documenti di",
@@ -76,7 +80,6 @@
     "UNDERDELIVERY": "Non prodotte",
     "REPORTED": "Segnalato",
     "SUCCESS": "Successo",
-    "ESTIMATED": "Stima",
     "SCRAP": "Fallite",
     "COMMENT": "Commenti",
     "CONFIRMATION": "Conferma",
@@ -128,9 +131,6 @@
     "ORDER": "Ordine",
     "PRODUCT": "Prodotto"
   },
-  "DISMISS": "RIFIUTARE",
   "CANCEL": "CANCELLA",
-  "CONFIRM": "CONFERMARE",
-  "DEFAULT_MESSAGE": "Qualcosa è andato storto sul server.",
-  "SERVER_NOT_REACHABLE": "Il server non è raggiungibile, controllare la connessione internet o le impostazioni del proxy."
+  "CONFIRM": "CONFERMARE"
 }

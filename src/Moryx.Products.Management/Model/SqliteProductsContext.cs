@@ -21,4 +21,13 @@ public class SqliteProductsContext : ProductsContext
     public SqliteProductsContext(DbContextOptions options) : base(options)
     {
     }
+
+    /// <inheritdoc />
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+    {
+        base.ConfigureConventions(configurationBuilder);
+
+        configurationBuilder.Properties<double>()
+            .HaveConversion<Ieee754ValueConverter>();
+    }
 }

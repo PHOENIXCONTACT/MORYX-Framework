@@ -5,7 +5,7 @@
 
 import { Component, computed, input, output, ChangeDetectionStrategy } from '@angular/core';
 import { OperatorViewModel } from '../models/operator-view-model';
-import { TranslationConstants } from '../extensions/translation-constants.extensions';
+import { TranslationConstants } from '../translation-constants';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({

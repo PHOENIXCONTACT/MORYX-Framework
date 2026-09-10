@@ -39,5 +39,7 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>{{ TranslationConstants.ABOUT.CLOSE | translate }}</button>
+  <button mat-button mat-dialog-close type="button" cdkFocusInitial>
+    {{ TranslationConstants.ABOUT.CLOSE | translate }}
+  </button>
 </mat-dialog-actions>

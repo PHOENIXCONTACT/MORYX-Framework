@@ -7,7 +7,7 @@ import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { OperatorViewModel } from '@app/models/operator-view-model';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/translation-constants';
 import { AssignableOperator } from '@app/api/models/assignable-operator';
 import { AppStoreService } from '@app/services/app-store.service';
 

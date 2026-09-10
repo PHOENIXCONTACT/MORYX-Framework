@@ -4,12 +4,7 @@
 */
 
 export class TranslationConstants {
-  public static readonly LANGUAGES = {
-    EN: 'en',
-    DE: 'de',
-    IT: 'it',
-    ZH: 'zh',
-  };
+  public static readonly LANGUAGES = ['en', 'de', 'it', 'zh'];
 
   public static readonly MORE = {
     VIEWS: 'MORE.VIEWS',
@@ -79,4 +74,3 @@ export class TranslationConstants {
     FULLSCREEN_MODE: 'SHORTCUTS.FULLSCREEN_MODE',
   }
 }
-

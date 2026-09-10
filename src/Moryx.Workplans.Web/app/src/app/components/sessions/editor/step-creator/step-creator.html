@@ -1,5 +1,5 @@
 @if (stepRecipe(); as recipe) {
-  <h1 class="side-sheet-title truncate">{{ recipe.name }}</h1>
+  <h2 class="side-sheet-title">{{ recipe.name }}</h2>
   <mat-hint class="side-sheet-subtitle">{{ recipe.description }}</mat-hint>
   @if (recipe.constructor?.parameters; as parameters) {
     <navigable-entry-editor
@@ -12,7 +12,7 @@
     {{ TranslationConstants.STEP_CREATOR.CREATE | translate }}
   </button>
 } @else {
-  <h1 class="side-sheet-title">{{ TranslationConstants.STEP_CREATOR.CONFIGURE_UNKNOWN | translate }}</h1>
+  <h2 class="side-sheet-title">{{ TranslationConstants.STEP_CREATOR.CONFIGURE_UNKNOWN | translate }}</h2>
   <mat-hint class="side-sheet-subtitle">{{ TranslationConstants.STEP_CREATOR.COULD_NOT_FIND | translate }}</mat-hint>
 }
 

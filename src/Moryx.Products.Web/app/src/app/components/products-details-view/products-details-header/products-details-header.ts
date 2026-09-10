@@ -5,7 +5,7 @@
 
 import { Component, inject, signal, linkedSignal, ChangeDetectionStrategy } from "@angular/core";
 import { TranslatePipe } from "@ngx-translate/core";
-import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
+import { TranslationConstants } from "@app/translation-constants";
 import { EditProductsService } from "@app/services/edit-products.service";
 import { ProductModel, ProductState } from "../../../api/models";
 

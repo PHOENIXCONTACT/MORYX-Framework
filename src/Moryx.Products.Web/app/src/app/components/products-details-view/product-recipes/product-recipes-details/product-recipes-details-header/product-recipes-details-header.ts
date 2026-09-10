@@ -15,7 +15,7 @@ import {
 } from "@angular/core";
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from "@angular/forms";
 import { TranslatePipe } from "@ngx-translate/core";
-import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
+import { TranslationConstants } from "@app/translation-constants";
 import { RecipeClassificationModel, WorkplanModel } from "@api/models";
 import { CacheProductsService } from "@app/services/cache-products.service";
 

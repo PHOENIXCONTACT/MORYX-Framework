@@ -40,7 +40,6 @@ public class InfluxDbListenerV2Test
 
         _config = CreateListenerConfig();
         _config.UseTls = useSsl;
-        _config.Proxy = useSsl ? string.Empty : "http://proxy.europe.phoenixcontact.com:8080/";
         _config.BypassProxyOnLocalHost = true;
     }
 

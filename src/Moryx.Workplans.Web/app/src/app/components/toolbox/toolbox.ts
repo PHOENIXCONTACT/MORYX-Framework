@@ -9,7 +9,7 @@ import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { TranslatePipe } from '@ngx-translate/core';
 import { WorkplanNodeClassification, WorkplanStepRecipe } from '@api/models';
 import { WorkplanEditingService } from '@api/services';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/translation-constants';
 import { SessionsService } from '@app/services/sessions.service';
 import { CommonModule } from '@angular/common';
 import { MatExpansionModule } from '@angular/material/expansion';

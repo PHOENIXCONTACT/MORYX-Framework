@@ -106,7 +106,7 @@ internal class JobManagementFacade : IJobManagement, IFacadeControl
     {
         ValidateHealthState();
         if (recipe is not ProductionRecipe prodRecipe)
-            throw new ArgumentException($"Process engine only supports {nameof(ProductionRecipe)}", nameof(recipe));
+            throw new ArgumentException($"Process engine only supports {nameof(ProductionRecipe)}.", nameof(recipe));
 
         return new JobEvaluation
         {
@@ -144,7 +144,7 @@ internal class JobManagementFacade : IJobManagement, IFacadeControl
         ValidateHealthState();
         return JobList.Get(jobId)?.Job
                ?? History.Get(jobId)
-               ?? throw new ArgumentException("Job does not refer to managed job", nameof(jobId));
+               ?? throw new ArgumentException("Job does not refer to managed job.", nameof(jobId));
     }
 
     public IReadOnlyList<Job> GetAll()
@@ -170,16 +170,16 @@ internal class JobManagementFacade : IJobManagement, IFacadeControl
         ArgumentNullException.ThrowIfNull(recipe);
 
         if (recipe.Origin == null)
-            throw new ArgumentException("Origin must not be null on recipe", nameof(recipe));
+            throw new ArgumentException("Origin must not be null on recipe.", nameof(recipe));
 
         var productionRecipe = recipe as ProductionRecipe
-                               ?? throw new NotSupportedException("Process engine only supports 'ProductionRecipe'!");
+                               ?? throw new NotSupportedException($"Process engine only supports '{nameof(ProductionRecipe)}'.");
 
         var errors = WorkplanValidation.Validate(productionRecipe.Workplan);
         if (errors.Count > 0)
         {
             var msg = string.Join("\n", errors);
-            throw new ValidationException("Workplan validation failed! Errors \n" + msg);
+            throw new ValidationException($"Workplan validation failed. Errors:\n{msg}");
         }
     }
 
@@ -192,7 +192,7 @@ internal class JobManagementFacade : IJobManagement, IFacadeControl
 
         ValidateHealthState();
         return JobList.Get(job.Id)
-               ?? throw new ArgumentException("Job does not refer to managed job", nameof(job));
+               ?? throw new ArgumentException("Job does not refer to managed job.", nameof(job));
     }
 
     /// <inheritdoc />

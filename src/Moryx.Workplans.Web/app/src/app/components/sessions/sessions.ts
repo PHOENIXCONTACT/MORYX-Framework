@@ -12,12 +12,8 @@ import { SnackbarService, SearchBarService, SearchRequest, SearchSuggestion } fr
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { WorkplanSessionModel } from '@api/models';
 import { WorkplanEditingService } from '@api/services';
-import {
-  ConfirmDialogButton,
-  ConfirmDialog,
-  ConfirmDialogData
-} from '@app/dialogs/dialog-confirm/dialog-confirm';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { ConfirmDialog, ConfirmDialogData } from '@app/dialogs/dialog-confirm/dialog-confirm';
+import { TranslationConstants } from '@app/translation-constants';
 import { SessionsService } from '@app/services/sessions.service';
 import { EditorStateService } from '@app/services/editor-state.service';
 
@@ -130,10 +126,8 @@ export class Sessions implements OnInit, OnDestroy {
   private async getTranslations(): Promise<{ [key: string]: string }> {
     return await firstValueFrom(this.translateService
       .get([
-        TranslationConstants.SESSIONS.CONFIRM_DIALOG.CONFIRM,
         TranslationConstants.SESSIONS.CONFIRM_DIALOG.MESSAGE,
         TranslationConstants.SESSIONS.CONFIRM_DIALOG.TITLE,
-        TranslationConstants.SESSIONS.CONFIRM_DIALOG.CANCEL,
         TranslationConstants.EDITOR.SNACK_BAR.SUCCESS
       ]));
   }
@@ -213,24 +207,15 @@ export class Sessions implements OnInit, OnDestroy {
     const translations = await this.getTranslations();
 
     const dialog = this.dialog.open(ConfirmDialog, {
-      autoFocus: false,
       data: <ConfirmDialogData>{
         title: translations[TranslationConstants.SESSIONS.CONFIRM_DIALOG.TITLE],
         message: translations[TranslationConstants.SESSIONS.CONFIRM_DIALOG.MESSAGE],
-        buttons: [
-          <ConfirmDialogButton>{
-            text: translations[TranslationConstants.SESSIONS.CONFIRM_DIALOG.CANCEL],
-            action: () => dialog.close()
-          },
-          <ConfirmDialogButton>{
-            text: translations[TranslationConstants.SESSIONS.CONFIRM_DIALOG.CONFIRM],
-            focused: true,
-            action: () => {
-              this.closeSession(sessionToken, sessionIndex);
-              dialog.close();
-            }
-          }
-        ]
+      }
+    });
+
+    dialog.afterClosed().subscribe((confirmed) => {
+      if (confirmed) {
+        this.closeSession(sessionToken, sessionIndex);
       }
     });
   }

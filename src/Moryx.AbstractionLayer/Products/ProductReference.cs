@@ -30,6 +30,6 @@ public class ProductReference : ProductType
     /// <inheritdoc />
     protected override ProductInstance Instantiate()
     {
-        throw new InvalidOperationException("Reference products can not be instantiated. Please replace with a real product first!");
+        throw new InvalidOperationException("Reference products can not be instantiated. Please replace with a real product first.");
     }
 }

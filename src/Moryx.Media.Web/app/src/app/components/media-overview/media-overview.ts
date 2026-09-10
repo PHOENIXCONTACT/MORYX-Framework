@@ -9,7 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatMenuTrigger, MatMenu, MatMenuContent, MatMenuItem } from '@angular/material/menu';
 import { Router } from '@angular/router';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/translation-constants';
 import { environment } from '../../../environments/environment';
 import { ContentDescriptorModel } from '@api/models';
 import { DialogDelete } from '@app/dialogs/dialog-delete/dialog-delete';

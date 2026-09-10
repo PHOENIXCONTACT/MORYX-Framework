@@ -126,7 +126,7 @@ public class EventDecouplerTests
 
         public void FaultyListener(object sender, EventArgs e)
         {
-            throw new Exception("Test");
+            throw new Exception("Test.");
         }
     }
 
@@ -161,7 +161,7 @@ public class EventDecouplerTests
 
     public void FaultyListener(object sender, EventArgs e)
     {
-        throw new Exception("Test");
+        throw new Exception("Test.");
     }
 
     #endregion

@@ -4,11 +4,10 @@
 */
 
 import { Component, ChangeDetectionStrategy, input } from "@angular/core";
-import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
+import { TranslationConstants } from "@app/translation-constants";
 import { OperationModel } from "@app/api/models";
 import { TranslatePipe } from "@ngx-translate/core";
-import { CommonModule } from "@angular/common";
-import { MatTooltip } from "@angular/material/tooltip";
+import { DecimalPipe } from "@angular/common";
 
 @Component({
   selector: "app-dialog-context",
@@ -17,8 +16,7 @@ import { MatTooltip } from "@angular/material/tooltip";
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     TranslatePipe,
-    CommonModule,
-    MatTooltip
+    DecimalPipe
   ]
 })
 export class DialogContext {

@@ -118,7 +118,7 @@ internal class JobStorage : IJobStorage, IJobHistory, ILoggingComponent
 
         // If there are still jobs left, the database was corrupted
         if (dbJobs.Any())
-            throw new InvalidOperationException("Failed to restore sorted jobs. Database corrupted!");
+            throw new InvalidOperationException("Failed to restore sorted jobs. Database corrupted.");
 
         // return sorted list
         return jobs;
@@ -182,7 +182,7 @@ internal class JobStorage : IJobStorage, IJobHistory, ILoggingComponent
 
         var provider = RecipeProviders.First(p => p.Name == result.RecipeProvider);
         if (provider is not IProductManagement)
-            throw new InvalidOperationException("Only jobs based on product recipes can be reloaded");
+            throw new InvalidOperationException("Only jobs based on product recipes can be reloaded.");
 
         result.DelayedRecipe = provider.LoadRecipeAsync(result.RecipeId).GetAwaiter().GetResult();
         return result;

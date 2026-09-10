@@ -4,7 +4,7 @@
 */
 
 import { Component, inject, linkedSignal, ChangeDetectionStrategy } from '@angular/core';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/translation-constants';
 import { CacheProductsService } from '@app/services/cache-products.service';
 import { EditProductsService } from '@app/services/edit-products.service';
 import { Entry, NavigableEntryEditor } from '@moryx/ngx-web-framework/entry-editor';

@@ -5,7 +5,7 @@
 
 import { Component, effect, inject, ChangeDetectionStrategy } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { TranslationConstants } from '../extensions/translation-constants.extensions';
+import { TranslationConstants } from '../translation-constants';
 import { SkillType } from '../models/skill-type-model';
 import { getDurationInDays } from '../models/utils';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';

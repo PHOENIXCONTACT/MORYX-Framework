@@ -235,6 +235,8 @@ public class DefaultSerialization : ICustomSerialization
 
                 return targetStream;
 
+            case EntryValueType.Struct:
+                return currentValue ?? Activator.CreateInstance(memberType);
             case EntryValueType.Class:
                 return currentValue ?? Activator.CreateInstance(memberType);
             case EntryValueType.Collection:
@@ -251,7 +253,7 @@ public class DefaultSerialization : ICustomSerialization
                 catch (Exception e)
                 {
                     if (e is FormatException or OverflowException)
-                        throw new ArgumentException($"Invalid value {mappedEntry.Value.Current} for entry {mappedEntry.DisplayName ?? mappedEntry.Identifier}", e);
+                        throw new ArgumentException($"Invalid value {mappedEntry.Value.Current} for entry {mappedEntry.DisplayName ?? mappedEntry.Identifier}.", e);
                     throw;
                 }
         }

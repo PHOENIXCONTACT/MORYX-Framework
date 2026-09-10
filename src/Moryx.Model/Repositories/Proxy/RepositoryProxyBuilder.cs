@@ -199,13 +199,13 @@ public class RepositoryProxyBuilder
     {
         if (!repoApi.IsInterface)
         {
-            throw new InvalidOperationException($"'{repoApi.Name}' is not an interface");
+            throw new InvalidOperationException($"'{repoApi.Name}' is not an interface.");
         }
 
         var repoInterfaces = repoApi.GetInterfaces();
         if (!repoInterfaces.Any(rI => rI.IsGenericType && rI.GetGenericTypeDefinition() == typeof(IRepository<>)))
         {
-            throw new InvalidOperationException($"'{repoApi.Name}' API does not inherit from IRepository<T>");
+            throw new InvalidOperationException($"'{repoApi.Name}' API does not inherit from IRepository<T>.");
         }
     }
 }

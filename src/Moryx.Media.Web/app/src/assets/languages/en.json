@@ -5,7 +5,7 @@
     "EMPTY_STATE_TEXT": "To add content click on the upload sign and select a file.",
     "FAILED_LOADING": "The connection to the server could not be established. Please check your network connection or try again later."
   },
-  "CONTEXT_MENU": {
+  "VARIANT_ACTION": {
     "DELETE": "Delete",
     "INFO": "Info",
     "DOWNLOAD": "Download"
@@ -17,7 +17,9 @@
     "ALREADY_EXISTS_MESSAGE": "Variant with this name already exists in this content",
     "DELETE_MESSAGE": "Do you really want to remove this variant?",
     "CREATION_DATE": "Creation date",
-    "SIZE": "Size"
+    "SIZE": "Size",
+    "EMPTY_STATE_HEADER": "No Variant Selected",
+    "EMPTY_STATE_TEXT": "Select a variant from the list to view its details."
   },
 
   "ADD_VARIANT_DIALOG": {
@@ -44,9 +46,5 @@
     "LINK": "Link",
     "CLOSE": "CLOSE",
     "COPY_TO_CLIPBOARD": "Copy to clipboard"
-  },
-
-  "DISMISS":"DISMISS",
-  "DEFAULT_MESSAGE": "Something went wrong on the server.",
-  "SERVER_NOT_REACHABLE": "Der Server ist nicht erreichbar, bitte überprüfen Sie Ihre Internetverbindung oder Proxy-Einstellungen."
+  }
 }

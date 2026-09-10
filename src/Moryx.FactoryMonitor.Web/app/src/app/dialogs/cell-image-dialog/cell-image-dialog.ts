@@ -15,7 +15,7 @@ import { environment } from '../../../environments/environment';
 import { CellSettingsService } from '@app/services/cell-settings.service';
 import { CellSettingsModel } from '@app/api/models/cell-settings-model';
 import { FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/translation-constants';
 import { MyErrorStateMatcher } from '../MyErrorStateMatcher';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';

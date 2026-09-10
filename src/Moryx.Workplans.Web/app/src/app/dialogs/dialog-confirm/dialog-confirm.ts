@@ -4,9 +4,11 @@
 */
 
 
-import { AfterViewInit, Component, inject, viewChildren, ChangeDetectionStrategy } from '@angular/core';
-import { MatButton, MatButtonModule } from '@angular/material/button';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { TranslatePipe } from '@ngx-translate/core';
+import { TranslationConstants } from '@app/translation-constants';
 
 @Component({
   selector: 'app-confirm-dialog',
@@ -15,42 +17,17 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/materia
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatButtonModule,
-    MatDialogModule
+    MatDialogModule,
+    TranslatePipe
   ]
 })
-export class ConfirmDialog implements AfterViewInit {
-  private dialogRef = inject(MatDialogRef<ConfirmDialog>);
+export class ConfirmDialog {
   protected data = inject<ConfirmDialogData>(MAT_DIALOG_DATA);
-
-  readonly actionButtons = viewChildren<MatButton>('actionButton');
-  protected buttons: ConfirmDialogButton[] | undefined;
-
-  constructor() {
-    this.buttons = this.data.buttons;
-  }
-
-  ngAfterViewInit(): void {
-    const focusedButtonIndex = this.buttons?.findIndex(b => b.focused);
-    if (focusedButtonIndex === undefined || focusedButtonIndex < 0) {
-      return;
-    }
-
-    const focusedButton = this.actionButtons()[focusedButtonIndex];
-    if (focusedButton) {
-      focusedButton.focus();
-    }
-  }
+  protected TranslationConstants = TranslationConstants;
 }
 
 export interface ConfirmDialogData {
   title: string;
   message: string;
-  buttons: ConfirmDialogButton[];
-}
-
-export interface ConfirmDialogButton {
-  text: string;
-  action: () => void;
-  focused?: boolean;
 }
 

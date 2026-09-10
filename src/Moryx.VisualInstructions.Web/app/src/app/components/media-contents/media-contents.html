@@ -8,7 +8,7 @@
   }
   @if (selectedContent()?.type?.includes('application/pdf') ) {
     <ngx-doc-viewer
-      viewer="url"
+      viewer="pdf"
       [url]="selectedContent()?.url ?? ''"
       class="media-content-detail-image"
     ></ngx-doc-viewer>

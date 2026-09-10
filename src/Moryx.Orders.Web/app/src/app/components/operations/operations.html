@@ -75,7 +75,7 @@
           <mat-drawer-content>
             <div class="operation-list">
               <mat-accordion>
-                @for (operation of filteringOperations(operations()); track operation) {
+                @for (operation of filteredOperations(); track operation) {
                   <mat-expansion-panel
                     class="operation"
                     (expandedChange)="onPanelExpandedChange($event, operation)"

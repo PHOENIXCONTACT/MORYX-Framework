@@ -5,7 +5,7 @@
 
 import { Component, computed, effect, inject, input, signal, untracked, ChangeDetectionStrategy } from "@angular/core";
 import { RouterLink } from "@angular/router";
-import { TranslationConstants } from "../extensions/translation-constants.extensions";
+import { TranslationConstants } from "../translation-constants";
 import { OperatorSkill } from "../models/operator-skill-model";
 import { dateToString } from "../models/utils";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";

@@ -10,7 +10,7 @@ import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { TranslatePipe } from '@ngx-translate/core';
 import { WorkplanNodeClassification, WorkplanNodeModel } from '@api/models';
 import { WorkplanEditingService } from '@api/services';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/translation-constants';
 import { SessionsService } from '@app/services/sessions.service';
 import { EditorStateService } from '@app/services/editor-state.service';
 

@@ -52,7 +52,7 @@ internal class ConfigurationService : IConfigurationService
                 ? typeof(Notification)
                 : measurandName.Contains("Process")
                     ? typeof(Process)
-                    : throw new ArgumentException("Measurand type not available");
+                    : throw new ArgumentException("Measurand type not available.");
 
     private List<MeasurementBinding> GetBindingsForMeasurandName(string name)
         => _moduleManager.AllModules

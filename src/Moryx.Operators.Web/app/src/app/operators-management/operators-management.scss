@@ -14,6 +14,8 @@
 
 .management-container {
   position: relative;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
   background-color: var(--mat-sys-background);
@@ -26,6 +28,8 @@
 
 .main-content {
   width: 100%;
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
   padding: 8px;
   row-gap: 8px;

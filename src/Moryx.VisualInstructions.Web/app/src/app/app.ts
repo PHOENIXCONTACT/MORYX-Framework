@@ -3,17 +3,15 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnInit, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy, DestroyRef, effect, untracked } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { LanguageService } from '@moryx/ngx-web-framework/services';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
-import { environment } from '../environments/environment';
-import { ConfigurationDialog, DialogData } from './dialogs/configuration-dialog/configuration-dialog';
-import { TranslationConstants } from './extensions/translation-constants.extensions';
-import { CookieService } from './services/cookie.service';
+import { SettingsDialog } from './dialogs/settings-dialog/settings-dialog';
+import { TranslationConstants } from './translation-constants';
 import { InstructionService } from './services/instruction.service';
+import { InstructionStateService } from './services/instruction-state.service';
 import { WorkerInstructions } from './components/worker-instructions/worker-instructions';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -32,72 +30,46 @@ import { MatIconModule } from '@angular/material/icon';
     '(window:beforeunload)': 'disconnectEvents()'
   }
 })
-export class App implements OnInit {
+export class App {
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
   private translateService = inject(TranslateService);
-  private cookieService = inject(CookieService);
   private instructionService = inject(InstructionService);
-  private languageService = inject(LanguageService);
+  private instructionStateService = inject(InstructionStateService);
   private destroyRef = inject(DestroyRef);
 
-  protected environment = environment;
-  protected clientIdentifier: string = '';
-
-  private readonly cookieName = 'moryx-client-identifier';
-  private readonly cookieLifetimeDays = 365;
+  protected clientIdentifier = this.instructionStateService.instructor;
 
   constructor() {
-    const cookie = this.cookieService.getCookie(this.cookieName);
-    if (cookie) {
-      this.clientIdentifier = cookie;
-      this.cookieService.setCookie(this.cookieName, cookie, this.cookieLifetimeDays);
-    } else {
-      this.openConfigDialog();
+    if (!this.clientIdentifier()) {
+      this.openSettingsDialog();
     }
 
-    this.translateService.addLangs([
-      TranslationConstants.LANGUAGES.EN,
-      TranslationConstants.LANGUAGES.DE,
-      TranslationConstants.LANGUAGES.IT,
-    ]);
-    this.translateService.setFallbackLang('en');
-    this.translateService.use(this.languageService.getFallbackLang());
+    effect(() => {
+      const instructor = this.clientIdentifier();
+      untracked(() => {
+        this.instructionService.disconnect();
+        if (instructor) {
+          this.instructionService.connect();
+        }
+      });
+    });
+
     this.destroyRef.onDestroy(() => this.disconnectEvents());
   }
 
-  ngOnInit(): void {
-    this.instructionService.connect();
-  }
-
-  protected openConfigDialog(): void {
-    const dialogRef = this.dialog.open(ConfigurationDialog, {
-      data: <DialogData>{
-        instructorName: this.clientIdentifier,
-      }
-    });
+  protected openSettingsDialog(): void {
+    const dialogRef = this.dialog.open(SettingsDialog);
 
     dialogRef
       .afterClosed()
-      .subscribe(result => this.handleDialogResult(result));
+      .subscribe(() => this.handleDialogResult());
   }
 
-  private async handleDialogResult(result: DialogData | undefined) {
-    if (result?.instructorName?.length) {
-      this.updateInstructor(result);
-    }
-
-    if (!this.clientIdentifier) {
+  private async handleDialogResult() {
+    if (!this.clientIdentifier()) {
       await this.showNoInstructorWarning();
     }
-  }
-
-  private updateInstructor(result: DialogData): void {
-    this.clientIdentifier = result.instructorName;
-    this.cookieService.setCookie(this.cookieName, result.instructorName, this.cookieLifetimeDays);
-
-    this.instructionService.disconnect();
-    this.instructionService.connect();
   }
 
   private async showNoInstructorWarning(): Promise<void> {
@@ -121,4 +93,3 @@ export class App implements OnInit {
     this.instructionService.disconnect();
   }
 }
-

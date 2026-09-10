@@ -32,22 +32,11 @@
   }
 </div>
 <div mat-dialog-actions align="end">
-  <button
-    tabindex="1"
-    mat-button
-    type="submit"
-    (click)="onClose()"
-    >
+  <button mat-button type="button" cdkFocusInitial (click)="onClose()">
     {{ TranslationConstants.REMOVE_PRODUCT_DIALOG.CANCEL | translate }}
   </button>
-  @if (
-    !productsWhichContainProduct() || productsWhichContainProduct().length === 0
-    ) {
-    <button
-      mat-flat-button
-      type="submit"
-      [mat-dialog-close]="productToBeRemoved"
-      >
+  @if (!productsWhichContainProduct() || productsWhichContainProduct().length === 0) {
+    <button mat-flat-button type="button" [mat-dialog-close]="productToBeRemoved">
       {{ TranslationConstants.REMOVE_PRODUCT_DIALOG.REMOVE | translate }}
     </button>
   }

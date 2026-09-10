@@ -1,7 +1,4 @@
 {
-    "DISMISS": "DISMISS",
-    "DEFAULT_MESSAGE": "Something went wrong on the server.",
-    "SERVER_NOT_REACHABLE": "The server is unreachable, please check your internet connection or proxy settings." ,
     "ASSIGNMENT": {
         "DETAILS": "Details",
         "DELETE": "Delete",

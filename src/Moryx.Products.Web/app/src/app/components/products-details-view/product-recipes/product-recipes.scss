@@ -44,6 +44,8 @@
 
   &-actions {
     height: fit-content;
+    padding: 8px;
+    background: var(--mat-sys-surface-container-lowest);
 
     .add-recipe-button {
       width: 100%;

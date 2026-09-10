@@ -5,6 +5,7 @@
   <empty-state [icon]="'error'" [header]="'Undefined State'" [message]="''"></empty-state>
 }
 @else {
+<h3>{{ recipe.name }}</h3>
 <mat-form-field appearance="outline">
   <mat-label>{{
     TranslationConstants.SHARED.IDENTIFIER | translate

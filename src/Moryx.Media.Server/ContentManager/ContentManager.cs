@@ -111,7 +111,7 @@ internal class ContentManager : IContentManager
     public async Task<ContentAddingInfo> AddMaster(string fileName, Stream contentStream)
     {
         if (!contentStream.CanSeek)
-            throw new NotSupportedException("Stream needs to be seekable");
+            throw new NotSupportedException("Stream needs to be seekable.");
 
         var hashPath = HashPath.FromStream(contentStream);
 

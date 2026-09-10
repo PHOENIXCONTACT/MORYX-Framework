@@ -272,7 +272,7 @@ public static class ProcessHolderExtensions
                 throw new InvalidOperationException($"Tried to update the {nameof(Session)} on an " +
                                                     $"{nameof(IProcessHolderPosition)} with a different session. Make sure to " +
                                                     $"{nameof(IProcessHolderPosition.Reset)} the {nameof(IProcessHolderPosition)} before " +
-                                                    $"assigning a new {nameof(Session)}");
+                                                    $"assigning a new {nameof(Session)}.");
 
             if (position is ProcessHolderPosition explicitPosition)
             {

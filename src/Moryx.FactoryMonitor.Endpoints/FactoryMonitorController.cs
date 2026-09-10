@@ -1,10 +1,8 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Concurrent;
 using System.Globalization;
 using System.Net.ServerSentEvents;
-using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Channels;
@@ -43,7 +41,6 @@ public class FactoryMonitorController : ControllerBase
     private readonly IOrderManagement _orderManager;
     private readonly CellSerialization _serialization;
 
-    private static readonly ConcurrentDictionary<Guid, Channel<(string EventType, string Data)>> _factoryStreamSubscribers = new();
     private static readonly JsonSerializerOptions _serializerOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -78,7 +75,7 @@ public class FactoryMonitorController : ControllerBase
         var locationsToCellMappings = MapCellsTo(locations);
         var orders = TryGetOrders();
         var activities = TryGetActivities();
-        var converter = new Converter.Converter(_serialization);
+        var converter = new Converter.Converter(_serialization, _logger);
 
         foreach (var l2cMapping in locationsToCellMappings)
         {
@@ -160,7 +157,7 @@ public class FactoryMonitorController : ControllerBase
         var locations = _resourceManager.GetResources<IMachineLocation>();
         var locationToCellMappings = MapCellsTo(locations);
 
-        var converter = new Converter.Converter(_serialization);
+        var converter = new Converter.Converter(_serialization, _logger);
         return locationToCellMappings.Select(l2cMapping => new SimpleGraph { Id = l2cMapping.Key.Id }
             .ToVisualItemModel(_resourceManager, _logger, converter)).ToList();
     }
@@ -179,7 +176,7 @@ public class FactoryMonitorController : ControllerBase
             return NotFound(Strings.FactoryMonitorController_FactoryNotFound_);
         }
 
-        var converter = new Converter.Converter(_serialization);
+        var converter = new Converter.Converter(_serialization, _logger);
         var graph = _resourceManager.ReadUnsafe(factory.Id, SimpleGraph.Create);
 
         var output = graph.Children
@@ -243,27 +240,27 @@ public class FactoryMonitorController : ControllerBase
             Response.Headers.Append("Retry-After", "5");
             return;
         }
+        var converter = new Converter.Converter(_serialization, _logger);
 
-        // Configure Serialization Settings
-        var converter = new Converter.Converter(_serialization);
+        var channel = Channel.CreateUnbounded<SseItem<string>>();
 
         // Define event handlers using helper methods
-        var resourceEventHandler = new ElapsedEventHandler((_, _) =>
-            FactoryMonitorHelper.ResourceUpdated(_resourceManager, l => MapCellsTo(l), converter, Broadcast));
+        ElapsedEventHandler resourceEventHandler = (_, _) =>
+            FactoryMonitorHelper.ResourceUpdated(_resourceManager, l => MapCellsTo(l), converter, Broadcast);
 
-        var capabilitiesEventHandler = new EventHandler<ICapabilities>((sender, _) =>
-            FactoryMonitorHelper.PublishCellUpdate((sender as ICell)?.GetCellStateChangedModel(), Broadcast));
+        EventHandler<ICapabilities> capabilitiesEventHandler = (sender, _) =>
+            FactoryMonitorHelper.PublishCellUpdate((sender as ICell)?.GetCellStateChangedModel(), Broadcast);
 
-        var orderStartedEventHandler = new EventHandler<OperationStartedEventArgs>((_, eventArgs) =>
-            FactoryMonitorHelper.OrderStarted(eventArgs, TryGetOrders(), Broadcast));
+        EventHandler<OperationStartedEventArgs> orderStartedEventHandler = (_, eventArgs) =>
+            FactoryMonitorHelper.OrderStarted(eventArgs, TryGetOrders(), Broadcast);
 
-        var orderEventHandler = new EventHandler<OperationChangedEventArgs>((sender, eventArgs) =>
-            FactoryMonitorHelper.OrderUpdated(eventArgs, Broadcast));
+        EventHandler<OperationChangedEventArgs> orderEventHandler = (_, eventArgs) =>
+            FactoryMonitorHelper.OrderUpdated(eventArgs, Broadcast);
 
         // ToDo: This breaks if new cells were added and process activities
-        var activityEventHandler = new EventHandler<ActivityUpdatedEventArgs>((sender, eventArgs) =>
+        EventHandler<ActivityUpdatedEventArgs> activityEventHandler = (_, eventArgs) =>
             FactoryMonitorHelper.ActivityUpdated(eventArgs, [.. _locationToCellMappings.Values],
-                TryGetOrders(), Broadcast));
+                TryGetOrders(), Broadcast);
 
         // Setup timer
         _resourceChangedTimer = new();
@@ -309,32 +306,15 @@ public class FactoryMonitorController : ControllerBase
 
         return;
 
-        async IAsyncEnumerable<SseItem<string>> Subscribe([EnumeratorCancellation] CancellationToken cancelToken)
+        IAsyncEnumerable<SseItem<string>> Subscribe(CancellationToken cancelToken)
         {
-            var channel = Channel.CreateUnbounded<(string EventType, string Data)>();
-            var id = Guid.NewGuid();
-            _factoryStreamSubscribers[id] = channel;
-
-            try
-            {
-                await foreach (var (eventType, data) in channel.Reader.ReadAllAsync(cancelToken))
-                {
-                    yield return new SseItem<string>(data, eventType);
-                }
-            }
-            finally
-            {
-                _factoryStreamSubscribers.TryRemove(id, out _);
-            }
+            return channel.Reader.ReadAllAsync(cancelToken);
         }
 
-        // Local helper to broadcast events to all connected clients
-        static void Broadcast(string eventType, object data)
+        // Local helper to push factory events to the client
+        void Broadcast(string eventType, object data)
         {
-            foreach (var channel in _factoryStreamSubscribers.Values)
-            {
-                channel.Writer.TryWrite((eventType, JsonSerializer.Serialize(data, _serializerOptions)));
-            }
+            channel.Writer.TryWrite(new SseItem<string>(JsonSerializer.Serialize(data, _serializerOptions), eventType));
         }
     }
 
@@ -396,7 +376,7 @@ public class FactoryMonitorController : ControllerBase
         if (cellLocation == null)
             return NotFound(new MoryxExceptionResponse { Title = "Cell/Resource not found" });
 
-        var converter = new Converter.Converter(_serialization);
+        var converter = new Converter.Converter(_serialization, _logger);
         var cell = _resourceManager.ReadUnsafe(cellLocation.Machine.Id, r => r);
         return converter.ToResourceChangedModel(cell)?.CellPropertySettings;
     }
@@ -478,7 +458,7 @@ public class FactoryMonitorController : ControllerBase
 
         if (resource is not IMachineLocation locationResource)
         {
-            throw new ArgumentException($"This cannot happen, unless there is a bug in the {_resourceManager}", nameof(location));
+            throw new ArgumentException($"This cannot happen, unless there is a bug in the {_resourceManager}.", nameof(location));
         }
 
         // Location is referencing a cell directly

@@ -139,7 +139,7 @@ public class ProductConverterTests
     private static bool HasChangedProperties<T>(object A, object B)
     {
         if (A is null || B is null)
-            throw new ArgumentNullException("You need to provide 2 non-null objects");
+            throw new ArgumentNullException("You need to provide 2 non-null objects.");
 
         var type = typeof(T);
         var allProperties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);

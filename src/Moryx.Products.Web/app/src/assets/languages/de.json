@@ -15,9 +15,6 @@
       "NO_IMPORTER": "Es wurde kein Importer definiert"
     }
   },
-  "DISMISS": "OKAY",
-  "DEFAULT_MESSAGE": "Auf dem Server ist etwas schief gelaufen.",
-  "SERVER_NOT_REACHABLE": "Der Server ist nicht erreichbar, bitte überprüfe deine Internetverbindung oder Proxy-Einstellungen.",
   "PRODUCT_NOT_FOUND": "Das angeforderte Produkt wurde nicht gefunden.",
   "SHARED": {
     "DELETE": "Löschen",
@@ -108,5 +105,6 @@
     "REFRESH": "Aktualisieren",
     "FILTER": "Filtern",
     "ADD": "Hinzufügen"
-  }
+  },
+  "DISMISS": "Okay"
 }

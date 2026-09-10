@@ -33,7 +33,7 @@ public static class JsonOptionsExtension
         {
             JsonEncoderOption.Default => JavaScriptEncoder.Default,
             JsonEncoderOption.UnsafeRelaxedJsonEscaping => JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-            _ => throw new NotImplementedException($"EncoderOption {encoderOption} is not defined"),
+            _ => throw new NotImplementedException($"EncoderOption {encoderOption} is not defined."),
         };
     }
 

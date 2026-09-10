@@ -5,9 +5,8 @@
 
 import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { LanguageService } from '@moryx/ngx-web-framework/services';
 import { TranslateService } from '@ngx-translate/core';
-import { TranslationConstants } from './extensions/translation-constants.extensions';
+import { TranslationConstants } from './translation-constants';
 
 @Component({
   selector: 'app-root',
@@ -20,20 +19,9 @@ import { TranslationConstants } from './extensions/translation-constants.extensi
 })
 export class App implements OnInit {
   private translateService = inject(TranslateService);
-  private languageService = inject(LanguageService);
 
   title = 'Orders';
   TranslationConstants = TranslationConstants;
-
-  constructor() {
-    this.translateService.addLangs([
-      TranslationConstants.LANGUAGES.EN,
-      TranslationConstants.LANGUAGES.DE,
-      TranslationConstants.LANGUAGES.IT,
-    ]);
-    this.translateService.setFallbackLang('en');
-    this.translateService.use(this.languageService.getFallbackLang());
-  }
 
   ngOnInit(): void {
     this.translateService.get([TranslationConstants.APP.TITLE]).subscribe(title => {

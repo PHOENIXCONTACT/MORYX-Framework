@@ -13,7 +13,7 @@ import {
   MatDialogClose
 } from '@angular/material/dialog';
 import { TranslatePipe } from '@ngx-translate/core';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/translation-constants';
 import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
 import { MatButton } from '@angular/material/button';
 import { DecimalPipe } from '@angular/common';

@@ -6,7 +6,7 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component, effect, inject, OnInit, signal, untracked, ChangeDetectorRef, ChangeDetectionStrategy, DestroyRef } from "@angular/core";
 import { JobManagementService, OrderManagementService } from "@api/services";
-import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
+import { TranslationConstants } from "@app/translation-constants";
 import { JobViewModel } from "@app/models/job-view-model";
 import { OperationType } from "@app/models/operation-models";
 import { JobManagementStreamService } from "@app/services/job-management-stream.service";

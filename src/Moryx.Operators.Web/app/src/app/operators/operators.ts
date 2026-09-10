@@ -5,7 +5,7 @@
 
 import { Component, effect, inject, input, signal, ChangeDetectionStrategy } from "@angular/core";
 import { OperatorViewModel } from "../models/operator-view-model";
-import { TranslationConstants } from "../extensions/translation-constants.extensions";
+import { TranslationConstants } from "../translation-constants";
 import { WorkstationViewModel } from "../models/workstation-view-model";
 import { ExtendedOperatorModel } from "@api/models/extended-operator-model";
 import { AssignableOperator } from "@api/models/assignable-operator";

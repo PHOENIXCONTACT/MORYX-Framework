@@ -4,7 +4,7 @@
 */
 
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/translation-constants';
 import { OrderStoreService } from '@app/services/order-store.service';
 import { CommonModule } from '@angular/common';
 import Order from '@app/models/order';

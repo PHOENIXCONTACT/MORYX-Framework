@@ -6,7 +6,7 @@
 import { Component, effect, inject, signal, untracked, ChangeDetectionStrategy } from '@angular/core';
 import { MatTable, MatTableModule } from '@angular/material/table';
 import { TranslatePipe } from '@ngx-translate/core';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/translation-constants';
 import { ReferenceTypeModel, ResourceModel, ResourceReferenceModel, ResourceReferenceRole } from '@api/models';
 import { CacheResourceService } from '@app/services/cache-resource.service';
 import { EditResourceService } from '@app/services/edit-resource.service';
@@ -18,6 +18,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
+import { WordBreakPipe } from '@app/pipes/word-break.pipe';
 
 
 @Component({
@@ -33,7 +34,8 @@ import { MatButtonModule } from '@angular/material/button';
     MatSelectModule,
     MatTableModule,
     TranslatePipe,
-    MatButtonModule
+    MatButtonModule,
+    WordBreakPipe,
 ]
 })
 export class ResourceReferences {
@@ -94,14 +96,13 @@ export class ResourceReferences {
     }
   }
 
-  protected addTarget(table: MatTable<ResourceModel>) {
-    if (!this.selectedTarget || !this.selectedReference()) {
+  protected addTarget(table: MatTable<ResourceModel>, target: ResourceModel) {
+    if (!target || !this.selectedReference()) {
       return;
     }
 
-    this.selectedReference()?.targets?.push(this.selectedTarget as ResourceModel);
+    this.selectedReference()?.targets?.push(target);
     this.possibleResources.set(this.getPossibleResources());
-    this.selectedTarget = undefined;
     table.renderRows();
   }
 
@@ -129,7 +130,7 @@ export class ResourceReferences {
   }
 
   protected deleteTarget(target: ResourceModel) {
-    if (!this.selectedReference) {
+    if (!this.selectedReference()) {
       return;
     }
 
@@ -138,6 +139,7 @@ export class ResourceReferences {
       return ref;
     });
 
+    this.selectedTarget = undefined;
     this.possibleResources.set(this.getPossibleResources());
   }
 
@@ -188,26 +190,15 @@ export class ResourceReferences {
     return supportedSubTypes;
   }
 
-  private truncateDescription(description: string): string {
-    const maxLength = 35;
-    return description.length > maxLength
-      ? `${description.substring(0, maxLength)}...`
-      : description;
-  }
-
-  protected getMetaText(referenceType: ReferenceTypeModel): string {
+  protected getTargetNames(referenceType: ReferenceTypeModel): string {
     const reference = this.editResourceService.activeResource()?.references?.find(
       r => r.name === referenceType.name
     );
-    const description = referenceType.description?.trim() ?? '';
-    const resourceText = reference?.targets
+    const names = reference?.targets
       ?.map(target => target.name)
       .filter(Boolean)
-      .join(', ') ?? '';
-    if (description && resourceText) {
-      return `${this.truncateDescription(description)} • ${resourceText}`;
-    }
-    return description || resourceText;
+      .join(', ');
+    return names ? `: ${names}` : '';
   }
 
 }

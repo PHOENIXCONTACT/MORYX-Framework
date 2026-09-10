@@ -12,8 +12,7 @@
 }
 
 .media-sidenav{
-  width: 300px;
-  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05); 
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
 }
 
 .media-side-bar{
@@ -101,9 +100,14 @@
   }
 }
 
+.variant-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 .variant-container {
   flex: 1 1 auto;
-  height: 100%;
   padding: 8px;
   box-sizing: border-box;
   overflow: hidden;

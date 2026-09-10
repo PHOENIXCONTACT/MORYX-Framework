@@ -31,7 +31,7 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
-import { TranslationConstants } from "@app/extensions/translation-constants.extensions";
+import { TranslationConstants } from "@app/translation-constants";
 import { OperationNumberValidations } from "@app/validations/operationNumberValidations";
 import {
   OperationCreationContextModel,
@@ -44,6 +44,7 @@ import {
 import { OrderManagementService } from "@api/services/order-management.service";
 import { ProductManagementService } from "@api/services/product-management.service";
 import { HttpErrorResponse } from "@angular/common/http";
+import { blockNonDigitInput } from '@app/dialogs/digit-input-helper';
 
 enum Action {
   AddCreate,
@@ -77,6 +78,7 @@ enum Action {
 })
 export class CreateDialog {
   protected TranslationConstants = TranslationConstants;
+  protected blockNonDigitInput =  blockNonDigitInput;
 
   private orderManagementService = inject(OrderManagementService);
   private productManagementService = inject(ProductManagementService);

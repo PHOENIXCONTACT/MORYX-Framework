@@ -6,7 +6,7 @@
 import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { TranslatePipe } from '@ngx-translate/core';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/translation-constants';
 import { DuplicateProductInfos } from '@app/models/DuplicateProductInfos';
 import { ProductModel } from '@api/models';
 import { EditProductsService } from '@app/services/edit-products.service';

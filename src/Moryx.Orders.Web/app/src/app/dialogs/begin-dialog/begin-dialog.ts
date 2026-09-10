@@ -12,14 +12,13 @@ import {
   RestrictionDescription,
   OperationStateClassification
 } from '@api/models';
-import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { TranslationConstants } from '@app/translation-constants';
 import { OperationViewModel } from '@app/models/operation-view-model';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { OperatorsService } from '@app/services/operators.service';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
-import { MatGridListModule } from '@angular/material/grid-list';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
@@ -29,6 +28,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MultiProgressBar } from "@app/multi-progress-bar/multi-progress-bar";
 import { OperatorSelector } from '@app/components/operator-selector/operator-selector';
 import { DialogContext } from "@app/components/dialog-context/dialog-context";
+import { blockNonDigitInput } from '@app/dialogs/digit-input-helper';
 
 @Component({
   selector: 'app-begin-dialog',
@@ -39,7 +39,6 @@ import { DialogContext } from "@app/components/dialog-context/dialog-context";
     MatDialogModule,
     CommonModule,
     TranslatePipe,
-    MatGridListModule,
     MatFormFieldModule,
     ReactiveFormsModule,
     FormsModule,
@@ -101,6 +100,7 @@ export class BeginDialog {
   protected targetAmountControl: FormControl;
   protected TranslationConstants = TranslationConstants;
   protected OperationStateClassification = OperationStateClassification;
+  protected blockNonDigitInput =  blockNonDigitInput;
 
   protected selectedOperatorId = signal<string|null>(null);
   protected creatingOperatorFailed = signal<boolean>(false);

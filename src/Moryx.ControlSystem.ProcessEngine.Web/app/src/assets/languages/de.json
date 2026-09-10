@@ -46,8 +46,5 @@
       "RESET_POSITION": "Position zurücksetzen und in den Ausgangszustand zurückkehren. Alle Mount-Informationen gehen verloren.",
       "RESET_GROUP": "Setzen Sie die gesamte Gruppe zurück",
       "EMPTY_STATE_TEXT": "Keine Gruppen/Positionen. Hier ist derzeit nichts, was Ihre Aufmerksamkeit erfordert."
-  },
-    "DISMISS": "OKAY",
-    "DEFAULT_MESSAGE": "Auf dem Server ist etwas schief gelaufen.",
-    "SERVER_NOT_REACHABLE": "Der Server ist nicht erreichbar, bitte überprüfe deine Internetverbindung oder Proxy-Einstellungen."
+  }
   }

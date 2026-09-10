@@ -72,10 +72,7 @@
 }
 
 .process-holder-group-name {
-  width: 150px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow-wrap: break-word;
 }
 
 .process-holder-group-actions {
@@ -98,7 +95,7 @@
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   grid-template-rows: 1fr;
-  grid-column-gap: 0px;
+  grid-column-gap: 8px;
   grid-row-gap: 0px;
   padding: 2px 0px;
 }
@@ -122,6 +119,11 @@
     gap: 10px;
     align-items: center;
     margin-left: 10px;
+    min-width: 0;
+
+    .position-details {
+      min-width: 0;
+    }
 }
 
 .indicator{

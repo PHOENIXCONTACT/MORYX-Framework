@@ -11,9 +11,34 @@ Property mappers are strategies to map a single property to a database column an
 
 | Name | Column Type | Supported Property Types |
 |---|---|---|
-| [IntegerColumnMapper](/src/Moryx.Products.Management/Plugins/GenericStrategies/IntegerColumnMapper.cs) | long | Int16 - UInt64 , Enum, DateTime, bool |
-| [FloatColumnMapper](/src/Moryx.Products.Management/Plugins/GenericStrategies/FloatColumnMapper.cs) | double | Float, Double, Decimal |
-| [TextColumnMapper](/src/Moryx.Products.Management/Plugins/GenericStrategies/TextColumnMapper.cs) | string | string (plain), object (JSON) |
+| [IntegerColumnMapper](/src/Moryx.Products.Management/Plugins/GenericStrategies/IntegerColumnMapper.cs) | long | Int16 - UInt64, Enum, DateTime, DateOnly, TimeOnly, bool |
+| [FloatColumnMapper](/src/Moryx.Products.Management/Plugins/GenericStrategies/FloatColumnMapper.cs) | double | float, double, decimal |
+| [TextColumnMapper](/src/Moryx.Products.Management/Plugins/GenericStrategies/TextColumnMapper.cs) | string | string (plain), Guid, classes/interfaces (JSON), non-primitive structs like Vector2, Vector3, Vector4, Quaternion, Plane, DateTimeOffset (JSON) |
+
+### IntegerColumnMapper
+
+The `IntegerColumnMapper` stores values as `long` in the database.
+
+- Int16 - UInt64 are stored directly
+- Enums are converted to their underlying integer type
+- `DateTime` is stored as `Ticks`
+- `DateOnly` is stored as `DayNumber` (days since 0001-01-01)
+- `TimeOnly` is stored as `Ticks` (ticks since midnight)
+- `bool` is stored as `1` or `0`
+
+### FloatColumnMapper
+
+The `FloatColumnMapper` stores values as `double` in the database. Supports `float`, `double` and `decimal` properties.
+
+> **Note:** IEEE 754 special values (`NaN`, `+Infinity`, `-Infinity`) are not supported by all databases. PostgreSQL stores them natively in `float8`, but SQLite throws on `REAL` columns. The `SqliteProductsContext` registers an [Ieee754ValueConverter](/src/Moryx.Products.Management/Model/Ieee754ValueConverter.cs) that encodes these as sentinel values before writing and decodes them back when reading.
+
+### TextColumnMapper
+
+The `TextColumnMapper` stores values as `string` in the database.
+
+- `string` is stored directly
+- `Guid` is converted to its string representation
+- Classes, interfaces and non-primitive structs (e.g. `Vector2`, `Vector3`, `Vector4`, `Quaternion`, `Plane`, `DateTimeOffset`) are serialized as JSON
 
 ## Configuration
 

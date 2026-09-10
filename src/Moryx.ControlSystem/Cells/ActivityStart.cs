@@ -30,7 +30,7 @@ public class ActivityStart : Session
     public ActivityCompleted CreateResult()
     {
         if (Activity.Result == null)
-            throw new InvalidOperationException("Can not create completed message for activity without result");
+            throw new InvalidOperationException("Can not create completed message for activity without result.");
 
         return new ActivityCompleted(Activity, this);
     }

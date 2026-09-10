@@ -1,7 +1,4 @@
-import { Component, inject, ChangeDetectionStrategy } from "@angular/core";
-import { TranslationConstants } from "./extensions/translation-constants.extensions";
-import { TranslateService } from "@ngx-translate/core";
-import { LanguageService } from "@moryx/ngx-web-framework/services";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import {
   RouterLink,
   RouterLinkActive,
@@ -19,17 +16,5 @@ import { MatIconModule } from "@angular/material/icon";
   providers: []
 })
 export class App {
-  private translateService = inject(TranslateService);
-  private languageService = inject(LanguageService);
-
-  constructor() {
-    this.translateService.addLangs([
-      TranslationConstants.LANGUAGES.EN,
-      TranslationConstants.LANGUAGES.DE,
-      TranslationConstants.LANGUAGES.IT,
-    ]);
-    this.translateService.setFallbackLang("en");
-    this.translateService.use(this.languageService.getFallbackLang());
-  }
 }
 
