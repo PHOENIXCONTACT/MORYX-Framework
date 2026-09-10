@@ -25,7 +25,7 @@ public class VisualInstructionsControllerTests
         _moduleManagerMock = new Mock<IModuleManager>();
         _serviceProviderMock = new Mock<IServiceProvider>();
         _moduleManagerMock.Setup(x => x.AllModules).Returns([]);
-        _controller = new VisualInstructionsController(_visualInstructionsFacadeMock, _moduleManagerMock.Object, _serviceProviderMock.Object, NullLogger<VisualInstructionsController>.Instance);
+        _controller = new VisualInstructionsController(_visualInstructionsFacadeMock, _moduleManagerMock.Object, _serviceProviderMock.Object);
     }
 
     [Test]
