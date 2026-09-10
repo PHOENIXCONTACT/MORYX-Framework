@@ -4,7 +4,7 @@
 namespace Moryx.AbstractionLayer.Resources.Endpoints;
 
 /// <summary>
-/// Permissions used to authorize for the <see cref="ResourceModificationController"/>
+/// Permissions used to authorize for the <see cref="ResourceManagementController"/>
 /// </summary>
 public static class ResourcePermissions
 {
@@ -28,11 +28,10 @@ public static class ResourcePermissions
     /// </summary>
     public const string CanEdit = _prefix + "CanEdit";
 
-    // TODO: Rename permission to CanViewTypeTree in the next major
     /// <summary>
     /// Permission for all actions related to viewing the resource type tree
     /// </summary>
-    public const string CanViewTypeTree = _prefix + "CanAddResource";
+    public const string CanViewTypeTree = _prefix + "CanViewTypeTree";
 
     /// <summary>
     /// Permission for all actions related to adding one or multiple resources
