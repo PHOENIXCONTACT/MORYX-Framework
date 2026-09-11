@@ -1,7 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Concurrent;
+using System.Net.ServerSentEvents;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -26,8 +26,6 @@ public class VisualInstructionsController : ControllerBase
 {
     private const string CookieName = "moryx-client-identifier";
     private readonly IVisualInstructions _visualInstructions;
-
-    private static readonly ConcurrentDictionary<Guid, (string Identifier, Channel<string> Channel)> _instructionStreamSubscribers = new();
     private static readonly JsonSerializerOptions _serializerOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -37,7 +35,10 @@ public class VisualInstructionsController : ControllerBase
     public VisualInstructionsController(IVisualInstructions visualInstructions, IModuleManager moduleManager, IServiceProvider serviceProvider)
     {
         _visualInstructions = visualInstructions;
-        _converter = new Converter(new PossibleValuesSerialization(moduleManager.AllModules.FirstOrDefault(module => module is IFacadeContainer<IVisualInstructions>)?.Container, serviceProvider, new EmptyValueProvider())); ; 
+        _converter = new Converter(new PossibleValuesSerialization(
+            moduleManager.AllModules.FirstOrDefault(module =>
+                module is IFacadeContainer<IVisualInstructions>)?.Container, serviceProvider,
+            new EmptyValueProvider()));
     }
 
     [HttpGet("stream")]
@@ -54,17 +55,34 @@ public class VisualInstructionsController : ControllerBase
             return;
         }
 
+        var channel = Channel.CreateUnbounded<string>();
         // Define event handlers using the broadcast helper
-        var eventHandler = new EventHandler<InstructionEventArgs>((_, e) =>
-            Broadcast(e.Identifier));
+        EventHandler<InstructionEventArgs> eventHandler = (_, e) =>
+        {
+            if (e.Identifier == identifier)
+            {
+                Broadcast();
+            }
+        };
+
+        EventHandler<bool> stateChangedEventHandler = (_, ready) =>
+        {
+            if (ready)
+            {
+                Broadcast();
+            }
+        };
 
         try
         {
             var result = TypedResults.ServerSentEvents(Subscribe(cancellationToken));
-
             // Register event handlers after result creation but before execution to ensure finally cleanup
             _visualInstructions.InstructionAdded += eventHandler;
             _visualInstructions.InstructionCleared += eventHandler;
+            if (_visualInstructions is ILifeCycleBoundFacade lf)
+            {
+                lf.StateChanged += stateChangedEventHandler;
+            }
 
             await result.ExecuteAsync(HttpContext);
         }
@@ -76,45 +94,40 @@ public class VisualInstructionsController : ControllerBase
         {
             _visualInstructions.InstructionAdded -= eventHandler;
             _visualInstructions.InstructionCleared -= eventHandler;
+            if (_visualInstructions is ILifeCycleBoundFacade lf)
+            {
+                lf.StateChanged -= stateChangedEventHandler;
+            }
         }
 
         return;
 
-        async IAsyncEnumerable<string> Subscribe([EnumeratorCancellation] CancellationToken cancelToken)
+        async IAsyncEnumerable<SseItem<string>> Subscribe([EnumeratorCancellation] CancellationToken cancelToken)
         {
-            var channel = Channel.CreateUnbounded<string>();
-            var id = Guid.NewGuid();
-            _instructionStreamSubscribers[id] = (identifier, channel);
-
-            // Send all instructions as first item
-            var initialInstructions = _visualInstructions.GetInstructions(identifier).Select(_converter.ToModel).ToArray();
-            yield return JsonSerializer.Serialize(initialInstructions, _serializerOptions);
+            InstructionModel[] initialInstructions = [];
 
             try
             {
-                await foreach (var data in channel.Reader.ReadAllAsync(cancelToken))
-                {
-                    yield return data;
-                }
+                // Send all instructions as first item
+                initialInstructions = _visualInstructions.GetInstructions(identifier).Select(_converter.ToModel).ToArray();
             }
-            finally
+            catch (HealthStateException)
             {
-                _instructionStreamSubscribers.TryRemove(id, out _);
+                // Ignore if module is not ready yet.
+            }
+            yield return new SseItem<string>(JsonSerializer.Serialize(initialInstructions, _serializerOptions));
+
+            await foreach (var data in channel.Reader.ReadAllAsync(cancelToken))
+            {
+                yield return new SseItem<string>(data);
             }
         }
 
         // Local helper to broadcast instruction changes to all matching subscribers
-        void Broadcast(string targetIdentifier)
+        void Broadcast()
         {
-            var instructions = _visualInstructions.GetInstructions(targetIdentifier).Select(_converter.ToModel).ToArray();
-
-            foreach (var (clientIdentifier, channel) in _instructionStreamSubscribers.Values)
-            {
-                if (clientIdentifier == targetIdentifier)
-                {
-                    channel.Writer.TryWrite(JsonSerializer.Serialize(instructions, _serializerOptions));
-                }
-            }
+            var instructions = _visualInstructions.GetInstructions(identifier).Select(_converter.ToModel).ToArray();
+            channel.Writer.TryWrite(JsonSerializer.Serialize(instructions, _serializerOptions));
         }
     }
 
@@ -125,7 +138,9 @@ public class VisualInstructionsController : ControllerBase
     public ActionResult<InstructionModel[]> GetAll(string identifier)
     {
         if (string.IsNullOrEmpty(identifier))
+        {
             return BadRequest($"{identifier} is not a valid identifier");
+        }
 
         return _visualInstructions.GetInstructions(identifier).Select(_converter.ToModel).ToArray();
     }
@@ -154,7 +169,9 @@ public class VisualInstructionsController : ControllerBase
     {
         var activeInstruction = _visualInstructions.GetInstructions(identifier)?.FirstOrDefault(ai => ai.Id == response.Id);
         if (activeInstruction is null)
+        {
             NotFound($"There is no active instruction corresponding to response id {response.Id}");
+        }
 
         var instructionResponse = new ActiveInstructionResponse
         {
