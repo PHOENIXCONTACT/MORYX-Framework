@@ -14,7 +14,7 @@ internal class ModuleLifecycleController
     private readonly ILogger _logger;
     private readonly ModuleManagerConfig _config;
     private readonly SemaphoreSlim _waitingModulesSemaphore = new(1, 1);
-    private readonly Dictionary<IServerModule, ICollection<IServerModule>> _waitingModules = new();
+    private readonly Dictionary<IServerModule, HashSet<IServerModule>> _waitingModules = new();
 
     public ModuleLifecycleController(IReadOnlyList<IServerModule> availableModules,
         IModuleDependencyManager dependencyManager, ILogger logger, ModuleManagerConfig config)
@@ -142,7 +142,7 @@ internal class ModuleLifecycleController
 
         // Now we start every service waiting on this service to return
         // Extract under semaphore, start outside to avoid re-entrance deadlock
-        ICollection<IServerModule> modulesToStart = null;
+        IServerModule[] modulesToStart = null;
         await _waitingModulesSemaphore.ExecuteAsync(() =>
         {
             if (!_waitingModules.Remove(module, out var candidates))
@@ -155,7 +155,7 @@ internal class ModuleLifecycleController
             // otherwise modules with multiple dependencies can be started multiple times.
             modulesToStart = candidates
                 .Where(m => !_waitingModules.Values.Any(waitingList => waitingList.Contains(m)))
-                .ToList();
+                .ToArray();
         }, cancellationToken);
 
         // To increase boot speed we fork module start if more than one dependent was found
@@ -197,15 +197,12 @@ internal class ModuleLifecycleController
     {
         return _waitingModulesSemaphore.ExecuteAsync(() =>
         {
-            if (_waitingModules.TryGetValue(dependency, out var waitingModules))
+            if (!_waitingModules.TryGetValue(dependency, out var waitingModules))
             {
-                if (!waitingModules.Contains(dependent))
-                    waitingModules.Add(dependent);
+                _waitingModules[dependency] = waitingModules = [];
             }
-            else
-            {
-                _waitingModules[dependency] = new List<IServerModule> { dependent };
-            }
+
+            waitingModules.Add(dependent);
         }, cancellationToken);
     }
 }
