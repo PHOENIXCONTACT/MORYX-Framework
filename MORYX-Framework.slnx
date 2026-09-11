@@ -185,5 +185,5 @@
   <Project Path="src/Moryx.Container/Moryx.Container.csproj" />
   <Project Path="src/Moryx.Launcher/Moryx.Launcher.csproj" />
   <Project Path="src/Moryx/Moryx.csproj" />
-  <Project Path="src/StartProject.Asp/StartProject.Asp.csproj" />
+  <Project Path="src/StartProject.Asp/StartProject.Asp.csproj" DefaultStartup="true"/>
 </Solution>
