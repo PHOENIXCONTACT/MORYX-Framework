@@ -145,7 +145,17 @@ internal class ModuleLifecycleController
         ICollection<IServerModule> modulesToStart = null;
         await _waitingModulesSemaphore.ExecuteAsync(() =>
         {
-            _waitingModules.Remove(module, out modulesToStart);
+            if (!_waitingModules.Remove(module, out var candidates))
+            {
+                return;
+            }
+
+            // Only start modules that have no remaining unresolved dependencies.
+            // A module still listed as "waiting on another dependency" must not be started yet,
+            // otherwise modules with multiple dependencies can be started multiple times.
+            modulesToStart = candidates
+                .Where(m => !_waitingModules.Values.Any(waitingList => waitingList.Contains(m)))
+                .ToList();
         }, cancellationToken);
 
         // To increase boot speed we fork module start if more than one dependent was found
