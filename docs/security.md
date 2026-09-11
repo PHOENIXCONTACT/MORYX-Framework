@@ -38,14 +38,31 @@ Key practices:
 - Terminate TLS at the application or at a reverse proxy in front of it and require TLS 1.2 as a minimum (TLS 1.3 recommended).
 - Enable HSTS (`app.UseHsts()`) for browser-facing deployments.
 
-## 4. CORS
+## 4. Data at Rest
+
+HTTPS protects data in transit. For sensitive data your application stores — database records, uploaded files, configuration exports — also consider encryption at rest.
+
+- For PostgreSQL, review the available [encryption options](https://www.postgresql.org/docs/current/encryption-options.html) (filesystem-level, transparent data encryption, or column-level encryption via `pgcrypto`) and choose the approach that fits your threat model.
+- Restrict filesystem access to the database data directory to the service account only.
+- Avoid storing sensitive data in the MORYX `Config/` JSON files; prefer environment variables or a secret manager (see [Credentials and Secrets](#2-credentials-and-secrets)).
+
+## 5. CORS
 
 The reference `Startup` enables a permissive CORS policy (`http://localhost:4200`, `AllowAnyMethod`, `AllowAnyHeader`, `AllowCredentials`) **only in the development environment**. For production:
 
 - Do not enable CORS unless a cross-origin client genuinely requires it.
 - If required, restrict `WithOrigins` to the exact production origin — never combine `AllowCredentials` with a wildcard origin.
 
-## 5. Logging
+## 6. Static Files
+
+ASP.NET Core's `UseStaticFiles` serves files from `wwwroot` by default, which is safe. Take care when reconfiguring the served path:
+
+- Never point `UseStaticFiles` at directories that may contain secrets — `Config/`, log directories, or any path outside `wwwroot`.
+- Do not enable `UseDirectoryBrowser` in production: it exposes a browsable directory listing of all files under the served path.
+
+See [Microsoft's security considerations for static files](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/static-files#security-considerations-for-static-files) for details.
+
+## 7. Logging
 
 MORYX logging is built on `Microsoft.Extensions.Logging` (see [Logging](articles/framework/logging.md)). For production:
 
@@ -53,27 +70,27 @@ MORYX logging is built on `Microsoft.Extensions.Logging` (see [Logging](articles
 - Never log credentials, tokens, personal data, or raw request bodies.
 - Forward logs to a centralised, access-controlled and tamper-resistant sink with an appropriate retention period.
 
-## 6. File Uploads (Media Module)
+## 8. File Uploads (Media Module)
 
 If your application uses the Media module, follow the [MORYX-Media Security Guidelines](articles/module-media/security-guidelines.md):
 
 - Store uploaded files in a directory tree separate from the application.
 - Remove execution privileges from the upload directory.
 
-## 7. Network Hardening and Firewall
+## 9. Network Hardening and Firewall
 
 - Expose only the ports the application actually needs (typically 443 for HTTPS). Place MORYX behind a reverse proxy rather than exposing Kestrel directly to a public network.
 - Keep the database reachable only from the application host.
 - If the OPC UA or MQTT drivers are enabled, restrict their ports to the industrial network segment.
 
-## 8. Principle of Least Privilege
+## 10. Principle of Least Privilege
 
 - Run the MORYX process under a dedicated service account without interactive login rights.
 - Grant the database account only the permissions it needs on the application schema (no server-admin rights).
 - The application requires write access only to its `Config/` and log directories; mount everything else read-only where possible.
 - In container deployments, run as a non-root user.
 
-## 9. Dependency Monitoring
+## 11. Dependency Monitoring
 
 MORYX centrally manages its dependencies, but you remain responsible for monitoring the dependencies of your own product for known CVEs:
 
@@ -81,18 +98,29 @@ MORYX centrally manages its dependencies, but you remain responsible for monitor
 - Enable Dependabot (or an equivalent scanner) on your own repository.
 - Before each release, verify that no unresolved advisory with CVSS ≥ 7.0 affects your dependency tree without a documented risk decision.
 
-## 10. Supported Versions and End-of-Life
+### Third-Party MORYX Modules
 
-Security updates for the MORYX Framework are provided according to the policy in [SECURITY.md](../SECURITY.md):
+By design, installed MORYX modules and their UIs can communicate freely within the application. This is a deliberate architectural feature, but it means that the security of a module you install is your responsibility:
 
-| Version | Status |
-|---------|--------|
-| 10.x (current) | Supported |
-| < 10.0 | End of life — no security updates |
+- Use only modules from trustworthy vendors. Modules published directly by the MORYX team are maintained by PHOENIX CONTACT; modules from third-party sources require your own security assessment.
+- Review the source, licensing, and update history of any third-party module before integrating it into a production application.
+
+## 12. Supported Versions and End-of-Life
+
+MORYX follows the [.NET LTS release schedule](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core).
+Security updates are provided during both the **Active Support** and **Maintenance Support** phases.
+For exact dates see the [MORYX Release Schedule](https://github.com/PHOENIXCONTACT/MORYX-Home/blob/main/processes/release-schedule.md).
+
+| Version | Status              | Security updates until |
+|---------|---------------------|------------------------|
+| 10.x    | Active Support      | ~ Nov 2030             |
+| 8.x     | Maintenance Support | ~ Nov 2028             |
+| 6.x     | Maintenance Support | ~ Nov 2026             |
+| < 6.0   | End of Life         | —                      |
 
 Plan upgrades to a supported major version before its end-of-life date. Under CRA Article 13, the product you ship on top of MORYX must receive security updates for its expected lifetime (minimum five years) — factor MORYX's support window into your own support commitments.
 
-## 11. Incident Response Contact
+## 13. Incident Response Contact
 
 For a security incident in a product built on MORYX, contact the Phoenix Contact PSIRT:
 
