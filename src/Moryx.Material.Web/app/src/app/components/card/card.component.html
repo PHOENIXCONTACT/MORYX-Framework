@@ -21,7 +21,7 @@
         </section>
     </mat-card-content>
     <mat-card-actions>
-        <button mat-button (click)="preAdvice()">{{ translationConstants.CARD.PRE_ADVICE | translate }}</button>
+        <button mat-button (click)="preAdvice()" [disabled]="container().state != stateClassificationModel.Available">{{ translationConstants.CARD.PRE_ADVICE | translate }}</button>
         <button mat-button (click)="onDelete()" >{{ translationConstants.CARD.DELETE | translate }}</button>
     </mat-card-actions>
 </mat-card>

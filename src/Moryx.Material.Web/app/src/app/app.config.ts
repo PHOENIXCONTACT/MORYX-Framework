@@ -4,7 +4,6 @@
 */
 
 import { ApplicationConfig, importProvidersFrom } from "@angular/core";
-import { environment } from "src/environments/environment";
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatBadgeModule } from "@angular/material/badge";
@@ -36,6 +35,7 @@ import { routes } from "./app.routes";
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { ApiModule } from "./api/api.module";
+import { environment } from "../environments/environment";
 
 export const appConfig: ApplicationConfig = {
   providers: [

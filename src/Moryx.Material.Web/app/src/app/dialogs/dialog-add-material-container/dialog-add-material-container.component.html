@@ -24,15 +24,22 @@
         <button mat-button mat-dialog-close type="button" class="transform-to-uppercase">
           {{ translationConstants.ADD_MATERIAL_CONTAINER_DIALOG.CANCEL| translate}}
         </button>
-        <button mat-flat-button (click)="typeSelected(stepper)" type="button" class="transform-to-uppercase" [disabled]="
+       @if(resourceType()?.constructors?.length){
+         <button mat-flat-button (click)="typeSelected(stepper)" type="button" class="transform-to-uppercase" [disabled]="
               resourceType() === undefined || resourceType()?.creatable !== true
             ">
           {{ translationConstants.ADD_MATERIAL_CONTAINER_DIALOG.NEXT| translate}}
         </button>
+       }@else if(resourceType()?.constructors?.length === 0 && resourceType()) {
+         <button mat-button [mat-dialog-close]="true" type="button" [mat-dialog-close]="createResult()"
+          class="transform-to-uppercase">
+          {{ translationConstants.ADD_MATERIAL_CONTAINER_DIALOG.CREATE| translate}}
+        </button>
+       }
       </ng-template>
     </mat-step>
     <!-- Select constructor -->
-    <mat-step [completed]="secondStepComplete()">
+    <mat-step [completed]="resourceType()?.constructors?.length === 1 || secondStepComplete()">
       <ng-template matStepLabel>Constructor</ng-template>
       @if (resourceType()?.constructors?.length) {
       <mat-selection-list [multiple]="false" (selectionChange)="onCtorSelectionChanged($event)">
@@ -67,7 +74,7 @@
       resourceType()?.constructors?.length &&
       selectedCtor()?.parameters &&
       selectedCtor()?.parameters?.subEntries?.length) {
-      <navigable-entry-editor [entry]="selectedCtor()?.parameters!" [disabled]="false">
+      <navigable-entry-editor #constructorEditor (entryChange)="paramsChanged($event, selectedCtor()!, constructorEditor)" [entry]="selectedCtor()?.parameters!" [disabled]="false">
       </navigable-entry-editor>
       } @else {
       <div class="done-template">

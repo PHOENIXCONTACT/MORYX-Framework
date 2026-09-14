@@ -45,7 +45,7 @@ public abstract class MaterialContainer : Resource, IMaterialContainer, IStateCo
     [DataMember]
     [EntrySerialize, ReadOnly(true)]
     [Display(Name = "Material", Description = "Material reference contained in this container (e.g., product number).")]
-    public virtual string? Material {  get; protected set; }
+    public virtual string? Material { get; protected set; }
 
     /// <inheritdoc />
     [DataMember]
@@ -90,7 +90,8 @@ public abstract class MaterialContainer : Resource, IMaterialContainer, IStateCo
             Unit = update.Unit;
         }
 
-        if (update.Kind.HasFlag(UpdateKind.FillingLevel)) {
+        if (update.Kind.HasFlag(UpdateKind.FillingLevel))
+        {
             if (update.Kind.HasFlag(UpdateKind.Relative))
             {
                 eventArgs.OldQuantity = Quantity;
@@ -217,5 +218,17 @@ public abstract class MaterialContainer : Resource, IMaterialContainer, IStateCo
         Material = material;
         Quantity = quantity;
         Unit = unit;
+    }
+
+    /// <summary>
+    /// Update entry based on given <paramref name="entries"/>
+    /// </summary>
+    /// <param name="entries">provided entries</param>
+    /// <param name="getDependency">Gets a dependency from the Level 1 container.</param>
+    /// <param name="ct">Cancellation token</param>
+    /// <returns></returns>
+    public virtual Task UpdateAsync(Dictionary<string, Entry> entries, Func<Type, object?>? getDependency, CancellationToken ct)
+    {
+        return Task.CompletedTask;
     }
 }

@@ -2,19 +2,19 @@ import { Component, computed, effect, inject, OnDestroy, OnInit, resource, signa
 import { CardComponent } from "../card/card.component";
 import { toSignal } from '@angular/core/rxjs-interop';
 import { filter, firstValueFrom, lastValueFrom, SubscriptionLike } from 'rxjs';
-import { MaterialFlowService } from 'src/app/services/material-flow.service';
-import { MaterialManagementService } from 'src/app/api/services';
-import { MaterialContainerModel, OrderReferenceModel, ResourceTypeModel, StateClassificationModel } from 'src/app/api/models';
-import { fromEventStream, ServerSentEventMessage } from 'src/app/utilities/server-sent-event';
-import { environment } from 'src/environments/environment';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatDivider } from "@angular/material/divider";
 import { MatButtonModule } from '@angular/material/button';
 import { MatIcon } from "@angular/material/icon";
-import { ReferenceType } from 'src/app/models/material-container';
 import { TranslateService } from '@ngx-translate/core';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
+import { MaterialFlowService } from '@app/services/material-flow.service';
+import { MaterialManagementService } from '@app/api/services';
+import { environment } from '../../../environments/environment';
+import { fromEventStream } from '@app/utilities/server-sent-event';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { ReferenceType } from '@app/models/material-container';
+import { MaterialContainerModel, OrderReferenceModel, ResourceTypeModel, StateClassificationModel } from '@app/api/models';
 
 @Component({
   selector: 'app-cards',

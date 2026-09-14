@@ -5,23 +5,22 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogPreAdviceComponent } from 'src/app/dialogs/dialog-pre-advice/dialog-pre-advice.component';
-import { MaterialContainerModel, OrderReferenceModel, PreAdviceModel, ReferenceModel, ResourceModel, ResourceTypeModel } from 'src/app/api/models';
-import { DialogContainerLinkingComponent } from 'src/app/dialogs/dialog-container-linking/dialog-container-linking.component';
-import { DialogConfirmDeleteComponent } from 'src/app/dialogs/dialog-confirm-delete/dialog-confirm-delete.component';
-import { MaterialManagementService } from 'src/app/api/services';
 import { firstValueFrom, lastValueFrom } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
-import { MaterialFlowService } from 'src/app/services/material-flow.service';
-import { ReferenceType } from 'src/app/models/material-container';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { MaterialManagementService } from '@app/api/services';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { DialogPreAdviceComponent } from '@app/dialogs/dialog-pre-advice/dialog-pre-advice.component';
+import { DialogContainerLinkingComponent } from '@app/dialogs/dialog-container-linking/dialog-container-linking.component';
+import { DialogConfirmDeleteComponent } from '@app/dialogs/dialog-confirm-delete/dialog-confirm-delete.component';
+import { ReferenceType } from '@app/models/material-container';
+import { MaterialContainerModel, OrderReferenceModel, PreAdviceModel, ReferenceModel, StateClassificationModel } from '@app/api/models';
 @Component({
   selector: 'app-card',
-  imports: [MatAnchor, MatIconModule, MatButtonModule, MatCardModule, MatChipsModule, TranslateModule, CommonModule],
+  imports: [MatAnchor, MatIconModule, MatButtonModule, MatCardModule, MatChipsModule, TranslatePipe, CommonModule],
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss',
 })
@@ -34,6 +33,7 @@ export class CardComponent implements OnInit{
   private translateService = inject(TranslateService);
   protected translationConstants = TranslationConstants;
   private translations  = signal<{ [key: string]: string }>({});
+  protected stateClassificationModel = StateClassificationModel;
 
   preAdvice() {
     const dialogRef = this.dialog.open(DialogPreAdviceComponent, {

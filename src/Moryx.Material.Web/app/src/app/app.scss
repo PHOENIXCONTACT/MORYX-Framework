@@ -1,9 +1,6 @@
 @use "@moryx/ngx-web-framework/styles/variables" as *;
 @use '@angular/material' as mat;
 
-:host {
-    background-color: $mat-background;
-}
 
 :host ::ng-deep .mat-mdc-tab-link-container {
     border-bottom: none !important;
@@ -23,7 +20,7 @@
 }
 
 .topbar-container {
-    background: $mat-background-light;
+    background: --mat-sys-primary-container;
     box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
     display: flex;
     justify-content: space-between;
@@ -61,7 +58,7 @@
 }
 
 .sidenav-container {
-    background: $mat-background-light;
+    background: --mat-sys-primary-container;
     box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
     display: flex;
     flex-direction: column;

@@ -1,17 +1,17 @@
 import { Component, inject, OnDestroy, OnInit, resource } from '@angular/core';
 import { firstValueFrom, SubscriptionLike } from 'rxjs';
-import { MaterialManagementService } from 'src/app/api/services';
-import { environment } from 'src/environments/environment';
-import { MaterialContainerModel, OrderReferenceModel } from 'src/app/api/models';
-import { fromEventStream } from 'src/app/utilities/server-sent-event';
 import { MatCardModule } from '@angular/material/card';
-import { ReferenceType } from 'src/app/models/material-container';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
+import { MaterialManagementService } from '@app/api/services';
+import { MaterialContainerModel, OrderReferenceModel } from '@app/api/models';
+import { environment } from '../../../environments/environment';
+import { fromEventStream } from '@app/utilities/server-sent-event';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
+import { ReferenceType } from '@app/models/material-container';
 
 @Component({
   selector: 'app-summaries',
-  imports: [MatCardModule, TranslateModule],
+  imports: [MatCardModule, TranslatePipe],
   templateUrl: './summaries.component.html',
   styleUrl: './summaries.component.scss',
 })

@@ -2,19 +2,18 @@ import { Component, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
-import { MaterialContainerModel, PreAdviceDepartureReasonModel, PreAdviceModel, ResourceModel } from 'src/app/api/models';
-import { MaterialManagementService } from 'src/app/api/services';
 import { MatFormField, MatInputModule, MatLabel } from "@angular/material/input";
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { firstValueFrom } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
-import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
+import { MaterialContainerModel, PreAdviceDepartureReasonModel, PreAdviceModel } from '@app/api/models';
+import { TranslationConstants } from '@app/extensions/translation-constants.extensions';
 
 @Component({
   selector: 'app-dialog-pre-advice',
-  imports: [MatDialogModule, MatButtonModule, MatLabel, MatSelectModule, TranslateModule, MatInputModule],
+  imports: [MatDialogModule, MatButtonModule, MatLabel, MatSelectModule, TranslatePipe, MatInputModule],
   templateUrl: './dialog-pre-advice.component.html',
   styleUrl: './dialog-pre-advice.component.scss',
 })

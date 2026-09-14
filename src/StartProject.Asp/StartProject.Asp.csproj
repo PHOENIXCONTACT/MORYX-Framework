@@ -17,6 +17,7 @@
     <ProjectReference Include="..\Moryx.AspNetCore\Moryx.AspNetCore.csproj" />
     <ProjectReference Include="..\Moryx.Benchmarking\Moryx.Benchmarking.csproj" />
     <ProjectReference Include="..\Moryx.CommandCenter.Web\Moryx.CommandCenter.Web.csproj" />
+    <ProjectReference Include="..\Moryx.Container\Moryx.Container.csproj" />
     <ProjectReference Include="..\Moryx.ControlSystem.Jobs.Endpoints\Moryx.ControlSystem.Jobs.Endpoints.csproj" />
     <ProjectReference Include="..\Moryx.ControlSystem.MaterialManager\Moryx.ControlSystem.MaterialManager.csproj" />
     <ProjectReference Include="..\Moryx.ControlSystem.ProcessEngine.Web\Moryx.ControlSystem.ProcessEngine.Web.csproj" />
@@ -25,7 +26,10 @@
     <ProjectReference Include="..\Moryx.ControlSystem.SetupProvider\Moryx.ControlSystem.SetupProvider.csproj" />
     <ProjectReference Include="..\Moryx.Material.Endpoints\Moryx.Material.Endpoints.csproj" />
     <ProjectReference Include="..\Moryx.Material.Integrations.Orders.Integrator\Moryx.Material.Integrations.Orders.Integrator.csproj" />
+    <ProjectReference Include="..\Moryx.Material.Integrations.Products.Integrator\Moryx.Material.Integrations.Products.Integrator.csproj" />
+    <ProjectReference Include="..\Moryx.Material.Integrations.Products\Moryx.Material.Integrations.Products.csproj" />
     <ProjectReference Include="..\Moryx.Material.Management\Moryx.Material.Management.csproj" />
+    <ProjectReference Include="..\Moryx.Material.Web\Moryx.Material.Web.csproj" />
     <ProjectReference Include="..\Moryx.Material\Moryx.Material.csproj" />
     <ProjectReference Include="..\Moryx.Resources.Benchmarking\Moryx.Resources.Benchmarking.csproj" />
     <ProjectReference Include="..\Moryx.Resources.BenchmarkSetup\Moryx.Benchmarking.Setups.csproj" />

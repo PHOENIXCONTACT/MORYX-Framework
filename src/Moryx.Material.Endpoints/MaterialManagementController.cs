@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Concurrent;
+using System.Net;
 using System.Net.ServerSentEvents;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
@@ -10,10 +11,16 @@ using System.Threading.Channels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Moryx.AbstractionLayer.Resources;
+using Moryx.Configuration;
 using Moryx.Material.Endpoints.Model;
 using Moryx.Material.Facade;
 using Moryx.Material.Integrations.Orders;
+using Moryx.Material.Management;
+using Moryx.Runtime.Modules;
+using Moryx.Serialization;
 using Moryx.Tools;
 
 namespace Moryx.Material.Endpoints;
@@ -26,7 +33,7 @@ namespace Moryx.Material.Endpoints;
 [ApiController]
 [Route("api/moryx/materials/")]
 [Produces("application/json")]
-public class MaterialManagementController(IMaterialManagement materialManagement, IOrderIntegration? orderIntegration, ILogger<MaterialManagementController> logger) : ControllerBase
+public class MaterialManagementController(IMaterialManagement materialManagement, IResourceTypeTree resourceTree, IModuleManager moduleManager, IServiceProvider provider, IOrderIntegration? orderIntegration, IConfigManager configManager, ILogger<MaterialManagementController> logger) : ControllerBase
 {
     private readonly IMaterialManagement _materialManagement = materialManagement ?? throw new ArgumentNullException(nameof(materialManagement));
     private readonly IOrderIntegration? _orderIntegration = orderIntegration;
@@ -56,7 +63,7 @@ public class MaterialManagementController(IMaterialManagement materialManagement
     [Authorize(Policy = MaterialPermissions.CanRead)]
     public ActionResult<MaterialContainerTypeModel[]> GetTypes()
     {
-        var types = _materialManagement.GetContainerTypes();
+        var types = ApplyConfiguredFilter(_materialManagement.GetContainerTypes(), configManager.GetConfiguration<ModuleConfig>());
         return Ok(types.Select(t => t.ToModel()).ToArray());
     }
 
@@ -72,6 +79,43 @@ public class MaterialManagementController(IMaterialManagement materialManagement
     #endregion
 
     #region POST
+    [HttpPost("containers/update-method-params/{type}")]
+    [ProducesResponseType(typeof(MethodEntry), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize(Policy = MaterialPermissions.CanUpdate)]
+    public async Task<ActionResult<MethodEntry>> UpdateMethodParams(string type, MethodEntry method, CancellationToken cancellationToken)
+    {
+        var trustedType = WebUtility.HtmlEncode(type);
+        MaterialContainer resource;
+        Type foundType;
+        try
+        {
+            foundType = ReflectionTool.GetPublicClasses<MaterialContainer>(t => t.FullName == type).First();
+            resource = (MaterialContainer)Activator.CreateInstance(foundType);
+        }
+        catch (Exception)
+        {
+            return NotFound($"Container '{type}' could not be found.");
+        }
+
+        if (resource is null)
+        {
+            return NotFound($"Container '{type}' could not be found.");
+        }
+
+        if (foundType.GetMethod(method.Name) is null)
+        {
+            return NotFound($"Container '{type}' doesn't have method  '{method.Name}'.");
+        }
+
+        var updatedParamEntries = method.Parameters.SubEntries.Select(x => new KeyValuePair<string, Entry>(x.Identifier, x)).ToDictionary();
+        await resource.UpdateAsync(updatedParamEntries, provider.GetService, cancellationToken);
+        UpdateMethodParams(method, updatedParamEntries);
+        return method;
+    }
+
     [HttpPost("containers/pre-advice")]
     [ProducesResponseType(typeof(MaterialContainerModel), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
@@ -210,4 +254,26 @@ public class MaterialManagementController(IMaterialManagement materialManagement
     }
     #endregion
     #endregion
+
+    private static IReadOnlyList<Type> ApplyConfiguredFilter(IReadOnlyList<Type> types, ModuleConfig moduleConfig)
+    {
+        if (!moduleConfig.HideUnknown)
+        {
+            return types;
+        }
+        return types.Where(t => moduleConfig.ContainerTypeSettings.Any(set => set.Enabled && set.Type == t.FullName)).ToArray();
+    }
+
+    private static void UpdateMethodParams(MethodEntry method, Dictionary<string, Entry> updatedParamEntries)
+    {
+        foreach (var item in updatedParamEntries)
+        {
+            if (method.Parameters.SubEntries.FirstOrDefault(x => x.Identifier == item.Key) is not Entry entry)
+            {
+                continue;
+            }
+
+            method.Parameters.SubEntries[method.Parameters.SubEntries.IndexOf(entry)] = item.Value;
+        }
+    }
 }

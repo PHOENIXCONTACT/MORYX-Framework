@@ -23,7 +23,7 @@ import { DialogAddMaterialContainerComponent } from './dialogs/dialog-add-materi
 import { MaterialFlowService } from './services/material-flow.service';
 import { MaterialManagementService, ResourceModificationService } from './api/services';
 import { MaterialContainerModel, OrderReferenceModel } from './api/models';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from './extensions/translation-constants.extensions';
 
 @Component({
@@ -39,7 +39,7 @@ import { TranslationConstants } from './extensions/translation-constants.extensi
         RouterOutlet,
         RouterLink,
         MatTabsModule,
-        TranslateModule
+        TranslatePipe
     ]
 })
 export class App implements OnInit, OnDestroy {
@@ -87,7 +87,7 @@ export class App implements OnInit, OnDestroy {
             TranslationConstants.LANGUAGES.IT,
         ]);
         this.translateService.setFallbackLang('en');
-        this.translateService.use(this.languageService.getDefaultLanguage());
+        this.translateService.use(this.languageService.getCurrentLang());
     }
 
     ngOnInit(): void {
