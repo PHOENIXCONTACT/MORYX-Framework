@@ -64,6 +64,6 @@ For vulnerabilities actively exploited in the wild, PHOENIX CONTACT's PSIRT repo
 
 This policy covers the source code in this repository (`PHOENIXCONTACT/MORYX-Framework`).
 
-If you are building a product or extension on top of MORYX, you are responsible for the security of your own code and for monitoring your additional dependencies for known CVEs. Please refer to our [security integration guidelines](docs/security.md) for recommended practices.
+If you are building a product or extension on top of MORYX, you are responsible for the security of your own code and for monitoring your additional dependencies for known CVEs. Please refer to our [security integration guidelines](https://github.com/PHOENIXCONTACT/MORYX-Home/blob/main/guidelines/security-guidelines.md) for recommended practices.
 
 Under the [EU Cyber Resilience Act (CRA)](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32024R2847), products with digital elements that incorporate MORYX are subject to Article 13 obligations, including providing security updates for the expected product lifetime (minimum five years).
