@@ -2,9 +2,12 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Reflection;
+using Moryx.AbstractionLayer.Recipes;
+using Moryx.AbstractionLayer.Resources;
 using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Serialization;
+using Moryx.Workplans;
 
 namespace Moryx.AbstractionLayer.Products.Endpoints;
 
@@ -43,6 +46,15 @@ public class PartialSerialization<T> : PossibleValuesSerialization
         return _serialization.GetProperties(sourceType).Where(SimpleProp);
     }
 
+    /// <summary>
+    /// List of all types where 'base'-propertyname like 'name' or 'id' should be allowed in complex properties
+    /// </summary>
+    private readonly List<Type> _typesOfNewSerialization =
+    [
+        typeof(ProductType),
+        typeof(Resource)
+    ];
+
     protected bool SimpleProp(PropertyInfo prop)
     {
         // Skip reference or domain model properties
@@ -52,9 +64,27 @@ public class PartialSerialization<T> : PossibleValuesSerialization
             typeof(IEnumerable<ProductPartLink>).IsAssignableFrom(type))
             return false;
 
-        // Filter default properties
-        if (FilteredProperties.Contains(prop.Name))
-            return false;
+        var testType = prop.DeclaringType;
+        var found = _typesOfNewSerialization.Contains(testType);
+        while (testType.BaseType != null && !found)
+        {
+            if (_typesOfNewSerialization.Contains(testType.BaseType))
+                found = true;
+            testType = testType.BaseType;
+        }
+
+        if (!found)
+        {
+            // Filter default properties
+            if (FilteredProperties.Contains(prop.Name))
+                return false;
+        }
+        else
+        {
+            // Filter default properties
+            if (_typesOfNewSerialization.Contains(prop.DeclaringType))
+                return false;
+        }
 
         return true;
     }

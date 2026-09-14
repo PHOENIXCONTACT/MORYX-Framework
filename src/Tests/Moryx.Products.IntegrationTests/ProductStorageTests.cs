@@ -156,6 +156,12 @@ public class ProductStorageTests
                             PropertyName = nameof(CompositeProductType.ComplexData1),
                             Column = nameof(IGenericColumns.Text1),
                             PluginName = nameof(TextColumnMapper)
+                        },
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(CompositeProductType.ComplexData2),
+                            Column = nameof(IGenericColumns.Text2),
+                            PluginName = nameof(TextColumnMapper)
                         }
                     ]
                 },
@@ -1099,6 +1105,7 @@ public class ProductStorageTests
 
             ComplexData1 = new ComplexData
             {
+                Name = "Inner name 1",
                 Content = "Content1",
                 PropertyName = "Property1",
                 Number = 11,
@@ -1106,6 +1113,7 @@ public class ProductStorageTests
             },
             ComplexData2 = new ComplexData
             {
+                Name = "Inner name 2",
                 Content = "Content2",
                 PropertyName = "Property2",
                 Number = 22,
@@ -1120,6 +1128,7 @@ public class ProductStorageTests
         // Assert
         // From mapped property
         Assert.That(loaded.ComplexData1, Is.Not.Null);
+        Assert.That(loaded.ComplexData1.Name, Is.EqualTo(product.ComplexData1.Name));
         Assert.That(loaded.ComplexData1.Content, Is.EqualTo(product.ComplexData1.Content));
         Assert.That(loaded.ComplexData1.PropertyName, Is.EqualTo(product.ComplexData1.PropertyName));
         Assert.That(loaded.ComplexData1.Number, Is.EqualTo(product.ComplexData1.Number));
@@ -1127,6 +1136,7 @@ public class ProductStorageTests
 
         // From json
         Assert.That(loaded.ComplexData2, Is.Not.Null);
+        Assert.That(loaded.ComplexData2.Name, Is.EqualTo(product.ComplexData2.Name));
         Assert.That(loaded.ComplexData2.Content, Is.EqualTo(product.ComplexData2.Content));
         Assert.That(loaded.ComplexData2.PropertyName, Is.EqualTo(product.ComplexData2.PropertyName));
         Assert.That(loaded.ComplexData2.Number, Is.EqualTo(product.ComplexData2.Number));
@@ -1137,9 +1147,9 @@ public class ProductStorageTests
         var version = (await uow.GetRepository<IProductTypeRepository>().GetByKeyAsync(id)).CurrentVersion;
         Assert.That(version.Text1, Does.Contain(product.ComplexData1.Content),
             "A mapped complex property belongs into its own column");
-        Assert.That(version.Text8, Does.Contain(product.ComplexData2.Content),
+        Assert.That(version.Text2, Does.Contain(product.ComplexData2.Content),
             "An unmapped complex property belongs into the JsonColumn");
-        Assert.That(version.Text8, Does.Not.Contain(product.ComplexData1.Content),
+        Assert.That(version.Text2, Does.Not.Contain(product.ComplexData1.Content),
             "A mapped complex property must not be duplicated into the JsonColumn");
     }
 

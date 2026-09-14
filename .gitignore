@@ -161,3 +161,6 @@ orleans.codegen.cs
 *.Cobertura.xml
 *.OpenCover.xml
 *.TestResult.xml
+/src/StartProject.Asp/db/*.db-wal
+/src/StartProject.Asp/db/*.db
+/src/StartProject.Asp/db/*.db-shm
