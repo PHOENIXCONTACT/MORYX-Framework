@@ -12,6 +12,8 @@ export type { GetTypes$Params as GetTypes$Params } from './fn/material-managemen
 export { getTypes as getTypes } from './fn/material-management/get-types';
 export type { GetStates$Params as GetStates$Params } from './fn/material-management/get-states';
 export { getStates as getStates } from './fn/material-management/get-states';
+export type { UpdateMethodParams$Params as UpdateMethodParams$Params } from './fn/material-management/update-method-params';
+export { updateMethodParams as updateMethodParams } from './fn/material-management/update-method-params';
 export type { PreAdviceAsync$Params as PreAdviceAsync$Params } from './fn/material-management/pre-advice-async';
 export { preAdviceAsync as preAdviceAsync } from './fn/material-management/pre-advice-async';
 export type { Deregister$Params as Deregister$Params } from './fn/material-management/deregister';

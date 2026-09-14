@@ -31,10 +31,13 @@ import { hasOrderIntegration } from '../fn/material-management/has-order-integra
 import { HasOrderIntegration$Params } from '../fn/material-management/has-order-integration';
 import { MaterialContainerModel } from '../models/material-container-model';
 import { MaterialContainerTypeModel } from '../models/material-container-type-model';
+import { MethodEntry } from '../models/method-entry';
 import { OrderReferenceModel } from '../models/order-reference-model';
 import { preAdviceAsync } from '../fn/material-management/pre-advice-async';
 import { PreAdviceAsync$Params } from '../fn/material-management/pre-advice-async';
 import { StateClassificationDescriptorModel } from '../models/state-classification-descriptor-model';
+import { updateMethodParams } from '../fn/material-management/update-method-params';
+import { UpdateMethodParams$Params } from '../fn/material-management/update-method-params';
 
 @Injectable({ providedIn: 'root' })
 export class MaterialManagementService extends BaseService {
@@ -120,6 +123,33 @@ export class MaterialManagementService extends BaseService {
     const resp = this.getStates$Response(params, context);
     return resp.pipe(
       map((r: StrictHttpResponse<Array<StateClassificationDescriptorModel>>): Array<StateClassificationDescriptorModel> => r.body)
+    );
+  }
+
+  /** Path part for operation `updateMethodParams()` */
+  static readonly UpdateMethodParamsPath = '/api/moryx/materials/containers/update-method-params/{type}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `updateMethodParams()` instead.
+   *
+   * This method sends `application/*+json` and handles request body of type `application/*+json`.
+   */
+  updateMethodParams$Response(params: UpdateMethodParams$Params, context?: HttpContext): Observable<StrictHttpResponse<MethodEntry>> {
+    const obs = updateMethodParams(this.http, this.rootUrl, params, context);
+    return obs;
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `updateMethodParams$Response()` instead.
+   *
+   * This method sends `application/*+json` and handles request body of type `application/*+json`.
+   */
+  updateMethodParams(params: UpdateMethodParams$Params, context?: HttpContext): Observable<MethodEntry> {
+    const resp = this.updateMethodParams$Response(params, context);
+    return resp.pipe(
+      map((r: StrictHttpResponse<MethodEntry>): MethodEntry => r.body)
     );
   }
 
