@@ -1,0 +1,23 @@
+name: Generate Product SBOMs
+
+on:
+  workflow_dispatch:
+
+  push:
+    branches:
+      - dev
+      - future
+      - main
+      - feature/SBOM-evaluation
+    tags:
+      - "v*"
+
+jobs:
+  generate-sboms:
+    permissions:
+      contents: write
+    uses: phoenixcontact/tools/.github/workflows/sbom-generation-tool.yml@main
+    with:
+      REPOSITORY_NAME: ${{ github.event.repository.name }}
+      dotnet_sdk_version: "10.0.100"
+      node_version: "22"
