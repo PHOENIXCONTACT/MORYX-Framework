@@ -2,59 +2,53 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Drivers;
+using Moryx.Drivers.OpcUa.Nodes;
 using Moryx.StateMachines;
 using Opc.Ua.Client;
 
 namespace Moryx.Drivers.OpcUa.States;
 
-internal abstract class DriverOpcUaState(OpcUaDriver context, StateBase.StateMap stateMap, StateClassification classification) : SyncDriverState<OpcUaDriver>(context, stateMap, classification)
+internal abstract class DriverOpcUaState(OpcUaDriver context, StateBase.StateMap stateMap, StateClassification classification) : AsyncDriverState<OpcUaDriver>(context, stateMap, classification)
 {
-    public override void Connect()
-    {
-        InvalidState();
-    }
+    public readonly SemaphoreSlim Semaphore = new(1, 1);
 
-    internal virtual Task OnConnectingCompletedAsync(bool successfull)
+    public override Task ConnectAsync(CancellationToken cancellationToken)
     {
         return InvalidStateAsync();
     }
 
-    internal virtual Task RebrowseNodesAsync()
+    internal virtual Task OnConnectingCompletedAsync(bool successfull, CancellationToken cancellationToken)
     {
         return InvalidStateAsync();
     }
 
-    internal virtual Task OnBrowsingNodesCompletedAsync()
+    internal virtual Task OnSubscriptionsInitializedAsync(CancellationToken cancellationToken)
     {
         return InvalidStateAsync();
     }
 
-    internal virtual Task OnSubscriptionsInitializedAsync()
-    {
-        return InvalidStateAsync();
-    }
-
-    public override void Disconnect()
+    public override Task DisconnectAsync(CancellationToken cancellationToken)
     {
         Context.Disconnect();
-        NextState(StateDisconnected);
+        return NextStateAsync(StateDisconnected, cancellationToken);
     }
 
-    internal virtual async Task OnConnectionLostAsync(KeepAliveEventArgs e)
+    internal virtual async Task OnConnectionLostAsync(KeepAliveEventArgs e, CancellationToken cancellationToken)
     {
         Context.RemoveSubscription();
-        NextState(StateReconnecting);
-        await Context.Reconnect(e);
+        await NextStateAsync(StateReconnecting, cancellationToken);
+        Context.Reconnect(e);
     }
 
-    internal virtual OpcUaNode GetNode(string identifier)
+    internal virtual Task<OpcUaNode> GetNode(string identifier)
     {
-        return Context.GetNotInitializedNode(identifier);
+        return Task.FromResult<OpcUaNode>(null);
     }
 
-    internal virtual void AddSubscription(OpcUaNode node)
+    internal virtual Task AddSubscription(string nodeId)
     {
-        Context.SaveSubscriptionToBeAdded(node);
+        Context.SaveSubscriptionToBeAdded(nodeId);
+        return Task.CompletedTask;
     }
 
     internal virtual Task<DataValueResult> ReadValueAsync(string identifier, CancellationToken cancellationToken)
@@ -67,19 +61,11 @@ internal abstract class DriverOpcUaState(OpcUaDriver context, StateBase.StateMap
         return InvalidStateAsync();
     }
 
-    internal virtual void Send()
-    {
-        InvalidState();
-    }
-
     [StateDefinition(typeof(DisconnectedState), IsInitial = true)]
     protected const int StateDisconnected = 10;
 
     [StateDefinition(typeof(ConnectingToServerState))]
     protected const int StateConnecting = 20;
-
-    [StateDefinition(typeof(BrowsingNodesOnServerState))]
-    protected const int StateBrowsingNodes = 30;
 
     [StateDefinition(typeof(InitializingSubscriptionsState))]
     protected const int StateInitializingSubscriptions = 40;

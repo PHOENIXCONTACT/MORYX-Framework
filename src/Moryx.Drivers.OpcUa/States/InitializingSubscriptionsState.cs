@@ -2,33 +2,33 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Drivers;
+using Moryx.Drivers.OpcUa.Nodes;
 
 namespace Moryx.Drivers.OpcUa.States;
 
 internal class InitializingSubscriptionsState(OpcUaDriver context, StateMachines.StateBase.StateMap stateMap)
       : DriverOpcUaState(context, stateMap, StateClassification.Initializing)
 {
-    internal override Task OnSubscriptionsInitializedAsync()
+    public override async Task OnEnterAsync(CancellationToken cancellationToken)
     {
-        NextState(StateRunning);
-        Context.ReadDeviceSet();
-        return Task.CompletedTask;
+        await base.OnEnterAsync(cancellationToken);
+        await Context.SubscribeSavedNodesAsync(cancellationToken);
     }
 
-    internal override OpcUaNode GetNode(string identifier)
+    internal override async Task OnSubscriptionsInitializedAsync(CancellationToken cancellationToken)
     {
-        return Context.GetNodeAsync(identifier).GetAwaiter().GetResult();
+        await NextStateAsync(StateRunning, cancellationToken);
+        await Context.ReadDeviceSetAsync(cancellationToken);
     }
 
-    internal override void AddSubscription(OpcUaNode node)
+    internal override Task<OpcUaNode> GetNode(string identifier)
     {
-        Context.AddSubscriptionToSession(node);
+        return Context.GetNodeAsync(identifier);
     }
 
-    internal override async Task RebrowseNodesAsync()
+    internal override async Task AddSubscription(string nodeId)
     {
-        Context.RemoveSubscription();
-        NextState(StateBrowsingNodes);
-        await Context.BrowseNodesAsync();
+        var node = await GetNode(nodeId);
+        await Context.AddSubscriptionToSession(node);
     }
 }

@@ -9,7 +9,10 @@ using Moryx.Logging;
 using Opc.Ua;
 using Opc.Ua.Client;
 
+// Ignore warning until next major version
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Moryx.Drivers.OpcUa;
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 
 /// <summary>
 /// MessageChannel representing an Opc Ua node
@@ -18,7 +21,7 @@ namespace Moryx.Drivers.OpcUa;
 /// </summary>
 public class OpcUaNode : IMessageChannel
 {
-    private IOpcUaDriver _driver => (IOpcUaDriver)Driver;
+    private IOpcUaDriverAddSubscription _driver => (IOpcUaDriverAddSubscription)Driver;
 
     private const int DefaultNamespaceLength = 5;
     private readonly IModuleLogger _logger;
@@ -62,7 +65,7 @@ public class OpcUaNode : IMessageChannel
     /// <summary>
     /// List of all Subnodes. This property is null, when the node is no object node
     /// </summary>
-    public List<OpcUaNode> Nodes { get; set; }
+    public List<OpcUaNode> Nodes { get; set; } = [];
 
     private event EventHandler<object> _received;
 
@@ -73,7 +76,7 @@ public class OpcUaNode : IMessageChannel
     {
         add
         {
-            _driver.AddSubscriptionAsync(this).GetAwaiter().GetResult();
+            _driver.AddSubscriptionAsync(Identifier).GetAwaiter().GetResult();
             _received += value;
         }
         remove
@@ -121,6 +124,7 @@ public class OpcUaNode : IMessageChannel
     }
 
     /// <inheritdoc />
+    [Obsolete("Not needed, as there doesn't seem to be any use for this variant.")]
     public OpcUaNode(IOpcUaDriver driver, IModuleLogger logger, string namespaceUri, string nodeIdValue)
         : this(driver, logger)
     {
@@ -131,22 +135,18 @@ public class OpcUaNode : IMessageChannel
     public OpcUaNode(IOpcUaDriver driver, IModuleLogger logger, ExpandedNodeId nodeId, NamespaceTable namespaceTable)
         : this(driver, logger)
     {
-        NodeId = new ExpandedNodeId(nodeId.Identifier, nodeId.NamespaceIndex, namespaceTable.GetString(nodeId.NamespaceIndex), nodeId.ServerIndex);
+        NodeId = new ExpandedNodeId(nodeId);
     }
 
     /// <inheritdoc />
+    [Obsolete("Not needed, as there doesn't seem to be any use for this variant.")]
     public OpcUaNode(IOpcUaDriver driver, IModuleLogger logger, string identifier)
+        : this(driver, logger)
     {
-        Driver = driver;
         NodeId = ExpandedNodeId.Parse(identifier);
-        _logger = logger;
     }
-    #endregion
 
-    internal void UpdateNodeId(NamespaceTable namespaceTable)
-    {
-        NodeId = new ExpandedNodeId(NodeId.Identifier, (ushort)namespaceTable.GetIndex(NodeId.NamespaceUri), NodeId.NamespaceUri, NodeId.ServerIndex);
-    }
+    #endregion
 
     /// <summary>
     /// Write a value to the Node. At the moment this only works for variable nodes
