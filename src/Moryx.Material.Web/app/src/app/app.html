@@ -1,6 +1,6 @@
 <div class="overview">
-    <main class="main-container">
-        <section class="topbar-container">
+    <mat-toolbar class="topbar-container">
+        <mat-toolbar-row>
             <section class="topbar-filter-section">
                 @if(hasOrderIntegration()){
                 <mat-form-field floatLabel="always" class="full-width" appearance="outline">
@@ -17,25 +17,31 @@
             </section>
             <section class="topbar-view-section">
                 <nav mat-tab-nav-bar [tabPanel]="tabPanel">
-                    <a mat-tab-link routerLink="cards" [active]="view() === views.cards">{{ translationConstants.APP.CARD | translate }}</a>
-                    <a mat-tab-link routerLink="summary" [active]="view() === views.summary">{{ translationConstants.APP.SUMMARY | translate }}</a>
+                    <a mat-tab-link routerLink="cards" [active]="view() === views.cards">{{
+                        translationConstants.APP.CARD | translate }}</a>
+                    <a mat-tab-link routerLink="summary" [active]="view() === views.summary">{{
+                        translationConstants.APP.SUMMARY | translate }}</a>
                 </nav>
             </section>
-        </section>
-        <section class="main-content-area">
-            <mat-tab-nav-panel #tabPanel>
-                <router-outlet />
-            </mat-tab-nav-panel>
-        </section>
-    </main>
-    <aside class="sidenav-container">
-        <div class="sidenav-toolbar-buttons">
-            <div class="side-container-item">
-                <a class="sidenav-toolbar-item" (click)="onAdd()">
-                    <span class="material-symbols-outlined">add</span>
-                    <div class="label">{{ translationConstants.APP.CREATE | translate }}</div>
-                </a>
+        </mat-toolbar-row>
+    </mat-toolbar>
+    <mat-drawer-container class="overview">
+        <main class="main-container">
+            <section class="main-content-area">
+                <mat-tab-nav-panel #tabPanel>
+                    <router-outlet />
+                </mat-tab-nav-panel>
+            </section>
+        </main>
+        <mat-drawer class="sidenav-container" mode="side" [opened]="true" position="end">
+            <div class="sidenav-toolbar-buttons">
+                <div class="side-container-item">
+                    <a class="sidenav-toolbar-item" (click)="onAdd()">
+                        <span class="material-symbols-outlined">add</span>
+                        <div class="label">{{ translationConstants.APP.CREATE | translate }}</div>
+                    </a>
+                </div>
             </div>
-        </div>
-    </aside>
+        </mat-drawer>
+    </mat-drawer-container>
 </div>

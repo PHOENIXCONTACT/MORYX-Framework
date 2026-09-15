@@ -25,6 +25,8 @@ import { MaterialManagementService, ResourceModificationService } from './api/se
 import { MaterialContainerModel, OrderReferenceModel } from './api/models';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from './extensions/translation-constants.extensions';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatSidenavModule} from '@angular/material/sidenav';
 
 @Component({
     selector: 'app-root',
@@ -39,7 +41,9 @@ import { TranslationConstants } from './extensions/translation-constants.extensi
         RouterOutlet,
         RouterLink,
         MatTabsModule,
-        TranslatePipe
+        TranslatePipe,
+        MatToolbarModule,
+        MatSidenavModule
     ]
 })
 export class App implements OnInit, OnDestroy {

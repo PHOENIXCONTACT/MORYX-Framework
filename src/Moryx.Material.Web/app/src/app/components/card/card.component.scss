@@ -3,7 +3,7 @@
 
 :host {
     @include mat.card-overrides((
-            elevated-container-color: --mat-sys-background-color,
+        elevated-container-color: var(--mat-sys-surface-container-lowest)
         ));
 }
 

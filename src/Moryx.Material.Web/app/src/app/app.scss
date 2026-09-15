@@ -4,13 +4,21 @@
 
 :host ::ng-deep .mat-mdc-tab-link-container {
     border-bottom: none !important;
+
 }
 
 .overview {
     width: 100%;
     height: 100%;
-    display: flex;
     overflow: hidden;
+
+    @include mat.sidenav-overrides((container-background-color: var(--mat-sys-surface-container-lowest),
+            container-width : 80px));
+}
+
+mat-toolbar {
+    --mat-toolbar-container-background-color: var(--mat-sys-surface-container-lowest);
+    border-bottom: 0.1px solid var(--mat-sys-outline-variant);
 }
 
 .main-container {
@@ -20,23 +28,23 @@
 }
 
 .topbar-container {
-    background: --mat-sys-primary-container;
     box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
     display: flex;
     justify-content: space-between;
-    padding: 15px 5px 2px 8px;
-    flex-wrap: wrap-reverse;
+    padding: 22px 5px 2px 8px;
     gap: 15px;
+
+    mat-toolbar-row {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap-reverse;
+    }
 }
 
 .topbar-filter-section {
     display: flex;
     flex-direction: row;
     gap: 5px;
-
-    @media (max-width: 530px) {
-        flex-wrap: wrap;
-    }
 }
 
 .topbar-view-section {
@@ -46,10 +54,6 @@
 
 .topbar-view-content {
     display: block;
-}
-
-.no-line {
-    border-bottom: none !important;
 }
 
 .main-content-area {

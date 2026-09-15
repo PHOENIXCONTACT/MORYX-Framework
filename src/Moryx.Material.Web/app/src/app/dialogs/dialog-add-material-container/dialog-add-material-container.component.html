@@ -10,7 +10,7 @@
     </ng-template>
     <!-- Select resource type -->
     <mat-step [completed]="resourceType">
-      <ng-template matStepLabel>Type</ng-template>
+      <ng-template matStepLabel>Container</ng-template>
       <mat-selection-list [multiple]="false" class="types-selection-list"
         (selectionChange)="onTypeSelectionChanged($event)">
         @for (type of types(); track type) {
@@ -40,7 +40,7 @@
     </mat-step>
     <!-- Select constructor -->
     <mat-step [completed]="resourceType()?.constructors?.length === 1 || secondStepComplete()">
-      <ng-template matStepLabel>Constructor</ng-template>
+      <ng-template matStepLabel>Options</ng-template>
       @if (resourceType()?.constructors?.length) {
       <mat-selection-list [multiple]="false" (selectionChange)="onCtorSelectionChanged($event)">
         @for (ctor of resourceType()?.constructors; track ctor) {
