@@ -66,7 +66,7 @@ public abstract class Resource : ILoggingComponent, IResource, IAsyncInitializab
     /// <inheritdoc />
     Task IAsyncInitializable.InitializeAsync(CancellationToken cancellationToken)
     {
-        var loggerName = Name?.Replace(".", "_"); // replace . with _ because of logger child structure
+        var loggerName = $"{Id}-{Name}".Replace(".", "_"); // replace . with _ because of logger child structure
         Logger = Logger?.GetChild(loggerName, GetType());
         return OnInitializeAsync(cancellationToken);
     }
