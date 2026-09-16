@@ -53,22 +53,4 @@ public class GoodPartContainer : OrderLinkedMaterialContainer
         var order = PossibleOrderOperationNumberAttribute.GetOrderFrom(orderOperation);
         return RequestOrderLinkAsync(order!, operation);
     }
-
-    public override Task UpdateAsync(Dictionary<string, Entry> entries, Func<Type, object> getDependency, CancellationToken ct)
-    {
-        var orderManager = getDependency(typeof(IOrderManagement));
-        if (orderManager is not IOrderManagement orderFacade || (!entries.TryGetValue("orderOperation", out var orderOperation) && !entries.TryGetValue("material", out var material) && material.Value.Current == Material))
-        {
-            return Task.CompletedTask;
-        }
-
-        var operationNumber = PossibleOrderOperationNumberAttribute.GetOperationFrom(orderOperation.Value.Current);
-        var order = PossibleOrderOperationNumberAttribute.GetOrderFrom(orderOperation.Value.Current);
-
-        var operations = orderFacade.GetOperations(x => x.Order.Number == order && x.Number == operationNumber);
-        var operation = operations.FirstOrDefault();
-        entries["material"]?.Value.Current = operation?.Product.Name;
-        entries["material"]?.Value.Default = operation?.Product.Name;
-        return Task.CompletedTask;
-    }
 }

@@ -78,44 +78,6 @@ public class MaterialManagementController(IMaterialManagement materialManagement
 
     #endregion
 
-    #region POST
-    [HttpPost("containers/update-method-params/{type}")]
-    [ProducesResponseType(typeof(MethodEntry), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [Authorize(Policy = MaterialPermissions.CanUpdate)]
-    public async Task<ActionResult<MethodEntry>> UpdateMethodParams(string type, MethodEntry method, CancellationToken cancellationToken)
-    {
-        var trustedType = WebUtility.HtmlEncode(type);
-        MaterialContainer resource;
-        Type foundType;
-        try
-        {
-            foundType = ReflectionTool.GetPublicClasses<MaterialContainer>(t => t.FullName == type).First();
-            resource = (MaterialContainer)Activator.CreateInstance(foundType);
-        }
-        catch (Exception)
-        {
-            return NotFound($"Container '{type}' could not be found.");
-        }
-
-        if (resource is null)
-        {
-            return NotFound($"Container '{type}' could not be found.");
-        }
-
-        if (foundType.GetMethod(method.Name) is null)
-        {
-            return NotFound($"Container '{type}' doesn't have method  '{method.Name}'.");
-        }
-
-        var updatedParamEntries = method.Parameters.SubEntries.Select(x => new KeyValuePair<string, Entry>(x.Identifier, x)).ToDictionary();
-        await resource.UpdateAsync(updatedParamEntries, provider.GetService, cancellationToken);
-        UpdateMethodParams(method, updatedParamEntries);
-        return method;
-    }
-
     [HttpPost("containers/pre-advice")]
     [ProducesResponseType(typeof(MaterialContainerModel), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
@@ -226,7 +188,6 @@ public class MaterialManagementController(IMaterialManagement materialManagement
             channel.Writer.TryWrite(JsonSerializer.Serialize(container.ToModel(), _serializerOptions)));
     }
     #endregion
-    #endregion
 
     #region Order References
     #region GET
@@ -262,18 +223,5 @@ public class MaterialManagementController(IMaterialManagement materialManagement
             return types;
         }
         return types.Where(t => moduleConfig.ContainerTypeSettings.Any(set => set.Enabled && set.Type == t.FullName)).ToArray();
-    }
-
-    private static void UpdateMethodParams(MethodEntry method, Dictionary<string, Entry> updatedParamEntries)
-    {
-        foreach (var item in updatedParamEntries)
-        {
-            if (method.Parameters.SubEntries.FirstOrDefault(x => x.Identifier == item.Key) is not Entry entry)
-            {
-                continue;
-            }
-
-            method.Parameters.SubEntries[method.Parameters.SubEntries.IndexOf(entry)] = item.Value;
-        }
     }
 }

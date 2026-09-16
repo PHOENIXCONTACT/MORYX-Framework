@@ -74,7 +74,7 @@
       resourceType()?.constructors?.length &&
       selectedCtor()?.parameters &&
       selectedCtor()?.parameters?.subEntries?.length) {
-      <navigable-entry-editor #constructorEditor (entryChange)="paramsChanged($event, selectedCtor()!, constructorEditor)" [entry]="selectedCtor()?.parameters!" [disabled]="false">
+      <navigable-entry-editor queryParam="method-params" #constructorEditor (entryChange)="paramsChanged($event)" [entry]="selectedCtor()?.parameters!" [disabled]="false">
       </navigable-entry-editor>
       } @else {
       <div class="done-template">

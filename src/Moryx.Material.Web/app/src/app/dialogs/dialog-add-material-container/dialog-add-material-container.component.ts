@@ -92,30 +92,31 @@ export class DialogAddMaterialContainerComponent implements OnDestroy {
     this.selectedCtor.update(() => event.options[0].value);
   }
 
-  paramsChanged(entry: Entry, method: MethodEntry, editor: NavigableEntryEditor) {
-    if (!this.parametersBusy()) {
-      this.parametersBusy.set(true);
-    } else {
-      return;
-    }
+  paramsChanged(entry: Entry) {
+    console.log("Entry :",entry);
+    // if (!this.parametersBusy()) {
+    //   this.parametersBusy.set(true);
+    // } else {
+    //   return;
+    // }
 
-    this.materialApi.updateMethodParams({
-      type: this.resourceType()?.name!,
-      body: method
-    }).subscribe({
-      next: value => {
-        this.selectedCtor.update(old => {
-          if (old) {
-            old.parameters = { ...value.parameters! };
-          }
-          this.parametersBusy.set(false);
-          return old;
-        });
-      },
-      error: e => {
-        this.parametersBusy.set(false);
-      }
-    })
+    // this.materialApi.updateMethodParams({
+    //   type: this.resourceType()?.name!,
+    //   body: method
+    // }).subscribe({
+    //   next: value => {
+    //     this.selectedCtor.update(old => {
+    //       if (old) {
+    //         old.parameters = { ...value.parameters! };
+    //       }
+    //       this.parametersBusy.set(false);
+    //       return old;
+    //     });
+    //   },
+    //   error: e => {
+    //     this.parametersBusy.set(false);
+    //   }
+    // })
   }
 
   createResult(): any {
