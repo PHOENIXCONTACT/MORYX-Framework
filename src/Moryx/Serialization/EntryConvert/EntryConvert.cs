@@ -151,6 +151,7 @@ public static partial class EntryConvert
         foreach (var prototype in customSerialization.Prototypes(memberType, customAttributeProvider))
         {
             var prototypeEntry = Prototype(prototype, customSerialization);
+            prototypeEntry.Identifier = prototype.Key;
             prototypeEntry.Validation = validation;
             prototypeEntry.Value.Possible = possibleElementValues;
             yield return prototypeEntry;
