@@ -1,6 +1,8 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Collections;
+using System.Collections.Concurrent;
 using Microsoft.Extensions.Logging;
 
 namespace Moryx.Logging;
@@ -12,6 +14,7 @@ public class ModuleLogger : IModuleLogger
 {
     private readonly ILogger _logger;
     private readonly ILoggerFactory _loggerFactory;
+    private readonly ConcurrentDictionary<string, object?> _properties = new();
 
     public string Name { get; }
 
@@ -49,16 +52,80 @@ public class ModuleLogger : IModuleLogger
     public IModuleLogger GetChild(string name, Type target)
     {
         var logger = string.IsNullOrEmpty(name)
-            ? new ModuleLogger(Name, _loggerFactory, _logger, NotificationTarget)
-            : new ModuleLogger($"{Name}.{name}", _loggerFactory, NotificationTarget);
+              ? new ModuleLogger(Name, _loggerFactory, _logger, NotificationTarget)
+              : new ModuleLogger($"{Name}.{name}", _loggerFactory, NotificationTarget);
         return logger;
     }
 
     public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
     {
-        _logger.Log(logLevel, eventId, state, exception, formatter);
-
+        if (!IsEnabled(logLevel))
+        {
+            return;
+        }
+        var enrichedState = new EnrichedState<TState>(state, _properties.ToArray());
+        _logger.Log(
+            logLevel,
+            eventId,
+            enrichedState,
+            exception,
+            (enriched, ex) => formatter(enriched.OriginalState, ex)
+        );
         if (logLevel >= LogLevel.Warning)
+        {
             NotificationTarget?.Invoke(logLevel, formatter(state, exception), exception);
+        }
+    }
+    internal void SetProperty(string key, object? value)
+    {
+        _properties[key] = value;
+    }
+
+    internal bool RemoveProperty(string key)
+    {
+        return _properties.TryRemove(key, out _);
+    }
+    private sealed class EnrichedState<TState>
+    : IReadOnlyList<KeyValuePair<string, object?>>
+    {
+        private readonly IReadOnlyList<KeyValuePair<string, object?>> _original;
+        private readonly IReadOnlyList<KeyValuePair<string, object?>> _properties;
+
+        public EnrichedState(TState originalState, IReadOnlyList<KeyValuePair<string, object?>> properties)
+        {
+            OriginalState = originalState;
+
+            _original =
+                originalState as IReadOnlyList<KeyValuePair<string, object?>>
+                ?? [];
+
+            _properties = properties;
+        }
+
+        public TState OriginalState { get; }
+
+        public int Count => _original.Count + _properties.Count;
+
+        public KeyValuePair<string, object?> this[int index] =>
+            index < _original.Count
+                ? _original[index]
+                : _properties[index - _original.Count];
+
+        public IEnumerator<KeyValuePair<string, object?>> GetEnumerator()
+        {
+            foreach (var item in _original)
+            {
+                yield return item;
+            }
+
+            foreach (var item in _properties)
+            {
+                yield return item;
+            }
+        }
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
     }
 }
