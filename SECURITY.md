@@ -1,7 +1,11 @@
 # Security Policy
 
 PHOENIX CONTACT takes the security of the MORYX Framework and its downstream products seriously.
-We follow the principle of [Coordinated Vulnerability Disclosure (CVD)](https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/CVD/CVD-Leitlinie.html) and are committed to addressing reported vulnerabilities in a timely manner.
+
+We support Coordinated Vulnerability Disclosure (CVD) and follow the principles described by the EU CSIRTs Network and ENISA.
+For more information, see:
+- https://csirtsnetwork.eu/homepage/cvd
+- https://www.enisa.europa.eu/topics/vulnerability-disclosure
 
 ## Supported Versions
 
