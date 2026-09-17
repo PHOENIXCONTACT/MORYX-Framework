@@ -912,8 +912,11 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
             }
             else if (linkStrategy.PartCreation == PartSourceStrategy.FromEntities)
             {
-                // Load part using the entity and assign PartLink afterwards
-                var partCollection = partEntityGroups[partGroup.Key.Name].ToList();
+                // Load part using the entity and assign PartLink afterwards. No entities exist yet
+                // for a freshly created parent that has none of these parts assigned.
+                var partCollection = partEntityGroups.TryGetValue(partGroup.Key.Name, out var group)
+                    ? group.ToList()
+                    : [];
                 var partArticles = await TransformInstances(uow, partCollection, cancellationToken);
                 for (var index = 0; index < partArticles.Length; index++)
                 {
@@ -933,6 +936,7 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
                     {
                         list.Add(partArticle);
                     }
+                    partGroup.Key.SetValue(productInstance, list);
                 }
             }
         }
