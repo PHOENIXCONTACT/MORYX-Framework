@@ -37,20 +37,13 @@ public class GoodPartContainer : OrderLinkedMaterialContainer
 
     [ResourceConstructor]
     [Display(Name = "Good Part Container", Description = "Create a Good Part material container that is linked to an order")]
-    public Task ConstructWith(
-        [Display(Name = "Order-Operation Number", Description = "Order-Operation number this container is linked to"), PossibleOrderOperationNumber(showAdvisableOperationOnly: true)] string orderOperation,
-        [ReadOnly(true), Display(Name = "Material")] string material,
-        [Display(Name = "Container Identity")] string containerIdentity,
-        [Display(Name = "Amount")] int amount
-        )
+    public Task ConstructWith([Display(Name = "Good Part options"), PossibleGoodPartModel] GoodPartModel model)
     {
         StateInformation = new RequestedStateInformation();
-        Identity = new BatchIdentity(containerIdentity);
-        Material = material;
+        Identity = new BatchIdentity(model.Container);
+        Material = model.Product;
         Unit = "pcs";
-        Quantity = amount;
-        var operation = PossibleOrderOperationNumberAttribute.GetOperationFrom(orderOperation);
-        var order = PossibleOrderOperationNumberAttribute.GetOrderFrom(orderOperation);
-        return RequestOrderLinkAsync(order!, operation);
+        Quantity = model.Amount;
+        return RequestOrderLinkAsync(model.Order, model.Operation);
     }
 }

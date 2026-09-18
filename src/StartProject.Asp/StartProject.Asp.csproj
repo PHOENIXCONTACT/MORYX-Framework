@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="PossiblePickPartAdviceAttribute.cs" />
+    <None Include="PossiblePickPartModelAttribute.cs" />
   </ItemGroup>
 
   <ItemGroup>

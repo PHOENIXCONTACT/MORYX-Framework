@@ -8,16 +8,22 @@ namespace StartProject.Asp;
 
 public class PickPartModel
 {
-    [Required]
-    [Display(Name = "Container Identity")]
-    public string Container { get; set; }
-
     [ReadOnly(true)]
     public string Order { get; set; }
 
     [ReadOnly(true)]
     public string Operation { get; set; }
 
-    [ReadOnly(true)]
+    [PossiblePart]
+    [Required]
     public string Product { get; set; }
+
+    [Required]
+    [Display(Name = "Container Identity")]
+    public string Container { get; set; }
+
+    public override string ToString()
+    {
+        return $"{Order}-{Operation} {Product}";
+    }
 }

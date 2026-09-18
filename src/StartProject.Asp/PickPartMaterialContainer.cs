@@ -37,9 +37,7 @@ public partial class PickPartMaterialContainer : OrderLinkedMaterialContainer
 
     [ResourceConstructor]
     [Display(Name = "Pick Part Container", Description = "Create a Pick Part material container that is linked to an order")]
-    public Task ConstructWith(
-        [Display(Name = "Order-Operation Number", Description = "Order-Operation number this container is linked to"),
-        PossiblePickPartAdvice] PickPartModel model)
+    public Task ConstructWith([Display(Name = "Pick Part options"), PossiblePickPartModel] PickPartModel model)
     {
         StateInformation = new RequestedStateInformation();
         Identity = new BatchIdentity(model.Container);
