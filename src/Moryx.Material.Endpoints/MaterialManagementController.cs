@@ -33,7 +33,7 @@ namespace Moryx.Material.Endpoints;
 [ApiController]
 [Route("api/moryx/materials/")]
 [Produces("application/json")]
-public class MaterialManagementController(IMaterialManagement materialManagement, IResourceTypeTree resourceTree, IModuleManager moduleManager, IServiceProvider provider, IOrderIntegration? orderIntegration, IConfigManager configManager, ILogger<MaterialManagementController> logger) : ControllerBase
+public class MaterialManagementController(IMaterialManagement materialManagement, IOrderIntegration? orderIntegration, IConfigManager configManager, ILogger<MaterialManagementController> logger) : ControllerBase
 {
     private readonly IMaterialManagement _materialManagement = materialManagement ?? throw new ArgumentNullException(nameof(materialManagement));
     private readonly IOrderIntegration? _orderIntegration = orderIntegration;

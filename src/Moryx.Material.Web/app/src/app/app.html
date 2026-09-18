@@ -5,7 +5,7 @@
                 @if(hasOrderIntegration()){
                 <mat-form-field floatLabel="always" class="full-width" appearance="outline">
                     <mat-label>{{ translationConstants.APP.ORDERS | translate }}</mat-label>
-                    <mat-select (valueChange)="selectedOrders.set($event)" value="" multiple>
+                    <mat-select (valueChange)="selectedOrders.set($event)" value="" [placeholder]="translationConstants.APP.FILTER_BY_ORDER | translate" multiple>
                         @for (order of ordersSource() ; track $index)
                         {
                         <mat-option [value]="order.orderNumber">{{ order.orderNumber

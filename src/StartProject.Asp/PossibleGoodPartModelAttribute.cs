@@ -1,13 +1,14 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Moryx.AbstractionLayer.Products;
 using Moryx.Orders;
 using Moryx.Runtime.Modules;
 using Moryx.Serialization;
 
 namespace StartProject.Asp;
 
-public class PossiblePickPartAdviceAttribute(bool showAdvisableOperationOnly = false) : PossibleValuesAttribute
+public class PossibleGoodPartModelAttribute : PossibleValuesAttribute
 {
     public override bool OverridesConversion => true;
 
@@ -23,7 +24,7 @@ public class PossiblePickPartAdviceAttribute(bool showAdvisableOperationOnly = f
         var orders = Array.Empty<string>();
         try
         {
-            return [.. facade.GetOperations(o => showAdvisableOperationOnly == false || (showAdvisableOperationOnly == true && o.State.HasFlag(OperationStateClassification.CanAdvice)) )
+            return [.. facade.GetOperations(o => o.State.HasFlag(OperationStateClassification.CanAdvice))
             .SelectMany(o => o.Order.Operations.Select(op => ToDisplayString(o))).Distinct()];
         }
         catch (HealthStateException)
@@ -36,17 +37,18 @@ public class PossiblePickPartAdviceAttribute(bool showAdvisableOperationOnly = f
     {
         if (serviceProvider.GetService(typeof(IOrderManagement)) is not IOrderManagement orderFacade)
         {
-            return new PickPartModel();
+            return new GoodPartModel();
         }
 
         var operationNumber = GetOperationFrom(value);
         var order = GetOrderFrom(value);
         var operation = orderFacade.GetOperations(x => x.Order.Number == order && x.Number == operationNumber).FirstOrDefault();
-        var model = new PickPartModel
+        var product = operation.Product.Identity is ProductIdentity identity ? identity.ToString() : string.Join('-', operation.Product.Identity.Identifier, "00") + $" {operation.Product.Name}";
+        var model = new GoodPartModel
         {
             Order = order,
             Operation = operationNumber,
-            Product = $"{operation.Product.Identity.Identifier}-{operation.Product.Name}"
+            Product = product,
         };
         return model;
     }
@@ -68,3 +70,4 @@ public class PossiblePickPartAdviceAttribute(bool showAdvisableOperationOnly = f
         return result;
     }
 }
+

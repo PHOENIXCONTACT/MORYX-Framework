@@ -32,7 +32,7 @@ public class PossiblePartAttribute : PossibleValuesAttribute
         try
         {
             var types = facade.LoadTypesAsync(new ProductQuery()).GetAwaiter().GetResult();
-            return types.Select(t => t.Name).Where(s => !string.IsNullOrEmpty(s)).Cast<string>().Distinct().ToArray();
+            return types.Select(ToDisplay).Where(s => !string.IsNullOrEmpty(s)).Cast<string>().Distinct().ToArray();
         }
         catch (HealthStateException)
         {
@@ -40,6 +40,12 @@ public class PossiblePartAttribute : PossibleValuesAttribute
         }
     }
 
-    public static string GetProductNameFrom(string value)
-        => value;
+    private string ToDisplay(ProductType productType)
+    {
+        if (productType.Identity is ProductIdentity productIdentity)
+        {
+            return $"{productIdentity.ToString()} {productType.Name}";
+        }
+        return $"{productType.Identity.Identifier}-{productType.Name}";
+    }
 }
