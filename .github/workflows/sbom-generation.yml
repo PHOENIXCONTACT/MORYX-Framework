@@ -8,7 +8,6 @@ on:
       - dev
       - future
       - main
-      - feature/SBOM-evaluation
     tags:
       - "v*"
 
