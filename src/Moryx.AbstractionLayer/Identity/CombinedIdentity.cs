@@ -40,7 +40,7 @@ public class CombinedIdentity : IIdentity
     /// </remarks>
     public static IIdentity From(IEnumerable<IIdentity> identities)
     {
-        if (identities == null || !identities.Any())
+        if (identities == null)
         {
             return NullIdentity.Instance;
         }
@@ -92,7 +92,7 @@ public class CombinedIdentity : IIdentity
     public virtual bool MatchedBy(IIdentity candidate) => candidate is CombinedIdentity combinedCandidate
         ? combinedCandidate.Matches(this) : EqualsSingleIdentity(candidate);
 
-    private bool EqualsSingleIdentity(IIdentity other) => _identities.Count == 1 && _identities.Single().Equals(other);
+    private bool EqualsSingleIdentity(IIdentity other) => _identities.Count == 1 && _identities[0].Equals(other);
 
     /// <summary>
     /// Checks whether this' combined identities satisfy the given <paramref name="required"/> required,

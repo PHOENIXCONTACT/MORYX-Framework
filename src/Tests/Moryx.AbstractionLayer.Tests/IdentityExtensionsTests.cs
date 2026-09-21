@@ -7,96 +7,66 @@ using NUnit.Framework;
 namespace Moryx.AbstractionLayer.Tests;
 
 [TestFixture]
-public class IdentityExtensionsTests
+public class IdentityExtensionsTests : IdentityTestBase
 {
     #region Combine
 
     [Test]
     public void Combine_WithSingleOther_CreatesCombinedContainingBoth()
     {
-        // Arrange
-        var a = new BatchIdentity("A");
-        var b = new BatchIdentity("B");
+        var result = _aIdentity.Combine(_bIdentity);
 
-        // Act
-        var result = a.Combine(b);
-
-        // Assert
-        Assert.That(result.GetAll(), Has.Count.EqualTo(2).And.Contain(a).And.Contain(b));
+        Assert.That(result.GetAll(), Has.Count.EqualTo(2).And.Contain(_aIdentity).And.Contain(_bIdentity));
     }
 
     [Test]
     public void Combine_WithMultipleOthers_CreatesCombinedContainingAll()
     {
-        // Arrange
-        var a = new BatchIdentity("A");
-        var b = new BatchIdentity("B");
-        var c = new BatchIdentity("C");
+        var result = _aIdentity.Combine(_bIdentity, _cIdentity);
 
-        // Act
-        var result = a.Combine(b, c);
-
-        // Assert
-        Assert.That(result.GetAll(), Has.Count.EqualTo(3).And.Contain(a).And.Contain(b).And.Contain(c));
+        Assert.That(result.GetAll(), Has.Count.EqualTo(3).And.Contain(_aIdentity).And.Contain(_bIdentity).And.Contain(_cIdentity));
     }
 
     [Test]
     public void Combine_WithEnumerableOthers_CreatesCombinedContainingAll()
     {
         // Arrange
-        var a = new BatchIdentity("A");
-        var b = new BatchIdentity("B");
-        var c = new BatchIdentity("C");
-        IEnumerable<IIdentity> others = [b, c];
+        IEnumerable<IIdentity> others = [_bIdentity, _cIdentity];
 
         // Act
-        var result = a.Combine(others);
+        var result = _aIdentity.Combine(others);
 
         // Assert
-        Assert.That(result.GetAll(), Has.Count.EqualTo(3).And.Contain(a).And.Contain(b).And.Contain(c));
+        Assert.That(result.GetAll(), Has.Count.EqualTo(3).And.Contain(_aIdentity).And.Contain(_bIdentity).And.Contain(_cIdentity));
     }
 
     [Test]
     public void Combine_WhenReceiverIsCombined_FlattensResult()
     {
-        // Arrange
-        var a = new BatchIdentity("A");
-        var b = new BatchIdentity("B");
-        var combined = CombinedIdentity.From(a, b);
-        var c = new BatchIdentity("C");
+        var result = _abIdentity.Combine(_cIdentity);
 
-        // Act
-        var result = combined.Combine(c);
-
-        // Assert
-        Assert.That(result.GetAll(), Has.Count.EqualTo(3).And.Contain(a).And.Contain(b).And.Contain(c));
+        Assert.That(result.GetAll(), Has.Count.EqualTo(3).And.Contain(_aIdentity).And.Contain(_bIdentity).And.Contain(_cIdentity));
     }
 
     [Test]
     public void Combine_WhenArgumentIsCombined_FlattensResult()
     {
         // Arrange
-        var a = new BatchIdentity("A");
-        var b = new BatchIdentity("B");
-        var c = new BatchIdentity("C");
-        var inner = CombinedIdentity.From(b, c);
+        var inner = CombinedIdentity.From(_bIdentity, _cIdentity);
 
         // Act
-        var result = a.Combine(inner);
+        var result = _aIdentity.Combine(inner);
 
         // Assert
-        Assert.That(result.GetAll(), Has.Count.EqualTo(3).And.Contain(a).And.Contain(b).And.Contain(c));
+        Assert.That(result.GetAll(), Has.Count.EqualTo(3).And.Contain(_aIdentity).And.Contain(_bIdentity).And.Contain(_cIdentity));
     }
 
     [Test]
     public void Combine_WithNullIdentityArgument_FiltersIt()
     {
-        var a = new BatchIdentity("A");
-        var b = new BatchIdentity("B");
+        var result = _aIdentity.Combine(NullIdentity.Instance, _bIdentity);
 
-        var result = a.Combine(NullIdentity.Instance, b);
-
-        Assert.That(result.GetAll(), Has.Count.EqualTo(2).And.Contain(a).And.Contain(b));
+        Assert.That(result.GetAll(), Has.Count.EqualTo(2).And.Contain(_aIdentity).And.Contain(_bIdentity));
     }
 
     #endregion
@@ -106,29 +76,17 @@ public class IdentityExtensionsTests
     [Test]
     public void GetAll_OnSingleIdentity_ReturnsSingleElementList()
     {
-        // Arrange
-        IIdentity identity = new BatchIdentity("A");
+        var result = _aIdentity.GetAll();
 
-        // Act
-        var result = identity.GetAll();
-
-        // Assert
-        Assert.That(result, Is.EqualTo([identity]));
+        Assert.That(result, Is.EqualTo([_aIdentity]));
     }
 
     [Test]
     public void GetAll_OnCombinedIdentity_ReturnsAllConstituents()
     {
-        // Arrange
-        var a = new BatchIdentity("A");
-        var b = new BatchIdentity("B");
-        var combined = CombinedIdentity.From(a, b);
+        var result = _abIdentity.GetAll();
 
-        // Act
-        var result = combined.GetAll();
-
-        // Assert
-        Assert.That(result, Has.Count.EqualTo(2).And.Contain(a).And.Contain(b));
+        Assert.That(result, Has.Count.EqualTo(2).And.Contain(_aIdentity).And.Contain(_bIdentity));
     }
 
     #endregion
@@ -138,51 +96,43 @@ public class IdentityExtensionsTests
     [Test]
     public void Matches_OnSingleIdentity_WithEqualRequired_ReturnsTrue()
     {
-        IIdentity identitiy = new BatchIdentity("A");
-        Assert.That(identitiy.Matches(new BatchIdentity("A")));
+        Assert.That(_aIdentity.Matches(_aIdentity));
     }
 
     [Test]
     public void Matches_OnSingleIdentity_WithDifferentRequired_ReturnsFalse()
     {
-        IIdentity identitiy = new BatchIdentity("A");
-        Assert.That(identitiy.Matches(new BatchIdentity("B")), Is.False);
+        Assert.That(_aIdentity.Matches(_bIdentity), Is.False);
     }
 
     [Test]
     public void Matches_OnSingleIdentity_WithSingleEntryCombinedRequired_ReturnsTrue()
     {
-        // combined([A]).Equals(singleA) = true via CombinedIdentity.EqualsSingleIdentity
-        IIdentity identitiy = new BatchIdentity("A");
-        Assert.That(identitiy.Matches(CombinedIdentity.From(new BatchIdentity("A"))));
+        Assert.That(_aIdentity.Matches(CombinedIdentity.From(_aIdentity)));
     }
 
     [Test]
     public void Matches_OnSingleIdentity_WithMultiEntryCombinedRequired_ReturnsFalse()
     {
-        IIdentity identitiy = new BatchIdentity("A");
-        Assert.That(identitiy.Matches(CombinedIdentity.From(new BatchIdentity("A"), new BatchIdentity("B"))), Is.False);
+        Assert.That(_aIdentity.Matches(_abIdentity), Is.False);
     }
 
     [Test]
     public void Matches_OnCombinedIdentity_WithContainedSingle_ReturnsTrue()
     {
-        var identitiy = CombinedIdentity.From(new BatchIdentity("A"), new BatchIdentity("B"));
-        Assert.That(identitiy.Matches(new BatchIdentity("A")));
+        Assert.That(_abIdentity.Matches(_aIdentity));
     }
 
     [Test]
     public void Matches_OnCombinedIdentity_WithNotContainedSingle_ReturnsFalse()
     {
-        var identitiy = CombinedIdentity.From(new BatchIdentity("A"), new BatchIdentity("B"));
-        Assert.That(identitiy.Matches(new BatchIdentity("C")), Is.False);
+        Assert.That(_abIdentity.Matches(_cIdentity), Is.False);
     }
 
     [Test]
     public void Matches_OnCombinedIdentity_WithSubsetCombined_ReturnsTrue()
     {
-        var identitiy = CombinedIdentity.From(new BatchIdentity("A"), new BatchIdentity("B"), new BatchIdentity("C"));
-        Assert.That(identitiy.Matches(CombinedIdentity.From(new BatchIdentity("A"), new BatchIdentity("C"))));
+        Assert.That(_abcIdentity.Matches(CombinedIdentity.From(_aIdentity, _cIdentity)));
     }
 
     #endregion
@@ -192,8 +142,8 @@ public class IdentityExtensionsTests
     private static IEnumerable<IIdentity> AllIdentityKinds() =>
     [
         NullIdentity.Instance,
-        new BatchIdentity("A"),
-        CombinedIdentity.From(new BatchIdentity("A"), new BatchIdentity("B")),
+        _aIdentity,
+        _abIdentity,
     ];
 
     [TestCaseSource(nameof(AllIdentityKinds))]
@@ -205,8 +155,8 @@ public class IdentityExtensionsTests
     private static IEnumerable<TestCaseData> MatchesOnNullIdentityCases() =>
     [
         new TestCaseData(NullIdentity.Instance, true),
-        new TestCaseData(new BatchIdentity("A"), false),
-        new TestCaseData(CombinedIdentity.From(new BatchIdentity("A"), new BatchIdentity("B")), false),
+        new TestCaseData(_aIdentity, false),
+        new TestCaseData(_abIdentity, false),
     ];
 
     [TestCaseSource(nameof(MatchesOnNullIdentityCases))]
@@ -217,35 +167,32 @@ public class IdentityExtensionsTests
 
     private static IEnumerable<IIdentity> NonNullIdentityKinds() =>
     [
-        new BatchIdentity("A"),
-        CombinedIdentity.From(new BatchIdentity("A"), new BatchIdentity("B")),
+        _aIdentity,
+        _abIdentity,
     ];
 
     [TestCaseSource(nameof(NonNullIdentityKinds))]
-    public void Matches_WithNullIdentityRequired_ReturnsTrue(IIdentity identitiy)
+    public void Matches_WithNullIdentityRequired_ReturnsTrue(IIdentity identity)
     {
-        // requiring nothing is satisfied by any identity
-        Assert.That(identitiy.Matches(NullIdentity.Instance));
+        Assert.That(identity.Matches(NullIdentity.Instance));
     }
 
     [TestCaseSource(nameof(NonNullIdentityKinds))]
-    public void MatchedBy_WithNullIdentityCandidate_ReturnsFalse(IIdentity identitiy)
+    public void MatchedBy_WithNullIdentityCandidate_ReturnsFalse(IIdentity identity)
     {
-        // absence cannot cover a real identity requirement
-        Assert.That(identitiy.MatchedBy(NullIdentity.Instance), Is.False);
+        Assert.That(identity.MatchedBy(NullIdentity.Instance), Is.False);
     }
 
     [Test]
     public void Matches_IsInverseOfMatchedBy_ForNullIdentity()
     {
         IIdentity nullId = NullIdentity.Instance;
-        IIdentity someId = new BatchIdentity("A");
 
         Assert.Multiple(() =>
         {
             Assert.That(nullId.Matches(nullId), Is.EqualTo(nullId.MatchedBy(nullId)));
-            Assert.That(nullId.Matches(someId), Is.EqualTo(someId.MatchedBy(nullId)));
-            Assert.That(someId.Matches(nullId), Is.EqualTo(nullId.MatchedBy(someId)));
+            Assert.That(nullId.Matches(_aIdentity), Is.EqualTo(_aIdentity.MatchedBy(nullId)));
+            Assert.That(_aIdentity.Matches(nullId), Is.EqualTo(nullId.MatchedBy(_aIdentity)));
         });
     }
 
@@ -256,61 +203,49 @@ public class IdentityExtensionsTests
     [Test]
     public void MatchedBy_OnSingleIdentity_WithEqualCandidate_ReturnsTrue()
     {
-        IIdentity identitiy = new BatchIdentity("A");
-        Assert.That(identitiy.MatchedBy(new BatchIdentity("A")));
+        Assert.That(_aIdentity.MatchedBy(_aIdentity));
     }
 
     [Test]
     public void MatchedBy_OnSingleIdentity_WithDifferentCandidate_ReturnsFalse()
     {
-        IIdentity identitiy = new BatchIdentity("A");
-        Assert.That(identitiy.MatchedBy(new BatchIdentity("B")), Is.False);
+        Assert.That(_aIdentity.MatchedBy(_bIdentity), Is.False);
     }
 
     [Test]
     public void MatchedBy_OnSingleIdentity_WithSingleEntryCombinedCandidate_ReturnsTrue()
     {
-        // combined([A]).Equals(singleA) = true via CombinedIdentity.EqualsSingleIdentity
-        IIdentity identitiy = new BatchIdentity("A");
-        Assert.That(identitiy.MatchedBy(CombinedIdentity.From(new BatchIdentity("A"))));
+        Assert.That(_aIdentity.MatchedBy(CombinedIdentity.From(_aIdentity)));
     }
 
     [Test]
     public void MatchedBy_OnSingleIdentity_WithSupersetCombinedCandidate_ReturnsTrue()
     {
-        // {A} ⊆ {A, B} — the candidate covers this identity
-        IIdentity identitiy = new BatchIdentity("A");
-        Assert.That(identitiy.MatchedBy(CombinedIdentity.From(new BatchIdentity("A"), new BatchIdentity("B"))));
+        Assert.That(_aIdentity.MatchedBy(_abIdentity));
     }
 
     [Test]
     public void MatchedBy_OnSingleIdentity_WithCombinedCandidateNotContainingThis_ReturnsFalse()
     {
-        IIdentity identitiy = new BatchIdentity("A");
-        Assert.That(identitiy.MatchedBy(CombinedIdentity.From(new BatchIdentity("B"), new BatchIdentity("C"))), Is.False);
+        Assert.That(_aIdentity.MatchedBy(CombinedIdentity.From(_bIdentity, _cIdentity)), Is.False);
     }
 
     [Test]
     public void MatchedBy_OnCombinedIdentity_WithFullSetCandidate_ReturnsTrue()
     {
-        var a = new BatchIdentity("A");
-        var b = new BatchIdentity("B");
-        var identitiy = CombinedIdentity.From(a, b);
-        Assert.That(identitiy.MatchedBy(CombinedIdentity.From(a, b)));
+        Assert.That(_abIdentity.MatchedBy(_abIdentity));
     }
 
     [Test]
     public void MatchedBy_OnCombinedIdentity_WithSupersetCombinedCandidate_ReturnsTrue()
     {
-        var identitiy = CombinedIdentity.From(new BatchIdentity("A"), new BatchIdentity("B"));
-        Assert.That(identitiy.MatchedBy(CombinedIdentity.From(new BatchIdentity("A"), new BatchIdentity("B"), new BatchIdentity("C"))));
+        Assert.That(_abIdentity.MatchedBy(_abcIdentity));
     }
 
     [Test]
     public void MatchedBy_OnCombinedIdentity_WithSubsetCombinedCandidate_ReturnsFalse()
     {
-        var identitiy = CombinedIdentity.From(new BatchIdentity("A"), new BatchIdentity("B"), new BatchIdentity("C"));
-        Assert.That(identitiy.MatchedBy(CombinedIdentity.From(new BatchIdentity("A"), new BatchIdentity("B"))), Is.False);
+        Assert.That(_abcIdentity.MatchedBy(_abIdentity), Is.False);
     }
 
     #endregion
