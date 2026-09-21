@@ -46,7 +46,7 @@ public class AssembleSetupTrigger : SetupTriggerBase<AssembleSetupTriggerConfig>
             .FirstOrDefault();
 
         if (requiredAssembleCapabilitiesType == null)
-            throw new InvalidConfigException(Config.RequiredCapabilityType, $"{nameof(AssembleSetupTriggerConfig.RequiredCapabilityType)} was not found!");
+            throw new InvalidConfigException(Config.RequiredCapabilityType, $"{nameof(AssembleSetupTriggerConfig.RequiredCapabilityType)} was not found.");
 
         _capabilitiesConstructor = ReflectionTool.ConstructorDelegate<ICapabilities>(requiredAssembleCapabilitiesType); ;
 
@@ -61,7 +61,7 @@ public class AssembleSetupTrigger : SetupTriggerBase<AssembleSetupTriggerConfig>
 
         var targetProperty = requiredAssembleCapabilitiesType.GetProperty(Config.TargetPropertyName);
         if (targetProperty == null)
-            throw new ArgumentException($"{nameof(AssembleSetupTriggerConfig.TargetPropertyName)} is not available in {Config.RequiredCapabilityType}");
+            throw new ArgumentException($"{nameof(AssembleSetupTriggerConfig.TargetPropertyName)} is not available in {Config.RequiredCapabilityType}.");
 
         // Make custom descriptor instance
         _descriptorAccessor = ReflectionTool.PropertyAccessor<ICapabilities>(targetProperty);

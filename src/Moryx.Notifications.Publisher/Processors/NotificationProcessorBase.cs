@@ -318,7 +318,7 @@ public abstract class NotificationProcessorBase<TNotification, TNotificationType
             return dateTime;
         if (dateTime.Kind == DateTimeKind.Local)
             return TimeZoneInfo.ConvertTimeToUtc(dateTime, TimeZoneInfo.Local);
-        throw new ArgumentException($"Provided {nameof(DateTime)} is neither UTC nor Local Time");
+        throw new ArgumentException($"Provided {nameof(DateTime)} is neither UTC nor Local Time.");
     }
 
     /// <summary>

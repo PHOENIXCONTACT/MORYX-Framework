@@ -22,14 +22,17 @@ public class ModuleManagerTests
 {
     private Mock<IConfigManager> _mockConfigManager;
     private Mock<IModuleLogger> _mockLogger;
+    private ModuleManagerConfig _moduleManagerConfig;
 
     [SetUp]
     public void Setup()
     {
         _mockConfigManager = new Mock<IConfigManager>();
-        var moduleManagerConfig = new ModuleManagerConfig { ManagedModules = [] };
-        _mockConfigManager.Setup(mock => mock.GetConfiguration(typeof(ModuleManagerConfig), typeof(ModuleManagerConfig).FullName, false)).Returns(moduleManagerConfig);
-        _mockConfigManager.Setup(mock => mock.GetConfiguration(typeof(RuntimeConfigManagerTestConfig2), typeof(RuntimeConfigManagerTestConfig2).FullName, false)).Returns(new RuntimeConfigManagerTestConfig2());
+        _moduleManagerConfig = new ModuleManagerConfig { ManagedModules = [] };
+        _mockConfigManager.Setup(mock => mock.GetConfiguration(typeof(ModuleManagerConfig), typeof(ModuleManagerConfig).FullName, false))
+            .Returns(_moduleManagerConfig);
+        _mockConfigManager.Setup(mock => mock.GetConfiguration(typeof(RuntimeConfigManagerTestConfig2), typeof(RuntimeConfigManagerTestConfig2).FullName, false))
+            .Returns(new RuntimeConfigManagerTestConfig2());
 
         _mockLogger = new Mock<IModuleLogger>();
         _mockLogger.Setup(ml => ml.GetChild(It.IsAny<string>(), It.IsAny<Type>())).Returns(_mockLogger.Object);
@@ -211,10 +214,10 @@ public class ModuleManagerTests
         WaitForTimeboxed(() => mockModule2.Invocations.Any(i => i.Method.Name == nameof(IServerModule.StartAsync)));
 
         // Assert
-        mockModule1.Verify(mock => mock.InitializeAsync(), Times.Exactly(2));
+        mockModule1.Verify(mock => mock.InitializeAsync(), Times.Once);
         mockModule1.Verify(mock => mock.StartAsync());
 
-        mockModule2.Verify(mock => mock.InitializeAsync(), Times.Exactly(2));
+        mockModule2.Verify(mock => mock.InitializeAsync(), Times.Once);
         mockModule2.Verify(mock => mock.StartAsync());
     }
 
@@ -305,6 +308,27 @@ public class ModuleManagerTests
 
         // Assert
         Assert.That(module.ActivatedCount, Is.EqualTo(1));
+    }
+
+    [Test, Description("Setting a module behaviour should update the config and persist it")]
+    public void BehaviourChangeSavesConfig()
+    {
+        // Arrange
+        const string moduleName = "TestModule";
+        const ModuleStartBehaviour targetBehaviour = ModuleStartBehaviour.Manual;
+
+        var mockModule = new Mock<IServerModule>();
+        mockModule.Setup(m => m.Name).Returns(moduleName);
+        var moduleManager = CreateObjectUnderTest([mockModule.Object]);
+
+        // Act
+        var startBehaviour = moduleManager.BehaviourAccess<ModuleStartBehaviour>(mockModule.Object);
+        startBehaviour.Behaviour = targetBehaviour;
+
+        // Assert
+        var managedModuleConfig = _moduleManagerConfig.ManagedModules.Single(m => m.ModuleName == moduleName);
+        Assert.That(managedModuleConfig.StartBehaviour, Is.EqualTo(targetBehaviour));
+        _mockConfigManager.Verify(cm => cm.SaveConfiguration(_moduleManagerConfig, It.IsAny<string>(), It.IsAny<bool>()), Times.Once);
     }
 
     private static void WaitForTimeboxed(Func<bool> condition, int maxSeconds = 10)

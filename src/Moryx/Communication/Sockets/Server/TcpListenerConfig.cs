@@ -39,6 +39,14 @@ public class TcpListenerConfig : BinaryConnectionConfig
     public bool ValidateBeforeAssignment { get; set; }
 
     /// <summary>
+    /// Time to wait between attempts to open a connection in ms.
+    /// </summary>
+    [DataMember]
+    [Description("Time to wait between attempts to open a connection in ms.")]
+    [DefaultValue(500)]
+    public int RetryWaitMs { get; set; }
+
+    /// <summary>
     /// The TCP KeepAlive configuration
     /// </summary>
     [DataMember]

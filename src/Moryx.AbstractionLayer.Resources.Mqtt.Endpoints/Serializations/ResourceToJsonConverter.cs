@@ -43,7 +43,7 @@ internal class ResourceToJsonConverter(IResourceManagement resourceManagement) :
         var synchronizationTypeId = jsonObj[nameof(ResourceSynchronizationAttribute.SynchronizationTypeId)]?.ToString();
         if (synchronizationTypeId is null)
         {
-            throw new InvalidOperationException("Cannot handle unknown resource without SynchronizationTypeId");
+            throw new InvalidOperationException($"Cannot handle unknown resource without {nameof(ResourceSynchronizationAttribute.SynchronizationTypeId)}.");
         }
 
         var matchingResourceType = resourceManagement.GetResourcesUnsafe<Resource>(x =>
@@ -52,7 +52,7 @@ internal class ResourceToJsonConverter(IResourceManagement resourceManagement) :
             .GetType();
 
         return matchingResourceType is null
-            ? throw new InvalidOperationException($"No resource type found for SynchronizationTypeId {synchronizationTypeId}")
+            ? throw new InvalidOperationException($"No resource type found for {nameof(ResourceSynchronizationAttribute.SynchronizationTypeId)}: {synchronizationTypeId}.")
             : jsonObj.Deserialize(matchingResourceType, options) as Resource;
     }
 

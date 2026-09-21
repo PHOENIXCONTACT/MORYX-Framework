@@ -1,8 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Concurrent;
-using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Channels;
@@ -17,7 +15,6 @@ namespace Moryx.ControlSystem.Processes.Endpoints.StreamServices;
 /// </summary>
 internal class ProcessHolderGroupStream(IResourceManagement resourceManagement)
 {
-    private static readonly ConcurrentDictionary<Guid, Channel<string>> _subscribers = new();
     private static readonly JsonSerializerOptions _serializerOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -32,6 +29,8 @@ internal class ProcessHolderGroupStream(IResourceManagement resourceManagement)
     /// <returns></returns>
     public async Task Start(HttpContext context, CancellationToken cancellationToken)
     {
+        var channel = Channel.CreateUnbounded<string>();
+
         // using unsafe because resourceManagement.GetResources<T> is very restricted in the sense
         // that casting at line 55 doesn't work
         var groups = resourceManagement.GetResourcesUnsafe<IProcessHolderGroup>(_ => true);
@@ -86,35 +85,18 @@ internal class ProcessHolderGroupStream(IResourceManagement resourceManagement)
             resourceManagement.ResourceAdded -= resourceAdded;
             resourceManagement.ResourceRemoved -= resourceRemoved;
         }
-    }
 
-    /// <summary>
-    /// Local helper to broadcast process holder group changes to all connected clients
-    /// </summary>
-    private static void Broadcast(ProcessHolderGroupModel groupModel)
-    {
-        foreach (var channel in _subscribers.Values)
+        return;
+
+        IAsyncEnumerable<string> Subscribe(CancellationToken cancelToken)
+        {
+            return channel.Reader.ReadAllAsync(cancelToken);
+        }
+
+        // Local helper to push process holder group changes to the client
+        void Broadcast(ProcessHolderGroupModel groupModel)
         {
             channel.Writer.TryWrite(JsonSerializer.Serialize(groupModel, _serializerOptions));
-        }
-    }
-
-    private static async IAsyncEnumerable<string> Subscribe([EnumeratorCancellation] CancellationToken cancellationToken)
-    {
-        var channel = Channel.CreateUnbounded<string>();
-        var id = Guid.NewGuid();
-        _subscribers[id] = channel;
-
-        try
-        {
-            await foreach (var data in channel.Reader.ReadAllAsync(cancellationToken))
-            {
-                yield return data;
-            }
-        }
-        finally
-        {
-            _subscribers.TryRemove(id, out _);
         }
     }
 }

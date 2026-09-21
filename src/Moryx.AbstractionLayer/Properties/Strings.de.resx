@@ -159,4 +159,16 @@
   <data name="Children" xml:space="preserve">
     <value>Kinder</value>
   </data>
+  <data name="BatchIdentity_Identifier_Name" xml:space="preserve">
+    <value>Chargenkennzeichen</value>
+  </data>
+  <data name="BatchIdentity_Name" xml:space="preserve">
+    <value>Chargenidentität</value>
+  </data>
+  <data name="BatchIdentity_Description" xml:space="preserve">
+    <value>Identität zur Identifizierung einer Material- oder Produktcharge.</value>
+  </data>
+  <data name="BatchIdentity_Identifier_Description" xml:space="preserve">
+    <value>Eindeutiges Kennzeichen der Charge.</value>
+  </data>
 </root>

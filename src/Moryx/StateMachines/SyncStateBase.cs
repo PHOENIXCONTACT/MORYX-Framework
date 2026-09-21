@@ -45,11 +45,11 @@ public abstract class SyncStateBase : StateBase
     internal static void Create(Type stateBaseType, IStateContext context, int? initialKey)
     {
         if (!typeof(SyncStateBase).IsAssignableFrom(stateBaseType))
-            throw new InvalidOperationException($"Only states inherited from {nameof(SyncStateBase)} are supported!");
+            throw new InvalidOperationException($"Only states inherited from {nameof(SyncStateBase)} are supported.");
 
         var initialState = CreateMapAndGetInitial(stateBaseType, context, initialKey) as SyncStateBase;
         if (initialState == null)
-            throw new ArgumentException($"Initial state does not inherit from {nameof(SyncStateBase)}");
+            throw new ArgumentException($"Initial state does not inherit from {nameof(SyncStateBase)}.");
 
         context.SetState(initialState);
         initialState.OnEnter();

@@ -423,7 +423,7 @@ internal class ProcessStorage : IProcessStorage, ILoggingComponent
             return nonNullDateTime;
         if (nonNullDateTime.Kind == DateTimeKind.Local)
             return TimeZoneInfo.ConvertTimeToUtc(nonNullDateTime, TimeZoneInfo.Local);
-        throw new ArgumentException($"Provided {nameof(DateTime)} is neither UTC nor Local Time");
+        throw new ArgumentException($"Provided {nameof(DateTime)} is neither UTC nor Local Time.");
     }
 
     private class TracingWrapper : IPersistentObject

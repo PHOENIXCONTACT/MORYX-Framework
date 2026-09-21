@@ -73,7 +73,7 @@ public class ResourceGraphMock : IResourceGraph
         var instance = Activator.CreateInstance(_typeMap[type]) as Resource;
         if (instance == null)
         {
-            throw new InvalidOperationException($"Cannot instantiate {type}");
+            throw new InvalidOperationException($"Cannot instantiate {type}.");
         }
 
         SetReferenceCollections(instance);

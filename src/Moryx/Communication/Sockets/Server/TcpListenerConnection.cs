@@ -96,7 +96,7 @@ public class TcpListenerConnection : IBinaryConnection, IStateContext
         if (IPAddress.TryParse(_config.IpAddress, out var address))
             Address = address;
         else
-            throw new FormatException($"Failed to parse IPAddress: {_config.IpAddress}");
+            throw new FormatException($"Failed to parse IPAddress: {_config.IpAddress}.");
 
         StateMachine.ForContext(this).With<ServerStateBase>();
     }
@@ -260,7 +260,8 @@ public class TcpListenerConnection : IBinaryConnection, IStateContext
         if (!Validator.Validate(message))
         {
             // If you send us crap we shut you off!
-            Reconnect();
+            Logger.LogWarning("Validation of received message failed. Reconnecting in {delayMs}ms.", _config.RetryWaitMs);
+            Reconnect(_config.RetryWaitMs);
             return;
         }
 

@@ -1,6 +1,17 @@
 @use '@angular/material' as mat;
 @use "@moryx/ngx-web-framework/styles/variables" as *;
 
+.mat-toolbar-row{
+  button{
+    color: white;
+    margin: 4px;
+  }
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
 .operation-recipe-container {
     height: 100%;
     @include mat.sidenav-overrides((
@@ -50,12 +61,7 @@ mat-list {
     flex-flow: column;
     align-items: flex-start;
 }
+
 .moryx-selected{
     background-color: $primary-light;
-}
-.toolbar-nav{
-    @include mat.sidenav-overrides((
-        container-background-color: var(--mat-sys-surface-container-lowest),
-        container-width: 50px
-      ));
 }

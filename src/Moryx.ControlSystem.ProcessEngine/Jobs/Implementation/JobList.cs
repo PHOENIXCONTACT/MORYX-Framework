@@ -260,7 +260,7 @@ internal class JobList : IJobDataList, IJobList
             JobPositionType.AfterOther => AfterOther(jobDatas, affectedJobs, jobPosition),
             JobPositionType.AroundExisting => Expand(jobDatas, affectedJobs),
             JobPositionType.AppendToRecipe => AppendToRecipe(jobDatas, affectedJobs, jobPosition),
-            _ => throw new ArgumentOutOfRangeException(nameof(jobPosition), "Unsupported job position!")
+            _ => throw new ArgumentOutOfRangeException(nameof(jobPosition), "Unsupported job position.")
         };
 
         // Save modified collection to database BEFORE any other action
@@ -360,7 +360,7 @@ internal class JobList : IJobDataList, IJobList
             currentNode = currentNode.Next;
         }
 
-        throw new KeyNotFoundException($"Found no job with id: {id} in the job list! Maybe it was removed?");
+        throw new KeyNotFoundException($"Found no job with id: {id} in the job list. Maybe it was removed?");
     }
 
     private long? Expand(LinkedList<IJobData> expandedList, List<IJobData> affectedJobs)
@@ -410,7 +410,7 @@ internal class JobList : IJobDataList, IJobList
                     // If we reached the end without finding a match, something is broken
                     var jobString = string.Join(";", expandedList.Select(j => $"{j.Id}-{j.Recipe.Name}"));
                     Logger.Log(LogLevel.Error, "Expanding list failed: {0}", jobString);
-                    throw new InvalidOperationException($"Expand: Existing job {currentNode.Value.Id} does not match job list position!");
+                    throw new InvalidOperationException($"Expand: Existing job {currentNode.Value.Id} does not match job list position.");
                 }
             }
 

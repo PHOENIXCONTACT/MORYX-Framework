@@ -25,12 +25,11 @@ import ModuleHeader from "../../common/components/ModuleHeader";
 import { ActionType } from "../../common/redux/Types";
 import ModulesRestClient from "../api/ModulesRestClient";
 import { HealthStateBadge } from "../components/HealthStateBadge";
-import { FailureBehaviour } from "../models/FailureBehaviour";
 import { ModuleStartBehaviour } from "../models/ModuleStartBehaviour";
 import NotificationModel from "../models/NotificationModel";
 import ServerModuleModel from "../models/ServerModuleModel";
 import { Serverity } from "../models/Severity";
-import { updateFailureBehaviour, updateStartBehaviour } from "../redux/ModulesActions";
+import { updateStartBehaviour } from "../redux/ModulesActions";
 import { ModuleInfoTile } from "./ModuleInfoTile";
 import { Notifications } from "./Notifications";
 
@@ -47,14 +46,11 @@ interface ModuleStateModel {
 
 interface ModuleDispatchPropModel {
   onUpdateStartBehaviour?(moduleName: string, startBehaviour: ModuleStartBehaviour): void;
-
-  onUpdateFailureBehaviour?(moduleName: string, failureBehaviour: FailureBehaviour): void;
 }
 
 const mapDispatchToProps = (dispatch: React.Dispatch<ActionType<{}>>): ModuleDispatchPropModel => {
   return {
     onUpdateStartBehaviour: (moduleName: string, startBehaviour: ModuleStartBehaviour) => dispatch(updateStartBehaviour(moduleName, startBehaviour)),
-    onUpdateFailureBehaviour: (moduleName: string, failureBehaviour: FailureBehaviour) => dispatch(updateFailureBehaviour(moduleName, failureBehaviour)),
   };
 };
 
@@ -92,11 +88,6 @@ class Module extends React.Component<ModulePropModel & ModuleDispatchPropModel, 
   public onStartBehaviourChange(e: React.ChangeEvent<HTMLInputElement>): void {
     const newValue = e.target.value as ModuleStartBehaviour;
     this.props.RestClient.updateModule({...this.props.Module, startBehaviour: newValue}).then((d) => this.props.onUpdateStartBehaviour(this.props.Module.name, newValue));
-  }
-
-  public onFailureBehaviourChange(e: React.ChangeEvent<HTMLInputElement>): void {
-    const newValue = e.target.value as FailureBehaviour;
-    this.props.RestClient.updateModule({...this.props.Module, failureBehaviour: newValue}).then((d) => this.props.onUpdateFailureBehaviour(this.props.Module.name, newValue));
   }
 
   private static dependenciesList(module: ServerModuleModel): React.ReactNode {
@@ -199,7 +190,7 @@ class Module extends React.Component<ModulePropModel & ModuleDispatchPropModel, 
               </Grid>
             </ModuleInfoTile>
             <ModuleInfoTile
-              title="Start &amp; Failure behaviour"
+              title="Start behaviour"
             >
               <Grid size={12}>
                 <TextField
@@ -213,21 +204,6 @@ class Module extends React.Component<ModulePropModel & ModuleDispatchPropModel, 
                   <MenuItem value={ModuleStartBehaviour.Auto}>Auto</MenuItem>
                   <MenuItem value={ModuleStartBehaviour.Manual}>Manual</MenuItem>
                   <MenuItem value={ModuleStartBehaviour.OnDependency}>On dependency</MenuItem>
-                </TextField>
-              </Grid>
-
-              <Grid size={12}>
-                <TextField
-                  select={true}
-                  label="Failure behaviour"
-                  value={this.props.Module.failureBehaviour}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => this.onFailureBehaviourChange(e)}
-                  size="small"
-                  margin="dense"
-                  fullWidth={true}
-                >
-                  <MenuItem value={FailureBehaviour.Stop}>Stop</MenuItem>
-                  <MenuItem value={FailureBehaviour.StopAndNotify}>Stop and notify</MenuItem>
                 </TextField>
               </Grid>
             </ModuleInfoTile>

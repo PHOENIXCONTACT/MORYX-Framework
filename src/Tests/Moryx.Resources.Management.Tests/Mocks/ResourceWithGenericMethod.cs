@@ -10,10 +10,7 @@ namespace Moryx.Resources.Management.Tests;
 
 public interface IGenericMethodCall : IResource
 {
-    /// <summary>
-    /// Get channel using specialized API
-    /// </summary>
-    IList<TChannel> GenericMethod<TChannel>(string identifier);
+    T GenericMethod<T>(T value);
 }
 
 public interface IDerivedFromGeneric : IGenericMethodCall
@@ -34,11 +31,13 @@ public class ResourceWithGenericMethod : Resource, IGenericMethodCall, ISimpleRe
     public event EventHandler SomeEvent;
     public event EventHandler<ICapabilities> CapabilitiesChanged;
 
-    public IList<TChannel> GenericMethod<TChannel>(string identifier) => throw new NotImplementedException();
+    public T GenericMethod<T>(T value) => value;
 
     public int MultiplyFoo(int factor) => throw new NotImplementedException();
 
     public int MultiplyFoo(int factor, ushort offset) => throw new NotImplementedException();
+
+    public void ThrowingMethod() => throw new NotImplementedException();
 
     public void RaiseEvent() => throw new NotImplementedException();
 }

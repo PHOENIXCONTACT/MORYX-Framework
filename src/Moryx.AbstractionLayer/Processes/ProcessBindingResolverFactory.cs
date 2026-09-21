@@ -88,7 +88,7 @@ public class PartLinkShortCut : BindingResolverBase
         // 3. Make sure we do not have a naming conflict
         if (linkResult != null && prodResult != null)
         {
-            throw new InvalidOperationException("Binding value inconclusive on part link and product!");
+            throw new InvalidOperationException("Binding value inconclusive on part link and product.");
         }
 
         return linkResult != null ? partLink : partLink.Product;
@@ -168,6 +168,6 @@ public class ProductResolver : BindingResolverBase
     /// <inheritdoc />
     protected override bool Update(object source, object value)
     {
-        throw new InvalidOperationException("Products cannot be updated!");
+        throw new InvalidOperationException("Products cannot be updated.");
     }
 }

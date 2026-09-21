@@ -19,6 +19,7 @@
 
 .radio-group {
   display: block;
+  overflow: hidden;
 }
 
 mat-radio-button ~ mat-radio-button {

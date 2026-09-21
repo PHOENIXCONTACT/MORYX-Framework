@@ -173,7 +173,7 @@ internal class ResourceLinker : IResourceLinker
         // Validate if object assigned to the property is a resource
         if (value != null && referencedResource == null)
         {
-            throw new ArgumentException($"Value of property {referenceProperty.Name} on resource {resource.Id}:{resource.GetType().Name} must be a Resource");
+            throw new ArgumentException($"Value of property {referenceProperty.Name} on resource {resource.Id}: {resource.GetType().Name} must be a {nameof(Resource)}.");
         }
 
         var referenceAtt = referenceProperty.GetCustomAttribute<ResourceReferenceAttribute>();
@@ -181,7 +181,7 @@ internal class ResourceLinker : IResourceLinker
         // Validate if required property is set
         if (referencedResource == null && referenceAtt.IsRequired)
         {
-            throw new ValidationException($"Property {referenceProperty.Name} is flagged 'Required' and was null!");
+            throw new ValidationException($"Property {referenceProperty.Name} is flagged 'Required' and was null.");
         }
 
         // Check if there is a relation that represents this reference
@@ -252,7 +252,7 @@ internal class ResourceLinker : IResourceLinker
         // Check required attribute against empty collections
         if (referencedResources.Count == 0 && referenceAtt.IsRequired)
         {
-            throw new ValidationException($"Property {referenceProperty.Name} is flagged 'Required' and was empty!");
+            throw new ValidationException($"Property {referenceProperty.Name} is flagged 'Required' and was empty.");
         }
 
         // First delete references that are not used by ANY property of the same configuration

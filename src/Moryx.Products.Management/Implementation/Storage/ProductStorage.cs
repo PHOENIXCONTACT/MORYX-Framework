@@ -602,7 +602,7 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
         }
 
         var strategy = _typeInformation[modifiedProductType.ProductTypeName()].Strategy
-                       ?? throw new InvalidOperationException($"Cannot save product of type {modifiedProductType.GetType().FullName}. No {nameof(IProductTypeStrategy)} is configured for this type in the {nameof(ModuleConfig)}");
+                       ?? throw new InvalidOperationException($"Cannot save product of type {modifiedProductType.GetType().FullName}. No {nameof(IProductTypeStrategy)} is configured for this type in the {nameof(ModuleConfig)}.");
 
         //TODO use uow directly instead of repo if that is possible
         // Get or create entity

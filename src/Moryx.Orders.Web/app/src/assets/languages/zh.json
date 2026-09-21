@@ -59,7 +59,11 @@
     "WORKPLAN": "工作计划",
     "CLASSIFICATION": "分类",
     "PROPERTIES": "属性",
-    "VERSION": "版本"
+    "VERSION": "版本",
+    "GO_BACK": "返回",
+    "EDIT": "编辑",
+    "SAVE": "保存",
+    "CANCEL": "取消"
   },
   "DOCUMENTS": {
     "DOCUMENTS_OF": "文档 -",
@@ -76,7 +80,6 @@
     "UNDERDELIVERY": "欠交",
     "REPORTED": "已报告",
     "SUCCESS": "成功",
-    "ESTIMATED": "估计",
     "SCRAP": "废品",
     "COMMENT": "评论",
     "CONFIRMATION": "确认",

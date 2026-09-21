@@ -1,16 +1,12 @@
 ﻿// Copyright (c) 2026, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Threading.Tasks;
 using Moq;
+using NUnit.Framework;
 using MQTTnet;
 using MQTTnet.Diagnostics.Logger;
 using MQTTnet.Packets;
-using MQTTnet.Protocol;
 using Moryx.AspNetCore.Mqtt.Components;
-using System.Threading;
-using System.Collections.Generic;
-using System;
 
 namespace Moryx.AspNetCore.Mqtt.Tests;
 

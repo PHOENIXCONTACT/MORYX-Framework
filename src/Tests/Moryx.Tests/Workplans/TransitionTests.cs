@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Moryx.Workplans;
@@ -117,6 +118,47 @@ public class TransitionTests
             Assert.That(_inputs[(index + 1) % 2].Tokens, Is.Empty);
             Assert.That(_outputs[0].Tokens, Is.Empty);
         });
+    }
+
+    [Test(Description = "MoveToken takes token from input and places it on output in one call")]
+    public void MoveTokenTakesAndPlaces()
+    {
+        // Arrange
+        var input = _inputs[0];
+        var output = _outputs[0];
+        var trans = new MoveTransition
+        {
+            Id = 1,
+            Inputs = [input],
+            Outputs = [output]
+        };
+
+        // Act
+        trans.Initialize();
+        input.Add(_token);
+
+        // Assert
+        Assert.That(input.Tokens, Is.Empty);
+        Assert.That(output.Tokens.Count(), Is.EqualTo(1));
+        Assert.That(output.Tokens.First(), Is.EqualTo(_token));
+    }
+
+    [Test(Description = "PlaceToken throws if the token was not taken first")]
+    public void PlaceTokenWithoutTakeThrows()
+    {
+        // Arrange
+        var output = _outputs[0];
+        var trans = new MoveTransition
+        {
+            Id = 1,
+            Inputs = [_inputs[0]],
+            Outputs = [output]
+        };
+        trans.Initialize();
+
+        // Act & Assert
+        var untakenToken = new DummyToken();
+        Assert.Throws<InvalidOperationException>(() => trans.PlaceUntaken(output, untakenToken));
     }
 
     [Test]

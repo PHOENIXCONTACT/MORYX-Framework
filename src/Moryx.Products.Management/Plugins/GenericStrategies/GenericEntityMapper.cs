@@ -130,7 +130,7 @@ internal class GenericEntityMapper<TBase, TReference> : IGenericMapper
                 }
                 break;
         }
-        throw new NotSupportedException("Expression type not supported yet");
+        throw new NotSupportedException("Expression type not supported yet.");
     }
 
     private Expression<Func<IGenericColumns, bool>> Convert(string memberName, ExpressionType type, object value)

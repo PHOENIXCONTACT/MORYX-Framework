@@ -1,22 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <DebugType>full</DebugType>
-    <OutputType>Library</OutputType>
-    <IsPackable>false</IsPackable>
-    <IsTestProject>true</IsTestProject>
   </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="NUnit" />
-    <PackageReference Include="NUnit3TestAdapter" />
-    <PackageReference Include="coverlet.collector" />
     <PackageReference Include="Moq" />
   </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\Moryx.Media.Endpoints\Moryx.Media.Endpoints.csproj" />
     <ProjectReference Include="..\..\Moryx.Media\Moryx.Media.csproj" />
   </ItemGroup>
+
   <ItemGroup>
     <None Include="..\TestContent\test.jpg" Link="TestContent\test.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -46,7 +42,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+
   <ItemGroup>
     <Folder Include="..\TestContent\" />
   </ItemGroup>
+
 </Project>

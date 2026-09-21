@@ -1,7 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Concurrent;
 using System.Net.ServerSentEvents;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
@@ -13,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moryx.AspNetCore;
 using Moryx.Notifications.Endpoints.Models;
 using Moryx.Notifications.Endpoints.Properties;
+using Moryx.Runtime.Modules;
 
 namespace Moryx.Notifications.Endpoints;
 
@@ -26,7 +26,6 @@ public class NotificationPublisherController : ControllerBase
 {
     private readonly INotificationPublisher _notificationPublisher;
 
-    private static readonly ConcurrentDictionary<Guid, Channel<SseItem<string>>> _notificationStreamSubscribers = new();
     private static readonly JsonSerializerOptions _serializerOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -51,7 +50,9 @@ public class NotificationPublisherController : ControllerBase
     {
         var notification = _notificationPublisher.Get(guid);
         if (notification == null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = Strings.NotificationPublisherController_NotificationNotFound });
+        }
 
         return Converter.ToModel(notification);
     }
@@ -64,12 +65,22 @@ public class NotificationPublisherController : ControllerBase
         // TODO: do not always broadcast all notifications, separate in event-types
         // https://github.com/PHOENIXCONTACT/MORYX-Framework/issues/1231
 
-        // Define event handlers that broadcast immediately when notifications change
-        var publishedEventHandler = new EventHandler<Notification>((_, _) =>
-            Broadcast());
+        var channel = Channel.CreateUnbounded<SseItem<string>>();
 
-        var acknowledgedEventHandler = new EventHandler<Notification>((_, _) =>
-            Broadcast());
+        // Define event handlers that broadcast immediately when notifications change
+        EventHandler<Notification> publishedEventHandler = (_, _) =>
+            Broadcast();
+
+        EventHandler<Notification> acknowledgedEventHandler = (_, _) =>
+            Broadcast();
+
+        EventHandler<bool> stateChangedEventHandler = (args, ready) =>
+        {
+            if (ready)
+            {
+                Broadcast();
+            }
+        };
 
         try
         {
@@ -78,6 +89,10 @@ public class NotificationPublisherController : ControllerBase
             // Register event handlers after result creation but before execution to ensure finally cleanup
             _notificationPublisher.Published += publishedEventHandler;
             _notificationPublisher.Acknowledged += acknowledgedEventHandler;
+            if (_notificationPublisher is ILifeCycleBoundFacade lf)
+            {
+                lf.StateChanged += stateChangedEventHandler;
+            }
 
             await result.ExecuteAsync(HttpContext);
         }
@@ -89,31 +104,33 @@ public class NotificationPublisherController : ControllerBase
         {
             _notificationPublisher.Published -= publishedEventHandler;
             _notificationPublisher.Acknowledged -= acknowledgedEventHandler;
+            if (_notificationPublisher is ILifeCycleBoundFacade lf)
+            {
+                lf.StateChanged -= stateChangedEventHandler;
+            }
         }
 
         return;
 
         async IAsyncEnumerable<SseItem<string>> Subscribe([EnumeratorCancellation] CancellationToken cancelToken)
         {
-            var channel = Channel.CreateUnbounded<SseItem<string>>();
-            var id = Guid.NewGuid();
-            _notificationStreamSubscribers[id] = channel;
-
             // Send all notifications set as first item
-            var initialNotifications = _notificationPublisher.GetAll()
-                .Select(Converter.ToModel).ToArray();
-            yield return new SseItem<string>(JsonSerializer.Serialize(initialNotifications, _serializerOptions));
+            NotificationModel[] initialNotifications = [];
 
             try
             {
-                await foreach (var data in channel.Reader.ReadAllAsync(cancelToken))
-                {
-                    yield return data;
-                }
+                initialNotifications = _notificationPublisher.GetAll()
+                .Select(Converter.ToModel).ToArray();
             }
-            finally
+            catch (HealthStateException)
             {
-                _notificationStreamSubscribers.TryRemove(id, out _);
+                // Ignore if module is not ready yet.
+            }
+            yield return new SseItem<string>(JsonSerializer.Serialize(initialNotifications, _serializerOptions));
+
+            await foreach (var data in channel.Reader.ReadAllAsync(cancelToken))
+            {
+                yield return data;
             }
         }
 
@@ -123,10 +140,7 @@ public class NotificationPublisherController : ControllerBase
             var notifications = _notificationPublisher.GetAll()
                 .Select(Converter.ToModel).ToArray();
 
-            foreach (var channel in _notificationStreamSubscribers.Values)
-            {
-                channel.Writer.TryWrite(new SseItem<string>(JsonSerializer.Serialize(notifications, _serializerOptions)));
-            }
+            channel.Writer.TryWrite(new SseItem<string>(JsonSerializer.Serialize(notifications, _serializerOptions)));
         }
     }
 
@@ -138,7 +152,9 @@ public class NotificationPublisherController : ControllerBase
     {
         var notification = _notificationPublisher.Get(guid);
         if (notification == null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = Strings.NotificationPublisherController_NotificationNotFound });
+        }
 
         _notificationPublisher.Acknowledge(notification);
         return Ok();

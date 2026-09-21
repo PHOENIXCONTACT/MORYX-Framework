@@ -77,6 +77,31 @@ public static class SemaphoreSlimExtensions
         }
 
         /// <summary>
+        /// Executes the specified synchronous operation within a semaphore lock.
+        /// The method waits asynchronously to enter the semaphore, runs the provided
+        /// action, and guarantees that the semaphore is released afterwards.
+        /// </summary>
+        /// <param name="criticalAction">The synchronous operation to execute.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+        /// <returns>
+        /// A <see cref="Task"/> that represents the asynchronous operation.
+        /// The task completes when the action has finished executing and the semaphore
+        /// has been released.
+        /// </returns>
+        public async Task ExecuteAsync(Action criticalAction, CancellationToken cancellationToken = default)
+        {
+            await semaphore.WaitAsync(cancellationToken);
+            try
+            {
+                criticalAction();
+            }
+            finally
+            {
+                semaphore.Release();
+            }
+        }
+
+        /// <summary>
         /// Executes the specified operation within a semaphore lock.
         /// The method waits to enter the semaphore, runs the provided
         /// function, and guarantees that the semaphore is released afterwards.

@@ -103,7 +103,7 @@ public class ProcessMovement : IDisposable
     public void MountOnTarget()
     {
         if (Progress < MovementProgress.InformationRetrieved)
-            throw new InvalidOperationException("Can not mount before initiating the transaction");
+            throw new InvalidOperationException("Can not mount before initiating the transaction.");
 
         _target.Mount(MountInformation);
         Progress = MovementProgress.MountedOnTarget;
@@ -115,7 +115,7 @@ public class ProcessMovement : IDisposable
     public void RemoveOnSource()
     {
         if (Progress < MovementProgress.MountedOnTarget)
-            throw new InvalidOperationException("Can not remove before mounting on target");
+            throw new InvalidOperationException("Can not remove before mounting on target.");
 
         _source.Unmount();
         Progress = MovementProgress.RemovedFromSource;
@@ -127,7 +127,7 @@ public class ProcessMovement : IDisposable
     public void Confirm()
     {
         if (Progress < MovementProgress.MountedOnTarget)
-            throw new InvalidOperationException("Can not confirm before everything was completed");
+            throw new InvalidOperationException("Can not confirm before everything was completed.");
 
         Progress = MovementProgress.Completed;
     }

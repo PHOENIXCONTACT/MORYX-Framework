@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Moryx.Configuration;
 using Moryx.Modules;
 using Moryx.Runtime.Modules;
 
@@ -8,13 +9,13 @@ namespace Moryx.Runtime.Kernel;
 
 internal static class ABehaviourAccess
 {
-    public static ABehaviourAccess<T> Create<T>(ModuleManagerConfig config, IModule module)
+    public static ABehaviourAccess<T> Create<T>(ModuleManagerConfig config, IConfigManager configManager, IModule module)
     {
         if (typeof(T) == typeof(ModuleStartBehaviour))
-            return new StartBehaviorAccess(config, module) as ABehaviourAccess<T>;
+            return new StartBehaviorAccess(config, configManager, module) as ABehaviourAccess<T>;
 
         if (typeof(T) == typeof(FailureBehaviour))
-            return new FailureBehaviourAccess(config, module) as ABehaviourAccess<T>;
+            return new FailureBehaviourAccess(config, configManager, module) as ABehaviourAccess<T>;
 
         return null;
     }
@@ -22,9 +23,16 @@ internal static class ABehaviourAccess
 
 internal abstract class ABehaviourAccess<T> : IBehaviourAccess<T>
 {
-    protected ManagedModuleConfig Module { get; private set; }
-    protected ABehaviourAccess(ModuleManagerConfig config, IModule module)
+    private readonly ModuleManagerConfig _config;
+    private readonly IConfigManager _configManager;
+
+    protected ManagedModuleConfig Module { get; }
+
+    protected ABehaviourAccess(ModuleManagerConfig config, IConfigManager configManager, IModule module)
     {
+        _config = config;
+        _configManager = configManager;
+
         Module = config.GetOrCreate(module.Name);
     }
 
@@ -34,7 +42,11 @@ internal abstract class ABehaviourAccess<T> : IBehaviourAccess<T>
     public T Behaviour
     {
         get { return GetBehavior(); }
-        set { SetBehavior(value); }
+        set
+        {
+            SetBehavior(value);
+            _configManager.SaveConfiguration(_config);
+        }
     }
 
     protected abstract T GetBehavior();
@@ -44,7 +56,7 @@ internal abstract class ABehaviourAccess<T> : IBehaviourAccess<T>
 
 internal class StartBehaviorAccess : ABehaviourAccess<ModuleStartBehaviour>
 {
-    public StartBehaviorAccess(ModuleManagerConfig config, IModule module) : base(config, module)
+    public StartBehaviorAccess(ModuleManagerConfig config, IConfigManager configManager, IModule module) : base(config, configManager, module)
     {
     }
 
@@ -61,7 +73,7 @@ internal class StartBehaviorAccess : ABehaviourAccess<ModuleStartBehaviour>
 
 internal class FailureBehaviourAccess : ABehaviourAccess<FailureBehaviour>
 {
-    public FailureBehaviourAccess(ModuleManagerConfig config, IModule module) : base(config, module)
+    public FailureBehaviourAccess(ModuleManagerConfig config, IConfigManager configManager, IModule module) : base(config, configManager, module)
     {
     }
 

@@ -10,4 +10,8 @@ namespace Moryx.AbstractionLayer.TestTools;
 /// </summary>
 public class DummyProductInstance : ProductInstance
 {
+    /// <summary>
+    /// Example information on an instance
+    /// </summary>
+    public string SerialNumber { get; set; }
 }

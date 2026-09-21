@@ -110,11 +110,11 @@ public static class VisualInstructorExtensions
         {
             var activity = activityStart.Activity;
             var attr = activity.GetType().GetCustomAttribute<ActivityResultsAttribute>() ??
-                       throw new ArgumentException($"Activity is not decorated with the {nameof(ActivityResultsAttribute)}");
+                       throw new ArgumentException($"Activity is not decorated with the {nameof(ActivityResultsAttribute)}.");
 
             if (!attr.ResultEnum.IsEnum)
             {
-                throw new ArgumentException("Result type is not an enum!");
+                throw new ArgumentException("Result type is not an enum.");
             }
 
             return instructor.Execute(new ActiveInstruction

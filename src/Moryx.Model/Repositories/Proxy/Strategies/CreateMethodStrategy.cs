@@ -53,10 +53,9 @@ internal class CreateMethodStrategy : MethodProxyStrategyBase
                 // Check if Property is ICollection<NavigationEntity>
                 var requiredType = typeof(ICollection<>).MakeGenericType(genericArg);
                 if (requiredType.IsAssignableFrom(propertyType))
-                    throw new InvalidOperationException("Create entities with collection is currently not supported!");
+                    throw new InvalidOperationException("Create entities with collection is currently not supported.");
                 else
-                    throw new InvalidOperationException("Method parameter is type of IEnumerable<T> " +
-                                                        "but the target property is not of type ICollection<T>");
+                    throw new InvalidOperationException("Method parameter is type of IEnumerable<T> but the target property is not of type ICollection<T>.");
             }
             else
             {

@@ -78,9 +78,9 @@ the available space.
 
 ````
 **Note**: This will work under the following conditions:
-1. You have created an [ASP.net Partial View](https://learn.microsoft.com/en-us/aspnet/core/mvc/views/partial?view=aspnetcore-10.0#declare-partial-views).
+1. You have created an [ASP.NET Partial View](https://learn.microsoft.com/en-us/aspnet/core/mvc/views/partial?view=aspnetcore-10.0#declare-partial-views).
 2. You used the `LauncherRegionAttribute` in your partial view.
 3. The name you used in your `LauncherRegion()` is the same in the configuration.
 4. You have placed the partial view inside a folder called `Pages`.
-5. The project in which you defined your partial view support Razor Pages and references the Launcher package or project. 
+5. The project in which you defined your partial view support Razor Pages and references the Launcher package or project.
 

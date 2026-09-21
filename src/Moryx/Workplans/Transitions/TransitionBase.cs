@@ -77,11 +77,24 @@ public abstract class TransitionBase : ITransition
     /// <summary>
     /// Place a stored token on an output and remove it from <see cref="StoredTokens"/>
     /// </summary>
-    /// <returns>True if token was placed otherwise false</returns>
     protected void PlaceToken(IPlace output, IToken token)
     {
+        if (!StoredTokens.Contains(token))
+        {
+            throw new InvalidOperationException($"Token was not taken from input before placing on output. Call {nameof(TakeToken)} first or use {nameof(MoveToken)}.");
+        }
+
         output.Add(token);
         StoredTokens.Remove(token);
+    }
+
+    /// <summary>
+    /// Take token from input and place it on an output in a single operation
+    /// </summary>
+    protected void MoveToken(IPlace input, IPlace output, IToken token)
+    {
+        TakeToken(input, token);
+        PlaceToken(output, token);
     }
 
     /// <summary>

@@ -92,11 +92,11 @@ public abstract class AsyncStateBase : StateBase
     internal static async Task CreateAsync(Type stateBaseType, IAsyncStateContext context, int? initialKey, CancellationToken cancellationToken)
     {
         if (!typeof(AsyncStateBase).IsAssignableFrom(stateBaseType))
-            throw new InvalidOperationException($"Only states inherited from {nameof(AsyncStateBase)} are supported!");
+            throw new InvalidOperationException($"Only states inherited from {nameof(AsyncStateBase)} are supported.");
 
         var initialState = CreateMapAndGetInitial(stateBaseType, context, initialKey) as AsyncStateBase;
         if (initialState == null)
-            throw new ArgumentException($"Initial state does not inherit from {nameof(AsyncStateBase)}");
+            throw new ArgumentException($"Initial state does not inherit from {nameof(AsyncStateBase)}.");
 
         await context.SetStateAsync(initialState, cancellationToken);
         await initialState.OnEnterAsync(cancellationToken);

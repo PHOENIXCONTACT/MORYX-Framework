@@ -6,12 +6,11 @@
 import { ActionType } from "../../common/redux/Types";
 import ModulesRestClient from "../api/ModulesRestClient";
 import Config from "../models/Config";
-import { FailureBehaviour } from "../models/FailureBehaviour";
 import { ModuleServerModuleState } from "../models/ModuleServerModuleState";
 import { ModuleStartBehaviour } from "../models/ModuleStartBehaviour";
 import NotificationModel from "../models/NotificationModel";
 import ServerModuleModel from "../models/ServerModuleModel";
-import { UPDATE_FAILURE_BEHAVIOUR, UPDATE_HEALTHSTATE, UPDATE_MODULES, UPDATE_NOTIFICATIONS, UPDATE_START_BEHAVIOUR } from "./ModulesActions";
+import { UPDATE_HEALTHSTATE, UPDATE_MODULES, UPDATE_NOTIFICATIONS, UPDATE_START_BEHAVIOUR } from "./ModulesActions";
 
 export interface ModulesState {
   RestClient: ModulesRestClient;
@@ -53,10 +52,6 @@ export function getModulesReducer(state: ModulesState = initialModulesState, act
     case UPDATE_START_BEHAVIOUR: {
       const { moduleName, startBehaviour } = action.payload as { moduleName: string; startBehaviour: ModuleStartBehaviour };
       return updateModule(state, moduleName, { startBehaviour });
-    }
-    case UPDATE_FAILURE_BEHAVIOUR: {
-      const { moduleName, failureBehaviour } = action.payload as { moduleName: string; failureBehaviour: FailureBehaviour };
-      return updateModule(state, moduleName, { failureBehaviour });
     }
   }
   return state;

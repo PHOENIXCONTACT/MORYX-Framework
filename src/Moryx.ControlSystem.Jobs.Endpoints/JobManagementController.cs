@@ -1,8 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Concurrent;
-using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authorization;
@@ -24,7 +22,6 @@ public class JobManagementController : ControllerBase
 {
     private readonly IJobManagement _jobManagement;
 
-    private static readonly ConcurrentDictionary<Guid, Channel<string>> _jobStreamSubscribers = new();
     private static readonly JsonSerializerOptions _serializerOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -85,12 +82,14 @@ public class JobManagementController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task ProgressStream(CancellationToken cancellationToken)
     {
-        // Define event handlers using the broadcast helper
-        var progressEventHandler = new EventHandler<Job>((_, job) =>
-            Broadcast(job));
+        var channel = Channel.CreateUnbounded<string>();
 
-        var stateEventHandler = new EventHandler<JobStateChangedEventArgs>((_, e) =>
-            Broadcast(e.Job));
+        // Define event handlers using the broadcast helper
+        EventHandler<Job> progressEventHandler = (_, job) =>
+            Broadcast(job);
+
+        EventHandler<JobStateChangedEventArgs> stateEventHandler = (_, e) =>
+            Broadcast(e.Job);
 
         try
         {
@@ -114,32 +113,15 @@ public class JobManagementController : ControllerBase
 
         return;
 
-        async IAsyncEnumerable<string> Subscribe([EnumeratorCancellation] CancellationToken cancelToken)
+        IAsyncEnumerable<string> Subscribe(CancellationToken cancelToken)
         {
-            var channel = Channel.CreateUnbounded<string>();
-            var id = Guid.NewGuid();
-            _jobStreamSubscribers[id] = channel;
-
-            try
-            {
-                await foreach (var data in channel.Reader.ReadAllAsync(cancelToken))
-                {
-                    yield return data;
-                }
-            }
-            finally
-            {
-                _jobStreamSubscribers.TryRemove(id, out _);
-            }
+            return channel.Reader.ReadAllAsync(cancelToken);
         }
 
-        // Local helper to broadcast job updates to all connected clients
-        static void Broadcast(Job job)
+        // Local helper to push job updates to the client
+        void Broadcast(Job job)
         {
-            foreach (var channel in _jobStreamSubscribers.Values)
-            {
-                channel.Writer.TryWrite(JsonSerializer.Serialize(Converter.ToModel(job), _serializerOptions));
-            }
+            channel.Writer.TryWrite(JsonSerializer.Serialize(Converter.ToModel(job), _serializerOptions));
         }
     }
 }

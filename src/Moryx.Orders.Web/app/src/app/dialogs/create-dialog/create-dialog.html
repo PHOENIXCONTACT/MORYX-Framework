@@ -65,7 +65,8 @@
 
   <mat-form-field appearance="outline" class="full-width top-spaced" subscriptSizing="dynamic">
     <mat-label>{{ TranslationConstants.CREATE_DIALOG.AMOUNT | translate }}</mat-label>
-    <input type="number" matInput [(ngModel)]="amount" [disabled]="isLoading()"/>
+    <input type="number" min="0" (beforeinput)="blockNonDigitInput($event)" matInput [(ngModel)]="amount"
+      [disabled]="isLoading()" />
   </mat-form-field>
 
   @if (operations().length > 0) {

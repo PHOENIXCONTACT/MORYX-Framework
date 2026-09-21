@@ -151,6 +151,7 @@ public static partial class EntryConvert
         foreach (var prototype in customSerialization.Prototypes(memberType, customAttributeProvider))
         {
             var prototypeEntry = Prototype(prototype, customSerialization);
+            prototypeEntry.Identifier = prototype.Key;
             prototypeEntry.Validation = validation;
             prototypeEntry.Value.Possible = possibleElementValues;
             yield return prototypeEntry;
@@ -647,7 +648,7 @@ public static partial class EntryConvert
             }
             else
             {
-                throw new SerializationException($"Unsupported property {property.Name} on {instance.GetType().Name}!");
+                throw new SerializationException($"Unsupported property {property.Name} on {instance.GetType().Name}.");
             }
 
             // Write new value to property
@@ -766,7 +767,7 @@ public static partial class EntryConvert
         }
         else
         {
-            throw new InvalidOperationException($"Unsupported collection type {collectionType}");
+            throw new InvalidOperationException($"Unsupported collection type {collectionType}.");
         }
 
         return strategy;
@@ -800,7 +801,7 @@ public static partial class EntryConvert
             .FirstOrDefault(m => m.Name == methodEntry.Name && (m.IsPublic || m.IsAssembly) && ParametersProvided(m.GetParameters(), methodEntry));
         if (method == null)
         {
-            throw new MissingMethodException($"Method {methodEntry.Name} not found on target {target.GetType().Name}!");
+            throw new MissingMethodException($"Method {methodEntry.Name} not found on target {target.GetType().Name}.");
         }
 
         var arguments = ConvertArguments(method, methodEntry, customSerialization);

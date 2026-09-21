@@ -44,6 +44,7 @@ import {
 import { OrderManagementService } from "@api/services/order-management.service";
 import { ProductManagementService } from "@api/services/product-management.service";
 import { HttpErrorResponse } from "@angular/common/http";
+import { blockNonDigitInput } from '@app/dialogs/digit-input-helper';
 
 enum Action {
   AddCreate,
@@ -77,6 +78,7 @@ enum Action {
 })
 export class CreateDialog {
   protected TranslationConstants = TranslationConstants;
+  protected blockNonDigitInput =  blockNonDigitInput;
 
   private orderManagementService = inject(OrderManagementService);
   private productManagementService = inject(ProductManagementService);

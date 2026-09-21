@@ -8,15 +8,13 @@ import Tabs from "@mui/material/Tabs";
 import * as React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router";
-import { FailureBehaviour } from "../../modules/models/FailureBehaviour";
 import { ModuleStartBehaviour } from "../../modules/models/ModuleStartBehaviour";
-import { updateFailureBehaviour, updateStartBehaviour } from "../../modules/redux/ModulesActions";
+import { updateStartBehaviour } from "../../modules/redux/ModulesActions";
 import { ActionType } from "../redux/Types";
 
 const mapDispatchToProps = (dispatch: React.Dispatch<ActionType<{}>>): ModuleDispatchPropModel => {
   return {
     onUpdateStartBehaviour: (moduleName: string, startBehaviour: ModuleStartBehaviour) => dispatch(updateStartBehaviour(moduleName, startBehaviour)),
-    onUpdateFailureBehaviour: (moduleName: string, failureBehaviour: FailureBehaviour) => dispatch(updateFailureBehaviour(moduleName, failureBehaviour)),
   };
 };
 
@@ -43,8 +41,6 @@ export class ModuleHeader extends React.Component<ModuleHeaderPropModel & Module
 
 interface ModuleDispatchPropModel {
   onUpdateStartBehaviour?(moduleName: string, startBehaviour: ModuleStartBehaviour): void;
-
-  onUpdateFailureBehaviour?(moduleName: string, failureBehaviour: FailureBehaviour): void;
 }
 
 export default connect<{}, ModuleDispatchPropModel>(null, mapDispatchToProps)(ModuleHeader);

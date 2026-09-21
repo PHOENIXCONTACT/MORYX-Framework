@@ -9,7 +9,10 @@ namespace Moryx.Runtime.Modules;
 public interface IModuleManager
 {
     /// <summary>
-    /// Start all modules in cascading order
+    /// Initiates the start of all modules in dependency order.
+    /// Module starts are executed in the background and this method returns
+    /// before all modules have reached the running state. Use <see cref="ModuleStateChanged"/>
+    /// to observe when individual modules have started.
     /// </summary>
     Task StartModulesAsync(CancellationToken cancellationToken = default);
 

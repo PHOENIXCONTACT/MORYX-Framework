@@ -8,6 +8,7 @@ namespace Moryx.AbstractionLayer.TestTools;
 /// <summary>
 /// Dummy implementation of a <see cref="ProductType"/>
 /// </summary>
+#pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
 public class DummyProductType : ProductType
 {
     /// <inheritdoc />
@@ -15,13 +16,14 @@ public class DummyProductType : ProductType
     {
         return new DummyProductInstance();
     }
-    /// <inheritdoc/>
 
+    /// <inheritdoc/>
     public override bool Equals(object obj)
     {
-        var toCompareWith = obj as DummyProductType;
-        if (toCompareWith == null)
+        if (obj is not DummyProductType toCompareWith)
+        {
             return false;
+        }
 
         return toCompareWith.Id == Id && toCompareWith.Name == Name && toCompareWith.State == State
                && ((toCompareWith.Identity is null && Identity is null) || toCompareWith.Identity.Equals(Identity));
@@ -52,14 +54,15 @@ public class DummyProductTypeWithParts : DummyProductType
     /// <inheritdoc/>
     public override bool Equals(object obj)
     {
-        var toCompareWith = obj as DummyProductTypeWithParts;
-        if (toCompareWith == null)
+        if (obj is not DummyProductTypeWithParts toCompareWith)
+        {
             return false;
+        }
 
-        return base.Equals(toCompareWith) &&
-               ((toCompareWith.ProductPartLink is null && ProductPartLink is null) ||
-                toCompareWith.ProductPartLink.Equals(ProductPartLink))
-               && ((toCompareWith.ProductPartLinkEnumerable is null && ProductPartLinkEnumerable is null) ||
-                   Enumerable.SequenceEqual<DummyProductPartLink>(toCompareWith.ProductPartLinkEnumerable, ProductPartLinkEnumerable));
+        return base.Equals(toCompareWith)
+            && ((toCompareWith.ProductPartLink is null && ProductPartLink is null)
+            || toCompareWith.ProductPartLink.Equals(ProductPartLink))
+            && ((toCompareWith.ProductPartLinkEnumerable is null && ProductPartLinkEnumerable is null)
+            || Enumerable.SequenceEqual(toCompareWith.ProductPartLinkEnumerable, ProductPartLinkEnumerable));
     }
 }

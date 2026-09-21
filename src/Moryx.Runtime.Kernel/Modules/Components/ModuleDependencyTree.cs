@@ -5,9 +5,9 @@ using Moryx.Runtime.Modules;
 
 namespace Moryx.Runtime.Kernel;
 
-internal class PluginDependencyTree : IModuleDependencyTree
+internal class ModuleDependencyTree : IModuleDependencyTree
 {
-    public PluginDependencyTree(IReadOnlyList<IModuleDependency> roots)
+    public ModuleDependencyTree(IReadOnlyList<IModuleDependency> roots)
     {
         RootModules = roots;
     }
@@ -23,11 +23,12 @@ internal class ModuleDependencyBranch : IModuleDependency
     }
 
     /// <summary>
-    /// Plugin represented by this entry in the dependency tree
+    /// Module represented by this entry in the dependency tree
     /// </summary>
     public IServerModule RepresentedModule { get; }
 
     public List<IModuleDependency> Dependencies { get; set; } = [];
+
     /// <summary>
     /// All modules this module depends on
     /// </summary>
@@ -36,9 +37,10 @@ internal class ModuleDependencyBranch : IModuleDependency
     /// <summary>
     /// All modules that depend on this module
     /// </summary>
-    public List<IModuleDependency> Dependends { get; set; } = [];
+    public List<IModuleDependency> Dependents { get; set; } = [];
+
     /// <summary>
     /// All modules that depend on this module
     /// </summary>
-    IReadOnlyList<IModuleDependency> IModuleDependency.Dependents => Dependends;
+    IReadOnlyList<IModuleDependency> IModuleDependency.Dependents => Dependents;
 }

@@ -48,6 +48,6 @@ public class RecipeReference : IRecipe
     /// <inheritdoc />
     public IRecipe Clone()
     {
-        throw new InvalidOperationException($"{nameof(RecipeReference)} cannot be cloned!");
+        throw new InvalidOperationException($"{nameof(RecipeReference)} cannot be cloned.");
     }
 }

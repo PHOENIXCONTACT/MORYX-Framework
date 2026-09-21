@@ -22,7 +22,7 @@ internal abstract class DriverMqttState : SyncDriverState<MqttDriver>
 
     internal virtual Task SendAsync(MqttTopic topic, object message, CancellationToken cancellationToken)
     {
-        throw new InvalidOperationException($"Current state {GetType().Name} can net send message of type {message.GetType().Name}");
+        throw new InvalidOperationException($"Current state {GetType().Name} can net send message of type {message.GetType().Name}.");
     }
 
     internal virtual void TriedConnecting(bool successful)
