@@ -1,0 +1,53 @@
+{
+  "APP": {
+    "RESOURCES": "Zasoby",
+    "NO_NAME": "Brak nazwy zasobu"
+  },
+  "SHARED": {
+    "DELETE": "Usuń",
+    "EDIT": "Edytuj",
+    "SAVE": "Zapisz",
+    "ID": "Id",
+    "TYPE": "Typ",
+    "NAME": "Nazwa",
+    "DESCRIPTION": "Opis",
+    "INTERNAL": "Wewnętrzny",
+    "CANCEL": "Anuluj",
+    "CREATE": "UTWÓRZ",
+    "ADD": "Dodaj zasób",
+    "ADD_CHILD": "Dodaj zasób podrzędny",
+    "RELOAD": "Odśwież",
+    "NEXT": "Dalej"
+  },
+  "ADD_RESOURCE_DIALOG": {
+    "TITLE": "Który typ zasobu chcesz utworzyć?"
+  },
+  "DEFAULT_VIEW": {
+    "FAILED_LOADING": "Nie można załadować zasobu.",
+    "NOT_FOUND": "Żądany zasób nie istnieje.",
+    "EMPTY_STATE_HEADER": "Brak zasobu",
+    "EMPTY_STATE_TEXT": "Wybierz zasób z listy lub dodaj nowy poprzez kliknięcie ikony plusa."
+  },
+  "DETAILS": {
+    "PROPERTIES_TAB_TITLE": "Właściwości",
+    "REFERENCES_TAB_TITLE": "Referencje",
+    "METHODS_TAB_TITLE": "Metody",
+    "REFERENCES": {
+      "LINKED_RESOURCE": "Powiązany zasób",
+      "PLACEHOLDER": "Wybierz dostępny zasób do dodania jako referencja",
+      "NO_TARGET": "Nie wybrano celu."
+    },
+    "METHODS": {
+      "WAS_INVOKED": "Metoda została wywołana.",
+      "INVOKE": "WYWOŁAJ",
+      "REPEAT": "POWTÓRZ",
+      "CLEAR": "WYCZYŚĆ"
+    }
+  },
+  "REMOVE_RESOURCE_DIALOG": {
+    "TITLE": "Usuń zasób",
+    "SUB_TITLE": "Zasób zostanie permamentnie usunięty:",
+    "CANCEL": "ANULUJ",
+    "REMOVE": "USUŃ"
+  }
+}
