@@ -29,6 +29,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MarkdownComponent } from "ngx-markdown";
 import { InstructionStateService } from '@app/services/instruction-state.service';
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { FocusMode } from '@app/services/focus-mode';
 
 @Component({
@@ -45,7 +46,8 @@ import { FocusMode } from '@app/services/focus-mode';
     TranslatePipe,
     MatButtonModule,
     MatIconModule,
-    MarkdownComponent
+    MarkdownComponent,
+    MatProgressSpinnerModule,
   ]
 })
 export class WorkerInstructions {
@@ -63,6 +65,7 @@ export class WorkerInstructions {
   protected displayedInstruction = signal<InstructionModel | undefined>(undefined);
   protected mediaItemsContent = signal<DisplayedMediaContent[]>([]);
   protected textItems = signal<InstructionItemModel[]>([]);
+  protected readonly connected = this.instructionService.connected;
 
   protected possibleInstructionResults = computed(() => {
     const instruction = this.displayedInstruction();

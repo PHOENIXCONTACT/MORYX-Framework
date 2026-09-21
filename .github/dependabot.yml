@@ -42,6 +42,8 @@ updates:
           - "version-update:semver-patch"
       - dependency-name: "typescript" # Not supported by Angular 22 until https://github.com/angular/angular/issues/69719
         versions: [">=7"]
+      - dependency-name: "vitest" # Blocked by @angular/build peer dependency on vitest ^4
+        versions: [">=5"]
     groups:
       npm-major:
         update-types: ["major"]
@@ -64,6 +66,8 @@ updates:
           - "version-update:semver-patch"
       - dependency-name: "typescript" # Not supported by Angular 22 until https://github.com/angular/angular/issues/69719
         versions: [">=7"]
+      - dependency-name: "vitest" # Blocked by @angular/build peer dependency on vitest ^4
+        versions: [">=5"]
     groups:
       npm-major:
         update-types: ["major"]
@@ -86,6 +90,8 @@ updates:
           - "version-update:semver-patch"
       - dependency-name: "typescript" # Not supported by Angular 22 until https://github.com/angular/angular/issues/69719
         versions: [">=7"]
+      - dependency-name: "vitest" # Blocked by @angular/build peer dependency on vitest ^4
+        versions: [">=5"]
     groups:
       npm-major:
         update-types: ["major"]
@@ -108,6 +114,8 @@ updates:
           - "version-update:semver-patch"
       - dependency-name: "typescript" # Not supported by Angular 22 until https://github.com/angular/angular/issues/69719
         versions: [">=7"]
+      - dependency-name: "vitest" # Blocked by @angular/build peer dependency on vitest ^4
+        versions: [">=5"]
     groups:
       npm-major:
         update-types: ["major"]
@@ -130,6 +138,8 @@ updates:
           - "version-update:semver-patch"
       - dependency-name: "typescript" # Not supported by Angular 22 until https://github.com/angular/angular/issues/69719
         versions: [">=7"]
+      - dependency-name: "vitest" # Blocked by @angular/build peer dependency on vitest ^4
+        versions: [">=5"]
     groups:
       npm-major:
         update-types: ["major"]
@@ -152,6 +162,8 @@ updates:
           - "version-update:semver-patch"
       - dependency-name: "typescript" # Not supported by Angular 22 until https://github.com/angular/angular/issues/69719
         versions: [">=7"]
+      - dependency-name: "vitest" # Blocked by @angular/build peer dependency on vitest ^4
+        versions: [">=5"]
     groups:
       npm-major:
         update-types: ["major"]
@@ -174,6 +186,8 @@ updates:
           - "version-update:semver-patch"
       - dependency-name: "typescript" # Not supported by Angular 22 until https://github.com/angular/angular/issues/69719
         versions: [">=7"]
+      - dependency-name: "vitest" # Blocked by @angular/build peer dependency on vitest ^4
+        versions: [">=5"]
     groups:
       npm-major:
         update-types: ["major"]
@@ -196,6 +210,8 @@ updates:
           - "version-update:semver-patch"
       - dependency-name: "typescript" # Not supported by Angular 22 until https://github.com/angular/angular/issues/69719
         versions: [">=7"]
+      - dependency-name: "vitest" # Blocked by @angular/build peer dependency on vitest ^4
+        versions: [">=5"]
     groups:
       npm-major:
         update-types: ["major"]
@@ -218,6 +234,8 @@ updates:
           - "version-update:semver-patch"
       - dependency-name: "typescript" # Not supported by Angular 22 until https://github.com/angular/angular/issues/69719
         versions: [">=7"]
+      - dependency-name: "vitest" # Blocked by @angular/build peer dependency on vitest ^4
+        versions: [">=5"]
     groups:
       npm-major:
         update-types: ["major"]
@@ -240,6 +258,8 @@ updates:
           - "version-update:semver-patch"
       - dependency-name: "typescript" # Not supported by Angular 22 until https://github.com/angular/angular/issues/69719
         versions: [">=7"]
+      - dependency-name: "vitest" # Blocked by @angular/build peer dependency on vitest ^4
+        versions: [">=5"]
     groups:
       npm-major:
         update-types: ["major"]
@@ -262,6 +282,8 @@ updates:
           - "version-update:semver-patch"
       - dependency-name: "typescript" # Not supported by Angular 22 until https://github.com/angular/angular/issues/69719
         versions: [">=7"]
+      - dependency-name: "vitest" # Blocked by @angular/build peer dependency on vitest ^4
+        versions: [">=5"]
     groups:
       npm-major:
         update-types: ["major"]
@@ -284,6 +306,8 @@ updates:
           - "version-update:semver-patch"
       - dependency-name: "typescript" # Not supported by Angular 22 until https://github.com/angular/angular/issues/69719
         versions: [">=7"]
+      - dependency-name: "vitest" # Blocked by @angular/build peer dependency on vitest ^4
+        versions: [">=5"]
     groups:
       npm-major:
         update-types: ["major"]
