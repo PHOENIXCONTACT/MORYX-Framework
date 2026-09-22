@@ -58,7 +58,16 @@ public class PossibleValuesSerialization : DefaultSerialization
     }
 
     /// <see cref="T:Moryx.Serialization.ICustomSerialization"/>
-    public override EntryPossible[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider)
+    public override EntryPossible[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider) => PossibleValues(memberType, attributeProvider, null);
+
+    /// <summary>
+    /// Extended method for <see cref="PossibleValuesAttribute.GetValues(IContainer, IServiceProvider)"/>
+    /// </summary>
+    /// <param name="memberType">current property</param>
+    /// <param name="attributeProvider">attribute provider</param>
+    /// <param name="instance">current instance of the class</param>
+    /// <returns></returns>
+    public virtual EntryPossible[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider, object instance = null)
     {
         var possibleValuesAttribute = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
         // Possible values for primitive collections only apply to members
@@ -66,7 +75,21 @@ public class PossibleValuesSerialization : DefaultSerialization
             return base.PossibleValues(memberType, attributeProvider);
 
         // Use attribute
-        var values = possibleValuesAttribute.GetValues(Container, ServiceProvider);
+        return GetEntryPossibles(possibleValuesAttribute, instance);
+    }
+
+    private EntryPossible[] GetEntryPossibles(PossibleValuesAttribute possibleValuesAttribute, object instance = null)
+    {
+        IEnumerable<string> values;
+        if (possibleValuesAttribute.RequiresPossibleValuesContext)
+        {
+            var context = new PossibleValuesContext(instance, new Dictionary<object, object>(), ServiceProvider, Container);
+            values = possibleValuesAttribute.GetValues(context);
+        }
+        else
+        {
+            values = possibleValuesAttribute.GetValues(Container, ServiceProvider);
+        }
         return EntryPossible.FromStrings(values?.Distinct());
     }
 
@@ -92,8 +115,7 @@ public class PossibleValuesSerialization : DefaultSerialization
         }
 
         // Use attribute
-        var values = valuesAttribute.GetValues(Container, ServiceProvider);
-        return EntryPossible.FromStrings(values?.Distinct());
+        return GetEntryPossibles(valuesAttribute);
     }
 
     /// <see cref="T:Moryx.Serialization.ICustomSerialization"/>
