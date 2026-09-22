@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Threading;
+using Moryx.Configuration;
 using Moryx.Serialization;
 using NUnit.Framework;
 
@@ -296,6 +297,37 @@ public class EntryConvertSerializationTests
             Assert.That(nullableValidation.IsRequired, Is.False, "Nullable parameter should not be required");
             Assert.That(defaultValueValidation.IsRequired, Is.False, "Default value shuold not be required");
         });
+    }
+
+    [Test]
+    public void ShouldProvidePossibleRuntime_ValueUsingProvidedSource()
+    {
+        //Arrange
+        var myObject = new RuntimeValuesClass
+        {
+            AllowedValues = ["a", "b", "c"]
+        };
+        var serialization = new RuntimePossibleValuesSerialization(null, null, new ValueProviderExecutor(new ValueProviderExecutorSettings()));
+
+        // Act
+        var converted = EntryConvert.EncodeObject(myObject, serialization);
+
+        //Assert
+        Assert.That(converted.SubEntries.First(x => x.Identifier == nameof(RuntimeValuesClass.SelectedValue)).Value.Possible.Length, Is.EqualTo(3));
+    }
+
+    [Test]
+    public void ShouldProvideEmptyPossibleRuntime_PropertyUsingProvidedSource()
+    {
+        //Arrange
+
+        var serialization = new RuntimePossibleValuesSerialization(null, null, new ValueProviderExecutor(new ValueProviderExecutorSettings()));
+
+        // Act
+        var converted = EntryConvert.EncodeClass(typeof(RuntimeValuesClass), serialization);
+
+        //Assert
+        Assert.That(converted.SubEntries.First(x => x.Identifier == nameof(RuntimeValuesClass.SelectedValue)).Value.Possible.Length, Is.EqualTo(0));
     }
 
 }

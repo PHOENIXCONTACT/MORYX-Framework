@@ -10,11 +10,6 @@ namespace Moryx.Serialization.PossibleValues;
 /// </summary>
 public abstract class RuntimePossibleValuesAttribute : PossibleValuesAttribute
 {
-    /// <summary>
-    /// Name of the property to use as values source in the current class
-    /// </summary>
-    public string Source { get; set; }
-
     /// <inheritdoc/>
     public override IEnumerable<string> GetValues(IContainer localContainer, IServiceProvider serviceProvider)
     {
@@ -30,7 +25,7 @@ public abstract class RuntimePossibleValuesAttribute : PossibleValuesAttribute
     /// <summary>
     /// Parse value from string using local or global DI container
     /// </summary>
-    /// <param name="instance">instance of the class in which the <see cref="Source"/> exist</param>
+    /// <param name="instance">instance of the class in which the attribute was used</param>
     /// <param name="container">Module local DI container</param>
     /// <param name="serviceProvider">Global service registration</param>
     /// <param name="value">Value to parse</param>
@@ -39,7 +34,7 @@ public abstract class RuntimePossibleValuesAttribute : PossibleValuesAttribute
     /// <summary>
     /// Extract possible values from the <paramref name="instance"/> or local or global DI registration
     /// </summary>
-    /// <param name="instance">instance of the class in which the <see cref="Source"/> exist</param>
+    /// <param name="instance">instance of the class in which the attribute was used</param>
     /// <param name="localContainer">Module local DI container</param>
     /// <param name="serviceProvider">Global service registration</param>
 

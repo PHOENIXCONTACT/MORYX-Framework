@@ -5,6 +5,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.Serialization;
+using Moryx.Configuration;
 using Moryx.Tools;
 
 namespace Moryx.Serialization;
@@ -68,14 +69,14 @@ public static partial class EntryConvert
     /// <returns>Converted property</returns>
     public static Entry EncodeProperty(PropertyInfo property)
     {
-        return EncodeProperty(property, _serialization);
+        return EncodeProperty(property, _serialization, null);
     }
 
     /// <summary>
     /// Convert a single property into a derived type of entry using a custom strategy
     /// </summary>
     /// <returns>Converted property</returns>
-    public static Entry EncodeProperty(PropertyInfo property, ICustomSerialization customSerialization)
+    public static Entry EncodeProperty(PropertyInfo property, ICustomSerialization customSerialization, object? instance = null)
     {
         // Fill with default if entry is null
         var entry = new Entry
@@ -83,7 +84,7 @@ public static partial class EntryConvert
             DisplayName = property.GetDisplayName() ?? property.Name,
             Identifier = property.Name,
             Description = property.GetDescription(),
-            Value = CreateEntryValue(property, customSerialization),
+            Value = CreateEntryValue(property, customSerialization, instance),
             Validation = customSerialization.CreateValidation(property.PropertyType, property)
         };
 
@@ -92,14 +93,14 @@ public static partial class EntryConvert
             return entry;
 
         // Determine and convert prototypes
-        var prototypes = Prototypes(property.PropertyType, property, customSerialization);
+        var prototypes = Prototypes(property.PropertyType, property, customSerialization, instance);
         entry.Prototypes.AddRange(prototypes);
 
         return entry;
     }
 
     /// <see cref="ICustomSerialization"/>
-    private static EntryValue CreateEntryValue(PropertyInfo property, ICustomSerialization customSerialization)
+    private static EntryValue CreateEntryValue(PropertyInfo property, ICustomSerialization customSerialization, object? instance = null)
     {
         // Set if the current entry is readonly by checking if the property has a setter
         // or the ReadOnlyAttribute was set to true
@@ -111,12 +112,13 @@ public static partial class EntryConvert
         }
 
         // Prepare object
+        var possible = customSerialization is RuntimePossibleValuesSerialization run ? run.PossibleValues(instance, property.PropertyType, property) : customSerialization.PossibleValues(property.PropertyType, property);
         var entryValue = new EntryValue
         {
             Type = TransformType(property.PropertyType),
             UnitType = customSerialization.GetUnitTypeByAttributes(property),
             IsReadOnly = isReadOnly,
-            Possible = customSerialization.PossibleValues(property.PropertyType, property)
+            Possible = possible
         };
 
         // Get most basic default
@@ -141,11 +143,18 @@ public static partial class EntryConvert
     /// <summary>
     /// Create prototypes for possible values of an entry
     /// </summary>
-    private static IEnumerable<Entry> Prototypes(Type memberType, ICustomAttributeProvider customAttributeProvider, ICustomSerialization customSerialization)
+    private static IEnumerable<Entry> Prototypes(Type memberType, ICustomAttributeProvider customAttributeProvider, ICustomSerialization customSerialization, object instance)
     {
-        var possibleElementValues = IsCollection(memberType)
-            ? customSerialization.PossibleElementValues(memberType, customAttributeProvider)
-            : customSerialization.PossibleValues(memberType, customAttributeProvider);
+        EntryPossible[] possibleElementValues;
+        if (IsCollection(memberType))
+        {
+            possibleElementValues = customSerialization.PossibleElementValues(memberType, customAttributeProvider);
+        }
+        else
+        {
+            possibleElementValues = customSerialization is RuntimePossibleValuesSerialization run ? run.PossibleValues(instance, memberType, customAttributeProvider) : customSerialization.PossibleValues(memberType, customAttributeProvider);
+        }
+
         var validation = customSerialization.CreateValidation(memberType, customAttributeProvider);
 
         foreach (var prototype in customSerialization.Prototypes(memberType, customAttributeProvider))
@@ -214,7 +223,7 @@ public static partial class EntryConvert
         var filtered = customSerialization.GetProperties(objType);
         foreach (var property in filtered)
         {
-            var converted = EncodeProperty(property, customSerialization);
+            var converted = EncodeProperty(property, customSerialization, null);
             // Assign default to current
             var value = converted.Value;
             value.Current = ConvertToString(value.Default, customSerialization.FormatProvider);
@@ -293,7 +302,7 @@ public static partial class EntryConvert
             if (propertyType == instanceType)
                 continue;
 
-            var convertedProperty = EncodeProperty(property, customSerialization);
+            var convertedProperty = EncodeProperty(property, customSerialization, instance);
 
             object value;
             try
@@ -511,13 +520,13 @@ public static partial class EntryConvert
         {
             case EntryValueType.Class:
                 parameterModel.Value.Current = parameterType.Name;
-                parameterModel.Prototypes.AddRange(Prototypes(parameterType, parameter, serialization));
+                parameterModel.Prototypes.AddRange(Prototypes(parameterType, parameter, serialization, null));
                 parameterModel.SubEntries = EncodeClass(parameterType, serialization).SubEntries;
                 break;
             case EntryValueType.Collection:
                 var elemType = ElementType(parameterType);
                 parameterModel.Value.Current = elemType.Name;
-                parameterModel.Prototypes.AddRange(Prototypes(parameterType, parameter, serialization));
+                parameterModel.Prototypes.AddRange(Prototypes(parameterType, parameter, serialization, null));
                 break;
         }
 
@@ -582,10 +591,10 @@ public static partial class EntryConvert
     {
         // Retrieve the most specific constructor matched by the encoded method entry
         var constructor = (from ctor in type.GetConstructors()
-            let parameters = ctor.GetParameters()
-            where parameters.Length == encodedConstructor.Parameters.SubEntries.Count
-                  && ParametersProvided(parameters, encodedConstructor)
-            select ctor).First();
+                           let parameters = ctor.GetParameters()
+                           where parameters.Length == encodedConstructor.Parameters.SubEntries.Count
+                                 && ParametersProvided(parameters, encodedConstructor)
+                           select ctor).First();
         var arguments = ConvertArguments(constructor, encodedConstructor, customSerialization);
         var instance = constructor.Invoke(arguments);
         return instance;
