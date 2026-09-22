@@ -17,4 +17,10 @@ public class UsersConfig
     /// </summary>
     [DataMember, Description("Flag if users are required")]
     public bool UserRequired { get; set; }
+
+    /// <summary>
+    /// Ignores existence and signin status of a user attached to actions
+    /// </summary>
+    [DataMember, Description("Ignores sign-in status of a user attached to actions")]
+    public bool IgnoreUserStatus { get; set; }
 }
