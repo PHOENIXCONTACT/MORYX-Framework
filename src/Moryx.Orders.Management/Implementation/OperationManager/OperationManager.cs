@@ -106,7 +106,7 @@ internal class OperationManager : IOperationManager, ILoggingComponent
     /// <inheritdoc />
     public Task Adjust(IOperationData operationData, User user, int amount)
     {
-        if (!user.SignedIn)
+        if (!ModuleConfig.Users.IgnoreUserStatus && !user.SignedIn)
         {
             throw new InvalidOperationException("User for the begin of the operation was not signed in.");
         }
