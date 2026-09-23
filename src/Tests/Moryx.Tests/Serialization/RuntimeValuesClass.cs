@@ -10,7 +10,7 @@ public class RuntimeValuesClass
 {
     public List<string> AllowedValues { get; set; }
 
-    [StringListPossibleValue(Source = nameof(AllowedValues))]
+    [StringListPossibleValue]
     public string SelectedValue { get; set; }
 }
 
@@ -22,19 +22,13 @@ public class StringListPossibleValueAttribute : RuntimePossibleValuesAttribute
 
     public override IEnumerable<string> GetValues(object instance, IContainer localContainer, IServiceProvider serviceProvider)
     {
-        var sourceProperty = instance?.GetType().GetProperty(Source);
 
-        if (sourceProperty is null)
+        if (instance is not RuntimeValuesClass value)
         {
             return [];
         }
 
-        var possible = sourceProperty.GetValue(instance, null);
-        if (possible is null)
-        {
-            return [];
-        }
-        return possible as IEnumerable<string>;
+        return value.AllowedValues;
     }
 
     public override object Parse(object instance, IContainer container, IServiceProvider serviceProvider, string value)

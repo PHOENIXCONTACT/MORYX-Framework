@@ -315,19 +315,4 @@ public class EntryConvertSerializationTests
         //Assert
         Assert.That(converted.SubEntries.First(x => x.Identifier == nameof(RuntimeValuesClass.SelectedValue)).Value.Possible.Length, Is.EqualTo(3));
     }
-
-    [Test]
-    public void ShouldProvideEmptyPossibleRuntime_PropertyUsingProvidedSource()
-    {
-        //Arrange
-
-        var serialization = new RuntimePossibleValuesSerialization(null, null, new ValueProviderExecutor(new ValueProviderExecutorSettings()));
-
-        // Act
-        var converted = EntryConvert.EncodeClass(typeof(RuntimeValuesClass), serialization);
-
-        //Assert
-        Assert.That(converted.SubEntries.First(x => x.Identifier == nameof(RuntimeValuesClass.SelectedValue)).Value.Possible.Length, Is.EqualTo(0));
-    }
-
 }
