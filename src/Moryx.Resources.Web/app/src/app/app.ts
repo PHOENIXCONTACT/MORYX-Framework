@@ -12,7 +12,7 @@ import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { TranslatePipe } from '@ngx-translate/core';
 import { environment } from '../environments/environment';
 import { ResourceModel, ResourceReferenceModel } from './api/models';
-import { ResourceModificationService } from './api/services';
+import { ResourceManagementService } from './api/services';
 import { DialogAddResource } from './dialogs/dialog-add-resource/dialog-add-resource';
 import { ResourceConstructionParameters } from './models/ResourceConstructionParameters';
 import './extensions/array.extensions';
@@ -60,7 +60,7 @@ export class App {
   private dialog = inject(MatDialog);
   private cacheResourceService = inject(CacheResourceService);
   private editResourceService = inject(EditResourceService);
-  private modificationService = inject(ResourceModificationService);
+  private managementService = inject(ResourceManagementService);
   private snackbarService = inject(SnackbarService);
 
   private readonly trigger = viewChild.required(MatMenuTrigger);
@@ -136,7 +136,7 @@ export class App {
       if (!result) {
         return;
       }
-      const constructed = await this.modificationService
+      const constructed = await this.managementService
         .constructWithParameters({
           type: result.name,
           method: result.method?.name,
@@ -187,7 +187,7 @@ export class App {
       }
 
       const actualResource = resourceToBeDeleted;
-      this.modificationService
+      this.managementService
         .remove$Response({id: actualResource.id})
         .then(async () => this.removeResource(actualResource))
         .catch(error => this.snackbarService.handleError(error));

@@ -33,7 +33,7 @@ public static class HostExtensions
         "Moryx.Resources.CanViewTree",
         "Moryx.Resources.CanViewDetails",
         "Moryx.Resources.CanEdit",
-        "Moryx.Resources.CanAddResource",
+        "Moryx.Resources.CanViewTypeTree",
         "Moryx.Resources.CanAdd",
         "Moryx.Resources.CanDelete",
         "Moryx.Resources.CanInvokeMethod",

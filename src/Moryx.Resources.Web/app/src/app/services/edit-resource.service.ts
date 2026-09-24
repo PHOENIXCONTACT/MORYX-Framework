@@ -6,7 +6,7 @@
 import { inject, Injectable, signal } from '@angular/core';
 
 import { ResourceModel } from '../api/models';
-import { ResourceModificationService } from '../api/services';
+import { ResourceManagementService } from '../api/services';
 import { StrictHttpResponse } from '@api/strict-http-response';
 import { CacheResourceService } from './cache-resource.service';
 import { ResourceStorageDetails, ResourceStorageObject, SessionService } from './session.service';
@@ -23,7 +23,7 @@ import { PrototypeToEntryConverter } from '@moryx/ngx-web-framework/entry-editor
   providedIn: 'root',
 })
 export class EditResourceService {
-  private readonly resourceModificationService = inject(ResourceModificationService);
+  private readonly resourceManagementService = inject(ResourceManagementService);
   private readonly cacheResourceService = inject(CacheResourceService);
   private readonly sessionService = inject(SessionService);
   private readonly snackbarService = inject(SnackbarService);
@@ -99,11 +99,11 @@ export class EditResourceService {
     }
 
     if (this.editingUnsavedResource) {
-      await this.resourceModificationService.save$Response({body: resourceModel})
+      await this.resourceManagementService.save$Response({body: resourceModel})
         .then(response => this.handleSaveResponse(response))
         .catch(e => this.snackbarService.handleError(e));
     } else {
-      await this.resourceModificationService.update$Response({id: resourceModel.id!, body: resourceModel})
+      await this.resourceManagementService.update$Response({id: resourceModel.id!, body: resourceModel})
         .then(response => this.handleUpdateResponse(response))
         .catch(e => this.snackbarService.handleError(e));
     }
@@ -133,7 +133,7 @@ export class EditResourceService {
     }
     this._editing.set(false);
     try {
-      const resource = await this.resourceModificationService.getDetails({id: resourceId});
+      const resource = await this.resourceManagementService.getDetails({id: resourceId});
       this._activeResource.set(resource);
     }
     catch (e) {

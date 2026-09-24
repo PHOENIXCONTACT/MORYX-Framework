@@ -7,7 +7,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { ReferenceValue, ResourceModel, ResourceTypeModel } from '../api/models';
-import { ResourceModificationService } from '../api/services';
+import { ResourceManagementService } from '../api/services';
 import { TranslationConstants } from '../translation-constants';
 
 
@@ -19,7 +19,7 @@ import { TranslationConstants } from '../translation-constants';
   providedIn: 'root',
 })
 export class CacheResourceService {
-  private resourceModificationService = inject(ResourceModificationService);
+  private resourceManagementService = inject(ResourceManagementService);
   private snackbarService = inject(SnackbarService);
 
   TranslationConstants = TranslationConstants;
@@ -76,7 +76,7 @@ export class CacheResourceService {
   }
 
   async loadResources() {
-    await this.resourceModificationService
+    await this.resourceManagementService
       .getTypeTree()
       .then(rootType => {
         this.rootType = rootType;
@@ -85,7 +85,7 @@ export class CacheResourceService {
       })
       .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err));
 
-    await this.resourceModificationService
+    await this.resourceManagementService
       .getResources({
         body: {
           referenceCondition: {

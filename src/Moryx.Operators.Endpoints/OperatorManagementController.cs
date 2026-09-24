@@ -19,7 +19,6 @@ namespace Moryx.Operators.Endpoints;
 
 /// <summary>
 /// Definition of a REST API on the <see cref="IOperatorManagement"/> facade.
-/// TODO: Remove unused resourceManagement paramter in next major
 /// </summary>
 [ApiController]
 [Route("api/moryx/operators/")]
@@ -27,7 +26,6 @@ namespace Moryx.Operators.Endpoints;
 public class OperatorManagementController(
     IOperatorManagement operatorManagement,
     IAttendanceManagement attendanceManagement,
-    IResourceManagement resourceManagement,
     ISkillManagement skillManagement) : ControllerBase
 {
     private const string SignInStatusChangedEventType = "signInChanged";

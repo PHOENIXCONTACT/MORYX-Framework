@@ -16,29 +16,29 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
-import { constructWithParameters } from '../fn/resource-modification/construct-with-parameters';
-import { ConstructWithParameters$Params } from '../fn/resource-modification/construct-with-parameters';
-import { getDetails } from '../fn/resource-modification/get-details';
-import { GetDetails$Params } from '../fn/resource-modification/get-details';
-import { getDetailsBatch } from '../fn/resource-modification/get-details-batch';
-import { GetDetailsBatch$Params } from '../fn/resource-modification/get-details-batch';
-import { getResources } from '../fn/resource-modification/get-resources';
-import { GetResources$Params } from '../fn/resource-modification/get-resources';
-import { getTypeTree } from '../fn/resource-modification/get-type-tree';
-import { GetTypeTree$Params } from '../fn/resource-modification/get-type-tree';
-import { invokeMethod } from '../fn/resource-modification/invoke-method';
-import { InvokeMethod$Params } from '../fn/resource-modification/invoke-method';
-import { remove } from '../fn/resource-modification/remove';
-import { Remove$Params } from '../fn/resource-modification/remove';
+import { constructWithParameters } from '../fn/resource-management/construct-with-parameters';
+import { ConstructWithParameters$Params } from '../fn/resource-management/construct-with-parameters';
+import { getDetails } from '../fn/resource-management/get-details';
+import { GetDetails$Params } from '../fn/resource-management/get-details';
+import { getDetailsBatch } from '../fn/resource-management/get-details-batch';
+import { GetDetailsBatch$Params } from '../fn/resource-management/get-details-batch';
+import { getResources } from '../fn/resource-management/get-resources';
+import { GetResources$Params } from '../fn/resource-management/get-resources';
+import { getTypeTree } from '../fn/resource-management/get-type-tree';
+import { GetTypeTree$Params } from '../fn/resource-management/get-type-tree';
+import { invokeMethod } from '../fn/resource-management/invoke-method';
+import { InvokeMethod$Params } from '../fn/resource-management/invoke-method';
+import { remove } from '../fn/resource-management/remove';
+import { Remove$Params } from '../fn/resource-management/remove';
 import { ResourceModel } from '../models/resource-model';
 import { ResourceTypeModel } from '../models/resource-type-model';
-import { save } from '../fn/resource-modification/save';
-import { Save$Params } from '../fn/resource-modification/save';
-import { update } from '../fn/resource-modification/update';
-import { Update$Params } from '../fn/resource-modification/update';
+import { save } from '../fn/resource-management/save';
+import { Save$Params } from '../fn/resource-management/save';
+import { update } from '../fn/resource-management/update';
+import { Update$Params } from '../fn/resource-management/update';
 
 @Injectable({ providedIn: 'root' })
-export class ResourceModificationService extends BaseService {
+export class ResourceManagementService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
   }

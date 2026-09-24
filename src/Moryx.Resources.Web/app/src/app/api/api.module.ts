@@ -10,7 +10,7 @@ import { NgModule, ModuleWithProviders, SkipSelf, Optional } from '@angular/core
 import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
-import { ResourceModificationService } from './services/resource-modification.service';
+import { ResourceManagementService } from './services/resource-management.service';
 
 /**
  * Module that provides all services and configuration.
@@ -20,7 +20,7 @@ import { ResourceModificationService } from './services/resource-modification.se
   exports: [],
   declarations: [],
   providers: [
-    ResourceModificationService,
+    ResourceManagementService,
     ApiConfiguration
   ],
 })

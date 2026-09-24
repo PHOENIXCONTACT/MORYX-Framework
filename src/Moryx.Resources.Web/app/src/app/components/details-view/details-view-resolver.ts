@@ -11,7 +11,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { SessionService } from '@app/services/session.service';
 import { ResourceModel } from '@api/models';
 import { EditResourceService } from '@app/services/edit-resource.service';
-import { ResourceModificationService } from '@api/services';
+import { ResourceManagementService } from '@api/services';
 
 /**
  * Retrieves the resource details given the resource id from the route before navigating to the details view.
@@ -21,7 +21,7 @@ import { ResourceModificationService } from '@api/services';
  * The retrieved resource is stored in the EditResourceService and can be accessed by all child components of the details view.
  */
 export const DetailsViewResolver: ResolveFn<ResourceModel> = async (route: ActivatedRouteSnapshot) => {
-  const apiService = inject(ResourceModificationService);
+  const apiService = inject(ResourceManagementService);
   const sessionService = inject(SessionService);
   const editService = inject(EditResourceService);
   const snackbarService = inject(SnackbarService);

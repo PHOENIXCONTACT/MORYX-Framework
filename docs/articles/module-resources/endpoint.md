@@ -8,7 +8,7 @@ This endpoint is based on the [`IResourceManagement`](/src/Moryx.AbstractionLaye
 
 ## Controllers
 
-- **ResourceModificationController**: Manages resource instances, the resource tree, and resource methods
+- **ResourceManagementController**: Manages resource instances, the resource tree, and resource methods
 
 ## Permissions
 
@@ -20,7 +20,7 @@ The `Moryx.Resources.CanViewTree` permission controls access to the UI page.
 |-------------------|-------------|
 | `Moryx.Resources.CanViewTree` | Permission for all actions related to viewing the resource instance tree |
 | `Moryx.Resources.CanViewDetails` | Permission for all actions related to viewing the instance information of a resource |
-| `Moryx.Resources.CanAddResource` | Permission for all actions related to viewing the resource type tree |
+| `Moryx.Resources.CanViewTypeTree` | Permission for all actions related to viewing the resource type tree |
 | `Moryx.Resources.CanAdd` | Permission for all actions related to adding one or multiple resources |
 | `Moryx.Resources.CanEdit` | Permission for all actions related to editing the resource graph and its members |
 | `Moryx.Resources.CanDelete` | Permission for all actions related to adding one or multiple resources |
