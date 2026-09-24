@@ -23,6 +23,7 @@ public class RuntimePossibleValuesSerialization(IContainer container, IServicePr
         return PossibleValues(null, memberType, attributeProvider);
     }
 
+    /// extended method for <see cref="T:Moryx.Serialization.ICustomSerialization"/>
     public virtual EntryPossible[] PossibleValues(object instance, Type memberType, ICustomAttributeProvider attributeProvider)
     {
         var runtimePossibleValuesAttribute = attributeProvider.GetCustomAttribute<RuntimePossibleValuesAttribute>();

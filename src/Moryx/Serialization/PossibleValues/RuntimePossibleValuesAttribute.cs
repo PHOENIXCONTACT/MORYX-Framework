@@ -37,6 +37,5 @@ public abstract class RuntimePossibleValuesAttribute : PossibleValuesAttribute
     /// <param name="instance">instance of the class in which the attribute was used</param>
     /// <param name="localContainer">Module local DI container</param>
     /// <param name="serviceProvider">Global service registration</param>
-
     public abstract IEnumerable<string> GetValues(object instance, IContainer localContainer, IServiceProvider serviceProvider);
 }
