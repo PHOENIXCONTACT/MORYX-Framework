@@ -8,13 +8,12 @@ namespace Moryx.Drivers.OpcUa.States;
 
 internal class DisconnectedState(OpcUaDriver context, StateMachines.StateBase.StateMap stateMap) : DriverOpcUaState(context, stateMap, StateClassification.Offline)
 {
-    public override void Connect()
+    public override async Task ConnectAsync(CancellationToken cancellationToken)
     {
-        NextState(StateConnecting);
-        Context.TryConnect(true).GetAwaiter().GetResult();
+        await NextStateAsync(StateConnecting, cancellationToken);
     }
 
-    internal override Task OnConnectionLostAsync(KeepAliveEventArgs e)
+    internal override Task OnConnectionLostAsync(KeepAliveEventArgs e, CancellationToken cancellationToken)
     {
         return InvalidStateAsync();
     }

@@ -3,13 +3,24 @@
 
 namespace Moryx.Drivers.OpcUa;
 
-internal class NodeIdAlias
+/// <summary>
+/// Key-Value pair of an alias for a node id
+/// </summary>
+public class NodeIdAlias
 {
+    /// <summary>
+    /// Alias name
+    /// </summary>
     public string Alias { get; set; }
+
+    /// <summary>
+    /// Node id to be aliased
+    /// </summary>
     public string NodeId { get; set; }
 
+    /// <inheritdoc/>
     public override string ToString()
     {
-        return Alias;
+        return $"{Alias}={NodeId}";
     }
 }

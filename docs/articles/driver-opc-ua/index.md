@@ -5,12 +5,20 @@ Because of the maximum number of layers given by json, the driver can only show 
 All nodes will still be browsed and can be written or read.  
 
 ## Configuration
-In order to use the OPC UA driver, the server has to accept all certificates. The same goes for the driver.
-- **OpcUaServerUrl**: Contains the IP Address of the server. Do not add `opc.tcp:\\`, since it will be added automatically. 
-- **OpcUaServerPort**: Contains the port of the server. If the path of the OPC UA isn't `opc.tcp:\\<Ipaddress>:<Port>`, then fill `-1` for the server port and write the whole address into the field *OpcUaServerUrl*
+
+- `OpcUaServerUrl`: Contains the address of the server. 
+  - Default protocol is `opc.tcp://` 
 - **Log on**: Right now the OPC UA server only supports log on via user name and password
+- `FilePathClientConfig`: A config `.xml` is required. By default it is expected to be
+  `Config/Opc.Ua.Default.Config.xml`. The default file is provided by the package.
+
+### Certificate
+
+In order to use the OPC UA driver, the server has to accept all certificates. The same goes for the driver.
+
 
 ## How to handle nodes
+
 The nodes are organized using the expanded node id. If you want to find the right node, please always use the expanded nodeId instead of the simple one. You can write and read nodes by using the interface `IInOutDriver`.
 ```
 var input = driver.Input[<extendedNodeId>];

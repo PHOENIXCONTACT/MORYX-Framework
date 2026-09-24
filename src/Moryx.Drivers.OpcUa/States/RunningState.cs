@@ -2,21 +2,21 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Drivers;
+using Moryx.Drivers.OpcUa.Nodes;
 
 namespace Moryx.Drivers.OpcUa.States;
 
 internal class RunningState(OpcUaDriver context, StateMachines.StateBase.StateMap stateMap) : DriverOpcUaState(context, stateMap, StateClassification.Running)
 {
-    internal override async Task RebrowseNodesAsync()
+    public override async Task OnEnterAsync(CancellationToken cancellationToken)
     {
-        Context.RemoveSubscription();
-        NextState(StateBrowsingNodes);
-        await Context.BrowseNodesAsync();
+        Context.PublishRunningState();
+        await base.OnEnterAsync(cancellationToken);
     }
 
-    internal override OpcUaNode GetNode(string identifier)
+    internal override Task<OpcUaNode> GetNode(string identifier)
     {
-        return Context.GetNodeAsync(identifier).GetAwaiter().GetResult();
+        return Context.GetNodeAsync(identifier);
     }
 
     internal override Task<DataValueResult> ReadValueAsync(string identifier, CancellationToken cancellationToken)
@@ -24,9 +24,10 @@ internal class RunningState(OpcUaDriver context, StateMachines.StateBase.StateMa
         return Context.OnReadValueOfNode(identifier, cancellationToken);
     }
 
-    internal override void AddSubscription(OpcUaNode node)
+    internal override async Task AddSubscription(string nodeId)
     {
-        Context.AddSubscriptionToSession(node);
+        var node = await GetNode(nodeId);
+        await Context.AddSubscriptionToSession(node);
     }
 
     internal override Task WriteNodeAsync(OpcUaNode node, object payload, CancellationToken cancellationToken)

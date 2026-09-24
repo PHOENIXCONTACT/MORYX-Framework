@@ -9,8 +9,10 @@ namespace Moryx.Drivers.OpcUa.Tests;
 [TestFixture]
 public class OpcUaDisplayNodeTests
 {
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
     private ExpandedNodeId _nodeId;
     private OpcUaDisplayNode _displayNode;
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
     [SetUp]
     public void SetUp()
