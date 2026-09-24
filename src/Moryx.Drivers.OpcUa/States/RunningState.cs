@@ -7,6 +7,12 @@ namespace Moryx.Drivers.OpcUa.States;
 
 internal class RunningState(OpcUaDriver context, StateMachines.StateBase.StateMap stateMap) : DriverOpcUaState(context, stateMap, StateClassification.Running)
 {
+    public override void OnEnter()
+    {
+        base.OnEnter();
+        Context.AcknowledgeConnectingNotification();
+    }
+
     internal override async Task RebrowseNodesAsync()
     {
         Context.RemoveSubscription();
