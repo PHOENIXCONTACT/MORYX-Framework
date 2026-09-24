@@ -28,28 +28,18 @@ public sealed class OperationUpdate
     /// </summary>
     public DateTime? PlannedEnd { get; set; }
 
-    /// <summary>
     /// <inheritdoc cref="Operation.TotalAmount"/>
-    /// </summary>
     public int? TotalAmount { get; set; }
 
-    /// <summary>
     /// <inheritdoc cref="Operation.OverDeliveryAmount"/>
-    /// </summary>
     public int? OverDeliveryAmount { get; set; }
 
-    /// <summary>
     /// <inheritdoc cref="Operation.UnderDeliveryAmount"/>
-    /// </summary>
     public int? UnderDeliveryAmount { get; set; }
 
-    /// <summary>
     /// <inheritdoc cref="Operation.TargetCycleTime"/>
-    /// </summary>
     public double? TargetCycleTime { get; set; }
 
-    /// <summary>
     /// <inheritdoc cref="Operation.TargetStock"/>
-    /// </summary>
     public string TargetStock { get; set; }
 }
