@@ -3,6 +3,8 @@
 
 #nullable enable
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace Moryx.Tools;
 
 /// <summary>
@@ -16,36 +18,31 @@ public class FunctionResult<TResult>
     /// <summary>
     /// Result value in case of success
     /// </summary>
-    public TResult? Result { get; }
+    public TResult? Result { get; protected set; }
 
     /// <summary>
     /// Error in case of failure
     /// </summary>
-    public FunctionResultError? Error { get; }
+    public FunctionResultError? Error { get; protected set; }
 
     /// <summary>
     /// Indicates if the result contains a valid value
     /// or not
     /// </summary>
-    public bool Success => Error == null;
+    [MemberNotNullWhen(false, nameof(Error))]
+    public virtual bool Success => Error == null;
 
     /// <summary>
     /// Creates a result with a value
     /// </summary>
     /// <param name="result"></param>
-    public FunctionResult(TResult result)
-    {
-        Result = result;
-    }
+    public FunctionResult(TResult? result) => Result = result;
 
     /// <summary>
     /// Creates an error result with <see cref="FunctionResultError"/>
     /// </summary>
     /// <param name="error"></param>
-    public FunctionResult(FunctionResultError error)
-    {
-        Error = error;
-    }
+    public FunctionResult(FunctionResultError error) => Error = error;
 
     /// <inheritdoc/>
     public override string ToString()
@@ -53,7 +50,7 @@ public class FunctionResult<TResult>
         // TODO: Add invariant culture for MORYX 12
         return Success
             ? Result?.ToString() ?? "null"
-            : Error!.ToString();
+            : Error.ToString();
     }
 
     /// <summary>
@@ -63,7 +60,7 @@ public class FunctionResult<TResult>
     /// <param name="error">Function to be executed in case of an error</param>
     /// <returns><see cref="FunctionResult{TResult}" /> of the executed function</returns>
     public FunctionResult<TResult> Match(Func<TResult, FunctionResult<TResult>> success, Func<FunctionResultError, FunctionResult<TResult>> error)
-        => Success ? success(Result!) : error(Error!);
+        => Success ? success(Result!) : error(Error);
 
     /// <summary>
     /// Process result value and errors in a 'pattern matching '-like way
@@ -110,36 +107,31 @@ public class FunctionResult : FunctionResult<Nothing>
     /// Helper to create an Ok <see cref="FunctionResult"/> in a descriptive way.
     /// </summary>
     /// <returns><see cref="FunctionResult"/></returns>
-    public static FunctionResult Ok()
-        => new();
+    public static FunctionResult Ok() => new();
 
     /// <summary>
     /// Helper to create a <see cref="FunctionResult"/> with an error message in a descriptive way.
     /// </summary>
     /// <returns><see cref="FunctionResult"/></returns>
-    public static FunctionResult WithError(string message)
-        => new(new FunctionResultError(message));
+    public static FunctionResult WithError(string message) => new(new FunctionResultError(message));
 
     /// <summary>
     /// Helper to create a <see cref="FunctionResult"/> with an <see cref="Exception"/> in a descriptive way.
     /// </summary>
     /// <returns><see cref="FunctionResult"/></returns>
-    public static FunctionResult WithError(Exception exception)
-        => new(new FunctionResultError(exception));
+    public static FunctionResult WithError(Exception exception) => new(new FunctionResultError(exception));
 
     /// <summary>
     /// Helper to create an Ok <see cref="FunctionResult"/> in a descriptive way.
     /// </summary>
-    /// <returns><see cref="FunctionResult"/> of <see cref="TResult"/></returns>
-    public static FunctionResult<TResult> Ok<TResult>(TResult result)
-        => new(result);
+    /// <returns><see cref="FunctionResult"/> of <typeparamref name="TResult"/></returns>
+    public static FunctionResult<TResult> Ok<TResult>(TResult result) => new(result);
 
     /// <summary>
     /// Helper to create a <see cref="FunctionResult{TResult}"/> with an error message in a descriptive way.
     /// </summary>
     /// <returns><see cref="FunctionResult{TResult}"/></returns>
-    public static FunctionResult<TResult> WithError<TResult>(string message)
-        => new(new FunctionResultError(message));
+    public static FunctionResult<TResult> WithError<TResult>(string message) => new(new FunctionResultError(message));
 
     /// <summary>
     /// Helper to create an Ok <see cref="FunctionResult"/> in a descriptive way.
@@ -165,7 +157,6 @@ public class FunctionResultError
     /// </summary>
     public Exception? Exception { get; }
 
-
     /// <summary>
     /// Creates an error with error message
     /// </summary>
@@ -190,10 +181,7 @@ public class FunctionResultError
     }
 
     /// <inheritdoc/>
-    public override string ToString()
-    {
-        return Exception?.Message ?? Message;
-    }
+    public override string ToString() => Exception?.Message ?? Message;
 }
 
 /// <summary>
@@ -229,14 +217,12 @@ public static class FunctionResultExtensions
         /// Executes the provided action in case of a successful result
         /// </summary>
         /// <returns>The underlying <see cref="FunctionResult{TResult}"/></returns>
-        public FunctionResult<TResult> Then(Action<TResult> action)
-            => result.Match(action, _ => { });
+        public FunctionResult<TResult> Then(Action<TResult> action) => result.Match(action, _ => { });
 
         /// <summary>
         /// Executes the provided action in case of a error result
         /// </summary>
         /// <returns>The underlying <see cref="FunctionResult{TResult}"/></returns>
-        public FunctionResult<TResult> Catch(Action<FunctionResultError> action)
-            => result.Match(_ => { }, action);
+        public FunctionResult<TResult> Catch(Action<FunctionResultError> action) => result.Match(_ => { }, action);
     }
 }
