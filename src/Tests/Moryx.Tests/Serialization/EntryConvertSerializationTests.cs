@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Threading;
+using Moryx.Configuration;
 using Moryx.Serialization;
 using NUnit.Framework;
 
@@ -298,4 +299,20 @@ public class EntryConvertSerializationTests
         });
     }
 
+    [Test]
+    public void ShouldProvidePossibleRuntime_ValueUsingProvidedSource()
+    {
+        //Arrange
+        var myObject = new RuntimeValuesClass
+        {
+            AllowedValues = ["a", "b", "c"]
+        };
+        var serialization = new RuntimePossibleValuesSerialization(null, null, new ValueProviderExecutor(new ValueProviderExecutorSettings()));
+
+        // Act
+        var converted = EntryConvert.EncodeObject(myObject, serialization);
+
+        //Assert
+        Assert.That(converted.SubEntries.First(x => x.Identifier == nameof(RuntimeValuesClass.SelectedValue)).Value.Possible.Length, Is.EqualTo(3));
+    }
 }
