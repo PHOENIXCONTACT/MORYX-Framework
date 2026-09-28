@@ -10,6 +10,7 @@ A common use case for reverse proxies is to allow multiple web applications to s
 This can be done in one of two ways. Either by hostname based routing or by path based routing.
 
 ## Setup
+
 If you want to follow along with the examples you can use this docker-compose file together with the nginx configuration examples to setup a reverse proxy and modify the StartProject.Asp project to see if everything works as expected.
 The nginx configuration needs to be placed in a file named `nginx.conf` next to your `docker-compose.yml` when executing `docker compose up`.
 
@@ -24,14 +25,18 @@ services:
       # prefix instead of removing it in asp.net
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     network_mode: host
+```
+
 This is very convenient for us, because it "just works" from our perspective as an app developer.
 The disadvantage is the required infrastructure. We need DNS Entries for the subdomains that point to our server and if we server our content over HTTPs we need either a wildcard certificate for our subdomain or a certificate that explicitly lists all our applications.
 
 ## Path based routing
-That's why it might be more interesting to use path based routing. In this case we only have one hostname `example.com` and use the route after it to distinguish the different apps, like example.com/app1 and example.com/app2. 
+
+That's why it might be more interesting to use path based routing. In this case we only have one hostname `example.com` and use the route after it to distinguish the different apps, like example.com/app1 and example.com/app2.
 There are two different ways to handle this scenario in our reverse proxy. The reverse proxy can either strip this prefix for passing the request along to our application or it can leave it as is. In both cases we need to enable support in our app.
 
 ### Changes to the frontend code
+
 Regardless of the specific method, we need support not only in our backend, but also in our frontend applications. This support is already available in all MORYX Modules that are in this repository, but for your own UIs we need a few simple steps.
 
 In the razor pages we usually mostly reference our script files and style sheets. It's important to not use an absolute path, but to start with a `~` instead.
@@ -91,7 +96,6 @@ http {
 
 In this case we need to instruct Asp.Net to use these headers using the ForwardedHeaders Middleware like so.
 
-
 ```csharp
 // Startup.cs or Program.cs before mapping static files, razor pages and so on.
 app.UseForwardedHeaders(new ForwardedHeadersOptions()
@@ -109,6 +113,7 @@ app.UsePathBase(requiredPathBase);
 ```
 
 An example nginx.conf for this case:
+
 ```conf
 events {}
 # make sure appsettings contains "PathBase": "/test"
