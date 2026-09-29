@@ -1,27 +1,25 @@
-﻿// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Microsoft.VisualBasic;
-using Moryx.Modules;
-using Moryx.Runtime.Modules;
-using Moryx.Runtime.Tests.Mocks;
-using NUnit.Framework;
-using System.Collections;
 using System.Collections.Specialized;
-using System.Linq;
+using Moryx.Runtime.Modules;
+using NUnit.Framework;
 
 namespace Moryx.Runtime.Tests
 {
     [TestFixture]
     public class ServerNotificationCollectionTests
     {
+        // The agreed maximum size of the `ServerNotificationCollection` which
+        // should provide an amount of notifications, that is large enough
+        // without hitting memory limits
         private const int MaxCollectionSize = 2500;
-        private ServerNotificationCollection _sut;
+        private ServerNotificationCollection _serverNotificationCollection;
 
         [SetUp]
         public void SetUp()
         {
-            _sut = [];
+            _serverNotificationCollection = [];
         }
 
         [Test]
@@ -29,9 +27,9 @@ namespace Moryx.Runtime.Tests
         {
             var notification = new ModuleNotification(Notifications.Severity.Info, "notification", null);
 
-            _sut.Add(notification);
+            _serverNotificationCollection.Add(notification);
 
-            Assert.That(_sut.Single().Message, Is.EqualTo("notification")); 
+            Assert.That(_serverNotificationCollection.Single().Message, Is.EqualTo("notification"));
         }
 
         [Test]
@@ -39,11 +37,11 @@ namespace Moryx.Runtime.Tests
         {
             var dummyNotification = new ModuleNotification(Notifications.Severity.Info, "dummy", null);
 
-            for (int i = 0; i < MaxCollectionSize + 1; i++)
+            for (var i = 0; i < MaxCollectionSize + 1; i++)
             {
-                _sut.Add(dummyNotification);
+                _serverNotificationCollection.Add(dummyNotification);
             }
-            Assert.That(_sut.Count, Is.EqualTo(MaxCollectionSize));
+            Assert.That(_serverNotificationCollection.Count, Is.EqualTo(MaxCollectionSize));
         }
 
         [Test]
@@ -52,13 +50,13 @@ namespace Moryx.Runtime.Tests
             var firstNotification = new ModuleNotification(Notifications.Severity.Info, "first", null);
             var dummyNotification = new ModuleNotification(Notifications.Severity.Info, "dummy", null);
 
-            _sut.Add(firstNotification);
-            for (int i = 0; i < MaxCollectionSize; i++)
+            _serverNotificationCollection.Add(firstNotification);
+            for (var i = 0; i < MaxCollectionSize; i++)
             {
-                _sut.Add(dummyNotification);
+                _serverNotificationCollection.Add(dummyNotification);
             }
 
-            Assert.That(_sut.First().Message, Is.EqualTo("dummy"));
+            Assert.That(_serverNotificationCollection.First().Message, Is.EqualTo("dummy"));
         }
 
         [Test]
@@ -67,7 +65,7 @@ namespace Moryx.Runtime.Tests
             var firstNotification = new ModuleNotification(Notifications.Severity.Info, "first", null);
             var dummyNotification = new ModuleNotification(Notifications.Severity.Info, "dummy", null);
             ModuleNotification removedNotification = null;
-            _sut.CollectionChanged += (sender, e) =>
+            _serverNotificationCollection.CollectionChanged += (sender, e) =>
             {
                 if (e.Action == NotifyCollectionChangedAction.Remove)
                 {
@@ -75,10 +73,10 @@ namespace Moryx.Runtime.Tests
                 }
             };
 
-            _sut.Add(firstNotification);
+            _serverNotificationCollection.Add(firstNotification);
             for (int i = 0; i < MaxCollectionSize; i++)
             {
-                _sut.Add(dummyNotification);
+                _serverNotificationCollection.Add(dummyNotification);
             }
 
             Assert.That(removedNotification.Message, Is.EqualTo(firstNotification.Message));
