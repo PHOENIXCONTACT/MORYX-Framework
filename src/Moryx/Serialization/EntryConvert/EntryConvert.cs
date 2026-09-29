@@ -76,7 +76,7 @@ public static partial class EntryConvert
     /// Convert a single property into a derived type of entry using a custom strategy
     /// </summary>
     /// <returns>Converted property</returns>
-    public static Entry EncodeProperty(PropertyInfo property, ICustomSerialization customSerialization, object? instance = null)
+    public static Entry EncodeProperty(PropertyInfo property, ICustomSerialization customSerialization, object instance = null)
     {
         // Fill with default if entry is null
         var entry = new Entry
@@ -100,7 +100,7 @@ public static partial class EntryConvert
     }
 
     /// <see cref="ICustomSerialization"/>
-    private static EntryValue CreateEntryValue(PropertyInfo property, ICustomSerialization customSerialization, object? instance = null)
+    private static EntryValue CreateEntryValue(PropertyInfo property, ICustomSerialization customSerialization, object instance = null)
     {
         // Set if the current entry is readonly by checking if the property has a setter
         // or the ReadOnlyAttribute was set to true
@@ -112,13 +112,12 @@ public static partial class EntryConvert
         }
 
         // Prepare object
-        var possible = customSerialization is RuntimePossibleValuesSerialization run ? run.PossibleValues(instance, property.PropertyType, property) : customSerialization.PossibleValues(property.PropertyType, property);
         var entryValue = new EntryValue
         {
             Type = TransformType(property.PropertyType),
             UnitType = customSerialization.GetUnitTypeByAttributes(property),
             IsReadOnly = isReadOnly,
-            Possible = possible
+            Possible = PossibleValues(property.PropertyType, property, customSerialization, instance)
         };
 
         // Get most basic default
@@ -152,11 +151,10 @@ public static partial class EntryConvert
         }
         else
         {
-            possibleElementValues = customSerialization is RuntimePossibleValuesSerialization run ? run.PossibleValues(instance, memberType, customAttributeProvider) : customSerialization.PossibleValues(memberType, customAttributeProvider);
+            possibleElementValues = PossibleValues(memberType, customAttributeProvider, customSerialization, instance);
         }
 
         var validation = customSerialization.CreateValidation(memberType, customAttributeProvider);
-
         foreach (var prototype in customSerialization.Prototypes(memberType, customAttributeProvider))
         {
             var prototypeEntry = Prototype(prototype, customSerialization);
@@ -165,6 +163,15 @@ public static partial class EntryConvert
             prototypeEntry.Value.Possible = possibleElementValues;
             yield return prototypeEntry;
         }
+    }
+
+    private static EntryPossible[] PossibleValues(Type memberType, ICustomAttributeProvider customAttributeProvider, ICustomSerialization customSerialization, object instance)
+    {
+        if (customSerialization is RuntimePossibleValuesSerialization run)
+        {
+            return run.PossibleValues(instance, memberType, customAttributeProvider);
+        }
+        return customSerialization.PossibleValues(memberType, customAttributeProvider);
     }
 
     /// <summary>
@@ -508,7 +515,7 @@ public static partial class EntryConvert
                 UnitType = serialization.GetUnitTypeByAttributes(parameter),
                 Current = defaultValue,
                 Default = defaultValue,
-                Possible = serialization.PossibleValues(parameterType, parameter)
+                Possible = PossibleValues(parameterType, parameter, serialization, null)
             },
             Validation = serialization.CreateValidation(parameterType, parameter)
         };

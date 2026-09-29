@@ -12,9 +12,6 @@ namespace Moryx.Configuration;
 /// <summary>
 ///  Base class for runtime config to model transformer
 /// </summary>
-/// <param name="container"></param>
-/// <param name="serviceProvider"></param>
-/// <param name="emptyPropertyProvider"></param>
 public class RuntimePossibleValuesSerialization(IContainer container, IServiceProvider serviceProvider, IEmptyPropertyProvider emptyPropertyProvider) : PossibleValuesSerialization(container, serviceProvider, emptyPropertyProvider)
 {
     /// <inheritdoc/>
@@ -23,7 +20,13 @@ public class RuntimePossibleValuesSerialization(IContainer container, IServicePr
         return PossibleValues(null, memberType, attributeProvider);
     }
 
-    /// extended method for <see cref="T:Moryx.Serialization.ICustomSerialization"/>
+    /// <summary>
+    /// Extended method for <see cref="PossibleValuesAttribute.PossibleValuesAttribute"/>
+    /// </summary>
+    /// <param name="instance">current instance of the class</param>
+    /// <param name="memberType">current property</param>
+    /// <param name="attributeProvider">attribute provider</param>
+    /// <returns></returns>
     public virtual EntryPossible[] PossibleValues(object instance, Type memberType, ICustomAttributeProvider attributeProvider)
     {
         var runtimePossibleValuesAttribute = attributeProvider.GetCustomAttribute<RuntimePossibleValuesAttribute>();
