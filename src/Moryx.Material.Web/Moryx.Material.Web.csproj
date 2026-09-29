@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Moryx.Material.Endpoints\Moryx.Material.Endpoints.csproj" />
     <ProjectReference Include="..\Moryx\Moryx.csproj" />
   </ItemGroup>
 
@@ -30,7 +31,7 @@
     </Compile>
   </ItemGroup>
 
-  <Import Project="..\..\.build\WebProjects.props"/>
+  <Import Project="..\..\.build\WebProjects.props" />
   <Target Name="BuildUI" Condition="('$(Configuration)'!='Debug' Or !Exists('wwwroot\main.js')) And ('$(NoBuild)' != 'true') ">
     <Exec WorkingDirectory=".\app\" Command="npm ci" />
     <Exec WorkingDirectory=".\app\" Command="npm run build:prod" />

@@ -7,6 +7,8 @@ import { Component, computed, effect, inject, OnDestroy, OnInit, resource, Signa
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
     LanguageService,
+    SearchBarService,
+    SearchRequest,
     SnackbarService
 } from '@moryx/ngx-web-framework/services';
 import { RouterOutlet, RouterLink, RouterLinkActive, ActivatedRoute, Router, EventType, NavigationEnd } from '@angular/router';
@@ -25,8 +27,8 @@ import { MaterialManagementService, ResourceModificationService } from './api/se
 import { MaterialContainerModel, OrderReferenceModel } from './api/models';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from './extensions/translation-constants.extensions';
-import {MatToolbarModule} from '@angular/material/toolbar';
-import {MatSidenavModule} from '@angular/material/sidenav';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 @Component({
     selector: 'app-root',
@@ -55,6 +57,7 @@ export class App implements OnInit, OnDestroy {
     private containersSource = toSignal(this.materialApi.getContainers());
     private resourceApi = inject(ResourceModificationService);
     private snackbarService = inject(SnackbarService);
+    private searchbar = inject(SearchBarService);
     views = Views;
     private subscriptions: SubscriptionLike[] = [];
 
@@ -102,6 +105,28 @@ export class App implements OnInit, OnDestroy {
             }
         })
         this.subscriptions.push(sub);
+
+        this.searchbar.subscribe({
+            next: (result: SearchRequest) => {
+                this.onSearch(result);
+            }
+        });
+    }
+
+    protected onSearch(request: SearchRequest) {
+        if (request.submitted) {
+            this.searchbar.clearSuggestions();
+            this.materialFlow.executeFilter([]);
+            this.selectedOrders.set([]);
+            this.selectedProducts.set([]);
+            this.searchbar.subscribe({
+                next: (newRequest: SearchRequest) => {
+                    this.onSearch(newRequest);
+                }
+            });
+        } else {
+            this.materialFlow.executeFilter([request.term]);
+        }
     }
 
     fetchLinkedOrders() {
@@ -136,7 +161,6 @@ export class App implements OnInit, OnDestroy {
             if (!result) {
                 return;
             }
-
             const constructed = await lastValueFrom(this.resourceApi
                 .constructWithParameters({
                     type: result.name,
@@ -147,7 +171,7 @@ export class App implements OnInit, OnDestroy {
             if (!constructed) {
                 return;
             }
-            const translation = await this.getTranslations(); 
+            const translation = await this.getTranslations();
             this.snackbarService.showSuccess(translation[TranslationConstants.APP.CREATED]);
             if (this.hasOrderIntegration()) {
                 this.fetchLinkedOrders();

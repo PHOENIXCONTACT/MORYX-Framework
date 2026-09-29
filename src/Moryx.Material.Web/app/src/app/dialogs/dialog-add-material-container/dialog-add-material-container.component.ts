@@ -37,11 +37,11 @@ export class DialogAddMaterialContainerComponent implements OnDestroy {
   types = signal<ResourceTypeModel[]>([]);
   resourceType = signal<ResourceTypeModel | undefined>(undefined);
   selectedCtor = signal<MethodEntry | undefined>(undefined);
+  isValid = signal(false);
   protected translationConstants = TranslationConstants;
   private materialApi = inject(MaterialManagementService);
   private resourceApi = inject(ResourceModificationService);
   private subscriptions: SubscriptionLike[] = [];
-  private parametersBusy = signal(false);
 
   constructor() {
     const sub = this.materialApi.getTypes().subscribe(materialTypes => {
@@ -93,30 +93,12 @@ export class DialogAddMaterialContainerComponent implements OnDestroy {
   }
 
   paramsChanged(entry: Entry) {
-    console.log("Entry :",entry);
-    // if (!this.parametersBusy()) {
-    //   this.parametersBusy.set(true);
-    // } else {
-    //   return;
-    // }
-
-    // this.materialApi.updateMethodParams({
-    //   type: this.resourceType()?.name!,
-    //   body: method
-    // }).subscribe({
-    //   next: value => {
-    //     this.selectedCtor.update(old => {
-    //       if (old) {
-    //         old.parameters = { ...value.parameters! };
-    //       }
-    //       this.parametersBusy.set(false);
-    //       return old;
-    //     });
-    //   },
-    //   error: e => {
-    //     this.parametersBusy.set(false);
-    //   }
-    // })
+    this.selectedCtor.update(old => {
+      if (old) {
+        old.parameters = { ...entry };
+      }
+      return old;
+    });
   }
 
   createResult(): any {

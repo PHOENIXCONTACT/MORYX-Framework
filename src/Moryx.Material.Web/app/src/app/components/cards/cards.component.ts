@@ -43,7 +43,7 @@ export class CardsComponent implements OnInit, OnDestroy {
     const fetchedContainers = this.containersResource.value() ?? [];
     const filters = this.filterEvents() ?? [];
     if (filters.length > 0) {
-      return fetchedContainers.filter(e => filters.some(f => this.matchOrder(e, f))) ?? [];
+      return fetchedContainers.filter(e => filters.some(f => this.match(e, f))) ?? [];
     }
     return fetchedContainers;
   })
@@ -95,8 +95,9 @@ export class CardsComponent implements OnInit, OnDestroy {
       ]));
   }
 
-  matchOrder(container: MaterialContainerModel, keyword: string): boolean {
-    return container.references?.some(reference => (reference as any).type?.toLowerCase().includes(ReferenceType.Order.toLowerCase()) && (reference as OrderReferenceModel).orderNumber == keyword) ?? false;
+  match(container: MaterialContainerModel, keyword: string): boolean {
+    const matchOrder = (container.references?.some(reference => (reference as any).type?.toLowerCase().includes(ReferenceType.Order.toLowerCase()) && (reference as OrderReferenceModel).orderNumber == keyword) ?? false)
+    return matchOrder || (container.material?.includes(keyword) ?? false) || (container.name?.includes(keyword) ?? false) ;
   }
 
   findStateName(classification: StateClassificationModel) {

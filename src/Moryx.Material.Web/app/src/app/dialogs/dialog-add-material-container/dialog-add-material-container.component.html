@@ -74,7 +74,7 @@
       resourceType()?.constructors?.length &&
       selectedCtor()?.parameters &&
       selectedCtor()?.parameters?.subEntries?.length) {
-      <navigable-entry-editor queryParam="method-params" #constructorEditor (entryChange)="paramsChanged($event)" [entry]="selectedCtor()?.parameters!" [disabled]="false">
+      <navigable-entry-editor queryParam="method-params" [entry]="selectedCtor()?.parameters!" (validChange)="isValid.set($event)" (entryChange)="paramsChanged($event)" [disabled]="false">
       </navigable-entry-editor>
       } @else {
       <div class="done-template">
@@ -88,7 +88,7 @@
           class="transform-to-uppercase">
           {{ translationConstants.ADD_MATERIAL_CONTAINER_DIALOG.CANCEL| translate}}
         </button>
-        <button mat-button [mat-dialog-close]="true" type="button" [mat-dialog-close]="createResult()"
+        <button mat-button [mat-dialog-close]="true" type="button" [disabled]="!isValid()"  [mat-dialog-close]="createResult()"
           class="transform-to-uppercase">
           {{ translationConstants.ADD_MATERIAL_CONTAINER_DIALOG.CREATE| translate}}
         </button>

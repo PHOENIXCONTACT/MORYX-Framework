@@ -27,7 +27,6 @@ import { MatTableModule } from "@angular/material/table";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { BrowserModule } from "@angular/platform-browser";
-import { provideAnimationsAsync } from "@angular/platform-browser/animations/async";
 import { TranslateService } from '@ngx-translate/core';
 import { provideRouter, withComponentInputBinding } from "@angular/router";
 import { routes } from "./app.routes";
@@ -75,8 +74,6 @@ export const appConfig: ApplicationConfig = {
         suffix: '.json'
       }),
       fallbackLang: 'en'
-    }),
-    provideAnimationsAsync(),
-  ],
+    })],
 };
 
