@@ -41,7 +41,7 @@ internal class MoryxFacility : IFacility
 
         // Bridge to ServiceProvider - added last so Windsor-registered components take precedence
         if (_serviceProvider != null)
-            kernel.Resolver.AddSubResolver(new ServiceProviderSubResolver(kernel, _serviceProvider, _serviceProviderTypeFilter));
+            kernel.Resolver.AddSubResolver(new ServiceProviderSubResolver((IKernelInternal)kernel, _serviceProvider, _serviceProviderTypeFilter));
     }
 
     public void Terminate()

@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Globalization;
 using Castle.Core;
 using Castle.MicroKernel;
 using Castle.MicroKernel.Context;
@@ -11,7 +12,7 @@ namespace Moryx.Container;
 /// Castle Windsor sub-resolver that delegates to an <see cref="IServiceProvider"/>
 /// for types not registered in Windsor. This bridges the ServiceProvider into module containers.
 /// </summary>
-internal class ServiceProviderSubResolver(IKernel kernel, IServiceProvider serviceProvider, Predicate<Type> typeFilter = null) : ISubDependencyResolver
+internal class ServiceProviderSubResolver(IKernelInternal kernel, IServiceProvider serviceProvider, Predicate<Type> typeFilter = null) : ISubDependencyResolver
 {
     public bool CanResolve(CreationContext context, ISubDependencyResolver contextHandlerResolver, ComponentModel model, DependencyModel dep)
     {
@@ -30,6 +31,9 @@ internal class ServiceProviderSubResolver(IKernel kernel, IServiceProvider servi
         {
             throw new InvalidOperationException($"Service of type '{dep.TargetType}' could not be resolved from IServiceProvider.");
         }
+
+        kernel.Logger.DebugFormat(CultureInfo.InvariantCulture,
+            "Resolved '{0}' for component '{1}' from ServiceProvider", dep.TargetType, model.Implementation);
 
         return service;
     }
