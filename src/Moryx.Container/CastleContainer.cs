@@ -25,19 +25,39 @@ public class CastleContainer : IContainer
         : this(new Dictionary<Type, string>())
     {
     }
+
     /// <summary>
     /// Create container with strategies
     /// </summary>
-    /// <param name="strategies"></param>
+    // TODO: Change in next major - remove this constructor and make serviceProvider non-optional
     public CastleContainer(IDictionary<Type, string> strategies)
+        : this(strategies, null)
+    {
+    }
+
+    /// <summary>
+    /// Create container with strategies and an optional <see cref="IServiceProvider"/>
+    /// to bridge the ServiceProvider into the module container.
+    /// </summary>
+    /// <param name="strategies">Strategy configuration for component resolution</param>
+    /// <param name="serviceProvider">Optional ServiceProvider to bridge into the container</param>
+    /// <param name="serviceProviderTypeFilter">Optional filter to exclude types from bridging</param>
+    public CastleContainer(IDictionary<Type, string> strategies, IServiceProvider serviceProvider, Predicate<Type> serviceProviderTypeFilter = null)
     {
         _strategies = strategies;
 
-        // Boot up the container 
+        // Boot up the container
         _container = new WindsorContainer();
 
         _container.AddFacility<TypedFactoryFacility>();
-        _container.AddFacility<MoryxFacility>(mf => mf.AddStrategies(strategies));
+        _container.AddFacility<MoryxFacility>(facility =>
+        {
+            facility.AddStrategies(strategies);
+            if (serviceProvider != null)
+            {
+                facility.SetServiceProvider(serviceProvider, serviceProviderTypeFilter);
+            }
+        });
 
         // Self registration for framework functionality
         RegisterInstance([typeof(IContainer)], this, null);
