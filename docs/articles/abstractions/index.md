@@ -57,6 +57,14 @@ A [ProductionRecipe](/src/Moryx.AbstractionLayer/Recipes/ProductionRecipe.cs) is
 
 The Resources package of the AbstractionLayer contains several basic classes to be used by the [Resources](/src/Moryx.AbstractionLayer/Resources/IResource.cs) and the [Resource Management](/docs/articles/module-resources/resource-management.md).
 
+## Resource Extensions
+
+The [Moryx.AbstractionLayer.ResourceExtensions](/src/Moryx.AbstractionLayer.ResourceExtensions/) package provides additional utilities building upon `Moryx.AbstractionLayer.Resources`.
+Namely,
+
+* [DriverStateNotifier](/src/Moryx.AbstractionLayer.Extensions/DriverStateNotifier.cs)
+* [DriverStateLogger](/src/Moryx.AbstractionLayer.Extensions/DriverStateLogger.cs)
+
 ## Tasks
 
 [Tasks](processing/tasks.md) are used within a Workplan to define the Activity for each step.

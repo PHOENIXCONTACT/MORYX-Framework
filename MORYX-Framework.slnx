@@ -180,7 +180,7 @@
     <Project Path="src/Moryx.Workplans.Web/Moryx.Workplans.Web.csproj" />
     <Project Path="src/Moryx.Workplans/Moryx.Workplans.csproj" />
   </Folder>
-  <Project Path="src/Moryx.AbstractionLayer.Extensions/Moryx.AbstractionLayer.Extensions.csproj" Id="4aba04c6-8f81-416d-b706-74dec4b31ed0" />
+  <Project Path="src/Moryx.AbstractionLayer.ResourceExtensions/Moryx.AbstractionLayer.ResourceExtensions.csproj" />
   <Project Path="src/Moryx.AbstractionLayer/Moryx.AbstractionLayer.csproj" />
   <Project Path="src/Moryx.Communication.Serial/Moryx.Communication.Serial.csproj" />
   <Project Path="src/Moryx.Container/Moryx.Container.csproj" />

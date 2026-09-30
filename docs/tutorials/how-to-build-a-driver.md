@@ -161,5 +161,5 @@ If you want to communicate with the OT Layer in the outside world like a PLC, RF
 You can use reusable 'resource extensions' which build on the shared `IDriver` interface.
 Some examples are shipped with the `Moryx.AbstractionLayer.Extensions` package:
 
-- [DriverStateNotifier](/src/Moryx.AbstractionLayer.Extensions/DriverStateNotifier.cs)
-- [DriverStateLogger](/src/Moryx.AbstractionLayer.Extensions/DriverStateLogger.cs)
+* [DriverStateNotifier](/src/Moryx.AbstractionLayer.Extensions/DriverStateNotifier.cs)
+* [DriverStateLogger](/src/Moryx.AbstractionLayer.Extensions/DriverStateLogger.cs)

@@ -1,3 +1,6 @@
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Runtime.Serialization;
@@ -83,7 +86,11 @@ public class DriverStateNotifier : Resource, INotificationSender
     /// <inheritdoc/>
     protected override Task OnStartAsync(CancellationToken cancellationToken)
     {
-        Name ??= Driver.Name + " Notifier";
+        if (string.IsNullOrEmpty(Name))
+        {
+            Name = Driver.Name + " State-Notifier";
+        }
+
         Driver.StateChanged += OnDriverStateChanged;
         if (Driver.CurrentState != null)
         {

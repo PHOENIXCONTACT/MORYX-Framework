@@ -1,3 +1,6 @@
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using Microsoft.Extensions.Logging;
@@ -7,7 +10,6 @@ using Moryx.AbstractionLayer.Resources;
 
 namespace Moryx.AbstractionLayer.Extensions;
 
-// TODO: Test and Extract to Framework
 /// <summary>
 /// Extension resource that observes an <see cref="IDriver"/> and logs state changes at appropriate log levels.
 /// </summary>
@@ -31,7 +33,11 @@ public class DriverStateLogger : Resource
     /// <inheritdoc/>
     protected override Task OnStartAsync(CancellationToken cancellationToken)
     {
-        Name ??= Driver.Name + " Logger";
+        if (string.IsNullOrEmpty(Name))
+        {
+            Name = Driver.Name + " State-Logger";
+        }
+
         Driver.StateChanged += OnDriverStateChanged;
         if (Driver.CurrentState != null)
         {
