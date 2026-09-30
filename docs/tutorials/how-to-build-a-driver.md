@@ -21,11 +21,12 @@ The interface `IExampleDriver` is the API of the driver and important for regist
 
 This interface is simply derived from [IDriver](../../src/Moryx.AbstractionLayer/Drivers/IDriver.cs). No further definitions are needed.
 
-````cs
+```cs
 public interface IExampleDriver : IDriver
 {
 }
-````
+```
+
 If you are implementing a Driver that is sending messages, [IMessageDriver](../../src/Moryx.AbstractionLayer/Drivers/Message/IMessageDriver.cs) is probably the better choice. An `IMessageDriver<TMessage>` can be used for a specific type of message. It contains several channels, which can represent for example Mqtt-Topics or OPC UA nodes.
 
 ### The implementation
@@ -132,6 +133,7 @@ internal class ExampleStateBase : SyncDriverState<StateExampleDriver>
 
 }
 ```
+
 All states are derived from the base state and contain the state specific implementations of the methods. If a state shouldn't be able to call a method, use `InvalidState()`.
 
 ```cs
@@ -153,3 +155,11 @@ For further information about the configuration and implementation of the State 
 ## When to use a driver
 
 If you want to communicate with the OT Layer in the outside world like a PLC, RFID scanner or bar code reader, implement it as a driver. For the communication with IT infrastructure like ERP systems please use Adapters.
+
+## Extensions
+
+You can use reusable 'resource extensions' which build on the shared `IDriver` interface.
+Some examples are shipped with the `Moryx.AbstractionLayer.ResourceExtensions` package:
+
+* [DriverStateNotifier](/src/Moryx.AbstractionLayer.ResourceExtensions/DriverStateNotifier.cs)
+* [DriverStateLogger](/src/Moryx.AbstractionLayer.ResourceExtensions/DriverStateLogger.cs)
