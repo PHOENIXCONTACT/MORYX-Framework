@@ -7,8 +7,14 @@ using NUnit.Framework;
 namespace Moryx.AbstractionLayer.Tests;
 
 [TestFixture]
-public class IdentityExtensionsTests : IdentityTestBase
+public class IdentityExtensionsTests
 {
+    private static readonly IIdentity _aIdentity = new BatchIdentity("A");
+    private static readonly IIdentity _bIdentity = new BatchIdentity("B");
+    private static readonly IIdentity _cIdentity = new BatchIdentity("C");
+    private static readonly IIdentity _abIdentity = CombinedIdentity.From(_aIdentity, _bIdentity);
+    private static readonly IIdentity _abcIdentity = CombinedIdentity.From(_aIdentity, _bIdentity, _cIdentity);
+
     #region Combine
 
     [Test]

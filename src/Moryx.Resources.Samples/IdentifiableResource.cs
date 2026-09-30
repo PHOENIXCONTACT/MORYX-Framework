@@ -12,5 +12,5 @@ namespace Moryx.Resources.Samples;
 public class IdentifiableResource : Resource, IIdentifiableObject
 {
     [EntrySerialize, DataMember]
-    public IIdentity Identity {  get; set; }
+    public IIdentity Identity { get; set; }
 }

@@ -7,7 +7,7 @@ namespace Moryx.AbstractionLayer.Identity;
 /// Aggregates multiple identities belonging to the same physical object into a single <see cref="IIdentity"/>.
 /// </summary>
 /// <remarks>
-/// Will always contain at least two instances of <see cref="IIdentity"/> and provide a concatinated <see cref="Identifier"/>,
+/// Will always contain at least two instances of <see cref="IIdentity"/> and provide a concatenated <see cref="Identifier"/>,
 /// canonically ordered by implementation type name first, then alphabetically by identifier value.
 /// Use <see cref="From(IEnumerable{IIdentity})"/> to create instances.
 /// </remarks>
@@ -87,12 +87,11 @@ public class CombinedIdentity : IIdentity
 
     /// <summary>
     /// Checks whether the given <paramref name="candidate"/> can identify this object,
-    /// i.e., all of this' identities are present in the candicate (<code>this</code> ⊆ <paramref name="candidate"/>).
+    /// i.e., all of this' identities are present in the <paramref name="candidate"/>
+    /// (<code>this</code> ⊆ <paramref name="candidate"/>).
     /// </summary>
     public virtual bool MatchedBy(IIdentity candidate) => candidate is CombinedIdentity combinedCandidate
-        ? combinedCandidate.Matches(this) : EqualsSingleIdentity(candidate);
-
-    private bool EqualsSingleIdentity(IIdentity other) => _identities.Count == 1 && _identities[0].Equals(other);
+        && combinedCandidate.Matches(this);
 
     /// <summary>
     /// Checks whether this' combined identities satisfy the given <paramref name="required"/> required,
@@ -100,14 +99,17 @@ public class CombinedIdentity : IIdentity
     /// </summary>
     public virtual bool Matches(IIdentity required)
     {
-        IEnumerable<IIdentity> toFind = required is CombinedIdentity c ? c._identities : [required];
+        if (required is NullIdentity)
+        {
+            return true;
+        }
+
+        var toFind = required is CombinedIdentity c ? c._identities : [required];
         return toFind.All(tf => _identities.Any(id => id.Equals(tf)));
     }
 
     /// <inheritdoc />
-    public bool Equals(IIdentity other) => EqualsSingleIdentity(other) || EqualsCombinedIdentity(other);
-
-    private bool EqualsCombinedIdentity(IIdentity other) => other is CombinedIdentity combined
+    public bool Equals(IIdentity other) => other is CombinedIdentity combined
         && _identities.Count == combined._identities.Count
         && _identities.Zip(combined._identities).All(pair => pair.First.Equals(pair.Second));
 

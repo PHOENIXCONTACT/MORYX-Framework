@@ -51,7 +51,7 @@ resource.Identity = CombinedIdentity.From(
     new QrCodeIdentity("QR-20250101-7F3A"));
 ````
 
-`CombinedIdentity.From` is the intended factory method, flatening nested `CombinedIdentity` instances and filtering `NullIdentity` entries.
+`CombinedIdentity.From` is the intended factory method, flattening nested `CombinedIdentity` instances and filtering `NullIdentity` entries.
 Passing null, an empty collection, or a collection that reduces to nothing returns `NullIdentity.Instance` not creating a `CombinedIdentity`.
 Similarly, passing a single non-null identity returns that identity directly without wrapping.
 

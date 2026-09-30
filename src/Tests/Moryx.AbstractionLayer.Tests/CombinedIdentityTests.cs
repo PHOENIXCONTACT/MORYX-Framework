@@ -7,8 +7,14 @@ using NUnit.Framework;
 namespace Moryx.AbstractionLayer.Tests;
 
 [TestFixture]
-public class CombinedIdentityTests : IdentityTestBase
+public class CombinedIdentityTests
 {
+    private static readonly BatchIdentity _aIdentity = new("A");
+    private static readonly BatchIdentity _bIdentity = new("B");
+    private static readonly BatchIdentity _cIdentity = new("C");
+    private static readonly CombinedIdentity _abIdentity = (CombinedIdentity)CombinedIdentity.From(_aIdentity, _bIdentity);
+    private static readonly CombinedIdentity _abcIdentity = (CombinedIdentity)CombinedIdentity.From(_aIdentity, _bIdentity, _cIdentity);
+
     #region Factory
 
     private static IEnumerable<TestCaseData> EmptyInputKinds() =>
@@ -227,6 +233,12 @@ public class CombinedIdentityTests : IdentityTestBase
     #endregion
 
     #region Matches
+
+    [Test]
+    public void Matches_WithNullIdentityRequired_ReturnsTrue()
+    {
+        Assert.That(_abIdentity.Matches(NullIdentity.Instance));
+    }
 
     [Test]
     public void Matches_WithSingleIdentityContained_ReturnsTrue()

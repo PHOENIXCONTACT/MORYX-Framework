@@ -8,12 +8,12 @@ namespace Moryx.AbstractionLayer.Identity;
 /// </summary>
 public class NullIdentity : IIdentity
 {
-    private static NullIdentity _instance;
+    private static readonly NullIdentity _instance = new();
 
     /// <summary>
     /// Singleton instance indicating non-identifiability
     /// </summary>
-    public static NullIdentity Instance => _instance ??= new NullIdentity();
+    public static NullIdentity Instance => _instance;
 
     /// <summary>
     /// Private constructor to enforce singleton
