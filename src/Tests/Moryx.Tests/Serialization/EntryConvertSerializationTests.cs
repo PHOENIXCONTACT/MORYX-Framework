@@ -300,14 +300,14 @@ public class EntryConvertSerializationTests
     }
 
     [Test]
-    public void ShouldProvidePossibleInstance_ValueUsingProvidedInstanceProperty()
+    public void ShouldProvidePossibleValue_UsingContext()
     {
         //Arrange
         var myObject = new InstanceAwareValuesClass
         {
             AllowedValues = ["a", "b", "c"]
         };
-        var serialization = new InstanceAwarePossibleValuesSerialization(null, null, new ValueProviderExecutor(new ValueProviderExecutorSettings()));
+        var serialization = new PossibleValuesSerialization(null, null, new ValueProviderExecutor(new ValueProviderExecutorSettings()));
 
         // Act
         var converted = EntryConvert.EncodeObject(myObject, serialization);

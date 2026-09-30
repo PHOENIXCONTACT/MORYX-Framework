@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Container;
-using Moryx.Serialization.PossibleValues;
+using Moryx.Serialization;
 
 namespace Moryx.Tests.Serialization;
 
@@ -10,29 +10,28 @@ public class InstanceAwareValuesClass
 {
     public List<string> AllowedValues { get; set; }
 
-    [StringListPossibleValue]
+    [StringListPossibleValue(RequiresPossibleValuesContext = true)]
     public string SelectedValue { get; set; }
 }
 
-public class StringListPossibleValueAttribute : InstanceAwarePossibleValuesAttribute
+public class StringListPossibleValueAttribute : PossibleValuesAttribute
 {
-    public override bool OverridesConversion => true;
+    public override bool OverridesConversion => false;
 
     public override bool UpdateFromPredecessor => false;
 
-    public override IEnumerable<string> GetValues(object instance, IContainer localContainer, IServiceProvider serviceProvider)
+    public override IEnumerable<string> GetValues(IContainer localContainer, IServiceProvider serviceProvider)
     {
+        throw new NotImplementedException();
+    }
 
-        if (instance is not InstanceAwareValuesClass value)
+    public override IEnumerable<string> GetValues(IContainer localContainer, IServiceProvider serviceProvider, PossibleValuesContext context)
+    {
+        if (context.Instance is not InstanceAwareValuesClass value)
         {
             return [];
         }
 
         return value.AllowedValues;
-    }
-
-    public override object Parse(object instance, IContainer container, IServiceProvider serviceProvider, string value)
-    {
-        return new();
     }
 }

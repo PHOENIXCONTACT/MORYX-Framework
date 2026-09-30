@@ -12,6 +12,11 @@ namespace Moryx.Serialization;
 public abstract class PossibleValuesAttribute : Attribute
 {
     /// <summary>
+    /// A flag indicating that the attribute requires a non-null <see cref="PossibleValuesContext"/>
+    /// </summary>
+    public bool RequiresPossibleValuesContext { get; set; }
+
+    /// <summary>
     /// Flag if this member implements its own string to value conversion
     /// </summary>
     public abstract bool OverridesConversion { get; }
@@ -25,6 +30,17 @@ public abstract class PossibleValuesAttribute : Attribute
     /// Extract possible values from local or global DI registration
     /// </summary>
     public abstract IEnumerable<string> GetValues(IContainer localContainer, IServiceProvider serviceProvider);
+
+    /// <summary>
+    /// Extract possible values from the given <paramref name="context"/>
+    /// </summary>
+    /// <param name="localContainer">Module local DI container</param>
+    /// <param name="serviceProvider">Global service registration</param>
+    /// <param name="context">context of the possible value</param>
+    public virtual IEnumerable<string> GetValues(IContainer localContainer, IServiceProvider serviceProvider, PossibleValuesContext context)
+    {
+        return [];
+    }
 
     /// <summary>
     /// Parse value from string using local or global DI container

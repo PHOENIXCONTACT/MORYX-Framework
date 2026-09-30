@@ -8,7 +8,7 @@ using Moryx.Serialization;
 
 namespace Moryx.AbstractionLayer.Resources.Endpoints;
 
-internal class ResourceSerialization : InstanceAwarePossibleValuesSerialization
+internal class ResourceSerialization : PossibleValuesSerialization
 {
     /// <summary>
     /// Instance for <see cref="EntrySerializeSerialization"/> we use to filter properties and methods
