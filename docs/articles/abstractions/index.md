@@ -62,8 +62,8 @@ The Resources package of the AbstractionLayer contains several basic classes to 
 The [Moryx.AbstractionLayer.ResourceExtensions](/src/Moryx.AbstractionLayer.ResourceExtensions/) package provides additional utilities building upon `Moryx.AbstractionLayer.Resources`.
 Namely,
 
-* [DriverStateNotifier](/src/Moryx.AbstractionLayer.Extensions/DriverStateNotifier.cs)
-* [DriverStateLogger](/src/Moryx.AbstractionLayer.Extensions/DriverStateLogger.cs)
+* [DriverStateNotifier](/src/Moryx.AbstractionLayer.ResourceExtensions/DriverStateNotifier.cs)
+* [DriverStateLogger](/src/Moryx.AbstractionLayer.ResourceExtensions/DriverStateLogger.cs)
 
 ## Tasks
 

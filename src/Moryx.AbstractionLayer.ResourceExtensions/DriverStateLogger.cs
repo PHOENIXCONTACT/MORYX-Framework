@@ -5,10 +5,10 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Drivers;
-using Moryx.AbstractionLayer.Extensions.Properties;
+using Moryx.AbstractionLayer.ResourceExtensions.Properties;
 using Moryx.AbstractionLayer.Resources;
 
-namespace Moryx.AbstractionLayer.Extensions;
+namespace Moryx.AbstractionLayer.ResourceExtensions;
 
 /// <summary>
 /// Extension resource that observes an <see cref="IDriver"/> and logs state changes at appropriate log levels.

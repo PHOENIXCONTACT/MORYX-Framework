@@ -5,12 +5,12 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Drivers;
-using Moryx.AbstractionLayer.Extensions.Properties;
+using Moryx.AbstractionLayer.ResourceExtensions.Properties;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Notifications;
 using Moryx.Serialization;
 
-namespace Moryx.AbstractionLayer.Extensions;
+namespace Moryx.AbstractionLayer.ResourceExtensions;
 
 /// <summary>
 /// Extension resource that observes an <see cref="IDriver"/> and publishes notifications based on its current
