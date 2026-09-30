@@ -34,14 +34,17 @@ public class ModuleContainerFactory : IModuleContainerFactory
     /// <inheritdoc />
     public IContainer Create(IDictionary<Type, string> strategies, Assembly moduleAssembly)
     {
-        var container = new CastleContainer(strategies, _serviceProvider, IsNotFacade);
+        var container = new CastleContainer(strategies, _serviceProvider, BridgeTypeFilter);
         container.LoadFromAssembly(moduleAssembly);
         return container;
     }
 
     /// <summary>
-    /// Filter that prevents facades from being resolved through the service provider bridge.
-    /// Facades must be resolved through the <see cref="RequiredModuleApiAttribute"/> mechanism, not directly from the ServiceProvider.
+    /// Filter that prevents module infrastructure types from being resolved through the service provider bridge.
+    /// Facades must be resolved through the facade mechanism, not directly from the ServiceProvider.
+    /// <see cref="IModuleManager"/> must not be accessible from within modules.
     /// </summary>
-    private static bool IsNotFacade(Type type) => !typeof(IFacadeControl).IsAssignableFrom(type);
+    private static bool BridgeTypeFilter(Type type) =>
+        !typeof(IFacadeControl).IsAssignableFrom(type)
+        && !typeof(IModuleManager).IsAssignableFrom(type);
 }

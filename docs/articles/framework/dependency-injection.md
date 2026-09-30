@@ -367,7 +367,7 @@ This is Joe Gunchy. He assumed that everything will be registered somehow automa
 
 > See also [ADR-006: ServiceProvider Bridge for Module Containers](/docs/adr/006-serviceprovider-bridge.md)
 
-By default, services registered in the host `IServiceProvider` (e.g. `IHttpClientFactory`, `TimeProvider`, `IMemoryCache`) are not available inside module containers. The **ServiceProvider Bridge** solves this by automatically forwarding unresolved dependencies from the Castle Windsor container to the host `IServiceProvider`.
+By default, services registered in the host `IServiceProvider` (e.g. `IHttpClientFactory`, `TimeProvider`) are not available inside module containers. The ServiceProvider Bridge solves this by automatically forwarding unresolved dependencies from the Castle Windsor container to the host `IServiceProvider`.
 
 ### How it works
 
@@ -408,7 +408,8 @@ builder.Services.AddHttpClient();
 
 ### Limitations
 
-- Facades (`IFacadeControl`) are excluded from the bridge. Use `IFacadeContainer<T>` and `RequiredModuleApiAttribute` as before.
 - If a type is registered in both Castle Windsor and the `IServiceProvider`, Castle Windsor always wins.
 - The bridge works for constructor and property injection. Direct `Container.Resolve<T>()` calls are not affected and return `null` if the type is not registered — sub-resolvers are only consulted when resolving dependencies of registered components.
 - The bridge does not guarantee that a service is available. It is the application developer's responsibility to register the required services in the `IServiceCollection` at startup (e.g. `builder.Services.AddHttpClient()`). There is no compile-time check — if a service is missing from the `IServiceProvider`, the injection will fail at runtime when the module component is resolved.
+
+For excluded types and further exceptions see [ADR-006](/docs/adr/006-serviceprovider-bridge.md#exceptions).

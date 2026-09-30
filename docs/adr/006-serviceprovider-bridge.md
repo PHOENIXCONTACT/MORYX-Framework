@@ -23,6 +23,8 @@ Any service that is registered in the `IServiceCollection` at startup is automat
 ## Exceptions
 
 - Facades are excluded to prevent them from being accidentally resolved through the bridge instead of through the facade mechanism.
+- `IModuleManager` is excluded because modules must not access the module manager directly.
+- Additional types may be excluded in future versions if they allow circumventing framework features or architectural boundaries. The bridge is not intended as a backdoor to bypass MORYX module isolation.
 - Direct `Container.Resolve<T>()` calls are not affected by the bridge. The resolver only participates in constructor and property injection of registered components.
 - The bridge does not guarantee that a service is available at runtime. The application developer is responsible for registering required services in the `IServiceCollection` at startup.
 
