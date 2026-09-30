@@ -6,7 +6,7 @@ using Moryx.Serialization.PossibleValues;
 
 namespace Moryx.Tests.Serialization;
 
-public class RuntimeValuesClass
+public class InstanceAwareValuesClass
 {
     public List<string> AllowedValues { get; set; }
 
@@ -14,7 +14,7 @@ public class RuntimeValuesClass
     public string SelectedValue { get; set; }
 }
 
-public class StringListPossibleValueAttribute : RuntimePossibleValuesAttribute
+public class StringListPossibleValueAttribute : InstanceAwarePossibleValuesAttribute
 {
     public override bool OverridesConversion => true;
 
@@ -23,7 +23,7 @@ public class StringListPossibleValueAttribute : RuntimePossibleValuesAttribute
     public override IEnumerable<string> GetValues(object instance, IContainer localContainer, IServiceProvider serviceProvider)
     {
 
-        if (instance is not RuntimeValuesClass value)
+        if (instance is not InstanceAwareValuesClass value)
         {
             return [];
         }

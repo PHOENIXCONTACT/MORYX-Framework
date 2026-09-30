@@ -12,7 +12,7 @@ namespace Moryx.Configuration;
 /// <summary>
 ///  Base class for runtime config to model transformer
 /// </summary>
-public class RuntimePossibleValuesSerialization(IContainer container, IServiceProvider serviceProvider, IEmptyPropertyProvider emptyPropertyProvider) : PossibleValuesSerialization(container, serviceProvider, emptyPropertyProvider)
+public class InstanceAwarePossibleValuesSerialization(IContainer container, IServiceProvider serviceProvider, IEmptyPropertyProvider emptyPropertyProvider) : PossibleValuesSerialization(container, serviceProvider, emptyPropertyProvider)
 {
     /// <inheritdoc/>
     public override EntryPossible[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider)
@@ -29,7 +29,7 @@ public class RuntimePossibleValuesSerialization(IContainer container, IServicePr
     /// <returns></returns>
     public virtual EntryPossible[] PossibleValues(object instance, Type memberType, ICustomAttributeProvider attributeProvider)
     {
-        var runtimePossibleValuesAttribute = attributeProvider.GetCustomAttribute<RuntimePossibleValuesAttribute>();
+        var runtimePossibleValuesAttribute = attributeProvider.GetCustomAttribute<InstanceAwarePossibleValuesAttribute>();
         if (runtimePossibleValuesAttribute is null)
         {
             return base.PossibleValues(memberType, attributeProvider);

@@ -8,7 +8,7 @@ namespace Moryx.Serialization.PossibleValues;
 /// <summary>
 /// Base attribute for all attributes that support multiple values ast runtime
 /// </summary>
-public abstract class RuntimePossibleValuesAttribute : PossibleValuesAttribute
+public abstract class InstanceAwarePossibleValuesAttribute : PossibleValuesAttribute
 {
     /// <inheritdoc/>
     public override IEnumerable<string> GetValues(IContainer localContainer, IServiceProvider serviceProvider)

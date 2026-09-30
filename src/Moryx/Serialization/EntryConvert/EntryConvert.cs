@@ -167,7 +167,7 @@ public static partial class EntryConvert
 
     private static EntryPossible[] PossibleValues(Type memberType, ICustomAttributeProvider customAttributeProvider, ICustomSerialization customSerialization, object instance)
     {
-        if (customSerialization is RuntimePossibleValuesSerialization run)
+        if (customSerialization is InstanceAwarePossibleValuesSerialization run)
         {
             return run.PossibleValues(instance, memberType, customAttributeProvider);
         }

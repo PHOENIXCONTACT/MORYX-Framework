@@ -300,19 +300,19 @@ public class EntryConvertSerializationTests
     }
 
     [Test]
-    public void ShouldProvidePossibleRuntime_ValueUsingProvidedSource()
+    public void ShouldProvidePossibleInstance_ValueUsingProvidedInstanceProperty()
     {
         //Arrange
-        var myObject = new RuntimeValuesClass
+        var myObject = new InstanceAwareValuesClass
         {
             AllowedValues = ["a", "b", "c"]
         };
-        var serialization = new RuntimePossibleValuesSerialization(null, null, new ValueProviderExecutor(new ValueProviderExecutorSettings()));
+        var serialization = new InstanceAwarePossibleValuesSerialization(null, null, new ValueProviderExecutor(new ValueProviderExecutorSettings()));
 
         // Act
         var converted = EntryConvert.EncodeObject(myObject, serialization);
 
         //Assert
-        Assert.That(converted.SubEntries.First(x => x.Identifier == nameof(RuntimeValuesClass.SelectedValue)).Value.Possible.Length, Is.EqualTo(3));
+        Assert.That(converted.SubEntries.First(x => x.Identifier == nameof(InstanceAwareValuesClass.SelectedValue)).Value.Possible.Length, Is.EqualTo(3));
     }
 }
