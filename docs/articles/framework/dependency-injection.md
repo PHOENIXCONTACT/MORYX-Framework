@@ -365,6 +365,8 @@ This is Joe Gunchy. He assumed that everything will be registered somehow automa
 
 ## ServiceProvider Bridge
 
+> See also [ADR-006: ServiceProvider Bridge for Module Containers](/docs/adr/006-serviceprovider-bridge.md)
+
 By default, services registered in the host `IServiceProvider` (e.g. `IHttpClientFactory`, `TimeProvider`, `IMemoryCache`) are not available inside module containers. The **ServiceProvider Bridge** solves this by automatically forwarding unresolved dependencies from the Castle Windsor container to the host `IServiceProvider`.
 
 ### How it works
