@@ -382,7 +382,7 @@ Castle Windsor registrations always take precedence. The bridge only activates f
 
 ### When to use
 
-Explicit registration in the module container (via `SetInstance`, `LoadComponents` or `RegistrationAttribute`) is always preferred when the dependency is known to the module. The ServiceProvider Bridge is intended for plugins or components that require infrastructure services from the host (e.g. `IHttpClientFactory`, `TimeProvider`) which are not part of the module's own domain.
+Explicit registration in the module container (via `SetInstance`, `LoadComponents` or `RegistrationAttribute`) must always be preferred when the dependency is known to the module. The ServiceProvider Bridge is intended for plugins or components that require infrastructure services from the host (e.g. `IHttpClientFactory`, `TimeProvider`) which are not part of the module's own domain.
 
 ### Usage
 
