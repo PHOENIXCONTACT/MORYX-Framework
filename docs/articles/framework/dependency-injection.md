@@ -362,3 +362,51 @@ Joe Gunchy wants to use a Factory for simple plugins. The Plugins can be disting
 ### Missing DependencyRegistration
 
 This is Joe Gunchy. He assumed that everything will be registered somehow automatically and will be injected somehow automatically. Most things seems to be magic but it isn´t. So Joe Gunchy is a complete idiot. Don't be stupid like Joe Gunchy. You need for everything a `RegistrationAttribute` then the MORYX Container will collect your stuff and register it how YOU defined it. Then you can use it.
+
+## ServiceProvider Bridge
+
+By default, services registered in the host `IServiceProvider` (e.g. `IHttpClientFactory`, `TimeProvider`, `IMemoryCache`) are not available inside module containers. The **ServiceProvider Bridge** solves this by automatically forwarding unresolved dependencies from the Castle Windsor container to the host `IServiceProvider`.
+
+### How it works
+
+When a module component requests a dependency that is not registered in its Castle Windsor container, the [`ServiceProviderSubResolver`](/src/Moryx.Container/ServiceProviderSubResolver.cs) checks if the host `IServiceProvider` can provide it. If so, the service is injected transparently.
+
+1. Module component requests IHttpClientFactory
+2. Castle Windsor checks its own registrations (not found)
+3. ServiceProviderSubResolver checks IServiceProvider
+4. Returns IHttpClientFactory from host DI
+
+Castle Windsor registrations always take precedence. The bridge only activates for types that are not registered in the module container.
+
+### When to use
+
+Explicit registration in the module container (via `SetInstance`, `LoadComponents` or `RegistrationAttribute`) is always preferred when the dependency is known to the module. The ServiceProvider Bridge is intended for plugins or components that require infrastructure services from the host (e.g. `IHttpClientFactory`, `TimeProvider`) which are not part of the module's own domain.
+
+### Usage
+
+Any service registered in the host `IServiceProvider` can be injected into module components — no additional registration needed:
+
+````cs
+[Component(LifeCycle.Singleton, typeof(IMyService))]
+public class MyService : IMyService
+{
+    public MyService(IHttpClientFactory httpClientFactory, TimeProvider timeProvider)
+    {
+        // Both are resolved from the host IServiceProvider automatically
+        var client = httpClientFactory.CreateClient();
+    }
+}
+````
+
+To make a service available through the bridge, register it in the host `IServiceCollection` at startup:
+
+````cs
+builder.Services.AddHttpClient();
+````
+
+### Limitations
+
+- Facades (`IFacadeControl`) are excluded from the bridge. Use `IFacadeContainer<T>` and `RequiredModuleApiAttribute` as before.
+- If a type is registered in both Castle Windsor and the `IServiceProvider`, Castle Windsor always wins.
+- The bridge works for constructor and property injection. Direct `Container.Resolve<T>()` calls are not affected and return `null` if the type is not registered — sub-resolvers are only consulted when resolving dependencies of registered components.
+- The bridge does not guarantee that a service is available. It is the application developer's responsibility to register the required services in the `IServiceCollection` at startup (e.g. `builder.Services.AddHttpClient()`). There is no compile-time check — if a service is missing from the `IServiceProvider`, the injection will fail at runtime when the module component is resolved.

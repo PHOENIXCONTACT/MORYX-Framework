@@ -15,7 +15,6 @@ public class CastleContainer : IContainer
     #region Constructors
 
     private readonly IWindsorContainer _container;
-
     private readonly IDictionary<Type, string> _strategies;
 
     /// <summary>
