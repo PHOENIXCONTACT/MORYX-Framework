@@ -49,6 +49,10 @@ public class ModuleController : ServerModuleBase<ModuleConfig>, IFacadeContainer
         var plugin = Container.Resolve<ITestPlugin>("TestPlugin");
         plugin.Start();
 
+        // Verify ServiceProvider bridge resolves IHostEnvironment
+        var bridgePlugin = Container.Resolve<IServiceProviderBridgePlugin>();
+        bridgePlugin.GetEnvironmentName();
+
         // Activate facades
         ActivateFacade(_testModule);
     }
