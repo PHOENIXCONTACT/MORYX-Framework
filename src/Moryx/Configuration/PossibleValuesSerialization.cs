@@ -61,7 +61,7 @@ public class PossibleValuesSerialization : DefaultSerialization
     public override EntryPossible[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider) => PossibleValues(null, memberType, attributeProvider);
 
     /// <summary>
-    /// Extended method for <see cref="PossibleValuesAttribute.GetValues(IContainer, IServiceProvider, Serialization.PossibleValues.PossibleValuesContext)"/>
+    /// Extended method for <see cref="PossibleValuesAttribute.GetValues(IContainer, IServiceProvider)"/>
     /// </summary>
     /// <param name="instance">current instance of the class</param>
     /// <param name="memberType">current property</param>
@@ -83,7 +83,7 @@ public class PossibleValuesSerialization : DefaultSerialization
         IEnumerable<string> values;
         if (possibleValuesAttribute.RequiresPossibleValuesContext)
         {
-            var context = new PossibleValuesContext(instance, new Dictionary<object, object>());
+            var context = new PossibleValuesContext(instance, new Dictionary<object, object>(), ServiceProvider, Container);
             values = possibleValuesAttribute.GetValues(Container, ServiceProvider, context);
         }
         else
