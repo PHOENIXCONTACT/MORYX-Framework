@@ -90,14 +90,14 @@ public class CombinedIdentity : IIdentity
     /// i.e., all of this' identities are present in the <paramref name="candidate"/>
     /// (<code>this</code> ⊆ <paramref name="candidate"/>).
     /// </summary>
-    public virtual bool MatchedBy(IIdentity candidate) => candidate is CombinedIdentity combinedCandidate
+    public bool MatchedBy(IIdentity candidate) => candidate is CombinedIdentity combinedCandidate
         && combinedCandidate.Matches(this);
 
     /// <summary>
     /// Checks whether this' combined identities satisfy the given <paramref name="required"/> required,
     /// i.e., all required identities are present in this (<code>this</code> ⊇ <paramref name="required"/>).
     /// </summary>
-    public virtual bool Matches(IIdentity required)
+    public bool Matches(IIdentity required)
     {
         if (required is NullIdentity)
         {
