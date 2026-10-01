@@ -77,7 +77,7 @@ public class DefaultSerialization : ICustomSerialization
         // Enum names, member name for collections, allowed values or null
         if (memberType.IsEnum)
         {
-            return EntryPossible.FromStrings(GetPossibleEnumNames(memberType, attributeProvider));
+            return GetPossibleEnumValues(memberType, attributeProvider);
         }
 
         if (isCollection)
@@ -362,28 +362,38 @@ public class DefaultSerialization : ICustomSerialization
     }
 
     /// <summary>
-    /// Returns the possible enum names.
+    /// Returns the possible enum values with display names and descriptions.
     /// Depending on the <see cref="AllowedValuesAttribute"/> and <see cref="DeniedValuesAttribute"/>
     /// </summary>
-    private static string[] GetPossibleEnumNames(Type memberType, ICustomAttributeProvider attributeProvider)
+    private static EntryPossible[] GetPossibleEnumValues(Type memberType, ICustomAttributeProvider attributeProvider)
     {
         var enumNames = Enum.GetNames(memberType);
         var allowedValuesAttribute = attributeProvider.GetCustomAttribute<AllowedValuesAttribute>();
         if (allowedValuesAttribute != null)
         {
-            var allowedEnumNames = allowedValuesAttribute.Values.Where(v => v != null && enumNames.Contains(v.ToString()))
-                .Select(v => v.ToString());
-            return allowedEnumNames.Distinct().ToArray();
+            enumNames = allowedValuesAttribute.Values.Where(v => v != null && enumNames.Contains(v.ToString()))
+                .Select(v => v.ToString()).Distinct().ToArray();
         }
-
-        var deniedValuesAttribute = attributeProvider.GetCustomAttribute<DeniedValuesAttribute>();
-        if (deniedValuesAttribute != null)
+        else
         {
-            var deniedEnumNames = deniedValuesAttribute.Values.Where(v => v != null)
-                .Select(v => v.ToString());
-            return enumNames.Except(deniedEnumNames).ToArray();
+            var deniedValuesAttribute = attributeProvider.GetCustomAttribute<DeniedValuesAttribute>();
+            if (deniedValuesAttribute != null)
+            {
+                var deniedEnumNames = deniedValuesAttribute.Values.Where(v => v != null)
+                    .Select(v => v.ToString());
+                enumNames = enumNames.Except(deniedEnumNames).ToArray();
+            }
         }
 
-        return enumNames;
+        return enumNames.Select(name =>
+        {
+            var field = memberType.GetField(name);
+            return new EntryPossible
+            {
+                Key = name,
+                DisplayName = field?.GetDisplayName() ?? name,
+                Description = field?.GetDescription()
+            };
+        }).ToArray();
     }
 }
