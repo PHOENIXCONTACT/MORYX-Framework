@@ -126,7 +126,7 @@ public class TechnicalStaff
     public string FirstName { get; set; }
 
     [DataMember, EntrySerialize]
-    public string LastName { get; set; }
+    public string Name { get; set; }
 
     [DataMember, EntrySerialize]
     public int StaffNumber { get; set; }
