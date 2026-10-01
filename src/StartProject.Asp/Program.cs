@@ -68,7 +68,14 @@ app.Services.UseMoryxConfigurations("Config");
 var pathBase = app.Configuration.GetValue<string>("PathBase");
 if (!string.IsNullOrEmpty(pathBase))
 {
+    // Enable prefix striping. The path base is removed from the path and witten to 
+    // Context.Request.PathBase for later usage
     app.UsePathBase(pathBase);
+
+    // Middleware to specifially block all traffic, that does not have the path base set for testing.
+    // This is not necessary for normal applications and only used for manual tests to ensure the information about
+    // the path base has been propagated through to all the razor pages and javascript applications that request
+    // data from the server.
     app.Use(new PathBaseTestMiddleware(pathBase).BlockRequestsWithoutPathBase);
 }
 
