@@ -10,6 +10,12 @@ namespace Moryx.Serialization;
 /// </summary>
 public class PossibleValuesContext
 {
+    #region Member Fields
+    private Func<Type, object> _serviceProvider;
+    private Func<Type, object> _localProvider;
+    private Func<Type, IEnumerable<Type>> _registeredImplementation;
+    #endregion
+
     /// <summary>
     /// Instance the current class needed for the possible values.
     /// </summary>
@@ -19,16 +25,6 @@ public class PossibleValuesContext
     /// Dictionary of key/value pairs associated with this context.
     /// </summary>
     public Dictionary<object, object> Items { get; }
-
-    /// <summary>
-    /// Global container
-    /// </summary>
-    public IServiceProvider ServiceProvider { get; }
-
-    /// <summary>
-    /// Local container
-    /// </summary>
-    public IContainer Container { get; }
 
     /// <summary>
     /// Construct a <see cref="PossibleValuesContext"/> for a given object instance and an optional
@@ -46,7 +42,44 @@ public class PossibleValuesContext
         ArgumentNullException.ThrowIfNull(instance);
         Items = items != null ? new Dictionary<object, object>(items) : [];
         Instance = instance;
-        ServiceProvider = provider;
-        Container = container;
+        if (container != null)
+        {
+            InitializeLocalProvider(container);
+        }
+        if (provider != null)
+        {
+            InitializeServiceProvider(provider.GetService);
+        }
+    }
+
+    private void InitializeServiceProvider(Func<Type, object> serviceProvider)
+    {
+        _serviceProvider = serviceProvider;
+    }
+
+    private void InitializeLocalProvider(IContainer container)
+    {
+        _localProvider = container.Resolve;
+        _registeredImplementation = container.GetRegisteredImplementations;
+    }
+
+    /// <summary>
+    /// See <see cref="IServiceProvider.GetService(Type)" /> and <see cref="IContainer.Resolve(Type, string)" />.
+    /// </summary>
+    /// <param name="serviceType">The type of the service needed.</param>
+    /// <returns>An instance of that service or null if it is not available.</returns>
+    public object GetService(Type serviceType)
+    {
+        return _localProvider?.Invoke(serviceType) ?? _serviceProvider?.Invoke(serviceType);
+    }
+
+    /// <summary>
+    /// Get all implementations for a given <paramref name="serviceType"/>
+    /// </summary>
+    /// <param name="serviceType">The type of the service needed.</param>
+    /// <returns>Implementations of <paramref name="serviceType"/>.</returns>
+    public IEnumerable<Type> GetRegisteredImplementations(Type serviceType)
+    {
+        return _registeredImplementation?.Invoke(serviceType);
     }
 }

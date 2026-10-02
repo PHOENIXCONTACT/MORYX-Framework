@@ -34,12 +34,10 @@ public abstract class PossibleValuesAttribute : Attribute
     /// <summary>
     /// Extract possible values from the given <paramref name="context"/>
     /// </summary>
-    /// <param name="localContainer">Module local DI container</param>
-    /// <param name="serviceProvider">Global service registration</param>
     /// <param name="context">context of the possible value</param>
-    public virtual IEnumerable<string> GetValues(IContainer localContainer, IServiceProvider serviceProvider, PossibleValuesContext context)
+    public virtual IEnumerable<string> GetValues(PossibleValuesContext context = null)
     {
-        return [];
+        yield break;
     }
 
     /// <summary>

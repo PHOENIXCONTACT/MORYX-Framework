@@ -142,7 +142,7 @@ public static partial class EntryConvert
     /// <summary>
     /// Create prototypes for possible values of an entry
     /// </summary>
-    private static IEnumerable<Entry> Prototypes(Type memberType, ICustomAttributeProvider customAttributeProvider, ICustomSerialization customSerialization, object instance)
+    private static IEnumerable<Entry> Prototypes(Type memberType, ICustomAttributeProvider customAttributeProvider, ICustomSerialization customSerialization, object instance = null)
     {
         EntryPossible[] possibleElementValues;
         if (IsCollection(memberType))
@@ -165,11 +165,11 @@ public static partial class EntryConvert
         }
     }
 
-    private static EntryPossible[] PossibleValues(Type memberType, ICustomAttributeProvider customAttributeProvider, ICustomSerialization customSerialization, object instance)
+    private static EntryPossible[] PossibleValues(Type memberType, ICustomAttributeProvider customAttributeProvider, ICustomSerialization customSerialization, object instance = null)
     {
         if (customSerialization is PossibleValuesSerialization run)
         {
-            return run.PossibleValues(instance, memberType, customAttributeProvider);
+            return run.PossibleValues(memberType, customAttributeProvider, instance);
         }
         return customSerialization.PossibleValues(memberType, customAttributeProvider);
     }
@@ -515,7 +515,7 @@ public static partial class EntryConvert
                 UnitType = serialization.GetUnitTypeByAttributes(parameter),
                 Current = defaultValue,
                 Default = defaultValue,
-                Possible = PossibleValues(parameterType, parameter, serialization, null)
+                Possible = PossibleValues(parameterType, parameter, serialization)
             },
             Validation = serialization.CreateValidation(parameterType, parameter)
         };
@@ -527,13 +527,13 @@ public static partial class EntryConvert
         {
             case EntryValueType.Class:
                 parameterModel.Value.Current = parameterType.Name;
-                parameterModel.Prototypes.AddRange(Prototypes(parameterType, parameter, serialization, null));
+                parameterModel.Prototypes.AddRange(Prototypes(parameterType, parameter, serialization));
                 parameterModel.SubEntries = EncodeClass(parameterType, serialization).SubEntries;
                 break;
             case EntryValueType.Collection:
                 var elemType = ElementType(parameterType);
                 parameterModel.Value.Current = elemType.Name;
-                parameterModel.Prototypes.AddRange(Prototypes(parameterType, parameter, serialization, null));
+                parameterModel.Prototypes.AddRange(Prototypes(parameterType, parameter, serialization));
                 break;
         }
 

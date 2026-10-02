@@ -25,9 +25,9 @@ public class StringListPossibleValueAttribute : PossibleValuesAttribute
         throw new NotImplementedException();
     }
 
-    public override IEnumerable<string> GetValues(IContainer localContainer, IServiceProvider serviceProvider, PossibleValuesContext context)
+    public override IEnumerable<string> GetValues(PossibleValuesContext context = null)
     {
-        if (context.Instance is not InstanceAwareValuesClass value)
+        if (context is null || context.Instance is not InstanceAwareValuesClass value)
         {
             return [];
         }
