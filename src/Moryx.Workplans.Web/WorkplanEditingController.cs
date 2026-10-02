@@ -159,26 +159,31 @@ public class WorkplanEditingController : ControllerBase
         }
 
         UpdateSession(sessionModel, session);
+        await _workplans.SaveWorkplanAsync(session.Workplan);
+        return ModelConverter.ConvertSession(session);
+    }
 
-        var validation = WorkplanInstance.Validate(
-            session.Workplan,
-            ValidationAspect.DeadEnd | ValidationAspect.LoneWolf | ValidationAspect.InfiniteLoop | ValidationAspect.LuckyStreak);
+    [HttpGet("sessions/{sessionId}/validate")]
+    [Authorize(Policy = WorkplanPermissions.CanEdit)]
+    [ProducesResponseType(typeof(ValidationResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<ValidationResult>> ValidateSession([FromRoute] string sessionId)
+    {
+        var session = _workplanEditing.OpenSession(sessionId);
 
-        if (!validation.Success)
+        if (session == null)
         {
-            var errors = validation.Errors
-                .Select(error => error.Print(session.Workplan));
-     
-            return BadRequest(new MoryxExceptionResponse
+            return NotFound(new MoryxExceptionResponse
             {
-                Title = "Workplan validation failed",
-                Exception = string.Join(Environment.NewLine, errors)
+                Title = Strings.WorkplanEditingController_SessionNotFound
             });
         }
 
-        await _workplans.SaveWorkplanAsync(session.Workplan);
+        var validation = WorkplanInstance.Validate(
+           session.Workplan,
+           ValidationAspect.DeadEnd | ValidationAspect.LoneWolf | ValidationAspect.InfiniteLoop | ValidationAspect.LuckyStreak);
 
-        return ModelConverter.ConvertSession(session);
+        return Ok(validation);
     }
 
     [HttpDelete("sessions/{sessionId}")]
