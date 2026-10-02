@@ -713,6 +713,13 @@ public static partial class EntryConvert
             strategy.Added(subEntry, item);
         }
 
+        // Reorder collection to match the client-side order of entries.
+        // Includes both existing and newly created identifiers
+        var newKeyOrder = rootEntry.SubEntries
+            .Select(se => se.Identifier)
+            .ToList();
+        strategy.Reorder(newKeyOrder);
+
         // Finalize all operations
         strategy.Flush();
     }
