@@ -13,12 +13,19 @@ internal class ArrayStrategy : ICollectionStrategy
     private readonly Array _currentArray;
     private readonly ICustomSerialization _serialization;
 
+    /// <summary>
+    /// Maps entry identifiers (numeric like "0" or created like "CREATED1") to their array positions.
+    /// Used by <see cref="Reorder"/> to resolve items without requiring numeric-only identifiers.
+    /// </summary>
+    private readonly Dictionary<string, int> _keyToIndex = new();
+
     public ArrayStrategy(Array array, Array currentArray, ICustomSerialization serialization)
     {
         _array = array;
         _currentArray = currentArray;
         _serialization = serialization;
     }
+
     public IEnumerable<Entry> Serialize()
     {
         var entries = new List<Entry>();
@@ -43,16 +50,36 @@ internal class ArrayStrategy : ICollectionStrategy
 
     public void Added(Entry entry, object addedValue)
     {
+        _keyToIndex[entry.Identifier] = _index;
         _array.SetValue(addedValue, _index++);
     }
 
     public void Updated(Entry entry, object updatedValue)
     {
+        _keyToIndex[entry.Identifier] = _index;
         _array.SetValue(updatedValue, _index++);
     }
 
     public void Removed(string key)
     {
+    }
+
+    /// <inheritdoc />
+    public void Reorder(IReadOnlyList<string> newKeyOrder)
+    {
+        if (_keyToIndex.Keys.SequenceEqual(newKeyOrder))
+        {
+            return;
+        }
+
+        var reordered = newKeyOrder
+            .Where(key => _keyToIndex.ContainsKey(key))
+            .Select(key => _array.GetValue(_keyToIndex[key]))
+            .ToArray();
+        for (var i = 0; i < reordered.Length; i++)
+        {
+            _array.SetValue(reordered[i], i);
+        }
     }
 
     public void Flush()
