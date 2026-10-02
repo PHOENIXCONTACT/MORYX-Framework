@@ -291,3 +291,22 @@ public Entry InvokeMethod(MethodEntry method)
 ### Serialize Constructors
 
 In the previous sections, it was described that `EntryConvert` can also serialize constructors. The [EntrySerializeSerialization](/src/Moryx/Serialization/EntrySerializeSerialization.cs) only serializes constructors like methods with the [EntrySerializeAttribute](/src/Moryx/Serialization/EntryConvert/EntrySerializeAttribute.cs) defined.
+
+## Collection Reordering
+
+`EntryConvert` supports reordering of collection items. When a client changes the order of `SubEntries` within a collection entry, the new order is applied to the target collection during deserialization.
+
+Each collection item is identified by its original index (e.g. `"0"`, `"1"`, `"2"`). When `UpdateInstance` processes a collection, it compares the order of identifiers in the incoming `SubEntries` against the original order. If the order differs, the collection is rebuilt to match the new sequence.
+
+Newly created items (with `CREATED` identifiers) can be interleaved between existing items. For example, a client could send `SubEntries` in the order `["2", "CREATED1", "0"]` to move the third item to the front, insert a new item, and place the first item at the end.
+
+Reordering is only applied when the order actually changes. If the `SubEntries` arrive in the original order (existing items followed by new items), no reordering takes place and the standard add/update/remove logic is used.
+
+### Supported Collection Types
+
+| Collection Type | Reordering | Notes |
+|----------------|------------|-------|
+| `List<T>` | Supported | Items are reordered in-place |
+| `T[]` (arrays) | Supported | Array is rebuilt in new order |
+| `IList<T>` (array-backed) | Supported | Array is rebuilt and reassigned via reflection |
+| `Dictionary<TKey, TValue>` | Not supported | The order of items in a dictionary is not guaranteed by the [.NET specification](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.dictionary-2#remarks) |
