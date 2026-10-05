@@ -29,6 +29,7 @@ public class WorkplanEditingController : ControllerBase
     }
 
     [HttpGet("steps")]
+    [ProducesResponseType(typeof(WorkplanStepRecipe[]), StatusCodes.Status200OK)]
     public async Task<ActionResult<WorkplanStepRecipe[]>> AvailableSteps()
     {
         var workplans = await _workplans.LoadAllWorkplansAsync();
@@ -56,6 +57,8 @@ public class WorkplanEditingController : ControllerBase
 
     [HttpPost("sessions")]
     [Authorize(Policy = WorkplanPermissions.CanEdit)]
+    [ProducesResponseType(typeof(WorkplanSessionModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<WorkplanSessionModel>> EditWorkplan([FromBody] OpenSessionRequest openSession)
     {
         var workplan = openSession.WorkplanId > 0
@@ -79,6 +82,8 @@ public class WorkplanEditingController : ControllerBase
 
     [HttpGet("sessions/{sessionId}")]
     [Authorize(Policy = WorkplanPermissions.CanView)]
+    [ProducesResponseType(typeof(WorkplanSessionModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
     public ActionResult<WorkplanSessionModel> OpenSession([FromRoute] string sessionId)
     {
         var session = _workplanEditing.OpenSession(sessionId);
@@ -89,6 +94,8 @@ public class WorkplanEditingController : ControllerBase
 
     [HttpGet("sessions/{sessionId}/autolayout")]
     [Authorize(Policy = WorkplanPermissions.CanView)]
+    [ProducesResponseType(typeof(WorkplanSessionModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
     public ActionResult<WorkplanSessionModel> AutoLayout([FromRoute] string sessionId)
     {
         var session = _workplanEditing.OpenSession(sessionId);
@@ -101,6 +108,7 @@ public class WorkplanEditingController : ControllerBase
 
     [HttpPut("sessions/{sessionId}")]
     [Authorize(Policy = WorkplanPermissions.CanEdit)]
+    [ProducesResponseType(typeof(WorkplanSessionModel), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
     public ActionResult<WorkplanSessionModel> UpdateSession(
         [FromRoute] string sessionId,
@@ -196,6 +204,8 @@ public class WorkplanEditingController : ControllerBase
 
     [HttpPost("sessions/{sessionId}/nodes")]
     [Authorize(Policy = WorkplanPermissions.CanEdit)]
+    [ProducesResponseType(typeof(WorkplanNodeModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<WorkplanNodeModel>> AddStep(
         [FromRoute] string sessionId,
         [FromBody] WorkplanStepRecipe recipe
@@ -230,6 +240,7 @@ public class WorkplanEditingController : ControllerBase
 
     [HttpPut("sessions/{sessionId}/nodes/{nodeId}")]
     [Authorize(Policy = WorkplanPermissions.CanEdit)]
+    [ProducesResponseType(typeof(WorkplanNodeModel), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
     public ActionResult<WorkplanNodeModel> UpdateStep(
         [FromRoute] string sessionId,
@@ -255,6 +266,7 @@ public class WorkplanEditingController : ControllerBase
 
     [HttpDelete("sessions/{sessionId}/nodes/{nodeId}")]
     [Authorize(Policy = WorkplanPermissions.CanEdit)]
+    [ProducesResponseType(typeof(WorkplanSessionModel), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
     public ActionResult<WorkplanSessionModel> RemoveNode(
         [FromRoute] string sessionId,
@@ -273,6 +285,7 @@ public class WorkplanEditingController : ControllerBase
 
     [HttpPost("sessions/{sessionId}/nodes/{targetNodeId}/{targetIndex}")]
     [Authorize(Policy = WorkplanPermissions.CanEdit)]
+    [ProducesResponseType(typeof(WorkplanSessionModel), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
     public ActionResult<WorkplanSessionModel> ConnectStep(
         [FromRoute] string sessionId,
@@ -296,6 +309,7 @@ public class WorkplanEditingController : ControllerBase
 
     [HttpDelete("sessions/{sessionId}/nodes/{targetNodeId}/{targetIndex}")]
     [Authorize(Policy = WorkplanPermissions.CanEdit)]
+    [ProducesResponseType(typeof(WorkplanSessionModel), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
     public ActionResult<WorkplanSessionModel> DisconnectStep(
         [FromRoute] string sessionId,

@@ -15,6 +15,10 @@
       "TITLE": "您是否要关闭此会话？",
       "MESSAGE": "如果您未保存，您的更改将丢失。您确定要关闭会话吗？"
     },
+    "CONFIRM_DIALOG_UNCONNECTED": {
+      "TITLE": "输入/输出未连接",
+      "MESSAGE": "某些输入/输出未连接，可能会导致问题。您仍要保存吗?"
+    },
     "CLOSE": "关闭"
   },
   "STEP_CREATOR": {

@@ -15,6 +15,10 @@
       "TITLE": "Möchtest du diese Sitzung schließen?",
       "MESSAGE": "Wenn du die Sitzung schließt gehen alle nicht gespeicherten Änderungen verloren. Möchtest du die Sitzung wirklich schließen?"
     },
+    "CONFIRM_DIALOG_UNCONNECTED": {
+      "TITLE": "Ein-/Ausgänge nicht angeschlossen",
+      "MESSAGE": "Einige Ein- oder Ausgänge sind nicht verbunden und könnten zu Problemen führen. Möchten Sie dennoch speichern?"
+    },
     "CLOSE": "Schließen"
   },
   "STEP_CREATOR": {

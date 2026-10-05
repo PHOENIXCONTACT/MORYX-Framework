@@ -15,6 +15,10 @@
       "TITLE": "Vuoi chiudere la sessione corrente?",
       "MESSAGE": "Se non hai salvato, le tue modifiche andranno perse. Sei sicuro di voler chiudere la sessione?"
     },
+    "CONFIRM_DIALOG_UNCONNECTED": {
+      "TITLE": "Ingressi/Uscite non collegati",
+      "MESSAGE": "Alcuni ingressi/uscite non sono collegati e potrebbero causare problemi. Vuoi comunque salvare?"
+    },
     "CLOSE": "Chiudi"
   },
   "STEP_CREATOR": {

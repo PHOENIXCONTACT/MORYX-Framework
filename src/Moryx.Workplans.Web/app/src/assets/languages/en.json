@@ -15,6 +15,10 @@
       "TITLE": "Do you want to close this session?",
       "MESSAGE": "If you haven't saved, your changes will be lost. Are you sure you want to close the session?"
     },
+    "CONFIRM_DIALOG_UNCONNECTED": {
+      "TITLE": "Inputs/Outputs not connected",
+      "MESSAGE": "Some inputs/outputs are not connected, and might cause issues. Do you still want to save?"
+    },
     "CLOSE": "Close"
   },
   "STEP_CREATOR": {

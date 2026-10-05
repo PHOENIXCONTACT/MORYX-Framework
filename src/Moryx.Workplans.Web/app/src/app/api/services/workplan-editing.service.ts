@@ -38,6 +38,9 @@ import { updateSession } from '../fn/workplan-editing/update-session';
 import { UpdateSession$Params } from '../fn/workplan-editing/update-session';
 import { updateStep } from '../fn/workplan-editing/update-step';
 import { UpdateStep$Params } from '../fn/workplan-editing/update-step';
+import { validateSession } from '../fn/workplan-editing/validate-session';
+import { ValidateSession$Params } from '../fn/workplan-editing/validate-session';
+import { ValidationResult } from '../models/validation-result';
 import { WorkplanNodeModel } from '../models/workplan-node-model';
 import { WorkplanSessionModel } from '../models/workplan-session-model';
 import { WorkplanStepRecipe } from '../models/workplan-step-recipe';
@@ -221,6 +224,31 @@ export class WorkplanEditingService extends BaseService {
   saveSession(params: SaveSession$Params, context?: HttpContext): Promise<WorkplanSessionModel> {
     const resp = this.saveSession$Response(params, context);
     return resp.then((r: StrictHttpResponse<WorkplanSessionModel>): WorkplanSessionModel => r.body);
+  }
+
+  /** Path part for operation `validateSession()` */
+  static readonly ValidateSessionPath = '/api/moryx/workplans/sessions/{sessionId}/validate';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `validateSession()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  validateSession$Response(params: ValidateSession$Params, context?: HttpContext): Promise<StrictHttpResponse<ValidationResult>> {
+    const obs = validateSession(this.http, this.rootUrl, params, context);
+    return firstValueFrom(obs);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `validateSession$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  validateSession(params: ValidateSession$Params, context?: HttpContext): Promise<ValidationResult> {
+    const resp = this.validateSession$Response(params, context);
+    return resp.then((r: StrictHttpResponse<ValidationResult>): ValidationResult => r.body);
   }
 
   /** Path part for operation `addStep()` */
