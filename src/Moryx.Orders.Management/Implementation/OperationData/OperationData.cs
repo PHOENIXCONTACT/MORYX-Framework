@@ -221,6 +221,31 @@ internal class OperationData : IOperationData, IAsyncStateContext, ILoggingCompo
             Operation.PlannedEnd = update.PlannedEnd.Value;
         }
 
+        if (update.TotalAmount.HasValue)
+        {
+            Operation.TotalAmount = update.TotalAmount.Value;
+        }
+
+        if (update.OverDeliveryAmount.HasValue)
+        {
+            Operation.OverDeliveryAmount = update.OverDeliveryAmount.Value;
+        }
+
+        if (update.UnderDeliveryAmount.HasValue)
+        {
+            Operation.UnderDeliveryAmount = update.UnderDeliveryAmount.Value;
+        }
+
+        if (update.TargetCycleTime.HasValue)
+        {
+            Operation.TargetCycleTime = update.TargetCycleTime.Value;
+        }
+
+        if (update.TargetStock is not null)
+        {
+            Operation.TargetStock = update.TargetStock;
+        }
+
         await _savingContext.SaveOperation(this);
         Updated?.Invoke(this, new OperationEventArgs(this));
     }
@@ -842,7 +867,7 @@ internal class OperationData : IOperationData, IAsyncStateContext, ILoggingCompo
             }
 
             var missingAmounts = _operationData.ExecuteCountStrategy(() => _countStrategy.MissingAmounts(_operationData.Operation),
-                nameof(_countStrategy.MissingAmounts),Array.Empty<DispatchContext>());
+                nameof(_countStrategy.MissingAmounts), Array.Empty<DispatchContext>());
 
             if (missingAmounts.Count == 0)
             {

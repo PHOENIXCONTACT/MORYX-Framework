@@ -12,11 +12,11 @@ namespace Moryx.AbstractionLayer.Capabilities;
 [DataContract]
 public class NullCapabilities : ICapabilities
 {
-    private static NullCapabilities _instance;
+    private static readonly NullCapabilities _instance = new();
     /// <summary>
     /// Singleton instance
     /// </summary>
-    public static NullCapabilities Instance => _instance ??= new NullCapabilities();
+    public static NullCapabilities Instance => _instance;
 
     /// <summary>
     /// Private constructor to enforce singleton

@@ -27,4 +27,19 @@ public sealed class OperationUpdate
     /// Planned end date of the operation which should be updated
     /// </summary>
     public DateTime? PlannedEnd { get; set; }
+
+    /// <inheritdoc cref="Operation.TotalAmount"/>
+    public int? TotalAmount { get; set; }
+
+    /// <inheritdoc cref="Operation.OverDeliveryAmount"/>
+    public int? OverDeliveryAmount { get; set; }
+
+    /// <inheritdoc cref="Operation.UnderDeliveryAmount"/>
+    public int? UnderDeliveryAmount { get; set; }
+
+    /// <inheritdoc cref="Operation.TargetCycleTime"/>
+    public double? TargetCycleTime { get; set; }
+
+    /// <inheritdoc cref="Operation.TargetStock"/>
+    public string TargetStock { get; set; }
 }

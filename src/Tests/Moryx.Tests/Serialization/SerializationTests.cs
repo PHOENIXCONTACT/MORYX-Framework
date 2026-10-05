@@ -1023,6 +1023,29 @@ public class SerializationTests
         Assert.That(possibles, Is.SupersetOf(expected));
     }
 
+    [Test(Description = "Enum possible values should use DisplayName and Description from attribute")]
+    public void EnumPossibleValuesHaveDisplayNameAndDescription()
+    {
+        // Arrange
+        var encoded = EntryConvert.EncodeClass(typeof(DisplayNameEnumClass));
+
+        // Act
+        var possibles = encoded.SubEntries[0].Value.Possible;
+
+        // Assert
+        Assert.That(possibles, Has.Exactly(3).Items);
+
+        Assert.That(possibles[0].Key, Is.EqualTo(nameof(DisplayNameEnum.Unset)));
+        Assert.That(possibles[0].DisplayName, Is.EqualTo(DisplayNameEnumStrings.UnsetDisplayName));
+        Assert.That(possibles[0].Description, Is.EqualTo(DisplayNameEnumStrings.UnsetDescription));
+
+        Assert.That(possibles[1].Key, Is.EqualTo(nameof(DisplayNameEnum.ValueA)));
+        Assert.That(possibles[1].DisplayName, Is.EqualTo(DisplayNameEnumStrings.ValueADisplayName));
+
+        Assert.That(possibles[2].Key, Is.EqualTo(nameof(DisplayNameEnum.ValueB)));
+        Assert.That(possibles[2].DisplayName, Is.EqualTo(nameof(DisplayNameEnum.ValueB)));
+    }
+
     [Test]
     public void AllowedIntValuesTest()
     {

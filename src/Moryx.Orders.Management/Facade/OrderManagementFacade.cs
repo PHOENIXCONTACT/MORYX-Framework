@@ -197,6 +197,7 @@ internal class OrderManagementFacade : IOrderManagement, IFacadeControl
     public Task BeginOperationAsync(Operation operation, int amount, User user, CancellationToken cancellationToken = default)
     {
         ValidateHealthState();
+        user ??= UserManagement.DefaultUser;
 
         var operationData = GetOperationDataSave(operation);
         return OperationManager.Adjust(operationData, user, amount);

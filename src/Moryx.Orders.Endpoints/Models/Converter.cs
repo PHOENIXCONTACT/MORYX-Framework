@@ -14,9 +14,13 @@ internal static class Converter
     internal static OperationAdvice FromModel(AdviceModel model, Operation operation)
     {
         if (!model.PartId.HasValue)
+        {
             return new OrderAdvice(model.ToteBoxNumber, model.Amount);
+        }
         else
+        {
             return new PickPartAdvice(operation.Parts.FirstOrDefault(p => p.Id == model.PartId), model.ToteBoxNumber);
+        }
     }
 
     internal static OperationUpdate FromModel(OperationUpdateModel model)
@@ -26,6 +30,11 @@ internal static class Converter
             SortIndex = model.SortIndex,
             PlannedStart = model.PlannedStart,
             PlannedEnd = model.PlannedEnd,
+            TotalAmount = model.TotalAmount,
+            OverDeliveryAmount = model.OverDeliveryAmount,
+            UnderDeliveryAmount = model.UnderDeliveryAmount,
+            TargetCycleTime = model.TargetCycleTime,
+            TargetStock = model.TargetStock,
         };
     }
 

@@ -24,7 +24,7 @@ internal class ServerNotificationCollection : INotificationCollection
         List<IModuleNotification> copy;
         lock (_lockObj)
         {
-            copy = _internalList.ToList();
+            copy = [.. _internalList];
         }
 
         return copy.GetEnumerator();
@@ -40,7 +40,7 @@ internal class ServerNotificationCollection : INotificationCollection
             _internalList.Add(item);
             if (_internalList.Count > MaxCollectionSize)
             {
-                removedItem = _internalList.First();
+                removedItem = _internalList[0];
                 _internalList.Remove(removedItem);
             }
         }
@@ -49,7 +49,7 @@ internal class ServerNotificationCollection : INotificationCollection
 
         if (removedItem != null)
         {
-            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item));
+            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removedItem));
         }
     }
 

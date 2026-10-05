@@ -4,7 +4,7 @@
 */
 
 export class TranslationConstants {
-  public static readonly LANGUAGES = ['en', 'de', 'it', 'zh'];
+  public static readonly LANGUAGES = ['en', 'de', 'it', 'zh', 'pl'];
 
   public static readonly MORE = {
     VIEWS: 'MORE.VIEWS',
