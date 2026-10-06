@@ -28,15 +28,18 @@ internal class ModuleLifecycleController
     public Task InitializeAsync(IServerModule module, CancellationToken cancellationToken)
     {
         if (!_availableModules.Contains(module))
+        {
             return Task.CompletedTask;
-
+        }
         return module.InitializeAsync(cancellationToken);
     }
 
     public async Task StartAsync(IServerModule module, CancellationToken cancellationToken)
     {
         if (!_availableModules.Contains(module))
+        {
             return;
+        }
 
         await module.InitializeAsync(cancellationToken);
         await StartModule(module, cancellationToken);
@@ -65,16 +68,18 @@ internal class ModuleLifecycleController
     public async Task StopAsync(IServerModule module, CancellationToken cancellationToken)
     {
         if (!_availableModules.Contains(module))
+        {
             return;
+        }
 
         // First we have to find all running modules that depend on this service
         var dependingServices = _dependencyManager.GetDependencyBranch(module).Dependents.Select(item => item.RepresentedModule);
         // Now we will stop all of them recursively
-        foreach (var dependingService in dependingServices.Where(dependent => dependent.State.HasFlag(ServerModuleState.Running)
-                                                                              || dependent.State == ServerModuleState.Starting))
+        foreach (var dependingService in dependingServices.Where(dependent =>
+                    dependent.State == ServerModuleState.Running || dependent.State == ServerModuleState.Starting).ToArray())
         {
             // We will enqueue the service to make sure it is restarted later on
-            await AddWaitingModuleAsync(module, dependingService, cancellationToken);
+            await AddWaitingModuleAsync(module, dependingService, cancellationToken, false); // no late check, because the module is intentionally running
             await StopAsync(dependingService, cancellationToken);
         }
 
@@ -106,11 +111,13 @@ internal class ModuleLifecycleController
 
         // Don't try to start modules which initialization has been failed or for which dependency initializations have failed
         if (module.State == ServerModuleState.Failure || hasFailedDependencies)
+        {
             return;
+        }
 
         // Now we check for any not running dependencies and start them
         var awaitingDependencies = dependencies
-            .Where(item => !item.RepresentedModule.State.HasFlag(ServerModuleState.Running))
+            .Where(item => item.RepresentedModule.State is not ServerModuleState.Running)
             // Filter missing modules if they are optional
             .Where(item => item.RepresentedModule is not MissingServerModule { Optional: true })
             .Select(item => item.RepresentedModule).ToArray();
@@ -137,8 +144,10 @@ internal class ModuleLifecycleController
     private async Task ModuleChangedState(IServerModule module, ServerModuleState newState, CancellationToken cancellationToken)
     {
         // Check if it switched to running
-        if (!newState.HasFlag(ServerModuleState.Running))
+        if (newState != ServerModuleState.Running)
+        {
             return;
+        }
 
         // Now we start every service waiting on this service to return
         // Extract under semaphore, start outside to avoid re-entrance deadlock
@@ -172,7 +181,7 @@ internal class ModuleLifecycleController
     {
         foreach (var dependent in branch.Dependents.Where(ShouldBeStarted))
         {
-            await AddWaitingModuleAsync(branch.RepresentedModule, dependent.RepresentedModule, cancellationToken);
+            await AddWaitingModuleAsync(branch.RepresentedModule, dependent.RepresentedModule, cancellationToken, true);
             await ConvertBranchAsync(dependent, cancellationToken);
         }
     }
@@ -181,7 +190,7 @@ internal class ModuleLifecycleController
     {
         foreach (var dependency in dependencies)
         {
-            await AddWaitingModuleAsync(dependency, waitingService, cancellationToken);
+            await AddWaitingModuleAsync(dependency, waitingService, cancellationToken, true);
             await StartAsync(dependency, cancellationToken);
         }
     }
@@ -193,16 +202,29 @@ internal class ModuleLifecycleController
         return result;
     }
 
-    private Task AddWaitingModuleAsync(IServerModule dependency, IServerModule dependent, CancellationToken cancellationToken)
+    private Task AddWaitingModuleAsync(IServerModule dependency, IServerModule dependent, CancellationToken cancellationToken, bool lateCheck)
     {
         return _waitingModulesSemaphore.ExecuteAsync(() =>
         {
-            if (!_waitingModules.TryGetValue(dependency, out var waitingModules))
+            if (lateCheck && dependency.State == ServerModuleState.Running)
             {
-                _waitingModules[dependency] = waitingModules = [];
+                return;
             }
 
-            waitingModules.Add(dependent);
+            if (_waitingModules.TryGetValue(dependency, out var waitingModules))
+            {
+                if (!waitingModules.Contains(dependent))
+                {
+                    waitingModules.Add(dependent);
+                }
+            }
+            else
+            {
+                _waitingModules[dependency] = new HashSet<IServerModule>
+                {
+                    dependent
+                };
+            }
         }, cancellationToken);
     }
 }

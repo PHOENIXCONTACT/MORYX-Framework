@@ -132,4 +132,55 @@ public class StateTransitionTest
         await casted.StopAsync();
         module.WaitEvent.Set();
     }
+
+    [Description("Test if module in stopped state starts again")]
+    [Test]
+    public async Task StoppedToRunning()
+    {
+        var casted = (IServerModule)_moduleUnderTest;
+
+        Assert.That(casted.State, Is.EqualTo(ServerModuleState.Stopped));
+
+        await casted.StartAsync();
+
+        Assert.That(_moduleUnderTest.LastInvoke,
+            Is.EqualTo(InvokedMethod.Start));
+
+        Assert.That(casted.State,
+            Is.EqualTo(ServerModuleState.Running));
+    }
+
+    [Test]
+    public async Task StartFromStoppedInitializesAndStarts()
+    {
+        var casted = (IServerModule)_moduleUnderTest;
+
+        Assert.That(casted.State,
+            Is.EqualTo(ServerModuleState.Stopped));
+
+        await casted.StartAsync();
+
+        Assert.That(_moduleUnderTest.InitializeCalls,
+            Is.EqualTo(1));
+
+        Assert.That(_moduleUnderTest.StartCalls,
+            Is.EqualTo(1));
+
+        Assert.That(casted.State,
+            Is.EqualTo(ServerModuleState.Running));
+    }
+
+    [Test]
+    public async Task StartFromStoppedInitializeFails()
+    {
+        var casted = (IServerModule)_moduleUnderTest;
+
+        _moduleUnderTest.CurrentMode = TestMode.MoryxException;
+
+        await casted.StartAsync();
+
+        Assert.That(_moduleUnderTest.InitializeCalls, Is.EqualTo(1));
+        Assert.That(_moduleUnderTest.StartCalls, Is.EqualTo(0));
+        Assert.That(casted.State, Is.EqualTo(ServerModuleState.Failure));
+    }
 }

@@ -12,6 +12,11 @@ internal class StoppedState : ServerModuleStateBase
     {
     }
 
+    public override Task Start(CancellationToken cancellationToken)
+    {
+        return NextStateAsync(StatePrepareReadyToStart, cancellationToken);
+    }
+
     public override Task Initialize(CancellationToken cancellationToken)
     {
         return NextStateAsync(StateInitializing, cancellationToken);

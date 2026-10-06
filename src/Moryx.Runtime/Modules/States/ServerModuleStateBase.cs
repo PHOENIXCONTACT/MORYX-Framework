@@ -39,6 +39,9 @@ internal abstract class ServerModuleStateBase : AsyncStateBase<IServerModuleStat
     [StateDefinition(typeof(InitializingState))]
     protected const int StateInitializing = 10;
 
+    [StateDefinition(typeof(PrepareForStartState))]
+    protected const int StatePrepareReadyToStart = 11;
+
     [StateDefinition(typeof(ReadyState))]
     protected const int StateReady = 20;
 
@@ -60,3 +63,4 @@ internal abstract class ServerModuleStateBase : AsyncStateBase<IServerModuleStat
     [StateDefinition(typeof(InitializedFailureState))]
     protected const int StateInitializedFailure = 65;
 }
+
