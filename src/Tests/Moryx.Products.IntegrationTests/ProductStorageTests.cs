@@ -1546,4 +1546,53 @@ public class ProductStorageTests
         // Assert
         Assert.That(loaded.CreatedAt, Is.EqualTo(createdAt));
     }
+
+    [Test(Description = "FromEntities collection parts crash on load when empty and lose children when non-empty (see #1518)")]
+    public async Task SaveAndLoadInstanceWithFromEntitiesParts()
+    {
+        // Arrange
+        // Reconfigure: persist NeedleInstance and use FromEntities for the Needles link
+        var instanceConfigs = _storage.Config.InstanceStrategies;
+        var skipIndex = instanceConfigs.FindIndex(s => s.TargetType == typeof(NeedleInstance).FullName);
+        instanceConfigs[skipIndex] = new GenericInstanceConfiguration
+        {
+            TargetType = typeof(NeedleInstance).FullName,
+            JsonColumn = nameof(IGenericColumns.Text8),
+            PropertyConfigs =
+            [
+                new PropertyMapperConfig
+                {
+                    PropertyName = nameof(NeedleInstance.Role),
+                    Column = nameof(IGenericColumns.Integer1),
+                    PluginName = nameof(IntegerColumnMapper)
+                }
+            ]
+        };
+
+        var needlesLinkConfig = _storage.Config.LinkStrategies
+            .First(s => s.TargetType == typeof(WatchType).FullName && s.PartName == nameof(WatchType.Needles));
+        needlesLinkConfig.PartCreation = PartSourceStrategy.FromEntities;
+
+        await _storage.StartAsync();
+
+        var watch = SetupProduct("FromEntitiesWatch", "FE");
+        await _storage.SaveTypeAsync(watch);
+        watch = (WatchType)await _storage.LoadTypeAsync(watch.Id);
+
+        var instance = (WatchInstance)watch.CreateInstance();
+        await _storage.SaveInstancesAsync([instance]);
+
+        // Act
+        var loadedInstances = await _storage.LoadInstancesAsync([instance.Id]);
+        var loaded = (WatchInstance)loadedInstances[0];
+
+        // Assert
+        // Needles must be populated from entities with persisted IDs
+        Assert.That(loaded.Needles, Is.Not.Null, "Needles collection should not be null");
+        Assert.That(loaded.Needles.Count, Is.EqualTo(3), "All 3 needles should be loaded via FromEntities");
+        foreach (var needle in loaded.Needles)
+        {
+            Assert.That(needle.Id, Is.GreaterThan(0), "Needle should have a persisted Id from the database");
+        }
+    }
 }
