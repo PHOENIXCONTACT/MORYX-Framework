@@ -414,4 +414,117 @@ public class ModuleManagerTests
             Is.EqualTo(dependentStartCalls + 1),
             "Dependent module was not restarted.");
     }
+
+    [Test]
+    [Description("Regression test: Reincarnating a module must restart dependent modules that were stopped during the shutdown sequence.")]
+    public async Task ShouldReincarnateDependentModules()
+    {
+        // Arrange
+        var rootModule = new ServerModuleA(
+            new ModuleContainerFactory(),
+            _mockConfigManager.Object,
+            new NullLoggerFactory());
+
+        var dependentModule = new ServerModuleADependent(
+            new ModuleContainerFactory(),
+            _mockConfigManager.Object,
+            new NullLoggerFactory());
+
+        var moduleManager = CreateObjectUnderTest(
+        [
+            rootModule,
+            dependentModule
+        ]);
+
+        // Initial startup
+        await moduleManager.StartModulesAsync();
+
+        WaitForTimeboxed(() =>
+            rootModule.State == ServerModuleState.Running &&
+            dependentModule.State == ServerModuleState.Running);
+
+        Assert.That(rootModule.State,
+            Is.EqualTo(ServerModuleState.Running));
+
+        Assert.That(dependentModule.State,
+            Is.EqualTo(ServerModuleState.Running));
+
+        var initialInitializeCalls = dependentModule.InitializeCalls;
+        var initialStartCalls = dependentModule.StartCalls;
+
+        // Act
+        await moduleManager.ReincarnateModuleAsync(rootModule);
+
+        WaitForTimeboxed(() =>
+            rootModule.State == ServerModuleState.Running &&
+            dependentModule.State == ServerModuleState.Running);
+
+        // Assert
+        Assert.That(rootModule.State,
+            Is.EqualTo(ServerModuleState.Running),
+            "Root module was not restarted.");
+
+        Assert.That(dependentModule.State,
+            Is.EqualTo(ServerModuleState.Running),
+            "Dependent module was not restarted.");
+
+        Assert.That(dependentModule.InitializeCalls,
+            Is.EqualTo(initialInitializeCalls + 1),
+            "Dependent module was not reinitialized.");
+
+        Assert.That(dependentModule.StartCalls,
+            Is.EqualTo(initialStartCalls + 1),
+            "Dependent module was not restarted.");
+    }
+
+    [Test]
+    public async Task ShouldIgnoreUnknownModuleOnStart()
+    {
+        // Arrange
+        var knownModule = new Mock<IServerModule>();
+        var unknownModule = new Mock<IServerModule>();
+
+        var moduleManager = CreateObjectUnderTest([knownModule.Object]);
+
+        // Act
+        Assert.DoesNotThrowAsync(async () => await moduleManager.StartModuleAsync(unknownModule.Object));
+
+        // Assert
+        unknownModule.Verify(m => m.InitializeAsync(), Times.Never);
+        unknownModule.Verify(m => m.StartAsync(), Times.Never);
+    }
+
+    [Test]
+    public async Task ShouldIgnoreUnknownModuleOnStop()
+    {
+        // Arrange
+        var knownModule = new Mock<IServerModule>();
+        var unknownModule = new Mock<IServerModule>();
+
+        var moduleManager = CreateObjectUnderTest([knownModule.Object]);
+
+        // Act
+        Assert.DoesNotThrowAsync(async () => await moduleManager.StopModuleAsync(unknownModule.Object));
+
+        // Assert
+        unknownModule.Verify(m => m.StopAsync(), Times.Never);
+    }
+
+    [Test]
+    public async Task ShouldIgnoreUnknownModuleOnReincarnate()
+    {
+        // Arrange
+        var knownModule = new Mock<IServerModule>();
+        var unknownModule = new Mock<IServerModule>();
+
+        var moduleManager = CreateObjectUnderTest([knownModule.Object]);
+
+        // Act
+        Assert.DoesNotThrowAsync(async () => await moduleManager.ReincarnateModuleAsync(unknownModule.Object));
+
+        // Assert
+        unknownModule.Verify(m => m.InitializeAsync(), Times.Never);
+        unknownModule.Verify(m => m.StartAsync(), Times.Never);
+        unknownModule.Verify(m => m.StopAsync(), Times.Never);
+    }
 }

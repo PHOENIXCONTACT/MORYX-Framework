@@ -35,8 +35,7 @@ public class RegressionTests
 
     // ToDo: Check if TransitionTests StoppedToRunning(), StartFromStoppedInitializesAndStarts() and StartFromStoppedInitializeFails() are covered by this Test.
     [Test]
-    [Description(
-        "Regression test for restarting a stopped module. Modules that are stopped as part of a dependency shutdown chain must be reinitialized before they are started again.")]
+    [Description("Regression test for restarting a stopped module. Modules that are stopped as part of a dependency shutdown chain must be reinitialized before they are started again.")]
     public async Task RestartStoppedModule()
     {
         // Arrange
