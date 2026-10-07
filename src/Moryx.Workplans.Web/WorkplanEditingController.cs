@@ -173,9 +173,9 @@ public class WorkplanEditingController : ControllerBase
 
     [HttpGet("sessions/{sessionId}/validate")]
     [Authorize(Policy = WorkplanPermissions.CanEdit)]
-    [ProducesResponseType(typeof(ValidationResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationResultModel), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<ValidationResult>> ValidateSession([FromRoute] string sessionId)
+    public async Task<ActionResult<ValidationResultModel>> ValidateSession([FromRoute] string sessionId)
     {
         var session = _workplanEditing.OpenSession(sessionId);
 
@@ -191,7 +191,7 @@ public class WorkplanEditingController : ControllerBase
            session.Workplan,
            ValidationAspect.DeadEnd | ValidationAspect.LoneWolf | ValidationAspect.InfiniteLoop | ValidationAspect.LuckyStreak);
 
-        return Ok(validation);
+        return Ok(ModelConverter.ToValidationModel(validation, session.Workplan));
     }
 
     [HttpDelete("sessions/{sessionId}")]

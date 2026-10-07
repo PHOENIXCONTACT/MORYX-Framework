@@ -10,7 +10,7 @@ import { Router, RouterOutlet } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { SnackbarService, SearchBarService, SearchRequest, SearchSuggestion } from '@moryx/ngx-web-framework/services';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { ValidationResult, WorkplanSessionModel } from '@api/models';
+import { ValidationResultModel, WorkplanSessionModel } from '@api/models';
 import { WorkplanEditingService } from '@api/services';
 import { ConfirmDialog, ConfirmDialogData } from '@app/dialogs/dialog-confirm/dialog-confirm';
 import { TranslationConstants } from '@app/translation-constants';
@@ -128,8 +128,7 @@ export class Sessions implements OnInit, OnDestroy {
       .get([
         TranslationConstants.SESSIONS.CONFIRM_DIALOG.MESSAGE,
         TranslationConstants.SESSIONS.CONFIRM_DIALOG.TITLE,
-        TranslationConstants.SESSIONS.CONFIRM_DIALOG_UNCONNECTED.TITLE,
-        TranslationConstants.SESSIONS.CONFIRM_DIALOG_UNCONNECTED.MESSAGE,
+        TranslationConstants.SESSIONS.CONFIRM_DIALOG_INVALID_WORKPLAN.TITLE,
         TranslationConstants.EDITOR.SNACK_BAR.SUCCESS
       ]));
   }
@@ -177,17 +176,21 @@ export class Sessions implements OnInit, OnDestroy {
   }
 
   private closeSession(sessionToken: string, sessionIndex: number) {
-    this.executeValidation(sessionToken, () => {
-        this.sessionService.closeSession(sessionToken)
-          .then(() => this.navigate(sessionIndex))
-          .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err));
-    }, (canContinue: boolean) => {
-      if(canContinue){
-        this.sessionService.closeSession(sessionToken)
-          .then(() => this.navigate(sessionIndex))
-          .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err));
+    this.executeValidation(sessionToken, 
+      () => this.closeCurrentSession(sessionToken, sessionIndex), 
+      (canContinue: boolean) => {
+        if(canContinue){
+          this.closeCurrentSession(sessionToken, sessionIndex);
+        }
       }
-    })    
+    );    
+  }
+
+  private closeCurrentSession(token: string, index: number)
+  {
+    this.sessionService.closeSession(token)
+          .then(() => this.navigate(index))
+          .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err));
   }
 
   private navigate(index: number){
@@ -221,7 +224,7 @@ export class Sessions implements OnInit, OnDestroy {
     const dialog = this.dialog.open(ConfirmDialog, {
       data: <ConfirmDialogData>{
         title: translations[TranslationConstants.SESSIONS.CONFIRM_DIALOG.TITLE],
-        message: translations[TranslationConstants.SESSIONS.CONFIRM_DIALOG.MESSAGE],
+        messages: [translations[TranslationConstants.SESSIONS.CONFIRM_DIALOG.MESSAGE]],
       }
     });
 
@@ -242,35 +245,49 @@ export class Sessions implements OnInit, OnDestroy {
     }
 
     const session = this.activeSession()!;
-    this.executeValidation(session.sessionToken!,() => {
-      this.sessionService.updateSession(session)
+    this.executeValidation(session.sessionToken!,
+      () => this.updateCurrentSession(session),
+      (canContinue) => {
+        if(canContinue){
+          this.saveSession(session);
+        }
+      }
+    );
+  }
+
+  private updateCurrentSession(session: WorkplanSessionModel){
+    this.sessionService.updateSession(session)
         .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err))
         .then(_ => this.saveSession(session));
-    },
-    () => this.saveSession(session));
   }
 
   private async executeValidation(token: string, validCallback: () => void, invalidCallback: (canContinue: boolean) => void ){
     await this.sessionService.validateWorkplan(token)
       .catch((err: HttpErrorResponse) => this.snackbarService.handleError(err))
-      .then(async (validateResult ) => {
+      .then(async (validateResult) => {
         if (!validateResult) {
           return;
         }
+        
         if(validateResult.success){
           validCallback();
         } else {
-          const translations = await this.getTranslations();
+          const messages = validateResult.errors?.map(e => e.error!) ?? [];
+          this.displayInvalidConfirmationDialog(messages, invalidCallback);
+        }
+      })
+  }
+
+  private async displayInvalidConfirmationDialog(messages : string[], invalidCallback: (canContinue: boolean) => void){
+    const translations = await this.getTranslations();
           const dialog = this.dialog.open(ConfirmDialog, {
             data: <ConfirmDialogData>{
-              title: translations[TranslationConstants.SESSIONS.CONFIRM_DIALOG_UNCONNECTED.TITLE],
-              message: translations[TranslationConstants.SESSIONS.CONFIRM_DIALOG_UNCONNECTED.MESSAGE],
+              title: translations[TranslationConstants.SESSIONS.CONFIRM_DIALOG_INVALID_WORKPLAN.TITLE],
+              messages: messages,
             }
           });
 
-          dialog.afterClosed().subscribe((confirmed) => invalidCallback(confirmed));
-        }
-      })
+    dialog.afterClosed().subscribe((confirmed) => invalidCallback(confirmed));
   }
 
   private saveSession(session: WorkplanSessionModel) {

@@ -4,7 +4,7 @@
 */
 
 import { inject, Injectable, signal } from '@angular/core';
-import { ValidationResult, WorkplanSessionModel } from '@api/models';
+import { ValidationResultModel, WorkplanSessionModel } from '@api/models';
 import { WorkplanEditingService, WorkplanService } from '@api/services';
 import { PrototypeToEntryConverter } from '@moryx/ngx-web-framework/entry-editor';
 import { BrowserStorageService } from './browser-storage.service';
@@ -89,9 +89,9 @@ export class SessionsService {
     return updated;
   }
 
-  async validateWorkplan(sessionId: string): Promise<ValidationResult> {
-    const updated = await this.workplanEditing.validateSession({ sessionId });
-    return updated;
+  async validateWorkplan(sessionId: string): Promise<ValidationResultModel> {
+    const validation = await this.workplanEditing.validateSession({ sessionId });
+    return validation;
   }
 
   registerUpdatedSession(session: WorkplanSessionModel) {

@@ -28,6 +28,6 @@ export class ConfirmDialog {
 
 export interface ConfirmDialogData {
   title: string;
-  message: string;
+  messages: string[];
 }
 

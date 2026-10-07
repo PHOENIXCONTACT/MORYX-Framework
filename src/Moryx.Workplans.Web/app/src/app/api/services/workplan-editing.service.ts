@@ -40,7 +40,7 @@ import { updateStep } from '../fn/workplan-editing/update-step';
 import { UpdateStep$Params } from '../fn/workplan-editing/update-step';
 import { validateSession } from '../fn/workplan-editing/validate-session';
 import { ValidateSession$Params } from '../fn/workplan-editing/validate-session';
-import { ValidationResult } from '../models/validation-result';
+import { ValidationResultModel } from '../models/validation-result-model';
 import { WorkplanNodeModel } from '../models/workplan-node-model';
 import { WorkplanSessionModel } from '../models/workplan-session-model';
 import { WorkplanStepRecipe } from '../models/workplan-step-recipe';
@@ -235,7 +235,7 @@ export class WorkplanEditingService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  validateSession$Response(params: ValidateSession$Params, context?: HttpContext): Promise<StrictHttpResponse<ValidationResult>> {
+  validateSession$Response(params: ValidateSession$Params, context?: HttpContext): Promise<StrictHttpResponse<ValidationResultModel>> {
     const obs = validateSession(this.http, this.rootUrl, params, context);
     return firstValueFrom(obs);
   }
@@ -246,9 +246,9 @@ export class WorkplanEditingService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  validateSession(params: ValidateSession$Params, context?: HttpContext): Promise<ValidationResult> {
+  validateSession(params: ValidateSession$Params, context?: HttpContext): Promise<ValidationResultModel> {
     const resp = this.validateSession$Response(params, context);
-    return resp.then((r: StrictHttpResponse<ValidationResult>): ValidationResult => r.body);
+    return resp.then((r: StrictHttpResponse<ValidationResultModel>): ValidationResultModel => r.body);
   }
 
   /** Path part for operation `addStep()` */

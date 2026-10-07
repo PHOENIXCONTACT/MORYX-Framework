@@ -12,13 +12,13 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { ValidationResult } from '../../models/validation-result';
+import { ValidationResultModel } from '../../models/validation-result-model';
 
 export interface ValidateSession$Params {
   sessionId: string;
 }
 
-export function validateSession(http: HttpClient, rootUrl: string, params: ValidateSession$Params, context?: HttpContext): Observable<StrictHttpResponse<ValidationResult>> {
+export function validateSession(http: HttpClient, rootUrl: string, params: ValidateSession$Params, context?: HttpContext): Observable<StrictHttpResponse<ValidationResultModel>> {
   const rb = new RequestBuilder(rootUrl, validateSession.PATH, 'get');
   if (params) {
     rb.path('sessionId', params.sessionId, {});
@@ -29,7 +29,7 @@ export function validateSession(http: HttpClient, rootUrl: string, params: Valid
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<ValidationResult>;
+      return r as StrictHttpResponse<ValidationResultModel>;
     })
   );
 }
