@@ -1,27 +1,29 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Container;
-using Moryx.Runtime.Modules;
 using Moryx.Runtime.Kernel.Tests.Dummies;
+using Moryx.Runtime.Modules;
+using Microsoft.Extensions.Logging;
 
 namespace Moryx.Runtime.Kernel.Tests.ModuleMocks;
 
-public class ServerModuleA : ServerModuleBase<RuntimeConfigManagerTestConfig2>, IFacadeContainer<IFacadeA>
-
+internal class ServerModuleADependent
+    : ServerModuleBase<RuntimeConfigManagerTestConfig2>
 {
-    public ServerModuleA(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory) : base(containerFactory, configManager, loggerFactory)
+    public ServerModuleADependent(
+        IModuleContainerFactory containerFactory,
+        IConfigManager configManager,
+        ILoggerFactory loggerFactory)
+        : base(containerFactory, configManager, loggerFactory)
     {
-        Facade = new FacadaA();
     }
 
-    public override string Name => "ServerModuleA";
+    public override string Name => "ServerModuleADependent";
 
-    private readonly FacadaA _aFacade = new();
-    IFacadeA IFacadeContainer<IFacadeA>.Facade => _aFacade;
-    public IFacadeA Facade { get; private set; }
+    [RequiredModuleApi(IsStartDependency = true)]
+    public IFacadeA Dependency { get; set; }
 
     public int InitializeCalls { get; private set; }
 

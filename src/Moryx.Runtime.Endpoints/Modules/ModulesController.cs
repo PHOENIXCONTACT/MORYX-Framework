@@ -95,8 +95,8 @@ public class ModulesController : ControllerBase
         var module = GetModuleFromManager(moduleName);
         if (module == null)
             return NotFound($"Module with name \"{moduleName}\" could not be found");
-        Task.Run(() => 
-            _moduleManager.StartModuleAsync(module));
+
+        Task.Run(() => _moduleManager.StartModuleAsync(module));
         return Ok();
     }
 
@@ -107,6 +107,7 @@ public class ModulesController : ControllerBase
         var module = GetModuleFromManager(moduleName);
         if (module == null)
             return NotFound($"Module with name \"{moduleName}\" could not be found");
+
         Task.Run(() => _moduleManager.StopModuleAsync(module));
         return Ok();
     }

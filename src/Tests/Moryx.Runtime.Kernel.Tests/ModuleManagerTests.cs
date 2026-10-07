@@ -1,10 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moryx.Configuration;
@@ -339,5 +335,83 @@ public class ModuleManagerTests
             Thread.Sleep(1000);
             i++;
         }
+    }
+
+    [Test]
+    [Description("Regression test: Dependent modules that were stopped during a dependency shutdown chain must be restarted when the root dependency is started again.")]
+    public async Task RestartingDependencyRootRestartsDependentModule()
+    {
+        // Arrange
+        var rootModule = new ServerModuleA(
+            new ModuleContainerFactory(),
+            _mockConfigManager.Object,
+            new NullLoggerFactory());
+
+        var dependentModule = new ServerModuleADependent(
+            new ModuleContainerFactory(),
+            _mockConfigManager.Object,
+            new NullLoggerFactory());
+
+        var moduleManager = CreateObjectUnderTest(
+        [
+            rootModule,
+        dependentModule
+        ]);
+
+        // Start all modules
+        await moduleManager.StartModulesAsync();
+
+        WaitForTimeboxed(() =>
+            rootModule.State == ServerModuleState.Running &&
+            dependentModule.State == ServerModuleState.Running);
+
+        Assert.That(rootModule.State,
+            Is.EqualTo(ServerModuleState.Running));
+
+        Assert.That(dependentModule.State,
+            Is.EqualTo(ServerModuleState.Running));
+
+        var dependentInitializeCalls = dependentModule.InitializeCalls;
+        var dependentStartCalls = dependentModule.StartCalls;
+
+        // Act
+
+        // Stop root module -> dependent must be stopped as well
+        await moduleManager.StopModuleAsync(rootModule);
+
+        WaitForTimeboxed(() =>
+            rootModule.State == ServerModuleState.Stopped &&
+            dependentModule.State == ServerModuleState.Stopped);
+
+        Assert.That(rootModule.State,
+            Is.EqualTo(ServerModuleState.Stopped));
+
+        Assert.That(dependentModule.State,
+            Is.EqualTo(ServerModuleState.Stopped));
+
+        // Restart root module
+        await moduleManager.StartModuleAsync(rootModule);
+
+        WaitForTimeboxed(() =>
+            rootModule.State == ServerModuleState.Running &&
+            dependentModule.State == ServerModuleState.Running);
+
+        // Assert
+
+        Assert.That(rootModule.State,
+            Is.EqualTo(ServerModuleState.Running),
+            "Root module was not restarted.");
+
+        Assert.That(dependentModule.State,
+            Is.EqualTo(ServerModuleState.Running),
+            "Dependent module was not restarted.");
+
+        Assert.That(dependentModule.InitializeCalls,
+            Is.EqualTo(dependentInitializeCalls + 1),
+            "Dependent module was not reinitialized.");
+
+        Assert.That(dependentModule.StartCalls,
+            Is.EqualTo(dependentStartCalls + 1),
+            "Dependent module was not restarted.");
     }
 }
