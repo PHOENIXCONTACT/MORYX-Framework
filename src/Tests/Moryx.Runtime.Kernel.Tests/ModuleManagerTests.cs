@@ -468,4 +468,150 @@ public class ModuleManagerTests
             await Task.Delay(10, cts.Token);
         }
     }
+
+    [Test]
+    public async Task ShouldNotStartModuleWhenStoppedDuringInitialization()
+    {
+        // Arrange
+
+        var initializeStarted = new TaskCompletionSource();
+        var continueInitialize = new TaskCompletionSource();
+
+        var mockModule = new Mock<IServerModule>();
+
+        mockModule
+            .Setup(m => m.InitializeAsync(It.IsAny<CancellationToken>()))
+            .Returns(async (CancellationToken ct) =>
+            {
+                initializeStarted.SetResult();
+
+                await continueInitialize.Task;
+            });
+
+        var manager = CreateObjectUnderTest([mockModule.Object]);
+
+        // Act
+        var startTask = manager.StartModulesAsync();
+
+        await initializeStarted.Task;
+
+        await manager.StopModulesAsync();
+
+        continueInitialize.SetResult();
+
+        await startTask;
+
+        // Assert
+
+        mockModule.Verify(
+            m => m.StartAsync(It.IsAny<CancellationToken>()),
+            Times.Never);
+    }
+
+    [Test]
+    public async Task ShouldNotStartModuleAfterCancellation()
+    {
+        // Arrange
+
+        var initializeEntered = new TaskCompletionSource();
+
+        var initializeContinue = new TaskCompletionSource();
+
+        var module = new Mock<IServerModule>();
+
+        module.SetupGet(m => m.Name)
+            .Returns("TestModule");
+
+        module.Setup(m => m.InitializeAsync(It.IsAny<CancellationToken>()))
+            .Returns(async (CancellationToken token) =>
+            {
+                initializeEntered.TrySetResult();
+
+                await initializeContinue.Task;
+            });
+
+        var manager = CreateObjectUnderTest([module.Object]);
+
+        using var cts = new CancellationTokenSource();
+
+        // Act
+
+        var startTask = manager.StartModulesAsync(cts.Token);
+
+        await initializeEntered.Task;
+
+        cts.Cancel();
+
+        initializeContinue.TrySetResult();
+
+        try
+        {
+            await startTask;
+        }
+        catch (OperationCanceledException)
+        {
+        }
+
+        // Assert
+
+        module.Verify(
+            m => m.StartAsync(It.IsAny<CancellationToken>()),
+            Times.Never);
+    }
+
+    [Test]
+    public async Task ShouldNotStartBlockingModuleAfterCancellation()
+    {
+        // Arrange
+        var initializeEntered = new TaskCompletionSource();
+        var continueInitialize = new TaskCompletionSource();
+
+        var module = new Mock<IServerModule>();
+
+        module.Setup(m => m.InitializeAsync(It.IsAny<CancellationToken>()))
+            .Returns(async () =>
+            {
+                initializeEntered.SetResult();
+                await continueInitialize.Task;
+            });
+
+        module.Setup(m => m.StartAsync(It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+
+        var state = ServerModuleState.Initializing;
+
+        module.SetupGet(m => m.State)
+            .Returns(() => state);
+
+        module.Setup(m => m.StopAsync(It.IsAny<CancellationToken>()))
+            .Returns(() =>
+            {
+                // Shutdown wurde angefordert, aber noch nicht abgeschlossen
+                state = ServerModuleState.Stopping;
+                return Task.CompletedTask;
+            });
+
+        var manager = CreateObjectUnderTest([module.Object]);
+
+        // Act
+        var startTask = manager.StartModulesAsync();
+
+        await initializeEntered.Task;
+
+        // Während Initialize noch läuft
+        await manager.StopModulesAsync();
+
+        continueInitialize.SetResult();
+
+        await startTask;
+
+        // Assert
+        module.Verify(
+            m => m.StopAsync(It.IsAny<CancellationToken>()),
+            Times.Once);
+
+        module.Verify(
+            m => m.StartAsync(It.IsAny<CancellationToken>()),
+            Times.Never);
+    }
 }
