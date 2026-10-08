@@ -15,6 +15,9 @@
       "TITLE": "Do you want to close this session?",
       "MESSAGE": "If you haven't saved, your changes will be lost. Are you sure you want to close the session?"
     },
+    "CONFIRM_DIALOG_INVALID_WORKPLAN": {
+      "TITLE": "Invalid Workplan"
+    },
     "CLOSE": "Close"
   },
   "STEP_CREATOR": {

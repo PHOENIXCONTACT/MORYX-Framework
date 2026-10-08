@@ -123,16 +123,25 @@
   <data name="JoinWorkplanStep_Name" xml:space="preserve">
     <value>Join</value>
   </data>
-  <data name="SplitWorkplanStep_Name" xml:space="preserve">
-    <value>Split</value>
-  </data>
   <data name="SplitWorkplanStep_Description" xml:space="preserve">
     <value>Teilt den eingehenden Pfad in mehrere Ausgänge</value>
+  </data>
+  <data name="SplitWorkplanStep_Name" xml:space="preserve">
+    <value>Split</value>
   </data>
   <data name="SubworkplanStep_Description" xml:space="preserve">
     <value>Sub-Workplan</value>
   </data>
   <data name="SubworkplanStep_Name" xml:space="preserve">
     <value>Bindet einen Arbeitsplan als Schritt ein</value>
+  </data>
+  <data name="Valitation_DeadEnd_Error" xml:space="preserve">
+    <value>Der Anschluss {0} an Position {1} wird in keinem Schritt als Eingang verwendet!</value>
+  </data>
+  <data name="Valitation_LoneWolf_Error" xml:space="preserve">
+    <value>Schritt {0} an Position {1} ist nicht erreichbar!</value>
+  </data>
+  <data name="WorkplanEditingController_SessionNotFound" xml:space="preserve">
+    <value>Keine Sitzung gefunden</value>
   </data>
 </root>

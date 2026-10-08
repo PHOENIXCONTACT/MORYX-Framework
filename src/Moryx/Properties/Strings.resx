@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -134,5 +134,14 @@
   </data>
   <data name="SubworkplanStep_DisplayName" xml:space="preserve">
     <value>Sub-Workplan</value>
+  </data>
+  <data name="Valitation_DeadEnd_Error" xml:space="preserve">
+    <value>Connector {0} at position {1} is not used as an input in any step!</value>
+  </data>
+  <data name="Valitation_LoneWolf_Error" xml:space="preserve">
+    <value>Step {0} at position {1} is unreachable!</value>
+  </data>
+  <data name="WorkplanEditingController_SessionNotFound" xml:space="preserve">
+    <value>No session found</value>
   </data>
 </root>

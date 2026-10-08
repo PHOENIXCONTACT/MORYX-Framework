@@ -15,6 +15,9 @@
       "TITLE": "Möchtest du diese Sitzung schließen?",
       "MESSAGE": "Wenn du die Sitzung schließt gehen alle nicht gespeicherten Änderungen verloren. Möchtest du die Sitzung wirklich schließen?"
     },
+    "CONFIRM_DIALOG_INVALID_WORKPLAN": {
+      "TITLE": "Ungültiger Arbeitsplan"
+    },
     "CLOSE": "Schließen"
   },
   "STEP_CREATOR": {

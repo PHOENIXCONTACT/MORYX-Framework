@@ -15,6 +15,9 @@
       "TITLE": "您是否要关闭此会话？",
       "MESSAGE": "如果您未保存，您的更改将丢失。您确定要关闭会话吗？"
     },
+    "CONFIRM_DIALOG_INVALID_WORKPLAN": {
+      "TITLE": "无效工作计划"
+    },
     "CLOSE": "关闭"
   },
   "STEP_CREATOR": {

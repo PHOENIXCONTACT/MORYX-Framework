@@ -15,6 +15,9 @@
       "TITLE": "Vuoi chiudere la sessione corrente?",
       "MESSAGE": "Se non hai salvato, le tue modifiche andranno perse. Sei sicuro di voler chiudere la sessione?"
     },
+    "CONFIRM_DIALOG_INVALID_WORKPLAN": {
+      "TITLE": "Piano di lavoro non valido"
+    },
     "CLOSE": "Chiudi"
   },
   "STEP_CREATOR": {
