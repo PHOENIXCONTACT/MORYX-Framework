@@ -76,10 +76,11 @@ internal class ModuleLifecycleController
         var dependingServices = _dependencyManager.GetDependencyBranch(module).Dependents.Select(item => item.RepresentedModule);
         // Now we will stop all of them recursively
         foreach (var dependingService in dependingServices.Where(dependent =>
-                    dependent.State == ServerModuleState.Running || dependent.State == ServerModuleState.Starting).ToArray())
+                     dependent.State is ServerModuleState.Running or ServerModuleState.Starting))
         {
             // We will enqueue the service to make sure it is restarted later on
-            await AddWaitingModuleAsync(module, dependingService, cancellationToken, false); // no late check, because the module is intentionally running
+            // No late check, because the module is intentionally running
+            await AddWaitingModuleAsync(module, dependingService, cancellationToken, false);
             await StopAsync(dependingService, cancellationToken);
         }
 
@@ -172,7 +173,7 @@ internal class ModuleLifecycleController
         {
             foreach (var waitingModule in modulesToStart)
             {
-                await StartModule(waitingModule, cancellationToken);
+                await StartAsync(waitingModule, cancellationToken);
             }
         }
     }
@@ -186,7 +187,7 @@ internal class ModuleLifecycleController
         }
     }
 
-    private async Task EnqueueServiceAndStartDependencies(IEnumerable<IServerModule> dependencies, IServerModule waitingService, CancellationToken cancellationToken)
+    private async Task EnqueueServiceAndStartDependencies(IServerModule[] dependencies, IServerModule waitingService, CancellationToken cancellationToken)
     {
         foreach (var dependency in dependencies)
         {
@@ -202,26 +203,24 @@ internal class ModuleLifecycleController
         return result;
     }
 
-    private Task AddWaitingModuleAsync(IServerModule dependency, IServerModule dependent, CancellationToken cancellationToken, bool lateCheck)
+    private Task AddWaitingModuleAsync(IServerModule dependency, IServerModule dependent,
+        CancellationToken cancellationToken, bool skipIfDependencyRunning)
     {
         return _waitingModulesSemaphore.ExecuteAsync(() =>
         {
-            if (lateCheck && dependency.State == ServerModuleState.Running)
+            // When starting, the dependency may reach Running while we wait for the semaphore.
+            // ModuleChangedState already processed it, so registering would create a dead entry.
+            if (skipIfDependencyRunning && dependency.State == ServerModuleState.Running)
             {
                 return;
             }
 
-            if (_waitingModules.TryGetValue(dependency, out var waitingModules))
+            if (!_waitingModules.TryGetValue(dependency, out var waitingModules))
             {
-                waitingModules.Add(dependent);
+                _waitingModules[dependency] = waitingModules = [];
             }
-            else
-            {
-                _waitingModules[dependency] = new HashSet<IServerModule>
-                {
-                    dependent
-                };
-            }
+
+            waitingModules.Add(dependent);
         }, cancellationToken);
     }
 }
