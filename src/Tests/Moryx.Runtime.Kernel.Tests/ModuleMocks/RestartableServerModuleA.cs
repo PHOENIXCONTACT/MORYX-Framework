@@ -9,9 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Moryx.Runtime.Kernel.Tests.ModuleMocks;
 
-internal class RestartableServerModuleA
-    : ServerModuleBase<RuntimeConfigManagerTestConfig2>,
-        IFacadeContainer<IFacadeA>
+internal class RestartableServerModuleA : MockServerModuleBase, IFacadeContainer<IFacadeA>
 {
     public RestartableServerModuleA(
         IModuleContainerFactory containerFactory,
@@ -23,27 +21,6 @@ internal class RestartableServerModuleA
 
     public override string Name => "RestartableServerModuleA";
 
-    public int InitializeCalls { get; private set; }
-    public int StartCalls { get; private set; }
-    public int StopCalls { get; private set; }
-
     public IFacadeA Facade { get; } = new FacadaA();
-
-    protected override Task OnInitializeAsync(CancellationToken cancellationToken)
-    {
-        InitializeCalls++;
-        return Task.CompletedTask;
-    }
-
-    protected override Task OnStartAsync(CancellationToken cancellationToken)
-    {
-        StartCalls++;
-        return Task.CompletedTask;
-    }
-
-    protected override Task OnStopAsync(CancellationToken cancellationToken)
-    {
-        StopCalls++;
-        return Task.CompletedTask;
-    }
 }
+

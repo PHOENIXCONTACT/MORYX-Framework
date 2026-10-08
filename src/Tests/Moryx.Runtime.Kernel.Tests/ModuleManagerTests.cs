@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Diagnostics;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moryx.Configuration;
@@ -207,7 +208,7 @@ public class ModuleManagerTests
         // Act
         await moduleManager.StartModulesAsync();
 
-        WaitForTimeboxed(() => mockModule2.Invocations.Any(i => i.Method.Name == nameof(IServerModule.StartAsync)));
+        await WaitForConditionAsync(() => mockModule2.Invocations.Any(i => i.Method.Name == nameof(IServerModule.StartAsync)));
 
         // Assert
         mockModule1.Verify(mock => mock.InitializeAsync(), Times.Once);
@@ -228,7 +229,7 @@ public class ModuleManagerTests
         // Act
         await moduleManager.StartModuleAsync(mockModule.Object);
 
-        WaitForTimeboxed(() => mockModule.Invocations.Any(i => i.Method.Name == nameof(IServerModule.StartAsync)));
+        await WaitForConditionAsync(() => mockModule.Invocations.Any(i => i.Method.Name == nameof(IServerModule.StartAsync)));
 
         // Assert
         mockModule.Verify(mock => mock.InitializeAsync());
@@ -280,7 +281,7 @@ public class ModuleManagerTests
         // Act
         await moduleManager.StartModulesAsync();
 
-        WaitForTimeboxed(() => module.State == ServerModuleState.Running);
+        await WaitForConditionAsync(() => module.State == ServerModuleState.Running);
 
         // Assert
         Assert.That(module.ActivatedCount, Is.EqualTo(1));
@@ -296,11 +297,11 @@ public class ModuleManagerTests
         // Act
         await moduleManager.StartModulesAsync();
 
-        WaitForTimeboxed(() => module.State == ServerModuleState.Running);
+        await WaitForConditionAsync(() => module.State == ServerModuleState.Running);
 
         await moduleManager.StopModulesAsync();
 
-        WaitForTimeboxed(() => module.State == ServerModuleState.Stopped);
+        await WaitForConditionAsync(() => module.State == ServerModuleState.Stopped);
 
         // Assert
         Assert.That(module.ActivatedCount, Is.EqualTo(1));
@@ -327,13 +328,24 @@ public class ModuleManagerTests
         _mockConfigManager.Verify(cm => cm.SaveConfiguration(_moduleManagerConfig, It.IsAny<string>(), It.IsAny<bool>()), Times.Once);
     }
 
-    private static void WaitForTimeboxed(Func<bool> condition, int maxSeconds = 10)
+    private static readonly TimeSpan _defaultTimeout = TimeSpan.FromSeconds(10);
+    private static async Task WaitForConditionAsync(Func<bool> condition,
+        TimeSpan? timeout = null,
+        TimeSpan? pollInterval = null)
     {
-        var i = 0;
-        while (!condition() && (i < maxSeconds))
+        timeout ??= _defaultTimeout;
+        pollInterval ??= TimeSpan.FromMilliseconds(10);
+
+        var stopwatch = Stopwatch.StartNew();
+
+        while (!condition())
         {
-            Thread.Sleep(1000);
-            i++;
+            await Task.Delay(pollInterval.Value);
+        }
+
+        if (stopwatch.Elapsed < timeout)
+        {
+            TestContext.WriteLine($"Condition fulfilled after {stopwatch.Elapsed.TotalMilliseconds:F0} ms");
         }
     }
 
@@ -352,18 +364,13 @@ public class ModuleManagerTests
             _mockConfigManager.Object,
             new NullLoggerFactory());
 
-        var moduleManager = CreateObjectUnderTest(
-        [
-            rootModule,
-        dependentModule
-        ]);
+        var moduleManager = CreateObjectUnderTest([rootModule, dependentModule]);
 
         // Start all modules
         await moduleManager.StartModulesAsync();
 
-        WaitForTimeboxed(() =>
-            rootModule.State == ServerModuleState.Running &&
-            dependentModule.State == ServerModuleState.Running);
+        await WaitForConditionAsync(() => rootModule.State == ServerModuleState.Running
+                                          && dependentModule.State == ServerModuleState.Running);
 
         Assert.That(rootModule.State,
             Is.EqualTo(ServerModuleState.Running));
@@ -375,13 +382,11 @@ public class ModuleManagerTests
         var dependentStartCalls = dependentModule.StartCalls;
 
         // Act
-
         // Stop root module -> dependent must be stopped as well
         await moduleManager.StopModuleAsync(rootModule);
 
-        WaitForTimeboxed(() =>
-            rootModule.State == ServerModuleState.Stopped &&
-            dependentModule.State == ServerModuleState.Stopped);
+        await WaitForConditionAsync(() => rootModule.State == ServerModuleState.Stopped
+                                          && dependentModule.State == ServerModuleState.Stopped);
 
         Assert.That(rootModule.State,
             Is.EqualTo(ServerModuleState.Stopped));
@@ -392,12 +397,10 @@ public class ModuleManagerTests
         // Restart root module
         await moduleManager.StartModuleAsync(rootModule);
 
-        WaitForTimeboxed(() =>
-            rootModule.State == ServerModuleState.Running &&
-            dependentModule.State == ServerModuleState.Running);
+        await WaitForConditionAsync(() => rootModule.State == ServerModuleState.Running
+                                          && dependentModule.State == ServerModuleState.Running);
 
         // Assert
-
         Assert.That(rootModule.State,
             Is.EqualTo(ServerModuleState.Running),
             "Root module was not restarted.");
@@ -430,18 +433,13 @@ public class ModuleManagerTests
             _mockConfigManager.Object,
             new NullLoggerFactory());
 
-        var moduleManager = CreateObjectUnderTest(
-        [
-            rootModule,
-            dependentModule
-        ]);
+        var moduleManager = CreateObjectUnderTest([rootModule, dependentModule]);
 
         // Initial startup
         await moduleManager.StartModulesAsync();
 
-        WaitForTimeboxed(() =>
-            rootModule.State == ServerModuleState.Running &&
-            dependentModule.State == ServerModuleState.Running);
+        await WaitForConditionAsync(() => rootModule.State == ServerModuleState.Running
+                                          && dependentModule.State == ServerModuleState.Running);
 
         Assert.That(rootModule.State,
             Is.EqualTo(ServerModuleState.Running));
@@ -454,10 +452,10 @@ public class ModuleManagerTests
 
         // Act
         await moduleManager.ReincarnateModuleAsync(rootModule);
-
-        WaitForTimeboxed(() =>
-            rootModule.State == ServerModuleState.Running &&
-            dependentModule.State == ServerModuleState.Running);
+      
+        // Running again
+        await WaitForConditionAsync(() => rootModule.State == ServerModuleState.Running
+                                          && dependentModule.State == ServerModuleState.Running);
 
         // Assert
         Assert.That(rootModule.State,

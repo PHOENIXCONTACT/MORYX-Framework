@@ -1,9 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Container;
@@ -34,8 +31,6 @@ internal class TestModule : ServerModuleBase<TestConfig>
     public int InitializeCalls { get; private set; }
     public int StartCalls { get; private set; }
 
-    public int RetryCount { get; set; }
-
     public TestConfig MyConfig => Config;
 
     protected override Task OnInitializeAsync(CancellationToken cancellationToken)
@@ -57,7 +52,6 @@ internal class TestModule : ServerModuleBase<TestConfig>
     {
         StartCalls++;
         LastInvoke = InvokedMethod.Start;
-        RetryCount++;
         switch (CurrentMode)
         {
             case TestMode.MoryxException:

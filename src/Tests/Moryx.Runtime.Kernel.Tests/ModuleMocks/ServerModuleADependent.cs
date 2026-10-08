@@ -9,8 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Moryx.Runtime.Kernel.Tests.ModuleMocks;
 
-internal class ServerModuleADependent
-    : ServerModuleBase<RuntimeConfigManagerTestConfig2>
+internal class ServerModuleADependent : MockServerModuleBase
 {
     public ServerModuleADependent(
         IModuleContainerFactory containerFactory,
@@ -24,28 +23,4 @@ internal class ServerModuleADependent
 
     [RequiredModuleApi(IsStartDependency = true)]
     public IFacadeA Dependency { get; set; }
-
-    public int InitializeCalls { get; private set; }
-
-    public int StartCalls { get; private set; }
-
-    public int StopCalls { get; private set; }
-
-    protected override Task OnInitializeAsync(CancellationToken cancellationToken)
-    {
-        InitializeCalls++;
-        return Task.CompletedTask;
-    }
-
-    protected override Task OnStartAsync(CancellationToken cancellationToken)
-    {
-        StartCalls++;
-        return Task.CompletedTask;
-    }
-
-    protected override Task OnStopAsync(CancellationToken cancellationToken)
-    {
-        StopCalls++;
-        return Task.CompletedTask;
-    }
 }

@@ -213,10 +213,7 @@ internal class ModuleLifecycleController
 
             if (_waitingModules.TryGetValue(dependency, out var waitingModules))
             {
-                if (!waitingModules.Contains(dependent))
-                {
-                    waitingModules.Add(dependent);
-                }
+                waitingModules.Add(dependent);
             }
             else
             {

@@ -16,7 +16,6 @@ internal class PrepareForStartState : ServerModuleStateBase
         try
         {
             await Context.InitializeAsync(cancellationToken);
-            //await Context.StartAsync(cancellationToken);
             await NextStateAsync(StateStarting, cancellationToken);
         }
         catch (Exception ex)
