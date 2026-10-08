@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Moryx.Runtime.Kernel.Tests.ModuleMocks;
 
-internal class BlockingInitializeModule : MockServerModuleBase // ServerModuleBase<RuntimeConfigManagerTestConfig2>
+internal class BlockingInitializeModule : MockServerModuleBase 
 {
     public BlockingInitializeModule(
         IModuleContainerFactory containerFactory,
