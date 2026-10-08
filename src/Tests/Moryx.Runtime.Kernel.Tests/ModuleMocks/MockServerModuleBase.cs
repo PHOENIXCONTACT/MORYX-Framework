@@ -9,12 +9,9 @@ using Moryx.Runtime.Modules;
 
 namespace Moryx.Runtime.Kernel.Tests.ModuleMocks;
 
-internal abstract class MockServerModuleBase : ServerModuleBase<RuntimeConfigManagerTestConfig2>
+public abstract class MockServerModuleBase : ServerModuleBase<RuntimeConfigManagerTestConfig2>
 {
-    protected MockServerModuleBase(
-        IModuleContainerFactory containerFactory,
-        IConfigManager configManager,
-        ILoggerFactory loggerFactory)
+    protected MockServerModuleBase(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory)
         : base(containerFactory, configManager, loggerFactory)
     {
     }
