@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <dotnetVersion>10.0.11</dotnetVersion>
+    <dotnetVersion>10.0.12</dotnetVersion>
   </PropertyGroup>
 
   <ItemGroup>
