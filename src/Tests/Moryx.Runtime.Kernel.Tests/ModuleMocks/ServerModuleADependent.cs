@@ -1,11 +1,11 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Runtime.Kernel.Tests.Dummies;
 using Moryx.Runtime.Modules;
-using Microsoft.Extensions.Logging;
 
 namespace Moryx.Runtime.Kernel.Tests.ModuleMocks;
 

@@ -10,18 +10,15 @@ using Moryx.Runtime.Kernel.Tests.Dummies;
 namespace Moryx.Runtime.Kernel.Tests.ModuleMocks;
 
 public class ServerModuleA : ServerModuleBase<RuntimeConfigManagerTestConfig2>, IFacadeContainer<IFacadeA>
-
 {
-    public ServerModuleA(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory) : base(containerFactory, configManager, loggerFactory)
+    public ServerModuleA(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory)
+        : base(containerFactory, configManager, loggerFactory)
     {
-        Facade = new FacadaA();
     }
 
     public override string Name => "ServerModuleA";
 
-    private readonly FacadaA _aFacade = new();
-    IFacadeA IFacadeContainer<IFacadeA>.Facade => _aFacade;
-    public IFacadeA Facade { get; private set; }
+    public IFacadeA Facade { get; } = new FacadaA();
 
     public int InitializeCalls { get; private set; }
 
