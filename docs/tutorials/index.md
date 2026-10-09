@@ -4,6 +4,7 @@
 
 - [How To Create A Product](how-to-create-a-product.md)
 - [How To Create Resource](how-to-create-resource.md)
+- [How To Use Strategies In Resources](how-to-use-strategies-in-resources.md)
 - [How To Create A Cell](how-to-create-a-cell.md)
 - [How To Build A Driver](how-to-build-a-driver.md)
 - [How To Create Everything For Production](how-to-create-everything-for-production.md)

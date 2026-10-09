@@ -82,6 +82,7 @@
     <Project Path="src/Moryx.AbstractionLayer.Resources.Mqtt.Endpoints/Moryx.AbstractionLayer.Resources.Mqtt.Endpoints.csproj" />
     <Project Path="src/Moryx.Resources.Management/Moryx.Resources.Management.csproj" />
     <Project Path="src/Moryx.Resources.Samples/Moryx.Resources.Samples.csproj" />
+    <Project Path="src/Moryx.Resources.Samples.Strategies/Moryx.Resources.Samples.Strategies.csproj" />
     <Project Path="src/Moryx.Resources.Web/Moryx.Resources.Web.csproj" />
   </Folder>
   <Folder Name="/Runtime/">
