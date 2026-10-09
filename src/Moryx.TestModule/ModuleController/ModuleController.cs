@@ -8,6 +8,7 @@ using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Model;
 using Moryx.Runtime.Modules;
+using Moryx.Samples.Strategies;
 
 namespace Moryx.TestModule;
 
@@ -28,8 +29,6 @@ public class ModuleController : ServerModuleBase<ModuleConfig>, IFacadeContainer
         : base(containerFactory, configManager, loggerFactory)
     {
         ContextManager = contextManager;
-
-        var config = options.Value;
     }
 
     #region State transition
@@ -38,6 +37,11 @@ public class ModuleController : ServerModuleBase<ModuleConfig>, IFacadeContainer
     protected override Task OnInitializeAsync(CancellationToken cancellationToken)
     {
         Container.ActivateDbContexts(ContextManager);
+
+        // Load externally defined named plugins
+        Container.LoadComponents<IWhiteSpaceRemovingStrategy>();
+        Container.Register<IWhiteSpaceRemovingStrategyFactory>();
+        
         return Task.CompletedTask;
     }
 
@@ -64,6 +68,9 @@ public class ModuleController : ServerModuleBase<ModuleConfig>, IFacadeContainer
 
         // Deactivate facades
         DeactivateFacade(_testModule);
+
+        var plugin = Container.Resolve<ITestPlugin>("TestPlugin");
+        plugin.Stop();
     }
     #endregion
 

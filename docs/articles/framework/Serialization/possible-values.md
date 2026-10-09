@@ -94,7 +94,7 @@ public string Directory { get; set; }
 
 ### PluginNameSelectorAttribute
 
-To specify which implementation to use, the platform provides support for the factory pattern and named components. The name of the component is defined in its component attribute and the factory provides a method `Create(string name)`. To reduce complexity of deployment and configuration and avoid typos when specifying these names the ComponentNameSelectorAttribute creates a list of available implementations of a certain interface. Its usage is pretty straight forward and only requires the type of interface to look for.
+To specify which implementation to use, the platform provides support for the factory pattern and named components. The name of the component is defined in its component attribute and the factory provides a method `Create(string name)`. To reduce complexity of deployment and configuration and avoid typos when specifying these names the `PluginNameSelectorAttribute` creates a list of available implementations of a certain interface from the respective, available container. Its usage is pretty straight forward and only requires the type of interface to look for.
 
 ````cs
 [DataMember]

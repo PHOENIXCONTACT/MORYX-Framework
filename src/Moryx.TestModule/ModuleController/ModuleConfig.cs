@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Runtime.Serialization;
 using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
+using Moryx.Samples.Strategies;
 using Moryx.Serialization;
 
 namespace Moryx.TestModule;
@@ -60,6 +61,11 @@ public class ModuleConfig : ConfigBase
     [DataMember]
     [PluginConfigs(typeof(ITestPlugin), false)]
     public List<TestPluginConfig> Plugins { get; set; }
+
+    [DataMember]
+    [PluginNameSelector(typeof(IWhiteSpaceRemovingStrategy))]
+    [DefaultValue(RegexWhiteSpaceRemovingStrategy.StrategyName)]
+    public string WhiteSpaceRemovingStrategy { get; set; }
 
     [DataMember]
     [DefaultValue(LogLevel.Trace)]

@@ -199,11 +199,13 @@ The same use case as in the section before. You implement a component but there 
 
 In this case you also need a `DependencyRegistrationAttribute` but with an additional `Moryx.Container.ISubInitializer`. A `SubInitializer` can load types from other assemblies like in the following example.
 
-Now we implement a Plugin in a different Assembly:
+Now we implement a Plugin in a different Assembly.
+
+> [!CAUTION] The class must be `public`, because `LoadComponents` only considers public classes of the assemblies loaded from the application directory:
 
 ````cs
 [Plugin(LifeCycle.Transient, typeof(IUserAssignmentHook), Name = PluginName)]
-internal class UserAssignmentHook : IUserAssignmentHook
+public class UserAssignmentHook : IUserAssignmentHook
 {
     public const string PluginName = nameof(UserAssignmentHook);
     ...
