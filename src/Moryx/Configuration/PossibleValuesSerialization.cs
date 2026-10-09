@@ -83,7 +83,7 @@ public class PossibleValuesSerialization : DefaultSerialization
         IEnumerable<string> values;
         if (possibleValuesAttribute.RequiresPossibleValuesContext)
         {
-            var context = new PossibleValuesContext(instance, new Dictionary<object, object>(), ServiceProvider, Container);
+            var context = new PossibleValuesContext(instance, ServiceProvider, Container);
             values = possibleValuesAttribute.GetValues(context);
         }
         else

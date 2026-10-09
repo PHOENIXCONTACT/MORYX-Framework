@@ -139,9 +139,14 @@ public List<string> SupportedTypes { get; set; }
 Implement a custom attribute when you need a possible value that is extracted from the current instance. You can use
 that custom attribute to perform your desired use case. 
 ````cs
-public abstract class MyPossibleUserAttribute : PossibleValuesAttribute
+public class MyPossibleUserAttribute : PossibleValuesAttribute
 {
-    public override IEnumerable<string> GetValues(PossibleValueContext ctx)
+    public MyPossibleUserAttribute()
+    {
+        RequiresPossibleValuesContext = true;
+    }
+
+    public override IEnumerable<string> GetValues(PossibleValuesContext ctx)
     {
         return ctx.Instance is MyType myInstance ? myInstance.PossibleUsers : [];
     }
@@ -156,7 +161,7 @@ The example `PossibleUserAttribute` inherits from the `PossibleValuesAttribute`.
     public List<string> PossibleUsers { get; set; }
 
     [DataMember]
-    [MyPossibleUserAttribute(RequiresPossibleValuesContext = true)]
+    [MyPossibleUserAttribute]
     public string SelectedUser { get; set; }
 ````
 
