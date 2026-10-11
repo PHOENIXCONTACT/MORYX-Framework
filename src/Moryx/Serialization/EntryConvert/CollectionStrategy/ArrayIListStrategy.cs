@@ -14,7 +14,8 @@ public class ArrayIListStrategy : ICollectionStrategy
     private readonly ICustomSerialization _customSerialization;
     private readonly ICustomAttributeProvider _property;
     private readonly object _instance;
-    private readonly IList _toAdd = new List<object>();
+    private readonly Dictionary<string, object> _addedItems = new();
+    private IReadOnlyList<string> _newOrder;
 
     /// <inheritdoc/>
     public ArrayIListStrategy(IList list, ICustomSerialization customSerialization,
@@ -53,7 +54,7 @@ public class ArrayIListStrategy : ICollectionStrategy
     /// <inheritdoc/>
     public void Added(Entry entry, object addedValue)
     {
-        _toAdd.Add(addedValue);
+        _addedItems[entry.Identifier] = addedValue;
     }
 
     /// <inheritdoc/>
@@ -68,29 +69,57 @@ public class ArrayIListStrategy : ICollectionStrategy
         _toDelete.Add(_list[int.Parse(key)]);
     }
 
+    /// <inheritdoc />
+    public void Reorder(IReadOnlyList<string> newKeyOrder)
+    {
+        if (CollectionStrategyTools.NeedsReordering(newKeyOrder, _list, _toDelete, _addedItems))
+        {
+            _newOrder = newKeyOrder;
+        }
+    }
+
     /// <inheritdoc/>
     public void Flush()
     {
-
         if (_property is PropertyInfo propertyInfo)
         {
             var type = propertyInfo.PropertyType;
             var elementType = type.GenericTypeArguments[0];
-            var list = Array.CreateInstance(elementType, _list.Count - _toDelete.Count + _toAdd.Count);
-            var index = 0;
-            foreach (var e in _list)
-            {
-                if (!_toDelete.Contains(e))
-                {
-                    list.SetValue(e, index++);
-                }
-            }
-            foreach (var e in _toAdd)
-            {
-                list.SetValue(e, index++);
-            }
 
-            propertyInfo.SetValue(_instance, list);
+            if (_newOrder != null)
+            {
+                var itemsByKey = CollectionStrategyTools.BuildItemLookup(_list, _toDelete, _addedItems);
+
+                // Rebuild array in the desired order
+                var list = Array.CreateInstance(elementType, _newOrder.Count);
+                var index = 0;
+                foreach (var key in _newOrder)
+                {
+                    if (itemsByKey.TryGetValue(key, out var item))
+                    {
+                        list.SetValue(item, index++);
+                    }
+                }
+                propertyInfo.SetValue(_instance, list);
+            }
+            else
+            {
+                // No reordering: filter deleted, append added
+                var list = Array.CreateInstance(elementType, _list.Count - _toDelete.Count + _addedItems.Count);
+                var index = 0;
+                foreach (var e in _list)
+                {
+                    if (!_toDelete.Contains(e))
+                    {
+                        list.SetValue(e, index++);
+                    }
+                }
+                foreach (var (_, value) in _addedItems)
+                {
+                    list.SetValue(value, index++);
+                }
+                propertyInfo.SetValue(_instance, list);
+            }
         }
     }
 }

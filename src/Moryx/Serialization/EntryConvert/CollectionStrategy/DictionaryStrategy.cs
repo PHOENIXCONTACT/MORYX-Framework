@@ -65,6 +65,13 @@ internal class DictionaryStrategy : ICollectionStrategy
         _dictionary.Remove(entryValue);
     }
 
+    public void Reorder(IReadOnlyList<string> newKeyOrder)
+    {
+        // Dictionaries do not support reordering.
+        // The order of items in a dictionary is not guaranteed by the .NET specification.
+        // See https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.dictionary-2#remarks
+    }
+
     public void Flush()
     {
     }

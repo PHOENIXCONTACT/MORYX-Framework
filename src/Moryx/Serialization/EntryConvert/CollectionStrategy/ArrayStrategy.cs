@@ -12,6 +12,7 @@ internal class ArrayStrategy : ICollectionStrategy
     private readonly Array _array;
     private readonly Array _currentArray;
     private readonly ICustomSerialization _serialization;
+    private IReadOnlyList<string> _newOrder;
 
     public ArrayStrategy(Array array, Array currentArray, ICustomSerialization serialization)
     {
@@ -53,6 +54,22 @@ internal class ArrayStrategy : ICollectionStrategy
 
     public void Removed(string key)
     {
+    }
+
+    /// <inheritdoc />
+    public void Reorder(IReadOnlyList<string> newKeyOrder)
+    {
+        // Check if order actually changed
+        var currentKeys = CollectionStrategyTools.GenerateKeys(_array.Length).ToList();
+        if (currentKeys.SequenceEqual(newKeyOrder))
+            return;
+
+        // Rebuild array in new order
+        var reordered = newKeyOrder.Select(key => _array.GetValue(int.Parse(key))).ToArray();
+        for (var i = 0; i < reordered.Length; i++)
+        {
+            _array.SetValue(reordered[i], i);
+        }
     }
 
     public void Flush()

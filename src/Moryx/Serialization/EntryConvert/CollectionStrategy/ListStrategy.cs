@@ -12,7 +12,9 @@ internal class ListStrategy : ICollectionStrategy
 {
     private readonly IList _list;
     private readonly IList _toDelete = new List<object>();
+    private readonly Dictionary<string, object> _addedItems = new();
     private readonly ICustomSerialization _customSerialization;
+    private IReadOnlyList<string> _newOrder;
 
     public ListStrategy(IList list, ICustomSerialization customSerialization)
     {
@@ -43,7 +45,7 @@ internal class ListStrategy : ICollectionStrategy
 
     public void Added(Entry entry, object addedValue)
     {
-        _list.Add(addedValue);
+        _addedItems[entry.Identifier] = addedValue;
     }
 
     public void Updated(Entry entry, object updatedValue)
@@ -56,11 +58,41 @@ internal class ListStrategy : ICollectionStrategy
         _toDelete.Add(_list[int.Parse(key)]);
     }
 
+    /// <inheritdoc />
+    public void Reorder(IReadOnlyList<string> newKeyOrder)
+    {
+        if (CollectionStrategyTools.NeedsReordering(newKeyOrder, _list, _toDelete, _addedItems))
+        {
+            _newOrder = newKeyOrder;
+        }
+    }
+
     public void Flush()
     {
-        foreach (var missing in _toDelete)
+        if (_newOrder != null)
         {
-            _list.Remove(missing);
+            var itemsByKey = CollectionStrategyTools.BuildItemLookup(_list, _toDelete, _addedItems);
+
+            _list.Clear();
+            foreach (var key in _newOrder)
+            {
+                if (itemsByKey.TryGetValue(key, out var item))
+                {
+                    _list.Add(item);
+                }
+            }
+        }
+        else
+        {
+            // No reordering: apply deletions and append new items
+            foreach (var missing in _toDelete)
+            {
+                _list.Remove(missing);
+            }
+            foreach (var (_, value) in _addedItems)
+            {
+                _list.Add(value);
+            }
         }
     }
 }
