@@ -30,7 +30,7 @@ public class DriverPropertiesTests : OpcUaTestBase
         //Arrange
         _driver.OpcUaServerUrl = "";
 
-        void Action() => _driver.TryConnect(true).GetAwaiter().GetResult();
+        void Action() => _driver.TryConnect(true, default).GetAwaiter().GetResult();
 
         //Assert
         Assert.DoesNotThrow(Action);
