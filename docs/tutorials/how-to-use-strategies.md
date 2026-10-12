@@ -5,12 +5,12 @@ uid: HowToUseStrategies
 
 >[!NOTE] The [strategy pattern](https://en.wikipedia.org/wiki/Strategy_pattern) has a dedicated place in the MORYX Framework and is directly supported by its dependency injection.
 
-This tutorial shows how a server module delegates part of its behavior to an exchangeable strategy, and how the strategy is selected in the module configuration using a [name based selector](../articles/framework/dependency-injection.md#name-based-component-selector). The same general structure can be applied to [configuration-based selectors](../articles/framework/dependency-injection.md#config-based-component-selector) as well.
+This tutorial shows how a server module delegates part of its behavior to an exchangeable strategy, and how the strategy is selected in the module configuration using a [name based selector](/docs/articles/framework/dependency-injection.md#name-based-component-selector). The same general structure can be applied to [configuration-based selectors](/docs/articles/framework/dependency-injection.md#config-based-component-selector) as well.
 
 >[!TIP] To use strategies in a resource, continue with [How to use strategies in resources](how-to-use-strategies-in-resources.md) afterwards.
 
-The strategies used in this tutorial are defined in [Moryx.Samples](../../src/Moryx.Samples/Strategies/) and shared with the resource sample.
-In the TestModule, the strategy is selected in the [ModuleConfig](../../src/Moryx.TestModule/ModuleController/ModuleConfig.cs), registered in the [ModuleController](../../src/Moryx.TestModule/ModuleController/ModuleController.cs) and resolved in the [TestPlugin](../../src/Moryx.TestModule/Plugin/TestPlugin.cs).
+The strategies used in this tutorial are defined in [Moryx.Samples](/src/Moryx.Samples/Strategies/) and shared with the resource sample.
+In the TestModule, the strategy is selected in the [ModuleConfig](/src/Moryx.TestModule/ModuleController/ModuleConfig.cs), registered in the [ModuleController](/src/Moryx.TestModule/ModuleController/ModuleController.cs) and resolved in the [TestPlugin](/src/Moryx.TestModule/Plugin/TestPlugin.cs).
 
 ## Define the strategy interface
 
@@ -46,7 +46,7 @@ public class LinqWhiteSpaceRemovingStrategy : IWhiteSpaceRemovingStrategy
 }
 ```
 
-Use `LifeCycle.Singleton` for stateless strategies, all users share the same instance. Use `LifeCycle.Transient` if a strategy holds state.
+Use `LifeCycle.Singleton` for stateless strategies, all users share the same instance. Use `LifeCycle.Transient` if a strategy holds state or more than one instance is necessary, e.g. with different configurations.
 
 ## Define the factory
 
@@ -88,8 +88,8 @@ protected override Task OnInitializeAsync(CancellationToken cancellationToken)
 `LoadComponents` registers all implementations of the interface in the application, strategies that are already registered are skipped. For a strategy from another assembly to be found, the following conditions must be met:
 
 - The strategy class is `public`. Internal classes are not found.
-- The assembly is deployed to the application directory. The application does not need to reference it, copying the DLL is sufficient.
-- The assembly is loaded into the application domain. Call `AppDomainBuilder.LoadAssemblies()` at the beginning of your `Program.cs`, as in [StartProject.Asp](../../src/StartProject.Asp/Program.cs). It loads all DLLs from the application directory.
+- The assembly is deployed to the application directory, i.e. make sure to reference the respective project in your application.
+- The assembly is loaded into the application domain. Call `AppDomainBuilder.LoadAssemblies()` at the beginning of your `Program.cs`, as in [StartProject.Asp](/src/StartProject.Asp/Program.cs). It loads all DLLs from the application directory.
 
 ## Add the selector property
 
@@ -102,7 +102,7 @@ The name of the selected strategy is part of the module configuration. The `Plug
 public string WhiteSpaceRemovingStrategy { get; set; }
 ```
 
-See [Possible Values](../articles/framework/Serialization/possible-values.md#pluginnameselectorattribute) for details on the attribute.
+See [Possible Values](/docs/articles/framework/Serialization/possible-values.md#pluginnameselectorattribute) for details on the attribute.
 
 ## Resolve and use the strategy
 

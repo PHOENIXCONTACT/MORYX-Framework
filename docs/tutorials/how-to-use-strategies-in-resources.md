@@ -3,14 +3,14 @@ uid: HowToUseStrategiesInResources
 ---
 # How to use strategies in resources
 
-This tutorial shows how a [Resource](../../src/Moryx.AbstractionLayer/Resources/Resource.cs) delegates part of its behavior to an exchangeable strategy, and how the strategy is selected in the resource UI using a [name based selector](../articles/framework/dependency-injection.md#name-based-component-selector). The same general structure can be applied to [configuration-based selectors](../articles/framework/dependency-injection.md#config-based-component-selector) as well.
+This tutorial shows how a [Resource](/src/Moryx.AbstractionLayer/Resources/Resource.cs) delegates part of its behavior to an exchangeable strategy, and how the strategy is selected in the resource UI using a [name based selector](/docs/articles/framework/dependency-injection.md#name-based-component-selector). The same general structure can be applied to [configuration-based selectors](/docs/articles/framework/dependency-injection.md#config-based-component-selector) as well.
 
 >[!NOTE] This tutorial builds on [How to use strategies](how-to-use-strategies.md), which defines the strategy interface `IWhiteSpaceRemovingStrategy`, its implementations and the factory `IWhiteSpaceRemovingStrategyFactory`. Only the parts that differ for resources are described here.
 
 >[!NOTE] If you have not created a resource before, start with [How to create a resource](how-to-create-resource.md).
 
-The complete sample can be found in [StrategyUsingResource.cs](../../src/Moryx.Resources.Samples/StrategyUsingResource.cs).
-It uses the strategies from [Moryx.Samples](../../src/Moryx.Samples/Strategies/), which are shared with the module sample.
+The complete sample can be found in [StrategyUsingResource.cs](/src/Moryx.Resources.Samples/StrategyUsingResource.cs).
+It uses the strategies from [Moryx.Samples](/src/Moryx.Samples/Strategies/), which are shared with the module sample.
 
 ## What differs for resources
 
@@ -25,7 +25,7 @@ It uses the strategies from [Moryx.Samples](../../src/Moryx.Samples/Strategies/)
 ## Register the strategies
 
 Resources are not part of the *Moryx.Resources.Management* assembly, so their strategies are not registered automatically.
-The *Resource Management* registers all resources with `Container.LoadComponents<IResource>()`.
+The *Resource Management* registers all resources with `Container.LoadComponents<IResource>()` when the `ResourceRegistrationAttribute` is set.
 While doing so, it evaluates the `DependencyRegistrationAttribute` of each resource and registers all components of the **resource's assembly** that export one of the listed types.
 If strategies and factory are defined in the resource assembly, list the strategy interface **and** the factory:
 
