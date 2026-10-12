@@ -92,7 +92,7 @@ http {
 In this case we need to instruct Asp.Net to use these headers using the ForwardedHeaders Middleware like so.
 
 
-```csharp
+```cs
 // Startup.cs or Program.cs before mapping static files, razor pages and so on.
 app.UseForwardedHeaders(new ForwardedHeadersOptions()
 {
@@ -104,7 +104,7 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions()
 
 If the proxy does not strip the prefix, we can use the `UsePathBase` middleware by adding before adding our routing.
 
-```csharp
+```cs
 app.UsePathBase(requiredPathBase);
 ```
 

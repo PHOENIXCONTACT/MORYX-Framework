@@ -26,7 +26,7 @@ To enable lifecycle hooks in your application, you need to:
 
 The `Moryx.Runtime.Kernel` package provides convenient extension methods to simplify this setup.
 
-```csharp
+```cs
 var builder = WebApplication.CreateBuilder();
 
 // Register application services
@@ -86,7 +86,7 @@ You can easily extend the system by implementing your own lifecycle hooks.
 
 Create a class that implements `ILifecycleHook`:
 
-```csharp
+```cs
 public class MyCustomHook : ILifecycleHook
 {
     public int Priority => 100;

@@ -79,7 +79,7 @@ In ASP.NET Core, the default configuration mechanism is `IConfiguration`, which 
 
 Integration of `IConfiguration` into MORYX is optional and must be explicitly enabled when registering the MORYX kernel:
 
-```csharp
+```cs
 // Program.cs
 
 services.AddMoryxKernel(configurationIntegration: true);

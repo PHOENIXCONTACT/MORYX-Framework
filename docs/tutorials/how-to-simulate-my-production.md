@@ -164,7 +164,7 @@ Note: The `Send()` method might differ from cell to cell. You can override the `
 
 In your cell definition/Class you can use the following example based on the type of driver you're trying to simulate. Let's say we are trying to "mock" an `MQTT driver`. Since Moryx MQTT driver inherits from `IMessageDriver` in your cell you can have the following case:
 
-```csharp
+```cs
 // SolderingCell.cs
 
 [ResourceRegistration]
@@ -181,7 +181,7 @@ public class SolderingCell : Cell
 
 Since the our "mock" driver has the following property defined:
 
-```csharp
+```cs
 //... rest of the codes//
 
     /// <summary>
@@ -196,7 +196,7 @@ Since the our "mock" driver has the following property defined:
 Moryx will take care of the relationship once you assign the driver to the cell.
 To start the communication you can define message types in your resources folder. For starter we can define some message types. You can also use already existing messages
 
-```csharp
+```cs
 //AssembleProductMessage.cs
 
 /// <summary>
@@ -227,7 +227,7 @@ public class WorkpieceArrivedMessage
 ```
 In the cell when you need to send a data to the driver you can do as described bellow:
  
-```csharp
+```cs
 //AssemblyCell.cs
 //... rest of the codes//
 
@@ -242,7 +242,7 @@ As you can see inside the `StartActivity` method we want the cell to send data t
 
 Now in our driver `TestMockDriver` class above. Inside the `public void Send(object payload)` method we are filtering the payload based on the message type that we have just defined. We can act upon the received message type. For instance:
 
-```csharp
+```cs
 //... rest of the codes//
 
    public void Send(object payload)

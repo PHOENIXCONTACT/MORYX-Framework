@@ -27,7 +27,7 @@ Sends messages to the broker when a public event or event exposed using the `Res
     
     You can modify it according to your needs.
     
-    ```csharp
+    ```cs
     // Program.cs
     builder.Services.AddMqttClient()
                     .AddMqttService<ResourceEventService>(); 
@@ -53,7 +53,7 @@ Sends messages to the broker when a public event or event exposed using the `Res
 
     Given is the following Resource:
       
-    ```csharp
+    ```cs
     public interface IMyPublicEvents
     {
         event EventHandler MyEvent;

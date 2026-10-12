@@ -26,7 +26,7 @@ Now, add a package reference to `Moryx` in the MyModule.csproj file.
 
 Lastly to appear in the navigation bar in the Launcher, replace the content of the component with this snippet
 
-```csharp
+```cs
 // MyModule.cshtml
 @page
 @using Moryx.Asp.Integration

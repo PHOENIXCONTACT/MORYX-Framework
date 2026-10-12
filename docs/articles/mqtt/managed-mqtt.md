@@ -7,11 +7,11 @@
 
    To use the `IManagedMqttClient` you need to configure it in the `Program.cs` like so:
 
-    ```csharp
+    ```cs
     builder.Services.AddMqttClient();
     ```
    Optionally you can also configure the Mqtt client connection details like so :
-    ```csharp
+    ```cs
     builder.Services.AddMqttClient((provider, options) =>
     {
         options.Connection = new MqttConnectionConfig
@@ -34,7 +34,7 @@
 
     - JsonSerializationOptions
 
-    ```csharp
+    ```cs
     // Program.cs
     builder.Services.AddMqttClient(builder: (provider, options) =>
     {
@@ -50,7 +50,7 @@
    Create a new C# class and inherit from `IMqttService`. Note: Dependency injection is supported. Now your service has access to the
       `IManagedMqttClient`. Example:
 
-    ```csharp
+    ```cs
     public class BlablaService : IMqttService
     {
         private IMyDependency _dependency;
@@ -79,7 +79,7 @@
     }
     ```
    To add your new service to the service collection do the following:
-    ```csharp
+    ```cs
     builder.Services.AddMqttClient();
                     .AddMqttService<BlablaService>(); // you custom service
     ```
@@ -91,7 +91,7 @@
      If you need something with topic template and constraint support, you can use the `IMqttEndpoint`. Here is an example:
     - In your `Program.cs` add the following:
 
-    ```csharp
+    ```cs
     builder.Services.AddMqttClient() // must be present
                     .AddMqttEndpoints(); // <-- this add supports for the endpoints
     ```
@@ -99,7 +99,7 @@
 
    There is a minimal version of the Mqtt endpoint, that you can use directly in the `Program.cs`:
 
-    ```csharp
+    ```cs
     public class Blabla : IMqttEndpoint
     {
         private IMyDependency _dependency;
@@ -124,7 +124,7 @@
 
    There is a minimal version of the Mqtt endpoint, that you can use directly in the `Program.cs`:
 
-    ```csharp
+    ```cs
     builder.Services.AddMqttClient()
                     .AddMqttEndpoints(route =>
                     {
@@ -164,16 +164,16 @@
 
    When the endpoint receives a message from the broker, it might come with a Body/payload and a parameter inside the topic.
    To access the payload inside your endpoint you can use one of the following methods:
-    ```csharp
+    ```cs
     FromBody<T>(string propertyName)
     ```
-    ```csharp
+    ```cs
     FromBody(string propertyName, Type type)
     ```
-    ```csharp
+    ```cs
     RequestBody<T>()
     ```
-    ```csharp
+    ```cs
     RequestBodyObject()
     ```
 
@@ -186,7 +186,7 @@
     ```
 
    The following examples shows how to use the Message body methods to extract the relevant data:
-    ```csharp
+    ```cs
     route.MapGet("/my-topic/{id:int}", ctx => {
         string name = ctx.FromBody<string>("Name"); // "Bloomberg"
         City city = RequestBody<City>();        // "{Name, Temperature}"
@@ -194,7 +194,7 @@
     ```
 
    The same thing is possible for the topic parameters. Example:
-    ```csharp
+    ```cs
     route.MapGet("/my-topic/{id:int}", ctx => {
         int id = ctx.FromParameterValues<int>("id"); // this return 2 for '/my-topic/2'
     });

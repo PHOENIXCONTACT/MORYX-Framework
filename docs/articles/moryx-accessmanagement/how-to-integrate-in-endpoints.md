@@ -5,7 +5,7 @@ We need to make sure the endpoint only allows requests from an authenticated use
 ### Permissions
 We start by defining all the different permissions for the actions of our endpoint.
 As an example we list the `Permissions.cs` file from the Endpoint of the ResourceManagement module.
-```csharp
+```cs
 public static class Permissions
 {
     private const string _prefix = "Moryx.MyModule.";
@@ -16,7 +16,7 @@ public static class Permissions
 ```
 ## Actions
 With these permissions at hand we now secure the different actions at the Resource Endpoint using the `Authorize` attribute.
-```csharp
+```cs
 // MyController.cs
 
 [Authorize(Policy = Permissions.CanRead)]

@@ -71,7 +71,7 @@ In case you used any of these `Create()` functions, please update your code by
 using ef core's `DbContext`. As an example for `IActivitiyEntityRepository` the
 changes could look like this:
 
-```csharp
+```cs
     // before
     var activityEntity = uow.GetRepository<IActivityEntityRepository>().Create(activityData.Task.Id, activityData.Resource.Id);
     activityEntity.ProcessId = processData.Id;

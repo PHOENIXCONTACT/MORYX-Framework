@@ -41,7 +41,7 @@ The `StateMachine.Reload` methods were merged into `StateMachine.With` which mak
 <details>
   <summary> Code Replacement Snippets </summary>
 
-  ```csharp
+  ```cs
   StateBase<TContext> // replace with
   SyncStateBase<TContext>
 
@@ -60,7 +60,7 @@ The lifecycle methods of ServerModules have been migrated from void to `async Ta
   <details>
     <summary> Code Replacement Snippets </summary>
 
-    ```csharp
+    ```cs
     protected override void OnInitialize() // replace with
     protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
 
@@ -172,7 +172,7 @@ The following interfaces are still existent for api extensions but the base clas
     <details>
     <summary> Code Replacement Snippets </summary>
 
-    ```csharp
+    ```cs
     // ICellSelector
     public override IReadOnlyList<ICell> SelectCells(IActivity activity, IReadOnlyList<ICell> availableCells) // replace with
     public override Task<IReadOnlyList<ICell>> SelectCellsAsync(Activity activity, IReadOnlyList<ICell> availableCells, CancellationToken cancellationToken)
@@ -188,7 +188,7 @@ The following interfaces are still existent for api extensions but the base clas
     <details>
     <summary> Code Replacement Snippets </summary>
 
-    ```csharp
+    ```cs
     // Parameters
     protected override void Populate(IProcess process, Parameters instance) // replace with
     protected override void Populate(Process process, Parameters instance)
@@ -274,7 +274,7 @@ Data model configs are reduced to the targeting model configurator and connectio
   <details>
     <summary> Code Replacement Snippets </summary>
 
-    ```csharp
+    ```cs
     [SqliteContext] // replace with
     [SqliteDbContext]
     
@@ -318,7 +318,7 @@ All driver APIs have been reworked to use TPL async/await instead of callbacks f
   <details>
     <summary> Code Replacement Snippets </summary>
 
-    ```csharp
+    ```cs
     new DriverNotRunningException() // replace with
     new DriverStateException(StateClassification.Running)
     ```
@@ -432,7 +432,7 @@ The following plugins have been migrated to the **async lifecycle**:
   <details>
     <summary> Code Replacement Snippets </summary>
 
-    ```csharp
+    ```cs
     public void Initialize(DocumentLoaderConfig config) // replace with
     public async Task InitializeAsync(DocumentLoaderConfig config, CancellationToken cancellationToken = default)
 
@@ -446,7 +446,7 @@ The following plugins have been migrated to the **async lifecycle**:
   <details>
     <summary> Code Replacement Snippets </summary>
 
-    ```csharp
+    ```cs
     public override bool ProcessRecipe(IProductRecipe clone, Operation operation, IOperationLogger operationLogger) // replace with
     public override Task<bool> ProcessRecipeAsync(IProductRecipe clone, Operation operation, IOperationLogger operationLogger, CancellationToken cancellationToken)
 
@@ -493,7 +493,7 @@ The ResourceManagement has been updated to support **asynchronous lifecycle meth
 <details>
   <summary> Code Replacement Snippets </summary>
 
-  ```csharp
+  ```cs
   protected override void OnInitialize() // replace with
   protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
 
@@ -522,7 +522,7 @@ Additionally, the APIs of these components have been updated to return `Task` or
   <details>
     <summary> Code Replacement Snippets </summary>
 
-    ```csharp
+    ```cs
     public override IReadOnlyList<Resource> Execute(IResourceGraph graph) // replace with
     public override Task<ResourceInitializerResult> ExecuteAsync(IResourceGraph graph, object parameters, CancellationToken cancellationToken)
     ```
@@ -562,7 +562,7 @@ Additionally, the APIs of these components have been updated to return `Task` or
   <details>
     <summary> Code Replacement Snippets </summary>
 
-    ```csharp
+    ```cs
     IProcessControlReporting // replace with
     IProcessControl
     ```
@@ -582,7 +582,7 @@ The methods `ControlSystemAttached` and `ControlSystemDetached` were renamed to 
 <details>
   <summary> Code Replacement Snippets </summary>
 
-  ```csharp
+  ```cs
   public override IEnumerable<Session> ControlSystemAttached() // replace with
   protected override IEnumerable<Session> ProcessEngineAttached()
 
@@ -650,7 +650,7 @@ All methods loading ProductTypes, ProductInstances, Recipes or Workplans are now
   <details>
     <summary> Code Replacement Snippets </summary>
 
-    ```csharp
+    ```cs
     protected Task<ProductImporterResult> Import(ProductImportContext context, DemoImportParameters parameters) // replace with
     protected override Task<ProductImporterResult> ImportAsync(ProductImportContext context, DemoImportParameters parameters, CancellationToken cancellationToken)
     ```
@@ -702,7 +702,7 @@ Cleanup:
 <details>
   <summary> Code Replacement Snippets </summary>
 
-  ```csharp
+  ```cs
    Deserialize(byte[] messageAsBytes) // replace with
    Deserialize(ReadOnlySequence<byte> messageAsBytes)
   ```

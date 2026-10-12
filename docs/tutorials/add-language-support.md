@@ -6,13 +6,13 @@ Language support based on needs can be added to two different layers, backend an
 
 In the **Startup.cs** file of the **StartProject.Asp** project, find the function **ConfigureServices(ISeviceCollection services)** and add the following line of code to its body
 
-```csharp
+```cs
 services.AddLocalization();
 ```
 
 Next, to the body of the function **Configure(IApplicationBuilder app, IWebHostEnvironment env)** just after *app.UserAuthorization();* add the following line that comes from Moryx.Launcher (install the package if it is not):
 
-```csharp
+```cs
 services.Configure<RequestLocalizationOptions>(options =>
 {
     var supportedCultures = new[]
@@ -43,7 +43,7 @@ You can fill in the table with the strings needing translation.
 
 You can see them being used under the *Pages* folder, the .cshtml file, in the following way:
 
-```csharp
+```cs
 @attribute [Display(ResourceType = typeof(Strings), Name = nameof(Strings.Module_Title), Description = "Module_Description")]
 ```
 

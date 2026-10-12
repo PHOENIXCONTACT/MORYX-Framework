@@ -4,7 +4,7 @@
 
 To register the launcher to your application use the `AddMoryxLauncher()` extension on the service collection. It registers all required components to use the Launcher.
 
-```csharp
+```cs
 services.AddMoryxLauncher();
 ```
 
