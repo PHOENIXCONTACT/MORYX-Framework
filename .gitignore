@@ -161,3 +161,8 @@ orleans.codegen.cs
 *.Cobertura.xml
 *.OpenCover.xml
 *.TestResult.xml
+
+# Agentic AI
+.claude/settings.local.json
+CLAUDE.md
+AGENTS.md
