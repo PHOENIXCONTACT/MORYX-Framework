@@ -104,6 +104,13 @@ internal class ModuleLifecycleController
 
     private async Task StartModule(IServerModule module, CancellationToken cancellationToken)
     {
+        // In case of 'Stopped' is defined as 0x0 every module is stopped at first call.
+        // So don't check here for 'Stopped' otherwise the module will never start
+        if (module.State == ServerModuleState.Stopping)
+        {
+            return;
+        }
+
         var dependencies = _dependencyManager.GetDependencyBranch(module).Dependencies;
 
         // Check for any failed dependencies
