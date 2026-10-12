@@ -34,7 +34,7 @@ For the following properties and attributes reference these files:
 - Moryx.dll
 - Moryx.Runtime.dll
 
-````cs
+```cs
 [Description("Example description")]
 public class ModuleController : ServerModuleBase<ModuleConfig>
 {
@@ -44,13 +44,13 @@ public class ModuleController : ServerModuleBase<ModuleConfig>
     public override string Name => "ExampleName";
 
     ...
-````
+```
 
 As an example for the first bullet point, we import the ResourceManagement and the ProductManagement. We do so by simply adding them as public properties, the global DI container will do the rest. (The RequiredModuleApi-Attribute is described [here](facades.md))
 
 The DbContextManager as well as the ConfigManager are part of the ServiceCollection. This is the reason why they have to be injected via the constructor.
 
-````cs
+```cs
 [RequiredModuleApi(IsStartDependency = true, IsOptional = false)]
 public IResourceManagement ResourceManagement { get; set; }
 
@@ -70,11 +70,11 @@ public ModuleController(IModuleContainerFactory containerFactory, IConfigManager
 {
     DbContextManager = contextManager;
 }
-````
+```
 
 Now we will register the global components to the internal container of our module. All internal components of a module are registered automatically. Components can be for example Plugins or Strategies. We do this in the `OnInitializeAsync` method we must override from our base class:
 
-````cs
+```cs
 /// <summary>
 /// Code executed on start up and after service was stopped and should be started again
 /// </summary>
@@ -86,11 +86,11 @@ protected override Task OnInitializeAsync(CancellationToken cancellationToken)
 
     return Task.CompletedTask;
 }
-````
+```
 
 After the initialization we have to start the custom plugins of our ServerModule and activate facades. We do so in the derived `OnStartAsync` method.
 
-````cs
+```cs
 protected override async Task OnStartAsync(CancellationToken cancellationToken)
 {
     // Activate facades
@@ -100,11 +100,11 @@ protected override async Task OnStartAsync(CancellationToken cancellationToken)
     var plugin = Container.Resolve<IExamplePlugin>();
     await plugin.StartAsync();
 }
-````
+```
 
 Even the greatest ServerModule must be stopped from time to time. We must override the `OnStopAsync` method to clean up our ServerModule and we must put it in a state in which it can be reinitialized. This includes for example to dispose and deactivate facades and plugins:
 
-````cs
+```cs
 /// <summary>
 /// Code executed when service is stopped
 /// </summary>
@@ -117,7 +117,7 @@ protected override async Task OnStopAsync(CancellationToken cancellationToken)
     var plugin = Container.Resolve<IExamplePlugin>();
     await plugin.StopAsync();
 }
-````
+```
 
 ## The ModuleConfig.cs - File
 
@@ -132,7 +132,7 @@ The following points must be noted:
 
 The following code is an example for a ModuleConfig.cs:
 
-````cs
+```cs
 [DataContract]
 public class ModuleConfig : ConfigBase
 {
@@ -144,13 +144,13 @@ public class ModuleConfig : ConfigBase
     [DefaultValue("Hello World")]
     public string SomeString { get; set; }
 }
-````
+```
 
 ## The ModuleConsole.cs - File
 
 The module console provides a way to execute methods using the maintenance. It can be used for initial testing, debugging or 'admin access'-features. For this feature you need to create a `ModuleConsole.cs` file in your `ModuleController` folder, implement `IServerModuleConsole` and add methods using the `EntrySerializeAttribute` in order to see them on the UI. Although the interface is empty, it is needed for the export.
 
-````cs
+```cs
 [ServerModuleConsole]
 internal class ModuleConsole : IServerModuleConsole
 {
@@ -160,4 +160,4 @@ internal class ModuleConsole : IServerModuleConsole
         ...
     }
 }
-````
+```

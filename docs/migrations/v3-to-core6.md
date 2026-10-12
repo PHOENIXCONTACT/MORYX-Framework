@@ -27,7 +27,7 @@ It also requires a couple of changes when you migrate modules or applications fr
 
 Example for the application project:
 
-````cs
+```cs
 ...
 using Moryx.Runtime.Kernel;
 using Moryx.Tools;
@@ -56,21 +56,21 @@ public static void Main(string[] args)
 
     host.Services.StopMoryxModules();
 }
-````
+```
 
 The constructor for a `ModuleController` uses constructor injection, this also includes further imports like `IDbContextManager`. **Beaware** that the internal dependency injection within a module, as well as dependenies to other facades within the module controller still use castle and, hence, work with property injection)
 
-````cs
+```cs
 public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager contextManager) 
     : base(containerFactory, configManager, loggerFactory)
 {
     ContextManager = contextManager;
 }
-````
+```
 
 When exporting facades from you module, the new structure no longer exports facades with implicit polymorphism. Instead when your facade provides multiple interfaces, for example after a new minor version, you need to export each one explicitly. 
 
-````cs
+```cs
 public class ModuleController : ServerModuleFacadeControllerBase<ModuleConfig>, 
     IFacadeContainer<IProductManagement>, 
     IFacadeContainer<IProductManagementModification>,
@@ -81,7 +81,7 @@ private readonly ProductManagementFacade _productManagement = new ProductManagem
 IProductManagement IFacadeContainer<IProductManagement>.Facade => _productManagement;
 IProductManagementTypeSearch IFacadeContainer<IProductManagementTypeSearch>.Facade => _productManagement;
 IProductManagementModification IFacadeContainer<IProductManagementModification>.Facade => _productManagement;    
-````
+```
 Lastly, the `ServerModule` attribute is not needed anymore and was removed.
 
 

@@ -14,7 +14,7 @@ First you have to define the steps needed for your use case. In this example, we
 Let's start by creating a new project in your assembly solution called `Moryx.Cake`. Then create the following project structure:
 First add a folder for the steps called *Activies*. In this folder, create subfolders for each step including a task, an activity, parameters and if needed results. The task is the step in the workplan. The activity will be generated from the task during the production. With the parameters you can add additional parameters to the step. Results represent the outputs of a step. The [DefaultActivityResult](../../src/Moryx.AbstractionLayer/Activities/DefaultActivityResult.cs) contains the result *Success*, *Failure* and *Technical Error*. If you need different results, please create a custom one.
 
-````fs
+```fs
 -Moryx.Cake
 |-Activities
     |-Assemble
@@ -34,7 +34,7 @@ First add a folder for the steps called *Activies*. In this folder, create subfo
         |-PackActivity.cs
         |-PackTask.cs
         |-PackParameter.cs
-````
+```
 Let's continue by implementing the parameters. Parameters have to implement the abstract class [Parameters](../../src/Moryx.AbstractionLayer/Activities/Parameters.cs). If the corresponding resource should show VisualInstructions during the activity, use `VisualInstructionParameters` instead.
 
 In the method `Populate()`, `instance` is the parameter of the just created activity in the current process. In this method you copy information from general parameters configured in the workplan to the specific ones.

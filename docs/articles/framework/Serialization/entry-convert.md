@@ -53,7 +53,7 @@ The return value of `EncodeClass` or `EncodeObject` is a root entry, that contai
 
 Let's look at this with an example:
 
-````cs
+```cs
 public class Foo
 {
     public int Id { get; set; }
@@ -85,11 +85,11 @@ public void Serialize()
         Properties = EntryConvert.EncodeObject(fooObj).ToArray()
     };
 }
-````
+```
 
 In the example we would not need to know the definition of `Derived` and could still send it to the client for modification by the user. If we do not have an object `fooObj` yet, we could also encode the type and later create an object from the clients response.
 
-````cs
+```cs
 public void SerializeType()
 {
     var type = typeof(DerivedFoo);
@@ -98,7 +98,7 @@ public void SerializeType()
         Properties = EntryConvert.EncodeClass(type).ToArray()
     };
 }
-````
+```
 
 If you try this examples yourself, you will notice, that properties also contains an entry with key `Id`, which is redundant with `FooDto` and part of the possibilities described for `ICustomSerialization`.
 
@@ -106,7 +106,7 @@ If you try this examples yourself, you will notice, that properties also contain
 
 When converting the modified `Entry` back into an object there are two choices - creating a new object or updating an existing one. Using the `FooDto` from the previous example both options are shown below.
 
-````cs
+```cs
 public void Deserialize()
 {
     FooDto dto = FromService();
@@ -117,7 +117,7 @@ public void Deserialize()
     dto.Properties[0].Value.Current = "Michael";
     EntryConvert.UpdateInstance(fooObj, dto.Properties);
 }
-````
+```
 
 ## Serialize and deserialize Streams
 
@@ -135,7 +135,7 @@ The EntryConvert also supports serialization and deserialization of [Streams](ht
 
 The following example shows a sample class containing a `FileStream` instance. The function `Serialize` shows what to call to encode to a new `Entry`. The function `Deserialize` shows how an existing instance is updated with a corresponding `Entry`.
 
-````cs
+```cs
 // Sample class that contains a FileStream object
 public class FileStreamDummy
 {
@@ -166,13 +166,13 @@ public void Deserialize(Entry entry, FileStreamDummy dummy)
     // Apply entry data
     EntryConvert.UpdateInstance(dummy, entry);
 }
-````
+```
 
 ## Serialize Structs
 
 `EntryConvert` supports decomposed serialization for the following `System.Numerics` struct types: `Vector2`, `Vector3`, `Vector4`, `Quaternion` and `Plane`. Instead of displaying unparseable strings like `<1.5, 2.5, 3.5>`, these structs are encoded as `Struct` entries with editable sub-entries for each component (X, Y, Z, W). When you serialize a class containing one of these types, the resulting entry will have sub-entries for each component of the struct.
 
-````cs
+```cs
 public class RobotPosition
 {
     public Vector3 Position { get; set; }
@@ -197,13 +197,13 @@ public void Deserialize(Entry entry)
     EntryConvert.UpdateInstance(pos, entry);
     // pos.Position and pos.Orientation are reconstructed from sub-entry values
 }
-````
+```
 
 ## ICustomSerialization
 
 All public methods of `EntryConvert` have overloads that expect an instance of [ICustomSerialization](/src/Moryx/Serialization/ICustomSerialization.cs) to modify the behavior of the serializer where necessary. The overloads without the parameter use a Singleton instance of `DefaultSerialization`. When implementing a new version of `ICustomSerialization` it is recommended to derive from [DefaultSerialization](/src/Moryx/Serialization/DefaultSerialization.cs) and only override what shall behave different.
 
-````cs
+```cs
 public class FooSerialization : DefaultSerialization
 {
     public override IEnumerable<PropertyInfo> GetProperties(Type sourceType)
@@ -220,11 +220,11 @@ public class FooSerialization : DefaultSerialization
         return base.PossibleValues(property);
     }
 }
-````
+```
 
 After you customized the behavior you can then apply it to the serializer by passing it into the `Encode` or `Create`/`Update` methods like shown in the two modified examples.
 
-````cs
+```cs
 var serialization = new FooSerialization();
 var dto = new FooDto
 {
@@ -233,7 +233,7 @@ var dto = new FooDto
 };
 dto.Properties[0].Value.Current = "Michael";
 EntryConvert.UpdateInstance(fooObj, dto.Properties, serialization);
-````
+```
 
 ## EntrySerialize Attribute
 
@@ -257,7 +257,7 @@ In the other sections you have learned that `EntryConvert` is able to serialize 
 
 To enable the `RPC` features of `EntryConvert` you need to use the [EntrySerializeSerialization](/src/Moryx/Serialization/EntrySerializeSerialization.cs) serializer on `EntryConvert`. Then you add the [EntrySerializeAttribute](/src/Moryx/Serialization/EntryConvert/EntrySerializeAttribute.cs) to all private/public methods or properties you want to expose. The serialization only serializes methods with the attribute defined.
 
-````cs
+```cs
 public class MyLittleRPC
 {
     [EntrySerialize, Description("Does something parameterized")]
@@ -266,27 +266,27 @@ public class MyLittleRPC
         return true;
     }
 }
-````
+```
 
 The serialization will be done by the method ``
 
-````cs
+```cs
 public MethodEntry[] GetMethods(string moduleName)
 {
     return EntryConvert.EncodeMethods(MyLittleRPC, new EntrySerializeSerialization()).ToArray();
 }
-````
+```
 
 **Invoke Methods**
 
 The following code allows you to expose and invoke you `RPC` methods or properties.
 
-````cs
+```cs
 public Entry InvokeMethod(MethodEntry method)
 {
     return EntryConvert.InvokeMethod(MyLittleRPC, method, new EntrySerializeSerialization());
 }
-````
+```
 
 ### Serialize Constructors
 

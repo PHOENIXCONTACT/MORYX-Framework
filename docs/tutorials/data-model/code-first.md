@@ -21,7 +21,7 @@ More extended, additional repositories can be created for the [UnitOfWork Reposi
 
 Create your own database context by deriving from `DbContext` or for more comfortability from [MoryxDbContext](/src/Moryx.Model/MoryxDbContext.cs) and add the two constructor overloads as shown below.
 
-````cs
+```cs
 public class SolarSystemContext : MoryxDbContext
 {
     public SolarSystemContext()
@@ -46,11 +46,11 @@ public class SolarSystemContext : MoryxDbContext
         // Additional FluentAPI calls ...
     }
 }
-````
+```
 
 If you want to provide database provider specific implementations you can derive from this context. The database specific attribute provides an argument for the base context. This is important to use the base context in a generic way, without knowledge about the specific database providers. For example for PostgreSQL:
 
-````cs
+```cs
 [NpgsqlDbContext(typeof(SolarSystemContext))]
 public class NpgsqlSolarSystemContext : SolarSystemContext
 {
@@ -63,11 +63,11 @@ public class NpgsqlSolarSystemContext : SolarSystemContext
         // Necessary for DesignTimeDbContextFactory
     }
 }
-````
+```
 
 or for Sqlite:
 
-````cs
+```cs
 [SqliteDbContext(typeof(SolarSystemContext))]
 public class SqliteSolarSystemContext : SolarSystemContext
 {
@@ -80,23 +80,23 @@ public class SqliteSolarSystemContext : SolarSystemContext
         // Necessary for DesignTimeDbContextFactory
     }
 }
-````
+```
 
 If you just want to support one database provider, you can use the database specific attribute on the base context directly.
 
-````cs
+```cs
 [NpgsqlDbContext]
 public class SolarSystemContext : MoryxDbContext
 {
     ...
 }
-````
+```
 
 ## Entities
 
 Then you need to define your entities which will be represented as tables in your database.
 
-````cs
+```cs
 public class Planet : ModificationTrackedEntityBase
 {
     public virtual string Name { get; set; }
@@ -131,7 +131,7 @@ public class Asteroid : ModificationTrackedEntityBase
 
     public virtual bool WasFiredByBugs { get; set; }
 }
-````
+```
 
 The entities are either derived from [EntityBase](/src/Moryx.Model/EntityBase.cs) or [ModificationTrackedEntityBase](/src/Moryx.Model/ModificationTrackedEntityBase.cs).
 Is that necessary?
@@ -145,10 +145,10 @@ You can find further information regarding modification tracking [here](/docs/ar
 
 EF Core can dynamically generate proxy types that implement `INotifyPropertyChanging` and `INotifyPropertyChanged`. This requires installing the `Microsoft.EntityFrameworkCore.Proxies` NuGet package, and enabling change-tracking proxies with UseChangeTrackingProxies For example:
 
-````cs
+```cs
 protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     => optionsBuilder.UseChangeTrackingProxies();
-````
+```
 
 ## Entity loading & change tracking behavior
 
@@ -185,7 +185,7 @@ You need __explicitly__ define the navigation property as __`virtual`__ if you w
 
 To use the context within a MORYX module, you must declare a dependency on `IDbContextManager` and register it together with the context specific factory in your local container. Afterwards you can use injection for context specific factories anywhere in the module.
 
-````cs
+```cs
 // ModuleController.cs
 
 public IDbContextManager DbContextManager { get; set; }
@@ -203,7 +203,7 @@ public class MyComponent : IMyComponent
     // Injected
     public IContextFactory<SolarSystemContext> SolarContextFactory { get; set; }
 }
-````
+```
 
 ## UnitOfWork Repository Pattern
 
@@ -214,7 +214,7 @@ For the following paragraphs, it is necessary to have a rough understanding of i
 
 First let's define a repository API (same assembly as the context is defined in)
 
-````cs
+```cs
 public interface IPlanetRepository : IRepository<Planet>
 {
     Planet Create(string name);
@@ -252,7 +252,7 @@ public interface ISatelliteRepository : IRepository<Satellite>
 public interface IAsteroidRepository : IRepository<Asteroid>
 {
 }
-````
+```
 
 If you got scared that you have to implement all these functions you are lucky, they will be implemented automatically.
 So you only have to define the interfaces.
@@ -264,25 +264,25 @@ But if you need a more specialized implementation of a repository you can either
 
 To use the unit of work pattern, another factory is registered to the local container of the module `IUnitOfWorkFactory` and this can also be injected per context:
 
-````cs
+```cs
 // Somewhere within the modules composition
 public class MyComponent : IMyComponent
 {
     // Injected
     public IUnitOfWorkFactory<SolarSystemContext> UnitOfWorkFactory { get; set; }
 }
-````
+```
 
 The repository can be used by creating a unit of work with the factory and resolving the repository
 
-````cs
+```cs
 using var uow = UnitOfWokFactory.Create();
 var planetRepo = uow.GetRepository<IPlanetRepository>();
 var planetEntity = planetRepo.Create();
 
 await uow.SaveChangesAsync();
 
-````
+```
 
 You do not need to implement your repository interface, this is completely done by the [Repository Proxy Builder](/docs/articles/framework/DataModel/repository-proxy-builder.md).
 
@@ -316,7 +316,7 @@ For both options we need implementations of the `IDesignTimeDbContextFactory<TCo
 
 Samples for the SolarSystemContext could look as follows. There is no additional code necessary within the classes.
 
-````cs
+```cs
 // Npgsql
 public class NpgsqlSolarSystemContextDesignTimeFactory : NpgsqlDesignTimeDbContextFactory<NpgsqlSolarSystemContext>
 {
@@ -326,31 +326,31 @@ public class NpgsqlSolarSystemContextDesignTimeFactory : NpgsqlDesignTimeDbConte
 public class SqliteSolarSystemContextDesignTimeFactory : NpgsqlDesignTimeDbContextFactory<SqliteSolarSystemContext>
 {
 }
-````
+```
 
 The `Moryx.Model.DesignTimeFactory<TContext>` base classes already implement the logic to read the connection string from the command line parameters or the `EFCORETOOLSDB` environment variable.
 
-````ps
+```ps
 // Using command line parameter
 dotnet ef migrations add InitialCreate -s .path/to/StartProject.csproj -c SolarSystemContext -- --connection "YourConnectionString"
 
 // Using environment variable
 $env:EFCORETOOLSDB="YourConnectionString"
 dotnet ef migrations add InitialCreate -s .path/to/StartProject.csproj -c SolarSystemContext
-````
+```
 
 ### Update-Database
 
 The last step to do, is to apply the migrations to the database so that your context and its entities are on the same version. Copy the following line to the command line:
 
-````ps
+```ps
 // Using command line parameter
 dotnet ef database update InitialCreate -s path/to/StartProject.csproj -c SolarSystemContext -- --connection "YourConnectionString"
 
 // Using environment variable
 $env:EFCORETOOLSDB="YourConnectionString"
 dotnet ef database update InitialCreate -s path/to/StartProject.csproj -c SolarSystemContext
-````
+```
 
 The database should now have been updated. Have a look.
 
@@ -364,10 +364,10 @@ Second change the `Name` parameter of the script to a speaking version name.
 
 But how to access the data? The next snippet shows an example call of the database. Note that usually a `DbContextFactory` is injected.
 
-````cs
+```cs
 using var context = DbContextFactory.Create<SolarSystemContext>();
 var planets = context.Planets;
-````
+```
 
 ## Schema support
 

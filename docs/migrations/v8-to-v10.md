@@ -80,7 +80,7 @@ The lifecycle methods of ServerModules have been migrated from void to `async Ta
   - `ReincarnateModule(IServerModule module)` -> `ReincarnateModuleAsync(IServerModule module)`  
 
   The `Main` method in `Program.cs` must be updated to a Task-based signature.
-  ````cs
+  ```cs
   public static async Task Main(string[] args)
   {
       AppDomainBuilder.LoadAssemblies();
@@ -94,7 +94,7 @@ The lifecycle methods of ServerModules have been migrated from void to `async Ta
 
       await moduleManager.StopModulesAsync();
   }
-  ````
+  ```
   _Note: For projects using top-level statements you can use the new async methods without any further actions._
 
 #### ConfigBasedComponentSelector async support
@@ -103,7 +103,7 @@ The `ConfigBasedComponentSelector` was extended to support async initialization 
 
 The following sample shows the new possibilities of the `ConfigBasedComponentSelector`:
 
-````cs
+```cs
 public interface ISample : IAsyncConfiguredInitializable<SampleConfig>;
 
 [PluginFactory(typeof(IConfigBasedComponentSelector))]
@@ -121,7 +121,7 @@ internal interface ISampleFactory
     // InitializeAsync will be called asynchronously after creation with passing cancellationToken
     Task<ISample> Create(SampleConfig config, CancellationToken cancellationToken);
 }
-````
+```
 
 #### Other Async Related changes
 
@@ -219,7 +219,7 @@ With MORYX 10, several changes have been made to the data model to improve perfo
 **Changes of DatabaseConfig**
 
 Old version:
-````json
+```json
 {
   "ConnectionSettings": {
     "$type": "Moryx.Model.Sqlite.SqliteDatabaseConnectionSettings, Moryx.Model.Sqlite",
@@ -229,17 +229,17 @@ Old version:
   "ConfiguratorTypename": "Moryx.Model.Sqlite.SqliteModelConfigurator, Moryx.Model.Sqlite, Version=8.0.0.0, Culture=neutral, PublicKeyToken=null",
   "ConfigState": "Valid"
 }
-````
+```
 
 New version:
 
-````json
+```json
 {
   "ConfiguratorType": "Moryx.Model.Sqlite.SqliteModelConfigurator, Moryx.Model.Sqlite, Version=10.0.0.0, Culture=neutral, PublicKeyToken=null",
   "ConnectionString": "Data Source=./db/ProcessContext.db;Mode=ReadWrite;",
   "ConfigState": "Valid"
 }
-````
+```
 
 #### Configurations
 Data model configs are reduced to the targeting model configurator and connection string, reducing complexity while still providing a richer UX in the frontend.
@@ -367,7 +367,7 @@ VisualInstructions has an own separate namespace now.
 
 Required SQL Update:
 
-````sql
+```sql
 // SQLite
 UPDATE Resources
 SET "Type" = 'Moryx.Resources.VisualInstructions.VisualInstructor'
@@ -377,7 +377,7 @@ WHERE "Type" = 'Moryx.Resources.AssemblyInstruction.VisualInstructor';
 UPDATE public."Resources"
 SET "Type" = 'Moryx.Resources.VisualInstructions.VisualInstructor'
 WHERE "Type" = 'Moryx.Resources.AssemblyInstruction.VisualInstructor';
-````
+```
 
 #### Replaced result of visual instructions with dedicated result object
 
@@ -721,7 +721,7 @@ Features:
 
 #### Required SQL Update:
 
-````sql
+```sql
 // SQLite
 UPDATE Resources
 SET "Type" = 'Moryx.Drivers.Mqtt.Topics.MqttTopicIByteSerializable'
@@ -743,7 +743,7 @@ WHERE "Type" = 'Moryx.Drivers.Mqtt.MqttTopics.MqttTopicJson';
 UPDATE public."Resources"
 SET "Type" = 'Moryx.Drivers.Mqtt.Topics.MqttTopicPrimitive'
 WHERE "Type" = 'Moryx.Drivers.Mqtt.MqttTopics.MqttTopicPrimitive';
-````
+```
 
 ### OPC-UA Driver`
 

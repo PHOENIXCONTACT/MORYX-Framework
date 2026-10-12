@@ -14,7 +14,7 @@ The [ExpressionConstraint](/src/Moryx.AbstractionLayer/Constraints/ExpressionCon
 It can compare a given value with the one returned by a typed lambda expression and supports standard `Equals` comparison as well was `LessOrEqual` and `GreaterOrEqual`.
 The `DummyContext` provides the value to check against. 
 
-````cs
+```cs
 public class DummyContext : IConstraintContext
 {
     public int Foo { get; set; }
@@ -43,14 +43,14 @@ public void ExpressionExamples()
     var r3 = lessOrEqual.Check(context); // True
     var r3 = greaterOrEqual.Check(context); // False
 }
-````
+```
 
 ## Constraint Context
 
 To define a context for the constraint it is enough to implement the [IConstraintContext](/src/Moryx.AbstractionLayer/Constraints/IConstraintContext.cs) interface. 
 Since [Processes](/src/Moryx.AbstractionLayer/Process//IProcess.cs) implement the [IConstraintContext](/src/Moryx.AbstractionLayer/Constraints/IConstraintContext.cs) interface, every process can be used for a check like in the following example:
 
-```` cs
+``` cs
 var identity = new ProductIdentity("123456", 0);
 var constraint = ExpressionConstraint.Equals<IProcess>(p => ((IProductRecipe) p.Recipe).Product.Identity, identity);
-````
+```

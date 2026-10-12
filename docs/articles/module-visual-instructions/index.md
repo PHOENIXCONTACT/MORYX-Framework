@@ -21,7 +21,7 @@ Every displayed instruction has either to be cleared manually or an auto clear t
 
 ### Sample
 
-````cs
+```cs
 [ResourceReference(ResourceRelationType.Extension)]
 public IVisualInstructor Instructor { get; set; }
 
@@ -46,7 +46,7 @@ public void DisplaySomething()
     // Work => Instruction no longer necessary => Clear
     Instructor.Clear(instructionId);
 }
-````
+```
 
 ## Execute Instructions
 

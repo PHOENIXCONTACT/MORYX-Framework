@@ -24,16 +24,16 @@ Also have a look at the [repository proxy builder](repository-proxy-builder.md) 
 
 Let's have a look at an example implementation. How do you define the UnitOfWork and Repository approach in the MORYX framework?
 
-````cs
+```cs
 public interface IPersonEntityRepository : IRepository<PersonEntity>
 {
     // Add here additional functions to make your life easier
 }
-````
+```
 
 And here is how you use it.
 
-````cs
+```cs
 // Note that this is just an example to show which calls you have to make
 // to work with your database.
 
@@ -81,7 +81,7 @@ public async Task UseExtensionMethodsToFurtherSimplifyYouLifeAsync(Person person
     // Save it
     await uow.SaveChangesAsync();
 }
-````
+```
 
 As you can see you just need to write the most important things.
 The magic of the runtime code generation takes care of the rest.

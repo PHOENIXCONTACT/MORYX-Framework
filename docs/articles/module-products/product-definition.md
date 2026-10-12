@@ -24,7 +24,7 @@ The level 1 definition for a watch, its watchface and needles is shown below. Th
 
 **The watch itself:**
 
-````cs
+```cs
 public class WatchProduct : ProductType
 {
     // Watch attributes
@@ -44,11 +44,11 @@ public class WatchProduct : ProductType
         };
     }
 }
-````
+```
 
 **The link between a watch and its needles defines the role of the referenced needle:**
 
-````cs
+```cs
 public enum NeedleRole
 {
     Hours,
@@ -76,7 +76,7 @@ public class NeedlePartLink : ProductPartLink<NeedleProduct>
         return needle;
     }
 }
-````
+```
 
 ## Product Level 2
 
@@ -86,7 +86,7 @@ Level 2 of the product definition defines concrete product variants within a gro
 
 The example below illustrates how the object tree for a product might look like. While the object tree might represent a real product, the way it is created does not. Normally product objects are fetched from the [ProductStorage](/src/Moryx.Products.Management/Components/IProductStorage.cs).
 
-````cs
+```cs
 var tagHeuer = new WatchProduct
 {
     Name = "TagHeuer Premium",
@@ -127,7 +127,7 @@ var tagHeuer = new WatchProduct
         }
     }
 };
-````
+```
 
 ## Instance Definition
 
@@ -141,7 +141,7 @@ All instance class definitions must be derived from [ProductInstance](/src/Moryx
 
 For our watch example the instance definition is shown below. Possible instance attributes for a watch could be the delivery date in addition to the production date for the warranty times. Another instance field is the `TimeSet`-flag if the time was preset to the current local time.
 
-````cs
+```cs
 public class WatchInstance: ProductInstance<WatchProduct>
 {
     public bool TimeSet { get; set; }
@@ -152,4 +152,4 @@ public class WatchInstance: ProductInstance<WatchProduct>
 
     public ICollection<NeedleInstance> Neddles { get; set; }
 }
-````
+```

@@ -17,7 +17,7 @@ To implement your protocol you must create two classes: a validator and an inter
 
 For header based protocols simply derive from `HeaderMessageInterpreter<T>` where `T` is the type of your header class. For the IPS-header please have a look at IpsHeader.cs(info). The base class will first read and parse the header. Then it will extract the payload length from the header and read the payload. If all is complete the binary connection publishes the message of type BinaryMessage<THeader>.
 
-````cs
+```cs
 public class MyHeaderInterpreter : HeaderMessageInterpreter<MyHeader>
 {
     protected override int HeaderSize => return MyHeader.HeaderLength;
@@ -30,7 +30,7 @@ public class MyHeaderInterpreter : HeaderMessageInterpreter<MyHeader>
         get { return _instance ?? (_instance = new MyHeaderInterpreter()); }
     }
 }
-````
+```
 
 ### MessageInterpreter for Delimiter-Protocols
 
@@ -54,7 +54,7 @@ For delimiter based protocols derive from `DelimiterMessageInterpreter` and prov
 |Recommended size (high latency) | BiggestMessage | For low latency make sure to read each message in a single cycle if possible. That makes transmission for the sending side easier. |
 | Maximum size | (BufferSize / 2) | In case the first read did not result in a full message you must have enough space to store full read size in the buffer. |
 
-````cs
+```cs
 public class HtmlInterpreter : DelimitedMessageInterpreter
 {
     private static HtmlInterpreter _instance;
@@ -84,13 +84,13 @@ public class HtmlInterpreter : DelimitedMessageInterpreter
     /// </summary>
     protected override byte[] EndDelimiter => Encoding.UTF8.GetBytes("</html>");
 }
-````
+```
 
 ## Message validation
 
 Validation is similar for both types of protocols. The only difference is that header based protocols must cast the message first to `BinaryMessage<THeader>`. Make sure to return the singleton instance of your protocol in the validator.
 
-````cs
+```cs
 public class MyMessageValidator : IMessageValidator
 {
     public IMessageInterpreter Interpreter => IpsHeaderInterpreter.Instance;
@@ -101,7 +101,7 @@ public class MyMessageValidator : IMessageValidator
         return ipsHeader.ModeID == 401;
     }
 }
-````
+```
 
 ## Putting it all together
 
@@ -146,7 +146,7 @@ The `IBinaryConnection` will represent an `TcpClientConnection`-Object. `TcpClie
 
 ### Sample
 
-````cs
+```cs
 public class BinaryConnectionTester : IDevice
 {
     // Injected factory
@@ -170,7 +170,7 @@ public class BinaryConnectionTester : IDevice
         _connection.Send(new BinaryMessage { Payload = message.Payload.ToBytes() });
     }
 }
-````
+```
 
 ## Byte-Order
 

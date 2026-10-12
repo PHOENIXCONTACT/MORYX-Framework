@@ -54,7 +54,7 @@ Define the property for the `NotificationPublisher` (this requires you to refere
 Then ask the container in the `Start()` method to provide you with the instance.
 The NotificationPublisher then provides you with desired notification access.
 
-````cs
+```cs
 ...
 [RequiredModuleApi(IsStartDependency = true, IsOptional = false)]
 public INotificationPublisher NotificationPublisher { get; set; }
@@ -67,7 +67,7 @@ protected override Task OnInitializeAsync(CancellationToken cancellationToken)
 }
 ...
 
-````
+```
 
 ### Publishing Notifications
 
@@ -76,7 +76,7 @@ To enable a ServerModule for notification handling the following steps are neces
 **Register notification components**
 It is necessary to register some components to the local container of the ServerModule. Just call the method which is shown in the following example:
 
-````cs
+```cs
 ...
 protected override Task OnInitializeAsync(CancellationToken cancellationToken)
 {
@@ -86,12 +86,12 @@ protected override Task OnInitializeAsync(CancellationToken cancellationToken)
 }
 ...
 
-````
+```
 
 **Provide notification Facade**
 It is necessary to provide a `INotificationSource` facade to publish notifications. There is a facade class called `NotificationSourceFacade` which should be used by ServerModules to publish notifications. This is a reusable class to encapsulate the communication to the `NotificationPublisher`. Just implement the interface `IFacadeContainer<INotificationSource>` and implement the facade like in the following example:
 
-````cs
+```cs
 public class ModuleController : ServerModuleFacadeControllerBase<ModuleConfig>, IFacadeContainer<INotificationSource>
 {
   ...
@@ -99,7 +99,7 @@ public class ModuleController : ServerModuleFacadeControllerBase<ModuleConfig>, 
   INotificationSource IFacadeContainer<INotificationSource>.Facade => _notificationSourceFacade;
 }
 
-````
+```
 
 The ServerModule is now able to publish notifications to the `NotificationPublisher`.
 
@@ -112,7 +112,7 @@ Inside of a plugin it is just necessary to implement the interface `INotificatio
 Then the plugin can publish notification as often as necessary.
 The following code snippet shows an example for how a notification publishing plugin could look like.
 
-````cs
+```cs
 public class MyPlugin : IModulePlugin, INotificationSender
 {
   public INotificationAdapter NotificationAdapter { get; set; }
@@ -137,7 +137,7 @@ public class MyPlugin : IModulePlugin, INotificationSender
   }
 }
 
-````
+```
 
 #### Marking a notification as not acknowledgeable
 
