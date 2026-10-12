@@ -11,11 +11,11 @@ MORYX Container is more than just inject the first suitable object from the Cont
 
 Components can be registered in the Container by two main methods:
 
-````cs
+```cs
 Container.SetInstance(MyComponent);
 
 Container.LoadComponents<IMyComponentInterface>();
-````
+```
 
 The main Task is to find the needed components and to register it by the `Moryx.Container.RegistrationAttribute`. There are several ways to register an component. In most case methods **LoadComponents** or **SetInstance** are enough but there are several `Register` methods for different ways of component registration. The following sections will describe the possibilities.
 
@@ -23,43 +23,43 @@ The main Task is to find the needed components and to register it by the `Moryx.
 
 If you want to register components by a given Interface then use `LoadComponents()`. The `LoadComponents()` method is a generic method which needs an interface to search for Components which are implementing this interface. It will search in the AppDomain. The AppDomain includes your default build folder to search for Components.
 
-````cs
+```cs
 Container.LoadComponents<IMyComponentInterface>();
-````
+```
 
 A condition can be useful if there are a bunch of components, but you want to register a sub-amount of it.
 For example, you want to register all components which are complete different but marked with an attribute. So you can register these components like that.
 
-````cs
+```cs
 Container.LoadComponents<object>(type => type.GetCustomAttribute(typeof(MyAttribute)) != null);
-````
+```
 
 Or you can just filter components with the same interface but some of them are marked with an attribute.
 
-````cs
+```cs
 Container.LoadComponents<IMyComponentInterface>(type => type.GetCustomAttribute(typeof(MyAttribute)) != null);
-````
+```
 
 ### SetInstance
 
 If you want to just register a concrete instance without a search by an interface or a predicate to filter for atrributes or something similar then just use the `SetInstance()` method for the registration.
 
-````cs
+```cs
 var myInstance = new HappyClass();
 Container.SetInstance(myInstance);
-````
+```
 
 If your class implements an interface then you can also register it for that interface.
 So a new instance of the class will be registered with the given interface.
 
-````cs
+```cs
 var myInstance = new HappyClass();
 Container.SetInstance<IHappyClass>(myInstance);
-````
+```
 
 If you have more instances of a component which are almost similar, but you want to distinguish the instances then you can also use its name for the registration.
 
-````cs
+```cs
 var modules = new List<MyModule>()
 {
     new ModuleA(), new ModuleB()
@@ -67,11 +67,11 @@ var modules = new List<MyModule>()
 
 foreach(var module in modules)
     Container.SetInstance(module, module.Name);
-````
+```
 
 Here you can also register the instances with an additional interface.
 
-````cs
+```cs
 var modules = new List<MyModule>()
 {
     new ModuleA(), new ModuleB()
@@ -81,23 +81,23 @@ foreach(var module in modules)
 {
     Container.SetInstance<IMyComponentInterface>(module, module.Name);
 }
-````
+```
 
 If you have structures like
 
-````cs
+```cs
 Container.SetInstance(component1);
 Container.SetInstance(component2);
 Container.SetInstance(component3);
-````
+```
 
 Then you can just use the fluent method to register more than one component. You can register multiple instances by.
 
-````cs
+```cs
 Container.SetInstance(component1)
     .SetInstance(component2);
     .SetInstance(component3);
-````
+```
 
 ## How to get Components
 
@@ -107,48 +107,48 @@ If there are already registered components then you have some possibilities to g
 
 For example, you have a `ServerModule` and you want to initialize its `Plugins` in a defined order during the `ServerModule` start. So you have to resolve the `Plugins` you want and call the necessary method. To resolve a `Plugin` just use the `Resolve`-method.
 
-````cs
+```cs
 var myPlugin = Container.Resolve<IMyPlugin>();
-````
+```
 
 Then you get the first plugin with the given interface. If there are more than one Plugin` which is implementing the given interface then you can use the concrete type or the name. Remember, don´t forget to register the plugins before with its type or name.
 
-````cs
+```cs
 var myConcretePlugin1 = Container.Resolve<MyPluginClass>();
 var myConcretePlugin2 = Container.Resolve("MyPluginName");
 var myConcretePlugin3 = Container.Resolve<IMyPlugin>("Trick17Plugin");
-````
+```
 
 ### ResolveAll
 
 It is also possible to get more than one component from the container just by using an interface or the class type. Just use the ResolveAll method. This works for Interfaces and Class Types but not for defined names.
 
-````cs
+```cs
 IMyPlugin>[] plugins1 = Container.ResolveAll<IMyPlugin>();
 MyPluginClass[] plugins2 = Container.ResolveAll<MyPluginClass>();
-````
+```
 
 ## How to register Plugins or Components
 
 If you implement a ServerModule then you may also want to implement some `Plugins` or `Components`. The main difference of a Plugin and a Component is that a Component is part of a fix structure. A plugin is just a small exchangeable part. So usually a Component will be registered with the `Component` Attribute and a Plugin with the `Plugin` Attribute. Both are `RegistrationAttribute` which will be used for the automatic registration. Both will be registered in the container of the `ServerModule`.
 
-````cs
+```cs
 [Component(LifeCycle.Transient, typeof(IMyComponent), Name = ComponentName)]
 public class MyComponent : IMyComponent
 {
     private const string ComponentName = nameof(MyComponent);
     ...
 }
-````
+```
 
-````cs
+```cs
 [Plugin(LifeCycle.Transient, typeof(IMyPlugin), Name = PluginName)]
 public class MyPlugin : IMyPlugin
 {
     private const string ComponentName = nameof(MyPlugin);
     ...
 }
-````
+```
 
 ---
 
@@ -158,29 +158,29 @@ In some case you want to implement a component which needs some additional plugi
 
 As an example we want to implement a UserAssignment so we implement a Component which is part of a ServerModule:
 
-````cs
+```cs
 [Component(LifeCycle.Transient, typeof(IUserAssignment))]
 public class UserAssignment : IUserAssignment
 {
     private const string ModuleName = nameof(UserAssignment);
     ...
 }
-````
+```
 
 Then there is a requirement that an external system should be informed about the assignment. So we can use for example the Hook Pattern.
 
-````cs
+```cs
 [Plugin(LifeCycle.Transient, typeof(IUserAssignmentHook), Name = PluginName)]
 internal class UserAssignmentHook : IUserAssignmentHook
 {
     public const string PluginName = nameof(UserAssignmentHook);
     ...
 }
-````
+```
 
 So the component has a dependency to the hook. Lets register it with the `Moryx.Container.DependencyRegistrationAttribute`:
 
-````cs
+```cs
 [Component(LifeCycle.Transient, typeof(IUserAssignment))]
 [DependencyRegistration(typeof(IUserAssignmentHook))]
 public class UserAssignment : IUserAssignment
@@ -188,7 +188,7 @@ public class UserAssignment : IUserAssignment
     private const string ModuleName = nameof(UserAssignment);
     ...
 }
-````
+```
 
 So if the UserAssignment will be injected then it will have a dependency to the hook, and it will be also injected.
 In this case the `Moryx.Container.DependencyRegistrationAttribute.InstallerMode` is set to `Specified`. It is also possible to set the InstallerMode to `All` to register all other plugins and components from your assembly but this can cause some problems. If you register all other plugins and components with the `DependencyRegistrationAttribute` instead of the explicit registration at your Container with the `LoadComponents` or `SetInstance` method then other components are indirectly depending to your component because they get their plugins because your component load them **accidentally** with the DependencyRegistration.
@@ -201,18 +201,18 @@ In this case you also need a `DependencyRegistrationAttribute` but with an addit
 
 Now we implement a Plugin in a different Assembly:
 
-````cs
+```cs
 [Plugin(LifeCycle.Transient, typeof(IUserAssignmentHook), Name = PluginName)]
 internal class UserAssignmentHook : IUserAssignmentHook
 {
     public const string PluginName = nameof(UserAssignmentHook);
     ...
 }
-````
+```
 
 Then we implement the `SubInitializer` to register the needed types from the other Assembly
 
-````cs
+```cs
 public class MyInitializer : ISubInitializer
 {
     public void Initialize(IContainer container)
@@ -221,11 +221,11 @@ public class MyInitializer : ISubInitializer
     }
 }
 
-````
+```
 
 Now we can use the `SubInitializer` for the `DependencyRegistrationAttribute`:
 
-````cs
+```cs
 [Component(LifeCycle.Transient, typeof(IUserAssignment))]
 [DependencyRegistration(typeof(IUserAssignmentHook), Initializer = typeof(MyInitializer))]
 public class UserAssignment : IUserAssignment
@@ -233,7 +233,7 @@ public class UserAssignment : IUserAssignment
     private const string ModuleName = nameof(UserAssignment);
     ...
 }
-````
+```
 
 ## How to register Factories
 
@@ -243,7 +243,7 @@ In some case it is helpful or necessary to implement a Factory. A Factory can al
 
 If you have some plugins without any configuration then you can just use the `Moryx.Container.INameBasedComponentSelector` for the Factory. Let's implement the plugins:
 
-````cs
+```cs
 [Plugin(LifeCycle.Transient, typeof(IMyPlugin), Name = nameof(MyPluginA))]
 public class MyPluginA : IMyPlugin, IPlugin
 {
@@ -255,11 +255,11 @@ public class MyPluginB : IMyPlugin, IPlugin
 {
 
 }
-````
+```
 
 Now we have two different plugins with different names. Make sure that the Plugins have different names and implement your name based factory like:
 
-````cs
+```cs
 [PluginFactory(typeof(INameBasedComponentSelector))]
 public interface IMyFactory
 {
@@ -267,7 +267,7 @@ public interface IMyFactory
 
     void Destroy(IMyPlugin instance);
 }
-````
+```
 
 This is the simplest way to get the needed plugin from a factory.
 
@@ -277,7 +277,7 @@ If the plugins gets more complex and they need an extra configuration. Then you 
 
 Let's create a configuration class.
 
-````cs
+```cs
 [DataContract]
 public class MyConfig : IPluginConfig
 {
@@ -287,11 +287,11 @@ public class MyConfig : IPluginConfig
     [DataMember]
     public int HowOftenIForgotTheDataMemberAttribute { get; set; }
 }
-````
+```
 
 Now we have a configuration class we can use for our plugins or inherit them for an extended configuration class. Let's implement the plugins:
 
-````cs
+```cs
 [Plugin(LifeCycle.Transient, typeof(IMyPlugin), Name = nameof(MyPluginA))]
 public class MyPluginA : IConfiguredModulePlugin<MyConfig>
 {
@@ -303,11 +303,11 @@ public class MyPluginB : IConfiguredModulePlugin<MyConfig>
 {
 
 }
-````
+```
 
 Now we have two plugins which implements the `IConfiguredPlugin` interface with a given config. So we can get a plugin from the `Factory` with a matching configuration.
 
-````cs
+```cs
 [PluginFactory(typeof(IConfigBasedComponentSelector))]
 public interface IMyFactory
 {
@@ -315,13 +315,13 @@ public interface IMyFactory
 
     void Destroy(IMyPlugin instance);
 }
-````
+```
 
 The `ConfigBasedComponentSelector` supports async initialization of the selected component. If the component implements `IAsyncConfiguredInitializable`, its `InitializeAsync` method will be called during selection. It is not required that the `Create` method returns a task, the `InitializeAsync` will run synchronously after creation. If it returns a Task, it will await its completion.
 
 The following sample shows the possibilities of the `ConfigBasedComponentSelector`:
 
-````cs
+```cs
 public interface ISample : IAsyncConfiguredInitializable<SampleConfig>;
 
 [PluginFactory(typeof(IConfigBasedComponentSelector))]
@@ -339,7 +339,7 @@ internal interface ISampleFactory
     // InitializeAsync will be called asynchronously after creation with passing cancellationToken
     Task<ISample> Create(SampleConfig config, CancellationToken cancellationToken);
 }
-````
+```
 
 ## Common Mistakes
 
@@ -388,7 +388,7 @@ Explicit registration in the module container (via `SetInstance`, `LoadComponent
 
 Any service registered in the host `IServiceProvider` can be injected into module components — no additional registration needed:
 
-````cs
+```cs
 [Component(LifeCycle.Singleton, typeof(IMyService))]
 public class MyService : IMyService
 {
@@ -398,13 +398,13 @@ public class MyService : IMyService
         var client = httpClientFactory.CreateClient();
     }
 }
-````
+```
 
 To make a service available through the bridge, register it in the host `IServiceCollection` at startup:
 
-````cs
+```cs
 builder.Services.AddHttpClient();
-````
+```
 
 ### Limitations
 

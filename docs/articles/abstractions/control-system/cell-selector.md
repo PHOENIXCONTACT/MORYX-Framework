@@ -6,7 +6,7 @@ In the `SelectCellsAsync` method you can remove or reorder cells from the availa
 
 The example below shows the simplest implementation of a load balancer. It shuffles the targets on every call:
 
-````cs
+```cs
 [Plugin(LifeCycle.Transient, typeof(ICellSelector), Name = nameof(LoadBalancer))]
 internal class LoadBalancer : CellSelectorBase<CellSelectorConfig>
 {
@@ -17,11 +17,11 @@ internal class LoadBalancer : CellSelectorBase<CellSelectorConfig>
         return Task.FromResult(availableCells);
     }
 }
-````
+```
 
 If your selector needs additional configuration data, you can derive from the `CellSelectorConfig` class. Make sure to add `[ExpectedConfig(typeof(LoadBalancerConfig))]` on your cell selector class.
 
-````cs
+```cs
 internal class LoadBalancerConfig : CellSelectorConfig
 {
     public override string PluginName 
@@ -33,4 +33,4 @@ internal class LoadBalancerConfig : CellSelectorConfig
     [DataMember, PossibleTypes(typeof(Activity))]
     public string TargetType { get; set; }
 }
-````
+```

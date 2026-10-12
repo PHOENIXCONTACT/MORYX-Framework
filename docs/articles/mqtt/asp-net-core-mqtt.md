@@ -24,11 +24,11 @@ _Checking those repositories will give you an idea of what the `ManagedMqtt` is 
 
    To use the `IManagedMqttClient` you need to configure it in the `Program.cs` like so:
 
-    ```csharp
+    ```cs
     builder.Services.AddMqttClient();
     ```
    Optionally you can also configure the Mqtt client connection details like so:
-    ```csharp
+    ```cs
     builder.Services.AddMqttClient((provider, options) =>
     {
         options.Connection = new MqttConnectionConfig
@@ -69,7 +69,7 @@ _Checking those repositories will give you an idea of what the `ManagedMqtt` is 
 
 4. **JsonSerializationOptions** :
 
-    ```csharp
+    ```cs
     // Program.cs
     builder.Services.AddMqttClient(builder: (provider, options) =>
     {
@@ -83,13 +83,13 @@ _Checking those repositories will give you an idea of what the `ManagedMqtt` is 
    If you want to implement your custom service based on the `IManagedMqttClient` the recommended way is the following:
     - In your `Program.cs` add the following:
 
-    ```csharp
+    ```cs
     builder.Services.AddMqttClient(); // this adds the IManagedMqttClient to the service collection
     ```
     - Create a new C# class and inherit from `IMqttService`. Note: Dependency injection is supported. Now your service has access to the `IManagedMqttClient`.
 
    To add your new service to the service collection do the following:
-    ```csharp
+    ```cs
     builder.Services.AddMqttClient();
                     .AddMqttService<BlablaService>(); // you custom service
     ```
@@ -101,7 +101,7 @@ _Checking those repositories will give you an idea of what the `ManagedMqtt` is 
    If you need something with topic template and constraint support, you can use the `IMqttEndpoint`. Here is an example:
     - In your `program.cs` add the following:
 
-    ```csharp
+    ```cs
     builder.Services.AddMqttClient() // must be present
                     .AddMqttEndpoints(); // <-- this adds supports for the endpoints
     ```
@@ -109,7 +109,7 @@ _Checking those repositories will give you an idea of what the `ManagedMqtt` is 
 
    There is a minimal version of the Mqtt endpoint, that you can use directly in the `Program.cs`:
 
-    ```csharp
+    ```cs
     builder.Services.AddMqttClient()
                     .AddMqttEndpoints(route =>
                     {
@@ -150,17 +150,17 @@ _Checking those repositories will give you an idea of what the `ManagedMqtt` is 
 
    When the endpoint receives a message from the broker, it might come with a Body(payload) and a parameter inside the topic.
    To access the payload inside your endpoint you can use one of the following methods:
-    ```csharp
+    ```cs
     FromBody<T>(string propertyName)
     ```
-    ```csharp
+    ```cs
     FromBody(string propertyName, Type type)
     ```
-    ```csharp
+    ```cs
     //Return the entire body of the request cast to the given type T
     RequestBody<T>()
     ```
-    ```csharp
+    ```cs
     //Get the request body as an Object
     RequestBodyObject()
     ```

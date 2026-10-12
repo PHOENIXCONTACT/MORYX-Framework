@@ -7,7 +7,7 @@ The [RepositoryProxyBuilder](/src/Moryx.Model/Repositories/Proxy/RepositoryProxy
 
 The builder provides runtime generated types for predefined APIs for example:
 
-````cs
+```cs
 public class CarEntity : ModificationTrackedEntityBase
 {
     public virtual string Name { get; set; }
@@ -18,14 +18,14 @@ public class CarEntity : ModificationTrackedEntityBase
 
     public virtual ICollection<WheelEntity> Wheels { get; set; }
 }
-````
+```
 
-````cs
+```cs
 public interface ICarEntityRepository : IRepository<CarEntity>
 {
     CarEntity Create(string name);
 }
-````
+```
 
 ## General
 
@@ -35,10 +35,10 @@ The builder evaluates the method name in general. The name will be used to selec
 
 A type can be created by only giving an interface like below.
 
-````cs
+```cs
 var repoBuilder = new RepositoryProxyBuilder();
 var impl = repoBuilder.Build(typeof(ICarEntityRepository)).
-````
+```
 
 With this information the builder creates a type with the name `CarEntityRepository_MoryxProxy` for the given `ICarEntityRepository`. It tries to implement all declared methods otherwise it throws an `InvalidOperationException` if something is not possible or not specific enough.
 
@@ -48,7 +48,7 @@ The builder automatically detects that the `CarEntity` is derived from `Modifica
 
 If you need an implementation with more specific or special implemented methods it is also possible. The builder has another overload of the `Build` method to provide a predefined type.
 
-````cs
+```cs
 public interface ISportCarRepository : IRepository<SportCarEntity>
 {
     CarEntity Create(string name);
@@ -67,14 +67,14 @@ public abstract class SportCarRepository : ModificationTrackedRepository<SportCa
         return DbSet.Single(s => s.Name == name && s.Name.Contains("Hello"));
     }
 }
-````
+```
 
 The type will be generated with following call:
 
-````cs
+```cs
 var repoBuilder = new RepositoryProxyBuilder();
 var impl = repoBuilder.Build(typeof(ISportCarRepository), typeof(SportCarRepository)).
-````
+```
 
 ## Method implementation strategies
 
@@ -82,16 +82,16 @@ var impl = repoBuilder.Build(typeof(ISportCarRepository), typeof(SportCarReposit
 
 The strategy `CreateMethodStrategy` searches for methods where the name is starting with `Create`. The implementation creates an method to create the entity and assigns all properties where the argument name is matching.
 
-````cs
+```cs
 public interface ICarEntityRepository : IRepository<CarEntity>
 {
     CarEntity Create(string name);
 }
-````
+```
 
 The implementation which is done by the builder will be the following:
 
-````cs
+```cs
 public class CarEntityRepository_MoryxProxy : ICarEntityRepository
 {
     public CarEntity Create(string name)
@@ -102,7 +102,7 @@ public class CarEntityRepository_MoryxProxy : ICarEntityRepository
     }
 }
 
-````
+```
 
 ### Filter
 
@@ -120,12 +120,12 @@ The strategy `FilterMethodStrategy` is a bit more complex. At start it is search
 
 An example for it can be `GetFirstBy(string name)`. This method name will be implemented by the builder like the following code sample. The other methods are straight forward:
 
-````cs
+```cs
 public CarEntity GetFirstBy(string name)
 {
     return DbSet.First(c => c.Name == name);
 }
-````
+```
 
 **Possible Selector Keywords**:
 
@@ -136,21 +136,21 @@ public CarEntity GetFirstBy(string name)
 
 An example for it can be `GetFirstContains(string name)`. This method name will be implemented by the builder like the following code sample:
 
-````cs
+```cs
 public CarEntity GetFirstContains(string name)
 {
     return DbSet.First(c => c.Name.Contains(name));
 }
-````
+```
 
 Other value types like `int` or `long` are implemented by default equals comparisons.
 
-````cs
+```cs
 public CarEntity GetFirstContains(string name, int power)
 {
     return DbSet.First(c => c.Name.Contains(name) && c.Power == power);
 }
-````
+```
 
 ### Remove
 
@@ -165,7 +165,7 @@ Due missing implementation of the `RemoveMethodStrategy` only the following remo
 
 With all this explanations in the filters and selector section below an repository API could look as follows:
 
-````cs
+```cs
 public interface ICarEntityRepository : IRepository<CarEntity>
 {
     // Create Strategy
@@ -204,4 +204,4 @@ public interface ICarEntityRepository : IRepository<CarEntity>
     ICollection<CarEntity> GetAllContainsName(string name); // postfix does not change behavior
     ICollection<CarEntity> GetAllByNameAndPrice(string name, int price); // postfix does not change behavior
 }
-````
+```

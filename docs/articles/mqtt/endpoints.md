@@ -21,7 +21,7 @@ Endpoint to remote call a procedure/method on a resource.
     }
     ```
 
-    ```csharp
+    ```cs
     // Program.cs
     builder.Services.AddMqttClient().AddMqttEndpoints(); // <-- this add supports for the endpoints
     ```
@@ -34,7 +34,7 @@ Endpoint to remote call a procedure/method on a resource.
 
     If the method you are invoking has parameters, you should put the value of those parameters in your payload:
 
-    ```csharp
+    ```cs
     // MyResource.cs
     //code..
     public void MyMethod(int testResult, string name)
@@ -61,7 +61,7 @@ Endpoint to remote call a procedure/method on a resource.
 
     If the method you are calling has a return value:
 
-    ```csharp
+    ```cs
     // MyResource.cs
     //code..
     public int MyMethod(int testResult, string name)

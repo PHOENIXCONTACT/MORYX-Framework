@@ -77,7 +77,7 @@ Steps:
 
 Your dependent module should look like this:
 
-````cs
+```cs
 [Description("Example description")]
 public class ModuleController : ServerModuleBase<ModuleConfig>
 {
@@ -90,7 +90,7 @@ public class ModuleController : ServerModuleBase<ModuleConfig>
     public IFacade Facade { get; set; }
 
     ...
-````
+```
 
 Of course a module can import more than one facade. Just add more properties of the facades you want to import and decorate them with RequiredModuleApiAttribute
 
@@ -99,10 +99,10 @@ Of course a module can import more than one facade. Just add more properties of 
 Like with every DI-container the Runtime facade linker is able to inject a collection of instances if more than one component exports the interface. While most frameworks will leave you the choice of collection type. Currently collection injection only works with arrays. So far the dependency manager does not take collection injection into account when it comes to start dependencies. Therefor be careful when accessing the facades as this might raise InvalidHealthStateExceptions.
 Usage in code:
 
-````cs
+```cs
 [RequiredModuleApi]
 public IFacade[] AllInstances { get; set; }
-````
+```
 
 ## Facade Design Guideline
 
@@ -122,7 +122,7 @@ Transferring this to MORYX facades means that for every event there must be a wa
 This decouples the life cycles and allows the dependent module to be started and stopped at any time without having to worry about what it might have missed in the process.
 For example the API for a `JobManagement` could simply be:
 
-````cs
+```cs
 /// <summary>
 /// Facade of the JobManagement
 /// </summary>
@@ -145,23 +145,23 @@ public interface IJobManagement
     /// </summary>
     public EventHandler<Job> JobFinished;
 }
-````
+```
 
 ## Lifecycle bound facades
 
 Sometimes you need to know when a facade gets `activated` or `deactivated`. It's quite possible to get notified when the activation state of a facade has been changed.
 Your facade should inherit from [FacadeBase](/src/Moryx.Runtime/Modules/ILifeCycleBoundFacade.cs) or at least from [ILifeCycleBoundFacade](/src/Moryx.Runtime/Modules/FacadeBase.cs):
 
-````cs
+```cs
 public class CustomFacade : FacadeBase, ICustomFacade
 {
 
 }
-````
+```
 
 Your last step will be to register to the facade event:
 
-````cs
+```cs
 public class MyPlugin : IPlugin
 {
     public ICustomFacade CustomFacade { get; set; }
@@ -181,4 +181,4 @@ public class MyPlugin : IPlugin
         // Do something
     }
 }
-````
+```

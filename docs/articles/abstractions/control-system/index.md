@@ -25,9 +25,9 @@ The ControlSystem adopts the Orders more simplified as the ERP or MES system doe
 
 As described Orders consists of multiple Operations for the final material. Operations can be for example *Assemble*, *Soldering* or *Packaging*.
 
-````text
+```text
 Order 1<----->n Operations
-````
+```
 
 Because of the reason that orders has no quantity operations holds this information. It is possible to produce more materials than given as quantity, the Operation also have the possibility for *Under- and Overdelivery*. These tolerances are defined to control percentages and quantities delivered in the process. Under-deliveries are seen as partial deliveries and are usually allowed, as they do not exceed a defined quantity. [[ref]](https://wiki.scn.sap.com/wiki/display/ERPSCM/Under+and+Overdelivery+Tolerances+in+Purchasing)
 
@@ -69,9 +69,9 @@ The OrderManagement is directly connected to the ProcessEngine which is responsi
 
 The ProcessEngine will use this information to create one or multiple abstract production jobs, which depends on the request of the OrderManagement.
 
-````text
+```text
 Operation 1----->n ProductionJob
-````
+```
 
 Because of the abstraction the ProcessEngine does not know anything about orders or operations. The relation is only known within the OrderManagement.
 
@@ -166,9 +166,9 @@ Jobs are unchangeable. This means later changes of job information (e.g. amount,
 
 When a job is executed, it lets the ProcessController create a series of processes depending on the amount and type given with the job.
 
-````text
+```text
 Job 1<----->n Process
-````
+```
 
 To decide if a job is finished, the JobManagement registers for ProcessController's events and counts all events saying that a process was finished, separated for successful and failed ones.
 
@@ -179,9 +179,9 @@ The *process* will be used to create a series of *activities* out of the workpla
 - For production jobs, each process produces exactly one *product*. If the process is interrupted for some rework after a failure, there will be a new process, but there will never be two articles produced by one process.
 - For setup jobs there only exists one process with a workplan to setup the machine for another product type. Processes are instantiated from recipes and keep a reference to their recipe throughout their life cycle.
 
-````text
+```text
 Process 1<----->n Activities
-````
+```
 
 ## Activities
 

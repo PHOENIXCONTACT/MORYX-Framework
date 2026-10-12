@@ -9,20 +9,20 @@ uid: Tasks
 
 A task is like the activity an application specific class. It is derived from the `TaskStep<TActivity, TParam>` class and must be created to get the needed activities like in the following example:
 
-```` cs
+``` cs
 public class MyTask : TaskStep<MyActivity, MyParameters>
 {
     public override string Name => nameof(MyTask);
 }
-````
+```
 
 If the activity is derived from `AssembleActivity` and has no parameters then it is enough to use the `AssembleParameters` class like:
 
-```` cs
+``` cs
 public class MyTask : TaskStep<MyActivity, AssembleParameters>
 {
     public override string Name => nameof(MyTask);
 }
-````
+```
 
 After creating the class it will be available at the production flow editor to create the needed workplan.

@@ -6,7 +6,7 @@ If you need to influence the simulation behavior of activities you can add `ISim
 
 The example below shows how to implement configurable execution time parameters
 
-````cs
+```cs
 internal class ConfiguredSimulationParameter : Parameters, ISimulationParameters
 {
     [EntrySerialize(EntrySerializeMode.Always)]
@@ -23,13 +23,13 @@ internal class ConfiguredSimulationParameter : Parameters, ISimulationParameters
         parameters.ExecutionTimeSec = ExecutionTimeSec;
     }
 }
-````
+```
 
 ## Binding execution times
 
 You can also determine execution time by binding like any other parameters. You could bind to static values or calculate execution time dynamically.
 
-````cs
+```cs
 internal class BindingSimulationParameters : Parameters, ISimulationParameters
 {
     [EntrySerialize(EntrySerializeMode.Never)]
@@ -44,4 +44,4 @@ internal class BindingSimulationParameters : Parameters, ISimulationParameters
         parameters.ExecutionTime = new TimeSpan(recipe.TestTimeSec);
     }
 }
-````
+```

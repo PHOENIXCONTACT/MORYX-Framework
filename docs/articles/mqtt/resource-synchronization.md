@@ -28,7 +28,7 @@
     }
     ```
 
-    ```csharp
+    ```cs
     // Program.cs
     builder.Services.AddMqttClient((provider, options) =>
     {
@@ -52,7 +52,7 @@
 
     `ResourceSynchronizationAttribute` has 2 modes `Full` and `Selective`. `Full` will serialize all the public properties inside the resource. While `Selective` will serialize properties that have the `SynchronizableMemberAttribute`.
 
-    ```csharp
+    ```cs
     [ResourceSynchronizationAttribute("Synchronization.Unique.MyResource",Mode.Selective)]
     public class MyResource: Resource
     {

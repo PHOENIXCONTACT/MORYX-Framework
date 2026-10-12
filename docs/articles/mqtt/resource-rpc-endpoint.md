@@ -26,7 +26,7 @@ Find the list of available constraints [Here](https://learn.microsoft.com/en-us/
     }
     ```
 
-    ```csharp
+    ```cs
     // Program.cs
     builder.Services.AddMqttClient().AddMqttEndpoints(); // <-- this add supports for the endpoints
     ```
@@ -59,7 +59,7 @@ Find the list of available constraints [Here](https://learn.microsoft.com/en-us/
 
     The method to invoke will look like this:
 
-    ```csharp
+    ```cs
     //code
     public void Method(string action, string path)
     {
@@ -72,7 +72,7 @@ Find the list of available constraints [Here](https://learn.microsoft.com/en-us/
 
     Given is the following Resource:
 
-    ```csharp
+    ```cs
     public interface IMyPublicMethods
     {
         void MethodWithParams(int value){

@@ -10,7 +10,7 @@ AL3 introduced the resource type tree and resource graph. The new major version 
 
 As we removed unused features from the UI, we no longer needer their associated columns either. Therefore the database script only renames or drops colums and their constraints within the products model.
 
-````sql
+```sql
 ALTER TABLE public."ProductEntity"
    RENAME COLUMN "MaterialNumber" TO "Identifier";
    
@@ -21,7 +21,7 @@ ALTER TABLE public."ProductProperties"
 
 ALTER TABLE public."ProductRecipeEntity"
    ALTER COLUMN "WorkplanId" DROP NOT NULL;
-````
+```
 
 ## Resource changes
 
