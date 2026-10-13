@@ -33,7 +33,7 @@
     <ProjectReference Include="..\Moryx.Drivers.Simulation\Moryx.Drivers.Simulation.csproj" />
     <ProjectReference Include="..\Moryx.FactoryMonitor.Endpoints\Moryx.FactoryMonitor.Endpoints.csproj" />
     <ProjectReference Include="..\Moryx.FactoryMonitor.Web\Moryx.FactoryMonitor.Web.csproj" />
-    <ProjectReference Include="..\Moryx.Launcher\Moryx.Launcher.csproj" />
+    <!--<ProjectReference Include="..\Moryx.Launcher\Moryx.Launcher.csproj" />-->
     <ProjectReference Include="..\Moryx.Media.Endpoints\Moryx.Media.Endpoints.csproj" />
     <ProjectReference Include="..\Moryx.Media.Server\Moryx.Media.Server.csproj" />
     <ProjectReference Include="..\Moryx.Media.Web\Moryx.Media.Web.csproj" />

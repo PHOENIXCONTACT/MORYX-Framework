@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.AspNetCore.Mvc.Controllers;
-using Moryx.Launcher;
+//using Moryx.Launcher;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
@@ -25,7 +25,7 @@ public class Startup
     // This method is optional for the Startup class.
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddMoryxLauncher();
+        //services.AddMoryxLauncher();
 
         services.AddLocalization();
 
