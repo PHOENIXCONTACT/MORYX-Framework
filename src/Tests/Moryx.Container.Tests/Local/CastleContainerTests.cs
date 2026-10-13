@@ -1,9 +1,8 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Moryx.Container.TestTools;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 
 namespace Moryx.Container.Tests;
 
@@ -49,10 +48,29 @@ public class CastleContainerTests
         Assert.That(compB.GetName(), Is.EqualTo(NamedComponentB.ComponentName), "Component B not resolved by name!");
     }
 
-    [Test]
-    public void SpecificDependencyRegistration()
+    [TestCase(null, Description = "NameBasedComponentSelector throws ArgumentException when null is passed as name")]
+    [TestCase("", Description = "NameBasedComponentSelector throws ArgumentException when empty string is passed as name")]
+    public void NameBasedComponentSelectorThrowsOnNullOrEmpty(string name)
     {
+        // Arrange
+        var fac = _container.Resolve<INamedComponentFactory>();
 
+        // Act & Assert
+        Assert.That(() => fac.Create(name), Throws.InstanceOf<ArgumentException>());
+    }
+
+    [TestCase(null, Description = "ConfigBasedComponentSelector throws ArgumentException when PluginName is null")]
+    [TestCase("", Description = "ConfigBasedComponentSelector throws ArgumentException when PluginName is empty")]
+    public void ConfigBasedComponentSelectorThrowsOnNullOrEmptyPluginName(string pluginName)
+    {
+        // Arrange
+        _container.LoadComponents<IRootClass>();
+        _container.Register<IRootClassFactory>();
+        var fac = _container.Resolve<IRootClassFactory>();
+        var config = new RootClassFactoryConfig { PluginName = pluginName };
+
+        // Act & Assert
+        Assert.That(() => fac.Create(config), Throws.InstanceOf<ArgumentException>());
     }
 
     [TearDown]
