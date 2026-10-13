@@ -123,7 +123,7 @@ public static partial class EntryConvert
             Type = TransformType(property.PropertyType),
             UnitType = customSerialization.GetUnitTypeByAttributes(property),
             IsReadOnly = isReadOnly,
-            Possible = PossibleValues(property.PropertyType, property, customSerialization, instance)
+            Possible = customSerialization.PossibleValues(property.PropertyType, property, instance)
         };
 
         // Get most basic default
@@ -157,7 +157,7 @@ public static partial class EntryConvert
         }
         else
         {
-            possibleElementValues = PossibleValues(memberType, customAttributeProvider, customSerialization, instance);
+            possibleElementValues = customSerialization.PossibleValues(memberType, customAttributeProvider, instance);
         }
 
         var validation = customSerialization.CreateValidation(memberType, customAttributeProvider);
@@ -169,15 +169,6 @@ public static partial class EntryConvert
             prototypeEntry.Value.Possible = possibleElementValues;
             yield return prototypeEntry;
         }
-    }
-
-    private static EntryPossible[] PossibleValues(Type memberType, ICustomAttributeProvider customAttributeProvider, ICustomSerialization customSerialization, object instance = null)
-    {
-        if (customSerialization is PossibleValuesSerialization run)
-        {
-            return run.PossibleValues(memberType, customAttributeProvider, instance);
-        }
-        return customSerialization.PossibleValues(memberType, customAttributeProvider);
     }
 
     /// <summary>
@@ -521,7 +512,7 @@ public static partial class EntryConvert
                 UnitType = serialization.GetUnitTypeByAttributes(parameter),
                 Current = defaultValue,
                 Default = defaultValue,
-                Possible = PossibleValues(parameterType, parameter, serialization)
+                Possible = serialization.PossibleValues(parameterType, parameter, null)
             },
             Validation = serialization.CreateValidation(parameterType, parameter)
         };

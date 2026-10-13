@@ -67,6 +67,12 @@ public class DefaultSerialization : ICustomSerialization
     }
 
     /// <see cref="ICustomSerialization"/>
+    public virtual EntryPossible[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider, object instance = null)
+    {
+        return PossibleValues(memberType, attributeProvider);
+    }
+
+    /// <see cref="ICustomSerialization"/>
     public virtual EntryPossible[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider)
     {
         // Element type for collections
