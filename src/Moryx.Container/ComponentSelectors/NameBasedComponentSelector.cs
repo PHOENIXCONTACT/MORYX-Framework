@@ -20,7 +20,7 @@ internal class NameBasedComponentSelector : DefaultTypedFactoryComponentSelector
     protected override string GetComponentName(MethodInfo method, object[] arguments)
     {
         var name = (string)arguments[0];
-        ArgumentNullException.ThrowIfNull(name);
+        ArgumentException.ThrowIfNullOrEmpty(name);
         return name;
     }
 }
