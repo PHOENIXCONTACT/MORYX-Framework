@@ -294,6 +294,25 @@ public class WorkplanDummy : Workplan
         return workplan;
     }
 
+    public static WorkplanDummy CreateNoLuckyStreak()
+    {
+        var workplan = new WorkplanDummy();
+
+        var initial = WorkplanInstance.CreateConnector("Start", NodeClassification.Start);
+        var complete = WorkplanInstance.CreateConnector("End", NodeClassification.End);
+        var failed = WorkplanInstance.CreateConnector("Failed", NodeClassification.Failed);
+        workplan.Add(initial, complete, failed);
+
+        // Step with only a failure output — no success path to End
+        var step = new DummyStep(1, "FailOnly");
+        step.Inputs[0] = initial;
+        step.Outputs[0] = failed;
+        step.OutputDescriptions = [new OutputDescription { Name = "Failed", OutputType = OutputType.Failure }];
+        workplan.Add(step);
+
+        return workplan;
+    }
+
     public static WorkplanDummy CreateInfiniteLoop()
     {
         var workplan = new WorkplanDummy();
