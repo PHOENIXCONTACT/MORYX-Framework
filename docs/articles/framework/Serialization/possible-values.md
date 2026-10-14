@@ -153,7 +153,7 @@ public class MyPossibleUserAttribute : PossibleValuesAttribute
 
 }
 ````
-The example `PossibleUserAttribute` inherits from the `PossibleValuesAttribute`. The `PossibleValueContext.Instance` property represent the current instance of the class in which the attribute was used. You also have indirect access to the local `Container` and the `ServiceProvider` via the `PossibleValueContext.GetService(Type)` method.
+The example `PossibleUserAttribute` inherits from the `PossibleValuesAttribute`. The `PossibleValuesContext.Instance` property represent the current instance of the class in which the attribute was used. You also have indirect access to the local `Container` and the `ServiceProvider` via the `PossibleValuesContext.GetService(Type)` method.
 
 ````cs
     [EntrySerialize]

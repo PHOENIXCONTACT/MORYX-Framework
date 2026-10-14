@@ -10,7 +10,7 @@ public class InstanceAwareValuesClass
 {
     public List<string> AllowedValues { get; set; }
 
-    [StringListPossibleValue(RequiresPossibleValuesContext = true)]
+    [StringListPossibleValue]
     public string SelectedValue { get; set; }
 }
 
@@ -20,6 +20,11 @@ public class StringListPossibleValueAttribute : PossibleValuesAttribute
 
     public override bool UpdateFromPredecessor => false;
 
+    public StringListPossibleValueAttribute()
+    {
+        RequiresPossibleValuesContext = true;
+    }
+
     public override IEnumerable<string> GetValues(IContainer localContainer, IServiceProvider serviceProvider)
     {
         throw new NotImplementedException();
@@ -27,9 +32,9 @@ public class StringListPossibleValueAttribute : PossibleValuesAttribute
 
     public override IEnumerable<string> GetValues(PossibleValuesContext context = null)
     {
-        if (context is null || context.Instance is not InstanceAwareValuesClass value)
+        if (context.Instance is not InstanceAwareValuesClass value)
         {
-            return [];
+            throw new InvalidOperationException();
         }
 
         return value.AllowedValues;
