@@ -15,6 +15,7 @@ internal static class WorkplanValidation
     [
         new DeadEndValidator(),
         new InfiniteLoopValidator(),
+        new LuckyStreakValidator(),
         new LoneWolfValidator()
     ];
 
