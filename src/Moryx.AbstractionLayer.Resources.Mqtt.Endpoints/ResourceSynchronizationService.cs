@@ -145,16 +145,15 @@ public class ResourceSynchronizationService : IMqttService
             var matchingResourceType = ReflectionTool.GetPublicClasses<Resource>(type => type.GetCustomAttribute<ResourceSynchronizationAttribute>()?.SynchronizationTypeId == synchronizationTypeIdValue).FirstOrDefault();
             if (matchingResourceType is null)
             {
-                _logger.LogWarning("No resource type found for synchronization type id '{synchronizationTypeId}'. Resource creation skipped.", synchronizationTypeIdValue);
+                _logger.LogWarning("No resource type found for synchronization type id '{SynchronizationTypeId}'. Resource creation skipped.", synchronizationTypeIdValue);
                 return;
             }
             var identityProperty = jsonProperties.FirstOrDefault(x => x.Name == nameof(IIdentifiableObject.Identity));
-            var identityValue = NullOrValue<BatchIdentity>(identityProperty.Value);
-            var matchingResources = _resourceManagement.GetResources<IResource>(x =>
-                x is IIdentifiableObject obj && obj.Identity.Identifier.Equals(identityValue?.Identifier)).ToArray();
+            var identifier = NullOrValue<string>(identityProperty.Value.GetProperty(nameof(IIdentity.Identifier)));
+            var matchingResources = _resourceManagement.GetResources<IResource>(x => x is IIdentifiableObject obj && obj.Identity.Identifier.Equals(identifier)).ToArray();
             if (matchingResources.Length > 0)
             {
-                _logger.LogWarning("A Resource of type {ResourceType} with that Identifier already exists. Resource creation skipped.", matchingResourceType.Name);
+                _logger.LogWarning("A Resource of type {ResourceType} with Identifier '{Identidier}' already exists. Resource creation skipped.", matchingResourceType.Name, identifier);
                 return;
             }
 
@@ -164,13 +163,13 @@ public class ResourceSynchronizationService : IMqttService
                 if (emptyResource is IIdentifiableObject identifiableObject)
                 {
                     // Ensure that identity is set
-                    if(identifiableObject.Identity != null)
+                    if (identifiableObject.Identity != null)
                     {
-                        identifiableObject.Identity.SetIdentifier(identityValue?.Identifier ?? string.Empty);
+                        identifiableObject.Identity.SetIdentifier(identifier ?? string.Empty);
                     }
                     else
                     {
-                        identifiableObject.Identity = identityValue;
+                        throw new NotSupportedException("Null Identity property is not supported. Please initialize the Identity property inside the constructor.");
                     }
                 }
 
@@ -226,15 +225,14 @@ public class ResourceSynchronizationService : IMqttService
         var identity = jsonProperties.FirstOrDefault(x => x.Name == nameof(IIdentifiableObject.Identity));
         var name = jsonProperties.FirstOrDefault(x => x.Name == nameof(Resource.Name));
 
-        //This is done just for casting purpose to access Identity.Identifier
-        var identityValue = NullOrValue<BatchIdentity>(identity.Value);
+        var identifier = NullOrValue<string>(identity.Value.GetProperty(nameof(IIdentity.Identifier)));
         var nameValue = NullOrValue<string>(name.Value);
         var matchingResources = _resourceManagement.GetResources<IResource>(x =>
-                x is IIdentifiableObject obj && obj.Identity.Identifier.Equals(identityValue?.Identifier) || x.Name.Equals(nameValue)).ToArray();
+                x is IIdentifiableObject obj && obj.Identity.Identifier.Equals(identifier) || x.Name.Equals(nameValue)).ToArray();
 
         if (matchingResources.Length > 1)
         {
-            _logger.LogWarning("Multiple resources found matching the identity '{identity}' or name '{name}'. Resource synchronization skipped.", identityValue?.Identifier, nameValue);
+            _logger.LogWarning("Multiple resources found matching the identity '{Identity}' or name '{Name}'. Resource synchronization skipped.", identifier, nameValue);
             return;
         }
         var matchingResource = matchingResources.FirstOrDefault();
@@ -252,7 +250,7 @@ public class ResourceSynchronizationService : IMqttService
         }
         else
         {
-            _logger.LogWarning("No matching resource found for identity '{identity}' or name '{name}'. Resource synchronization skipped.", identityValue?.Identifier, nameValue);
+            _logger.LogWarning("No matching resource found for identity '{Identity}' or name '{Name}'. Resource synchronization skipped.", identifier, nameValue);
         }
     }
 
@@ -271,7 +269,7 @@ public class ResourceSynchronizationService : IMqttService
     {
         return resourceManagement.ModifyUnsafeAsync(matchingResource.Id, resource =>
         {
-            _logger.LogInformation("Updating local resource with identity '{identity}'", (resource as IIdentifiableObject)?.Identity?.Identifier); 
+            _logger.LogInformation("Updating local resource with identity '{Identity}'", (resource as IIdentifiableObject)?.Identity?.Identifier);
             SetInstanceValue(jsonProperties, resource);
             return Task.FromResult(true);
         });
@@ -281,7 +279,7 @@ public class ResourceSynchronizationService : IMqttService
     {
         var message = MqttMessageSerialization.GetJsonPayload(matchingResource, _options.JsonSerializerOptions);
         TryAddToMessageCache(GetHashString(message));
-        _logger.LogInformation("Removing local resource with identity '{identity}'", (matchingResource as IIdentifiableObject)?.Identity?.Identifier);
+        _logger.LogInformation("Removing local resource with identity '{Identity}'", (matchingResource as IIdentifiableObject)?.Identity?.Identifier);
 
         return resourceManagement.DeleteAsync(matchingResource.Id);
     }
@@ -304,7 +302,7 @@ public class ResourceSynchronizationService : IMqttService
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex , "Error while deserializing Mqtt Resource Synchronization Payload.");
+                _logger.LogError(ex, "Error while deserializing Mqtt Resource Synchronization Payload.");
             }
         }
     }
@@ -396,7 +394,7 @@ public class ResourceSynchronizationService : IMqttService
         }
         if (synchronizationAttribute?.SynchronizationTypeId is null)
         {
-            _logger.LogError("Resource of type {resourceType} is marked for synchronization but has no SynchronizationTypeId defined.", resource.GetType().FullName);
+            _logger.LogError("Resource of type {ResourceType} is marked for synchronization but has no SynchronizationTypeId defined.", resource.GetType().FullName);
             return resource;
         }
         SendChanges(resource, topic);
@@ -418,7 +416,6 @@ public class ResourceSynchronizationService : IMqttService
         Removed,
         Changed
     }
-
 
     /// <summary>
     /// Message for deleted resource synchronization
