@@ -12,6 +12,11 @@ public class InstanceAwareValuesClass
 
     [StringListPossibleValue]
     public string SelectedValue { get; set; }
+
+    [EntrySerialize]
+    public void DoSomething([StringListPossibleValue] string value)
+    {
+    }
 }
 
 public class StringListPossibleValueAttribute : PossibleValuesAttribute
@@ -32,7 +37,7 @@ public class StringListPossibleValueAttribute : PossibleValuesAttribute
 
     public override IEnumerable<string> GetValues(PossibleValuesContext context = null)
     {
-        if (context.Instance is not InstanceAwareValuesClass value)
+        if (context!.Instance is not InstanceAwareValuesClass value)
         {
             throw new InvalidOperationException();
         }
