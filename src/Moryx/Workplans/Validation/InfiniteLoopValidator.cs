@@ -7,7 +7,7 @@ using Moryx.Properties;
 namespace Moryx.Workplans.Validation;
 
 /// <summary>
-/// Detects steps trapped in cycles with no path to an exit connector.
+/// Detects steps trapped in cycles with no path to an exit connector. Uses backward reachability from exit connectors.
 /// </summary>
 internal class InfiniteLoopValidator : IWorkplanValidator
 {

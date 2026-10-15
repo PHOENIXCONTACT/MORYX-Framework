@@ -6,6 +6,9 @@ using Moryx.Properties;
 
 namespace Moryx.Workplans.Validation;
 
+/// <summary>
+/// Finds steps that are unreachable because none of their inputs are connected to the output of another step or a start connector.
+/// </summary>
 internal class LoneWolfValidator : IWorkplanValidator
 {
     /// <summary>

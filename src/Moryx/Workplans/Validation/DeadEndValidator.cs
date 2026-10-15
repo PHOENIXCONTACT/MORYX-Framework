@@ -6,6 +6,9 @@ using Moryx.Properties;
 
 namespace Moryx.Workplans.Validation;
 
+/// <summary>
+/// Detects connectors that are used as an output but never as an input by any step, causing tokens to get stuck.
+/// </summary>
 internal class DeadEndValidator : IWorkplanValidator
 {
     /// <summary>

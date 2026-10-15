@@ -7,7 +7,7 @@ using Moryx.Properties;
 namespace Moryx.Workplans.Validation;
 
 /// <summary>
-/// Validates that there is a consistent path of success outputs from start to a success exit connector.
+/// Verifies that a consistent success path exists from the start connector to a success exit connector through <see cref="OutputType.Success"/> outputs only.
 /// </summary>
 internal class LuckyStreakValidator : IWorkplanValidator
 {
