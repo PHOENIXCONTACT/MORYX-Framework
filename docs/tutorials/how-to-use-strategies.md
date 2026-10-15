@@ -3,11 +3,13 @@ uid: HowToUseStrategies
 ---
 # How to use strategies
 
->[!NOTE] The [strategy pattern](https://en.wikipedia.org/wiki/Strategy_pattern) has a dedicated place in the MORYX Framework and is directly supported by its [dependency injection](/docs/articles/framework/dependency-injection.md).
+> [!NOTE] The [strategy pattern](https://en.wikipedia.org/wiki/Strategy_pattern) has a dedicated place in the MORYX Framework and is directly supported by its [dependency injection](/docs/articles/framework/dependency-injection.md).
 
 This tutorial shows how a server module delegates part of its behavior to an exchangeable strategy, which is selected in the module configuration. It covers where the strategies can come from, how they are created on demand with a factory and what to consider when using strategies in plugins.
 This tutorial uses [name-based strategy selection](/docs/articles/framework/dependency-injection.md#name-based-component-selector), you can apply the same general structure for configured strategies.
 Check out [configuration-based strategy selection](/docs/articles/framework/dependency-injection.md#config-based-component-selector) for more information.
+
+> [!TIP] If you have not created a server module before, start with [How to create a server module](server-module/server-module.md).
 
 ## Define the strategy
 
@@ -149,7 +151,7 @@ public class TextProcessor : ITextProcessor
 
 The same conditions as for [strategies in another assembly](#strategies-in-another-assembly) apply to the strategies loaded by the initializer.
 
->[!NOTE]
+> [!NOTE]
 > The `DependencyRegistrationAttribute` is only evaluated for types registered with `LoadComponents`. It has no effect on types of the module assembly, so the `Initializer` of the attribute is ignored there as well.
 
 ## Create strategies with a factory
@@ -226,13 +228,17 @@ public class StrategyUsingResource : Resource
     private IWhiteSpaceRemovingStrategy GetStrategy()
     {
         if (_strategy != null && _strategyName == Strategy)
+        {
             return _strategy;
+        }
 
         ReleaseStrategy();
 
         // The factory would return the first strategy for an empty name
         if (string.IsNullOrEmpty(Strategy))
+        {
             throw new InvalidOperationException($"No strategy selected for resource {Name}.");
+        }
 
         _strategy = StrategyFactory.Create(Strategy);
         _strategyName = Strategy;
@@ -242,7 +248,9 @@ public class StrategyUsingResource : Resource
     private void ReleaseStrategy()
     {
         if (_strategy != null)
+        {
             StrategyFactory.Destroy(_strategy);
+        }
         _strategy = null;
         _strategyName = null;
     }
@@ -262,10 +270,11 @@ If strategies and factory are defined in another assembly than the resource, reg
 | Symptom | Cause |
 |---------|-------|
 | The drop-down is empty or a strategy is missing | The strategy is not registered in the container of the module, see [Register the strategies](#register-the-strategies). |
-| A strategy from another assembly is missing | The class is `internal`, the DLL is not in the application directory, or `AppDomainBuilder.LoadAssemblies()` is not called. |
-| The injected strategy is `null` | The configured name is empty or does not match a registered strategy, e.g. after a strategy was renamed or its assembly removed. |
+| A type from another assembly is not found by `LoadComponents` | The class is `internal`, the project is not referenced by the application, or `AppDomainBuilder.LoadAssemblies()` is not called. |
+| An injected property is `null` | The type is missing a registration attribute, it is defined in another assembly and not loaded in `OnInitializeAsync`, or the configured name is empty  |
 | `ComponentNotFoundException` when creating the strategy | The name passed to the factory does not match a registered strategy. |
 | The factory creates the wrong strategy | The name is empty, so the first registered strategy is returned. |
-| Two strategies, but only one is listed | Both use the same `Name`. Only the first registration is kept. |
+| Two implementations with the same name, only one is used | Both use the same `Name`. Only the first registration is kept. |
 | `DependencyRegistration` has no effect | The type is part of the module assembly and therefore not registered with `LoadComponents`. |
 | `StrategyFactory` of a resource is `null` | The factory is not listed in `DependencyRegistration` or not registered by the `Initializer`, or the resource is missing the `ResourceRegistrationAttribute`. |
+| `Container.Resolve<T>()` returns `null` for a service of the host | The ServiceProvider Bridge only applies to injected dependencies, not to direct `Resolve` calls. |

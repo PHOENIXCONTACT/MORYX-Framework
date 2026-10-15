@@ -7,7 +7,9 @@ Every server module in MORYX has its own dependency injection container. Compone
 
 The container is based on [Castle Windsor](https://github.com/castleproject/Windsor) and encapsulated in [`CastleContainer`](/src/Moryx.Container/CastleContainer.cs). Modules, components and plugins only depend on the interface [`IContainer`](/src/Moryx/Container/IContainer.cs) and its extension methods, so they never reference Castle Windsor directly.
 
->[!TIP] For a step-by-step guide on exchangeable behavior in a module's components and plugins, see [How to use strategies](/docs/tutorials/how-to-use-strategies.md).
+> [!TIP] For a step-by-step guide to set up the container of a module, see [How to create a server module](/docs/tutorials/server-module/server-module.md).
+ 
+> [!TIP] For a step-by-step guide on exchangeable behavior in a module's components and plugins as well as helpful troubleshooting advice, see [How to use strategies](/docs/tutorials/how-to-use-strategies.md).
 
 ## How it works
 
@@ -58,6 +60,31 @@ public class MyPlugin : IMyPlugin
 }
 ```
 
+Further sample implementations for plugins can be found in the [TestModule](/src/Moryx.TestModule/Plugin/).
+
+### Manual resolution
+
+Components should get their dependencies injected instead of resolving them. Manual resolution is meant for the composition root, i.e. the `ModuleController`, which resolves the entry components of the module on start and stop:
+
+```cs
+// First registered implementation, or the one configured with ModuleStrategyAttribute
+var plugin = Container.Resolve<IMyPlugin>();
+
+// Implementation registered with this name
+var pluginB = Container.Resolve<IMyPlugin>(MyPluginB.PluginName);
+
+// All registered implementations
+IMyHook[] hooks = Container.ResolveAll<IMyHook>();
+```
+
+Keep the following behavior in mind:
+
+- `Resolve` returns `null` if the service is not registered.
+- An unknown name does **not** fail, `Resolve` falls back to the first registered implementation of the service.
+- Sub resolvers only apply to the dependencies of the resolved component, not to the requested service itself. A service of the host is therefore not resolved through the [ServiceProvider Bridge](#serviceprovider-bridge).
+
+[How to create a server module](/docs/tutorials/server-module/server-module.md#start-the-module) shows the typical usage.
+
 ## Registration
 
 ### Registration attributes
@@ -88,7 +115,7 @@ public class MyPlugin : IMyPlugin
 - `LifeCycle.Singleton`: All dependents share one instance per container.
 - `LifeCycle.Transient`: Every resolution creates a new instance. Release instances created by a factory with its `Destroy` method.
 
->[!CAUTION] Names must be unique within the container. If two types are registered with the same name, only the first one is kept. Types without a name are registered with their full type name.
+> [!CAUTION] Names must be unique within the container. If two types are registered with the same name, only the first one is kept. Types without a name are registered with their full type name.
 
 ### Registration methods
 
@@ -149,11 +176,8 @@ public class MyHookInitializer : ISubInitializer
 }
 ```
 
->[!NOTE]
+> [!NOTE]
 > The attribute has no effect on types of the module assembly, because they are registered without `LoadComponents`.
-
->[!CAUTION]
-> Avoid `InstallerMode.All`. It registers types that other components then silently depend on, and these dependencies break as soon as the annotated component is removed.
 
 ## Module strategies
 
@@ -173,9 +197,8 @@ An interface marked with the `PluginFactoryAttribute` is implemented by the cont
 
 ### Name based component selector
 
-The `INameBasedComponentSelector` creates the implementation with the given name:
+The `INameBasedComponentSelector` takes the name of a plugin, like [the once sketched out previously](#registration-attributes), and creates the instances accordingly using:
 
-```cs
 ```cs
 [PluginFactory(typeof(INameBasedComponentSelector))]
 public interface IMyPluginFactory
@@ -184,7 +207,6 @@ public interface IMyPluginFactory
 
     void Destroy(IMyPlugin instance);
 }
-```
 ```
 
 - An unknown name throws a `ComponentNotFoundException`.
@@ -208,6 +230,12 @@ public class MyPluginA : IMyPlugin, IConfiguredPlugin<MyPluginConfig>
     public void Initialize(MyPluginConfig config) { }
 }
 
+[Plugin(LifeCycle.Transient, typeof(IMyPlugin), Name = nameof(MyPluginB))]
+public class MyPluginB : IMyPlugin, IConfiguredPlugin<MyPluginConfig>
+{
+    public void Initialize(MyPluginConfig config) { }
+}
+
 [PluginFactory(typeof(IConfigBasedComponentSelector))]
 public interface IMyPluginFactory
 {
@@ -216,7 +244,8 @@ public interface IMyPluginFactory
     void Destroy(IMyPlugin instance);
 }
 ```
-```
+
+A sample implementation of configured plugins can be found in the [TestModule](/src/Moryx.TestModule/Plugin/TestPlugin.cs), which utilizes the `ExpectedConfigAttribute`.
 
 If the component implements `IAsyncConfiguredInitializable`, its `InitializeAsync` method is called during selection. The signature of the `Create` method decides how it is called:
 
@@ -294,14 +323,3 @@ builder.Services.AddHttpClient();
 - The bridge does not guarantee that a service is available. It is the application developer's responsibility to register the required services in the `IServiceCollection` at startup (e.g. `builder.Services.AddHttpClient()`). There is no compile-time check — if a service is missing from the `IServiceProvider`, the injection will fail at runtime when the module component is resolved.
 
 For excluded types and further exceptions see [ADR-006](/docs/adr/006-serviceprovider-bridge.md#exceptions).
-
-## Troubleshooting
-
-| Symptom | Cause |
-|---|---|
-| A property is `null` | The type is missing a registration attribute, or it is defined in another assembly and not loaded in `OnInitializeAsync`. |
-| A type from another assembly is not found by `LoadComponents` | The class is `internal`, the project is not referenced by the application, or `AppDomainBuilder.LoadAssemblies()` is not called. |
-| A named component cannot be resolved | The name or the service in the registration attribute does not match the requested one. |
-| Two implementations with the same name, only one is used | Names must be unique within the container. Only the first registration is kept. |
-| `DependencyRegistration` has no effect | The annotated type is part of the module assembly and therefore not registered with `LoadComponents`. |
-| `Container.Resolve<T>()` returns `null` for a service of the host | The ServiceProvider Bridge only applies to injected dependencies, not to direct `Resolve` calls. |

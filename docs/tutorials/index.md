@@ -10,7 +10,7 @@
 ### Server Module
 
 - [Facades](server-module/facades.md)
-- [Server Module](server-module/server-module.md)
+- [How To Create A Server Module](server-module/server-module.md)
 - [How To Use Strategies](how-to-use-strategies.md)
 - [How To Test A Module](server-module/how-to-test-a-module.md)
 

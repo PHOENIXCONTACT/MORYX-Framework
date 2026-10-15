@@ -67,7 +67,7 @@ namespace Moryx.Resources.Samples.DriverTutorial
 
 The implementation of the `ExampleResource` derives from the [Resource](../../src/Moryx.AbstractionLayer/Resources/Resource.cs) base class. It also implements the `IResource` interface. This is enough to use your resource definition within MORYX. If your resource relies on dependency injection like logging it is important to add the [ResourceRegistration attribute](../../src/Moryx.AbstractionLayer/Resources/Attributes/ResourceRegistrationAttribute.cs). MORYX can now identify this class as a resource. Properties or methods with the Attribute `EntrySerialize` will be shown in the UI. The Attribute `DataMember` marks all properties saved in the database. Additional attributes like `DisplayName` and `Description` are used within the Resource UI.
 
->[!TIP] If parts of the resource behavior shall be exchangeable and selectable in the Resource UI, take a look at this example for [strategies in resources](/docs/tutorials/how-to-use-strategies.md#an-example-using-resources).
+> [!TIP] If parts of the resource behavior shall be exchangeable and selectable in the Resource UI, take a look at this example for [strategies in resources](/docs/tutorials/how-to-use-strategies.md#an-example-using-resources).
 
 ## Configure Relations between Resources
 Resources can reference other resources. When for example a cell communicates with a PLC via a Driver, the Driver has to be referenced in the Cell. Every Resource has the References `Children` and `Parent` by default. In order to overwrite
