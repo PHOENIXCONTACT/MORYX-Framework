@@ -1,7 +1,9 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Text;
 using Moryx.Serialization;
+using Moryx.Workplans.Validation;
 using Moryx.Workplans.WorkplanSteps;
 
 namespace Moryx.Workplans.Web.Models;
@@ -148,5 +150,23 @@ internal static class ModelConverter
         nodeModel.Outputs = connections;
 
         return nodeModel;
+    }
+
+    public static ValidationResultModel ToValidationModel(ValidationResult result, IWorkplan workplan)
+    {
+        return new ValidationResultModel
+        {
+            Errors = [.. result.Errors.Select(x => ToErrorModel(x, workplan))],
+            Success = result.Success
+        };
+    }
+
+    private static ValidationErrorModel ToErrorModel(ValidationError error, IWorkplan workplan)
+    {
+        return new ValidationErrorModel
+        {
+            Error = error.Print(workplan),
+            Position = error.PositionId
+        };
     }
 }

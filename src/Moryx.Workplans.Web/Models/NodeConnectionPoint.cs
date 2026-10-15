@@ -3,11 +3,23 @@
 
 namespace Moryx.Workplans.Web.Models;
 
+/// <summary>
+/// Exchange type for node connection point
+/// </summary>
 public class NodeConnectionPoint
 {
+    /// <summary>
+    /// Index of the connection point
+    /// </summary>
     public int Index { get; set; }
 
+    /// <summary>
+    /// Name of the connection
+    /// </summary>
     public string Name { get; set; }
 
+    /// <summary>
+    /// List of connectors
+    /// </summary>
     public List<NodeConnector> Connections { get; set; } = new List<NodeConnector>();
 }

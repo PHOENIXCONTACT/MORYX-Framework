@@ -154,7 +154,7 @@ export class Management implements OnInit, OnDestroy {
     const confirmDialog = this.dialog.open(ConfirmDialog, {
       data: <ConfirmDialogData>{
         title: translations[TranslationConstants.MANAGEMENT.CONFRIM_DIALOG.TITLE],
-        message: dialogMessage,
+        messages: [dialogMessage],
       }
     });
 

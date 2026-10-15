@@ -68,6 +68,8 @@ export type { AutoLayout$Params as AutoLayout$Params } from './fn/workplan-editi
 export { autoLayout as autoLayout } from './fn/workplan-editing/auto-layout';
 export type { SaveSession$Params as SaveSession$Params } from './fn/workplan-editing/save-session';
 export { saveSession as saveSession } from './fn/workplan-editing/save-session';
+export type { ValidateSession$Params as ValidateSession$Params } from './fn/workplan-editing/validate-session';
+export { validateSession as validateSession } from './fn/workplan-editing/validate-session';
 export type { AddStep$Params as AddStep$Params } from './fn/workplan-editing/add-step';
 export { addStep as addStep } from './fn/workplan-editing/add-step';
 export type { UpdateStep$Params as UpdateStep$Params } from './fn/workplan-editing/update-step';
