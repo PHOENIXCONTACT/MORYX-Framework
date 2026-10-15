@@ -14,18 +14,21 @@ public enum OutputType
     /// Unknown
     /// </summary>
     Unknown,
+
     /// <summary>
     /// Success
     /// </summary>
     Success,
+
     /// <summary>
     /// Failure
     /// </summary>
     Failure,
+
     /// <summary>
     /// Alternative failure
     /// </summary>
-    Alternative,
+    Alternative
 }
 
 /// <summary>
