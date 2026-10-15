@@ -145,6 +145,21 @@ public class DefaultSerialization : ICustomSerialization
                     validation.DataType = dataTypeAttribute.DataType;
                     break;
             }
+
+            // The attribute may carry a message explaining what it rejects, either
+            // literally or through a resource. FormatErrorMessage resolves both, the
+            // same way DisplayAttribute.GetName does for the display name, and fills
+            // the placeholder with the member's display name where the message has one.
+            //
+            // It is only asked for when the attribute actually declares a message.
+            // Without that guard every member would carry the framework's own English
+            // default, which takes the choice of fallback away from the consumer.
+            //
+            // The first message wins: a member with several attributes has no obvious
+            // winner among them.
+            if (validation.ErrorMessage is null &&
+                (attribute.ErrorMessage is not null || attribute.ErrorMessageResourceName is not null))
+                validation.ErrorMessage = attribute.FormatErrorMessage(attributeProvider.GetDisplayName() ?? string.Empty);
         }
 
         return validation;
