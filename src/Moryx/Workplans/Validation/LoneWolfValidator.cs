@@ -1,6 +1,9 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Globalization;
+using Moryx.Properties;
+
 namespace Moryx.Workplans.Validation;
 
 internal class LoneWolfValidator : IWorkplanValidator
@@ -37,7 +40,6 @@ internal class LoneWolfValidationError : ValidationError
     /// <summary>
     /// Create error instance with position id
     /// </summary>
-    /// <param name="positionId"></param>
     public LoneWolfValidationError(long positionId) : base(positionId)
     {
     }
@@ -48,6 +50,6 @@ internal class LoneWolfValidationError : ValidationError
     public override string Print(IWorkplan workplan)
     {
         var targetStep = workplan.Steps.First(step => step.Id == PositionId);
-        return $"Step {targetStep.Name} at position {PositionId} is unreachable!";
+        return string.Format(CultureInfo.CurrentCulture, Strings.LoneWolfValidationError_Message, targetStep.Name, PositionId);
     }
 }

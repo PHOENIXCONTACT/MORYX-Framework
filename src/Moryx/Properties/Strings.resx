@@ -135,4 +135,19 @@
   <data name="SubworkplanStep_DisplayName" xml:space="preserve">
     <value>Sub-Workplan</value>
   </data>
+  <data name="DeadEndValidationError_Message" xml:space="preserve">
+    <value>Connector {0} at position {1} is not used as an input in any step!</value>
+  </data>
+  <data name="LoneWolfValidationError_Message" xml:space="preserve">
+    <value>Step {0} at position {1} is unreachable!</value>
+  </data>
+  <data name="InfiniteLoopValidationError_Message" xml:space="preserve">
+    <value>Step {0} at position {1} is part of an infinite loop!</value>
+  </data>
+  <data name="LuckyStreakValidationError_NoSuccessOutput" xml:space="preserve">
+    <value>Step {0} at position {1} has no success output, breaking the success path!</value>
+  </data>
+  <data name="LuckyStreakValidationError_NoSuccessPath" xml:space="preserve">
+    <value>No consistent success path found through the workplan!</value>
+  </data>
 </root>

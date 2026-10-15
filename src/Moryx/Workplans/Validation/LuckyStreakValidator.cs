@@ -1,6 +1,9 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Globalization;
+using Moryx.Properties;
+
 namespace Moryx.Workplans.Validation;
 
 /// <summary>
@@ -129,9 +132,9 @@ internal class LuckyStreakValidationError : ValidationError
         var step = workplan.Steps.FirstOrDefault(s => s.Id == PositionId);
         if (step is not null)
         {
-            return $"Step {step.Name} at position {PositionId} has no success output, breaking the success path!";
+            return string.Format(CultureInfo.CurrentCulture, Strings.LuckyStreakValidationError_NoSuccessOutput, step.Name, PositionId);
         }
 
-        return $"No consistent success path found through the workplan!";
+        return Strings.LuckyStreakValidationError_NoSuccessPath;
     }
 }

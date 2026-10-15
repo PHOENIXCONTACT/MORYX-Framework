@@ -1,6 +1,9 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Globalization;
+using Moryx.Properties;
+
 namespace Moryx.Workplans.Validation;
 
 /// <summary>
@@ -90,6 +93,6 @@ internal class InfiniteLoopValidationError : ValidationError
     public override string Print(IWorkplan workplan)
     {
         var targetStep = workplan.Steps.First(step => step.Id == PositionId);
-        return $"Step {targetStep.Name} at position {PositionId} is part of an infinite loop!";
+        return string.Format(CultureInfo.CurrentCulture, Strings.InfiniteLoopValidationError_Message, targetStep.Name, PositionId);
     }
 }
