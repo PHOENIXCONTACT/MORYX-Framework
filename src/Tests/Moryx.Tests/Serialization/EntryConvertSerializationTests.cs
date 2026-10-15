@@ -7,6 +7,9 @@ using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Threading;
+using Moq;
+using Moryx.Configuration;
+using Moryx.Container;
 using Moryx.Serialization;
 using NUnit.Framework;
 
@@ -298,4 +301,22 @@ public class EntryConvertSerializationTests
         });
     }
 
+    [Test]
+    public void ShouldProvidePossibleValue_UsingContext()
+    {
+        //Arrange
+        var providerMock = new Mock<IServiceProvider>();
+        var container = new Mock<IContainer>();
+        var myObject = new InstanceAwareValuesClass
+        {
+            AllowedValues = ["a", "b", "c"]
+        };
+        var serialization = new PossibleValuesSerialization(container.Object, providerMock.Object, new ValueProviderExecutor(new ValueProviderExecutorSettings()));
+
+        // Act
+        var converted = EntryConvert.EncodeObject(myObject, serialization);
+
+        //Assert
+        Assert.That(converted.SubEntries.First(x => x.Identifier == nameof(InstanceAwareValuesClass.SelectedValue)).Value.Possible.Length, Is.EqualTo(3));
+    }
 }

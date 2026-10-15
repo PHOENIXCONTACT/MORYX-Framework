@@ -44,6 +44,11 @@ This attribute is abstract and can not be used directly but must be inherited to
 public abstract class PossibleValuesAttribute : Attribute
 {
     /// <summary>
+    /// A flag indicating that the attribute requires a non-null <see cref="PossibleValuesContext"/>
+    /// </summary>
+    public bool RequiresPossibleValuesContext { get; set; }
+
+    /// <summary>
     /// Flag if this member implements its own string to value conversion. If this is set to false the runtime
     /// will try to convert the the value with a predefined set of conversions for native types. This must be overridden
     /// whenever your string represents and object.
@@ -127,4 +132,37 @@ public string ConfiguredType { get; set; }
 [DataMember]
 [PossibleTypes(new []{ typeof(Type1), typeof(Type2) })]
 public List<string> SupportedTypes { get; set; }
-```
+````
+
+### Custom Instance aware PossibleValues
+
+Implement a custom attribute when you need a possible value that is extracted from the current instance. You can use
+that custom attribute to perform your desired use case. 
+````cs
+public class MyPossibleUserAttribute : PossibleValuesAttribute
+{
+    public MyPossibleUserAttribute()
+    {
+        RequiresPossibleValuesContext = true;
+    }
+
+    public override IEnumerable<string> GetValues(PossibleValuesContext ctx)
+    {
+        return ctx.Instance is MyType myInstance ? myInstance.PossibleUsers : [];
+    }
+
+}
+````
+The example `PossibleUserAttribute` inherits from the `PossibleValuesAttribute`. The `PossibleValuesContext.Instance` property represent the current instance of the class in which the attribute was used. You also have indirect access to the local `Container` and the `ServiceProvider` via the `PossibleValuesContext.GetService(Type)` method.
+
+````cs
+    [EntrySerialize]
+    [DataMember]
+    public List<string> PossibleUsers { get; set; }
+
+    [DataMember]
+    [MyPossibleUserAttribute]
+    public string SelectedUser { get; set; }
+````
+
+The `RequiresPossibleValuesContext` flag by default is optional, but here it is important and required if you need access to the current instance.
