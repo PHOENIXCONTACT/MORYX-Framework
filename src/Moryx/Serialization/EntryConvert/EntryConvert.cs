@@ -82,7 +82,7 @@ public static partial class EntryConvert
     /// Convert a single property into a derived type of entry using a custom strategy
     /// </summary>
     /// <returns>Converted property</returns>
-    public static Entry EncodeProperty(PropertyInfo property, ICustomSerialization customSerialization, object instance = null)
+    public static Entry EncodeProperty(PropertyInfo property, ICustomSerialization customSerialization, object instance)
     {
         // Fill with default if entry is null
         var entry = new Entry
@@ -411,13 +411,18 @@ public static partial class EntryConvert
     /// <returns>Encoded method entry</returns>
     public static MethodEntry EncodeMethod(MethodBase method)
     {
-        return EncodeMethod(method, _serialization);
+        return EncodeMethod(method, _serialization, null);
     }
 
     /// <summary>
     /// Encode a <see cref="MethodBase"/> to the transmittable <see cref="MethodEntry"/>
     /// </summary>
-    public static MethodEntry EncodeMethod(MethodBase method, ICustomSerialization serialization)
+    public static MethodEntry EncodeMethod(MethodBase method, ICustomSerialization serialization) => EncodeMethod(method, serialization, null);
+
+    /// <summary>
+    /// Encode a <see cref="MethodBase"/> to the transmittable <see cref="MethodEntry"/>
+    /// </summary>
+    public static MethodEntry EncodeMethod(MethodBase method, ICustomSerialization serialization, object instance)
     {
         var methodEntry = new MethodEntry
         {
@@ -430,7 +435,7 @@ public static partial class EntryConvert
                 DisplayName = "Root",
                 Identifier = "Root",
                 Value = new EntryValue { Type = EntryValueType.Class },
-                SubEntries = method.GetParameters().Select(p => ConvertParameter(p, serialization)).ToList()
+                SubEntries = method.GetParameters().Select(p => ConvertParameter(p, serialization, instance)).ToList()
             }
         };
 
@@ -448,7 +453,7 @@ public static partial class EntryConvert
     /// </summary>
     public static IEnumerable<MethodEntry> EncodeMethods(object source)
     {
-        return EncodeMethods(source.GetType(), _serialization);
+        return EncodeMethods(source, _serialization);
     }
 
     /// <summary>
@@ -456,7 +461,8 @@ public static partial class EntryConvert
     /// </summary>
     public static IEnumerable<MethodEntry> EncodeMethods(object source, ICustomSerialization serialization)
     {
-        return EncodeMethods(source.GetType(), serialization);
+        var methods = serialization.GetMethods(source.GetType());
+        return methods.Select(m => EncodeMethod(m, serialization, source));
     }
 
     /// <summary>
@@ -496,7 +502,7 @@ public static partial class EntryConvert
     /// <summary>
     /// Convert a method parameter to our standard <see cref="Entry"/> format
     /// </summary>
-    private static Entry ConvertParameter(ParameterInfo parameter, ICustomSerialization serialization)
+    private static Entry ConvertParameter(ParameterInfo parameter, ICustomSerialization serialization, object instance = null)
     {
         var parameterType = parameter.ParameterType;
         var defaultValue = parameter.HasDefaultValue ? parameter.DefaultValue?.ToString() : null;
@@ -512,7 +518,7 @@ public static partial class EntryConvert
                 UnitType = serialization.GetUnitTypeByAttributes(parameter),
                 Current = defaultValue,
                 Default = defaultValue,
-                Possible = serialization.PossibleValues(parameterType, parameter, null)
+                Possible = serialization.PossibleValues(parameterType, parameter, instance)
             },
             Validation = serialization.CreateValidation(parameterType, parameter)
         };
@@ -524,13 +530,13 @@ public static partial class EntryConvert
         {
             case EntryValueType.Class:
                 parameterModel.Value.Current = parameterType.Name;
-                parameterModel.Prototypes.AddRange(Prototypes(parameterType, parameter, serialization));
+                parameterModel.Prototypes.AddRange(Prototypes(parameterType, parameter, serialization, instance));
                 parameterModel.SubEntries = EncodeClass(parameterType, serialization).SubEntries;
                 break;
             case EntryValueType.Collection:
                 var elemType = ElementType(parameterType);
                 parameterModel.Value.Current = elemType.Name;
-                parameterModel.Prototypes.AddRange(Prototypes(parameterType, parameter, serialization));
+                parameterModel.Prototypes.AddRange(Prototypes(parameterType, parameter, serialization, instance));
                 break;
         }
 

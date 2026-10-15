@@ -39,12 +39,17 @@ public class VisualInstructor : Resource, IVisualInstructor, IVisualInstructionS
     [EntrySerialize, ReadOnly(true)]
     [Display(Name = nameof(Strings.VisualInstructor_CurrentInstructions),
         Description = nameof(Strings.VisualInstructor_CurrentInstructions_Description), ResourceType = typeof(Strings))]
-    public string CurrentInstructions
+    public string CurrentInstructions => string.Join(", ", CurrentInstructionIds);
+
+    /// <summary>
+    /// Internal collection of current instruction ids for ui
+    /// </summary>
+    internal long[] CurrentInstructionIds
     {
         get
         {
             lock (_instructionDict)
-                return string.Join(", ", _instructionDict.Keys);
+                return _instructionDict.Keys.ToArray();
         }
     }
 
@@ -144,7 +149,7 @@ public class VisualInstructor : Resource, IVisualInstructor, IVisualInstructionS
     /// <inheritdoc />
     [EntrySerialize]
     [Display(Name = nameof(Strings.VisualInstructor_Clear), Description = nameof(Strings.VisualInstructor_Clear_Description), ResourceType = typeof(Strings))]
-    public void Clear([Description("Id of the instruction")] long instructionId)
+    public void Clear([Description("Id of the instruction"), PossibleInstructions] long instructionId)
     {
         Logger.Log(LogLevel.Debug, "Clearing instruction with id {0} on {1}", instructionId, Name);
 
