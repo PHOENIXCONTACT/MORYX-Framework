@@ -3,265 +3,208 @@ uid: DependencyInjection
 ---
 # Dependency Injection
 
-The dependency injection in MORYX-Modules is basically realized with a `Castle Windsor` container. It is encapsulated in the class `Moryx.Container.CastleContainer` to decorate it with some useful methods. It is also implementing the interface `Moryx.Container.IContainer`. So it is only necessary to know this interface instead of the concrete container class. This provides the possibility to change the container flexible to use for example derived containers or just to switch from Castle Windsor to a different DI Container.
+Every server module in MORYX has its own dependency injection container. Components and plugins of a module are registered in this container and get their dependencies injected from it. Modules do not share containers, they only communicate through their [facades](/docs/tutorials/server-module/facades.md).
 
-MORYX Container is more than just inject the first suitable object from the Container. It provides the possibility to choose the object you want to inject from a pool of suitable objects by using [different Component Selectors](https://github.com/castleproject/Windsor/blob/master/docs/typed-factory-facility-interface-based.md) or the possibility to define at your component how you want to register it just by using the `Moryx.Container.RegistrationAttribute`.
+The container is based on [Castle Windsor](https://github.com/castleproject/Windsor) and encapsulated in [`CastleContainer`](/src/Moryx.Container/CastleContainer.cs). Modules, components and plugins only depend on the interface [`IContainer`](/src/Moryx/Container/IContainer.cs) and its extension methods, so they never reference Castle Windsor directly.
 
-## How to register Components
+> [!TIP]
+> For a step-by-step guide to set up the container of a module, see [How to create a server module](/docs/tutorials/server-module/server-module.md).
 
-Components can be registered in the Container by two main methods:
+> [!TIP]
+> For a step-by-step guide on exchangeable behavior in a module's components and plugins as well as helpful troubleshooting advice, see [How to use strategies](/docs/tutorials/how-to-use-strategies.md).
 
-```cs
-Container.SetInstance(MyComponent);
+## How it works
 
-Container.LoadComponents<IMyComponentInterface>();
-```
+### The container lifecycle of a module
 
-The main Task is to find the needed components and to register it by the `Moryx.Container.RegistrationAttribute`. There are several ways to register an component. In most case methods **LoadComponents** or **SetInstance** are enough but there are several `Register` methods for different ways of component registration. The following sections will describe the possibilities.
+The container of a module is created and destroyed by [`ServerModuleBase`](/src/Moryx.Runtime/Modules/ServerModuleBase.cs) together with the module:
 
-### LoadComponents
+1. **Parse the configuration**: The module configuration is loaded and searched for properties with the `ModuleStrategyAttribute`, see [Module strategies](#module-strategies).
+2. **Create the container**: The [`ModuleContainerFactory`](/src/Moryx.Runtime.Kernel/Container/ModuleContainerFactory.cs) creates a new `CastleContainer` and registers **all** types of the module assembly that carry a `ComponentAttribute` (or a derived attribute like `PluginAttribute`) or a `PluginFactoryAttribute`.  
+*Note: This includes `internal` types, so keep your module interior internal.*
+3. **Register the module instances**: The module configuration, the `ILoggerFactory` and the module logger are registered as instances.
+4. **`OnInitializeAsync`**: The module registers everything that is not part of its own assembly, e.g. plugins from other assemblies or facades of other modules.
+5. **Execute the sub initializers**: All `ISubInitializer` registered in the container are resolved and executed, see [Register dependencies of a component](#register-dependencies-of-a-component).
+6. **Start, Stop**: Components are resolved from the container as needed.
+7. **Destroy**: When the module is stopped, the container is destroyed, together with all instances it created. The next start creates a new container.  
+*Note: The facade of your own module lives outside of the container's lifecycle, it is not going to be recreated.*
 
-If you want to register components by a given Interface then use `LoadComponents()`. The `LoadComponents()` method is a generic method which needs an interface to search for Components which are implementing this interface. It will search in the AppDomain. The AppDomain includes your default build folder to search for Components.
+### Resolving dependencies
 
-```cs
-Container.LoadComponents<IMyComponentInterface>();
-```
+Dependencies are injected via constructor parameters or public properties with a setter. Constructor parameters are mandatory, properties are optional and stay `null` if the dependency cannot be resolved.
 
-A condition can be useful if there are a bunch of components, but you want to register a sub-amount of it.
-For example, you want to register all components which are complete different but marked with an attribute. So you can register these components like that.
+For every dependency, the container first looks at its own registrations. In addition, the [`MoryxFacility`](/src/Moryx.Container/MoryxFacility.cs) adds the following sub resolvers, which are consulted in this order:
 
-```cs
-Container.LoadComponents<object>(type => type.GetCustomAttribute(typeof(MyAttribute)) != null);
-```
-
-Or you can just filter components with the same interface but some of them are marked with an attribute.
-
-```cs
-Container.LoadComponents<IMyComponentInterface>(type => type.GetCustomAttribute(typeof(MyAttribute)) != null);
-```
-
-### SetInstance
-
-If you want to just register a concrete instance without a search by an interface or a predicate to filter for atrributes or something similar then just use the `SetInstance()` method for the registration.
-
-```cs
-var myInstance = new HappyClass();
-Container.SetInstance(myInstance);
-```
-
-If your class implements an interface then you can also register it for that interface.
-So a new instance of the class will be registered with the given interface.
+| Sub resolver | Triggered by | Resolves |
+|---|---|---|
+| `CollectionResolver` | Array or collection of a service | All registered implementations of the service |
+| [`NamedDependencyResolver`](/src/Moryx.Container/NamedDependencyResolver.cs) | `NamedAttribute` on the property or parameter | The component registered with this name |
+| [`StrategySubResolver`](/src/Moryx.Container/StrategySubResolver.cs) | Service type configured with the `ModuleStrategyAttribute` | The component with the configured name |
+| [`ChildContainerSubResolver`](/src/Moryx.Container/ChildContainerSubResolver.cs) | `UseChildAttribute` on the property or parameter | A child of a registered `INamedChildContainer`, e.g. a named child logger |
+| [`ServiceProviderSubResolver`](/src/Moryx.Container/ServiceProviderSubResolver.cs) | Service is not registered in the container | The service from the host `IServiceProvider`, see [ServiceProvider Bridge](#serviceprovider-bridge) |
 
 ```cs
-var myInstance = new HappyClass();
-Container.SetInstance<IHappyClass>(myInstance);
-```
-
-If you have more instances of a component which are almost similar, but you want to distinguish the instances then you can also use its name for the registration.
-
-```cs
-var modules = new List<MyModule>()
+[Plugin(LifeCycle.Singleton, typeof(IMyPlugin), Name = PluginName)]
+public class MyPlugin : IMyPlugin
 {
-    new ModuleA(), new ModuleB()
-};
+    public const string PluginName = nameof(MyPlugin);
 
-foreach(var module in modules)
-    Container.SetInstance(module, module.Name);
-```
+    // Child logger with the name of this plugin
+    [UseChild(PluginName)]
+    public IModuleLogger Logger { get; set; }
 
-Here you can also register the instances with an additional interface.
+    // Specific implementation of IMyComponent
+    [Named(MyComponentB.ComponentName)]
+    public IMyComponent Component { get; set; }
 
-```cs
-var modules = new List<MyModule>()
-{
-    new ModuleA(), new ModuleB()
-};
-
-foreach(var module in modules)
-{
-    Container.SetInstance<IMyComponentInterface>(module, module.Name);
+    // All implementations of IMyHook
+    public IMyHook[] Hooks { get; set; }
 }
 ```
 
-If you have structures like
+Further sample implementations for plugins can be found in the [TestModule](/src/Moryx.TestModule/Plugin/).
+
+### Manual resolution
+
+Components should get their dependencies injected instead of resolving them. Manual resolution is meant for the composition root, i.e. the `ModuleController`, which resolves the entry components of the module on start and stop:
 
 ```cs
-Container.SetInstance(component1);
-Container.SetInstance(component2);
-Container.SetInstance(component3);
+// First registered implementation, or the one configured with ModuleStrategyAttribute
+var plugin = Container.Resolve<IMyPlugin>();
+
+// Implementation registered with this name
+var pluginB = Container.Resolve<IMyPlugin>(MyPluginB.PluginName);
+
+// All registered implementations
+IMyHook[] hooks = Container.ResolveAll<IMyHook>();
 ```
 
-Then you can just use the fluent method to register more than one component. You can register multiple instances by.
+Keep the following behavior in mind:
+
+- `Resolve` returns `null` if the service is not registered.
+- An unknown name does **not** fail, `Resolve` falls back to the first registered implementation of the service.
+- Sub resolvers only apply to the dependencies of the resolved component, not to the requested service itself. A service of the host is therefore not resolved through the [ServiceProvider Bridge](#serviceprovider-bridge).
+
+[How to create a server module](/docs/tutorials/server-module/server-module.md#start-the-module) shows the typical usage.
+
+## Registration
+
+### Registration attributes
+
+Types are only registered if they are marked with one of the registration attributes. A type without them is neither registered automatically nor by `LoadComponents`.
+
+| Attribute | Purpose |
+|---|---|
+| `ComponentAttribute` | Marks a fixed part of the module structure. Defines the `LifeCycle`, the services and an optional `Name`. |
+| `PluginAttribute` | Same as `ComponentAttribute`, but marks an exchangeable part, e.g. a strategy. Plugins with a `Name` can be selected in the configuration. |
+| `PluginFactoryAttribute` | Marks an interface as factory. Its implementation is generated by the container, see [Factories](#factories). |
+| `DependencyRegistrationAttribute` | Registers additional types when the annotated type is loaded with `LoadComponents`, see [Register dependencies of a component](#register-dependencies-of-a-component). |
+| `ComponentLoaderIgnoreAttribute` | Assembly attribute that excludes all types of the assembly from `LoadComponents`. |
 
 ```cs
-Container.SetInstance(component1)
-    .SetInstance(component2);
-    .SetInstance(component3);
-```
-
-## How to get Components
-
-If there are already registered components then you have some possibilities to get them.
-
-### Resolve
-
-For example, you have a `ServerModule` and you want to initialize its `Plugins` in a defined order during the `ServerModule` start. So you have to resolve the `Plugins` you want and call the necessary method. To resolve a `Plugin` just use the `Resolve`-method.
-
-```cs
-var myPlugin = Container.Resolve<IMyPlugin>();
-```
-
-Then you get the first plugin with the given interface. If there are more than one Plugin` which is implementing the given interface then you can use the concrete type or the name. Remember, don´t forget to register the plugins before with its type or name.
-
-```cs
-var myConcretePlugin1 = Container.Resolve<MyPluginClass>();
-var myConcretePlugin2 = Container.Resolve("MyPluginName");
-var myConcretePlugin3 = Container.Resolve<IMyPlugin>("Trick17Plugin");
-```
-
-### ResolveAll
-
-It is also possible to get more than one component from the container just by using an interface or the class type. Just use the ResolveAll method. This works for Interfaces and Class Types but not for defined names.
-
-```cs
-IMyPlugin>[] plugins1 = Container.ResolveAll<IMyPlugin>();
-MyPluginClass[] plugins2 = Container.ResolveAll<MyPluginClass>();
-```
-
-## How to register Plugins or Components
-
-If you implement a ServerModule then you may also want to implement some `Plugins` or `Components`. The main difference of a Plugin and a Component is that a Component is part of a fix structure. A plugin is just a small exchangeable part. So usually a Component will be registered with the `Component` Attribute and a Plugin with the `Plugin` Attribute. Both are `RegistrationAttribute` which will be used for the automatic registration. Both will be registered in the container of the `ServerModule`.
-
-```cs
-[Component(LifeCycle.Transient, typeof(IMyComponent), Name = ComponentName)]
-public class MyComponent : IMyComponent
+[Component(LifeCycle.Singleton, typeof(IMyComponent))]
+internal class MyComponent : IMyComponent
 {
-    private const string ComponentName = nameof(MyComponent);
-    ...
 }
-```
 
-```cs
 [Plugin(LifeCycle.Transient, typeof(IMyPlugin), Name = PluginName)]
 public class MyPlugin : IMyPlugin
 {
-    private const string ComponentName = nameof(MyPlugin);
-    ...
+    public const string PluginName = nameof(MyPlugin);
 }
 ```
 
----
+- `LifeCycle.Singleton`: All dependents share one instance per container.
+- `LifeCycle.Transient`: Every resolution creates a new instance. Release instances created by a factory with its `Destroy` method.
 
-### Register additional plugins or components from your assembly
+> [!CAUTION]
+> Names must be unique within the container. If two types are registered with the same name, only the first one is kept. Types without a name are registered with their full type name.
 
-In some case you want to implement a component which needs some additional plugins from your assembly. So you can extend your list of component registration, or you can use the `Moryx.Container.DependencyRegistrationAttribute`. You can decide if all other components from your assembly should be registered (that would be lazy) or a list of some types.
+### Registration methods
 
-As an example we want to implement a UserAssignment so we implement a Component which is part of a ServerModule:
+Types of the module assembly are registered automatically. Everything else is registered in `OnInitializeAsync` of the `ModuleController` with the following methods:
 
 ```cs
-[Component(LifeCycle.Transient, typeof(IUserAssignment))]
-public class UserAssignment : IUserAssignment
+protected override Task OnInitializeAsync(CancellationToken cancellationToken)
 {
-    private const string ModuleName = nameof(UserAssignment);
-    ...
+    // All public implementations of IMyPlugin from all loaded assemblies
+    Container.LoadComponents<IMyPlugin>();
+
+    // Only implementations that match a condition
+    Container.LoadComponents<IMyPlugin>(type => type.GetCustomAttribute<MyAttribute>() != null);
+
+    // A single type or a factory interface
+    Container.Register<IMyService, MyService>();
+    Container.Register<IMyPluginFactory>();
+
+    // An existing instance, optionally with a name
+    Container.SetInstance(ResourceManagement)
+        .SetInstance<IMyService>(myService, "MyService");
+
+    return Task.CompletedTask;
 }
 ```
 
-Then there is a requirement that an external system should be informed about the assignment. So we can use for example the Hook Pattern.
+`LoadComponents<T>` searches the types known to the [`ReflectionTool`](/src/Moryx/Tools/ReflectionTool.cs) for public classes that implement `T` and carry a `ComponentAttribute`. A type is only found if:
+
+- the class is `public`,
+- its assembly is deployed to the application directory, i.e. the project is referenced by the application,
+- its assembly is loaded into the application domain. Call `AppDomainBuilder.LoadAssemblies()` at the beginning of your `Program.cs`, as in [StartProject.Asp](/src/StartProject.Asp/Program.cs).
+
+Types that are already registered are skipped, so it is safe to load the same service more than once.
+
+### Register dependencies of a component
+
+A component from another assembly often needs its own plugins. Instead of letting every module register them, the component declares them with the `DependencyRegistrationAttribute`. The attribute is evaluated when the component is registered with `LoadComponents` (see [`ContainerLoadComponentsExtension`](/src/Moryx/Container/ContainerLoadComponentsExtension.cs)):
+
+- All types from the **assembly of the annotated component** that export one of the listed services are registered. With `InstallerMode.All`, all types of the assembly are registered.
+- If an `Initializer` is set, it is registered as `ISubInitializer`. The module executes it after `OnInitializeAsync`. Use it to register types from other assemblies than the component (which itself is already not part of the module's assembly).
 
 ```cs
-[Plugin(LifeCycle.Transient, typeof(IUserAssignmentHook), Name = PluginName)]
-internal class UserAssignmentHook : IUserAssignmentHook
+[Plugin(LifeCycle.Singleton, typeof(IMyPlugin), Name = PluginName)]
+[DependencyRegistration(typeof(IMyHook), Initializer = typeof(MyHookInitializer))]
+public class MyPlugin : IMyPlugin
 {
-    public const string PluginName = nameof(UserAssignmentHook);
-    ...
+    public const string PluginName = nameof(MyPlugin);
+
+    public IMyHook[] Hooks { get; set; }
 }
-```
 
-So the component has a dependency to the hook. Lets register it with the `Moryx.Container.DependencyRegistrationAttribute`:
-
-```cs
-[Component(LifeCycle.Transient, typeof(IUserAssignment))]
-[DependencyRegistration(typeof(IUserAssignmentHook))]
-public class UserAssignment : IUserAssignment
-{
-    private const string ModuleName = nameof(UserAssignment);
-    ...
-}
-```
-
-So if the UserAssignment will be injected then it will have a dependency to the hook, and it will be also injected.
-In this case the `Moryx.Container.DependencyRegistrationAttribute.InstallerMode` is set to `Specified`. It is also possible to set the InstallerMode to `All` to register all other plugins and components from your assembly but this can cause some problems. If you register all other plugins and components with the `DependencyRegistrationAttribute` instead of the explicit registration at your Container with the `LoadComponents` or `SetInstance` method then other components are indirectly depending to your component because they get their plugins because your component load them **accidentally** with the DependencyRegistration.
-
-### Register additional plugins or components from another assembly
-
-The same use case as in the section before. You implement a component but there is an requirement to extend it. Now the extension needs a handling with an external system and you are a good software programmer so you outsource it in a different assembly to encapsulate it because in some other cases you don´t need this extension.
-
-In this case you also need a `DependencyRegistrationAttribute` but with an additional `Moryx.Container.ISubInitializer`. A `SubInitializer` can load types from other assemblies like in the following example.
-
-Now we implement a Plugin in a different Assembly:
-
-```cs
-[Plugin(LifeCycle.Transient, typeof(IUserAssignmentHook), Name = PluginName)]
-internal class UserAssignmentHook : IUserAssignmentHook
-{
-    public const string PluginName = nameof(UserAssignmentHook);
-    ...
-}
-```
-
-Then we implement the `SubInitializer` to register the needed types from the other Assembly
-
-```cs
-public class MyInitializer : ISubInitializer
+public class MyHookInitializer : ISubInitializer
 {
     public void Initialize(IContainer container)
     {
-        container.LoadComponents<IUserAssignmentHook>();
+        container.LoadComponents<IMyHook>();
     }
 }
-
 ```
 
-Now we can use the `SubInitializer` for the `DependencyRegistrationAttribute`:
+> [!NOTE]
+> The attribute has no effect on types of the module assembly, because they are registered without `LoadComponents`.
+
+## Module strategies
+
+The `ModuleStrategyAttribute` binds a service type to the name of an implementation, which is selected in the module configuration. The property can either be a `string` with the name or an `IPluginConfig`, in which case its `PluginName` is used:
 
 ```cs
-[Component(LifeCycle.Transient, typeof(IUserAssignment))]
-[DependencyRegistration(typeof(IUserAssignmentHook), Initializer = typeof(MyInitializer))]
-public class UserAssignment : IUserAssignment
-{
-    private const string ModuleName = nameof(UserAssignment);
-    ...
-}
+[DataMember]
+[ModuleStrategy(typeof(IMyStrategy)), PluginNameSelector(typeof(IMyStrategy))]
+public string MyStrategy { get; set; }
 ```
 
-## How to register Factories
+Before the container is created, the module configuration is parsed for these attributes, including nested configurations and collections (see [`ConfigParser`](/src/Moryx.Runtime/Modules/ConfigParser.cs)). Whenever a component of the module depends on `IMyStrategy`, the container injects the implementation with the configured name. As the configuration is only parsed during initialization, a different strategy is used after the module is restarted.
 
-In some case it is helpful or necessary to implement a Factory. A Factory can also be registered in the Container so every Component or Plugin can get injected the Factory. You have only to use the `Moryx.Container.PluginFactoryAttribute`. You have also to define in the `RegistrationAttribute` if the Factory should create Plugins by its Configuration or by its Name. So you have to choose the right `ComponentSelector` so that the Factory can create the needed Plugin out of the LocalContainer.
+## Factories
+
+An interface marked with the `PluginFactoryAttribute` is implemented by the container using the [typed factory facility](https://github.com/castleproject/Windsor/blob/master/docs/typed-factory-facility-interface-based.md) of Castle Windsor. A `Create` method resolves a component, a `Destroy` method releases it. The component selector of the attribute decides which implementation is created.
 
 ### Name based component selector
 
-If you have some plugins without any configuration then you can just use the `Moryx.Container.INameBasedComponentSelector` for the Factory. Let's implement the plugins:
-
-```cs
-[Plugin(LifeCycle.Transient, typeof(IMyPlugin), Name = nameof(MyPluginA))]
-public class MyPluginA : IMyPlugin, IPlugin
-{
-
-}
-
-[Plugin(LifeCycle.Transient, typeof(IMyPlugin), Name = nameof(MyPluginB))]
-public class MyPluginB : IMyPlugin, IPlugin
-{
-
-}
-```
-
-Now we have two different plugins with different names. Make sure that the Plugins have different names and implement your name based factory like:
+The `INameBasedComponentSelector` takes the name of a plugin, like [the once sketched out previously](#registration-attributes), and creates the instances accordingly using:
 
 ```cs
 [PluginFactory(typeof(INameBasedComponentSelector))]
-public interface IMyFactory
+public interface IMyPluginFactory
 {
     IMyPlugin Create(string name);
 
@@ -269,57 +212,45 @@ public interface IMyFactory
 }
 ```
 
-This is the simplest way to get the needed plugin from a factory.
+- An unknown name throws a `ComponentNotFoundException`.
+- A `null` name does **not** fail, it returns the first registered implementation.
 
 ### Config based component selector
 
-If the plugins gets more complex and they need an extra configuration. Then you can use the `Moryx.Container.IConfigBasedComponentSelector` for the Factory to get the plugin instances by its configuration.
-
-Let's create a configuration class.
+The `IConfigBasedComponentSelector` creates the implementation named by `IPluginConfig.PluginName` and initializes it with the configuration. The plugins implement `IConfiguredPlugin<TConfig>`:
 
 ```cs
 [DataContract]
-public class MyConfig : IPluginConfig
+public class MyPluginConfig : IPluginConfig
 {
     [DataMember]
     public virtual string PluginName { get; set; }
-
-    [DataMember]
-    public int HowOftenIForgotTheDataMemberAttribute { get; set; }
 }
-```
 
-Now we have a configuration class we can use for our plugins or inherit them for an extended configuration class. Let's implement the plugins:
-
-```cs
 [Plugin(LifeCycle.Transient, typeof(IMyPlugin), Name = nameof(MyPluginA))]
-public class MyPluginA : IConfiguredModulePlugin<MyConfig>
+public class MyPluginA : IMyPlugin, IConfiguredPlugin<MyPluginConfig>
 {
-
+    public void Initialize(MyPluginConfig config) { }
 }
 
 [Plugin(LifeCycle.Transient, typeof(IMyPlugin), Name = nameof(MyPluginB))]
-public class MyPluginB : IConfiguredModulePlugin<MyConfig>
+public class MyPluginB : IMyPlugin, IConfiguredPlugin<MyPluginConfig>
 {
-
+    public void Initialize(MyPluginConfig config) { }
 }
-```
 
-Now we have two plugins which implements the `IConfiguredPlugin` interface with a given config. So we can get a plugin from the `Factory` with a matching configuration.
-
-```cs
 [PluginFactory(typeof(IConfigBasedComponentSelector))]
-public interface IMyFactory
+public interface IMyPluginFactory
 {
-    IMyPlugin Create(MyConfig pluginConfig);
+    IMyPlugin Create(MyPluginConfig config);
 
     void Destroy(IMyPlugin instance);
 }
 ```
 
-The `ConfigBasedComponentSelector` supports async initialization of the selected component. If the component implements `IAsyncConfiguredInitializable`, its `InitializeAsync` method will be called during selection. It is not required that the `Create` method returns a task, the `InitializeAsync` will run synchronously after creation. If it returns a Task, it will await its completion.
+A sample implementation of configured plugins can be found in the [TestModule](/src/Moryx.TestModule/Plugin/TestPlugin.cs), which utilizes the `ExpectedConfigAttribute`.
 
-The following sample shows the possibilities of the `ConfigBasedComponentSelector`:
+If the component implements `IAsyncConfiguredInitializable`, its `InitializeAsync` method is called during selection. The signature of the `Create` method decides how it is called:
 
 ```cs
 public interface ISample : IAsyncConfiguredInitializable<SampleConfig>;
@@ -341,27 +272,9 @@ internal interface ISampleFactory
 }
 ```
 
-## Common Mistakes
+Use the name based selector if the implementations do not need a configuration. A configuration class that only holds the `PluginName` adds no value.
 
-### No RegistrationAttribute
-
-"Why i get a NullReferenceException?", "Why is my component null?" and "Do you use your own Framework?". This are typical questions from Joe Gunchy. But Joe forgot the `Moryx.Container.RegistrationAttribute` for his components. Don't be stupid like Joe. Use `RegistrationAttribute`s so the MORYX container knows how to register the components you want.
-
-### Wrong build path
-
-You must reference your project in the application-project or start-project so that the MORYX Container can find your components. Joe Gunchy forgot to reference his project in the application-project so the container can't find his components. Don´t be stupid like Joe.
-
-### Missing Name, Class or Interface
-
-"I am using RegistrationAttributes but my component is still null! Why is your system so shitty". Joe Gunchy tries to get his components by using a name/class/interface, but he forgot to register the component with the name/class/interface. Don't be stupid like Joe. Make shre you don´t forget to register your components with the information you need for the loading.
-
-### Config based instead of name based component selector
-
-Joe Gunchy wants to use a Factory for simple plugins. The Plugins can be distinguished by the names but Joe implements the `IConfiguredModulePlugin` interface and adds a Config class just to set the PluginName and uses the `IConfigBasedComponentSelector` for the Factory `RegistrationAttribute`. Joe Gunchy is very stupid so don´t be like Joe. In simple cases without a config, use the `INameBasedComponentSelector` for your Factory. No unnecessary classes anymore.
-
-### Missing DependencyRegistration
-
-This is Joe Gunchy. He assumed that everything will be registered somehow automatically and will be injected somehow automatically. Most things seems to be magic but it isn´t. So Joe Gunchy is a complete idiot. Don't be stupid like Joe Gunchy. You need for everything a `RegistrationAttribute` then the MORYX Container will collect your stuff and register it how YOU defined it. Then you can use it.
+If you declare the factory interface `internal`, the assembly needs `[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]`.
 
 ## ServiceProvider Bridge
 
@@ -369,7 +282,7 @@ This is Joe Gunchy. He assumed that everything will be registered somehow automa
 
 By default, services registered in the host `IServiceProvider` (e.g. `IHttpClientFactory`, `TimeProvider`) are not available inside module containers. The ServiceProvider Bridge solves this by automatically forwarding unresolved dependencies from the Castle Windsor container to the host `IServiceProvider`.
 
-### How it works
+### How the bridge works
 
 When a module component requests a dependency that is not registered in its Castle Windsor container, the [`ServiceProviderSubResolver`](/src/Moryx.Container/ServiceProviderSubResolver.cs) checks if the host `IServiceProvider` can provide it. If so, the service is injected transparently.
 
