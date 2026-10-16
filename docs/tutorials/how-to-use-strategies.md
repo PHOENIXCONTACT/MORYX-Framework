@@ -3,13 +3,15 @@ uid: HowToUseStrategies
 ---
 # How to use strategies
 
-> [!NOTE] The [strategy pattern](https://en.wikipedia.org/wiki/Strategy_pattern) has a dedicated place in the MORYX Framework and is directly supported by its [dependency injection](/docs/articles/framework/dependency-injection.md).
+> [!NOTE]
+> The [strategy pattern](https://en.wikipedia.org/wiki/Strategy_pattern) has a dedicated place in the MORYX Framework and is directly supported by its [dependency injection](/docs/articles/framework/dependency-injection.md).
 
 This tutorial shows how a server module delegates part of its behavior to an exchangeable strategy, which is selected in the module configuration. It covers where the strategies can come from, how they are created on demand with a factory and what to consider when using strategies in plugins.
 This tutorial uses [name-based strategy selection](/docs/articles/framework/dependency-injection.md#name-based-component-selector), you can apply the same general structure for configured strategies.
 Check out [configuration-based strategy selection](/docs/articles/framework/dependency-injection.md#config-based-component-selector) for more information.
 
-> [!TIP] If you have not created a server module before, start with [How to create a server module](server-module/server-module.md).
+> [!TIP]
+> If you have not created a server module before, start with [How to create a server module](server-module/server-module.md).
 
 ## Define the strategy
 

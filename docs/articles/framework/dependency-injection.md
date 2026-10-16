@@ -7,9 +7,11 @@ Every server module in MORYX has its own dependency injection container. Compone
 
 The container is based on [Castle Windsor](https://github.com/castleproject/Windsor) and encapsulated in [`CastleContainer`](/src/Moryx.Container/CastleContainer.cs). Modules, components and plugins only depend on the interface [`IContainer`](/src/Moryx/Container/IContainer.cs) and its extension methods, so they never reference Castle Windsor directly.
 
-> [!TIP] For a step-by-step guide to set up the container of a module, see [How to create a server module](/docs/tutorials/server-module/server-module.md).
- 
-> [!TIP] For a step-by-step guide on exchangeable behavior in a module's components and plugins as well as helpful troubleshooting advice, see [How to use strategies](/docs/tutorials/how-to-use-strategies.md).
+> [!TIP]
+> For a step-by-step guide to set up the container of a module, see [How to create a server module](/docs/tutorials/server-module/server-module.md).
+
+> [!TIP]
+> For a step-by-step guide on exchangeable behavior in a module's components and plugins as well as helpful troubleshooting advice, see [How to use strategies](/docs/tutorials/how-to-use-strategies.md).
 
 ## How it works
 
@@ -25,7 +27,7 @@ The container of a module is created and destroyed by [`ServerModuleBase`](/src/
 5. **Execute the sub initializers**: All `ISubInitializer` registered in the container are resolved and executed, see [Register dependencies of a component](#register-dependencies-of-a-component).
 6. **Start, Stop**: Components are resolved from the container as needed.
 7. **Destroy**: When the module is stopped, the container is destroyed, together with all instances it created. The next start creates a new container.  
-*Note: The facade of your own module lifes outside of the container's lifecycle, it is not going to be recreated.*
+*Note: The facade of your own module lives outside of the container's lifecycle, it is not going to be recreated.*
 
 ### Resolving dependencies
 
@@ -115,7 +117,8 @@ public class MyPlugin : IMyPlugin
 - `LifeCycle.Singleton`: All dependents share one instance per container.
 - `LifeCycle.Transient`: Every resolution creates a new instance. Release instances created by a factory with its `Destroy` method.
 
-> [!CAUTION] Names must be unique within the container. If two types are registered with the same name, only the first one is kept. Types without a name are registered with their full type name.
+> [!CAUTION]
+> Names must be unique within the container. If two types are registered with the same name, only the first one is kept. Types without a name are registered with their full type name.
 
 ### Registration methods
 
@@ -155,7 +158,7 @@ Types that are already registered are skipped, so it is safe to load the same se
 A component from another assembly often needs its own plugins. Instead of letting every module register them, the component declares them with the `DependencyRegistrationAttribute`. The attribute is evaluated when the component is registered with `LoadComponents` (see [`ContainerLoadComponentsExtension`](/src/Moryx/Container/ContainerLoadComponentsExtension.cs)):
 
 - All types from the **assembly of the annotated component** that export one of the listed services are registered. With `InstallerMode.All`, all types of the assembly are registered.
-- If an `Initializer` is set, it is registered as `ISubInitializer`. The module executes it after `OnInitializeAsync`. Use it to register types from other assemblies then the component (which itself is already not part of the module's assembly).
+- If an `Initializer` is set, it is registered as `ISubInitializer`. The module executes it after `OnInitializeAsync`. Use it to register types from other assemblies than the component (which itself is already not part of the module's assembly).
 
 ```cs
 [Plugin(LifeCycle.Singleton, typeof(IMyPlugin), Name = PluginName)]
