@@ -152,7 +152,7 @@ public class SkillManagementController(ISkillManagement skillManagement, IOperat
         AlreadyExistsException _ => BadRequest(ex.Message),
         ArgumentNullException _ => BadRequest(ex.Message),
         ArgumentException _ => BadRequest(ex.Message),
-        KeyNotFoundException _ => StatusCode(500, ex.Message),
+        KeyNotFoundException _ => NotFound(ex.Message),
         HealthStateException _ => StatusCode(500, ex.Message),
         _ => StatusCode(500, ex.Message),
     };
