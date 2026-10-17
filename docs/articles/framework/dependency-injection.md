@@ -271,6 +271,9 @@ public interface IMyFactory
 
 This is the simplest way to get the needed plugin from a factory.
 
+> [!NOTE]
+> The `name` parameter must not be `null` or empty. Passing `null` or an empty string will throw an `ArgumentException`.
+
 ### Config based component selector
 
 If the plugins gets more complex and they need an extra configuration. Then you can use the `Moryx.Container.IConfigBasedComponentSelector` for the Factory to get the plugin instances by its configuration.
@@ -316,6 +319,9 @@ public interface IMyFactory
     void Destroy(IMyPlugin instance);
 }
 ```
+
+> [!NOTE]
+> The `PluginName` property of the config must not be `null` or empty. Passing a config with a `null` or empty `PluginName` will throw an `ArgumentException`.
 
 The `ConfigBasedComponentSelector` supports async initialization of the selected component. If the component implements `IAsyncConfiguredInitializable`, its `InitializeAsync` method will be called during selection. It is not required that the `Create` method returns a task, the `InitializeAsync` will run synchronously after creation. If it returns a Task, it will await its completion.
 
