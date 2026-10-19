@@ -22,7 +22,7 @@ This was nice because the instantiation of states was done only when the state m
 
 **Old Version 1**
 
-````cs
+```cs
 private static readonly Dictionary<string, StateConstructor> StateConstructors = new Dictionary<string, StateConstructor>
 {
     {StateDisconnected, context => new DisconnectedState(context)},
@@ -32,11 +32,11 @@ private static readonly Dictionary<string, StateConstructor> StateConstructors =
 
 protected const int StateDisconnected = 10;
 protected const int StateConnecting = 20;
-````
+```
 
 **Old Version 2**
 
-````cs
+```cs
 public static MyStateBase Create(PhoenixPlcDriver driver)
 {
     var map = new StateMap();
@@ -48,13 +48,13 @@ public static MyStateBase Create(PhoenixPlcDriver driver)
 protected const int StateDisconnected = 10;
 protected const int StateConnecting = 20;
 
-````
+```
 
 The last step leading to the current implementation was to try to remove the manual work (Boilerplate Code). There is no need to implement the state map with every new implementation again. In general we know all states because all states derive from base class and have a unique identifier defined by constant `integer`. The complete state map can be instantiated by reflection. The fields can be attributed with the needed type information to reduce the reflection work to a minimum.
 
 The next example shows a simple state machine and a simple context. The context initializes the state machine (described later) and selects the initial state. If the state machine will change the state, the `SetState`-Method will be called. We save it into a private field to access it in the next methods. The class is holding a `_currentValue` which is simply an `int`. In the `DoSomething`-Method the state machine is called. `AtoB` moves the state machine from the A-State to B-State and calls `HandleAtoB` on the context. `HandleAtoB` sets the current value to `10`. The next call is the `BToA`. Like before, the A-State will be set and `HandleBtoA` will be called.
 
-````cs
+```cs
 public class MyContext : IStateContext
 {
     private MyStateBase _state;
@@ -90,7 +90,7 @@ public class MyContext : IStateContext
     internal void HandleAtoB() => _currentValue = 10;
     internal void HandleBtoA() => _currentValue = 20;
 }
-````
+```
 
 The base class of the state should derive from `SyncStateBase<TContext>` or `AsyncStateBase<TContext>` while `TContext` is a type of [IStateContext](/src/Moryx/StateMachines/IStateContext.cs). With the given type the `abstract class` is fully typed.
 
@@ -98,7 +98,7 @@ The states are defined for the base class by adding the Attributes [StateDefinit
 
 Every transition of the state machine must be provided as a `virtual`-Method which will be overwritten by the specialized state.
 
-````cs
+```cs
 public abstract class MyStateBase : SyncStateBase<MyContext>
 {
     protected MyStateBase(MyContext context, StateMap stateMap)
@@ -122,11 +122,11 @@ public abstract class MyStateBase : SyncStateBase<MyContext>
     [StateDefinition(typeof(BState))]
     protected const int StateB = 20;
 }
-````
+```
 
 Let us have a look on a state implementation:
 
-````cs
+```cs
 internal sealed class AState : MyStateBase
 {
     public AState(MyContext context, StateMap stateMap) : base(context, stateMap)
@@ -152,7 +152,7 @@ internal sealed class BState : MyStateBase
         Context.HandleBtoA();
     }
 }
-````
+```
 
 The parameters of the constructor will be given to the base.
 
@@ -160,7 +160,7 @@ The `NextState()`-Method is implemented as a `virtual` method in the base class.
 
 Same sample as `AsyncStateBase`:
 
-````cs
+```cs
 public abstract class MyAsyncStateBase : AsyncStateBase<MyContext>
 {
     protected MyAsyncStateBase(MyAsyncContext context, StateMap stateMap)
@@ -210,13 +210,13 @@ internal sealed class BAsyncState : MyAsyncStateBase
         await Context.HandleBtoAAsync();
     }
 }
-````
+```
 
 **initialize the machine**
 
 The state machine will be initialized with the static helper class [StateMachine](/src/Moryx/StateMachines/StateMachine.cs). It will use the base class of the machine and the instance of the context.
 
-````cs
+```cs
 private void InitializeMachine()
 {
     StateMachine.ForContext(this).With<MyStateBase>();
@@ -226,14 +226,14 @@ private async Task InitializeMachineAsync()
 {
     await StateMachine.ForAsyncContext(this).WithAsync<MyAsyncStateBase>();
 }
-````
+```
 
 **Persist and reload the machine**
 
 The state machine will be reloaded with the static helper class [StateMachine](/src/Moryx/StateMachines/StateMachine.cs). It will use the base class of the machine and the instance of the context.
 Additionally a `stateKey` can be given to the method.
 
-````cs
+```cs
 private void ReloadMachine()
 {
     // Get the key of current state
@@ -244,11 +244,11 @@ private void ReloadMachine()
     // Reload the state with the saved key
     StateMachine.ForContext(this).With<MyStateBase>(currentStateKey);
 }
-````
+```
 
 For async state machines:
 
-````cs
+```cs
 private async Task ReloadMachineAsync()
 {
     // Get the key of current state
@@ -259,14 +259,14 @@ private async Task ReloadMachineAsync()
     // Reload the state with the saved key
     await StateMachine.ForAsyncContext(this).WithAsync<MyAsyncStateBase>(currentStateKey);
 }
-````
+```
 
 **Force a machine to a specific state**
 
 Sometimes it is required to force a specific state machine state for debugging purposes.
 It is possible to force the state machine with the static helper class [StateMachine](/src/Moryx/StateMachines/StateMachine.cs):
 
-````cs
+```cs
 private void ForceMachine()
 {
     StateMachine.Force(context.State, MyStateBase.StateA);
@@ -276,12 +276,12 @@ private async Task ForceMachineAsync()
 {
     await StateMachine.ForceAsync(context.State, MyAsyncStateBase.StateA);
 }
-````
+```
 
 The default overload of `Force`/`ForceAsync` does not call `OnExit`/`OnExitAsync` of the given state nor calling the `OnEnter`/`OnEnterAsync` of the forced state.
 A specialized overload for this can be used:
 
-````cs
+```cs
 private void ForceMachine()
 {
     StateMachine.Force(context.State, MyStateBase.StateA, exitCurrent: true, enterForced: false);
@@ -291,7 +291,7 @@ private async Task ForceMachineAsync()
 {
     await StateMachine.ForceAsync(context.State, MyAsyncStateBase.StateA, exitCurrent: true, enterForced: false);
 }
-````
+```
 
 Please open the class documentation to see all functions of the [StateMachine](/src/Moryx/StateMachines/StateMachine.cs) class.
 

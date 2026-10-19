@@ -64,7 +64,7 @@ For each group of splits and joins leading to parallel threads there must be a b
 
 The most comfortable way is to use the workplan editor to draw the workplan with the created task. But it is also possible to create a workplan programmatically to use it for example during the product import. A self-created workplan could look like this:
 
-```` cs
+``` cs
 // Prepare workplan
 var workplan = new Workplan { Name = "My Workplan" };
 
@@ -97,7 +97,7 @@ workplan.Validate();
 
 // Convert the workplan to an entity
 RecipeStorage.ToWorkplanEntity(openContext, workplan);
-````
+```
 
 The method `AddStep` of the workplan takes a list of connectors which must fit the result enum of the corresponding activity of the used task. If it does not fit then the validation will throw an exception. In the shown example the MountTask has only two outputs where the first one is the `Mounted` connector and the last goes directly to the `Failed` output. The other activities have three possible results where two of them go directly to the failed output. The `UnmountTask` is the last task and its first output, which is the success path, goes to the `End` output to close the good path of this workplan.
 
@@ -105,14 +105,14 @@ The method `AddStep` of the workplan takes a list of connectors which must fit t
 
 For execution the above mentioned _Workplans_ are instantiated to _WorkplanInstances_, which can then be executed by an instance of the [workplan engine](/src/Moryx/Workplans/API/IWorkplanEngine.cs). The internal architecture is based on [the concept of petri-nets](https://en.wikipedia.org/wiki/Petri_net) with its transitions and places. The execution is performed by tokens that are moved by transitions from one place to another.
 
-````cs
+```cs
 var workplan = MethodThatReturnsWorkplan();
 
 var engine = WorkplanInstance.CreateEngine(workplan, new NullContext());
 engine.TransitionTriggered += OnTransitionTriggered;
 engine.Completed += OnEngineCompleted;
 engine.Start();
-````
+```
 
 It is possible to pass a [context](/src/Moryx/Workplans/API/Type/IWorkplanContext.cs) to the workplan instantiation. This makes it possible to create workplans in a more universal way and add details during the creation of an individual instance. The context, like steps and transitions, are created domain specific. The context can contain instance specific parameters likes names or ids to avoid including them in the workplan. During creation of `ITransition` those values can be written to the new object from the context.
 
@@ -122,7 +122,7 @@ Sometimes the result of a workplan instance execution is foreseeable during exec
 
 In _Moryx.Workplans_ this feature is available via the [PathPredictor](/src/Moryx/Workplans/API/IPathPredictor.cs). An instance of the path predictor can be created per workplan and then used to monitor all engines executing an instance of  the afore-mentioned workplan. During creation the workplan is analyzed for predictable paths and once an instance enters that path an event is published that contains the expected result in the form of a `NodeClassification`.
 
-````cs
+```cs
 var workplan = MethodThatReturnsWorkplan();
 // Create predictor
 var predictor = WorkplanInstance.PathPrediction(workplan);
@@ -136,4 +136,4 @@ private void OnPrediction(object sender, PathPredictionEventArgs eventArgs)
 {
     var result = eventArgs.PredictedOutcome;
 }
-````
+```

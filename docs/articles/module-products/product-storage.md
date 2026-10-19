@@ -19,7 +19,7 @@ The target type property defines the scope of the strategy. It must return the s
 
 The storage saves each version of a product as a separate entity. To avoid duplicates the strategy needs to determine if anything has changed.
 
-````cs
+```cs
 // In class WatchStrategy
 public override bool HasChanged(IProduct current, IGenericColumns dbProperties)
 {
@@ -27,7 +27,7 @@ public override bool HasChanged(IProduct current, IGenericColumns dbProperties)
     return Math.Abs(watch.Weight - dbProperties.Float1) > 0.01 
         || Math.Abs(watch.Price - dbProperties.Float2) > 0.01;
 }
-````
+```
 
 ### Load Product
 
@@ -38,7 +38,7 @@ Loading products refer to the conversion from product entity to typed object of 
 
 An implementation for our watch would look like this:
 
-````cs
+```cs
 // In class WatchStrategy
 public void LoadType(IGenericColumns source, ProductType target)
 {
@@ -47,7 +47,7 @@ public void LoadType(IGenericColumns source, ProductType target)
     watch.Price = source.Float2;
 }
 
-````
+```
 
 ## Archive Product
 
@@ -57,7 +57,7 @@ The `SaveType`-methods save the typed `IProduct` object to the database. Similar
 
 The code to archive our watch and watchface looks like this:
 
-````cs
+```cs
 // In class WatchStrategy
 public override void LoadType(IGenericColumns source, IProduct target)
 {
@@ -65,7 +65,7 @@ public override void LoadType(IGenericColumns source, IProduct target)
     watch.Weight = source.Float1;
     watch.Price = source.Float2;
 }
-````
+```
 
 ## Part Links
 
@@ -73,7 +73,7 @@ Just like product types the part link strategies need to be configured. For part
 
 The implementation of the NeedleLinkStrategy is implemented below. The `PartCreation` property defines whether the instance is constructed from the `ProductPartLink`-property of the type or restored only from the entities. Per default the product definition is used to avoid redundancy and improve object creation.
 
-````cs
+```cs
 private class NeedleLinkStrategy : LinkStrategyBase<NeedleProduct>
 {
     public override void LoadPartLink(IGenericColumns linkEntity, ProductPartLink target)
@@ -88,7 +88,7 @@ private class NeedleLinkStrategy : LinkStrategyBase<NeedleProduct>
         target.Integer1 = (int)needleLink.Role;
     }
 }
-````
+```
 
 ### Load Instances
 
@@ -98,7 +98,7 @@ As explained in [Product Definition](product-definition.md) product instances ar
 
 We only have to configure the instance strategy for the root instance. Watchface instances use the empty `GenericProductStrategy` implementation while needles are not saved at all by configuring the `SkipInstanceStrategy`. Not having to persist needles is one of the benefits of recreating the instance from the product instead from the entity. The only instance information `Role` is restored by creating an instance of the watch product. Keeping the previous two sections in mind this example shows how instance storage is supposed to be efficient and not pretty or even human readable.
 
-````cs
+```cs
 public void LoadInstance(IGenericColumns source, ProductInstance target);
 {
     var watchInstance = (WatchInstance)target;
@@ -107,7 +107,7 @@ public void LoadInstance(IGenericColumns source, ProductInstance target);
     watchInstance.DeliveryDate = DateTime.FromBinary(source.Integer1);
     watchInstance.TimeSet = source.Integer2 > 0;
 }
-````
+```
 
 ### Save Instances
 
@@ -115,7 +115,7 @@ The recommendations for instance storage obviously apply to `SaveInstance` as we
 
 #### Sample Code
 
-````cs
+```cs
 public void SaveInstance(ProductInstance source, IGenericColumns target);
 {
     var watchInstance = (WatchInstance)source;
@@ -123,4 +123,4 @@ public void SaveInstance(ProductInstance source, IGenericColumns target);
     target.Integer1 = watchInstance.DeliverDate.Ticks
     target.Integer2 = watchInstance.TimeSet ? 1 : 0;
 }
-````
+```

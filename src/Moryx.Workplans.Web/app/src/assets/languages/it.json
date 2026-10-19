@@ -13,7 +13,8 @@
   "SESSIONS": {
     "CONFIRM_DIALOG": {
       "TITLE": "Vuoi chiudere la sessione corrente?",
-      "MESSAGE": "Se non hai salvato, le tue modifiche andranno perse. Sei sicuro di voler chiudere la sessione?"
+      "MESSAGE": "Se non hai salvato, le tue modifiche andranno perse. Sei sicuro di voler chiudere la sessione?",
+      "INVALID_WORKPLAN": "Piano di lavoro non valido"
     },
     "CLOSE": "Chiudi"
   },

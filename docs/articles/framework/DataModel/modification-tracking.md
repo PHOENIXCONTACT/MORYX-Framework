@@ -9,12 +9,12 @@ Sometimes developers want to keep track about modifications of a row in their ta
 
 To make an entity trackable you just need to derive from [IModificationTrackedEntity](/src/Moryx.Model/IEntity.cs) or the corresponding base class [ModificationTrackedEntityBase](/src/Moryx.Model/ModificationTrackedEntityBase.cs).
 
-````cs
+```cs
 public class PersonEntity : ModificationTrackedEntityBase
 {
     public virtual string Name { get; set; }
 }
-````
+```
 
 The example above defines four additional columns: Id (from `EntityBase`), Created, Updated and Deleted. The last three properties are introduced by the `ModificationTrackedEntityBase` and will be used in a special way by the framework and the database:
 

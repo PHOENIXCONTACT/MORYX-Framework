@@ -9,11 +9,11 @@ A driver is the interface between other Resources and physical parts of the mode
 
 A driver has this basic solution structure which can be extended for your needs:
 
-````fs
+```fs
 -Moryx.Driver.ExampleDriver
 |-IExampleDriver.cs
 |-ExampleDriver.cs
-````
+```
 
 The interface `IExampleDriver` is the API of the driver and important for registration within the AbstractionLayer. For a loose coupling between the resources it is best to use an existing driver interface or add an a new driver interface instead of using the implementation directly.
 
@@ -33,7 +33,7 @@ If you are implementing a Driver that is sending messages, [IMessageDriver](../.
 
 Now implement `IDriver`:
 
-````cs
+```cs
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Drivers;
@@ -61,7 +61,7 @@ namespace Moryx.Resources.Samples.DriverTutorial
         }
     }
 }
-````
+```
 
 The implementation of the `ExampleDriver` derives from the [Driver](../../src/Moryx.AbstractionLayer/Drivers/Driver.cs) base class. It also implements the `IDriver` interface. The next important thing is the [ResourceRegistration attribute](../../src/Moryx.AbstractionLayer/Resources/Attributes/ResourceRegistrationAttribute.csResourceRegistrationAttribute). The AbstractionLayer can now identify this driver as a resource. Additional attributes like `DisplayName` and `Description` are used within the Resource UI.
 
@@ -72,7 +72,7 @@ The `Square` function is also visible in the Resource UI. And: It is callable fr
 
 The `ExampleDriver` is just a simple implementation for a driver. As like every [Resource](../../src/Moryx.AbstractionLayer/Resources/Resource.cs) you can `Initialize`, `Start`, `Stop` a driver. Also `State machine` support is built in:
 
-````cs
+```cs
 [ResourceRegistration]
 [DisplayName("StateExample Driver"), Description("An example driver that uses the state machine")]
 public class StateExampleDriver : Driver, IExampleDriver, IStateContext
@@ -101,7 +101,7 @@ public class StateExampleDriver : Driver, IExampleDriver, IStateContext
             State.Connect();
     }
 }
-````
+```
 
 In order to create the State machine, first define a base type, the methods you need and your states. States are derived from `SyncStateBase` or `AsyncStateBase`. For drivers there exists a specific `SyncDriverState`/`AsyncDriverState`, which includes the methods `Connect()`/`ConnectAsync()` and `Disconnect()`/`DisconnectAsync()`. Typical States for a Driver are `Disconnected`, `Connecting` and `Connected`.
 

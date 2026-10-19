@@ -11,7 +11,7 @@ uid: Capabilities
 
 Just implement the interface to define a capability like in the example:
 
-```` cs
+``` cs
 [DataContract]
 public class MyCapabilities : ICapabilities
 {
@@ -26,21 +26,21 @@ public class MyCapabilities : ICapabilities
         yield return this;
     }
 }
-````
+```
 
 It is also possible to use the base class [CapabilitiesBase](/src/Moryx.AbstractionLayer/Capabilities/CapabilitiesBase.cs), which reduces the code to the following lines:
 
-```` cs
+``` cs
 [DataContract]
 public class MyCapabilities : CapabilitiesBase
 {
     protected override bool ProvidedBy(ICapabilities provided) => provided is MyCapabilities;
 }
-````
+```
 
 In any case you can extend your capabilities with more properties to give the resource a more meaningful self description. Let's take the ScrewingCapabilities as an example. Maybe there is more than one station which has ScrewingCapabilities but each can handle a different screw head. Our Capability implementation could then look like:
 
-```` cs
+``` cs
 public enum ScrewHead
 {
     Default, 
@@ -74,7 +74,7 @@ public class ScrewingCapabilities : CapabilitiesBase
         return capabilities != null && capabilities.Head == Head;
     }
 }
-````
+```
 
 So it is possible to extend a Capability with different information to distinguish between resources with the same capabilities.
 
@@ -82,7 +82,7 @@ So it is possible to extend a Capability with different information to distingui
 
 A resource can also have multiple capabilities. For that the [CombinedCapabilities](/src/Moryx.AbstractionLayer/Capabilities/CombinedCapabilities.cs) class should be used, which implements the ICapabilities interface as well. In set theory `CombinedCapabilities` represent unions or intersections depending on whether they are used as required or provided capabilities:
 
-```` cs
+``` cs
 // some resource code
 
 public override void Initialize()
@@ -100,4 +100,4 @@ public override void Initialize()
 }
 
 // some more resource code
-````
+```

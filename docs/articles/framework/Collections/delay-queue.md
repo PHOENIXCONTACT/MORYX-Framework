@@ -23,7 +23,7 @@ We will come to this later.
 
 To make the queue work correctly, you have to call it's `Start` method. Otherwise it will never hand out any message to being send through the port. As a parameter you have to insert the waiting time (**in ms!**) between two messages. If the component finishes, don't forget to stop the queue.
 
-````cs
+```cs
 public DelayDataSender : IConfiguredModulePlugin<FooConfig>
 {
     #region DependencyInjection
@@ -59,22 +59,22 @@ public DelayDataSender : IConfiguredModulePlugin<FooConfig>
 
     #endregion
 }
-````
+```
 
 Always if you want to send your `FooMessageData` through your data sender component, you have to call the method shown below. It enqueues your data into the `DelayQueue`.
 
-````cs
+```cs
 public void SendFoo(FooMessageData data)
 {
     _queue.Enqueue(data);
 }
-````
+```
 
 Below is the method which is called if a message is dequeued by the `DelayQueue`, because we registered it to the event when we wrote `_queue.Dequeued += OnMessageReadyToSend;`. Now we can directly send the data through the `SerialPort` (or at least whatever), because the `DelayQueue` ensured that we waited long enough between sending of two messages. That's all the magic.
 
-````cs
+```cs
 private void OnMessageReadyToSend(object sender, FooMessageData message)
 {
     _port.Write(message);
 }
-````
+```

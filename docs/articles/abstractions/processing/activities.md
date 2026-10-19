@@ -9,7 +9,7 @@ An [Activity](/src/Moryx.AbstractionLayer/Activities/IActivity.cs) is the smalle
 
 To create an activity it is necessary to derive at least the abstract class [Activity](/src/Moryx.AbstractionLayer/Activities/Activity.cs). An implementation could look like the following:
 
-```` cs
+``` cs
 [ActivityResults(typeof(DefaultActivityResult))]
 public class MyActivity : Activity
 {
@@ -29,17 +29,17 @@ public class MyActivity : Activity
         return Complete(resultNumber);
     }
 }
-````
+```
 
 ### Required Capabilities
 
 This property defines what capabilities a resource must have to handle this activity. Maybe it is just a capability like `MyCapabilities` or a capability with parameters like:
 
-```` cs
+``` cs
 ...
 public override ICapabilities RequiredCapabilities => new ScrewingCapabilities(ScrewHeads.Default);
 ...
-````
+```
 
 Then a resource will be searched which has the capability to handle at least default screw heads.
 
@@ -59,7 +59,7 @@ There are two methods to create a result for the activity. One to define a faile
 
 Is there some information which is necessary to handle the activity like an adapter number for an electrical test or something like that? Then it is necessary to define a parameter class for the activity and derive the activity from the [Activity<TParam>](/src/Moryx.AbstractionLayer/Activities/Activity.cs) class like in the following example:
 
-```` cs
+``` cs
 [ActivityResults(typeof(DefaultActivityResult))]
 public class MyActivity : Activity<MyParameters>
 {
@@ -98,11 +98,11 @@ internal class MyParameters : ParametersBase
         };
     }
 }
-````
+```
 
 The method `ResolveBinding` will be called during the creation of the activity and in this case the given process will be used to get the [Recipe](/src/Moryx.AbstractionLayer/Recipes/IRecipe.cs) which contains the needed adapter number for the electrical test. The number will be stored in the parameter class and will be available during the execution inside of the resource:
 
-```` cs
+``` cs
 // some resource code
 private void OnMyActivity(StartActivity startActivity, MyActivity activity)
 {
@@ -116,25 +116,25 @@ private void OnMyActivity(StartActivity startActivity, MyActivity activity)
     });
 }
 // some more resource code
-````
+```
 For more information on how a Driver works see [this article](/docs/tutorials/HowToBuildADriver.md).
 
 ## Activity Results
 
 An activity can have different results depending to the defined result enum. The default results are:
 
-```` cs
+``` cs
 public enum DefaultActivityResult
 {
     Success = 0,
     Failed = 1,
     TechnicalError = 2
 }
-````
+```
 
 So just implement a new enum to have specific result for the application specific activity like:
 
-```` cs
+``` cs
 public enum MyActivityResults
 {
     Success = 0,
@@ -144,11 +144,11 @@ public enum MyActivityResults
     Nearly = 4,
     NextTimeItWillBeBetter = 5
 }
-````
+```
 
 To use the new activity results it is necessary to use the `ActivityResults` attribute like:
 
-```` cs
+``` cs
 [ActivityResults(typeof(MyActivityResults))]
 public class MyActivity : Activity<MyParameters>
 {
@@ -164,12 +164,12 @@ public class MyActivity : Activity<MyParameters>
         return ActivityResult.Create(MyActivityResults.NextTimeItWillBeBetter);
     }
 }
-````
+```
 
 ## An Example using the VisualInstruction Resource
 If the activity is used for [VisualInstruction](/src/Moryx.Resources.Samples/IVisualInstructor.cs), the UI will create a button for each possible result from the result enum. It is also possible to show a different text at the visual instruction or hide a result like in the following example:
 
-```` cs
+``` cs
 public enum MyActivityResults
 {
     [VisualInstruction(Hide = true)]
@@ -190,7 +190,7 @@ public enum MyActivityResults
     [VisualInstruction("That's not my fault")]
     NextTimeItWillBeBetter = 5
 }
-````
+```
 
 By implementing the [IVisualInstruction](/src/Moryx.Resources.Samples/IVisualInstructor.cs) interface we can also define which text to display alongside the possible results giving the required instructions for the user.
 
@@ -198,7 +198,7 @@ By implementing the [IVisualInstruction](/src/Moryx.Resources.Samples/IVisualIns
 For long-term traceability and to resume interrupted activities it is possible to use [Tracing](/src/Moryx.AbstractionLayer/Activities/Tracing.cs).
 Using the `Progress` property of the base class [Tracing](/src/Moryx.AbstractionLayer/Activities/Tracing.cs) derived types can trace intermediate progress during an activities execution. The example below shows how to define an enum for the progress.
 
-````cs
+```cs
 public enum FooProgress
 {
     Initial = 0,
@@ -216,12 +216,12 @@ public class FooTracing : Tracing
     // Relative progress defined by Tracing
     public double Relative => base.Progress;
 }
-````
+```
 
 Resources can access and transform an activities tracing information using the fluent API [TracingExtension](/src/Moryx.AbstractionLayer/Activities/TracingExtension.cs). This rather complex approach is taken because the type of the tracing object might change at runtime depending on the resource executing the activity or the circumstances of the execution.
 For the example above this would look like the following:
 
-````cs
+```cs
 FooTracing tracing = activity.TransformTracing<FooTracing>()
   .Trace(t => t.Progress = FooProgress.Running);
-````
+```

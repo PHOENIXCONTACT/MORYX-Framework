@@ -7,6 +7,9 @@ using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Threading;
+using Moq;
+using Moryx.Configuration;
+using Moryx.Container;
 using Moryx.Serialization;
 using NUnit.Framework;
 
@@ -298,4 +301,44 @@ public class EntryConvertSerializationTests
         });
     }
 
+    [Test]
+    public void ShouldProvidePossibleValue_UsingContext()
+    {
+        //Arrange
+        var providerMock = new Mock<IServiceProvider>();
+        var container = new Mock<IContainer>();
+        var myObject = new InstanceAwareValuesClass
+        {
+            AllowedValues = ["a", "b", "c"]
+        };
+        var serialization = new PossibleValuesSerialization(container.Object, providerMock.Object, new ValueProviderExecutor(new ValueProviderExecutorSettings()));
+
+        // Act
+        var converted = EntryConvert.EncodeObject(myObject, serialization);
+
+        //Assert
+        Assert.That(converted.SubEntries.First(x => x.Identifier == nameof(InstanceAwareValuesClass.SelectedValue)).Value.Possible.Length, Is.EqualTo(3));
+    }
+
+    [Test(Description = "EncodeMethod passes instance to PossibleValues context for method parameters.")]
+    public void PossibleValuesForMethodParametersUsingContext()
+    {
+        // Arrange
+        var providerMock = new Mock<IServiceProvider>();
+        var container = new Mock<IContainer>();
+        var myObject = new InstanceAwareValuesClass
+        {
+            AllowedValues = ["x", "y"]
+        };
+        var serialization = new PossibleValuesSerialization(container.Object, providerMock.Object, new ValueProviderExecutor(new ValueProviderExecutorSettings()));
+
+        // Act
+        var methods = EntryConvert.EncodeMethods(myObject, serialization).ToArray();
+        var doSomething = methods.First(m => m.Name == nameof(InstanceAwareValuesClass.DoSomething));
+
+        // Assert
+        var parameterPossible = doSomething.Parameters.SubEntries.First(x => x.Identifier == "value").Value.Possible;
+        Assert.That(parameterPossible.Length, Is.EqualTo(2));
+        Assert.That(parameterPossible.Select(p => p.Key), Is.EquivalentTo(new[] { "x", "y" }));
+    }
 }

@@ -12,7 +12,7 @@ Any domain object that can be identified implements [IIdentifiableObject](/src/M
 
 Implement `IIdentity` directly to define a custom identity:
 
-````cs
+```cs
 public class SerialNumberIdentity : IIdentity
 {
     public string Identifier { get; private set; }
@@ -27,7 +27,7 @@ public class SerialNumberIdentity : IIdentity
     public bool Equals(IIdentity other) =>
         other is SerialNumberIdentity s && s.Identifier == Identifier;
 }
-````
+```
 
 For identities backed by numeric values, the abstract base class [NumberIdentity](/src/Moryx.AbstractionLayer/Identity/NumberIdentity.cs) reduces boilerplate. A `NumberType` discriminator distinguishes between identity kinds that both express as a number, for example serial vs. MAC address.
 
@@ -37,19 +37,19 @@ For identities backed by numeric values, the abstract base class [NumberIdentity
 
 [NullIdentity](/src/Moryx.AbstractionLayer/Identity/NullIdentity.cs) is the null object for `IIdentity`. Use `NullIdentity.Instance` to represent a non-identifiable object instead of `null`:
 
-````cs
+```cs
 resource.Identity = NullIdentity.Instance;
-````
+```
 
 ## Combined Identity
 
 A physical object may carry more than one identifying property simultaneously — for example both a serial number and a QR code label. [CombinedIdentity](/src/Moryx.AbstractionLayer/Identity/CombinedIdentity.cs) aggregates multiple `IIdentity` instances into one while still implementing `IIdentity`, so it can be assigned directly to `IIdentifiableObject.Identity`:
 
-````cs
+```cs
 resource.Identity = CombinedIdentity.From(
     new SerialNumberIdentity("SN-0042"),
     new QrCodeIdentity("QR-20250101-7F3A"));
-````
+```
 
 `CombinedIdentity.From` is the intended factory method, flattening nested `CombinedIdentity` instances and filtering `NullIdentity` entries.
 Passing null, an empty collection, or a collection that reduces to nothing returns `NullIdentity.Instance` not creating a `CombinedIdentity`.
@@ -66,7 +66,7 @@ Two methods express set-membership queries across combined identities, mirroring
 
 They are proper inverses: `a.Matches(b) ↔ b.MatchedBy(a)`.
 
-````cs
+```cs
 IIdentity required = new SerialNumberIdentity("SN-0042");
 IIdentity provided = CombinedIdentity.From(
     new SerialNumberIdentity("SN-0042"),
@@ -74,13 +74,13 @@ IIdentity provided = CombinedIdentity.From(
 
 provided.Matches(required);    // true — provided contains the required serial
 required.MatchedBy(provided);  // true — provided covers all of required
-````
+```
 
 ## Extension Methods
 
 [IdentityExtensions](/src/Moryx.AbstractionLayer/Identity/IdentityExtensions.cs) brings `Combine`, `GetAll`, `Matches`, and `MatchedBy` to any `IIdentity` variable, including plain single identities:
 
-````cs
+```cs
 IIdentity serial = new SerialNumberIdentity("SN-0042");
 IIdentity qr     = new QrCodeIdentity("QR-20250101-7F3A");
 
@@ -93,6 +93,6 @@ IReadOnlyList<IIdentity> all = combined.GetAll(); // works on singles too → [i
 // Set-membership queries through the IIdentity interface
 combined.Matches(serial);    // true
 serial.MatchedBy(combined);  // true
-````
+```
 
 `NullIdentity` participates with consistent semantics: `NullIdentity.Matches(nonNull)` is `false`; `any.Matches(NullIdentity)` is `true` (requiring nothing is satisfied by anything); `NullIdentity.MatchedBy(any)` is `true`; `any.MatchedBy(NullIdentity)` is `false` (absence covers no real requirement).

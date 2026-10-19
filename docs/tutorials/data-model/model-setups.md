@@ -14,7 +14,7 @@ As a sample model we will use a small datamodel that could be used to manage a c
 
 As a first example we will start by creating some key employees hard coded. It will create the boss as well as his assistant and an in-turn. To create a model setup create a new class within you model assembly or create new ClassLibrary project with all necessary references. Inherit it from [IModelSetup](/src/Moryx.Model/IModelSetup.cs) and add the [ModelSetupAttribute](/src/Moryx.Model/Attributes/ModelSetupAttribute.cs).
 
-````cs
+```cs
 [ModelSetup(typeof(EmployeeContext))]
 public class HardCodedSetup : IModelSetup
 {
@@ -24,7 +24,7 @@ public class HardCodedSetup : IModelSetup
     public string SupportedFileRegex => string.Empty;
     [...]
 }
-````
+```
 
 ### Hard coded infrastructure
 
@@ -41,11 +41,11 @@ First we have to take care of the properties required by the Runtime. They are n
 
 When the setup gets executed, MORYX will create a `IUnitOfWork` and provide it within the `ExecuteAsync` method. Here everything can be done for setting up the database:
 
-````cs
+```cs
 public Task ExecuteAsync(IUnitOfWork openContext, string setupData, CancellationToken cancellationToken)
 {
 }
-````
+```
 
 ## File based setup
 
@@ -55,25 +55,25 @@ In many cases we have to import from other system through some export formats or
 
 The infrastructure properties of file based setups are the same except for the `SupportedFileRegex`. Here we must define a naming scheme to map files to this setup. In our example we will use `EmployeeCard_\w+\.txt` to match files like `EmployeeCard_Claudia.txt`.
 
-````cs
+```cs
 public string SupportedFileRegex => @"EmployeeCard_\w+\.txt";
-````
+```
 
 ### File based entity creation
 
 For our setup we will assume that each line contains one or more properties always in the same format. The following file format should be imported:
 
-````text
+```text
 Claudia Bach
 21.04.1991
 Highway to perfection:42
 12345 NRW
 Kathrin Cole
-````
+```
 
 A setup parsing the file and creating the entity might look likes this:
 
-````cs
+```cs
 public async Task ExecuteAsync(IUnitOfWork uow, string setupData)
 {
     var employeeRepo = uow.GetRepository<IEmployeeRepository>();
@@ -109,4 +109,4 @@ public async Task ExecuteAsync(IUnitOfWork uow, string setupData)
 
     await uow.SaveChangesAsync();
 }
-````
+```

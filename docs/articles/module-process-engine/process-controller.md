@@ -107,7 +107,7 @@ The `ResourceAssignment` uses the ResourceManagement to determine all resources 
 
 The resource selector API can be used to influence the ProcessEngines distribution and execution of activities, especially in a manufacturing system with redundant cells for activities. Below is an example for a random based load balancer using the `ResourceSelectorBase` class:
 
-````cs
+```cs
 internal class LoadBalancer : ResourceSelectorBase<LoadBalancerConfig>
 {
     public override IReadOnlyList<ICell> SelectResources(IActivityData activityData, IReadOnlyList<ICell> availableCells)
@@ -118,7 +118,7 @@ internal class LoadBalancer : ResourceSelectorBase<LoadBalancerConfig>
         return resultList;
     }
 }
-````
+```
 
 ### StorageTrigger
 
