@@ -9,7 +9,7 @@ The ProcessDataMonitor is the central module to collect process data from all so
 
 This modules exports the `IProcessDataMonitor` facade.
 
-````cs
+```cs
 /// <summary>
 /// Central facade to collect process data. Will be implemented by the ProcessDataMonitor module
 /// </summary>
@@ -25,7 +25,7 @@ public interface IProcessDataMonitor
     /// </summary>
     void Add(IMeasurand measurand);
 }
-````
+```
 
 ## Referenced Facades
 
@@ -49,7 +49,7 @@ The `ProcessDataCollector` is the central component within the module. It handle
 
 `ProcessDataListener`'s are listening to events of the `ProcessDataCollector` and handle them on their own way. As a sample we can hava a look on a listener which is writing process data to the internal module logger:
 
-````cs
+```cs
 [ExpectedConfig(typeof(ProcessDataListenerConfig))]
 [Plugin(LifeCycle.Transient, typeof(IProcessDataListener), Name = nameof(LogListener))]
 public class LogListener : ProcessDataListenerBase<ProcessDataListenerConfig>
@@ -86,13 +86,13 @@ public class LogListener : ProcessDataListenerBase<ProcessDataListenerConfig>
         Logger.LogEntry(LogLevel.Trace, strBuilder.ToString());
     }
 }
-````
+```
 
 This listener plugin produces the following sample output:
 
-````txt
+```txt
 16.01.2020 14:07:35: controlSystem_processes: Values (id: 6029313, success: True, cycleTimeMs: 72,1918) Tags (productIdent: 123456, productRev: 1)
-````
+```
 
 Each listener must be configured for existing measurands. So every measurand can be enabled or disabled. New measurands are **disabled** by default and must be enabled explicit for each listener.
 
@@ -160,7 +160,7 @@ The ControlSystem adapter is used to convert `IProcessControl` facade events and
 
 The existing measurments can be extended with the known binding API. There are two configuration options within the `ModuleConfig`: `ProcessBindings` and `ActivityBindings`. Both are configured the same. The binding engine will be used to configure additional fields and tags. As a sample we add the product identifier to the *controlSystem_processes* measurement:
 
-````json
+```json
 {
   "ProcessBindings": [
     {
@@ -170,13 +170,13 @@ The existing measurments can be extended with the known binding API. There are t
     }
   ]
 }
-````
+```
 
 Valid binding root objects are `Process`, `Recipe`, `Product` and `Article`.
 
 Next a sample for tracing information for *controlSystem_activities*:
 
-````json
+```json
 {
   "ActivityBindings": [
     {
@@ -186,7 +186,7 @@ Next a sample for tracing information for *controlSystem_activities*:
     }
   ]
 }
-````
+```
 
 Valid binding root objects are `Activity`, `Tracing`, `Process`, `Recipe`, `Product` and `Article`.
 
@@ -211,7 +211,7 @@ The existing measurment can also be extended with the known binding API. There i
 The binding engine will be used to configure additional fields and tags. The only available base key is `Notification`.
 As a sample we add the acknowledger to the *notification_acknowledged* measurement:
 
-````json
+```json
 {
   "NotificationBindings": [
     {
@@ -221,7 +221,7 @@ As a sample we add the acknowledger to the *notification_acknowledged* measureme
     }
   ]
 }
-````
+```
 
 ### PdmOrderManagement
 
@@ -262,7 +262,7 @@ This measurement contains all state changes of an operation:
 
 There is a InfluxDb listener which is pushing the measurements to an influx database for further processing. The listener requires the following configuration properties:
 
-````cs
+```cs
 [DataMember, DefaultValue("localhost")]
 public string Host { get; set; }
 
@@ -271,11 +271,11 @@ public int Port { get; set; }
 
 [DataMember]
 public string DatabaseName { get; set; }
-````
+```
 
 For communication the default .NET InfluxDb LineProtocol is used. Sample meaurement series:
 
-````sh
+```sh
 > select * from controlSystem_processes LIMIT 10
 name: controlSystem_processes
 time                application   cycleTimeMs id      productIdent productRev success
@@ -290,4 +290,4 @@ time                application   cycleTimeMs id      productIdent productRev su
 1579102613845534900 MoryxRuntime 6168.1316   5701652 123456       1          true
 1579102614844550800 MoryxRuntime 6211.245    5701653 123456       1          true
 1579102615172939300 MoryxRuntime 7442.3973   5701654 123456       1          true
-````
+```

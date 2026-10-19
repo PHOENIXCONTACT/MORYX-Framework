@@ -5,18 +5,25 @@ using System.Runtime.Serialization;
 
 namespace Moryx.Workplans.Web.Models;
 
+/// <summary>
+/// DTO type for workplan
+/// </summary>
 [DataContract]
 public class WorkplanModel
 {
+    /// <inheritdoc cref="Workplan.Id" />
     [DataMember]
     public long Id { get; set; }
 
+    /// <inheritdoc cref="Workplan.Name" />
     [DataMember]
     public string Name { get; set; }
 
+    /// <inheritdoc cref="Workplan.Version" />
     [DataMember]
     public int Version { get; set; }
 
+    /// <inheritdoc cref="Workplan.State" />
     [DataMember]
     public WorkplanState State { get; set; }
 }

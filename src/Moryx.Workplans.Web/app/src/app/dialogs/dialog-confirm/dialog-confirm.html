@@ -1,6 +1,9 @@
 <h1 mat-dialog-title>{{ data.title }}</h1>
 <div mat-dialog-content>
-  {{ data.message }}
+  @for (message of data.messages; track $index) 
+  {
+    <p>{{ message }}</p>
+  }
 </div>
 <div mat-dialog-actions align="end">
   <button mat-button type="button" cdkFocusInitial mat-dialog-close>

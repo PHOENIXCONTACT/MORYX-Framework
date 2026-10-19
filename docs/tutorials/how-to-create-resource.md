@@ -9,11 +9,11 @@ This tutorial shows how a [Resource](../../src/Moryx.AbstractionLayer/Resources/
 
 A resource has this basic solution structure which can be extended for your needs:
 
-````fs
+```fs
 -Moryx.Resource.ExampleResource
 |-IExampleResource.cs
 |-ExampleResource.cs
-````
+```
 
 The interface `IExampleResource` is optional for a resource and probably better located in a shared project between resources and modules. The implementation of this interface is done with the `ExampleResource` class.
 
@@ -21,7 +21,7 @@ The interface `IExampleResource` is optional for a resource and probably better 
 
 This interface is simply derived from [IResource](../../src/Moryx.AbstractionLayer/Resources/IResource.cs). No further definitions are needed.
 
-````cs
+```cs
 using Moryx.AbstractionLayer.Resources;
 
 namespace Moryx.Resources.Samples.DriverTutorial
@@ -30,13 +30,13 @@ namespace Moryx.Resources.Samples.DriverTutorial
     {
     }
 }
-````
+```
 
 ### The implementation
 
 Now implement `IExampleResource`:
 
-````cs
+```cs
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Resources;
@@ -63,7 +63,7 @@ namespace Moryx.Resources.Samples.DriverTutorial
         }
     }
 }
-````
+```
 
 The implementation of the `ExampleResource` derives from the [Resource](../../src/Moryx.AbstractionLayer/Resources/Resource.cs) base class. It also implements the `IResource` interface. This is enough to use your resource definition within MORYX. If your resource relies on dependency injection like logging it is important to add the [ResourceRegistration attribute](../../src/Moryx.AbstractionLayer/Resources/Attributes/ResourceRegistrationAttribute.cs). MORYX can now identify this class as a resource. Properties or methods with the Attribute `EntrySerialize` will be shown in the UI. The Attribute `DataMember` marks all properties saved in the database. Additional attributes like `DisplayName` and `Description` are used within the Resource UI.
 
@@ -88,7 +88,7 @@ References use the attribute `ReferenceOverride`. New References can be added us
 
 If you want to use the new resource from a custom module, you need to request the resource from the [ResourceManagement](../../src/Moryx.AbstractionLayer/Resources/IResourceManagement.cs). Inject the `ResourceManagement` into the `ModuleController` and pass the object to the inner container of your custom module.
 
-````cs
+```cs
     [ServerModule(ModuleName)]
     public class ModuleController : ServerModuleBase<ModuleConfig>
     {
@@ -118,15 +118,15 @@ If you want to use the new resource from a custom module, you need to request th
             return Task.CompletedTask;
         }
     }
-````
+```
 
 If it is nesessary to react when a capability has changed, is it possible to attach to the [CapabilityChanged](../../src/Moryx.AbstractionLayer/Resources/IResourceManagement.cs) event:
 
-````cs
+```cs
 private void ExampleResourceCapabilityChanged(object sender, ICapabilities newCapabilities)
 {
     var id = ((IResource)sender).Id;
 
     // Do something
 }
-````
+```

@@ -19,7 +19,7 @@ It is important that the new created importer is configured in the **Command Cen
 
 A simple prototype importer for our watch product model is shown below. Like other plugins it needs to define a config and export it as `ExpectedConfig` above the class.
 
-````cs
+```cs
 [DataContract]
 public class PrototypeImporterConfig : ProductImporterConfig
 {
@@ -80,7 +80,7 @@ public class PrototypeImporter : ProductImporterBase<PrototypeImporterConfig, Wa
         });
     }
 }
-````
+```
 
 ## File Importer
 
@@ -88,7 +88,7 @@ In many applications the products are already defined in some digital form. This
 
 The client will send a file path or encode the file as a Base64 string into the `FileProperty`. Using the `ReadFile`-method on the parameters will either open the file or parse the Base64 string. This makes the importer independent from the clients location and behavior.
 
-````cs
+```cs
 [DataContract]
 public class FileImporterConfig : ProductImporterConfig
 {
@@ -127,4 +127,4 @@ public class FileImporter : ProductImporterBase<FileImporterConfig, FileImportPa
         }
     }
 }
-````
+```

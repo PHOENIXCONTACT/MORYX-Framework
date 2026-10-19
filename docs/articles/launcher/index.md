@@ -4,7 +4,7 @@
 
 To register the launcher to your application use the `AddMoryxLauncher()` extension on the service collection. It registers all required components to use the Launcher.
 
-```csharp
+```cs
 services.AddMoryxLauncher();
 ```
 
@@ -16,7 +16,7 @@ The launcher generates a config file named `Moryx.Launcher.LauncherConfig.json` 
 
 To sort your modules in the launcher, you can use the `ModuleSortIndices` property. This property allows you to define the order of modules by assigning them an index value. Modules with lower index values will appear before those with higher values.
 
-````json
+```json
 {
   "ModuleSortIndices": [
     {
@@ -34,7 +34,7 @@ To sort your modules in the launcher, you can use the `ModuleSortIndices` proper
   ]
 }
 
-````
+```
 
 ### External Modules
 
@@ -43,7 +43,7 @@ modules that should be loaded from external sources rather than being bundled wi
 
 External modules are integrated with the `<embed>` tag; the external web-page must support being embedded in an iframe.
 
-````json
+```json
 {
   "ExternalModules": [
     {
@@ -56,7 +56,7 @@ External modules are integrated with the `<embed>` tag; the external web-page mu
   ]
 }
 
-````
+```
 
 ### Region
 
@@ -66,7 +66,7 @@ which region should be loaded and where it shoud be placed in the launcher.
 The region must define its own size using `css`, if that's a requirement for you. Otherwise the launcher will set an automatic size based on
 the available space.
 
-````json
+```json
 {
   "Regions": [
     {
@@ -76,7 +76,7 @@ the available space.
   ]
 }
 
-````
+```
 **Note**: This will work under the following conditions:
 1. You have created an [ASP.NET Partial View](https://learn.microsoft.com/en-us/aspnet/core/mvc/views/partial?view=aspnetcore-10.0#declare-partial-views).
 2. You used the `LauncherRegionAttribute` in your partial view.

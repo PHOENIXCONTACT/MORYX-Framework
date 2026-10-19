@@ -9,7 +9,7 @@ It is also possible to set the value of the property by calling `Update(object, 
 
 Example of binding resolution and property update:
 
-````cs
+```cs
 public class Root
 {
     public Branch Branch { get; set; }
@@ -40,7 +40,7 @@ name = resolver.Resolve(root); // Value of name = "Bob"
 
 // Setting the value
 resolver.Update(root, "Marie"); // Value of "root.Branch" = "Marie"
-````
+```
 
 ## IBindingResolver Chain
 
@@ -56,7 +56,7 @@ This base class implements the [IBindingResolverChain](/src/Moryx/Bindings/IBind
 
 A simple example for a custom resolver could resolve the type of an object.
 
-````cs
+```cs
 // Resolver that fetches the type of the current object
 public class TypeResolver : BindingResolverBase
 {
@@ -71,7 +71,7 @@ public class TypeResolver : BindingResolverBase
         throw new NotImplementedException();
     }
 }
-````
+```
 
 ### NullResolver
 
@@ -79,11 +79,11 @@ Following the [Null-Object pattern](https://en.wikipedia.org/wiki/Null_Object_pa
 
 Example in code:
 
-````cs
+```cs
 var resolver = new NullResolver();
 var result = resolver.Resolve(10); // Value of result = 10
 result = resolver.Resolve("Name"); // Value of result = "Name"
-````
+```
 
 ### ReflectionResolver
 
@@ -91,14 +91,14 @@ By using reflection [this resolver](/src/Moryx/Bindings/ReflectionResolver.cs) t
 
 Example in code:
 
-````cs
+```cs
 var resolver = new ReflectionResolver("Length");
 var result = resolver.Resolve("Name"); // Value of result = 4
-````
+```
 
 Example for updating a value:
 
-````cs
+```cs
 class Foo
 {
     public string Name {get; set;}
@@ -107,7 +107,7 @@ class Foo
 var foo = new Foo();
 IBindingResolver resolver = new ReflectionResolver("Name");
 resolver.Update(foo, "Bob");
-````
+```
 
 ### DelegateResolver
 
@@ -115,19 +115,19 @@ The [delegate resolver](/src/Moryx/Bindings/DelegateResolver.cs) can be used to 
 
 Using the DelegateResolver to provide the `GetType()` behavior:
 
-````cs
+```cs
 var resolver = new DelegateResolver(src => src.GetType());
 var result = resolver.Resolve(10); // Value of result = "System.Int32"
 result = resolver.Resolve("Name"); // Value of result = "System.String"
-````
+```
 
 The DelegateResolver also supports the `Update`-method. To use this feature the second constructor needs to be used. Using the class `Foo` from our previous example:
 
-````cs
+```cs
 var foo = new Foo();
 var resolver = new DelegateResolver(src => ((Foo)src)?.Name, (src, value) => ((Foo)src).Name = (string)value);
 resolver.Update(foo, "Bob");
-````
+```
 
 ### FormatBindingResolver
 
@@ -135,10 +135,10 @@ The [format resolver](/src/Moryx/Bindings/FormatBindingResolver.cs) can create f
 
 An easy example using the resolver to format a string with fixed length:
 
-````cs
+```cs
 var resolver = new FormatBindingResolver("D3");
 var result = resolver.Resolve(3); // Value of result = "003"
-````
+```
 
 ### IndexResolver
 
@@ -146,7 +146,7 @@ The [index resolver](/src/Moryx/Bindings/IndexResolver.cs) can extract values fr
 
 Using it stand-alone looks like this:
 
-````cs
+```cs
 var resolver = new IndexResolver("1");
 var list = new List<int>{ 10, 42, 100 };
 var result = resolver.Resolve(list); // Value of result = 42
@@ -159,13 +159,13 @@ var dict = new Dictionary
 };
 result = resolver.Resolve(dict); // Value of result = "Value"
 resolver.Update(dict, "OtherValue");
-````
+```
 
 ## IBindingResolverFactory
 
 The resolver factory builds a recursive chain of `IBindingResolver` from a string like `"Root.Branch.Name"`. The default and base implementation is [BindingResolverFactory](/src/Moryx/Bindings/BindingResolverFactory.cs). It is similar to the binding-engine in XAML with the addition that it supports collection resolution. Custom resolver factories are built by creating a type derived from `BindingResolverFactory`. Below is an example for a factory that supports loading the objects type. The example explains the two concepts base key and custom resolution rules.
 
-````cs
+```cs
 public class TypeResolverFactory : BindingResolverFactory
 {
     protected override IBindingResolverChain CreateBaseResolver(string baseKey)
@@ -189,7 +189,7 @@ public class TypeResolverFactory : BindingResolverFactory
         return base.AddToChain(resolver, property);
     }
 }
-````
+```
 
 ### Base Key
 
@@ -199,7 +199,7 @@ Base keys can be used for readability like the example for `"Root"` above or wor
 
 Let us assume the following object tree:
 
-````sh
+```sh
 - Root
 -- Branch
 --- Name
@@ -214,11 +214,11 @@ Let us assume the following object tree:
 ---- Value
 ---- EntryC
 ----- LongString
-````
+```
 
 If users would usually need values of one of the three entry points, they would have to build rather long binding strings like `"EntryB.Bla.EntryC.LongString"`. In such cases it makes sense to define base keys that work as short cuts and as a side effect also improve performance. For complex object structures this reduces the required knowledge of users about your design. As far as they are concerned these are four independent types.
 
-````cs
+```cs
 protected override IBindingResolverChain CreateBaseResolver(string baseKey)
 {
     switch (baseKey)
@@ -235,7 +235,7 @@ protected override IBindingResolverChain CreateBaseResolver(string baseKey)
             return base.CreateBaseResolver(baseKey);
     }
 }
-````
+```
 
 ### Add To Chain
 
@@ -259,7 +259,7 @@ The text resolution also supports formatting by appending `":<format>"` to the b
 
 Using the previous examples using the text resolvers looks like this.
 
-````cs
+```cs
 var text = "For {Root.Branch.Name} the type of 'EntryA' is {EntryA.Type.FullName}".
 var resolver = TextBindingResolverFactory.Create(text, new TypeResolverFactory());
 
@@ -283,4 +283,4 @@ text = "The value '{Root.Branch.Name}' has {Root.Branch.Name.Length:D2} letters!
 resolver = TextBindingResolverFactory.Create(text, new BindingResolverFactory());
 
 resolved = resolver.Resolve(root);     // Value of 'resolved': "The value 'Foo' has 03 letters!"
-````
+```

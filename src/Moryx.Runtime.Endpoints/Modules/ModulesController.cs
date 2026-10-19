@@ -95,7 +95,7 @@ public class ModulesController : ControllerBase
         if (module == null)
             return NotFound($"Module with name \"{moduleName}\" could not be found");
 
-        _moduleManager.StartModuleAsync(module);
+        Task.Run(() => _moduleManager.StartModuleAsync(module));
         return Ok();
     }
 
@@ -107,7 +107,7 @@ public class ModulesController : ControllerBase
         if (module == null)
             return NotFound($"Module with name \"{moduleName}\" could not be found");
 
-        _moduleManager.StopModuleAsync(module);
+        Task.Run(() => _moduleManager.StopModuleAsync(module));
         return Ok();
     }
 

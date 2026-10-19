@@ -1,12 +1,17 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Moryx.AbstractionLayer.Products.Endpoints;
+using Moryx.AbstractionLayer.Workplans;
 using Moryx.AspNetCore;
 using Moryx.Serialization;
+using Moryx.Workplans.Validation;
 using Moryx.Workplans.Web.Models;
 using Moryx.Workplans.Web.Properties;
 
@@ -26,6 +31,7 @@ public class WorkplanEditingController : ControllerBase
     }
 
     [HttpGet("steps")]
+    [ProducesResponseType(typeof(WorkplanStepRecipe[]), StatusCodes.Status200OK)]
     public async Task<ActionResult<WorkplanStepRecipe[]>> AvailableSteps()
     {
         var workplans = await _workplans.LoadAllWorkplansAsync();
@@ -53,14 +59,17 @@ public class WorkplanEditingController : ControllerBase
 
     [HttpPost("sessions")]
     [Authorize(Policy = WorkplanPermissions.CanEdit)]
+    [ProducesResponseType(typeof(WorkplanSessionModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<WorkplanSessionModel>> EditWorkplan([FromBody] OpenSessionRequest openSession)
     {
         var workplan = openSession.WorkplanId > 0
             ? await _workplans.LoadWorkplanAsync(openSession.WorkplanId)
             : CreateNew();
         if (workplan == null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = Strings.WorkplanEditingController_SessionNotFound });
-
+        }
         var session = _workplanEditing.EditWorkplan(workplan, openSession.Duplicate);
         return ModelConverter.ConvertSession(session);
     }
@@ -76,34 +85,50 @@ public class WorkplanEditingController : ControllerBase
 
     [HttpGet("sessions/{sessionId}")]
     [Authorize(Policy = WorkplanPermissions.CanView)]
+    [ProducesResponseType(typeof(WorkplanSessionModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
     public ActionResult<WorkplanSessionModel> OpenSession([FromRoute] string sessionId)
     {
         var session = _workplanEditing.OpenSession(sessionId);
         if (session == null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = Strings.WorkplanEditingController_SessionNotFound });
+        }
         return ModelConverter.ConvertSession(session);
     }
 
     [HttpGet("sessions/{sessionId}/autolayout")]
     [Authorize(Policy = WorkplanPermissions.CanView)]
+    [ProducesResponseType(typeof(WorkplanSessionModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
     public ActionResult<WorkplanSessionModel> AutoLayout([FromRoute] string sessionId)
     {
         var session = _workplanEditing.OpenSession(sessionId);
         if (session == null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = Strings.WorkplanEditingController_SessionNotFound });
-
+        }
         _workplanEditing.AutoLayout(sessionId);
         return ModelConverter.ConvertSession(session);
     }
 
     [HttpPut("sessions/{sessionId}")]
     [Authorize(Policy = WorkplanPermissions.CanEdit)]
+    [ProducesResponseType(typeof(WorkplanSessionModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
     public ActionResult<WorkplanSessionModel> UpdateSession(
         [FromRoute] string sessionId,
         [FromBody] WorkplanSessionModel sessionModel
     )
     {
         var session = _workplanEditing.OpenSession(sessionId);
+        if (session == null)
+        {
+            return NotFound(new MoryxExceptionResponse
+            {
+                Title = Strings.WorkplanEditingController_SessionNotFound
+            });
+        }
         UpdateSession(sessionModel, session);
         return ModelConverter.ConvertSession(session);
     }
@@ -118,28 +143,74 @@ public class WorkplanEditingController : ControllerBase
                                ?? session.Workplan.Steps.FirstOrDefault(s => s.Id == node.Id);
 
             if (workplanNode == null)
+            {
                 continue;
-
+            }
             workplanNode.Name = node.DisplayName ?? node.Name;
             workplanNode.Position = new Point(node.PositionLeft, node.PositionTop);
 
             if (node.Properties == null)
+            {
                 continue;
-
+            }
             EntryConvert.UpdateInstance(workplanNode, node.Properties);
         }
     }
 
     [HttpPost("sessions/{sessionId}/save")]
     [Authorize(Policy = WorkplanPermissions.CanEdit)]
+    [ProducesResponseType(typeof(WorkplanSessionModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<WorkplanSessionModel>> SaveSession(
         [FromRoute] string sessionId,
         [FromBody] WorkplanSessionModel sessionModel)
     {
         var session = _workplanEditing.OpenSession(sessionId);
+
+        if (session == null)
+        {
+            return NotFound(new MoryxExceptionResponse
+            {
+                Title = Strings.WorkplanEditingController_SessionNotFound
+            });
+        }
+
         UpdateSession(sessionModel, session);
         await _workplans.SaveWorkplanAsync(session.Workplan);
         return ModelConverter.ConvertSession(session);
+    }
+
+    [HttpGet("sessions/{sessionId}/validate")]
+    [Authorize(Policy = WorkplanPermissions.CanEdit)]
+    [ProducesResponseType(typeof(ValidationResultModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<ValidationResultModel>> ValidateSession([FromRoute] string sessionId)
+    {
+        var session = _workplanEditing.OpenSession(sessionId);
+
+        if (session == null)
+        {
+            return NotFound(new MoryxExceptionResponse
+            {
+                Title = Strings.WorkplanEditingController_SessionNotFound
+            });
+        }
+
+        try
+        {
+            session.Workplan.Validate();
+        }
+        catch (ValidationException e)
+        {
+            var response = new ValidationResultModel
+            {
+                Errors = [new ValidationErrorModel { Error = e.ValidationResult.ErrorMessage }],
+                Success = false
+            };
+            return Ok(response);
+        }
+        return Ok(ModelConverter.ToValidationModel(new Validation.ValidationResult { Success = true }, session.Workplan));
     }
 
     [HttpDelete("sessions/{sessionId}")]
@@ -152,6 +223,8 @@ public class WorkplanEditingController : ControllerBase
 
     [HttpPost("sessions/{sessionId}/nodes")]
     [Authorize(Policy = WorkplanPermissions.CanEdit)]
+    [ProducesResponseType(typeof(WorkplanNodeModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<WorkplanNodeModel>> AddStep(
         [FromRoute] string sessionId,
         [FromBody] WorkplanStepRecipe recipe
@@ -166,10 +239,13 @@ public class WorkplanEditingController : ControllerBase
             step = (IWorkplanStep)Activator.CreateInstance(stepType, workplan);
         }
         else if (recipe.Constructor == null)
+        {
             step = (IWorkplanStep)Activator.CreateInstance(stepType);
+        }
         else
+        {
             step = (IWorkplanStep)EntryConvert.CreateInstance(stepType, recipe.Constructor);
-
+        }
         step.Position = new Point(recipe.PositionLeft, recipe.PositionTop);
 
         try
@@ -186,37 +262,59 @@ public class WorkplanEditingController : ControllerBase
 
     [HttpPut("sessions/{sessionId}/nodes/{nodeId}")]
     [Authorize(Policy = WorkplanPermissions.CanEdit)]
+    [ProducesResponseType(typeof(WorkplanNodeModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
     public ActionResult<WorkplanNodeModel> UpdateStep(
         [FromRoute] string sessionId,
         [FromRoute] long nodeId,
         [FromBody] WorkplanNodeModel stepModel)
     {
         var session = _workplanEditing.OpenSession(sessionId);
+        if (session == null)
+        {
+            return NotFound(new MoryxExceptionResponse
+            {
+                Title = Strings.WorkplanEditingController_SessionNotFound
+            });
+        }
         var step = session.Workplan.Steps.FirstOrDefault(s => s.Id == nodeId);
         if (step == null)
+        {
             return stepModel;
-
+        }
         if (stepModel.Properties != null)
+        {
             EntryConvert.UpdateInstance(step, stepModel.Properties);
-
+        }
         step.Name = stepModel.DisplayName;
         return ModelConverter.ConvertWorkplanStep(step, session.Workplan.Steps.ToList());
     }
 
     [HttpDelete("sessions/{sessionId}/nodes/{nodeId}")]
     [Authorize(Policy = WorkplanPermissions.CanEdit)]
+    [ProducesResponseType(typeof(WorkplanSessionModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
     public ActionResult<WorkplanSessionModel> RemoveNode(
         [FromRoute] string sessionId,
         [FromRoute] long nodeId
     )
     {
         var session = _workplanEditing.OpenSession(sessionId);
+        if (session == null)
+        {
+            return NotFound(new MoryxExceptionResponse
+            {
+                Title = Strings.WorkplanEditingController_SessionNotFound
+            });
+        }
         _workplanEditing.RemoveStep(sessionId, nodeId);
         return ModelConverter.ConvertSession(session);
     }
 
     [HttpPost("sessions/{sessionId}/nodes/{targetNodeId}/{targetIndex}")]
     [Authorize(Policy = WorkplanPermissions.CanEdit)]
+    [ProducesResponseType(typeof(WorkplanSessionModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
     public ActionResult<WorkplanSessionModel> ConnectStep(
         [FromRoute] string sessionId,
         [FromRoute] long targetNodeId,
@@ -224,6 +322,13 @@ public class WorkplanEditingController : ControllerBase
         [FromBody] NodeConnector source)
     {
         var session = _workplanEditing.OpenSession(sessionId);
+        if (session == null)
+        {
+            return NotFound(new MoryxExceptionResponse
+            {
+                Title = Strings.WorkplanEditingController_SessionNotFound
+            });
+        }
         var sourceNode = (IWorkplanNode)session.Workplan.Connectors.FirstOrDefault(c => c.Id == source.NodeId)
                          ?? session.Workplan.Steps.FirstOrDefault(s => s.Id == source.NodeId);
         var targetNode = (IWorkplanNode)session.Workplan.Connectors.FirstOrDefault(c => c.Id == targetNodeId)
@@ -234,6 +339,8 @@ public class WorkplanEditingController : ControllerBase
 
     [HttpDelete("sessions/{sessionId}/nodes/{targetNodeId}/{targetIndex}")]
     [Authorize(Policy = WorkplanPermissions.CanEdit)]
+    [ProducesResponseType(typeof(WorkplanSessionModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
     public ActionResult<WorkplanSessionModel> DisconnectStep(
         [FromRoute] string sessionId,
         [FromRoute] long targetNodeId,
@@ -241,6 +348,13 @@ public class WorkplanEditingController : ControllerBase
         [FromBody] NodeConnector source)
     {
         var session = _workplanEditing.OpenSession(sessionId);
+        if (session == null)
+        {
+            return NotFound(new MoryxExceptionResponse
+            {
+                Title = Strings.WorkplanEditingController_SessionNotFound
+            });
+        }
         var sourceNode = (IWorkplanNode)session.Workplan.Connectors.FirstOrDefault(c => c.Id == source.NodeId)
                          ?? session.Workplan.Steps.FirstOrDefault(s => s.Id == source.NodeId);
         var targetNode = (IWorkplanNode)session.Workplan.Connectors.FirstOrDefault(c => c.Id == targetNodeId)

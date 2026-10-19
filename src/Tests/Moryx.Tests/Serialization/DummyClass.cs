@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Moryx.Tests.Serialization;
 
@@ -62,4 +63,27 @@ public enum DummyEnum
 public class NullablePropertiesClass
 {
     public int? Value { get; set; } = 0;
+}
+
+public enum DisplayNameEnum
+{
+    [Display(Name = DisplayNameEnumStrings.UnsetDisplayName, Description = DisplayNameEnumStrings.UnsetDescription)]
+    Unset,
+
+    [Display(Name = DisplayNameEnumStrings.ValueADisplayName)]
+    ValueA,
+
+    ValueB
+}
+
+public static class DisplayNameEnumStrings
+{
+    public const string UnsetDisplayName = "No Value";
+    public const string UnsetDescription = "Nothing selected";
+    public const string ValueADisplayName = "First Value";
+}
+
+public class DisplayNameEnumClass
+{
+    public DisplayNameEnum EnumProperty { get; set; }
 }

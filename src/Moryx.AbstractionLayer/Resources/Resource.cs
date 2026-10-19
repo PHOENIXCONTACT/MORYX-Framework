@@ -68,6 +68,14 @@ public abstract class Resource : ILoggingComponent, IResource, IAsyncInitializab
     {
         var loggerName = Name?.Replace(".", "_"); // replace . with _ because of logger child structure
         Logger = Logger?.GetChild(loggerName, GetType());
+
+        (Logger as ModuleLogger)?.SetScope(new Dictionary<string, object>
+        {
+            ["Id"] = Id,
+            ["Name"] = Name,
+            ["Type"] = GetType().Name
+        });
+
         return OnInitializeAsync(cancellationToken);
     }
 

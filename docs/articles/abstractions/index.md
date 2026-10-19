@@ -33,7 +33,7 @@ The constraint is also not based on an inherent property of the activity or reso
 
 ## Identity
 
-[Identities](/src/Moryx.AbstractionLayer/Identity/IIdentity.cs) are used to represent unique properties like serial numbers and MAC addresses for instances and material number for products. There is also the derived type [ProductIdentity](/src/Moryx.AbstractionLayer/Products/ProductIdentity.cs) that represents a products material number and revision. The static constructor `AsLatestRevision` also lets you refer to the latest revision for a certain material.
+[Identities](identity.md) are used to represent unique properties like serial numbers and MAC addresses for physical objects and production instances. [IIdentifiableObject](identity.md) is the base interface for any domain object that carries an identity.
 
 ## Process
 
@@ -56,6 +56,14 @@ A [ProductionRecipe](/src/Moryx.AbstractionLayer/Recipes/ProductionRecipe.cs) is
 ## Resources
 
 The Resources package of the AbstractionLayer contains several basic classes to be used by the [Resources](/src/Moryx.AbstractionLayer/Resources/IResource.cs) and the [Resource Management](/docs/articles/module-resources/resource-management.md).
+
+## Resource Extensions
+
+The [Moryx.AbstractionLayer.ResourceExtensions](/src/Moryx.AbstractionLayer.ResourceExtensions/) package provides additional utilities building upon `Moryx.AbstractionLayer.Resources`.
+Namely,
+
+* [DriverStateNotifier](/src/Moryx.AbstractionLayer.ResourceExtensions/DriverStateNotifier.cs)
+* [DriverStateLogger](/src/Moryx.AbstractionLayer.ResourceExtensions/DriverStateLogger.cs)
 
 ## Tasks
 

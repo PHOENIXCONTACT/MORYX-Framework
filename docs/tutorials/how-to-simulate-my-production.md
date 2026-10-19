@@ -74,11 +74,11 @@ public class SimulationResult
     /// </summary>
     public IActivity Activity { get; set; }
 }
-````
+```
 
 So here is an example of how your mock driver can implement `Moryx.Simulation.ISimulationDriver`:
 
-````cs
+```cs
 [ResourceRegistration]
 public class TestMockDriver : Driver, IMessageDriver, ISimulationDriver
 {
@@ -156,7 +156,7 @@ public class TestMockDriver : Driver, IMessageDriver, ISimulationDriver
 
     //... rest of your codes//
 }
-````
+```
 
 Note: The `Send()` method might differ from cell to cell. You can override the `Send()` method and do your implementation of what needs to happen when your "mock" driver receives something from the cell. In case your driver doesn't have a `Send()` method, you can use your own method and react upon the type of message you received just like described inside the `TestMockDriver.Send()` method above.
 
@@ -164,7 +164,7 @@ Note: The `Send()` method might differ from cell to cell. You can override the `
 
 In your cell definition/Class you can use the following example based on the type of driver you're trying to simulate. Let's say we are trying to "mock" an `MQTT driver`. Since Moryx MQTT driver inherits from `IMessageDriver` in your cell you can have the following case:
 
-````csharp
+```cs
 // SolderingCell.cs
 
 [ResourceRegistration]
@@ -177,11 +177,11 @@ public class SolderingCell : Cell
 
     //... rest of your codes//
 }
-````
+```
 
 Since the our "mock" driver has the following property defined:
 
-````csharp
+```cs
 //... rest of the codes//
 
     /// <summary>
@@ -191,12 +191,12 @@ Since the our "mock" driver has the following property defined:
     public AssemblyCell Cell { get; set; }
 
 //... rest of the codes//
-````
+```
 
 Moryx will take care of the relationship once you assign the driver to the cell.
 To start the communication you can define message types in your resources folder. For starter we can define some message types. You can also use already existing messages
 
-````csharp
+```cs
 //AssembleProductMessage.cs
 
 /// <summary>
@@ -224,10 +224,10 @@ public class WorkpieceArrivedMessage
 {
     public long ProcessId { get; set; }
 }
-````
+```
 In the cell when you need to send a data to the driver you can do as described bellow:
  
-````csharp
+```cs
 //AssemblyCell.cs
 //... rest of the codes//
 
@@ -237,12 +237,12 @@ In the cell when you need to send a data to the driver you can do as described b
     }
 
 //... rest of the codes//
-````
+```
 As you can see inside the `StartActivity` method we want the cell to send data to the driver.
 
 Now in our driver `TestMockDriver` class above. Inside the `public void Send(object payload)` method we are filtering the payload based on the message type that we have just defined. We can act upon the received message type. For instance:
 
-````csharp
+```cs
 //... rest of the codes//
 
    public void Send(object payload)
@@ -259,4 +259,4 @@ Now in our driver `TestMockDriver` class above. Inside the `public void Send(obj
     }
 
 //... rest of the codes//
-````
+```

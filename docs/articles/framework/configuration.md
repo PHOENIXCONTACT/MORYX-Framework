@@ -12,7 +12,7 @@ Configuration of components is one of the core features of the platform. Configu
 Configurations in the platform are written as classes to make in-code usage as easy as possible and avoid unnecessary file and string parsing. Configuration values are written as properties, classes or collections of class instances. With respect to a couple of rules and conventions almost any structure a developer might need is possible. Some of theses conventions are necessary to save to configuration to a file, others are boundaries set by the generic configuration editor which will explained later. These rules can be ignored but don't blame me, if this results in non permanent configurations or poor editor support!
 Quick example of a configuration:
 
-````cs
+```cs
 [DataContract]
 public class ModuleConfig : ConfigBase
 {
@@ -33,7 +33,7 @@ public class SubConfig
     [DataMember]
     public string SomeString { get; set; }
 }
-````
+```
 
 The basic structure of the configuration object including the [ConfigBase](/src/Moryx/Configuration/ConfigBase.cs) implementation. The dummy properties and subclass can be renamed or deleted once you understand the structure of a configuration.
 
@@ -79,7 +79,7 @@ In ASP.NET Core, the default configuration mechanism is `IConfiguration`, which 
 
 Integration of `IConfiguration` into MORYX is optional and must be explicitly enabled when registering the MORYX kernel:
 
-```csharp
+```cs
 // Program.cs
 
 services.AddMoryxKernel(configurationIntegration: true);

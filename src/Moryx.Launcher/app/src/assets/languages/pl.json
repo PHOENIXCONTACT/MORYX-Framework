@@ -1,0 +1,65 @@
+{
+  "MORE": {
+    "VIEWS": "Widoki",
+    "ABOUT": "O programie",
+    "FULLSCREEN_MODE": "Pełny ekran",
+    "OPERATOR_MODE": "Tryb operatora",
+    "FULL_MODE": "Tryb pełny",
+    "TOP_REGION": "Górny panel",
+    "RIGHT_REGION": "Prawy panel",
+    "SPOTLIGHT": "Wyszukiwanie",
+    "THEME": "Motyw",
+    "THEME_LIGHT": "Jasny",
+    "THEME_DARK": "Ciemny",
+    "THEME_SYSTEM": "System"
+  },
+  "LANGUAGE": {
+    "LANGUAGE": "Język"
+  },
+  "SEARCH": {
+    "PLACEHOLDER": "Szukaj...",
+    "NO_PROVIDER": "Brak dostępnego dostawcy wyszukiwania",
+    "CLEAR": "Wyczyść",
+    "NO_RESULTS": "Brak wyników dla \"{{query}}\"",
+    "DIALOG_LABEL": "Wyszukiwanie"
+  },
+  "FULLSCREEN_LAYOUT": {
+    "EXIT_FULLSCREEN": "Opuść tryb pełnoekranowy",
+    "MODULES": "Moduły",
+    "MORE": "Więcej"
+  },
+  "NAVIGATION": {
+    "ALL": "Wszystkie",
+    "MORE": "Więcej",
+    "NO_ITEMS": "Brak elementów."
+  },
+  "AUTH": {
+    "LOG_IN": "Zaloguj się"
+  },
+  "ABOUT": {
+    "TITLE": "O programie",
+    "APPLICATION": "Aplikacja",
+    "HOST": "Host",
+    "SERVER_TIME": "Czas serwera",
+    "CLOSE": "Zamknij",
+    "LABEL_TITLE": "Tytuł",
+    "LABEL_PRODUCT": "Produkt",
+    "LABEL_DESCRIPTION": "Opis",
+    "LABEL_VERSION": "Wersja",
+    "LABEL_INFORMATIONAL_VERSION": "Wersja informacyjna",
+    "LABEL_COMPANY": "Firma",
+    "LABEL_CONFIGURATION": "Konfiguracja",
+    "LABEL_COPYRIGHT": "Prawa autorskie",
+    "LABEL_TARGET_FRAMEWORK": "Platforma docelowa",
+    "LABEL_MACHINE_NAME": "Nazwa komputera",
+    "LABEL_OS": "System operacyjny",
+    "LABEL_UPTIME": "Czas działania",
+    "SHORTCUTS": "Skróty"
+  },
+  "SHORTCUTS": {
+    "SPOTLIGHT": "Wyszukiwanie",
+    "FULL_MODE": "Tryb pełny",
+    "OPERATOR_MODE": "Tryb operatora",
+    "FULLSCREEN_MODE": "Tryb pełnoekranowy"
+  }
+}

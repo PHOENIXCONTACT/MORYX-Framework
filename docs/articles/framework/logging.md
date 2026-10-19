@@ -9,7 +9,7 @@ Logging is an essential part of every application and framework. Logging within 
 
 Level 2 components that are created by a DI-Container receive a logger instance by declaring a public property of type [IModuleLogger](/src/Moryx/Logging/IModuleLogger.cs), which is basically `ILogger`. This property must be decorated with the [UseChildAttribute](/src/Moryx/Container/UseChildAttribute.cs) to tell the container it shall create a class specific clone of the logger. Optionally a name can be given to create a sub-logger in the hierarchy. A name might be used more than once to group collaborating components in the same logger. It is recommended to implement the interface [ILoggingComponent](/src/Moryx/Logging/ILoggingComponent.cs). This gives framework components a chance to use your logger in case of exceptions.
 
-````cs
+```cs
 public class DummyComponent : ILoggingComponent
 {
     [UseChild(nameof(DummyComponent))]
@@ -29,4 +29,4 @@ public class DummyComponent : ILoggingComponent
         }
     }
 }
-````
+```

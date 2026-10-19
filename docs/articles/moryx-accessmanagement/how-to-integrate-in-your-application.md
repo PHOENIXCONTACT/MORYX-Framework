@@ -2,7 +2,7 @@
 To include the MORYX Access Management in your application add the `Moryx.Identity` package to your application project.
 The configuration of the authentication in the `Program.cs` file follows the standard ASP approach, find details to the authentication middleware [here](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/?view=aspnetcore-10.0).
 We start by binding the config to the `MoryxIdentityOption`.
-```csharp
+```cs
 ...
 // ...
 var config = new ConfigurationBuilder().AddJsonFile("appsettings.Development.json", optional: false).Build();
@@ -51,7 +51,7 @@ That's it. You can now start the IAM Server and your application.
 
 To use your application without a running IAM, e.g. in a development environment, you need to create a `AuthorizationPolicyProvider`, which returns new policies for each request and enable the `AnonymousAttribute` in the `Configure` function. 
 This `ExamplePolicyProvider` provides you with the ability to use any policy protected endpoint in your application
-```csharp
+```cs
 internal class ExamplePolicyProvider(IOptions<AuthorizationOptions> options) : DefaultAuthorizationPolicyProvider(options)
 {
     public override async Task<AuthorizationPolicy> GetPolicyAsync(string policyName) => await base.GetPolicyAsync(policyName) ??
@@ -59,7 +59,7 @@ internal class ExamplePolicyProvider(IOptions<AuthorizationOptions> options) : D
 }
 ```
 Adding this policy provider to the services and enabling the usage of the endpoint anonymously is done in the following way
-```csharp
+```cs
 // ...
 services.AddSingleton<IAuthorizationPolicyProvider, ExamplePolicyProvider>(); // instead of
 // services.AddSingleton<IAuthorizationPolicyProvider, MoryxAuthorizationPolicyProvider>();

@@ -34,6 +34,18 @@ public interface ICustomSerialization
     EntryPossible[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider);
 
     /// <summary>
+    /// Possible values of a property
+    /// </summary>
+    /// <param name="memberType">current property</param>
+    /// <param name="attributeProvider">attribute provider</param>
+    /// <param name="instance">current instance of the class</param>
+    /// <returns>Possible values or null</returns>
+    EntryPossible[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider, object instance = null)
+    {
+        return PossibleValues(memberType, attributeProvider);
+    }
+
+    /// <summary>
     /// Possible values for the elements of a collection property
     /// </summary>
     /// <param name="memberType">Either <see cref="PropertyInfo.PropertyType"/> or <see cref="ParameterInfo.ParameterType"/></param>

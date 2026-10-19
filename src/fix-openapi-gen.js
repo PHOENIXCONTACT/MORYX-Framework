@@ -72,7 +72,9 @@ for (const moduleName of Object.keys(entryTypes)) {
 console.log('\nUpdating imports in generated files:');
 
 function processDirectory(dir) {
-  if (!fs.existsSync(dir)) return;
+  if (!fs.existsSync(dir)) {
+    return;
+  }
 
   const files = fs.readdirSync(dir);
   for (const file of files) {
@@ -83,6 +85,10 @@ function processDirectory(dir) {
       processDirectory(filePath);
     } else if (file.endsWith('.ts')) {
       let content = fs.readFileSync(filePath, 'utf8');
+      const useCrlf = content.includes('\r\n');
+      if (useCrlf) {
+        content = content.replace(/\r\n/g, '\n');
+      }
       let modified = false;
       const typesToImport = new Set();
 
@@ -118,6 +124,9 @@ function processDirectory(dir) {
       }
 
       if (modified) {
+        if (useCrlf) {
+          content = content.replace(/\n/g, '\r\n');
+        }
         fs.writeFileSync(filePath, content);
         console.log(`  Updated: ${path.relative(apiDir, filePath)}`);
       }
@@ -131,6 +140,10 @@ processDirectory(apiDir);
 const modelsBarrel = path.join(apiDir, 'models.ts');
 if (fs.existsSync(modelsBarrel)) {
   let content = fs.readFileSync(modelsBarrel, 'utf8');
+  const useCrlf = content.includes('\r\n');
+  if (useCrlf) {
+    content = content.replace(/\r\n/g, '\n');
+  }
   let modified = false;
 
   for (const moduleName of Object.keys(entryTypes)) {
@@ -143,6 +156,9 @@ if (fs.existsSync(modelsBarrel)) {
   }
 
   if (modified) {
+    if (useCrlf) {
+      content = content.replace(/\n/g, '\r\n');
+    }
     fs.writeFileSync(modelsBarrel, content);
     console.log(`  Updated: models.ts`);
   }

@@ -53,7 +53,7 @@ The recursive `SubEntries` structure represents properties of a `EntryValueType.
 
 Example class:
 
-````cs
+```cs
 public class Root
 {
     [DisplayName("Bob")]
@@ -66,11 +66,11 @@ public class Foo
     [DefaultValue("Hello")]
     public string ValueB { get; set; }
 }
-````
+```
 
 The root object as a entry tree:
 
-````sh
+```sh
 Entry
 - Key { Identifier = "Blah", Name = "Bob" }
 - Value { Current = "Foo" }
@@ -81,7 +81,7 @@ Entry
 -- Entry-B
 --- Key { Identifier = "ValueB", Name = "ValueB" }
 --- Value { Current = "SomeString", Default = "Hello" }
-````
+```
 
 ## Prototypes
 
@@ -89,7 +89,7 @@ As the name suggests prototypes can be used to create instances by cloning the s
 
 Example with sub-classes:
 
-````cs
+```cs
 // Reference to the collection entry
 Entry collection = GetCollection(..);
 // Fetch and instantiate prototype, possible by displaying possible values as drop-down box
@@ -97,4 +97,4 @@ var prototype = collection.GetPrototype("SubClass");
 var instance = prototype.Instantiate();
 // Add to collection
 collection.SubEntries.Add(instance);
-````
+```

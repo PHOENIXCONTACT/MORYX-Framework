@@ -91,6 +91,11 @@ public sealed class UnitOfWork<TContext> : IUnitOfWork<TContext> where TContext 
             // Debug entity framework exceptions
             throw;
         }
+
+        foreach (var link in _entityBusinessObjectLinks)
+        {
+            link.Key.Id = link.Value.Id;
+        }
     }
 
     /// <inheritdoc />
