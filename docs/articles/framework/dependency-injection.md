@@ -21,7 +21,7 @@ The container of a module is created and destroyed by [`ServerModuleBase`](/src/
 
 1. **Parse the configuration**: The module configuration is loaded and searched for properties with the `ModuleStrategyAttribute`, see [Module strategies](#module-strategies).
 2. **Create the container**: The [`ModuleContainerFactory`](/src/Moryx.Runtime.Kernel/Container/ModuleContainerFactory.cs) creates a new `CastleContainer` and registers **all** types of the module assembly that carry a `ComponentAttribute` (or a derived attribute like `PluginAttribute`) or a `PluginFactoryAttribute`.  
-*Note: This includes `internal` types, so keep your module interior internal.*
+*Note: This includes `internal` types, which allows you to keep your module interior `internal`.*
 3. **Register the module instances**: The module configuration, the `ILoggerFactory` and the module logger are registered as instances.
 4. **`OnInitializeAsync`**: The module registers everything that is not part of its own assembly, e.g. plugins from other assemblies or facades of other modules.
 5. **Execute the sub initializers**: All `ISubInitializer` registered in the container are resolved and executed, see [Register dependencies of a component](#register-dependencies-of-a-component).
