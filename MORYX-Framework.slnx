@@ -2,7 +2,7 @@
   <Folder Name="/Benchmark/">
     <Project Path="src/Moryx.Benchmarking/Moryx.Benchmarking.csproj" />
     <Project Path="src/Moryx.Resources.Benchmarking/Moryx.Resources.Benchmarking.csproj" />
-    <Project Path="src/Moryx.Resources.BenchmarkSetup/Moryx.Benchmarking.Setups.csproj" />
+    <Project Path="src/Moryx.Benchmarking.Setups/Moryx.Benchmarking.Setups.csproj" />
   </Folder>
   <Folder Name="/ControlSystem/">
     <Project Path="src/Moryx.ControlSystem.Jobs.Endpoints/Moryx.ControlSystem.Jobs.Endpoints.csproj" />
@@ -141,7 +141,7 @@
     <Project Path="src/Tests/Moryx.ProcessData.InfluxDbListener.Tests/Moryx.ProcessData.InfluxDbListener.Tests.csproj" />
     <Project Path="src/Tests/Moryx.ProcessData.SpreadsheetsListener.Tests/Moryx.ProcessData.SpreadsheetsListener.Tests.csproj" />
     <Project Path="src/Tests/Moryx.ProcessData.Tests/Moryx.ProcessData.Tests.csproj" />
-    <Project Path="src/Tests/Moryx.Products.Management.Tests/Moryx.AbstractionLayer.Products.Endpoints.Tests.csproj" />
+    <Project Path="src/Tests/Moryx.AbstractionLayer.Products.Endpoints.Tests/Moryx.AbstractionLayer.Products.Endpoints.Tests.csproj" />
     <Project Path="src/Tests/Moryx.Resources.Management.Tests/Moryx.Resources.Management.Tests.csproj" />
     <Project Path="src/Tests/Moryx.Resources.VisualInstructions.Tests/Moryx.Resources.VisualInstructions.Tests.csproj" />
     <Project Path="src/Tests/Moryx.Runtime.Endpoints.Tests/Moryx.Runtime.Endpoints.Tests.csproj" />
@@ -156,7 +156,7 @@
   </Folder>
   <Folder Name="/TestTools/">
     <Project Path="src/Moryx.AbstractionLayer.TestTools/Moryx.AbstractionLayer.TestTools.csproj" />
-    <Project Path="src/Moryx.ControlSystem.Assemble/Moryx.ControlSystem.TestTools.Assemble.csproj" />
+    <Project Path="src/Moryx.ControlSystem.TestTools.Assemble/Moryx.ControlSystem.TestTools.Assemble.csproj" />
     <Project Path="src/Moryx.ControlSystem.TestTools/Moryx.ControlSystem.TestTools.csproj" />
     <Project Path="src/Moryx.DependentTestModule/Moryx.DependentTestModule.csproj" />
     <Project Path="src/Moryx.TestModule/Moryx.TestModule.csproj" />

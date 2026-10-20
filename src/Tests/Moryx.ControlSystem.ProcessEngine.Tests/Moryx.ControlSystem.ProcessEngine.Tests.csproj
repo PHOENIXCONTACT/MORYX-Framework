@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Moryx.Container\Moryx.Container.csproj" />
-    <ProjectReference Include="..\..\Moryx.ControlSystem.Assemble\Moryx.ControlSystem.TestTools.Assemble.csproj" />
+    <ProjectReference Include="..\..\Moryx.ControlSystem.TestTools.Assemble\Moryx.ControlSystem.TestTools.Assemble.csproj" />
     <ProjectReference Include="..\..\Moryx.ControlSystem.ProcessEngine\Moryx.ControlSystem.ProcessEngine.csproj" />
     <ProjectReference Include="..\..\Moryx.ControlSystem.TestTools\Moryx.ControlSystem.TestTools.csproj" />
     <ProjectReference Include="..\..\Moryx.Model.InMemory\Moryx.Model.InMemory.csproj" />
