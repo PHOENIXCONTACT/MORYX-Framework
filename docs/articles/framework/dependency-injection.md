@@ -213,7 +213,7 @@ public interface IMyPluginFactory
 ```
 
 - An unknown name throws a `ComponentNotFoundException`.
-- A `null` name does **not** fail, it returns the first registered implementation.
+- A `null` or empty name throws an `ArgumentException`.
 
 ### Config based component selector
 

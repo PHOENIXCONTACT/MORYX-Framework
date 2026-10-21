@@ -199,7 +199,7 @@ public void Stop()
 Keep the following behavior of the factory in mind:
 
 - An unknown name throws a `ComponentNotFoundException`.
-- A `null` name does **not** fail, it returns the first registered strategy.
+- A `null` or empty name throws an `ArgumentException`.
 - If you declare the factory interface `internal`, the assembly needs `[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]`.
 
 ## An example using resources
@@ -275,7 +275,7 @@ If strategies and factory are defined in another assembly than the resource, reg
 | A type from another assembly is not found by `LoadComponents` | The class is `internal`, the project is not referenced by the application, or `AppDomainBuilder.LoadAssemblies()` is not called. |
 | An injected property is `null` | The type is missing a registration attribute, it is defined in another assembly and not loaded in `OnInitializeAsync`, or the configured name is empty  |
 | `ComponentNotFoundException` when creating the strategy | The name passed to the factory does not match a registered strategy. |
-| The factory creates the wrong strategy | The name is empty, so the first registered strategy is returned. |
+| The factory throws an `ArgumentException` | The name passed to the factory is `null` or empty. |
 | Two implementations with the same name, only one is used | Both use the same `Name`. Only the first registration is kept. |
 | `DependencyRegistration` has no effect | The type is part of the module assembly and therefore not registered with `LoadComponents`. |
 | `StrategyFactory` of a resource is `null` | The factory is not listed in `DependencyRegistration` or not registered by the `Initializer`, or the resource is missing the `ResourceRegistrationAttribute`. |
