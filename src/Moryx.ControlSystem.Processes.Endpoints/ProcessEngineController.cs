@@ -313,6 +313,7 @@ public class ProcessEngineController : ControllerBase // TODO: Rename to Process
 
     [HttpPost("holders/groups/{id:int}/reset")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public ActionResult ResetGroup(long id)
     {
         return HttpResponse(() =>
@@ -325,6 +326,7 @@ public class ProcessEngineController : ControllerBase // TODO: Rename to Process
 
     [HttpPost("holders/positions/{id:int}/reset")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public ActionResult ResetPosition(long id)
     {
         return HttpResponse(() =>
@@ -379,7 +381,7 @@ public class ProcessEngineController : ControllerBase // TODO: Rename to Process
         ResourceNotFoundException _ => NotFound(ex.Message),
         ArgumentNullException _ => BadRequest(ex.Message),
         ArgumentException _ => BadRequest(ex.Message),
-        KeyNotFoundException _ => StatusCode(StatusCodes.Status500InternalServerError, ex.Message),
+        KeyNotFoundException _ => NotFound(ex.Message),
         _ => StatusCode(StatusCodes.Status500InternalServerError, ex.Message),
     };
 }
