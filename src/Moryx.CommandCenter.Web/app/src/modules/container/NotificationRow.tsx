@@ -36,16 +36,10 @@ export class NotificationRow extends React.Component<NotificationRowPropModel, N
   }
 
   private static formatTimestamp(timestamp: Date): string {
-    const d2 = function (n: number, digits = 2): string {
-      return String(n).padStart(digits, "0");
-    };
-    return timestamp.getFullYear() + "-" +
-      d2(timestamp.getMonth() + 1) + "-" +
-      d2(timestamp.getDate()) + " " +
-      d2(timestamp.getHours()) + ":" +
-      d2(timestamp.getMinutes()) + ":" +
-      d2(timestamp.getSeconds()) + "." +
-      timestamp.getMilliseconds();
+    const pad = (n: number, digits = 2) => String(n).padStart(digits, "0");
+    const date = `${timestamp.getFullYear()}-${pad(timestamp.getMonth() + 1)}-${pad(timestamp.getDate())}`;
+    const time = `${pad(timestamp.getHours())}:${pad(timestamp.getMinutes())}:${pad(timestamp.getSeconds())}.${pad(timestamp.getMilliseconds(), 3)}`;
+    return `${date} ${time}`;
   }
 
   public render() {
