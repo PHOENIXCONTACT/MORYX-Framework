@@ -26,8 +26,7 @@ export class HorizontalModuleNav extends ModuleNavBase {
   private navEl = viewChild.required<ElementRef<HTMLElement>>('navEl');
 
   private visibleCount = signal(Number.MAX_SAFE_INTEGER);
-
-  protected visibleModules = computed(() => this.modules().slice(0, this.visibleCount()));
+  protected visibleModules = computed(() => this.userModules().slice(0, this.visibleCount()));
 
   private resizeObserver = new ResizeObserver(entries => {
     const navWidth = entries[0].contentRect.width;
