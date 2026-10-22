@@ -87,6 +87,24 @@ public class ValidationTests
         Assert.That(error, Is.Not.Null);
     }
 
+    [Test(Description = "Validate that a cycle on the success-only path is detected")]
+    public void ValidateLuckyStreakSuccessPathCycle()
+    {
+        // Arrange
+        var workplan = WorkplanDummy.CreateSuccessPathCycle();
+
+        // Act
+        var validation = WorkplanInstance.Validate(workplan, ValidationAspect.LuckyStreak);
+
+        // Assert
+        Assert.That(validation.Success, Is.False, "Validation did not detect error!");
+        Assert.That(validation.Errors, Is.All.InstanceOf<SuccessPathCycleValidationError>(), $"Errors should be of type {nameof(SuccessPathCycleValidationError)}");
+        Assert.That(validation.Errors.Length, Is.EqualTo(3), "All three cycle steps should be reported!");
+
+        var error = validation.Errors[0].Print(workplan);
+        Assert.That(error, Is.Not.Null);
+    }
+
     [Test(Description = "Validate that an infinite loop is detected in the workplan")]
     public void ValidateInfiniteLoop()
     {

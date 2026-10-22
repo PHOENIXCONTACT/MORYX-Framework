@@ -43,8 +43,8 @@ internal class LuckyStreakValidator : IWorkplanValidator
                         continue;
                     }
 
-                    // Check if this output index is a success output
-                    if (i < step.OutputDescriptions.Length && step.OutputDescriptions[i].OutputType != OutputType.Success)
+                    // Only follow outputs explicitly described as success
+                    if (i >= step.OutputDescriptions.Length || step.OutputDescriptions[i].OutputType != OutputType.Success)
                     {
                         continue;
                     }
@@ -83,7 +83,7 @@ internal class LuckyStreakValidator : IWorkplanValidator
                     continue;
                 }
 
-                if (i < step.OutputDescriptions.Length && step.OutputDescriptions[i].OutputType != OutputType.Success)
+                if (i >= step.OutputDescriptions.Length || step.OutputDescriptions[i].OutputType != OutputType.Success)
                 {
                     continue;
                 }
