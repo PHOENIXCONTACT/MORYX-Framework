@@ -1,6 +1,6 @@
 <p align="center">
-    <a href="https://github.com/PHOENIXCONTACT/MORYX-Framework/workflows">
-        <img src="https://github.com/PHOENIXCONTACT/MORYX-Framework/workflows/CI/badge.svg" alt="CI">
+    <a href="https://github.com/PHOENIXCONTACT/MORYX-Framework/actions/workflows/build-and-test.yml">
+        <img src="https://github.com/PHOENIXCONTACT/MORYX-Framework/actions/workflows/build-and-test.yml/badge.svg" alt="CI">
     </a>
     <a href="https://codecov.io/gh/PHOENIXCONTACT/MORYX-Framework">
         <img alt="Coverage" src="https://codecov.io/gh/PHOENIXCONTACT/MORYX-Framework/coverage.svg?branch=dev" />
