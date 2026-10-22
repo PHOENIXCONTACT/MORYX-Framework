@@ -40,7 +40,7 @@ export class NotificationRow extends React.Component<NotificationRowPropModel, N
       return String(n).padStart(digits, "0");
     };
     return timestamp.getFullYear() + "-" +
-      d2(timestamp.getMonth()) + "-" +
+      d2(timestamp.getMonth() + 1) + "-" +
       d2(timestamp.getDate()) + " " +
       d2(timestamp.getHours()) + ":" +
       d2(timestamp.getMinutes()) + ":" +
