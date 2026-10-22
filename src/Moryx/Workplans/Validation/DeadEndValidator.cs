@@ -11,14 +11,10 @@ namespace Moryx.Workplans.Validation;
 /// </summary>
 internal class DeadEndValidator : IWorkplanValidator
 {
-    /// <summary>
-    /// Aspect this validator covers
-    /// </summary>
+    /// <inheritdoc />
     public ValidationAspect TargetAspect => ValidationAspect.DeadEnd;
 
-    /// <summary>
-    /// Validate the given workplan
-    /// </summary>
+    /// <inheritdoc />
     public bool Validate(IWorkplan workplan, ICollection<ValidationError> errors)
     {
         foreach (var connector in workplan.Connectors)
@@ -43,16 +39,12 @@ internal class DeadEndValidator : IWorkplanValidator
 
 internal class DeadEndValidationError : ValidationError
 {
-    /// <summary>
-    /// Create error instance with position id
-    /// </summary>
+    /// <inheritdoc />
     public DeadEndValidationError(long positionId) : base(positionId)
     {
     }
 
-    /// <summary>
-    /// Print error in readable format
-    /// </summary>
+    /// <inheritdoc />
     public override string Print(IWorkplan workplan)
     {
         var connector = workplan.Connectors.First(c => c.Id == PositionId);

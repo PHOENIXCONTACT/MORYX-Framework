@@ -11,16 +11,14 @@ namespace Moryx.Workplans.Validation;
 /// </summary>
 internal class InfiniteLoopValidator : IWorkplanValidator
 {
-    /// <summary>
-    /// Aspect this validator covers
-    /// </summary>
+    /// <inheritdoc />
     public ValidationAspect TargetAspect => ValidationAspect.InfiniteLoop;
 
-    /// <summary>
-    /// Validate the given workplan
-    /// </summary>
+    /// <inheritdoc />
     public bool Validate(IWorkplan workplan, ICollection<ValidationError> errors)
     {
+        var valid = true;
+
         // Backward reachability: find all connectors from which an exit can be reached
         var canReachExit = workplan.Connectors
             .Where(c => c.Classification.HasFlag(NodeClassification.Exit))
@@ -71,25 +69,22 @@ internal class InfiniteLoopValidator : IWorkplanValidator
             if (hasOutputs && allStuck)
             {
                 errors.Add(new InfiniteLoopValidationError(step.Id));
+                valid = false;
             }
         }
 
-        return errors.Count == 0;
+        return valid;
     }
 }
 
 internal class InfiniteLoopValidationError : ValidationError
 {
-    /// <summary>
-    /// Create error instance with position id
-    /// </summary>
+    /// <inheritdoc />
     public InfiniteLoopValidationError(long positionId) : base(positionId)
     {
     }
 
-    /// <summary>
-    /// Print error in readable format
-    /// </summary>
+    /// <inheritdoc />
     public override string Print(IWorkplan workplan)
     {
         var targetStep = workplan.Steps.First(step => step.Id == PositionId);

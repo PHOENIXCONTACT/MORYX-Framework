@@ -11,14 +11,10 @@ namespace Moryx.Workplans.Validation;
 /// </summary>
 internal class LuckyStreakValidator : IWorkplanValidator
 {
-    /// <summary>
-    /// Aspect this validator covers
-    /// </summary>
+    /// <inheritdoc />
     public ValidationAspect TargetAspect => ValidationAspect.LuckyStreak;
 
-    /// <summary>
-    /// Validate the given workplan
-    /// </summary>
+    /// <inheritdoc />
     public bool Validate(IWorkplan workplan, ICollection<ValidationError> errors)
     {
         // Forward reachability from start connectors through success outputs only
@@ -67,10 +63,11 @@ internal class LuckyStreakValidator : IWorkplanValidator
 
         if (successExitReached)
         {
-            return errors.Count == 0;
+            return true;
         }
 
         // Report steps that block the success path: reachable steps with no success output leading forward
+        var foundBlockingStep = false;
         foreach (var step in workplan.Steps)
         {
             if (!step.Inputs.Any(reachable.Contains))
@@ -98,43 +95,54 @@ internal class LuckyStreakValidator : IWorkplanValidator
             if (!hasSuccessOutput)
             {
                 errors.Add(new LuckyStreakValidationError(step.Id));
+                foundBlockingStep = true;
             }
         }
 
-        // If no specific step was found, report the first start connector
-        if (errors.Count == 0)
+        if (foundBlockingStep)
         {
-            var start = workplan.Connectors.FirstOrDefault(c => c.Classification.HasFlag(NodeClassification.Entry));
-            if (start is not null)
+            return false;
+        }
+
+        // No step without success output found — the success path is stuck in a cycle
+        foreach (var step in workplan.Steps)
+        {
+            if (step.Inputs.Any(reachable.Contains))
             {
-                errors.Add(new LuckyStreakValidationError(start.Id));
+                errors.Add(new SuccessPathCycleValidationError(step.Id));
             }
         }
 
-        return errors.Count == 0;
+        return false;
     }
 }
 
 internal class LuckyStreakValidationError : ValidationError
 {
-    /// <summary>
-    /// Create error instance with position id
-    /// </summary>
+    /// <inheritdoc />
     public LuckyStreakValidationError(long positionId) : base(positionId)
     {
     }
 
-    /// <summary>
-    /// Print error in readable format
-    /// </summary>
+    /// <inheritdoc />
     public override string Print(IWorkplan workplan)
     {
-        var step = workplan.Steps.FirstOrDefault(s => s.Id == PositionId);
-        if (step is not null)
-        {
-            return string.Format(CultureInfo.CurrentCulture, Strings.LuckyStreakValidationError_NoSuccessOutput, step.Name, PositionId);
-        }
+        var step = workplan.Steps.First(s => s.Id == PositionId);
+        return string.Format(CultureInfo.CurrentCulture, Strings.LuckyStreakValidationError_NoSuccessOutput, step.Name, PositionId);
+    }
+}
 
-        return Strings.LuckyStreakValidationError_NoSuccessPath;
+internal class SuccessPathCycleValidationError : ValidationError
+{
+    /// <inheritdoc />
+    public SuccessPathCycleValidationError(long positionId) : base(positionId)
+    {
+    }
+
+    /// <inheritdoc />
+    public override string Print(IWorkplan workplan)
+    {
+        var step = workplan.Steps.First(s => s.Id == PositionId);
+        return string.Format(CultureInfo.CurrentCulture, Strings.SuccessPathCycleValidationError_Message, step.Name, PositionId);
     }
 }

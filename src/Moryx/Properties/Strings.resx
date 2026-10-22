@@ -147,7 +147,7 @@
   <data name="LuckyStreakValidationError_NoSuccessOutput" xml:space="preserve">
     <value>Step {0} at position {1} has no success output, breaking the success path!</value>
   </data>
-  <data name="LuckyStreakValidationError_NoSuccessPath" xml:space="preserve">
-    <value>No consistent success path found through the workplan!</value>
+  <data name="SuccessPathCycleValidationError_Message" xml:space="preserve">
+    <value>Step {0} at position {1} is part of a cycle on the success path!</value>
   </data>
 </root>

@@ -104,10 +104,10 @@ namespace Moryx.Properties {
                 return ResourceManager.GetString("LuckyStreakValidationError_NoSuccessOutput", resourceCulture);
             }
         }
-        
-        public static string LuckyStreakValidationError_NoSuccessPath {
+
+        public static string SuccessPathCycleValidationError_Message {
             get {
-                return ResourceManager.GetString("LuckyStreakValidationError_NoSuccessPath", resourceCulture);
+                return ResourceManager.GetString("SuccessPathCycleValidationError_Message", resourceCulture);
             }
         }
     }

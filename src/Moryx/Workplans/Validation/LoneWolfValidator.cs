@@ -11,14 +11,10 @@ namespace Moryx.Workplans.Validation;
 /// </summary>
 internal class LoneWolfValidator : IWorkplanValidator
 {
-    /// <summary>
-    /// Aspect this validator covers
-    /// </summary>
+    /// <inheritdoc />
     public ValidationAspect TargetAspect => ValidationAspect.LoneWolf;
 
-    /// <summary>
-    /// Validate the given workplan
-    /// </summary>
+    /// <inheritdoc />
     public bool Validate(IWorkplan workplan, ICollection<ValidationError> errors)
     {
         // Iterate over every step and find all steps without inputs or inputs that are not connected
@@ -40,16 +36,12 @@ internal class LoneWolfValidator : IWorkplanValidator
 
 internal class LoneWolfValidationError : ValidationError
 {
-    /// <summary>
-    /// Create error instance with position id
-    /// </summary>
+    /// <inheritdoc />
     public LoneWolfValidationError(long positionId) : base(positionId)
     {
     }
 
-    /// <summary>
-    /// Print error in readable format
-    /// </summary>
+    /// <inheritdoc />
     public override string Print(IWorkplan workplan)
     {
         var targetStep = workplan.Steps.First(step => step.Id == PositionId);

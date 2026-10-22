@@ -147,7 +147,7 @@
   <data name="LuckyStreakValidationError_NoSuccessOutput" xml:space="preserve">
     <value>Schritt {0} an Position {1} hat keinen Erfolgsausgang und unterbricht den Erfolgspfad!</value>
   </data>
-  <data name="LuckyStreakValidationError_NoSuccessPath" xml:space="preserve">
-    <value>Kein durchgängiger Erfolgspfad im Arbeitsplan gefunden!</value>
+  <data name="SuccessPathCycleValidationError_Message" xml:space="preserve">
+    <value>Schritt {0} an Position {1} ist Teil eines Zyklus auf dem Erfolgspfad!</value>
   </data>
 </root>
