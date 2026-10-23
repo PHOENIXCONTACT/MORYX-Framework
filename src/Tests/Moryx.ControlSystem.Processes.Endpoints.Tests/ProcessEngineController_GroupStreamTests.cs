@@ -25,13 +25,11 @@ public class ProcessEngineControllerGroupStreamTests
         var resourceManagement = new Mock<IResourceManagement>();
         var group = Mock.Of<IProcessHolderGroup>();
 
-        resourceManagement
-            .Setup(rm => rm.GetResourcesUnsafe<IProcessHolderGroup>(
+        resourceManagement.Setup(rm => rm.GetResourcesUnsafe<IProcessHolderGroup>(
                 It.IsAny<Func<IProcessHolderGroup, bool>>()))
             .Returns(new[] { group });
 
-        resourceManagement
-            .Setup(rm => rm.GetResourcesUnsafe<IProcessHolderPosition>(
+        resourceManagement.Setup(rm => rm.GetResourcesUnsafe<IProcessHolderPosition>(
                 It.IsAny<Func<IProcessHolderPosition, bool>>()))
             .Returns(Array.Empty<IProcessHolderPosition>());
 
@@ -41,9 +39,7 @@ public class ProcessEngineControllerGroupStreamTests
             resourceManagement.Object,
             Mock.Of<IJobManagement>());
 
-        using var services = new ServiceCollection()
-            .AddLogging()
-            .BuildServiceProvider();
+        using var services = new ServiceCollection().AddLogging().BuildServiceProvider();
 
         var httpContext = new DefaultHttpContext
         {
@@ -59,9 +55,8 @@ public class ProcessEngineControllerGroupStreamTests
         };
 
         // Act & Assert: The stream must not throw an exception
-        using var cts = new CancellationTokenSource(
-            TimeSpan.FromMilliseconds(100));
+        using var cts = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
 
         Assert.DoesNotThrowAsync(() => controller.GroupStream(cts.Token));
-    }
+    }  
 }
