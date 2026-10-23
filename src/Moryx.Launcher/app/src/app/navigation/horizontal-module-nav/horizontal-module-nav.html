@@ -1,5 +1,5 @@
 <nav #navEl>
-  @if (modules().length) {
+  @if (hasMultipleUserModules()) {
     <button class="nav-item" [matMenuTriggerFor]="moduleGridMenu.moduleGridMenu()">
       <div class="icon-wrapper">
         <mat-icon>view_module</mat-icon>
@@ -18,8 +18,6 @@
       </div>
       <span class="nav-title">{{ module.title }}</span>
     </a>
-  } @empty {
-    <span class="empty">{{ TranslationConstants.NAVIGATION.NO_ITEMS | translate }}</span>
   }
 
   <button class="nav-item" [matMenuTriggerFor]="moreMenu.appMenu()">

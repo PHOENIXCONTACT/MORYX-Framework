@@ -28,6 +28,9 @@ export class ModuleService {
       .sort((a, b) => a.sortIndex - b.sortIndex)
   );
 
+  /** Whether there are multiple user modules */
+  hasMultipleUserModules = computed(() => this.userModules().length > 1);
+
   /** Non-user-category modules, sorted by sortIndex. */
   otherModules = computed(() =>
     this.modules()

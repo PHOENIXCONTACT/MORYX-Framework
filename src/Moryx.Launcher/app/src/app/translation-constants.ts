@@ -39,7 +39,6 @@ export class TranslationConstants {
   public static readonly NAVIGATION = {
     ALL: 'NAVIGATION.ALL',
     MORE: 'NAVIGATION.MORE',
-    NO_ITEMS: 'NAVIGATION.NO_ITEMS',
   }
 
   public static readonly AUTH = {

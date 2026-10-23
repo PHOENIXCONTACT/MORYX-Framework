@@ -5,9 +5,13 @@
 
 import { computed, inject } from '@angular/core';
 import { LauncherLayoutService } from '../services/launcher-layout.service';
+import { ModuleService } from '../services/module.service';
 
 export abstract class LayoutBase {
   protected launcherLayoutService = inject(LauncherLayoutService);
+  private moduleService = inject(ModuleService);
+
+  protected hasMultipleUserModules = this.moduleService.hasMultipleUserModules;
 
   protected showTopRegion = computed(() =>
     this.launcherLayoutService.topRegionAvailable() && this.launcherLayoutService.topRegionEnabled()

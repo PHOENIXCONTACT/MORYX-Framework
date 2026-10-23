@@ -15,7 +15,8 @@ export abstract class ModuleNavBase {
   private moduleService = inject(ModuleService);
   private locationPersistenceService = inject(LocationPersistenceService);
 
-  protected modules = this.moduleService.userModules;
+  protected userModules = this.moduleService.userModules;
+  protected hasMultipleUserModules = this.moduleService.hasMultipleUserModules;
   protected activeRoute = this.moduleService.activeRoute;
 
   protected TranslationConstants = TranslationConstants;
