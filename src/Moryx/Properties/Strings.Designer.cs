@@ -80,5 +80,35 @@ namespace Moryx.Properties {
                 return ResourceManager.GetString("SubworkplanStep_DisplayName", resourceCulture);
             }
         }
+        
+        public static string DeadEndValidationError_Message {
+            get {
+                return ResourceManager.GetString("DeadEndValidationError_Message", resourceCulture);
+            }
+        }
+        
+        public static string LoneWolfValidationError_Message {
+            get {
+                return ResourceManager.GetString("LoneWolfValidationError_Message", resourceCulture);
+            }
+        }
+        
+        public static string InfiniteLoopValidationError_Message {
+            get {
+                return ResourceManager.GetString("InfiniteLoopValidationError_Message", resourceCulture);
+            }
+        }
+        
+        public static string LuckyStreakValidationError_NoSuccessOutput {
+            get {
+                return ResourceManager.GetString("LuckyStreakValidationError_NoSuccessOutput", resourceCulture);
+            }
+        }
+
+        public static string SuccessPathCycleValidationError_Message {
+            get {
+                return ResourceManager.GetString("SuccessPathCycleValidationError_Message", resourceCulture);
+            }
+        }
     }
 }

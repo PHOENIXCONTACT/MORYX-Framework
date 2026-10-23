@@ -294,6 +294,96 @@ public class WorkplanDummy : Workplan
         return workplan;
     }
 
+    public static WorkplanDummy CreateNoLuckyStreak()
+    {
+        var workplan = new WorkplanDummy();
+
+        var initial = WorkplanInstance.CreateConnector("Start", NodeClassification.Start);
+        var complete = WorkplanInstance.CreateConnector("End", NodeClassification.End);
+        var failed = WorkplanInstance.CreateConnector("Failed", NodeClassification.Failed);
+        workplan.Add(initial, complete, failed);
+
+        // Step with only a failure output — no success path to End
+        var step = new DummyStep(1, "FailOnly");
+        step.Inputs[0] = initial;
+        step.Outputs[0] = failed;
+        step.OutputDescriptions = [new OutputDescription { Name = "Failed", OutputType = OutputType.Failure }];
+        workplan.Add(step);
+
+        return workplan;
+    }
+
+    public static WorkplanDummy CreateInfiniteLoop()
+    {
+        var workplan = new WorkplanDummy();
+
+        var initial = WorkplanInstance.CreateConnector("Start", NodeClassification.Start);
+        var complete = WorkplanInstance.CreateConnector("End", NodeClassification.End);
+        workplan.Add(initial, complete);
+
+        // Step A: Start -> Left
+        var left = WorkplanInstance.CreateConnector("Left");
+        workplan.Add(left);
+        var stepA = new DummyStep(1, "A");
+        stepA.Inputs[0] = initial;
+        stepA.Outputs[0] = left;
+        workplan.Add(stepA);
+
+        // Step B: Left -> Right (forms a cycle with Step C, no exit)
+        var right = WorkplanInstance.CreateConnector("Right");
+        workplan.Add(right);
+        var stepB = new DummyStep(1, "InfiniteB");
+        stepB.Inputs[0] = left;
+        stepB.Outputs[0] = right;
+        workplan.Add(stepB);
+
+        // Step C: Right -> Left (closes the loop back to Left)
+        var stepC = new DummyStep(1, "InfiniteC");
+        stepC.Inputs[0] = right;
+        stepC.Outputs[0] = left;
+        workplan.Add(stepC);
+
+        return workplan;
+    }
+
+    public static WorkplanDummy CreateSuccessPathCycle()
+    {
+        var workplan = new WorkplanDummy();
+
+        var initial = WorkplanInstance.CreateConnector("Start", NodeClassification.Start);
+        var complete = WorkplanInstance.CreateConnector("End", NodeClassification.End);
+        var failed = WorkplanInstance.CreateConnector("Failed", NodeClassification.Failed);
+        workplan.Add(initial, complete, failed);
+
+        var left = WorkplanInstance.CreateConnector("Left");
+        workplan.Add(left);
+        var right = WorkplanInstance.CreateConnector("Right");
+        workplan.Add(right);
+
+        // Step A: output 0 (success) -> Left, output 1 (alternative) -> Failed
+        var stepA = new DummyStep(2, "CycleA");
+        stepA.Inputs[0] = initial;
+        stepA.Outputs[0] = left;
+        stepA.Outputs[1] = failed;
+        workplan.Add(stepA);
+
+        // Step B: output 0 (success) -> Right, output 1 (alternative) -> Failed
+        var stepB = new DummyStep(2, "CycleB");
+        stepB.Inputs[0] = left;
+        stepB.Outputs[0] = right;
+        stepB.Outputs[1] = failed;
+        workplan.Add(stepB);
+
+        // Step C: output 0 (success) -> Left (closes cycle), output 1 (alternative) -> Failed
+        var stepC = new DummyStep(2, "CycleC");
+        stepC.Inputs[0] = right;
+        stepC.Outputs[0] = left;
+        stepC.Outputs[1] = failed;
+        workplan.Add(stepC);
+
+        return workplan;
+    }
+
     public static WorkplanDummy WithLoop()
     {
         var workplan = new WorkplanDummy();

@@ -173,11 +173,13 @@ public static class WorkplanExtensions
         var result = WorkplanInstance.Validate(workplan, aspects);
 
         if (result.Success)
-            return;
-
-        foreach (var error in result.Errors)
         {
-            throw new ValidationException(error.Print(workplan));
+            return;
         }
+
+        var message = string.Join(Environment.NewLine, result.Errors.Select(e => e.Print(workplan)));
+
+        // TODO: Replace ValidationException in next major with a dedicated WorkplanValidationException, ValidationException is intended for System.ComponentModel.DataAnnotations ValidationAttribute
+        throw new ValidationException(message);
     }
 }
