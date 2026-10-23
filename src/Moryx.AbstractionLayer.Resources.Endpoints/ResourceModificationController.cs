@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Diagnostics;
+using System.Globalization;
 using System.Net;
 using System.Reflection;
 using Microsoft.AspNetCore.Authorization;
@@ -129,7 +130,7 @@ public class ResourceModificationController : ControllerBase
         var converter = new ResourceToModelConverter(_resourceTypeTree, _serialization);
         var resourceModel = _resourceManagement.ReadUnsafe(id, r => converter.GetDetails(r));
         if (resourceModel is null)
-            return Problem().ResourceNotFound(id);
+            return this.ResourceNotFound(id);
 
         return resourceModel;
     }
@@ -157,7 +158,7 @@ public class ResourceModificationController : ControllerBase
     public async Task<ActionResult<Entry>> InvokeMethod(long id, string method, Entry parameters)
     {
         if (!_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == id).Any())
-            return Problem().ResourceNotFound(id);
+            return this.ResourceNotFound(id);
 
         Entry entry = null;
         try
@@ -170,14 +171,14 @@ public class ResourceModificationController : ControllerBase
         }
         catch (MissingMethodException)
         {
-            return Problem().MethodNotFound(method, id);
+            return this.MethodNotFound(method, id);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex,
                 "Unhandled exception while invoking method {Method} on resource {ResourceId}. TraceId: {TraceId}",
                 method, id, GetTraceId());
-            return Problem().MethodFailed(method);
+            return this.MethodFailed(method);
         }
 
         return entry is null ? NoContent() : Ok(entry);
@@ -228,10 +229,11 @@ public class ResourceModificationController : ControllerBase
         }
         catch (Exception ex)
         {
+            var traceId = GetTraceId();
             _logger.LogError(ex,
                 "Failed to construct resource of type {Type}. TraceId: {TraceId}",
-                type, GetTraceId());
-            return Problem().ResourceTypeNotFound(type);
+                type, traceId);
+            return this.ResourceTypeNotFound(type);
         }
 
         ValueProviderExecutor.Execute(resource, new ValueProviderExecutorSettings()
@@ -262,7 +264,7 @@ public class ResourceModificationController : ControllerBase
                 _logger.LogWarning(e,
                     "Invalid argument while constructing resource of type {Type} via method {Method}. TraceId: {TraceId}",
                     type, method?.Name, traceId);
-                return Problem().InvalidArgument();
+                return this.InvalidArgument();
             }
             _logger.LogError(e,
                 "Unhandled exception while constructing resource of type {Type} via method {Method}. TraceId: {TraceId}",
@@ -289,7 +291,7 @@ public class ResourceModificationController : ControllerBase
     public async Task<ActionResult<ResourceModel>> Save(ResourceModel model)
     {
         if (_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == model.Id).Any())
-            return Problem().ResourceAlreadyExists(model.Id);
+            return this.ResourceAlreadyExists(model.Id);
         try
         {
             var id = await _resourceManagement.CreateUnsafeAsync(_resourceTypeTree[model.Type].ResourceType, async (r) =>
@@ -314,7 +316,7 @@ public class ResourceModificationController : ControllerBase
                 _logger.LogWarning(e,
                     "Invalid argument while saving resource of type {Type}. TraceId: {TraceId}",
                     model?.Type, traceId);
-                return Problem().InvalidArgument();
+                return this.InvalidArgument();
             }
             _logger.LogError(e,
                 "Unhandled exception while saving resource of type {Type}. TraceId: {TraceId}",
@@ -459,7 +461,7 @@ public class ResourceModificationController : ControllerBase
     public async Task<ActionResult<ResourceModel>> Update(long id, ResourceModel model)
     {
         if (!_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == id).Any())
-            return Problem().ResourceNotFound(id);
+            return this.ResourceNotFound(id);
 
         try
         {
@@ -483,7 +485,7 @@ public class ResourceModificationController : ControllerBase
                 _logger.LogWarning(e,
                     "Invalid argument while updating resource with id {ResourceId}. TraceId: {TraceId}",
                     id, traceId);
-                return Problem().InvalidArgument();
+                return this.InvalidArgument();
             }
             _logger.LogError(e,
                 "Unhandled exception while updating resource with id {ResourceId}. TraceId: {TraceId}",
@@ -511,12 +513,11 @@ public class ResourceModificationController : ControllerBase
     public async Task<ActionResult> Remove(long id)
     {
         if (!_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == id).Any())
-            return Problem().ResourceNotFound(id);
+            return this.ResourceNotFound(id);
 
         var deleted = await _resourceManagement.DeleteAsync(id);
         if (!deleted)
-            return Problem().ResourceReferenceConflict(id);
-
+            return this.ResourceReferenceConflict(id);
         return NoContent();
     }
 
@@ -547,9 +548,9 @@ public class ResourceModificationController : ControllerBase
 
             var referenceCondition = _query.ReferenceCondition;
             var references = (from property in node.PropertiesOfResourceType
-                let att = property.GetCustomAttribute<ResourceReferenceAttribute>()
-                where att != null
-                select new { property, att }).ToList();
+                              let att = property.GetCustomAttribute<ResourceReferenceAttribute>()
+                              where att != null
+                              select new { property, att }).ToList();
 
             // Find properties matching the condition
             PropertyInfo[] matches;

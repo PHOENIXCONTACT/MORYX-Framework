@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Localization;
 using System.Globalization;
+using Moryx.AbstractionLayer.Resources.Endpoints;
 
 namespace StartProject.Asp;
 
