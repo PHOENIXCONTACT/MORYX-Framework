@@ -154,9 +154,10 @@ internal static class ModelConverter
 
     public static ValidationResultModel ToValidationModel(ValidationResult result, IWorkplan workplan)
     {
+        var errors = result.Errors?.Select(x => ToErrorModel(x, workplan)).ToArray() ?? [];
         return new ValidationResultModel
         {
-            Errors = [.. result.Errors.Select(x => ToErrorModel(x, workplan))],
+            Errors = errors,
             Success = result.Success
         };
     }
