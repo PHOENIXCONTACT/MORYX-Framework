@@ -6,6 +6,7 @@
 import { Injectable, signal } from '@angular/core';
 import { WorkplanSessionModel } from '@api/models/workplan-session-model';
 import { WorkplanNodeModel } from '@api/models';
+import { Entry } from '@moryx/ngx-web-framework/entry-editor';
 
 @Injectable({
   providedIn: 'root',
@@ -84,5 +85,16 @@ export class EditorStateService {
     if (this.isCreatingStep()) {
       this._isCreatingStep.set(undefined);
     }
+  }
+
+  updateNodeParams(nodeId : number, props: Entry){
+    this._currentWorkplan.update(item => {
+      const node = item?.nodes?.find(x => x.id === nodeId);
+      const params = node?.properties?.subEntries?.find(p => p.identifier === 'Parameters');
+      if(params){
+        params.subEntries = props.subEntries; 
+      }
+      return item;
+    })
   }
 }

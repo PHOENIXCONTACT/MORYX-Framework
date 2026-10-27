@@ -19,6 +19,7 @@
   @if (properties()?.subEntries?.length) {
     <navigable-entry-editor
       [entry]="properties()!"
+      (entryChange)="updateNodeParams($event)"
       [disabled]="false"
     queryParam="nodePropertiesEditor"></navigable-entry-editor>
   }

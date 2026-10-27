@@ -64,6 +64,10 @@ export class NodeProperties {
     });
   }
 
+  protected updateNodeParams(updated: Entry) {
+    this.editorStateService.updateNodeParams(this.node()!.id!, updated);
+  }
+
   private async updateNode(node: WorkplanNodeModel) {
     const activeSession = this.sessionsService.activeSession();
     if (!activeSession || !node.id || !this.editorStateService.workplan) {
