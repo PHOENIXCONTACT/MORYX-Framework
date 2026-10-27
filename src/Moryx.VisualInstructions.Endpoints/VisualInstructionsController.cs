@@ -58,16 +58,6 @@ public class VisualInstructionsController : ControllerBase
 
         var channel = Channel.CreateUnbounded<SseItem<string>>();
 
-        var lifecycleFacade = _visualInstructions as ILifeCycleBoundFacade;
-
-        LifeCycleSseHandler? lifeCycleHandler = null;
-
-        if (lifecycleFacade is not null)
-        {
-            lifeCycleHandler = new LifeCycleSseHandler(
-                lifecycleFacade, channel.Writer, Broadcast, _serializerOptions);
-        }
-
         // Define event handlers using the broadcast helper
         EventHandler<InstructionEventArgs> eventHandler = (_, e) =>
         {
@@ -79,6 +69,10 @@ public class VisualInstructionsController : ControllerBase
 
         try
         {
+            using var lifeCycleHandler = new LifeCycleSseHandler(
+                _visualInstructions as ILifeCycleBoundFacade, channel.Writer, onReady: Broadcast, _serializerOptions);
+            lifeCycleHandler.Start();
+
             var result = TypedResults.ServerSentEvents(Subscribe(cancellationToken));
             // Register event handlers after result creation but before execution to ensure finally cleanup
             _visualInstructions.InstructionAdded += eventHandler;
@@ -94,31 +88,12 @@ public class VisualInstructionsController : ControllerBase
         {
             _visualInstructions.InstructionAdded -= eventHandler;
             _visualInstructions.InstructionCleared -= eventHandler;
-
-            lifeCycleHandler?.Dispose();
         }
 
         return;
 
         async IAsyncEnumerable<SseItem<string>> Subscribe([EnumeratorCancellation] CancellationToken cancelToken)
         {
-            if (lifecycleFacade is not null)
-            {
-                yield return lifeCycleHandler.CreateInitialMessage();
-            }
-
-            InstructionModel[] initialInstructions = [];
-
-            try
-            {
-                // Send all instructions as first item
-                initialInstructions = _visualInstructions.GetInstructions(identifier).Select(_converter.ToModel).ToArray();
-            }
-            catch (HealthStateException)
-            {
-                // Ignore if module is not ready yet.
-            }
-            yield return new SseItem<string>(JsonSerializer.Serialize(initialInstructions, _serializerOptions));
 
             await foreach (var item in channel.Reader.ReadAllAsync(cancelToken))
             {
@@ -129,7 +104,16 @@ public class VisualInstructionsController : ControllerBase
         // Local helper to broadcast instruction changes to all matching subscribers
         void Broadcast()
         {
-            var instructions = _visualInstructions.GetInstructions(identifier).Select(_converter.ToModel).ToArray();
+           
+            InstructionModel[] instructions = [];
+            try
+            {
+                instructions = _visualInstructions.GetInstructions(identifier).Select(_converter.ToModel).ToArray();
+            }
+            catch (HealthStateException)
+            {
+                // Ignore if module is not ready yet.
+            }
 
             var data = JsonSerializer.Serialize(instructions, _serializerOptions);
 
