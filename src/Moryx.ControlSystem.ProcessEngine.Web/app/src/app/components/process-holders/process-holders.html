@@ -9,9 +9,10 @@
           <input
             matInput
             type="text"
-            [(ngModel)]="filterText"
+            [ngModel]="filterText()"
+            (ngModelChange)="filterText.set($event)"
             name="filter"
-            />
+          />
           @if(this.filterText().length){
             <button mat-icon-button matSuffix (click)="clear()" class="clear-button">
               <mat-icon class="search-input-icon">cancel</mat-icon>
