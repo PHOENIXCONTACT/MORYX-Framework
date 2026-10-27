@@ -22,6 +22,7 @@ import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { firstValueFrom } from "rxjs";
 import { ProcessEngineService } from "@api/services";
 import { ProcessHolderGroup } from "@app/models/process-holder-group-model";
+import { ProcessHolderPosition } from '@app/models/process-holder-position-model';
 import ProcessHolderNode from "../../models/process-holder-node";
 import { Category } from "@api/models/category";
 import { ConvertToNode, ConvertToProcessHolderGroup } from "@app/models/converter";
@@ -70,9 +71,16 @@ export class ProcessHolders implements OnInit {
       return groups.map(g => ConvertToNode(g));
     }
 
+    const f = filter.trim().toLowerCase();
     return groups
-      .filter(group => this.matchesFilter(group, filter))
-      .map(g => ConvertToNode(g));
+      .map((group) => {
+        const positions = (group.positions ?? []).filter((x) => this.matchesFilter(x, f));
+        const groupMatches = (group.name ?? "").toLowerCase().includes(f);
+        // If group name matches, keep full group, otherwise keep only matching positions
+        return groupMatches ? group : { ...group, positions };
+      })
+      .filter((group) => group.positions.length > 0 || (group.name ?? "").toLowerCase().includes(f))
+      .map((g) => ConvertToNode(g));
   });
 
   protected visualizationCategory = Category;
@@ -195,12 +203,13 @@ export class ProcessHolders implements OnInit {
     }
   }
 
-  private matchesFilter(group: ProcessHolderGroup, filter: string): boolean {
-    return group.name.includes(filter) ||
-      !!group.positions?.some(x =>
-        x.order?.includes(filter) ||
-        x.activity?.includes(filter) ||
-        x.process?.includes(filter)
-      );
+  // Match a single position by name/order/activity/process (case-insensitive)
+  private matchesFilter(position: ProcessHolderPosition, filter: string): boolean {
+    return (
+      (position.name ?? "").toLowerCase().includes(filter) ||
+      (position.order ?? "").toLowerCase().includes(filter) ||
+      (position.activity ?? "").toLowerCase().includes(filter) ||
+      (position.process ?? "").toLowerCase().includes(filter)
+    );
   }
 }
