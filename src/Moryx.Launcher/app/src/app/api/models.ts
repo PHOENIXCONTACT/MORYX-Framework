@@ -8,4 +8,5 @@
 
 export type { ApplicationInformationResponse } from './models/application-information-response';
 export type { HostInformationResponse } from './models/host-information-response';
+export type { ProblemDetails } from './models/problem-details';
 export type { ServerTimeResponse } from './models/server-time-response';
