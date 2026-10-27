@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Container.TestTools;
+using Moryx.Tools;
 using NUnit.Framework;
 
 namespace Moryx.Container.Tests;
@@ -10,6 +11,13 @@ namespace Moryx.Container.Tests;
 public class CastleContainerTests
 {
     private CastleContainer _container;
+
+    [OneTimeSetUp]
+    public void TestFixtureSetUp()
+    {
+        ReflectionTool.TestMode = true;
+        AppDomainBuilder.LoadAssemblies();
+    }
 
     [SetUp]
     public void Init()
