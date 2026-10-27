@@ -99,6 +99,17 @@ public interface ICustomSerialization
     /// Retrieves the unit type
     /// </summary>
     EntryUnitType GetUnitTypeByAttributes(ICustomAttributeProvider property);
+
+    /// <summary>
+    /// Get the <see cref="EntryConverter"/> that takes over the conversion of a member
+    /// </summary>
+    /// <param name="memberType">Either <see cref="PropertyInfo.PropertyType"/> or <see cref="ParameterInfo.ParameterType"/></param>
+    /// <param name="attributeProvider">The <see cref="PropertyInfo"/> or <see cref="ParameterInfo"/> to retrieve custom attributes</param>
+    /// <returns>Converter of the member or <c>null</c>, if the member uses the default conversion</returns>
+    EntryConverter GetConverter(Type memberType, ICustomAttributeProvider attributeProvider)
+    {
+        return EntryConvert.ResolveConverter(memberType, attributeProvider);
+    }
 }
 
 /// <summary>

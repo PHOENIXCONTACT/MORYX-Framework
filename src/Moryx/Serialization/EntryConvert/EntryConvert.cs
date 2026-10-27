@@ -5,7 +5,6 @@ using System.Collections;
 using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.Serialization;
-using Moryx.Configuration;
 using Moryx.Tools;
 
 namespace Moryx.Serialization;
@@ -84,6 +83,32 @@ public static partial class EntryConvert
     /// <returns>Converted property</returns>
     public static Entry EncodeProperty(PropertyInfo property, ICustomSerialization customSerialization, object instance)
     {
+        var converter = customSerialization.GetConverter(property.PropertyType, property);
+        if (converter == null)
+            return EncodePropertyDefault(property, customSerialization, instance);
+
+        object value = null;
+        try
+        {
+            if (instance != null)
+                value = property.GetValue(instance);
+        }
+        catch (Exception ex)
+        {
+            var faulty = EncodePropertyDefault(property, customSerialization, instance);
+            faulty.Value.Type = EntryValueType.Exception;
+            faulty.Value.Current = ex.ToString();
+            return faulty;
+        }
+
+        return EncodeConverted(converter, customSerialization, property, instance, value);
+    }
+
+    /// <summary>
+    /// Convert a single property without <see cref="EntryConverter"/>
+    /// </summary>
+    private static Entry EncodePropertyDefault(PropertyInfo property, ICustomSerialization customSerialization, object instance = default)
+    {
         // Fill with default if entry is null
         var entry = new Entry
         {
@@ -105,24 +130,43 @@ public static partial class EntryConvert
         return entry;
     }
 
+    /// <summary>
+    /// Encode a property using an <see cref="EntryConverter"/>
+    /// </summary>
+    private static Entry EncodeConverted(EntryConverter converter, ICustomSerialization customSerialization,
+        PropertyInfo property, object instance = default, object value = default)
+    {
+        var context = new EntryConverterContext(property.PropertyType, property, customSerialization, instance);
+        var encoded = converter.Encode(value, context);
+
+        // Member metadata is always defined by the property
+        encoded.Identifier = property.Name;
+        encoded.DisplayName = property.GetDisplayName() ?? property.Name;
+        encoded.Description = property.GetDescription();
+        encoded.Validation = customSerialization.CreateValidation(property.PropertyType, property);
+        encoded.Value.IsReadOnly |= IsReadOnly(property);
+
+        return encoded;
+    }
+
+    private static bool IsReadOnly(PropertyInfo property)
+    {
+        if (!property.CanWrite)
+            return true;
+
+        var readOnlyAtt = property.GetCustomAttribute<ReadOnlyAttribute>();
+        return readOnlyAtt?.IsReadOnly ?? false;
+    }
+
     /// <see cref="ICustomSerialization"/>
     private static EntryValue CreateEntryValue(PropertyInfo property, ICustomSerialization customSerialization, object instance = null)
     {
-        // Set if the current entry is readonly by checking if the property has a setter
-        // or the ReadOnlyAttribute was set to true
-        var isReadOnly = !property.CanWrite;
-        if (!isReadOnly)
-        {
-            var readOnlyAtt = property.GetCustomAttribute<ReadOnlyAttribute>();
-            isReadOnly = readOnlyAtt?.IsReadOnly ?? false;
-        }
-
         // Prepare object
         var entryValue = new EntryValue
         {
             Type = TransformType(property.PropertyType),
             UnitType = customSerialization.GetUnitTypeByAttributes(property),
-            IsReadOnly = isReadOnly,
+            IsReadOnly = IsReadOnly(property),
             Possible = customSerialization.PossibleValues(property.PropertyType, property, instance)
         };
 
@@ -227,7 +271,15 @@ public static partial class EntryConvert
         var filtered = customSerialization.GetProperties(objType);
         foreach (var property in filtered)
         {
-            var converted = EncodeProperty(property, customSerialization);
+            // Converters encode the complete entry
+            var converter = customSerialization.GetConverter(property.PropertyType, property);
+            if (converter is not null)
+            {
+                encodedClass.SubEntries.Add(EncodeConverted(converter, customSerialization, property));
+                continue;
+            }
+
+            var converted = EncodePropertyDefault(property, customSerialization);
             // Assign default to current
             var value = converted.Value;
             value.Current = ConvertToString(value.Default, customSerialization.FormatProvider);
@@ -306,9 +358,8 @@ public static partial class EntryConvert
             if (propertyType == instanceType)
                 continue;
 
-            var convertedProperty = EncodeProperty(property, customSerialization, instance);
-
             object value;
+            var isFaulty = false;
             try
             {
                 value = property.GetValue(instance);
@@ -316,9 +367,21 @@ public static partial class EntryConvert
             catch (Exception ex)
             {
                 value = ex;
-                // Change type in case of exception
-                convertedProperty.Value.Type = EntryValueType.Exception;
+                isFaulty = true;
             }
+
+            // Converters encode the complete entry
+            var converter = customSerialization.GetConverter(propertyType, property);
+            if (converter is not null && !isFaulty)
+            {
+                converted.SubEntries.Add(EncodeConverted(converter, customSerialization, property, instance, value));
+                continue;
+            }
+
+            var convertedProperty = EncodePropertyDefault(property, customSerialization, instance);
+            // Change type in case of exception
+            if (isFaulty)
+                convertedProperty.Value.Type = EntryValueType.Exception;
 
             switch (convertedProperty.Value.Type)
             {
@@ -637,6 +700,19 @@ public static partial class EntryConvert
 
             // Try to assign value to the property
             var currentValue = mapped.Property.GetValue(instance);
+
+            // Converters decode the complete entry, members without entry keep their current value
+            var converter = customSerialization.GetConverter(propertyType, property);
+            if (converter is not null)
+            {
+                if (mapped.Entry is not null && property.CanWrite)
+                {
+                    var context = new EntryConverterContext(propertyType, property, customSerialization, instance);
+                    property.SetValue(instance, converter.Decode(mapped.Entry, currentValue, context));
+                }
+                continue;
+            }
+
             var value = mapped.Entry == null
                 ? customSerialization.DefaultValue(property, currentValue)
                 : customSerialization.ConvertValue(propertyType, property, mapped.Entry, currentValue);

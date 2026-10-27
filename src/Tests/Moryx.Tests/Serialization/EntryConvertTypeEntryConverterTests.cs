@@ -1,0 +1,149 @@
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using Moq;
+using Moryx.Configuration;
+using Moryx.Container;
+using Moryx.Serialization;
+using NUnit.Framework;
+
+namespace Moryx.Tests.Serialization;
+
+[TestFixture]
+public class EntryConvertTypeEntryConverterTests
+{
+    [Test]
+    public void EncodeObject_ForTypeWithoutPossibleTypes_IsReadOnlyFullName()
+    {
+        // Arrange
+        var dummy = new TypeDummy { PlainType = typeof(int) };
+
+        // Act
+        var encoded = EntryConvert.EncodeObject(dummy);
+
+        // Assert
+        var subEntry = SubEntry(encoded, nameof(TypeDummy.PlainType));
+        Assert.Multiple(() =>
+        {
+            Assert.That(subEntry.Value.Type, Is.EqualTo(EntryValueType.String));
+            Assert.That(subEntry.Value.Current, Is.EqualTo(typeof(int).FullName));
+            Assert.That(subEntry.Value.IsReadOnly, Is.True);
+            Assert.That(subEntry.SubEntries, Is.Empty);
+        });
+    }
+
+    [Test]
+    public void UpdateInstance_OnTypeWithoutPossibleTypes_KeepsCurrentValue()
+    {
+        // Arrange
+        var dummy = new TypeDummy { PlainType = typeof(int) };
+        var encoded = EntryConvert.EncodeObject(dummy);
+        SubEntry(encoded, nameof(TypeDummy.PlainType)).Value.Current = typeof(string).FullName;
+
+        // Act
+        EntryConvert.UpdateInstance(dummy, encoded);
+
+        // Assert
+        Assert.That(dummy.PlainType, Is.EqualTo(typeof(int)));
+    }
+
+    [Test]
+    public void UpdateInstance_OnTypeWithoutPossibleTypesAndEmptyKey_KeepsCurrentValue()
+    {
+        // Arrange
+        var dummy = new TypeDummy { PlainType = typeof(int) };
+        var encoded = EntryConvert.EncodeObject(dummy);
+        SubEntry(encoded, nameof(TypeDummy.PlainType)).Value.Current = string.Empty;
+
+        // Act
+        EntryConvert.UpdateInstance(dummy, encoded);
+
+        // Assert
+        Assert.That(dummy.PlainType, Is.EqualTo(typeof(int)));
+    }
+
+    [Test]
+    public void UpdateInstance_OnStringWithPossibleTypes_AssignsTypeName()
+    {
+        // Arrange
+        var serialization = CreatePossibleValuesSerialization();
+        var dummy = new TypeNameDummy { TypeName = typeof(string).FullName };
+        var encoded = EntryConvert.EncodeObject(dummy, serialization);
+        SubEntry(encoded, nameof(TypeNameDummy.TypeName)).Value.Current = typeof(int).FullName;
+
+        // Act
+        EntryConvert.UpdateInstance(dummy, encoded, serialization);
+
+        // Assert
+        Assert.That(dummy.TypeName, Is.EqualTo(typeof(int).FullName));
+    }
+
+    [Test]
+    public void EncodeObject_OnTypeWithPossibleTypes_ProvidesPossibleTypeNames()
+    {
+        // Arrange
+        var dummy = new TypeDummy { SelectableType = typeof(string) };
+
+        // Act
+        var encoded = EntryConvert.EncodeObject(dummy, CreatePossibleValuesSerialization());
+
+        // Assert
+        var subEntry = SubEntry(encoded, nameof(TypeDummy.SelectableType));
+        Assert.Multiple(() =>
+        {
+            Assert.That(subEntry.Value.Current, Is.EqualTo(typeof(String).FullName));
+            Assert.That(subEntry.Value.Possible.Select(p => p.Key), Is.EquivalentTo([typeof(String).FullName, typeof(Int32).FullName]));
+            Assert.That(subEntry.Value.IsReadOnly, Is.False);
+        });
+    }
+
+    [TestCase("System.Int32", typeof(int))]
+    [TestCase("", null)]
+    public void UpdateInstance_OnTypeWithPossibleTypes_ResolvesType(string key, Type expected)
+    {
+        // Arrange
+        var serialization = CreatePossibleValuesSerialization();
+        var dummy = new TypeDummy { SelectableType = typeof(string) };
+        var encoded = EntryConvert.EncodeObject(dummy, serialization);
+        SubEntry(encoded, nameof(TypeDummy.SelectableType)).Value.Current = key;
+
+        // Act
+        EntryConvert.UpdateInstance(dummy, encoded, serialization);
+
+        // Assert
+        Assert.That(dummy.SelectableType, Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void UpdateInstance_OnTypeNotInPossibleTypes_Throws()
+    {
+        // Arrange
+        var serialization = CreatePossibleValuesSerialization();
+        var dummy = new TypeDummy { SelectableType = typeof(string) };
+        var encoded = EntryConvert.EncodeObject(dummy, serialization);
+        SubEntry(encoded, nameof(TypeDummy.SelectableType)).Value.Current = typeof(double).FullName;
+
+        // Act & Assert
+        Assert.Throws<ArgumentException>(() => EntryConvert.UpdateInstance(dummy, encoded, serialization));
+    }
+
+    public class TypeDummy
+    {
+        public Type PlainType { get; set; }
+
+        [PossibleTypes([typeof(string), typeof(int)], UseFullname = true)]
+        public Type SelectableType { get; set; }
+    }
+
+    public class TypeNameDummy
+    {
+        [PossibleTypes([typeof(string), typeof(int)], UseFullname = true)]
+        public string TypeName { get; set; }
+    }
+
+    private static Entry SubEntry(Entry entry, string identifier) =>
+        entry.SubEntries.Single(e => e.Identifier == identifier);
+
+    private static PossibleValuesSerialization CreatePossibleValuesSerialization() =>
+        new(new Mock<IContainer>().Object, new Mock<IServiceProvider>().Object, new ValueProviderExecutor(new ValueProviderExecutorSettings()));
+}

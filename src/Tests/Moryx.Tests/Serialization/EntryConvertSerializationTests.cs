@@ -341,4 +341,25 @@ public class EntryConvertSerializationTests
         Assert.That(parameterPossible.Length, Is.EqualTo(2));
         Assert.That(parameterPossible.Select(p => p.Key), Is.EquivalentTo(new[] { "x", "y" }));
     }
+
+    [Test]
+    public void UpdateInstance_WithGetOnlyProperty_UpdatesInPlace()
+    {
+        // Arrange
+        var dummy = new GetOnlyDummy();
+        var encoded = EntryConvert.EncodeObject(dummy);
+        encoded.SubEntries.Single(e => e.Identifier == nameof(GetOnlyDummy.Sub))
+            .SubEntries.Single(e => e.Identifier == nameof(SubClass.Foo)).Value.Current = "42";
+
+        // Act
+        EntryConvert.UpdateInstance(dummy, encoded);
+
+        // Assert
+        Assert.That(dummy.Sub.Foo, Is.EqualTo(42f));
+    }
+
+    public class GetOnlyDummy
+    {
+        public SubClass Sub { get; } = new();
+    }
 }

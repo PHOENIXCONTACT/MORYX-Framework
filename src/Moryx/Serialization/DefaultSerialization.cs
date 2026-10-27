@@ -317,6 +317,12 @@ public class DefaultSerialization : ICustomSerialization
         return Activator.CreateInstance(elementType);
     }
 
+    /// <inheritdoc/>
+    public virtual EntryConverter GetConverter(Type memberType, ICustomAttributeProvider attributeProvider)
+    {
+        return EntryConvert.ResolveConverter(memberType, attributeProvider);
+    }
+
     /// <summary>
     /// Build collection object from entry
     /// </summary>
