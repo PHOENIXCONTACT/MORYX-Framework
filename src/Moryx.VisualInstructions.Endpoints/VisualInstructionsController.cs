@@ -13,6 +13,7 @@ using Moryx.Configuration;
 using Moryx.Runtime.Modules;
 using Moryx.Serialization;
 using static Moryx.VisualInstructions.Endpoints.Converter;
+using Moryx.AspNetCore.ServerSentEvents;
 
 namespace Moryx.VisualInstructions.Endpoints;
 
@@ -55,19 +56,22 @@ public class VisualInstructionsController : ControllerBase
             return;
         }
 
-        var channel = Channel.CreateUnbounded<string>();
+        var channel = Channel.CreateUnbounded<SseItem<string>>();
+
+        var lifecycleFacade = _visualInstructions as ILifeCycleBoundFacade;
+
+        LifeCycleSseHandler? lifeCycleHandler = null;
+
+        if (lifecycleFacade is not null)
+        {
+            lifeCycleHandler = new LifeCycleSseHandler(
+                lifecycleFacade, channel.Writer, Broadcast, _serializerOptions);
+        }
+
         // Define event handlers using the broadcast helper
         EventHandler<InstructionEventArgs> eventHandler = (_, e) =>
         {
             if (e.Identifier == identifier)
-            {
-                Broadcast();
-            }
-        };
-
-        EventHandler<bool> stateChangedEventHandler = (_, ready) =>
-        {
-            if (ready)
             {
                 Broadcast();
             }
@@ -79,10 +83,6 @@ public class VisualInstructionsController : ControllerBase
             // Register event handlers after result creation but before execution to ensure finally cleanup
             _visualInstructions.InstructionAdded += eventHandler;
             _visualInstructions.InstructionCleared += eventHandler;
-            if (_visualInstructions is ILifeCycleBoundFacade lf)
-            {
-                lf.StateChanged += stateChangedEventHandler;
-            }
 
             await result.ExecuteAsync(HttpContext);
         }
@@ -94,16 +94,19 @@ public class VisualInstructionsController : ControllerBase
         {
             _visualInstructions.InstructionAdded -= eventHandler;
             _visualInstructions.InstructionCleared -= eventHandler;
-            if (_visualInstructions is ILifeCycleBoundFacade lf)
-            {
-                lf.StateChanged -= stateChangedEventHandler;
-            }
+
+            lifeCycleHandler?.Dispose();
         }
 
         return;
 
         async IAsyncEnumerable<SseItem<string>> Subscribe([EnumeratorCancellation] CancellationToken cancelToken)
         {
+            if (lifecycleFacade is not null)
+            {
+                yield return lifeCycleHandler.CreateInitialMessage();
+            }
+
             InstructionModel[] initialInstructions = [];
 
             try
@@ -117,9 +120,9 @@ public class VisualInstructionsController : ControllerBase
             }
             yield return new SseItem<string>(JsonSerializer.Serialize(initialInstructions, _serializerOptions));
 
-            await foreach (var data in channel.Reader.ReadAllAsync(cancelToken))
+            await foreach (var item in channel.Reader.ReadAllAsync(cancelToken))
             {
-                yield return new SseItem<string>(data);
+                yield return item;
             }
         }
 
@@ -127,7 +130,10 @@ public class VisualInstructionsController : ControllerBase
         void Broadcast()
         {
             var instructions = _visualInstructions.GetInstructions(identifier).Select(_converter.ToModel).ToArray();
-            channel.Writer.TryWrite(JsonSerializer.Serialize(instructions, _serializerOptions));
+
+            var data = JsonSerializer.Serialize(instructions, _serializerOptions);
+
+            channel.Writer.TryWrite(new SseItem<string>(data));
         }
     }
 

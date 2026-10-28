@@ -10,7 +10,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App"/>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Moryx.Runtime\Moryx.Runtime.csproj" />
   </ItemGroup>
 
 </Project>
