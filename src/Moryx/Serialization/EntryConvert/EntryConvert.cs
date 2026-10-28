@@ -130,6 +130,7 @@ public static partial class EntryConvert
         return entry;
     }
 
+    // TODO: Check for a clean split including the type conversion in EncodeObject
     /// <summary>
     /// Encode a property using an <see cref="EntryConverter"/>
     /// </summary>
@@ -290,12 +291,6 @@ public static partial class EntryConvert
                 var subentry = EncodeClass(property.PropertyType, customSerialization);
                 converted.SubEntries.AddRange(subentry.SubEntries);
             }
-            // Decomposed structs use the serializer to create default sub-entries
-            else if (converted.Value.Type == EntryValueType.Struct && TryGetSerializer(property.PropertyType, out var serializer))
-            {
-                var structEntry = serializer.Encode(Activator.CreateInstance(property.PropertyType), customSerialization.FormatProvider);
-                converted.SubEntries.AddRange(structEntry.SubEntries);
-            }
 
             encodedClass.SubEntries.Add(converted);
         }
@@ -320,13 +315,19 @@ public static partial class EntryConvert
         var isValueType = ValueOrStringType(instanceType);
 
         var converted = CreateFromType(instanceType, customSerialization);
-
-        // Structs with registered serializers are encoded via sub-entries
-        if (converted.Value.Type == EntryValueType.Struct && TryGetSerializer(instanceType, out var serializer))
+        // Converters encode the complete entry
+        var instanceConverter = customSerialization.GetConverter(instanceType, instanceType);
+        if (instanceConverter is not null)
         {
-            var structEntry = serializer.Encode(instance, customSerialization.FormatProvider);
-            converted.SubEntries = structEntry.SubEntries;
-            return converted;
+            var context = new EntryConverterContext(instanceType, instanceType, customSerialization, null);
+            var encoded = instanceConverter.Encode(instance, context);
+
+            // Root metadata is always defined by the type
+            encoded.DisplayName = converted.DisplayName;
+            encoded.Identifier = converted.Identifier;
+            encoded.Description = converted.Description;
+            encoded.Validation = converted.Validation;
+            return encoded;
         }
 
         // Value or string are easily value encoded
@@ -396,13 +397,6 @@ public static partial class EntryConvert
                     {
                         entry.Value.Possible = possibleElementValues;
                         convertedProperty.SubEntries.Add(entry);
-                    }
-                    break;
-                case EntryValueType.Struct:
-                    if (value != null && TryGetSerializer(propertyType, out var structSerializer))
-                    {
-                        var structEntry = structSerializer.Encode(value, customSerialization.FormatProvider);
-                        convertedProperty.SubEntries = structEntry.SubEntries;
                     }
                     break;
                 case EntryValueType.Class:
@@ -718,14 +712,9 @@ public static partial class EntryConvert
                 : customSerialization.ConvertValue(propertyType, property, mapped.Entry, currentValue);
 
             // Value types, strings and streams do not need recursion
-            if (ValueOrStringType(propertyType) && !TryGetSerializer(propertyType, out _) || typeof(Stream).IsAssignableFrom(propertyType))
+            if (ValueOrStringType(propertyType) || typeof(Stream).IsAssignableFrom(propertyType))
             {
 
-            }
-            // Structs with registered serializers are reconstructed from sub-entries
-            else if (TryGetSerializer(propertyType, out var structSerializer) && mapped.Entry != null)
-            {
-                value = structSerializer.Decode(mapped.Entry, customSerialization.FormatProvider);
             }
             // Update collection from entry
             else if (IsCollection(propertyType) && mapped.Entry != null)
