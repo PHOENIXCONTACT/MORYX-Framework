@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections;
+using System.Globalization;
 
 namespace Moryx.Serialization;
 
@@ -40,7 +41,7 @@ internal class ListStrategy : ICollectionStrategy
 
     public object ElementAt(string key)
     {
-        return _list[int.Parse(key)];
+        return _list[int.Parse(key, CultureInfo.InvariantCulture)];
     }
 
     public void Added(Entry entry, object addedValue)
@@ -50,17 +51,24 @@ internal class ListStrategy : ICollectionStrategy
 
     public void Updated(Entry entry, object updatedValue)
     {
-        _list[int.Parse(entry.Identifier)] = updatedValue;
+        _list[int.Parse(entry.Identifier, CultureInfo.InvariantCulture)] = updatedValue;
     }
 
     public void Removed(string key)
     {
-        _toDelete.Add(_list[int.Parse(key)]);
+        _toDelete.Add(_list[int.Parse(key, CultureInfo.InvariantCulture)]);
     }
 
     /// <inheritdoc />
     public void Reorder(IReadOnlyList<string> newKeyOrder)
     {
+        // TODO: Remove in next major version once all consumers use unique CREATED identifiers
+        // Skip reorder if keys aren't unique (e.g. multiple "CREATED" entries)
+        if (newKeyOrder.Count != newKeyOrder.Distinct().Count())
+        {
+            return;
+        }
+
         if (CollectionStrategyTools.NeedsReordering(newKeyOrder, _list, _toDelete, _addedItems))
         {
             _newOrder = newKeyOrder;

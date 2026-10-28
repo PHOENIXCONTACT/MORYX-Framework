@@ -1,6 +1,8 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Globalization;
+
 namespace Moryx.Serialization;
 
 /// <summary>
@@ -14,8 +16,8 @@ internal class ArrayStrategy : ICollectionStrategy
     private readonly ICustomSerialization _serialization;
 
     /// <summary>
-    /// Maps entry identifiers (numeric like "0" or created like "CREATED1") to their array positions.
-    /// Used by <see cref="Reorder"/> to resolve items without requiring numeric-only identifiers.
+    /// Maps entry identifiers to their array positions.
+    /// Required because identifiers can be non-numeric (e.g. "CREATED-guid").
     /// </summary>
     private readonly Dictionary<string, int> _keyToIndex = new();
 
@@ -45,7 +47,7 @@ internal class ArrayStrategy : ICollectionStrategy
 
     public object ElementAt(string key)
     {
-        return _currentArray.GetValue(int.Parse(key));
+        return _currentArray.GetValue(int.Parse(key, CultureInfo.InvariantCulture));
     }
 
     public void Added(Entry entry, object addedValue)
@@ -67,6 +69,13 @@ internal class ArrayStrategy : ICollectionStrategy
     /// <inheritdoc />
     public void Reorder(IReadOnlyList<string> newKeyOrder)
     {
+        // TODO: Remove in next major version once all consumers use unique CREATED identifiers
+        // Skip reorder if keys aren't unique (e.g. multiple "CREATED" entries)
+        if (newKeyOrder.Count != newKeyOrder.Distinct().Count())
+        {
+            return;
+        }
+
         if (_keyToIndex.Keys.SequenceEqual(newKeyOrder))
         {
             return;
