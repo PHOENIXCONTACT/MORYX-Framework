@@ -574,26 +574,25 @@ public static partial class EntryConvert
     private static Entry ConvertParameter(ParameterInfo parameter, ICustomSerialization serialization, object instance = null)
     {
         var parameterType = parameter.ParameterType;
-        var defaultValue = parameter.HasDefaultValue ? parameter.DefaultValue?.ToString() : null;
 
-        var parameterModel = new Entry
+        // Converters encode the complete entry
+        var converter = serialization.GetConverter(parameterType, parameter);
+        if (converter is not null)
         {
-            DisplayName = parameter.GetDisplayName() ?? parameter.Name,
-            Identifier = parameter.Name,
-            Description = parameter.GetDescription(),
-            Value = new EntryValue
-            {
-                Type = TransformType(parameter.ParameterType),
-                UnitType = serialization.GetUnitTypeByAttributes(parameter),
-                Current = defaultValue,
-                Default = defaultValue,
-                Possible = serialization.PossibleValues(parameterType, parameter, instance)
-            },
-            Validation = serialization.CreateValidation(parameterType, parameter)
-        };
+            var context = new EntryConverterContext(parameterType, parameter, serialization, instance);
+            return EncodeWith(converter, context, DefaultArgument(parameter), CreateFromParameter(parameter, serialization));
+        }
 
-        // mark the parameter as required when there is no default value
-        parameterModel.Validation.IsRequired = !parameter.HasDefaultValue;
+        var defaultValue = DefaultArgument(parameter)?.ToString();
+        var parameterModel = CreateFromParameter(parameter, serialization);
+        parameterModel.Value = new EntryValue
+        {
+            Type = TransformType(parameter.ParameterType),
+            UnitType = serialization.GetUnitTypeByAttributes(parameter),
+            Current = defaultValue,
+            Default = defaultValue,
+            Possible = serialization.PossibleValues(parameterType, parameter, instance)
+        };
 
         switch (parameterModel.Value.Type)
         {
@@ -610,6 +609,25 @@ public static partial class EntryConvert
         }
 
         return parameterModel;
+    }
+
+    private static object DefaultArgument(ParameterInfo parameter) =>
+        parameter.HasDefaultValue ? parameter.DefaultValue : null;
+
+    private static Entry CreateFromParameter(ParameterInfo parameter, ICustomSerialization serialization)
+    {
+        var entry = new Entry
+        {
+            Identifier = parameter.Name,
+            DisplayName = parameter.GetDisplayName() ?? parameter.Name,
+            Description = parameter.GetDescription(),
+            Validation = serialization.CreateValidation(parameter.ParameterType, parameter)
+        };
+
+        // mark the parameter as required when there is no default value
+        entry.Validation.IsRequired = !parameter.HasDefaultValue;
+
+        return entry;
     }
 
     #endregion
@@ -900,7 +918,7 @@ public static partial class EntryConvert
             throw new MissingMethodException($"Method {methodEntry.Name} not found on target {target.GetType().Name}.");
         }
 
-        var arguments = ConvertArguments(method, methodEntry, customSerialization);
+        var arguments = ConvertArguments(method, methodEntry, customSerialization, target);
         object invokeResult = null;
 
         // Also part of MethodEntry but be safer than sorry
@@ -954,7 +972,8 @@ public static partial class EntryConvert
     /// <summary>
     /// Convert encoded parameters to argument array for method invocation
     /// </summary>
-    private static object[] ConvertArguments(MethodBase method, MethodEntry encodedMethod, ICustomSerialization customSerialization)
+    private static object[] ConvertArguments(MethodBase method, MethodEntry encodedMethod, ICustomSerialization customSerialization,
+        object instance = null)
     {
         var parameters = method.GetParameters();
         var arguments = new object[parameters.Length];
@@ -965,6 +984,16 @@ public static partial class EntryConvert
             var entry = parameterEntries[i];
             var parameter = parameters[i];
             var paramType = parameter.ParameterType;
+
+            // Converters decode the complete entry, rejected values fall back to the parameter default
+            var converter = customSerialization.GetConverter(paramType, parameter);
+            if (converter is not null)
+            {
+                var context = new EntryConverterContext(paramType, parameter, customSerialization, instance);
+                arguments[i] = converter.Decode(entry, DefaultArgument(parameter), context);
+                continue;
+            }
+
             var argument = customSerialization.ConvertValue(paramType, parameter, entry, null);
 
             // Value types and strings do not need recursion

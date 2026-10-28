@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Reflection;
 using Moq;
 using Moryx.Configuration;
 using Moryx.Container;
@@ -125,6 +126,70 @@ public class EntryConvertTypeEntryConverterTests
 
         // Act & Assert
         Assert.Throws<ArgumentException>(() => EntryConvert.UpdateInstance(dummy, encoded, serialization));
+    }
+
+    [Test]
+    public void EncodeMethod_WithTypeParameterAndPossibleTypes_ProvidesPossibleTypeNames()
+    {
+        // Act
+        var encoded = EntryConvert.EncodeMethod(SelectMethod, CreatePossibleValuesSerialization());
+
+        // Assert
+        var parameter = encoded.Parameters.SubEntries.Single();
+        Assert.Multiple(() =>
+        {
+            Assert.That(parameter.Value.Type, Is.EqualTo(EntryValueType.String));
+            Assert.That(parameter.Value.Possible.Select(p => p.Key), Is.EquivalentTo([typeof(string).FullName, typeof(int).FullName]));
+            Assert.That(parameter.Value.IsReadOnly, Is.False);
+            Assert.That(parameter.Validation.IsRequired, Is.True);
+        });
+    }
+
+    [Test]
+    public void InvokeMethod_WithTypeParameterAndPossibleTypes_ResolvesType()
+    {
+        // Arrange
+        var serialization = CreatePossibleValuesSerialization();
+        var dummy = new TypeMethodDummy();
+        var encoded = EntryConvert.EncodeMethod(SelectMethod, serialization);
+        encoded.Parameters.SubEntries.Single().Value.Current = typeof(int).FullName;
+
+        // Act
+        EntryConvert.InvokeMethod(dummy, encoded, serialization);
+
+        // Assert
+        Assert.That(dummy.Received, Is.EqualTo(typeof(int)));
+    }
+
+    [Test]
+    public void InvokeMethod_WithTypeParameterMissingPossibleTypes_PassesParameterDefault()
+    {
+        // Arrange
+        var dummy = new TypeMethodDummy();
+        var encoded = EntryConvert.EncodeMethod(typeof(TypeMethodDummy).GetMethod(nameof(TypeMethodDummy.SelectAny))!);
+        var parameter = encoded.Parameters.SubEntries.Single();
+        parameter.Value.Current = typeof(int).FullName;
+
+        // Act
+        EntryConvert.InvokeMethod(dummy, encoded);
+
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(parameter.Value.IsReadOnly, Is.True);
+            Assert.That(dummy.Received, Is.Null);
+        });
+    }
+
+    private static MethodInfo SelectMethod => typeof(TypeMethodDummy).GetMethod(nameof(TypeMethodDummy.Select))!;
+
+    public class TypeMethodDummy
+    {
+        public Type Received { get; private set; } = typeof(object);
+
+        public void Select([PossibleTypes([typeof(string), typeof(int)], UseFullname = true)] Type type) => Received = type;
+
+        public void SelectAny(Type type) => Received = type;
     }
 
     public class TypeDummy
