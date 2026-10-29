@@ -7,9 +7,30 @@ namespace Moryx.Serialization;
 public class EntrySerializeAttribute : Attribute
 {
     /// <summary>
-    /// Configured mode for the entry to serialize
+    /// Configured <see cref="EntrySerializeMode"/> for the entry to serialize
     /// </summary>
     public EntrySerializeMode Mode { get; }
+
+    /// <summary>
+    /// Type of the <see cref="EntryConverter"/> that takes over the conversion of this member,
+    /// or of all members of this type. Must derive from <see cref="EntryConverter"/> and provide
+    /// a public parameterless constructor.
+    /// </summary>
+    public Type ConverterType
+    {
+        get => field;
+        set
+        {
+            EntryConverterAttributeValidation.ValidateConverterType(value, nameof(ConverterType));
+            field = value;
+        }
+    }
+
+    /// <summary>
+    /// Defines whether <see cref="ConverterType"/> converts this member or the items of this collection member.
+    /// The default is <see cref="EntryConverterTarget.Member"/>.
+    /// </summary>
+    public EntryConverterTarget ConverterTarget { get; set; }
 
     /// <summary>
     /// Creates a new instance of the <see cref="EntrySerializeAttribute"/>. The default mode is <see cref="EntrySerializeMode.Always"/>

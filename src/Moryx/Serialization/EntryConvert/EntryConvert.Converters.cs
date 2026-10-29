@@ -13,7 +13,8 @@ namespace Moryx.Serialization;
 public static partial class EntryConvert
 {
     /// <summary>
-    /// Converters that are applied to all matching members without an explicit <see cref="EntryConverterAttribute"/>
+    /// Converters that are applied to all matching members without an explicit
+    /// <see cref="EntrySerializeAttribute.ConverterType"/>
     /// </summary>
     private static readonly EntryConverter[] _defaultConverters =
     [
@@ -32,12 +33,12 @@ public static partial class EntryConvert
         _defaultConverters.OfType<NumericStructEntryConverter>().Select(c => c.TargetType).ToHashSet();
 
     /// <summary>
-    /// Shared converter instances created from <see cref="EntryConverterAttribute"/>
+    /// Shared converter instances created from <see cref="EntrySerializeAttribute.ConverterType"/>
     /// </summary>
     private static readonly ConcurrentDictionary<Type, EntryConverter> _converters = new();
 
     /// <summary>
-    /// Resolve the <see cref="EntryConverter"/> of a member. The <see cref="EntryConverterAttribute"/> on the member
+    /// Resolve the <see cref="EntryConverter"/> of a member. The <see cref="EntrySerializeAttribute"/> on the member
     /// takes precedence over the attribute on the member type, followed by the built-in default converters.
     /// </summary>
     /// <param name="memberType">Either <see cref="PropertyInfo.PropertyType"/> or <see cref="ParameterInfo.ParameterType"/></param>
@@ -45,21 +46,21 @@ public static partial class EntryConvert
     /// <returns>Converter of the member or <c>null</c>, if the member uses the default conversion</returns>
     public static EntryConverter ResolveConverter(Type memberType, ICustomAttributeProvider attributeProvider)
     {
-        var converterType = attributeProvider?.GetCustomAttribute<EntryConverterAttribute>()?.ConverterType
-            ?? memberType.GetCustomAttribute<EntryConverterAttribute>()?.ConverterType;
+        var converterType = DeclaredConverterType(attributeProvider, memberType, EntryConverterTarget.Member)
+            ?? DeclaredConverterType(memberType, memberType, EntryConverterTarget.Member);
 
         return FromConverterType(converterType, memberType)
             ?? _defaultConverters.FirstOrDefault(c => c.CanConvert(memberType));
     }
 
     /// <summary>
-    /// Resolve the <see cref="EntryConverter"/> for the elements of a collection member. The
-    /// <see cref="EntryItemConverterAttribute"/> on the member takes precedence over the
-    /// <see cref="EntryConverterAttribute"/> on the element type, followed by the built-in default converters.
+    /// Resolve the <see cref="EntryConverter"/> for the items of a collection member. The
+    /// <see cref="EntrySerializeAttribute"/> on the member takes precedence over the attribute on the
+    /// item type, followed by the built-in default converters.
     /// </summary>
     /// <param name="memberType">Collection type of the member</param>
     /// <param name="attributeProvider">The <see cref="PropertyInfo"/> or <see cref="ParameterInfo"/> to retrieve custom attributes</param>
-    /// <returns>Converter of the elements or <c>null</c>, if the elements use the default conversion</returns>
+    /// <returns>Converter of the items or <c>null</c>, if the items use the default conversion</returns>
     public static EntryConverter ResolveItemConverter(Type memberType, ICustomAttributeProvider attributeProvider)
     {
         if (!TryGetElementType(memberType, out var elementType))
@@ -67,11 +68,37 @@ public static partial class EntryConvert
             return null;
         }
 
-        var converterType = attributeProvider?.GetCustomAttribute<EntryItemConverterAttribute>()?.ConverterType
-            ?? elementType.GetCustomAttribute<EntryConverterAttribute>()?.ConverterType;
+        var converterType = DeclaredConverterType(attributeProvider, memberType, EntryConverterTarget.Items)
+            ?? DeclaredConverterType(elementType, elementType, EntryConverterTarget.Member);
 
         return FromConverterType(converterType, elementType)
             ?? _defaultConverters.FirstOrDefault(c => c.CanConvert(elementType));
+    }
+
+    private static Type DeclaredConverterType(ICustomAttributeProvider attributeProvider, Type memberType, EntryConverterTarget target)
+    {
+        var attribute = attributeProvider?.GetCustomAttribute<EntrySerializeAttribute>();
+        if (attribute is null || attribute.ConverterTarget != target)
+        {
+            return null;
+        }
+
+        if (attribute.ConverterTarget == EntryConverterTarget.Items)
+        {
+            if (attribute.ConverterType is null)
+            {
+                throw new InvalidOperationException(
+                    $"{nameof(EntrySerializeAttribute.ConverterTarget)} {EntryConverterTarget.Items} requires a {nameof(EntrySerializeAttribute.ConverterType)}.");
+            }
+
+            if (!TryGetElementType(memberType, out _))
+            {
+                throw new InvalidOperationException(
+                    $"{nameof(EntrySerializeAttribute.ConverterTarget)} {EntryConverterTarget.Items} is not supported for the non-collection type {memberType.Name}.");
+            }
+        }
+
+        return attribute.ConverterType;
     }
 
     private static bool TryGetElementType(Type memberType, out Type elementType)

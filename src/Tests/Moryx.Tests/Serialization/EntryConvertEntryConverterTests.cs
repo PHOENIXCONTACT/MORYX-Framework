@@ -204,6 +204,26 @@ public class EntryConvertEntryConverterTests
         Assert.That(dummy.ByProperty.Select(t => t.Tag), Is.EqualTo(["b", "c"]));
     }
 
+    [Test]
+    public void EncodeObject_WithItemsTargetButNoConverterType_Throws()
+    {
+        // Arrange
+        var dummy = new MissingItemsConverterDummy { Items = [] };
+
+        // Act & Assert
+        Assert.Throws<InvalidOperationException>(() => EntryConvert.EncodeObject(dummy));
+    }
+
+    [Test]
+    public void EncodeObject_WithItemsTargetOnSingleValue_Throws()
+    {
+        // Arrange
+        var dummy = new ItemsConverterOnSingleValueDummy { Single = new Tagged { Tag = "a" } };
+
+        // Act & Assert
+        Assert.Throws<InvalidOperationException>(() => EntryConvert.EncodeObject(dummy));
+    }
+
     private static Entry SubEntry(Entry entry, string identifier) =>
         entry.SubEntries.Single(e => e.Identifier == identifier);
 
@@ -211,11 +231,23 @@ public class EntryConvertEntryConverterTests
     {
         public List<Tagged> ByType { get; set; }
 
-        [EntryItemConverter(typeof(PropertyTagConverter))]
+        [EntrySerialize(ConverterType = typeof(PropertyTagConverter), ConverterTarget = EntryConverterTarget.Items)]
         public List<Tagged> ByProperty { get; set; }
 
-        [EntryConverter(typeof(TagListConverter)), EntryItemConverter(typeof(PropertyTagConverter))]
+        [EntrySerialize(ConverterType = typeof(TagListConverter))]
         public List<Tagged> Whole { get; set; }
+    }
+
+    public class MissingItemsConverterDummy
+    {
+        [EntrySerialize(ConverterTarget = EntryConverterTarget.Items)]
+        public List<Tagged> Items { get; set; }
+    }
+
+    public class ItemsConverterOnSingleValueDummy
+    {
+        [EntrySerialize(ConverterType = typeof(PropertyTagConverter), ConverterTarget = EntryConverterTarget.Items)]
+        public Tagged Single { get; set; }
     }
 
     public class TagListConverter : EntryConverter
@@ -239,10 +271,10 @@ public class EntryConvertEntryConverterTests
     {
         public Tagged Received { get; private set; }
 
-        public void Apply([EntryConverter(typeof(PropertyTagConverter))] Tagged tagged) => Received = tagged;
+        public void Apply([EntrySerialize(ConverterType = typeof(PropertyTagConverter))] Tagged tagged) => Received = tagged;
     }
 
-    [EntryConverter(typeof(TypeTagConverter))]
+    [EntrySerialize(ConverterType = typeof(TypeTagConverter))]
     public class Tagged
     {
         public string Tag { get; set; }
@@ -252,7 +284,7 @@ public class EntryConvertEntryConverterTests
     {
         public Tagged ByType { get; set; }
 
-        [EntryConverter(typeof(PropertyTagConverter))]
+        [EntrySerialize(ConverterType = typeof(PropertyTagConverter))]
         public Tagged ByProperty { get; set; }
     }
 
