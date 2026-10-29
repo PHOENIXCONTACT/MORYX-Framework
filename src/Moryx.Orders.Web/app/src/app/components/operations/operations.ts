@@ -17,8 +17,9 @@ import {
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
-import { Router } from '@angular/router';
-import { SnackbarService } from '@moryx/ngx-web-framework/services';
+import { Location } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
+import { SearchBarService, SearchRequest, SearchSuggestion, SnackbarService } from '@moryx/ngx-web-framework/services';
 import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
@@ -82,6 +83,9 @@ export class Operations implements OnInit {
   private orderManagementService = inject(OrderManagementService);
   private dialog = inject(MatDialog);
   private router = inject(Router);
+  private location = inject(Location);
+  private activatedRoute = inject(ActivatedRoute);
+  private searchBarService = inject(SearchBarService);
   private translateService = inject(TranslateService);
   private snackbarService = inject(SnackbarService);
   private operationService = inject(OperationService);
@@ -104,6 +108,7 @@ export class Operations implements OnInit {
   protected mobileQuery: MediaQueryList;
   protected readonly drawer = viewChild.required<MatDrawer>('drawer');
   protected hideCompleted = this.filterService.hideCompleted;
+  protected selectedOperationId = signal<string | undefined>(undefined);
 
   constructor() {
     this.mobileQuery = this.mediaMatcher.matchMedia('(max-width: 1279px)');
@@ -124,9 +129,17 @@ export class Operations implements OnInit {
           return viewModel;
         }))
       this.isLoading.set(false);
+      this.selectOperationFromQueryParam();
     }).catch(async (err: HttpErrorResponse) => {
       await this.snackbarService.handleError(err);
       this.isLoading.set(false);
+    });
+
+    // Searchbar
+    this.searchBarService.subscribe({
+      next: (request: SearchRequest) => {
+        this.onSearch(request);
+      }
     });
 
     // Register events
@@ -151,6 +164,50 @@ export class Operations implements OnInit {
       }
     });
 
+  }
+
+  private selectOperationFromQueryParam() {
+    const id = this.activatedRoute.snapshot.queryParamMap.get('selected');
+    if (id) {
+      this.selectedOperationId.set(id);
+    }
+  }
+
+  private updateQueryParam(identifier: string | undefined) {
+    void this.router.navigate([], {
+      queryParams: identifier ? { selected: identifier } : {},
+      replaceUrl: true
+    });
+  }
+
+  private onSearch(request: SearchRequest) {
+    if (request.submitted) {
+      const matches = this.operations().filter(o => this.isMatch(o, request.term));
+      if (matches.length === 1) {
+        const id = matches[0].model.identifier!;
+        this.selectedOperationId.set(id);
+        this.updateQueryParam(id);
+      }
+      this.searchBarService.subscribe({
+        next: (newRequest: SearchRequest) => {
+          this.onSearch(newRequest);
+        }
+      });
+    } else {
+      const suggestions: SearchSuggestion[] = this.operations()
+        .filter(o => this.isMatch(o, request.term))
+        .map(o => ({
+          text: `${o.model.order ?? ''}-${o.model.number ?? ''}`,
+          url: this.location.prepareExternalUrl(this.router.serializeUrl(
+            this.router.createUrlTree(['operations'], {
+              queryParams: {
+                selected: o.model.identifier
+              }
+            })
+          ))
+        }));
+      this.searchBarService.provideSuggestions(suggestions);
+    }
   }
 
   protected filteringOperations(operations: OperationViewModel[]): OperationViewModel[] {
@@ -312,6 +369,8 @@ export class Operations implements OnInit {
     if (isExpanded) {
       // Panel is being expanded
       this.selectedOperation.set(operation.model);
+      this.selectedOperationId.set(operation.model.identifier);
+      this.updateQueryParam(operation.model.identifier);
     } else {
       // Panel is being collapsed
       this.onPanelCollapse(operation);
@@ -322,6 +381,8 @@ export class Operations implements OnInit {
     if (this.selectedOperation()?.identifier === operation.model.identifier) {
       // User clicked to close the panel
       this.selectedOperation.set(undefined);
+      this.selectedOperationId.set(undefined);
+      this.updateQueryParam(undefined);
       if (this.drawerContent() !== DrawerContent.Filter) {
         this.closeDrawer();
       }
@@ -337,6 +398,7 @@ export class Operations implements OnInit {
 
   protected disconnectEvents(): void {
     this.mobileQuery.removeEventListener('change', this._mobileQueryListener);
+    this.searchBarService.unsubscribe();
     this.operationService.disconnect();
   }
 }
