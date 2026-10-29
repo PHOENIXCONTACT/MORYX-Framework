@@ -43,7 +43,10 @@
       "STAGING_INDICATOR": "Indicatore di gestione temporanea"
     },
     "FILTERS": {
-      "HIDE_COMPLETED": "Nascondi completati"
+      "HIDE_COMPLETED": "Nascondi completati",
+      "FILTER_TERM": "Termine di filtro",
+      "FILTER_TERM_DESCRIPTION": "Filtra per ordine, operazione, prodotto o stato",
+      "RESET": "Reimposta"
     },
     "EMPTY_LOG": "Questo registro è vuoto",
     "FAILED_LOADING": "Non è stato possibile stabilire la connessione al server. Controllare la connessione di rete o riprovare più tardi.",

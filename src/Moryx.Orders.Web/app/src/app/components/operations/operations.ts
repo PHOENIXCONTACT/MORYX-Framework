@@ -18,7 +18,7 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
-import { SearchBarService, SearchRequest, SnackbarService } from '@moryx/ngx-web-framework/services';
+import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
@@ -82,7 +82,6 @@ export class Operations implements OnInit {
   private orderManagementService = inject(OrderManagementService);
   private dialog = inject(MatDialog);
   private router = inject(Router);
-  private searchBarService = inject(SearchBarService);
   private translateService = inject(TranslateService);
   private snackbarService = inject(SnackbarService);
   private operationService = inject(OperationService);
@@ -103,7 +102,6 @@ export class Operations implements OnInit {
   protected OperationStateClassification = OperationStateClassification;
   protected isLoading = signal<boolean>(true);
   protected mobileQuery: MediaQueryList;
-  private searchTerm = signal<string>('');
   protected readonly drawer = viewChild.required<MatDrawer>('drawer');
   protected hideCompleted = this.filterService.hideCompleted;
 
@@ -153,30 +151,10 @@ export class Operations implements OnInit {
       }
     });
 
-    // Searchbar
-    this.searchBarService.subscribe({
-      next: (request: SearchRequest) => {
-        this.onSearch(request);
-      }
-    });
-  }
-
-  protected onSearch(request: SearchRequest) {
-    if (request.submitted) {
-      this.searchBarService.clearSuggestions();
-      this.searchTerm.set('');
-      this.searchBarService.subscribe({
-        next: (newRequest: SearchRequest) => {
-          this.onSearch(newRequest);
-        }
-      });
-    } else {
-      this.searchTerm.set(request.term);
-    }
   }
 
   protected filteringOperations(operations: OperationViewModel[]): OperationViewModel[] {
-    const searchTerm = this.searchTerm();
+    const searchTerm = this.filterService.searchTerm();
     const hideCompleted = this.hideCompleted();
 
     return operations
@@ -199,13 +177,12 @@ export class Operations implements OnInit {
   }
 
   private isMatch(operation: OperationViewModel, searchTerm: string) : boolean {
-    const result = (operation.model.order?.includes(searchTerm) ||
-      operation.model.number?.includes(searchTerm) ||
-      operation.model.productIdentifier?.includes(searchTerm) ||
-      operation.model.productName?.includes(searchTerm) ||
-      operation.model.stateDisplayName?.includes(searchTerm)) ?? false;
-
-    return result;
+    const term = searchTerm.toLowerCase();
+    return (operation.model.order?.toLowerCase().includes(term) ||
+      operation.model.number?.toLowerCase().includes(term) ||
+      operation.model.productIdentifier?.toLowerCase().includes(term) ||
+      operation.model.productName?.toLowerCase().includes(term) ||
+      operation.model.stateDisplayName?.toLowerCase().includes(term)) ?? false;
   }
 
   protected async onBegin(operation: OperationViewModel) {
@@ -360,7 +337,6 @@ export class Operations implements OnInit {
 
   protected disconnectEvents(): void {
     this.mobileQuery.removeEventListener('change', this._mobileQueryListener);
-    this.searchBarService.unsubscribe();
     this.operationService.disconnect();
   }
 }

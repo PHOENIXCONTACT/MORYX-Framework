@@ -43,7 +43,10 @@
       "STAGING_INDICATOR": "Bereitstellungskennzeichen"
     },
     "FILTERS": {
-      "HIDE_COMPLETED": "Abgeschlossene ausblenden"
+      "HIDE_COMPLETED": "Abgeschlossene ausblenden",
+      "FILTER_TERM": "Filterbegriff",
+      "FILTER_TERM_DESCRIPTION": "Filtert nach Auftrag, Vorgang, Produkt oder Status",
+      "RESET": "Zurücksetzen"
     },
     "EMPTY_LOG": "Dieses Protokoll ist leer",
     "FAILED_LOADING": "Die Verbindung zum Server ist leider fehlgeschlagen. Bitte überprüfe deine Netzwerkverbindung oder versuch es später nochmal.",
