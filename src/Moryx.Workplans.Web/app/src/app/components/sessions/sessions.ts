@@ -7,6 +7,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, effect, inject, OnDestroy, OnInit, signal, untracked, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, RouterOutlet } from '@angular/router';
+import { Location } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
 import { SnackbarService, SearchBarService, SearchRequest, SearchSuggestion } from '@moryx/ngx-web-framework/services';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -47,6 +48,7 @@ export class Sessions implements OnInit, OnDestroy {
   private router = inject( Router );
   private dialog = inject( MatDialog );
   private searchBarService = inject( SearchBarService );
+  private location = inject( Location );
   private translateService = inject( TranslateService );
   private editorStateService = inject( EditorStateService );
 
@@ -138,8 +140,6 @@ export class Sessions implements OnInit, OnDestroy {
       return;
     }
 
-    const urlWorkplans = 'Workplans/';
-    const urlSession = 'session/';
     const searchterm = request.term.toLowerCase();
     let sessions = this.sessions().filter( s => s.name?.toLowerCase().includes( searchterm ) );
 
@@ -153,7 +153,7 @@ export class Sessions implements OnInit, OnDestroy {
       if ( sessions.length === 1 && sessions[0].sessionToken && sessions[0].name ) {
         const session = sessions[0];
         this.activateSession( session.sessionToken! );
-        this.router.navigate( [urlSession + session.sessionToken] );
+        this.router.navigate( ['session', session.sessionToken] );
       }
       this.searchBarService.subscribe( {
         next: ( newRequest: SearchRequest ) => {
@@ -167,7 +167,9 @@ export class Sessions implements OnInit, OnDestroy {
           continue;
         }
 
-        const url = urlWorkplans + urlSession + session.sessionToken;
+        const url = this.location.prepareExternalUrl( this.router.serializeUrl(
+          this.router.createUrlTree( ['session', session.sessionToken] )
+        ) );
         searchSuggestions.push( { text: session.name, url: url } );
       }
 
