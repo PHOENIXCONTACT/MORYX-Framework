@@ -143,27 +143,32 @@ export class Operations implements OnInit {
     });
 
     // Register events
-    this.operationService.connect((updatedOperation: OperationModel) => {
-      if (!updatedOperation) {
-        return;
-      }
+    this.operationService.connect((model) => this.onOperationUpdated(model));
 
-      const existent = this.operations().find(o => o.model.identifier == updatedOperation.identifier);
-      if (existent) {
-        existent.updateModel(updatedOperation);
+  }
 
-        // TODO: This is a workaround to trigger change detection for the updated job.
-        //  The OperationViewModel is mutable and Angular does not detect changes to its properties.
-        //  Consider refactoring OperationViewModel to be immutable to avoid this issue.
-        this.changeDetectorRef.markForCheck();
-      } else {
-        this.operations.update(operations => {
-          operations.push(new OperationViewModel(updatedOperation));
-          return operations
-        });
+  private onOperationUpdated(updatedOperation: OperationModel) {
+    if (!updatedOperation) {
+      return;
+    }
+
+    this.operations.update(operations => {
+      // Create a new array with replaced/added item to trigger computed() re-evaluation.
+      // errorMessagesCount is preserved because it is fetched separately via getLogs.
+
+      const index = operations.findIndex(o => o.model.identifier == updatedOperation.identifier);
+      if (index >= 0) {
+        const updated = new OperationViewModel(updatedOperation);
+        updated.errorMessagesCount = operations[index].errorMessagesCount;
+
+        // replace on previous index
+        const copy = [...operations];
+        copy[index] = updated;
+
+        return copy;
       }
+      return [...operations, new OperationViewModel(updatedOperation)];
     });
-
   }
 
   private selectOperationFromQueryParam() {
@@ -348,7 +353,7 @@ export class Operations implements OnInit {
     }
   }
 
-  subscribeForMessagesCount(operation: OperationViewModel) {
+  private subscribeForMessagesCount(operation: OperationViewModel) {
     this.orderManagementService.getLogs({guid: operation.model.identifier!}).then(
       messages =>
         (operation.errorMessagesCount = messages.filter(

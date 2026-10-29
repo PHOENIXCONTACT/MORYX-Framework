@@ -15,15 +15,10 @@ export class OperationViewModel {
 
   constructor(model: OperationModel) {
     this.model = model;
-    this.updateDeliveryThreshold();
+    this.setDeliveryThreshold();
   }
 
-  public updateModel(model: OperationModel): void {
-    this.model = model;
-    this.updateDeliveryThreshold();
-  }
-
-  private updateDeliveryThreshold(): void {
+  private setDeliveryThreshold(): void {
     if (this.model.totalAmount) {
       if (this.model.overDeliveryAmount) {
         this.overDelivery = Math.round(this.model.overDeliveryAmount / this.model.totalAmount) * 100;
