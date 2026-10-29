@@ -186,8 +186,13 @@ export class Operations implements OnInit {
   }
 
   private onSearch(request: SearchRequest) {
+    const hideCompleted = this.hideCompleted();
+    const visibleOperations = hideCompleted
+      ? this.operations().filter(o => o.model.classification !== OperationStateClassification.Completed)
+      : this.operations();
+
     if (request.submitted) {
-      const matches = this.operations().filter(o => this.isMatch(o, request.term));
+      const matches = visibleOperations.filter(o => this.isMatch(o, request.term));
       if (matches.length === 1) {
         const id = matches[0].model.identifier!;
         this.selectedOperationId.set(id);
@@ -199,7 +204,7 @@ export class Operations implements OnInit {
         }
       });
     } else {
-      const suggestions: SearchSuggestion[] = this.operations()
+      const suggestions: SearchSuggestion[] = visibleOperations
         .filter(o => this.isMatch(o, request.term))
         .map(o => ({
           text: `${o.model.order ?? ''} - ${o.model.number ?? ''}`,
