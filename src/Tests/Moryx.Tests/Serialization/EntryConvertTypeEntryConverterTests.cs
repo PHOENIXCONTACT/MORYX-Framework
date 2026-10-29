@@ -181,6 +181,52 @@ public class EntryConvertTypeEntryConverterTests
         });
     }
 
+    [Test]
+    public void EncodeObject_OnTypeListWithPossibleTypes_ProvidesPossibleTypeNamesPerItem()
+    {
+        // Arrange
+        var dummy = new TypeListDummy { Types = [typeof(string)] };
+
+        // Act
+        var encoded = EntryConvert.EncodeObject(dummy, CreatePossibleValuesSerialization());
+
+        // Assert
+        var item = SubEntry(encoded, nameof(TypeListDummy.Types)).SubEntries.Single();
+        Assert.Multiple(() =>
+        {
+            Assert.That(item.Value.Type, Is.EqualTo(EntryValueType.String));
+            Assert.That(item.Value.Current, Is.EqualTo(typeof(string).FullName));
+            Assert.That(item.Value.Possible.Select(p => p.Key), Is.EquivalentTo([typeof(string).FullName, typeof(int).FullName]));
+            Assert.That(item.Value.IsReadOnly, Is.False);
+        });
+    }
+
+    [Test]
+    public void UpdateInstance_OnTypeListWithPossibleTypes_ResolvesUpdatedAndAddedItems()
+    {
+        // Arrange
+        var serialization = CreatePossibleValuesSerialization();
+        var dummy = new TypeListDummy { Types = [typeof(string)] };
+        var encoded = EntryConvert.EncodeObject(dummy, serialization);
+        var entry = SubEntry(encoded, nameof(TypeListDummy.Types));
+        entry.SubEntries.Single().Value.Current = typeof(int).FullName;
+        var added = entry.Prototypes.Single().Instantiate();
+        added.Value.Current = typeof(string).FullName;
+        entry.SubEntries.Add(added);
+
+        // Act
+        EntryConvert.UpdateInstance(dummy, encoded, serialization);
+
+        // Assert
+        Assert.That(dummy.Types, Is.EqualTo(new[] { typeof(int), typeof(string) }));
+    }
+
+    public class TypeListDummy
+    {
+        [PossibleTypes([typeof(string), typeof(int)], UseFullname = true)]
+        public List<Type> Types { get; set; }
+    }
+
     private static MethodInfo SelectMethod => typeof(TypeMethodDummy).GetMethod(nameof(TypeMethodDummy.Select))!;
 
     public class TypeMethodDummy

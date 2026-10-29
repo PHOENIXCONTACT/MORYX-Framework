@@ -8,26 +8,23 @@ namespace Moryx.Serialization;
 /// <summary>
 /// Dictionary implementation of <see cref="ICollectionStrategy"/>
 /// </summary>
-internal class DictionaryStrategy : ICollectionStrategy
+internal class DictionaryStrategy(IDictionary dictionary, ICustomSerialization serialization) : ICollectionStrategy
 {
-    private readonly IDictionary _dictionary;
-    private readonly ICustomSerialization _serialization;
+    /// <summary>
+    /// Optional encoder for the values of the dictionary
+    /// </summary>
+    internal Func<object, Entry> EncodeItem { get; init; }
 
-    public DictionaryStrategy(IDictionary dictionary, ICustomSerialization serialization)
-    {
-        _serialization = serialization;
-        _dictionary = dictionary;
-    }
-
+    /// <inheritdoc/>
     public IEnumerable<Entry> Serialize()
     {
         var entries = new List<Entry>();
-        foreach (var key in _dictionary.Keys)
+        foreach (var key in dictionary.Keys)
         {
-            var value = _dictionary[key];
+            var value = dictionary[key];
             var keyString = key.ToString();
 
-            var subEntry = EntryConvert.EncodeObject(value, _serialization);
+            var subEntry = CollectionStrategyTools.EncodeItem(value, serialization, EncodeItem);
             subEntry.DisplayName = keyString;
             subEntry.Identifier = keyString;
 
@@ -36,43 +33,47 @@ internal class DictionaryStrategy : ICollectionStrategy
         return entries;
     }
 
-    public IEnumerable<string> Keys()
-    {
-        return _dictionary.Keys.OfType<object>().Select(key => key.ToString()).ToArray();
-    }
+    /// <inheritdoc/>
+    public IEnumerable<string> Keys() => dictionary.Keys.OfType<object>().Select(key => key.ToString()).ToArray();
 
+    /// <inheritdoc/>
     public object ElementAt(string key)
     {
         var keyValue = EntryValue(key);
-        return _dictionary[keyValue];
+        return dictionary[keyValue];
     }
 
+    /// <inheritdoc/>
     public void Added(Entry entry, object addedValue)
     {
         var keyValue = EntryValue(entry.DisplayName);
-        _dictionary.Add(keyValue, addedValue);
+        dictionary.Add(keyValue, addedValue);
     }
 
+    /// <inheritdoc/>
     public void Updated(Entry entry, object updatedValue)
     {
         Removed(entry.Identifier);
         Added(entry, updatedValue);
     }
 
+    /// <inheritdoc/>
     public void Removed(string key)
     {
         var entryValue = EntryValue(key);
-        _dictionary.Remove(entryValue);
+        dictionary.Remove(entryValue);
     }
 
+    /// <inheritdoc/>
     public void Flush()
     {
     }
 
+    /// <inheritdoc/>
     private object EntryValue(string entry)
     {
-        var entryType = _dictionary.GetType().GenericTypeArguments[0];
-        var entryValue = EntryConvert.ToObject(entryType, entry, _serialization.FormatProvider);
+        var entryType = dictionary.GetType().GenericTypeArguments[0];
+        var entryValue = EntryConvert.ToObject(entryType, entry, serialization.FormatProvider);
         return entryValue;
     }
 }

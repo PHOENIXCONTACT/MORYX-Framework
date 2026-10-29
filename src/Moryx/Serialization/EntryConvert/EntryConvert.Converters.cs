@@ -45,8 +45,50 @@ public static partial class EntryConvert
     /// <returns>Converter of the member or <c>null</c>, if the member uses the default conversion</returns>
     public static EntryConverter ResolveConverter(Type memberType, ICustomAttributeProvider attributeProvider)
     {
-        var converter = FromAttribute(attributeProvider, memberType) ?? FromAttribute(memberType, memberType);
-        return converter ?? _defaultConverters.FirstOrDefault(c => c.CanConvert(memberType));
+        var converterType = attributeProvider?.GetCustomAttribute<EntryConverterAttribute>()?.ConverterType
+            ?? memberType.GetCustomAttribute<EntryConverterAttribute>()?.ConverterType;
+
+        return FromConverterType(converterType, memberType)
+            ?? _defaultConverters.FirstOrDefault(c => c.CanConvert(memberType));
+    }
+
+    /// <summary>
+    /// Resolve the <see cref="EntryConverter"/> for the elements of a collection member. The
+    /// <see cref="EntryItemConverterAttribute"/> on the member takes precedence over the
+    /// <see cref="EntryConverterAttribute"/> on the element type, followed by the built-in default converters.
+    /// </summary>
+    /// <param name="memberType">Collection type of the member</param>
+    /// <param name="attributeProvider">The <see cref="PropertyInfo"/> or <see cref="ParameterInfo"/> to retrieve custom attributes</param>
+    /// <returns>Converter of the elements or <c>null</c>, if the elements use the default conversion</returns>
+    public static EntryConverter ResolveItemConverter(Type memberType, ICustomAttributeProvider attributeProvider)
+    {
+        if (!TryGetElementType(memberType, out var elementType))
+        {
+            return null;
+        }
+
+        var converterType = attributeProvider?.GetCustomAttribute<EntryItemConverterAttribute>()?.ConverterType
+            ?? elementType.GetCustomAttribute<EntryConverterAttribute>()?.ConverterType;
+
+        return FromConverterType(converterType, elementType)
+            ?? _defaultConverters.FirstOrDefault(c => c.CanConvert(elementType));
+    }
+
+    private static bool TryGetElementType(Type memberType, out Type elementType)
+    {
+        elementType = null;
+        if (!IsCollection(memberType))
+        {
+            return false;
+        }
+
+        if (!memberType.IsArray && !memberType.IsGenericType)
+        {
+            return false;
+        }
+
+        elementType = ElementType(memberType);
+        return elementType != null;
     }
 
     /// <summary>
@@ -54,16 +96,15 @@ public static partial class EntryConvert
     /// </summary>
     private static bool IsSupportedStructType(Type type) => _structTypes.Contains(type);
 
-    private static EntryConverter FromAttribute(ICustomAttributeProvider attributeProvider, Type memberType)
+    private static EntryConverter FromConverterType(Type converterType, Type memberType)
     {
-        var attribute = attributeProvider?.GetCustomAttribute<EntryConverterAttribute>();
-        if (attribute == null)
+        if (converterType == null)
         {
             return null;
         }
 
-        var converter = _converters.GetOrAdd(attribute.ConverterType, type => (EntryConverter)Activator.CreateInstance(type));
+        var converter = _converters.GetOrAdd(converterType, type => (EntryConverter)Activator.CreateInstance(type));
         return converter.CanConvert(memberType) ? converter
-            : throw new InvalidOperationException($"{attribute.ConverterType.Name} can not convert members of type {memberType.Name}.");
+            : throw new InvalidOperationException($"{converterType.Name} can not convert members of type {memberType.Name}.");
     }
 }

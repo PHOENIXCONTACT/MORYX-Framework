@@ -116,8 +116,7 @@ public static partial class EntryConvert
         }
 
         // Determine and convert prototypes
-        var prototypes = Prototypes(property.PropertyType, property, customSerialization, instance);
-        entry.Prototypes.AddRange(prototypes);
+        AddPrototypes(entry, property.PropertyType, property, customSerialization, instance);
 
         return entry;
     }
@@ -170,6 +169,45 @@ public static partial class EntryConvert
 
         var readOnlyAtt = property.GetCustomAttribute<ReadOnlyAttribute>();
         return readOnlyAtt?.IsReadOnly ?? false;
+    }
+
+    /// <summary>
+    /// Add the prototypes for possible values to an entry. Collections with an item converter use the prototypes
+    /// of the converter and offer them as possible values for new items.
+    /// </summary>
+    private static void AddPrototypes(Entry entry, Type memberType, ICustomAttributeProvider attributeProvider,
+        ICustomSerialization customSerialization, object instance)
+    {
+        var itemConverter = IsCollection(memberType) ? customSerialization.GetItemConverter(memberType, attributeProvider) : null;
+        if (itemConverter is null)
+        {
+            entry.Prototypes.AddRange(Prototypes(memberType, attributeProvider, customSerialization, instance));
+            return;
+        }
+
+        var prototypes = ItemPrototypes(itemConverter, memberType, attributeProvider, customSerialization, instance);
+        entry.Prototypes.AddRange(prototypes);
+        entry.Value.Possible = prototypes
+            .Select(p => new EntryPossible { Key = p.Identifier, DisplayName = p.DisplayName, Description = p.Description })
+            .ToArray();
+    }
+
+    /// <summary>
+    /// Create the prototypes of an item converter, which are either the prototypes of the encoded empty item
+    /// or the encoded empty item itself
+    /// </summary>
+    private static IReadOnlyList<Entry> ItemPrototypes(EntryConverter itemConverter, Type memberType,
+        ICustomAttributeProvider attributeProvider, ICustomSerialization customSerialization, object instance)
+    {
+        var context = CreateItemContext(memberType, attributeProvider, customSerialization, instance);
+        var emptyItem = EncodeWith(itemConverter, context, null, CreateFromType(context.MemberType, customSerialization));
+        if (emptyItem.Prototypes.Count > 0)
+        {
+            return emptyItem.Prototypes;
+        }
+
+        emptyItem.Identifier = context.MemberType.Name;
+        return [emptyItem];
     }
 
     /// <summary>
@@ -352,13 +390,7 @@ public static partial class EntryConvert
         // Collections are encoded as a root entry with subentries
         if (converted.Value.Type == EntryValueType.Collection)
         {
-            var possibleElementValues = customSerialization.PossibleElementValues(instanceType, instanceType);
-            var strategy = CreateStrategy(instance, instance, instanceType, customSerialization);
-            foreach (var entry in strategy.Serialize())
-            {
-                entry.Value.Possible = possibleElementValues;
-                converted.SubEntries.Add(entry);
-            }
+            converted.SubEntries.AddRange(EncodeItems(instance, instanceType, instanceType, customSerialization, null));
             return converted;
         }
 
@@ -393,13 +425,7 @@ public static partial class EntryConvert
                     if (value == null)
                         break;
 
-                    var possibleElementValues = customSerialization.PossibleElementValues(property.PropertyType, property);
-                    var strategy = CreateStrategy(value, value, property.PropertyType, customSerialization);
-                    foreach (var entry in strategy.Serialize())
-                    {
-                        entry.Value.Possible = possibleElementValues;
-                        convertedProperty.SubEntries.Add(entry);
-                    }
+                    convertedProperty.SubEntries.AddRange(EncodeItems(value, propertyType, property, customSerialization, instance));
                     break;
                 case EntryValueType.Class:
                     var subEntry = value == null
@@ -429,6 +455,43 @@ public static partial class EntryConvert
         }
 
         return converted;
+    }
+
+    private static IEnumerable<Entry> EncodeItems(object collection, Type memberType, ICustomAttributeProvider attributeProvider,
+        ICustomSerialization customSerialization, object instance)
+    {
+        var entryConverter = customSerialization.GetItemConverter(memberType, attributeProvider);
+        var itemEncoder = entryConverter is null ? null
+            : CreateItemEncoder(entryConverter, memberType, attributeProvider, customSerialization, instance);
+
+        var collectionStrategy = CreateStrategy(collection, collection, memberType, customSerialization, itemEncoding: itemEncoder);
+        var entries = collectionStrategy.Serialize();
+        if (entryConverter is not null)
+        {
+            // Converters define the possible values of their items
+            return entries;
+        }
+
+        var possibleElementValues = customSerialization.PossibleElementValues(memberType, attributeProvider);
+        return entries.Select(entry =>
+        {
+            entry.Value.Possible = possibleElementValues;
+            return entry;
+        });
+    }
+
+    private static Func<object, Entry> CreateItemEncoder(EntryConverter itemConverter, Type memberType,
+        ICustomAttributeProvider attributeProvider, ICustomSerialization customSerialization, object instance)
+    {
+        var context = CreateItemContext(memberType, attributeProvider, customSerialization, instance);
+        return item => EncodeWith(itemConverter, context, item, CreateFromType(context.MemberType, customSerialization));
+    }
+
+    private static EntryConverterContext CreateItemContext(Type memberType, ICustomAttributeProvider attributeProvider,
+        ICustomSerialization customSerialization, object instance)
+    {
+        TryGetElementType(memberType, out var elementType);
+        return new EntryConverterContext(elementType, attributeProvider, customSerialization, instance);
     }
 
     /// <summary>
@@ -604,7 +667,7 @@ public static partial class EntryConvert
             case EntryValueType.Collection:
                 var elemType = ElementType(parameterType);
                 parameterModel.Value.Current = elemType.Name;
-                parameterModel.Prototypes.AddRange(Prototypes(parameterType, parameter, serialization, instance));
+                AddPrototypes(parameterModel, parameterType, parameter, serialization, instance);
                 break;
         }
 
@@ -751,7 +814,8 @@ public static partial class EntryConvert
             {
                 // Pick collection strategy
                 var strategy = CreateStrategy(value, currentValue, propertyType, customSerialization, mapped.Property, instance);
-                UpdateCollection(currentValue, mapped.Property.PropertyType, mapped.Property, mapped.Entry, strategy, customSerialization);
+                UpdateCollection(currentValue, mapped.Property.PropertyType, mapped.Property, mapped.Entry, strategy,
+                    customSerialization, instance);
                 if (strategy is ArrayIListStrategy)
                     doNotUpdateProperty = true;
             }
@@ -779,9 +843,14 @@ public static partial class EntryConvert
     /// Update or fill the collection using the mapping entry
     /// </summary>
     private static void UpdateCollection(object currentValue, Type memberType, ICustomAttributeProvider attributeProvider, Entry rootEntry,
-        ICollectionStrategy strategy, ICustomSerialization customSerialization)
+        ICollectionStrategy strategy, ICustomSerialization customSerialization, object instance = null)
     {
         var currentCollection = currentValue as ICollection;
+
+        // Converters decode the complete item
+        var itemConverter = customSerialization.GetItemConverter(memberType, attributeProvider);
+        var itemContext = itemConverter is null ? null
+            : CreateItemContext(memberType, attributeProvider, customSerialization, instance);
 
         // Loop over the collection and update the entries that are still present
         if (currentCollection != null)
@@ -796,7 +865,11 @@ public static partial class EntryConvert
                     continue;
                 }
 
-                if (match.Value.Type < EntryValueType.Class)
+                if (itemConverter is not null)
+                {
+                    item = itemConverter.Decode(match, item, itemContext);
+                }
+                else if (match.Value.Type < EntryValueType.Class)
                 {
                     item = CreatePrimitiveOrEnum(memberType, match.Value, customSerialization.FormatProvider);
                 }
@@ -812,8 +885,12 @@ public static partial class EntryConvert
         foreach (var subEntry in rootEntry.SubEntries.Where(se => se.Identifier.ToLower().StartsWith(Entry.CreatedIdentifier.ToLower())))
         {
             object item;
+            if (itemConverter is not null)
+            {
+                item = itemConverter.Decode(subEntry, null, itemContext);
+            }
             // All value types
-            if (subEntry.Value.Type < EntryValueType.Class)
+            else if (subEntry.Value.Type < EntryValueType.Class)
             {
                 // Create value type
                 item = CreatePrimitiveOrEnum(memberType, subEntry.Value, customSerialization.FormatProvider);
@@ -856,27 +933,32 @@ public static partial class EntryConvert
     /// </summary>
     private static ICollectionStrategy CreateStrategy(object collection, object currentCollection,
         Type collectionType, ICustomSerialization serialization, ICustomAttributeProvider attributeProvider = null,
-        object instance = null)
+        object instance = null, Func<object, Entry> itemEncoding = null)
     {
         ICollectionStrategy strategy;
         if (collectionType.IsArray)
         {
-            strategy = new ArrayStrategy((Array)collection, currentCollection as Array, serialization);
+            strategy = new ArrayStrategy((Array)collection, currentCollection as Array, serialization)
+            {
+                EncodeItem = itemEncoding
+            };
         }
-        else if (collection is IDictionary)
+        else if (collection is IDictionary dictionary)
         {
-            strategy = new DictionaryStrategy((IDictionary)collection, serialization);
+            strategy = new DictionaryStrategy(dictionary, serialization) { EncodeItem = itemEncoding };
         }
-        else if (collection is IList)
+        else if (collection is IList list)
         {
             if (currentCollection is Array)
             {
-                strategy = new ArrayIListStrategy(
-                    (IList)collection, serialization, attributeProvider, instance);
+                strategy = new ArrayIListStrategy(list, serialization, attributeProvider, instance)
+                {
+                    EncodeItem = itemEncoding
+                };
             }
             else
             {
-                strategy = new ListStrategy((IList)collection, serialization);
+                strategy = new ListStrategy(list, serialization) { EncodeItem = itemEncoding };
             }
         }
         else
@@ -1005,7 +1087,7 @@ public static partial class EntryConvert
             {
                 // Pick collection strategy
                 var strategy = CreateStrategy(argument, null, paramType, customSerialization);
-                UpdateCollection(null, paramType, parameter, entry, strategy, customSerialization);
+                UpdateCollection(null, paramType, parameter, entry, strategy, customSerialization, instance);
             }
             // Update class
             else if (paramType.IsClass)

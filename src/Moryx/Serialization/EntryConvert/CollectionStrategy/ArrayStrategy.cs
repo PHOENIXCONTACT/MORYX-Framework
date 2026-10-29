@@ -4,57 +4,47 @@
 namespace Moryx.Serialization;
 
 /// <summary>
-/// Array implementation of <see cref="ICollectionStrategy"/>
+/// <see cref="Array"/> implementation of <see cref="ICollectionStrategy"/>
 /// </summary>
-internal class ArrayStrategy : ICollectionStrategy
+internal class ArrayStrategy(Array array, Array currentArray, ICustomSerialization serialization) : ICollectionStrategy
 {
     private int _index;
-    private readonly Array _array;
-    private readonly Array _currentArray;
-    private readonly ICustomSerialization _serialization;
 
-    public ArrayStrategy(Array array, Array currentArray, ICustomSerialization serialization)
-    {
-        _array = array;
-        _currentArray = currentArray;
-        _serialization = serialization;
-    }
+    /// <summary>
+    /// Optional encoder for the items of the array
+    /// </summary>
+    internal Func<object, Entry> EncodeItem { get; init; }
+
     public IEnumerable<Entry> Serialize()
     {
         var entries = new List<Entry>();
-        for (var i = 0; i < _array.Length; i++)
+        for (var i = 0; i < array.Length; i++)
         {
-            var value = _array.GetValue(i);
-            var entry = CollectionStrategyTools.CreateSub(value, i, _serialization);
+            var value = array.GetValue(i);
+            var entry = CollectionStrategyTools.CreateSub(value, i, serialization, EncodeItem);
             entries.Add(entry);
         }
         return entries;
     }
 
-    public IEnumerable<string> Keys()
-    {
-        return CollectionStrategyTools.GenerateKeys(_currentArray.Length);
-    }
+    /// <inheritdoc/>
+    public IEnumerable<string> Keys() => CollectionStrategyTools.GenerateKeys(currentArray.Length);
 
-    public object ElementAt(string key)
-    {
-        return _currentArray.GetValue(int.Parse(key));
-    }
+    /// <inheritdoc/>
+    public object ElementAt(string key) => currentArray.GetValue(int.Parse(key));
 
-    public void Added(Entry entry, object addedValue)
-    {
-        _array.SetValue(addedValue, _index++);
-    }
+    /// <inheritdoc/>
+    public void Added(Entry entry, object addedValue) => array.SetValue(addedValue, _index++);
 
-    public void Updated(Entry entry, object updatedValue)
-    {
-        _array.SetValue(updatedValue, _index++);
-    }
+    /// <inheritdoc/>
+    public void Updated(Entry entry, object updatedValue) => array.SetValue(updatedValue, _index++);
 
+    /// <inheritdoc/>
     public void Removed(string key)
     {
     }
 
+    /// <inheritdoc/>
     public void Flush()
     {
     }
