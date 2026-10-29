@@ -160,10 +160,7 @@ export class App implements OnInit, OnDestroy {
     }
     if (result.submitted) {
       this.searchbar.clearSuggestions();
-      if (products.length > 1) {
-        this.router.navigate(["search"], {queryParams: {q: searchTerm}});
-      }
-      else if (products.length === 1) {
+      if (products.length === 1) {
         this.router.navigate(['/details', products[0].id ?? 0]);
       }
       this.searchbar.subscribe({
