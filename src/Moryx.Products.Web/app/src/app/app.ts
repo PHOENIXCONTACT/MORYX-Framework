@@ -153,7 +153,7 @@ export class App implements OnInit, OnDestroy {
 
     const searchTerm = result.term;
     let products = this.products().filter((p) =>
-      this.editService.createProductNameWithIdentity(p).includes(searchTerm)
+      this.editService.createProductNameWithIdentity(p).toLowerCase().includes(searchTerm.toLowerCase())
     );
     if (!products.length) {
       products = [];
