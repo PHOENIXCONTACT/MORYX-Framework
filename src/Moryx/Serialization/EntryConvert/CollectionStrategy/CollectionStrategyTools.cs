@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections;
+using System.Globalization;
 using Moryx.Tools;
 
 namespace Moryx.Serialization;
@@ -28,7 +29,7 @@ internal static class CollectionStrategyTools
             return displayName;
 
         // Check if item declares its own version of ToString()
-        return itemType.GetMethod(nameof(ToString)).DeclaringType == typeof(object) ? itemType.Name : item.ToString();
+        return itemType.GetMethod(nameof(ToString))!.DeclaringType == typeof(object) ? itemType.Name : item.ToString();
     }
 
     /// <summary>
@@ -38,7 +39,7 @@ internal static class CollectionStrategyTools
     {
         var subEntry = EntryConvert.EncodeObject(item, customSerialization);
         subEntry.DisplayName = GetEntryName(item);
-        subEntry.Identifier = index.ToString("D");
+        subEntry.Identifier = index.ToString("D", CultureInfo.InvariantCulture);
 
         return subEntry;
     }
@@ -48,7 +49,7 @@ internal static class CollectionStrategyTools
     /// </summary>
     public static IEnumerable<string> GenerateKeys(int count)
     {
-        return count == 0 ? Array.Empty<string>() : Enumerable.Range(0, count).Select(i => i.ToString("D"));
+        return count == 0 ? Array.Empty<string>() : Enumerable.Range(0, count).Select(i => i.ToString("D", CultureInfo.InvariantCulture));
     }
 
     /// <summary>
@@ -62,7 +63,7 @@ internal static class CollectionStrategyTools
         {
             if (!toDelete.Contains(list[i]))
             {
-                itemsByKey[i.ToString("D")] = list[i];
+                itemsByKey[i.ToString("D", CultureInfo.InvariantCulture)] = list[i];
             }
         }
         foreach (var (key, value) in addedItems)
@@ -79,7 +80,7 @@ internal static class CollectionStrategyTools
     public static bool NeedsReordering(IReadOnlyList<string> newKeyOrder, IList list, IList toDelete, Dictionary<string, object> addedItems)
     {
         var defaultOrder = GenerateKeys(list.Count)
-            .Where(k => !toDelete.Contains(list[int.Parse(k)]))
+            .Where(key => !toDelete.Contains(list[int.Parse(key, CultureInfo.InvariantCulture)]))
             .Concat(addedItems.Keys);
 
         return !newKeyOrder.SequenceEqual(defaultOrder);
