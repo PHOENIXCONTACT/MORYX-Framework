@@ -72,6 +72,7 @@ export class ToolbarSearch {
     const q = this.query().trim();
     if (q) {
       this.searchService.search(q, true);
+      this.collapse();
     }
   }
 

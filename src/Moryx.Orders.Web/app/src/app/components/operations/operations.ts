@@ -202,7 +202,7 @@ export class Operations implements OnInit {
       const suggestions: SearchSuggestion[] = this.operations()
         .filter(o => this.isMatch(o, request.term))
         .map(o => ({
-          text: `${o.model.order ?? ''}-${o.model.number ?? ''}`,
+          text: `${o.model.order ?? ''} - ${o.model.number ?? ''}`,
           url: this.location.prepareExternalUrl(this.router.serializeUrl(
             this.router.createUrlTree(['operations'], {
               queryParams: {
