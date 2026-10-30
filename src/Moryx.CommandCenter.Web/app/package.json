@@ -23,7 +23,7 @@
     "@types/uuid": "^11.0.0",
     "moment": "^2.30.1",
     "path-scurry": "^2.0.1",
-    "query-string": "^9.4.0",
+    "query-string": "^10.0.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-redux": "^9.3.0",
