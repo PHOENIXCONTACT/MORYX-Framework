@@ -8,6 +8,7 @@
 
 export interface CellPropertySettings {
   currentValue?: any | null;
+  displayName?: string | null;
   iconName?: string | null;
   isDisplayed?: boolean;
   valueUnit?: string | null;
