@@ -87,7 +87,7 @@ public class Entry : ICloneable
     public Entry Instantiate()
     {
         var instance = Clone(true);
-        instance.Identifier = CreatedIdentifier;
+        instance.Identifier = CreatedIdentifier + "-" + Guid.NewGuid().ToString("N");
         return instance;
     }
 

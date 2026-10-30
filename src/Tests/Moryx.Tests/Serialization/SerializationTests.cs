@@ -1,12 +1,8 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Text;
 using Moryx.Configuration;
 using Moryx.Serialization;
@@ -230,7 +226,7 @@ public class SerializationTests
             entry2.SubEntries.Add(newInstance);
         }
 
-        entry2.SubEntries[0].Value.Current = DummyEnum.ValueA.ToString();
+        entry2.SubEntries[0].Value.Current = nameof(DummyEnum.ValueA);
         entry2.SubEntries[0].DisplayName = "555";
 
         // Act
@@ -412,7 +408,7 @@ public class SerializationTests
     public void EncodeCollection()
     {
         // Arrange
-        var values = new string[] { "Hello", "World" };
+        var values = new[] { "Hello", "World" };
 
         // Act
         var encoded = EntryConvert.EncodeObject(values);
@@ -524,7 +520,7 @@ public class SerializationTests
 
         if (type == CollectionType.Dictionary)
         {
-            var array = (collection as IEnumerable<KeyValuePair<int, SubClass>>).ToArray();
+            var array = (collection as IEnumerable<KeyValuePair<int, SubClass>>)!.ToArray();
             for (var i = 0; i < totalSize; i++)
             {
                 Assert.That(array[i].Key, Is.EqualTo((float)i + 1), "Key not set!");
@@ -535,7 +531,7 @@ public class SerializationTests
         }
         else
         {
-            var array = (collection as IEnumerable<SubClass>).ToArray();
+            var array = (collection as IEnumerable<SubClass>)!.ToArray();
             for (var i = 0; i < totalSize; i++)
             {
                 Assert.That(array[i].Foo, Is.EqualTo((float)i + 1), "Value not set!");
@@ -593,7 +589,7 @@ public class SerializationTests
             // Assert
             var collection = ExtractCollection(type, obj);
 
-            var array = (collection as IEnumerable<SubClass>).ToArray();
+            var array = (collection as IEnumerable<SubClass>)!.ToArray();
 
             for (var i = 0; i < collection.Count; i++)
             {
@@ -633,7 +629,7 @@ public class SerializationTests
 
         if (type == CollectionType.Dictionary)
         {
-            var array = (collection as IEnumerable<KeyValuePair<int, SubClass>>).ToArray();
+            var array = (collection as IEnumerable<KeyValuePair<int, SubClass>>)!.ToArray();
             for (var i = 0; i < prefill; i++)
             {
                 if (removedIndexes.Contains(i))
@@ -645,7 +641,7 @@ public class SerializationTests
         }
         else
         {
-            var array = (collection as IEnumerable<SubClass>).ToArray();
+            var array = (collection as IEnumerable<SubClass>)!.ToArray();
             for (var i = 0; i < prefill; i++)
             {
                 if (removedIndexes.Contains(i))
@@ -655,6 +651,66 @@ public class SerializationTests
                 Assert.That(match, Is.Not.Null);
             }
         }
+    }
+
+    [TestCase(CollectionType.Array, 4)]
+    [TestCase(CollectionType.List, 4)]
+    [TestCase(CollectionType.Enumerable, 4)]
+    public void ReorderEntries(CollectionType type, int prefill)
+    {
+        // Arrange
+        var obj = Prebuild(type, prefill);
+        var encoded = EntryConvert.EncodeObject(obj);
+        var colEntry = CollectionEntry(encoded.SubEntries, type);
+
+        // Act - reverse the sub-entries order
+        colEntry.SubEntries.Reverse();
+        EntryConvert.UpdateInstance(obj, encoded);
+
+        // Assert
+        var collection = ExtractCollection(type, obj);
+        Assert.That(collection.Count, Is.EqualTo(prefill), "Size should remain the same");
+
+        var array = (collection as IEnumerable<SubClass>)!.ToArray();
+        for (var i = 0; i < prefill; i++)
+        {
+            // Original order was Foo = 1,2,3,4 — reversed should be 4,3,2,1
+            Assert.That(array[i].Foo, Is.EqualTo(prefill - i), "Item not in expected reordered position");
+        }
+    }
+
+    [TestCase(CollectionType.Array)]
+    [TestCase(CollectionType.List)]
+    [TestCase(CollectionType.Enumerable)]
+    public void ReorderWithAddAndRemove(CollectionType type)
+    {
+        // Arrange - create collection with items Foo=1,2,3,4,5
+        var obj = Prebuild(type, 5);
+        var encoded = EntryConvert.EncodeObject(obj);
+        var colEntry = CollectionEntry(encoded.SubEntries, type);
+
+        // Remove index 1 (Foo=2) and index 3 (Foo=4)
+        colEntry.SubEntries.RemoveAt(3);
+        colEntry.SubEntries.RemoveAt(1);
+
+        // Add a new entry (Foo=99)
+        var newInstance = colEntry.Prototypes[0].Instantiate();
+        newInstance.SubEntries[0].Value.Current = "99";
+        newInstance.SubEntries[1].Value.Current = newInstance.SubEntries[1].Value.Possible[2].Key;
+
+        // Act - insert the new entry at position 1 (between Foo=1 and Foo=3)
+        colEntry.SubEntries.Insert(1, newInstance);
+        EntryConvert.UpdateInstance(obj, encoded);
+
+        // Assert - expected order: Foo=1, Foo=99, Foo=3, Foo=5
+        var collection = ExtractCollection(type, obj);
+        Assert.That(collection.Count, Is.EqualTo(4));
+
+        var array = (collection as IEnumerable<SubClass>)!.ToArray();
+        Assert.That(array[0].Foo, Is.EqualTo(1));
+        Assert.That(array[1].Foo, Is.EqualTo(99));
+        Assert.That(array[2].Foo, Is.EqualTo(3));
+        Assert.That(array[3].Foo, Is.EqualTo(5));
     }
 
     [Test]
@@ -699,7 +755,7 @@ public class SerializationTests
             }
             else
             {
-                var array = (collection as IEnumerable<SubClass>).ToArray();
+                var array = (collection as IEnumerable<SubClass>)!.ToArray();
                 for (var j = 0; j < length; j++)
                 {
                     Assert.That(array[j].Foo, Is.EqualTo((float)j));

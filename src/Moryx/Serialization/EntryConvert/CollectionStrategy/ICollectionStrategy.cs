@@ -41,6 +41,13 @@ internal interface ICollectionStrategy
     void Removed(string key);
 
     /// <summary>
+    /// Reorder the collection to match the given key order.
+    /// The key order can inclde both existing and newly created identifiers,
+    /// Only reorders if the new order differs from the current order.
+    /// </summary>
+    void Reorder(IReadOnlyList<string> newKeyOrder);
+
+    /// <summary>
     /// Write pending changes to the target collection
     /// </summary>
     void Flush();
