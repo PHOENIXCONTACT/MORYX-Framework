@@ -62,13 +62,6 @@ internal class ListStrategy : ICollectionStrategy
     /// <inheritdoc />
     public void Reorder(IReadOnlyList<string> newKeyOrder)
     {
-        // TODO: Remove in next major version once all consumers use unique CREATED identifiers
-        // Skip reorder if keys aren't unique (e.g. multiple "CREATED" entries)
-        if (newKeyOrder.Count != newKeyOrder.Distinct().Count())
-        {
-            return;
-        }
-
         if (CollectionStrategyTools.NeedsReordering(newKeyOrder, _list, _toDelete, _addedItems))
         {
             _newOrder = newKeyOrder;
