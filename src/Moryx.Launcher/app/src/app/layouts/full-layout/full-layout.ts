@@ -35,6 +35,7 @@ import { LayoutBase } from '../layout-base';
 })
 export class FullLayout extends LayoutBase {
   private authService = inject(AuthService);
+
   protected environment = environment;
 
   protected navCollapsed = this.launcherLayoutService.navCollapsed;

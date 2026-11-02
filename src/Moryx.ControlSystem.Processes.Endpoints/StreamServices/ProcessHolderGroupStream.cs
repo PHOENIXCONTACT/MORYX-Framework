@@ -56,7 +56,10 @@ internal class ProcessHolderGroupStream(IResourceManagement resourceManagement)
 
             foreach (var group in groups)
             {
-                (group as ProcessHolderGroup).Changed += groupChanged;
+                if (group is ProcessHolderGroup phg)
+                {
+                    phg.Changed += groupChanged;
+                }
             }
 
             resourceManagement.ResourceAdded += resourceAdded;
@@ -79,7 +82,10 @@ internal class ProcessHolderGroupStream(IResourceManagement resourceManagement)
 
             foreach (var group in groups)
             {
-                (group as ProcessHolderGroup).Changed -= groupChanged;
+                if (group is ProcessHolderGroup phg)
+                {
+                    phg.Changed -= groupChanged;
+                }
             }
 
             resourceManagement.ResourceAdded -= resourceAdded;

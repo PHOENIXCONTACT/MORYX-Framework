@@ -1,136 +1,123 @@
 ---
 uid: GettingStarted.ServerModule
 ---
-# ServerModule
+# How to create a server module
 
-The ServerModule is the place where you have access to level 1 and the level 2 components of your module.
-So this is the place where you have to link the different components and make them work together.
+A server module is a self-contained unit of the application with its own [dependency injection container](/docs/articles/framework/dependency-injection.md), configuration and lifecycle. This tutorial shows how to create a module and how its `ModuleController` composes the components of the module.
 
-This document describes how to build (the basis for) a new ServerModule from scratch and step by step.
+Create a new project, named after the module, e.g. *Moryx.Something.Execution*, and reference *Moryx* and *Moryx.Runtime*. A module consists of at least the following files:
 
-Add a new project to your solution. The name of the project should be the name of your new ServerModule. (In the following examples the name "Execution" is chosen.)
-
-Your new ServerModule-Project gets at least one folder: "ModuleController". The "ModuleController" consists of at least of three files.
-
-For implementation details click on the file name:
-- [ServerModule](#servermodule)
-  - [The ModuleController.cs - File](#the-modulecontrollercs)
-  - [The ModuleConfig.cs - File](#the-moduleconfigcs---file)
-  - [The ModuleConsole.cs - File](#the-moduleconsolecs---file)
-
-## The ModuleController.cs
-The ModuleController.cs-File is the key point of your module. Here, all the components of your module come together and you are responsible to initialize, start and stop them in the right way. Because every ServerModule can have its own architecture, there is no _correct way_ to do so, but there are some _usual points_ a ModuleController.cs-File covers. These points are:
-
-1. Import the global components your ServerModule needs
-2. Register imported _global_ components to the internal container
-3. Resolve the desired components from the container and **start** them
-4. Stop the started components when the ServerModule is stopped
-5. Export and Import facades -> this topic is described [here](facades.md)
-
-Now we will look at examples for these points. But first create your your class implementing `ServerModuleBase`. If your ServerModule exports facades, use `ServerModuleFacadeControllerBase` instead and specify those facades using `IFacadeContainer<TFacade>`.
-
-For the following properties and attributes reference these files:
-
-- Moryx.dll
-- Moryx.Runtime.dll
-
-```cs
-[Description("Example description")]
-public class ModuleController : ServerModuleBase<ModuleConfig>
-{
-    /// <summary>
-    /// Name of this module
-    /// </summary>
-    public override string Name => "ExampleName";
-
-    ...
+```fs
+-Moryx.Something.Execution
+|-ModuleController
+| |-ModuleController.cs
+| |-ModuleConfig.cs
+| |-ModuleConsole.cs
 ```
 
-As an example for the first bullet point, we import the ResourceManagement and the ProductManagement. We do so by simply adding them as public properties, the global DI container will do the rest. (The RequiredModuleApi-Attribute is described [here](facades.md))
+## The ModuleController
 
-The DbContextManager as well as the ConfigManager are part of the ServiceCollection. This is the reason why they have to be injected via the constructor.
+The `ModuleController` is the composition root of the module. It derives from `ServerModuleBase<TConfig>` and is responsible to
+
+1. import the dependencies of the module,
+2. register external dependencies in the container of the module,
+3. resolve and start the components of the module,
+4. stop them again, and
+5. export the facades of the module, see [Facades](/docs/tutorials/server-module/facades.md).
+
+```cs
+[Description("Executes something of the production")]
+public class ModuleController : ServerModuleBase<ModuleConfig>, IFacadeContainer<IExecution>
+{
+    public const string ModuleName = "Something Execution";
+
+    public override string Name => ModuleName;
+}
+```
+
+### Import dependencies
+
+The `ModuleController` itself is created by the host. It has two kinds of dependencies:
+
+- **Services of the host** are injected via the constructor, e.g. the `IDbContextManager`. The base class requires the `IModuleContainerFactory`, the `IConfigManager` and the `ILoggerFactory`.
+- **Facades of other modules** are injected into public properties with the `RequiredModuleApiAttribute`. The attribute also defines whether the module depends on the start of the other module, see [Importing a facade](facades.md#importing-a-facade).
 
 ```cs
 [RequiredModuleApi(IsStartDependency = true, IsOptional = false)]
 public IResourceManagement ResourceManagement { get; set; }
 
-[RequiredModuleApi(IsStartDependency = true, IsOptional = false)]
-public IProductManagement ProductManagement { get; set; }
+private readonly IDbContextManager _dbContextManager;
 
-/// <summary>
-/// Generic component to access every data model
-/// </summary>
-public IDbContextManager DbContextManager { get; }
-
-/// <summary>
-/// Create new module instance
-/// </summary>
-public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager contextManager)
+public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory,
+    IDbContextManager dbContextManager)
     : base(containerFactory, configManager, loggerFactory)
 {
-    DbContextManager = contextManager;
+    _dbContextManager = dbContextManager;
 }
 ```
 
-Now we will register the global components to the internal container of our module. All internal components of a module are registered automatically. Components can be for example Plugins or Strategies. We do this in the `OnInitializeAsync` method we must override from our base class:
+### Register external dependencies
+
+Before `OnInitializeAsync` is called, the container is created and all components, plugins and factories of the module assembly are registered automatically, as well as the module configuration and logger. Everything else is registered in `OnInitializeAsync`, so the components of the module can get it injected:
 
 ```cs
-/// <summary>
-/// Code executed on start up and after service was stopped and should be started again
-/// </summary>
 protected override Task OnInitializeAsync(CancellationToken cancellationToken)
 {
-    // Register all imported components
+    // Imported facades
     Container.SetInstance(ResourceManagement)
         .SetInstance(ProductManagement);
+
+    // Data model of the module
+    Container.ActivateDbContexts(_dbContextManager);
+
+    // Plugins from other assemblies
+    Container.LoadComponents<ISomePlugin>();
 
     return Task.CompletedTask;
 }
 ```
 
-After the initialization we have to start the custom plugins of our ServerModule and activate facades. We do so in the derived `OnStartAsync` method.
+See [Registration methods](/docs/articles/framework/dependency-injection.md#registration-methods) for all options and [How to use strategies](/docs/tutorials/how-to-use-strategies.md#register-the-strategies) for registering exchangeable plugins.
+
+### Start the module
+
+Components do not resolve their dependencies themselves, they get them injected. Only the `ModuleController` resolves components manually, see [Manual resolution](/docs/articles/framework/dependency-injection.md#manual-resolution).
 
 ```cs
 protected override async Task OnStartAsync(CancellationToken cancellationToken)
 {
-    // Activate facades
-    ActivateFacade(_playGroundExecution);
-
     // Start Plugin
-    var plugin = Container.Resolve<IExamplePlugin>();
+    var plugin = Container.Resolve<ISomePlugin>();
     await plugin.StartAsync();
+    
+    // Activate facades
+    ActivateFacade(_somethingExecution);
 }
 ```
 
-Even the greatest ServerModule must be stopped from time to time. We must override the `OnStopAsync` method to clean up our ServerModule and we must put it in a state in which it can be reinitialized. This includes for example to dispose and deactivate facades and plugins:
+Activate the facades after the components are started, so other modules only access the module when it is ready.
+
+### Stop the module
+
+`OnStopAsync` reverses the start: Deactivate the facades first, then stop the components. As the entry component is a singleton, resolving it again returns the started instance:
 
 ```cs
-/// <summary>
-/// Code executed when service is stopped
-/// </summary>
 protected override async Task OnStopAsync(CancellationToken cancellationToken)
 {
-    // Deactivate facades
-    DeactivateFacade(_playGroundExecution);
+    DeactivateFacade(_executionFacade);
 
+    
     // Stop Plugin
-    var plugin = Container.Resolve<IExamplePlugin>();
+    var plugin = Container.Resolve<ISomePlugin>();
     await plugin.StopAsync();
 }
 ```
 
-## The ModuleConfig.cs - File
+After `OnStopAsync`, the container is destroyed together with all its instances. The next start of the module initializes a new container, so do not keep references to components in the `ModuleController`.
 
-In the `ModuleConfig.cs`-file you can define the data fields needed to configure your ServerModule. Here you can set the configuration values for your ServerModule manually. You can also use the CommandCenter website to edit the values.
+## The ModuleConfig
 
-The following points must be noted:
-
-* Your `ModuleConfig` class must derive from `ConfigBase`
-* You must add the `DataContract` attribute to your class
-* You must add the `DataMember` attribute for each of the data fields
-* (Beyond this you can use the `DefaultValueAttribute` to add a default value to your data fields)
-
-The following code is an example for a ModuleConfig.cs:
+The `ModuleConfig` holds the configuration of the module. It is loaded before `OnInitializeAsync`, registered in the container and available in the `ModuleController` as `Config`. It can be edited in the configuration UI, changes take effect after a restart of the module.
 
 ```cs
 [DataContract]
@@ -146,14 +133,22 @@ public class ModuleConfig : ConfigBase
 }
 ```
 
-## The ModuleConsole.cs - File
+- The class derives from `ConfigBase` and has the `DataContractAttribute`.
+- Only properties with the `DataMemberAttribute` are saved.
+- The `DefaultValueAttribute` defines the value of a new configuration.
 
-The module console provides a way to execute methods using the maintenance. It can be used for initial testing, debugging or 'admin access'-features. For this feature you need to create a `ModuleConsole.cs` file in your `ModuleController` folder, implement `IServerModuleConsole` and add methods using the `EntrySerializeAttribute` in order to see them on the UI. Although the interface is empty, it is needed for the export.
+See [Configuration](/docs/articles/framework/configuration.md) for all conventions and [How to use strategies](../how-to-use-strategies.md#select-the-strategy-in-the-configuration) for selecting plugins in the configuration.
+
+## The ModuleConsole
+
+The module console offers methods in the UI of the module, e.g. for testing, debugging or maintenance. It implements `IServerModuleConsole` and is marked with the `ServerModuleConsoleAttribute`, which registers it in the container of the module. Methods with the `EntrySerializeAttribute` are shown in the UI. As the console is part of the container, it can get the components of the module injected.
 
 ```cs
 [ServerModuleConsole]
 internal class ModuleConsole : IServerModuleConsole
 {
+    public ISomePlugin SomePlugin { get; set; }
+
     [EntrySerialize]
     public void DoSomething(int input)
     {
@@ -161,3 +156,9 @@ internal class ModuleConsole : IServerModuleConsole
     }
 }
 ```
+
+## Next steps
+
+- [Facades](facades.md): Export and import the API of a module.
+- [How to use strategies](../how-to-use-strategies.md): Make parts of the module exchangeable.
+- [How to test a module](how-to-test-a-module.md): Test the module in isolation.

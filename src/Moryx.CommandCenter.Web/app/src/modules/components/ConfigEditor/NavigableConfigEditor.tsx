@@ -7,7 +7,6 @@ import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
-import queryString from "query-string";
 import * as React from "react";
 import { Location, useLocation, useNavigate } from "react-router";
 import Entry from "../../models/Entry";
@@ -33,12 +32,13 @@ function NavigableConfigEditor(props: NavigableConfigEditorPropModel) {
 
   const resolveEntryChainByPath = (location: Location, entries: Entry[]): void => {
     if (location !== undefined) {
-      const query = queryString.parse(location.search);
-      if (query != null && "path" in query) {
+      const query = new URLSearchParams(location.search);
+      const path = query.get("path");
+      if (path != null) {
         const entryChain: Entry[] = [];
         let currentEntry: Entry | null = null;
 
-        (query.path as string).split("/").forEach((element: string) => {
+        path.split("/").forEach((element: string) => {
           const searchableEntries: Entry[] = currentEntry != null ? currentEntry.subEntries : entries;
           const filtered = searchableEntries.filter((entry) => entry.identifier === element);
 

@@ -27,6 +27,7 @@ internal class ConfigBasedComponentSelector : DefaultTypedFactoryComponentSelect
     protected override string GetComponentName(MethodInfo method, object[] arguments)
     {
         var config = (IPluginConfig)arguments[0];
+        ArgumentException.ThrowIfNullOrEmpty(config.PluginName);
         return config.PluginName;
     }
 

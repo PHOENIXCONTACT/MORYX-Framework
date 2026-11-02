@@ -28,8 +28,6 @@ public class ModuleController : ServerModuleBase<ModuleConfig>, IFacadeContainer
         : base(containerFactory, configManager, loggerFactory)
     {
         ContextManager = contextManager;
-
-        var config = options.Value;
     }
 
     #region State transition
@@ -64,6 +62,9 @@ public class ModuleController : ServerModuleBase<ModuleConfig>, IFacadeContainer
 
         // Deactivate facades
         DeactivateFacade(_testModule);
+
+        var plugin = Container.Resolve<ITestPlugin>("TestPlugin");
+        plugin.Stop();
     }
     #endregion
 
