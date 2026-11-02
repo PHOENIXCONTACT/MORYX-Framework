@@ -87,7 +87,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseRequestLocalization();
-app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    OnPrepareResponse = ctx =>
+        ctx.Context.Response.Headers.CacheControl = "public, no-cache"
+});
 app.UseHttpsRedirection();
 app.UseRouting();
 
