@@ -12,7 +12,6 @@ import { ProductRecipes } from "./components/products-details-view/product-recip
 import { ProductReferences } from "./components/products-details-view/product-references/product-references";
 import { ProductsDetailsView } from "./components/products-details-view/products-details-view";
 import { ProductsImporter } from "./components/products-importer/products-importer";
-import { SearchResult } from "./components/search-result/search-result";
 import { ProductResolver } from "./components/products-details-view/products-resolver";
 import { WorkInProgressGuard } from "./app-guard";
 import { ReferencesResolver } from "./components/products-details-view/product-references/references-resolver";
@@ -44,6 +43,5 @@ export const routes: Routes = [
   },
   { path: '', component: DefaultView, pathMatch: 'full', canActivate: [WorkInProgressGuard] },
   { path: 'import/:importer', component: ProductsImporter },
-  { path: 'search', component: SearchResult },
   { path: 'cancel', component: CancellationComponent }
 ]

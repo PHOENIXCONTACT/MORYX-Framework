@@ -102,7 +102,7 @@ export class Management implements OnInit, OnDestroy {
       return;
     }
 
-    let workplans = this.workplans().filter(w => w.name?.includes(request.term));
+    let workplans = this.workplans().filter(w => w.name?.toLowerCase().includes(request.term.toLowerCase()));
     if (!workplans) {
       workplans = [];
     }

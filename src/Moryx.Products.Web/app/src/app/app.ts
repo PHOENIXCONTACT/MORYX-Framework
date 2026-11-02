@@ -19,6 +19,7 @@ import { MatMenuModule, MatMenuTrigger } from "@angular/material/menu";
 import { MatDrawer, MatSidenavModule } from "@angular/material/sidenav";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ProductTree } from "./components/product-tree/product-tree";
+import { Location } from "@angular/common";
 import { Router, RouterOutlet } from "@angular/router";
 import {
   SearchBarService,
@@ -81,6 +82,7 @@ import { MatInputModule } from "@angular/material/input";
 })
 export class App implements OnInit, OnDestroy {
   private router = inject(Router);
+  private location = inject(Location);
   private dialog = inject(MatDialog);
   private searchbar = inject(SearchBarService);
   private cacheService = inject(CacheProductsService);
@@ -153,17 +155,14 @@ export class App implements OnInit, OnDestroy {
 
     const searchTerm = result.term;
     let products = this.products().filter((p) =>
-      this.editService.createProductNameWithIdentity(p).includes(searchTerm)
+      this.editService.createProductNameWithIdentity(p).toLowerCase().includes(searchTerm.toLowerCase())
     );
     if (!products.length) {
       products = [];
     }
     if (result.submitted) {
       this.searchbar.clearSuggestions();
-      if (products.length > 1) {
-        this.router.navigate(["search"], {queryParams: {q: searchTerm}});
-      }
-      else if (products.length === 1) {
+      if (products.length === 1) {
         this.router.navigate(['/details', products[0].id ?? 0]);
       }
       this.searchbar.subscribe({
@@ -174,15 +173,15 @@ export class App implements OnInit, OnDestroy {
     } else {
       const searchSuggestions = [] as SearchSuggestion[];
       for (const product of products) {
-        //TODO: change this in MORYX 12
-        const url = "Products/details/" + product.id; // <= BAD, hard coding a parent url 'Products' is no reliable.
         if (!product.id) {
           continue;
         }
 
         searchSuggestions.push({
           text: this.editService.createProductNameWithIdentity(product),
-          url: url
+          url: this.location.prepareExternalUrl(this.router.serializeUrl(
+            this.router.createUrlTree(['details', product.id])
+          ))
         });
       }
 

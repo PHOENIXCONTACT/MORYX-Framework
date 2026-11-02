@@ -17,8 +17,9 @@ import {
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
-import { Router } from '@angular/router';
-import { SearchBarService, SearchRequest, SnackbarService } from '@moryx/ngx-web-framework/services';
+import { Location } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
+import { SearchBarService, SearchRequest, SearchSuggestion, SnackbarService } from '@moryx/ngx-web-framework/services';
 import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
@@ -82,6 +83,8 @@ export class Operations implements OnInit {
   private orderManagementService = inject(OrderManagementService);
   private dialog = inject(MatDialog);
   private router = inject(Router);
+  private location = inject(Location);
+  private activatedRoute = inject(ActivatedRoute);
   private searchBarService = inject(SearchBarService);
   private translateService = inject(TranslateService);
   private snackbarService = inject(SnackbarService);
@@ -103,9 +106,9 @@ export class Operations implements OnInit {
   protected OperationStateClassification = OperationStateClassification;
   protected isLoading = signal<boolean>(true);
   protected mobileQuery: MediaQueryList;
-  private searchTerm = signal<string>('');
   protected readonly drawer = viewChild.required<MatDrawer>('drawer');
   protected hideCompleted = this.filterService.hideCompleted;
+  protected selectedOperationId = signal<string | undefined>(undefined);
 
   constructor() {
     this.mobileQuery = this.mediaMatcher.matchMedia('(max-width: 1279px)');
@@ -126,31 +129,10 @@ export class Operations implements OnInit {
           return viewModel;
         }))
       this.isLoading.set(false);
+      this.selectOperationFromQueryParam();
     }).catch(async (err: HttpErrorResponse) => {
       await this.snackbarService.handleError(err);
       this.isLoading.set(false);
-    });
-
-    // Register events
-    this.operationService.connect((updatedOperation: OperationModel) => {
-      if (!updatedOperation) {
-        return;
-      }
-
-      const existent = this.operations().find(o => o.model.identifier == updatedOperation.identifier);
-      if (existent) {
-        existent.updateModel(updatedOperation);
-
-        // TODO: This is a workaround to trigger change detection for the updated job.
-        //  The OperationViewModel is mutable and Angular does not detect changes to its properties.
-        //  Consider refactoring OperationViewModel to be immutable to avoid this issue.
-        this.changeDetectorRef.markForCheck();
-      } else {
-        this.operations.update(operations => {
-          operations.push(new OperationViewModel(updatedOperation));
-          return operations
-        });
-      }
     });
 
     // Searchbar
@@ -159,24 +141,87 @@ export class Operations implements OnInit {
         this.onSearch(request);
       }
     });
+
+    // Register events
+    this.operationService.connect((model) => this.onOperationUpdated(model));
+
   }
 
-  protected onSearch(request: SearchRequest) {
+  private onOperationUpdated(updatedOperation: OperationModel) {
+    if (!updatedOperation) {
+      return;
+    }
+
+    this.operations.update(operations => {
+      // Create a new array with replaced/added item to trigger computed() re-evaluation.
+      // errorMessagesCount is preserved because it is fetched separately via getLogs.
+
+      const index = operations.findIndex(o => o.model.identifier == updatedOperation.identifier);
+      if (index >= 0) {
+        const updated = new OperationViewModel(updatedOperation);
+        updated.errorMessagesCount = operations[index].errorMessagesCount;
+
+        // replace on previous index
+        const copy = [...operations];
+        copy[index] = updated;
+
+        return copy;
+      }
+      return [...operations, new OperationViewModel(updatedOperation)];
+    });
+  }
+
+  private selectOperationFromQueryParam() {
+    const id = this.activatedRoute.snapshot.queryParamMap.get('selected');
+    if (id) {
+      this.selectedOperationId.set(id);
+    }
+  }
+
+  private updateQueryParam(identifier: string | undefined) {
+    void this.router.navigate([], {
+      queryParams: identifier ? { selected: identifier } : {},
+      replaceUrl: true
+    });
+  }
+
+  private onSearch(request: SearchRequest) {
+    const hideCompleted = this.hideCompleted();
+    const visibleOperations = hideCompleted
+      ? this.operations().filter(o => o.model.classification !== OperationStateClassification.Completed)
+      : this.operations();
+
     if (request.submitted) {
-      this.searchBarService.clearSuggestions();
-      this.searchTerm.set('');
+      const matches = visibleOperations.filter(o => this.isMatch(o, request.term));
+      if (matches.length === 1) {
+        const id = matches[0].model.identifier!;
+        this.selectedOperationId.set(id);
+        this.updateQueryParam(id);
+      }
       this.searchBarService.subscribe({
         next: (newRequest: SearchRequest) => {
           this.onSearch(newRequest);
         }
       });
     } else {
-      this.searchTerm.set(request.term);
+      const suggestions: SearchSuggestion[] = visibleOperations
+        .filter(o => this.isMatch(o, request.term))
+        .map(o => ({
+          text: `${o.model.order ?? ''} - ${o.model.number ?? ''}`,
+          url: this.location.prepareExternalUrl(this.router.serializeUrl(
+            this.router.createUrlTree(['operations'], {
+              queryParams: {
+                selected: o.model.identifier
+              }
+            })
+          ))
+        }));
+      this.searchBarService.provideSuggestions(suggestions);
     }
   }
 
   protected filteringOperations(operations: OperationViewModel[]): OperationViewModel[] {
-    const searchTerm = this.searchTerm();
+    const searchTerm = this.filterService.searchTerm();
     const hideCompleted = this.hideCompleted();
 
     return operations
@@ -199,13 +244,12 @@ export class Operations implements OnInit {
   }
 
   private isMatch(operation: OperationViewModel, searchTerm: string) : boolean {
-    const result = (operation.model.order?.includes(searchTerm) ||
-      operation.model.number?.includes(searchTerm) ||
-      operation.model.productIdentifier?.includes(searchTerm) ||
-      operation.model.productName?.includes(searchTerm) ||
-      operation.model.stateDisplayName?.includes(searchTerm)) ?? false;
-
-    return result;
+    const term = searchTerm.toLowerCase();
+    return (operation.model.order?.toLowerCase().includes(term) ||
+      operation.model.number?.toLowerCase().includes(term) ||
+      operation.model.productIdentifier?.toLowerCase().includes(term) ||
+      operation.model.productName?.toLowerCase().includes(term) ||
+      operation.model.stateDisplayName?.toLowerCase().includes(term)) ?? false;
   }
 
   protected async onBegin(operation: OperationViewModel) {
@@ -314,7 +358,7 @@ export class Operations implements OnInit {
     }
   }
 
-  subscribeForMessagesCount(operation: OperationViewModel) {
+  private subscribeForMessagesCount(operation: OperationViewModel) {
     this.orderManagementService.getLogs({guid: operation.model.identifier!}).then(
       messages =>
         (operation.errorMessagesCount = messages.filter(
@@ -335,6 +379,8 @@ export class Operations implements OnInit {
     if (isExpanded) {
       // Panel is being expanded
       this.selectedOperation.set(operation.model);
+      this.selectedOperationId.set(operation.model.identifier);
+      this.updateQueryParam(operation.model.identifier);
     } else {
       // Panel is being collapsed
       this.onPanelCollapse(operation);
@@ -345,6 +391,8 @@ export class Operations implements OnInit {
     if (this.selectedOperation()?.identifier === operation.model.identifier) {
       // User clicked to close the panel
       this.selectedOperation.set(undefined);
+      this.selectedOperationId.set(undefined);
+      this.updateQueryParam(undefined);
       if (this.drawerContent() !== DrawerContent.Filter) {
         this.closeDrawer();
       }

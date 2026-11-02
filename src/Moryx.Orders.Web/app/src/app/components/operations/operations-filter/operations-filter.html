@@ -1,5 +1,18 @@
+<mat-form-field class="full-width" appearance="outline" subscriptSizing="dynamic">
+  <mat-label>{{ TranslationConstants.OPERATIONS.FILTERS.FILTER_TERM | translate }}</mat-label>
+  <input matInput [value]="searchTerm()" (input)="onSearchInput($event)" />
+  <mat-hint>{{ TranslationConstants.OPERATIONS.FILTERS.FILTER_TERM_DESCRIPTION | translate }}</mat-hint>
+</mat-form-field>
+
 <p>
   <mat-slide-toggle [checked]="hideCompleted()" (change)="toggleHideCompleted()">
     {{ TranslationConstants.OPERATIONS.FILTERS.HIDE_COMPLETED | translate }}
   </mat-slide-toggle>
 </p>
+
+<div class="actions">
+  <button mat-button (click)="resetFilter()">
+    <mat-icon>filter_alt_off</mat-icon>
+    {{ TranslationConstants.OPERATIONS.FILTERS.RESET | translate }}
+  </button>
+</div>

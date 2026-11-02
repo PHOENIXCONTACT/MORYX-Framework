@@ -8,6 +8,7 @@ import { firstValueFrom } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuTrigger, MatMenu, MatMenuContent, MatMenuItem } from '@angular/material/menu';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/translation-constants';
 import { environment } from '../../../environments/environment';
@@ -40,6 +41,7 @@ export class MediaOverview implements OnInit, OnDestroy {
   private router = inject(Router);
   private translateService = inject(TranslateService);
   private searchBarService = inject(SearchBarService);
+  private location = inject(Location);
   private snackbarService = inject(SnackbarService);
 
   protected filteredContents = signal<ContentDescriptorModel[]>([]);
@@ -76,7 +78,6 @@ export class MediaOverview implements OnInit, OnDestroy {
   }
 
   private onSearch(result: SearchRequest) {
-    const urlBase = 'Media/details/';
     const contents = this.contents().filter((c) =>
       c.name?.toLowerCase()?.includes(result.term.toLowerCase())
     );
@@ -99,7 +100,9 @@ export class MediaOverview implements OnInit, OnDestroy {
           continue;
         }
 
-        const url = urlBase + content.id;
+        const url = this.location.prepareExternalUrl(this.router.serializeUrl(
+          this.router.createUrlTree(['details', content.id])
+        ));
         searchSuggestions.push({text: content.name, url: url});
       }
       this.filteredContents.set(contents);
