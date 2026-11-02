@@ -843,6 +843,26 @@ public class SerializationTests
         Assert.That(equals, Is.False);
     }
 
+    [TestCase(false, Description = "ValuesEqual returns false when sub-entries have different order")]
+    [TestCase(true, Description = "ValuesEqual returns true when sub-entries have same order")]
+    public void ValuesEqualRespectsSubEntryOrder(bool sameOrder)
+    {
+        // Arrange
+        var entry = CreateTestEntry();
+        var entry2 = CreateTestEntry();
+
+        if (!sameOrder)
+        {
+            (entry2.SubEntries[0], entry2.SubEntries[1]) = (entry2.SubEntries[1], entry2.SubEntries[0]);
+        }
+
+        // Act
+        var equals = Entry.ValuesEqual(entry, entry2, orderSensitive: true);
+
+        // Assert
+        Assert.That(equals, Is.EqualTo(sameOrder));
+    }
+
     [Test]
     public void EntryDoesNotEqualWhenWhenASubEntryIsDifferent()
     {

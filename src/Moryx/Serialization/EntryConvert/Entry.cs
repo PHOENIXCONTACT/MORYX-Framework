@@ -164,8 +164,18 @@ public class Entry : ICloneable
     /// <summary>
     /// Compare two entries recursive to detect changes
     /// </summary>
-    public static bool ValuesEqual(Entry left, Entry right)
+
+    public static bool ValuesEqual(Entry left, Entry right) =>
+        ValuesEqual(left, right, false);
+
+    /// <summary>
+    /// Compare two entries recursive to detect changes.
+    /// When <paramref name="orderSensitive"/> is true, sub-entries must also be in the same order.
+    /// </summary>
+    public static bool ValuesEqual(Entry left, Entry right, bool orderSensitive)
     {
+        // TODO: Remove this overload in the next major and make order-sensitive comparison the default
+
         if (left == null || right == null)
             return false;
 
@@ -178,13 +188,17 @@ public class Entry : ICloneable
         if (left.SubEntries.Count != right.SubEntries.Count)
             return false;
 
-        foreach (var leftEntry in left.SubEntries)
+        for (var i = 0; i < left.SubEntries.Count; i++)
         {
-            var rightEntry = right.SubEntries.FirstOrDefault(p => p.Identifier == leftEntry.Identifier);
-            if (rightEntry == null)
+            var leftEntry = left.SubEntries[i];
+            var rightEntry = orderSensitive
+                ? right.SubEntries[i]
+                : right.SubEntries.FirstOrDefault(p => p.Identifier == leftEntry.Identifier);
+
+            if (rightEntry == null || leftEntry.Identifier != rightEntry.Identifier)
                 return false;
 
-            if (!ValuesEqual(leftEntry, rightEntry))
+            if (!ValuesEqual(leftEntry, rightEntry, orderSensitive))
                 return false;
         }
 
