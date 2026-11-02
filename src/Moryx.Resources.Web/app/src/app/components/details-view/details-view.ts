@@ -4,12 +4,17 @@
 */
 
 import { Component, effect, inject, linkedSignal, signal, untracked, ChangeDetectionStrategy } from '@angular/core';
-import { Event, NavigationCancel, NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Event, NavigationCancel, NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/translation-constants';
 import { ResourceModel } from '../../api/models';
 import { EditResourceService } from '@app/services/edit-resource.service';
+import { SessionService } from '@app/services/session.service';
+import { ResourceModificationService } from '@api/services';
+import { SnackbarService } from '@moryx/ngx-web-framework/services';
+import { HttpErrorResponse } from '@angular/common/http';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DetailsHeader } from './details-header/details-header';
 
 @Component({
@@ -17,12 +22,17 @@ import { DetailsHeader } from './details-header/details-header';
   templateUrl: './details-view.html',
   styleUrls: ['./details-view.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [RouterOutlet, TranslatePipe, MatTabsModule, RouterLink, DetailsHeader]
+  imports: [RouterOutlet, TranslatePipe, MatTabsModule, MatProgressSpinnerModule, RouterLink, DetailsHeader]
 })
 export class DetailsView {
   private router = inject(Router);
+  private activatedRoute = inject(ActivatedRoute);
   private editResourceService = inject(EditResourceService);
+  private resourceModificationService = inject(ResourceModificationService);
+  private sessionService = inject(SessionService);
+  private snackbarService = inject(SnackbarService);
 
+  protected loading = signal(true);
   protected isEditMode = this.editResourceService.editing;
   protected activeLink = signal<number | undefined>(undefined);
   protected activeResource = linkedSignal(() => this.editResourceService.activeResource());
@@ -32,6 +42,10 @@ export class DetailsView {
   private oldResourceId?: number;
 
   constructor() {
+    this.activatedRoute.paramMap.subscribe(params => {
+      this.loadResource(Number(params.get('id')));
+    });
+
     this.router.events.subscribe(event => this.onRoutingEvent(event));
     effect(() => {
       const resource = this.activeResource();
@@ -45,6 +59,38 @@ export class DetailsView {
         this.onNewResource(resource);
       });
     });
+  }
+
+  private async loadResource(id: number) {
+    this.loading.set(true);
+
+    // Restore work-in-progress resource from session storage
+    const workInProgress = this.sessionService.removeWipResource();
+    if (workInProgress?.resource.id === id) {
+      this.editResourceService.setResourceFromStorage(workInProgress);
+      this.loading.set(false);
+      return;
+    }
+
+    // Creating a new resource — edit service already holds the resource
+    if (id === 0) {
+      const resource = this.editResourceService.activeResource();
+      if (!resource) {
+        this.router.navigate(['']);
+      }
+      this.loading.set(false);
+      return;
+    }
+
+    try {
+      const resource = await this.resourceModificationService.getDetails({ id });
+      this.editResourceService.setResource(resource);
+    } catch (error) {
+      await this.snackbarService.handleError(error as HttpErrorResponse);
+      this.router.navigate(['']);
+    } finally {
+      this.loading.set(false);
+    }
   }
 
   private onNewResource(resource: ResourceModel) {
