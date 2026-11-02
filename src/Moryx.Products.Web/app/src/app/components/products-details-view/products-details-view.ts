@@ -8,11 +8,15 @@ import { ActivatedRoute, NavigationCancel, NavigationEnd, Router, RouterOutlet }
 import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/translation-constants';
 import { EditProductsService } from '@app/services/edit-products.service';
+import { SessionService } from '@app/services/session.service';
+import { ProductManagementService } from '@app/api/services';
 import { ProductsDetailsHeader } from './products-details-header/products-details-header';
+import { SnackbarService } from '@moryx/ngx-web-framework/services';
+import { HttpErrorResponse } from '@angular/common/http';
 
 import { MatDividerModule } from '@angular/material/divider';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTabsModule } from '@angular/material/tabs';
-import { ProductModel } from '@api/models';
 
 @Component({
   selector: 'app-products-details-view',
@@ -22,6 +26,7 @@ import { ProductModel } from '@api/models';
   imports: [
     ProductsDetailsHeader,
     MatDividerModule,
+    MatProgressSpinnerModule,
     MatTabsModule,
     TranslatePipe,
     RouterOutlet
@@ -29,9 +34,13 @@ import { ProductModel } from '@api/models';
 })
 export class ProductsDetailsView {
   private router = inject(Router);
-  private editProductsService = inject(EditProductsService);
   private activatedRoute = inject(ActivatedRoute);
+  private editProductsService = inject(EditProductsService);
+  private productManagementService = inject(ProductManagementService);
+  private sessionService = inject(SessionService);
+  private snackbarService = inject(SnackbarService);
 
+  protected loading = signal(true);
   protected isEditMode = this.editProductsService.editing;
   protected currentProduct = this.editProductsService.currentProduct;
   protected activeLink = signal<Tabs>(Tabs.Unknown);
@@ -44,6 +53,10 @@ export class ProductsDetailsView {
   private regexProperties: RegExp = /(details\/\d*\/properties)/;
 
   constructor() {
+    this.activatedRoute.paramMap.subscribe(params => {
+      this.loadProduct(Number(params.get('id')));
+    });
+
     this.router.events.subscribe((val) => {
       if (val instanceof NavigationEnd || val instanceof NavigationCancel) {
         const url = this.router.url;
@@ -58,6 +71,29 @@ export class ProductsDetailsView {
         }
       }
     });
+  }
+
+  private async loadProduct(id: number) {
+    this.loading.set(true);
+
+    // Restore work-in-progress product from session storage
+    const workInProgress = this.sessionService.popWipProduct();
+    if (workInProgress?.product.id === id) {
+      this.editProductsService.setProductFromStorage(workInProgress);
+      this.loading.set(false);
+      return;
+    }
+
+    try {
+      const product = await this.productManagementService.getTypeById({ id });
+      this.editProductsService.setProduct(product);
+    } catch (error) {
+      await this.snackbarService.handleError(error as HttpErrorResponse);
+      this.editProductsService.resetProduct();
+      this.router.navigate(['']);
+    } finally {
+      this.loading.set(false);
+    }
   }
 
   protected routeTo(target: number) {
@@ -92,12 +128,6 @@ export class ProductsDetailsView {
     }
 
     this.router.navigate([url]);
-  }
-
-  protected onCurrentProductChangeFromHeader(product: ProductModel | undefined) {
-    if (this.isEditMode() && product) {
-      this.editProductsService.updateCurrentProduct(product);
-    }
   }
 }
 
