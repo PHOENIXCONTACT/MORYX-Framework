@@ -37,13 +37,16 @@ public class SubConfig
 
 The basic structure of the configuration object including the [ConfigBase](/src/Moryx/Configuration/ConfigBase.cs) implementation. The dummy properties and subclass can be renamed or deleted once you understand the structure of a configuration.
 
+> [!TIP]
+> How the configured strategies are defined, registered and created is described in [How to use strategies](../../tutorials/how-to-use-strategies.md).
+
 ## Conventions
 
 As mentioned before there are a couple of rules and conventions when defining a configuration. Some of them are mandatory while others are optional comfort features like self-repair or initialization. To improve understanding of the configuration management inside the platform the details and reasons for each of these conventions will be explained below.
 
 ### DataContract and DataMember
 
-These attributes are defined inside the .NET and are necessary to save the configuration to an json file. Classes that shall be serialized or used as `DataMember` properties in another `DataContracts` must be decorated with the `DataContractAttribute`. All properties that shall be saved to the file and restored on the next start must be decorated with the `DataMemberAttribute`. Properties without `DataMemberAttribute` are still visible to the component and the configuration editor but will always have their default value and all modifications are lost on reload.
+These attributes are defined inside the .NET and are necessary to save the configuration to a json file. Classes that shall be serialized or used as `DataMember` properties in another `DataContracts` must be decorated with the `DataContractAttribute`. All properties that shall be saved to the file and restored on the next start must be decorated with the `DataMemberAttribute`. Properties without `DataMemberAttribute` are still visible to the component and the configuration editor but will always have their default value and all modifications are lost on reload.
 
 ### Collections
 

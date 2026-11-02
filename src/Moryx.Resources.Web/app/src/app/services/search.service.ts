@@ -4,6 +4,7 @@ import { ResourceModel } from '../api/models';
 import { SearchBarService, SearchRequest, SearchSuggestion } from '@moryx/ngx-web-framework/services';
 import { EditResourceService } from './edit-resource.service';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +14,7 @@ export class SearchService {
   private editService = inject(EditResourceService);
   private searchBarService = inject(SearchBarService);
   private router = inject(Router);
+  private location = inject(Location);
 
   constructor() {
     effect(() => {
@@ -102,8 +104,9 @@ export class SearchService {
   private updateSuggestions(possibleResults: ResourceModel[]) {
     const searchSuggestions = [] as SearchSuggestion[];
     for (const resource of possibleResults) {
-      const urlBase = 'Resources/details/';
-      const url = urlBase + resource.id;
+      const url = this.location.prepareExternalUrl(this.router.serializeUrl(
+        this.router.createUrlTree(['details', resource.id])
+      ));
       searchSuggestions.push({ text: this.createSuggestionText(resource), url: url });
     }
 

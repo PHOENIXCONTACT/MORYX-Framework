@@ -14,6 +14,8 @@ internal static class WorkplanValidation
     private static readonly IWorkplanValidator[] Validators =
     [
         new DeadEndValidator(),
+        new InfiniteLoopValidator(),
+        new LuckyStreakValidator(),
         new LoneWolfValidator()
     ];
 

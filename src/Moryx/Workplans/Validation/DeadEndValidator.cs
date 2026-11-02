@@ -1,18 +1,20 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Globalization;
+using Moryx.Properties;
+
 namespace Moryx.Workplans.Validation;
 
+/// <summary>
+/// Detects connectors that are used as an output but never as an input by any step, causing tokens to get stuck.
+/// </summary>
 internal class DeadEndValidator : IWorkplanValidator
 {
-    /// <summary>
-    /// Aspect this validator covers
-    /// </summary>
+    /// <inheritdoc />
     public ValidationAspect TargetAspect => ValidationAspect.DeadEnd;
 
-    /// <summary>
-    /// Validate the given workplan
-    /// </summary>
+    /// <inheritdoc />
     public bool Validate(IWorkplan workplan, ICollection<ValidationError> errors)
     {
         foreach (var connector in workplan.Connectors)
@@ -37,20 +39,15 @@ internal class DeadEndValidator : IWorkplanValidator
 
 internal class DeadEndValidationError : ValidationError
 {
-    /// <summary>
-    /// Create error instance with position id
-    /// </summary>
-    /// <param name="positionId"></param>
+    /// <inheritdoc />
     public DeadEndValidationError(long positionId) : base(positionId)
     {
     }
 
-    /// <summary>
-    /// Print error in readable format
-    /// </summary>
+    /// <inheritdoc />
     public override string Print(IWorkplan workplan)
     {
         var connector = workplan.Connectors.First(c => c.Id == PositionId);
-        return $"Connector {connector.Name} at position {PositionId} is not used as an input in any step!";
+        return string.Format(CultureInfo.CurrentCulture, Strings.DeadEndValidationError_Message, connector.Name, PositionId);
     }
 }

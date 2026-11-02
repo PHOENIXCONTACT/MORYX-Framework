@@ -3,6 +3,7 @@
 
 using System.Reflection;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moryx.Configuration;
 using Moryx.Modules;
@@ -30,10 +31,12 @@ public class ModulesController : ControllerBase
     }
 
     [HttpGet("dependencies")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public ActionResult<DependencyEvaluation> GetDependencyEvaluation()
         => new DependencyEvaluation(_moduleManager.DependencyTree);
 
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [Authorize(Policy = RuntimePermissions.ModulesCanView)]
     public ActionResult<IEnumerable<ServerModuleModel>> GetAll()
     {
@@ -67,6 +70,8 @@ public class ModulesController : ControllerBase
     }
 
     [HttpGet("{moduleName}/healthstate")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Authorize(Policy = RuntimePermissions.ModulesCanView)]
     public ActionResult<ServerModuleState> HealthState([FromRoute] string moduleName)
     {
@@ -78,6 +83,8 @@ public class ModulesController : ControllerBase
     }
 
     [HttpGet("{moduleName}/notifications")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Authorize(Policy = RuntimePermissions.ModulesCanView)]
     public ActionResult<IEnumerable<ModuleNotificationModel>> Notifications([FromRoute] string moduleName)
     {
@@ -89,6 +96,8 @@ public class ModulesController : ControllerBase
     }
 
     [HttpPost("{moduleName}/start")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Authorize(Policy = RuntimePermissions.ModulesCanControl)]
     public ActionResult Start([FromRoute] string moduleName)
     {
@@ -101,6 +110,8 @@ public class ModulesController : ControllerBase
     }
 
     [HttpPost("{moduleName}/stop")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Authorize(Policy = RuntimePermissions.ModulesCanControl)]
     public ActionResult Stop([FromRoute] string moduleName)
     {
@@ -113,6 +124,8 @@ public class ModulesController : ControllerBase
     }
 
     [HttpPost("{moduleName}/reincarnate")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Authorize(Policy = RuntimePermissions.ModulesCanControl)]
     public ActionResult Reincarnate([FromRoute] string moduleName)
     {
@@ -125,10 +138,14 @@ public class ModulesController : ControllerBase
     }
 
     [HttpPost("{moduleName}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Authorize(Policy = RuntimePermissions.ModulesCanConfigure)]
     public ActionResult Update([FromRoute] string moduleName, [FromBody] ServerModuleModel module)
     {
-        ArgumentNullException.ThrowIfNull(module);
+        if (module == null)
+            return BadRequest("Module is required");
 
         var serverModule = GetModuleFromManager(moduleName);
         if (serverModule == null)
@@ -146,6 +163,8 @@ public class ModulesController : ControllerBase
     }
 
     [HttpPost("{moduleName}/confirm")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Authorize(Policy = RuntimePermissions.ModulesCanConfirmNotifications)]
     public ActionResult ConfirmWarning([FromRoute] string moduleName)
     {
@@ -162,6 +181,9 @@ public class ModulesController : ControllerBase
     }
 
     [HttpGet("{moduleName}/config")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Policy = RuntimePermissions.ModulesCanViewConfiguration)]
     public ActionResult<Config> GetConfig([FromRoute] string moduleName)
     {
@@ -182,16 +204,20 @@ public class ModulesController : ControllerBase
         }
         catch (Exception ex)
         {
-            throw new Exception(ex.Message);
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
         }
     }
 
     [HttpPost("{moduleName}/config")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Policy = RuntimePermissions.ModulesCanConfigure)]
     public ActionResult SetConfig([FromRoute] string moduleName, [FromBody] SaveConfigRequest request)
     {
         if (request.Config == null)
-            throw new ArgumentNullException(nameof(request.Config));
+            return BadRequest("Config is required");
 
         try
         {
@@ -211,11 +237,13 @@ public class ModulesController : ControllerBase
         }
         catch (Exception ex)
         {
-            throw new Exception(ex.Message);
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
         }
     }
 
     [HttpGet("{moduleName}/console")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Authorize(Policy = RuntimePermissions.ModulesCanViewMethods)]
     public ActionResult<IEnumerable<MethodEntry>> GetMethods([FromRoute] string moduleName)
     {
@@ -231,10 +259,15 @@ public class ModulesController : ControllerBase
     }
 
     [HttpPost("{moduleName}/console")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Policy = RuntimePermissions.ModulesCanInvoke)]
     public async Task<ActionResult<Entry>> InvokeMethod([FromRoute] string moduleName, [FromBody] MethodEntry method)
     {
-        ArgumentNullException.ThrowIfNull(method);
+        if (method == null)
+            return BadRequest("Method is required");
 
         var serverModule = GetModuleFromManager(moduleName);
         if (serverModule == null)
@@ -257,7 +290,7 @@ public class ModulesController : ControllerBase
         }
         catch (Exception e)
         {
-            throw new Exception($"Error while invoking function: {method.DisplayName}.", e);
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Error while invoking function: {method.DisplayName}.");
         }
     }
 

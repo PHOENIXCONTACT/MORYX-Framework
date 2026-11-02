@@ -78,6 +78,7 @@
                 @for (operation of filteredOperations(); track operation) {
                   <mat-expansion-panel
                     class="operation"
+                    [expanded]="operation.model.identifier === selectedOperationId()"
                     (expandedChange)="onPanelExpandedChange($event, operation)"
                   >
                     <mat-expansion-panel-header

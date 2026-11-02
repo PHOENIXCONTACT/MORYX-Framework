@@ -1,8 +1,10 @@
 <div class="main-area">
   <mat-toolbar>
-    <button mat-icon-button aria-label="Menu" (click)="toggleNav()">
-      <mat-icon>menu</mat-icon>
-    </button>
+    @if (hasMultipleUserModules()) {
+      <button mat-icon-button aria-label="Menu" (click)="toggleNav()">
+        <mat-icon>menu</mat-icon>
+      </button>
+    }
     <div class="logo-host">
       <a [href]="environment.rootUrl">
         <img [src]="environment.assets + 'assets/moryx-banner-small.svg'" class="logo" alt="MORYX Logo">
@@ -25,9 +27,11 @@
   </mat-toolbar>
 
   <mat-sidenav-container autosize>
-    <mat-sidenav mode="side" opened>
-      <app-vertical-module-nav [collapsed]="navCollapsed()"></app-vertical-module-nav>
-    </mat-sidenav>
+    @if (hasMultipleUserModules()) {
+      <mat-sidenav mode="side" opened>
+        <app-vertical-module-nav [collapsed]="navCollapsed()"></app-vertical-module-nav>
+      </mat-sidenav>
+    }
 
     <mat-sidenav-content>
       <slot name="app"></slot>

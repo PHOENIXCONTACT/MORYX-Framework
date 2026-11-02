@@ -30,8 +30,7 @@
   },
   "NAVIGATION": {
     "ALL": "All",
-    "MORE": "More",
-    "NO_ITEMS": "No items."
+    "MORE": "More"
   },
   "AUTH": {
     "LOG_IN": "Log In"

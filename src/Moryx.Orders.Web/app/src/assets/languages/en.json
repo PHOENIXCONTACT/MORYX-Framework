@@ -43,7 +43,10 @@
       "STAGING_INDICATOR": "Staging indicator"
     },
     "FILTERS": {
-      "HIDE_COMPLETED": "Hide completed"
+      "HIDE_COMPLETED": "Hide completed",
+      "FILTER_TERM": "Filter Term",
+      "FILTER_TERM_DESCRIPTION": "Filters by order, operation, product or state",
+      "RESET": "Reset"
     },
     "EMPTY_LOG": "This log is empty",
     "FAILED_LOADING": "The connection to the server could not be established. Please check your network connection or try again later.",

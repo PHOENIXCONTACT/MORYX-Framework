@@ -31,7 +31,7 @@ The previously mentioned connectors and steps share the common interface [IWorkp
 
 **WorkplanSteps** are basically the Tasks which must be implemented in an application to define the needed step in the production. The task will create the corresponding activity during the processing of the workplan. The workplan engine, as most of MORYX, was created in the context of industrial automation where the steps represent manufacturing steps of a product. Independent from its origin the workplan engine was designed to be domain-independent. For this purpose users of the workplan engine need to create implementations of `IWorkplanStep` for the actions of their domain.
 
-To implement `IWorkplanStep` it is recommended to derive from `WorkplanStepBase`, which already implements most of the interface. Per default this defines a step with one input and one output. Besides the `Name` of the step the most important part to implement is the definition of outputs and creation of an executable `ITransition` from the step. While `IWorkplanStep` instances only represent an action in the workplan object graph, `ITransition` implement the executable code to perform the action. 
+To implement `IWorkplanStep` it is recommended to derive from `WorkplanStepBase`, which already implements most of the interface. Per default this defines a step with one input and one output. Besides the `Name` of the step the most important part to implement is the definition of outputs and creation of an executable `ITransition` from the step. While `IWorkplanStep` instances only represent an action in the workplan object graph, `ITransition` implement the executable code to perform the action.
 
 ## Concept
 
@@ -64,7 +64,7 @@ For each group of splits and joins leading to parallel threads there must be a b
 
 The most comfortable way is to use the workplan editor to draw the workplan with the created task. But it is also possible to create a workplan programmatically to use it for example during the product import. A self-created workplan could look like this:
 
-``` cs
+```cs
 // Prepare workplan
 var workplan = new Workplan { Name = "My Workplan" };
 
@@ -100,6 +100,36 @@ RecipeStorage.ToWorkplanEntity(openContext, workplan);
 ```
 
 The method `AddStep` of the workplan takes a list of connectors which must fit the result enum of the corresponding activity of the used task. If it does not fit then the validation will throw an exception. In the shown example the MountTask has only two outputs where the first one is the `Mounted` connector and the last goes directly to the `Failed` output. The other activities have three possible results where two of them go directly to the failed output. The `UnmountTask` is the last task and its first output, which is the success path, goes to the `End` output to close the good path of this workplan.
+
+## Workplan Validation
+
+Before executing a workplan it can be validated for structural correctness. The static method `WorkplanInstance.Validate` checks a workplan against one or more `ValidationAspect` flags that can be combined using the `|` operator:
+
+```cs
+var result = WorkplanInstance.Validate(workplan, ValidationAspect.DeadEnd | ValidationAspect.LoneWolf);
+if (!result.Success)
+{
+    foreach (var error in result.Errors)
+    {
+        Console.WriteLine(error.Print(workplan));
+    }
+}
+```
+
+The extension method `workplan.Validate()` from `WorkplanExtensions` checks all aspects at once and throws a `ValidationException` if any errors are found:
+
+```cs
+workplan.Validate(); // throws ValidationException on errors
+```
+
+### Validation Aspects
+
+| Aspect | Description |
+|--------|-------------|
+| [`DeadEnd`](/src/Moryx/Workplans/Validation/DeadEndValidator.cs) | Detects connectors that are used as an output but never as an input by any step, causing tokens to get stuck. |
+| [`LoneWolf`](/src/Moryx/Workplans/Validation/LoneWolfValidator.cs) | Finds steps that are unreachable because none of their inputs are connected to the output of another step or a start connector. |
+| [`InfiniteLoop`](/src/Moryx/Workplans/Validation/InfiniteLoopValidator.cs) | Detects steps trapped in cycles with no path to an exit connector. Uses backward reachability from exit connectors. |
+| [`LuckyStreak`](/src/Moryx/Workplans/Validation/LuckyStreakValidator.cs) | Verifies that a consistent success path exists from the start connector to a success exit connector through `OutputType.Success` outputs only. |
 
 ## Workplan Instance Execution
 

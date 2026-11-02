@@ -43,7 +43,10 @@
       "STAGING_INDICATOR": "暂存指示器"
     },
     "FILTERS": {
-      "HIDE_COMPLETED": "隐藏已完成"
+      "HIDE_COMPLETED": "隐藏已完成",
+      "FILTER_TERM": "筛选条件",
+      "FILTER_TERM_DESCRIPTION": "按订单、工序、产品或状态筛选",
+      "RESET": "重置"
     },
     "EMPTY_LOG": "此日志为空",
     "FAILED_LOADING": "无法建立与服务器的连接。请检查您的网络连接或稍后重试。",
