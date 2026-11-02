@@ -15,6 +15,7 @@ export interface ProductQuery {
   excludeDerivedTypes?: boolean;
   identifier?: string | null;
   includeDeleted?: boolean;
+  loadFullTypeInformation?: boolean;
   name?: string | null;
   propertyFilters?: Array<PropertyFilter> | null;
   recipeFilter?: RecipeFilter;
