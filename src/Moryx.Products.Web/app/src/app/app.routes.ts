@@ -13,8 +13,6 @@ import { ProductReferences } from "./components/products-details-view/product-re
 import { ProductsDetailsView } from "./components/products-details-view/products-details-view";
 import { ProductsImporter } from "./components/products-importer/products-importer";
 import { WorkInProgressGuard } from "./app-guard";
-import { RecipeResolver } from "./components/products-details-view/product-recipes/product-recipes-details/recipe-resolver";
-import { PartsResolver } from "./components/products-details-view/product-parts/part-resolver";
 import { CancellationComponent } from "./components/cancellation/cancellation.component";
 
 export const routes: Routes = [
@@ -25,13 +23,13 @@ export const routes: Routes = [
       { path: '', redirectTo: 'properties', pathMatch: 'full' },
       { path: 'properties', component: ProductProperties },
       { path: 'references', component: ProductReferences },
-      { path: 'parts/:partName/:partId', component: ProductParts, resolve: { references: PartsResolver }},
+      { path: 'parts/:partName/:partId', component: ProductParts },
       {
         path: 'recipes',
         component: ProductRecipes,
         children: [
           { path: '', component: DefaultView, pathMatch: 'full' },
-          { path: ':recipeId', component: ProductRecipesDetails, resolve: { references: RecipeResolver } },
+          { path: ':recipeId', component: ProductRecipesDetails },
         ],
       },
     ],

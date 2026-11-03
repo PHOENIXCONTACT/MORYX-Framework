@@ -8,6 +8,7 @@ import { ActivatedRoute, NavigationCancel, NavigationEnd, Router, RouterOutlet }
 import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/translation-constants';
 import { EditProductsService } from '@app/services/edit-products.service';
+import { ProductNavigationService } from '@app/services/product-navigation.service';
 import { SessionService } from '@app/services/session.service';
 import { ProductManagementService } from '@app/api/services';
 import { ProductsDetailsHeader } from './products-details-header/products-details-header';
@@ -35,19 +36,18 @@ export class ProductsDetailsView {
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
   private editProductsService = inject(EditProductsService);
+  private navigationService = inject(ProductNavigationService);
   private productManagementService = inject(ProductManagementService);
   private sessionService = inject(SessionService);
   private snackbarService = inject(SnackbarService);
 
-  protected loading = signal(true);
+  protected loading = this.navigationService.loading;
   protected isEditMode = this.editProductsService.editing;
   protected currentProduct = this.editProductsService.currentProduct;
   protected activeLink = signal<Tabs>(Tabs.Unknown);
 
   protected Tabs = Tabs;
   protected TranslationConstants = TranslationConstants;
-
-  private currentProductId?: number;
 
   constructor() {
     this.activatedRoute.paramMap.subscribe(params => {
@@ -56,24 +56,15 @@ export class ProductsDetailsView {
 
     this.router.events.subscribe(val => {
       if (val instanceof NavigationEnd || val instanceof NavigationCancel) {
-        const childPath = this.activatedRoute.firstChild?.snapshot.url[0]?.path;
-        switch (childPath) {
-          case 'properties': {
-            this.activeLink.set(Tabs.Properties);
-            break;
-          }
-          case 'parts': {
-            this.activeLink.set(Tabs.Parts);
-            break;
-          }
-          case 'recipes': {
-            this.activeLink.set(Tabs.Recipes);
-            break;
-          }
-          case 'references': {
-            this.activeLink.set(Tabs.References);
-            break;
-          }
+        const url = this.router.url;
+        if (url.includes('/properties')) {
+          this.activeLink.set(Tabs.Properties);
+        } else if (url.includes('/parts/')) { // trailing slash to avoid false match with path params
+          this.activeLink.set(Tabs.Parts);
+        } else if (url.includes('/recipes')) {
+          this.activeLink.set(Tabs.Recipes);
+        } else if (url.includes('/references')) {
+          this.activeLink.set(Tabs.References);
         }
       }
     });
@@ -82,17 +73,17 @@ export class ProductsDetailsView {
 
 
   private async loadProduct(id: number) {
-    if (this.currentProductId === id) {
+    if (this.navigationService.activeId() === id) {
       return;
     }
-    this.currentProductId = id;
-    this.loading.set(true);
+    this.navigationService.setActiveId(id);
+    this.navigationService.setLoading(true);
 
     // Restore work-in-progress product from session storage
     const workInProgress = this.sessionService.popWipProduct();
     if (workInProgress?.product.id === id) {
       this.editProductsService.setProductFromStorage(workInProgress);
-      this.loading.set(false);
+      this.navigationService.setLoading(false);
       return;
     }
 
@@ -104,7 +95,7 @@ export class ProductsDetailsView {
       this.editProductsService.resetProduct();
       this.router.navigate(['']);
     } finally {
-      this.loading.set(false);
+      this.navigationService.setLoading(false);
     }
   }
 

@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, signal, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, effect, inject, signal, untracked, ChangeDetectionStrategy } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/translation-constants';
 import { EditProductsService } from '@app/services/edit-products.service';
@@ -31,7 +31,7 @@ import { RouterLink } from '@angular/router';
     RouterLink
 ]
 })
-export class ProductReferences implements OnInit {
+export class ProductReferences {
   private editProductsService = inject(EditProductsService);
   private productManagementService = inject(ProductManagementService);
   private snackbarService = inject(SnackbarService);
@@ -40,17 +40,18 @@ export class ProductReferences implements OnInit {
   protected references = this.editProductsService.references;
   protected TranslationConstants = TranslationConstants;
 
-  ngOnInit() {
-    this.loadReferences();
+  constructor() {
+    effect(() => {
+      const product = this.editProductsService.currentProduct();
+      if (!product) {
+        return;
+      }
+      untracked(() => this.loadReferences(product));
+    });
   }
 
-  private async loadReferences() {
-    const product = this.editProductsService.currentProduct();
-    if (!product) {
-      this.loading.set(false);
-      return;
-    }
-
+  private async loadReferences(product: { identifier?: string | null; revision?: number }) {
+    this.loading.set(true);
     const body: ProductQuery = {
       includeDeleted: false,
       identifier: product.identifier,
