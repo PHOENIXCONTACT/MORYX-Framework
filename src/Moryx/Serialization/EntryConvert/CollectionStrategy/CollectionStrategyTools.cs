@@ -1,6 +1,8 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Collections;
+using System.Globalization;
 using Moryx.Tools;
 
 namespace Moryx.Serialization;
@@ -27,7 +29,7 @@ internal static class CollectionStrategyTools
             return displayName;
 
         // Check if item declares its own version of ToString()
-        return itemType.GetMethod(nameof(ToString)).DeclaringType == typeof(object) ? itemType.Name : item.ToString();
+        return itemType.GetMethod(nameof(ToString))!.DeclaringType == typeof(object) ? itemType.Name : item.ToString();
     }
 
     /// <summary>
@@ -37,7 +39,7 @@ internal static class CollectionStrategyTools
     {
         var subEntry = EntryConvert.EncodeObject(item, customSerialization);
         subEntry.DisplayName = GetEntryName(item);
-        subEntry.Identifier = index.ToString("D");
+        subEntry.Identifier = index.ToString("D", CultureInfo.InvariantCulture);
 
         return subEntry;
     }
@@ -47,6 +49,47 @@ internal static class CollectionStrategyTools
     /// </summary>
     public static IEnumerable<string> GenerateKeys(int count)
     {
-        return count == 0 ? Array.Empty<string>() : Enumerable.Range(0, count).Select(i => i.ToString("D"));
+        return count == 0 ? Array.Empty<string>() : Enumerable.Range(0, count).Select(i => i.ToString("D", CultureInfo.InvariantCulture));
+    }
+
+    /// <summary>
+    /// Build a lookup of all items by their key, excluding deleted items and including added items.
+    /// Used by strategies to resolve the final item order during reordering.
+    /// </summary>
+    public static Dictionary<string, object> BuildItemLookup(IList list, IList toDelete, Dictionary<string, object> addedItems)
+    {
+        var itemsByKey = new Dictionary<string, object>();
+        for (var i = 0; i < list.Count; i++)
+        {
+            if (!toDelete.Contains(list[i]))
+            {
+                itemsByKey[i.ToString("D", CultureInfo.InvariantCulture)] = list[i];
+            }
+        }
+        foreach (var (key, value) in addedItems)
+        {
+            itemsByKey[key] = value;
+        }
+        return itemsByKey;
+    }
+
+    /// <summary>
+    /// Check if the new key order differs from the default order (existing keys minus removed, then added).
+    /// Returns true if reordering is needed.
+    /// </summary>
+    public static bool NeedsReordering(IReadOnlyList<string> newKeyOrder, IList list, IList toDelete, Dictionary<string, object> addedItems)
+    {
+        // TODO: Remove in next major version once all consumers use unique CREATED identifiers
+        // Skip reorder if keys aren't unique (e.g. multiple "CREATED" entries)
+        if (newKeyOrder.Count != newKeyOrder.Distinct().Count())
+        {
+            return false;
+        }
+
+        var defaultOrder = GenerateKeys(list.Count)
+            .Where(key => !toDelete.Contains(list[int.Parse(key, CultureInfo.InvariantCulture)]))
+            .Concat(addedItems.Keys);
+
+        return !newKeyOrder.SequenceEqual(defaultOrder);
     }
 }
