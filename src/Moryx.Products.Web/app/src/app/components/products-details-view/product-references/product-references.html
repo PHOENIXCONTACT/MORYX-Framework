@@ -4,11 +4,7 @@
   @let refs = references();
 
   @if (refs && refs.length > 0) {
-    <table
-      mat-table
-      [dataSource]="refs"
-      class="mat-elevation-z8"
-      >
+    <table mat-table [dataSource]="refs" class="mat-elevation-z8">
       <!-- Identifier Column -->
       <ng-container matColumnDef="identifier">
         <th mat-header-cell *matHeaderCellDef>
@@ -32,25 +28,17 @@
       </ng-container>
       <!-- Table Description Column -->
       <ng-container matColumnDef="table-description">
-        <th class="table-description-header" mat-header-cell *matHeaderCellDef colspan="3">{{ TranslationConstants.DETAILS.REFS.TITLE | translate }}</th>
+        <th class="table-description-header" mat-header-cell *matHeaderCellDef colspan="3">
+          {{ TranslationConstants.DETAILS.REFS.TITLE | translate }}
+        </th>
       </ng-container>
-      <tr
-        mat-header-row
-        *matHeaderRowDef="['identifier', 'revision', 'name']"
-      ></tr>
-      <tr
-        mat-header-row
-        *matHeaderRowDef="['table-description']"
-        class="table-description-header-row"
-      ></tr>
-      <tr
-        mat-row
-        *matRowDef="let row; columns: ['identifier', 'revision', 'name']"
-        [routerLink]="['/details', row.id, 'properties']"
-        class="clickable-row"
-      ></tr>
+      <tr mat-header-row *matHeaderRowDef="['identifier', 'revision', 'name']"></tr>
+      <tr mat-header-row *matHeaderRowDef="['table-description']" class="table-description-header-row"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['identifier', 'revision', 'name']"
+        [routerLink]="['/details', row.id, 'properties']" class="clickable-row"></tr>
     </table>
   } @else {
-    <empty-state header="{{ TranslationConstants.DETAILS.REFS.NO_REF_HEADER | translate }}" message="{{ TranslationConstants.DETAILS.REFS.NO_REF | translate }}" />
+    <empty-state header="{{ TranslationConstants.DETAILS.REFS.NO_REF_HEADER | translate }}"
+      message="{{ TranslationConstants.DETAILS.REFS.NO_REF | translate }}" />
   }
 }
