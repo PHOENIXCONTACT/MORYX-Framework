@@ -19,6 +19,7 @@ import './extensions/array.extensions';
 import { TranslationConstants } from './translation-constants';
 import { CacheResourceService } from './services/cache-resource.service';
 import { EditResourceService } from './services/edit-resource.service';
+import { ResourceNavigationService } from './services/resource-navigation.service';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -71,6 +72,9 @@ export class App {
 
   protected resources = computed(() => this.cacheResourceService.resources() ?? []);
   protected selected = signal<ResourceModel | undefined>(undefined);
+  private navigationService = inject(ResourceNavigationService);
+  protected isLoading = this.navigationService.loading;
+
   protected TranslationConstants = TranslationConstants;
 
   protected beforeUnloadHandler() {
@@ -104,7 +108,7 @@ export class App {
   }
 
   protected selectResource(id: number) {
-    if (this.isEditMode() || this.selected()?.id === id) {
+    if (this.isEditMode() || this.isLoading() || this.selected()?.id === id) {
       return;
     }
     this.router.navigate(['details', id]);

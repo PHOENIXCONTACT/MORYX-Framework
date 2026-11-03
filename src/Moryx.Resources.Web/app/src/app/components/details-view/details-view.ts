@@ -9,6 +9,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/translation-constants';
 import { ResourceModel } from '../../api/models';
 import { EditResourceService } from '@app/services/edit-resource.service';
+import { ResourceNavigationService } from '@app/services/resource-navigation.service';
 import { SessionService } from '@app/services/session.service';
 import { ResourceModificationService } from '@api/services';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
@@ -28,18 +29,17 @@ export class DetailsView {
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
   private editResourceService = inject(EditResourceService);
+  private navigationService = inject(ResourceNavigationService);
   private resourceModificationService = inject(ResourceModificationService);
   private sessionService = inject(SessionService);
   private snackbarService = inject(SnackbarService);
 
-  protected loading = signal(true);
+  protected loading = this.navigationService.loading;
   protected isEditMode = this.editResourceService.editing;
   protected activeLink = signal<number | undefined>(undefined);
   protected activeResource = linkedSignal(() => this.editResourceService.activeResource());
 
   protected TranslationConstants = TranslationConstants;
-
-  private currentResourceId?: number;
 
   constructor() {
     this.activatedRoute.paramMap.subscribe(params => {
@@ -48,20 +48,13 @@ export class DetailsView {
 
     this.router.events.subscribe(val => {
       if (val instanceof NavigationEnd || val instanceof NavigationCancel) {
-        const childPath = this.activatedRoute.firstChild?.snapshot.url[0]?.path;
-        switch (childPath) {
-          case 'properties': {
-            this.activeLink.set(1);
-            break;
-          }
-          case 'references': {
-            this.activeLink.set(2);
-            break;
-          }
-          case 'methods': {
-            this.activeLink.set(3);
-            break;
-          }
+        const url = this.router.url;
+        if (url.includes('/properties')) {
+          this.activeLink.set(1);
+        } else if (url.includes('/references')) {
+          this.activeLink.set(2);
+        } else if (url.includes('/methods')) {
+          this.activeLink.set(3);
         }
       }
     });
@@ -71,7 +64,7 @@ export class DetailsView {
       if (!resource) {
         return;
       }
-      if (this.currentResourceId === resource.id) {
+      if (this.navigationService.activeId() === resource.id) {
         return;
       }
       untracked(() => {
@@ -81,17 +74,17 @@ export class DetailsView {
   }
 
   private async loadResource(id: number) {
-    if (this.currentResourceId === id) {
+    if (this.navigationService.activeId() === id) {
       return;
     }
-    this.currentResourceId = id;
-    this.loading.set(true);
+    this.navigationService.setActiveId(id);
+    this.navigationService.setLoading(true);
 
     // Restore work-in-progress resource from session storage
     const workInProgress = this.sessionService.removeWipResource();
     if (workInProgress?.resource.id === id) {
       this.editResourceService.setResourceFromStorage(workInProgress);
-      this.loading.set(false);
+      this.navigationService.setLoading(false);
       return;
     }
 
@@ -101,7 +94,7 @@ export class DetailsView {
       if (!resource) {
         this.router.navigate(['']);
       }
-      this.loading.set(false);
+      this.navigationService.setLoading(false);
       return;
     }
 
@@ -112,28 +105,18 @@ export class DetailsView {
       await this.snackbarService.handleError(error as HttpErrorResponse);
       this.router.navigate(['']);
     } finally {
-      this.loading.set(false);
+      this.navigationService.setLoading(false);
     }
   }
 
   private onNewResource(resource: ResourceModel) {
-    const childPath = this.activatedRoute.firstChild?.snapshot.url[0]?.path;
-    switch (childPath) {
-      case 'methods': {
-        this.router.navigate([`details/${resource?.id}/methods`]);
-        break;
-      }
-      case 'references': {
-        this.router.navigate([`details/${resource?.id}/references`]);
-        break;
-      }
-      default: {
-        if (resource?.properties) {
-          this.router.navigate([`details/${resource.id}/properties`]);
-        }
-        break;
-      }
+    const url = this.router.url;
+    if (url.includes('/methods')) {
+      this.router.navigate([`details/${resource?.id}/methods`]);
+    } else if (url.includes('/references')) {
+      this.router.navigate([`details/${resource?.id}/references`]);
+    } else if (resource?.properties) {
+      this.router.navigate([`details/${resource.id}/properties`]);
     }
-    this.currentResourceId = resource?.id;
   }
 }
