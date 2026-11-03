@@ -9,8 +9,7 @@
           <input
             matInput
             type="text"
-            [ngModel]="filterText()"
-            (ngModelChange)="filterText.set($event)"
+            [(ngModel)]="filterText"
             name="filter"
           />
           @if(this.filterText().length){

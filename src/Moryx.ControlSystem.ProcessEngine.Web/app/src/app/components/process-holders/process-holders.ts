@@ -74,12 +74,15 @@ export class ProcessHolders implements OnInit {
     const f = filter.trim().toLowerCase();
     return groups
       .map((group) => {
-        const positions = (group.positions ?? []).filter((x) => this.matchesFilter(x, f));
-        const groupMatches = (group.name ?? "").toLowerCase().includes(f);
-        // If group name matches, keep full group, otherwise keep only matching positions
-        return groupMatches ? group : { ...group, positions };
+        if (group.name.toLowerCase().includes(f)) {
+          // Keep full group when group name matches
+          return group;
+        }
+        const positions = group.positions.filter((x) => this.matchesFilter(x, f));
+        // Only keep group if at least one position matches, avoid copying otherwise
+        return positions.length > 0 ? { ...group, positions } : null;
       })
-      .filter((group) => group.positions.length > 0 || (group.name ?? "").toLowerCase().includes(f))
+      .filter((g): g is ProcessHolderGroup => g !== null)
       .map((g) => ConvertToNode(g));
   });
 
