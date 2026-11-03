@@ -42,6 +42,10 @@
       <div class="processes-activity-details-container">
         <div class="processes-activity-details">
           <div>
+            {{ TranslationConstants.PROCESSES.ACTIVITY_ID | translate }}:
+            {{ selectedActivity()?.id }}
+          </div>
+          <div>
             {{ TranslationConstants.PROCESSES.STARTED | translate }}:
             {{ selectedActivity()?.tracing?.started | date: "dd.LL.YYYY HH:mm:ss" }}
           </div>
