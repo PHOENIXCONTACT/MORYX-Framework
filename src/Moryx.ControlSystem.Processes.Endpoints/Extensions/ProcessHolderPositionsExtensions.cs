@@ -9,23 +9,23 @@ namespace Moryx.ControlSystem.Processes.Endpoints.Extensions;
 
 internal static class ProcessHolderPositionsExtensions
 {
-
-    public static Dictionary<Resource, IEnumerable<IProcessHolderPosition>> GetUngroupedPostions(
-        this IEnumerable<IProcessHolderPosition> positions)
+    public static Dictionary<Resource, List<IProcessHolderPosition>> GetUngroupedPositions(this IEnumerable<IProcessHolderPosition> positions)
     {
-        var result = new Dictionary<Resource, IEnumerable<IProcessHolderPosition>>();
+        var result = new Dictionary<Resource, List<IProcessHolderPosition>>();
         foreach (var position in positions)
         {
-            if (position is Resource resource && !(resource.ParentCategory() == Category.ProcessHolderGroup))
+            if (position is not Resource resource || resource.ParentCategory() == Category.ProcessHolderGroup)
             {
-                if (result.TryGetValue(resource, out var list))
-                {
-                    list.Append(position);
-                }
-                else
-                {
-                    result.Add(resource, [position]);
-                }
+                continue;
+            }
+
+            if (result.TryGetValue(resource, out var list))
+            {
+                list.Add(position);
+            }
+            else
+            {
+                result.Add(resource, [position]);
             }
         }
         return result;
