@@ -13,7 +13,6 @@ import { ProductManagementService } from '@app/api/services';
 import { ProductsDetailsHeader } from './products-details-header/products-details-header';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { HttpErrorResponse } from '@angular/common/http';
-
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -47,33 +46,46 @@ export class ProductsDetailsView {
 
   protected Tabs = Tabs;
   protected TranslationConstants = TranslationConstants;
-  private regexParts: RegExp = /(details\/\d*\/parts)/;
-  private regexRecipes: RegExp = /(details\/\d*\/recipes)/;
-  private regexReferences: RegExp = /(details\/\d*\/references)/;
-  private regexProperties: RegExp = /(details\/\d*\/properties)/;
+
+  private currentProductId?: number;
 
   constructor() {
     this.activatedRoute.paramMap.subscribe(params => {
       this.loadProduct(Number(params.get('id')));
     });
 
-    this.router.events.subscribe((val) => {
+    this.router.events.subscribe(val => {
       if (val instanceof NavigationEnd || val instanceof NavigationCancel) {
-        const url = this.router.url;
-        if (this.regexProperties.test(url)) {
-          this.activeLink.set(Tabs.Properties);
-        } else if (this.regexParts.test(url)) {
-          this.activeLink.set(Tabs.Parts);
-        } else if (this.regexRecipes.test(url)) {
-          this.activeLink.set(Tabs.Recipes);
-        } else if (this.regexReferences.test(url)) {
-          this.activeLink.set(Tabs.References);
+        const childPath = this.activatedRoute.firstChild?.snapshot.url[0]?.path;
+        switch (childPath) {
+          case 'properties': {
+            this.activeLink.set(Tabs.Properties);
+            break;
+          }
+          case 'parts': {
+            this.activeLink.set(Tabs.Parts);
+            break;
+          }
+          case 'recipes': {
+            this.activeLink.set(Tabs.Recipes);
+            break;
+          }
+          case 'references': {
+            this.activeLink.set(Tabs.References);
+            break;
+          }
         }
       }
     });
   }
 
+
+
   private async loadProduct(id: number) {
+    if (this.currentProductId === id) {
+      return;
+    }
+    this.currentProductId = id;
     this.loading.set(true);
 
     // Restore work-in-progress product from session storage
@@ -96,21 +108,7 @@ export class ProductsDetailsView {
     }
   }
 
-  protected routeTo(target: number) {
-    const url = this.router.url;
-    const regexSpecificRecipe: RegExp = /(details\/\d*\/recipes\/\d*)/;
-    const regexParts: RegExp = /(details\/\d*\/parts)/;
-    // ToDo: Simplify, no need for 2 navigations
-    if (regexSpecificRecipe.test(url) || regexParts.test(url)) {
-      this.router.navigate(['../../'], { relativeTo: this.activatedRoute }).then(() => {
-        this.routeToTab(target);
-      });
-    } else {
-      this.routeToTab(target);
-    }
-  }
-
-  private routeToTab(target: Tabs) {
+  protected routeTo(target: Tabs) {
     let url = '';
     switch (target) {
       case Tabs.Properties:
