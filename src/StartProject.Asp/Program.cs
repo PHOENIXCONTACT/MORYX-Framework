@@ -60,12 +60,12 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 });
 builder.Services.AddControllers();
 
-builder.Services.AddOpenApi(options =>
+builder.Services.AddOpenApi(static options =>
 {
 
-    options.OpenApiVersion = Microsoft.OpenApi.OpenApiSpecVersion.OpenApi3_1; // OpenApi3_2 is only available with .net 11
+    options.OpenApiVersion = OpenApiSpecVersion.OpenApi3_1; // OpenApi3_2 is only available with .net 11
     //options.AddOperationTransformer<SseOpenApiMapper>();
-    options.AddDocumentTransformer<MoryxOpenApiDocumentTransformer>();
+    options.ConfigureMoryxTransformers();
 }
 );
 
