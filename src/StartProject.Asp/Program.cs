@@ -5,6 +5,8 @@ using System.Globalization;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.OpenApi;
+using Microsoft.OpenApi;
 using Moryx.AspNetCore;
 using Moryx.Launcher;
 using Moryx.Model;
@@ -92,6 +94,21 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 
     app.MapOpenApi();
+    // Map open api spec as yaml to, if someone requires it
+    app.MapGet("/openapi/v1.yaml",
+        async ([FromKeyedServices("v1")] IOpenApiDocumentProvider provider) =>
+        {
+            var document = await provider.GetOpenApiDocumentAsync();
+
+            using var stringWriter = new StringWriter();
+            var writer = new OpenApiYamlWriter(stringWriter);
+
+            document.SerializeAsV31(writer);
+
+            return Results.Text(
+                stringWriter.ToString(),
+            "application/yaml");
+        });
     app.UseSwaggerUI(options =>
         options.SwaggerEndpoint("/openapi/v1.json", "v1")
     );
