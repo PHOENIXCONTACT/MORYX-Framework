@@ -5,7 +5,7 @@ using System.Globalization;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.AspNetCore.Mvc.Controllers;
+using Moryx.AspNetCore;
 using Moryx.Launcher;
 using Moryx.Model;
 using Moryx.Runtime.Kernel;
@@ -51,13 +51,21 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddRazorPages();
 
-builder.Services.AddControllers()
-    .AddJsonOptions(jo => jo.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
-
-builder.Services.AddSwaggerGen(c =>
+builder.Services.ConfigureHttpJsonOptions(options =>
 {
-    c.CustomOperationIds(api => ((ControllerActionDescriptor)api.ActionDescriptor).MethodInfo.Name);
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    options.SerializerOptions.NumberHandling = JsonNumberHandling.Strict; // https://github.com/dotnet/aspnetcore/issues/64501
 });
+builder.Services.AddControllers();
+
+builder.Services.AddOpenApi(options =>
+{
+
+    options.OpenApiVersion = Microsoft.OpenApi.OpenApiSpecVersion.OpenApi3_1; // OpenApi3_2 is only available with .net 11
+    //options.AddOperationTransformer<SseOpenApiMapper>();
+    options.AddDocumentTransformer<MoryxOpenApiDocumentTransformer>();
+}
+);
 
 builder.Services.AddSingleton<IAuthorizationPolicyProvider, ExamplePolicyProvider>();
 
@@ -82,10 +90,12 @@ if (!string.IsNullOrEmpty(pathBase))
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
 
+    app.MapOpenApi();
+    app.UseSwaggerUI(options =>
+        options.SwaggerEndpoint("/openapi/v1.json", "v1")
+    );
+}
 app.UseRequestLocalization();
 app.UseStaticFiles();
 app.UseHttpsRedirection();
