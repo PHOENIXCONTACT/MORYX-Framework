@@ -15,11 +15,19 @@ import { RequestBuilder } from '../../request-builder';
 import { AdviceModel } from '../../models/advice-model';
 
 export interface AdviceOperation$Params {
+
+/**
+ * Id of the operation
+ */
   guid: string;
-      body?: AdviceModel
+  
+    /**
+     * Parameter object
+     */
+    body: AdviceModel
 }
 
-export function adviceOperation(http: HttpClient, rootUrl: string, params: AdviceOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+export function adviceOperation(http: HttpClient, rootUrl: string, params: AdviceOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<any>> {
   const rb = new RequestBuilder(rootUrl, adviceOperation.PATH, 'post');
   if (params) {
     rb.path('guid', params.guid, {});
@@ -27,11 +35,11 @@ export function adviceOperation(http: HttpClient, rootUrl: string, params: Advic
   }
 
   return http.request(
-    rb.build({ responseType: 'text', accept: '*/*', context })
+    rb.build({ responseType: 'json', accept: 'application/json', context })
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+      return r as StrictHttpResponse<any>;
     })
   );
 }

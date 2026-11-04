@@ -15,11 +15,19 @@ import { RequestBuilder } from '../../request-builder';
 import { OperationUpdateModel } from '../../models/operation-update-model';
 
 export interface UpdateOperation$Params {
+
+/**
+ * Id of the operation
+ */
   guid: string;
-      body?: OperationUpdateModel
+  
+    /**
+     * Paramter object
+     */
+    body: OperationUpdateModel
 }
 
-export function updateOperation(http: HttpClient, rootUrl: string, params: UpdateOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+export function updateOperation(http: HttpClient, rootUrl: string, params: UpdateOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<any>> {
   const rb = new RequestBuilder(rootUrl, updateOperation.PATH, 'put');
   if (params) {
     rb.path('guid', params.guid, {});
@@ -27,11 +35,11 @@ export function updateOperation(http: HttpClient, rootUrl: string, params: Updat
   }
 
   return http.request(
-    rb.build({ responseType: 'text', accept: '*/*', context })
+    rb.build({ responseType: 'json', accept: 'application/json', context })
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+      return r as StrictHttpResponse<any>;
     })
   );
 }

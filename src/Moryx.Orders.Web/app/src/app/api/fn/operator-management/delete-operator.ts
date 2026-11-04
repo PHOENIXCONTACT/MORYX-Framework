@@ -17,18 +17,18 @@ export interface DeleteOperator$Params {
   operatorIdentifier?: string;
 }
 
-export function deleteOperator(http: HttpClient, rootUrl: string, params?: DeleteOperator$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+export function deleteOperator(http: HttpClient, rootUrl: string, params?: DeleteOperator$Params, context?: HttpContext): Observable<StrictHttpResponse<any>> {
   const rb = new RequestBuilder(rootUrl, deleteOperator.PATH, 'delete');
   if (params) {
     rb.query('operatorIdentifier', params.operatorIdentifier, {});
   }
 
   return http.request(
-    rb.build({ responseType: 'text', accept: '*/*', context })
+    rb.build({ responseType: 'json', accept: 'application/json', context })
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+      return r as StrictHttpResponse<any>;
     })
   );
 }

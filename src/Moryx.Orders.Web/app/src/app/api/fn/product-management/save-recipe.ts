@@ -15,10 +15,14 @@ import { RequestBuilder } from '../../request-builder';
 import { RecipeModel } from '../../models/recipe-model';
 
 export interface SaveRecipe$Params {
-      body?: RecipeModel
+  
+    /**
+     * Model of the recipe
+     */
+    body: RecipeModel
 }
 
-export function saveRecipe(http: HttpClient, rootUrl: string, params?: SaveRecipe$Params, context?: HttpContext): Observable<StrictHttpResponse<number>> {
+export function saveRecipe(http: HttpClient, rootUrl: string, params: SaveRecipe$Params, context?: HttpContext): Observable<StrictHttpResponse<number>> {
   const rb = new RequestBuilder(rootUrl, saveRecipe.PATH, 'post');
   if (params) {
     rb.body(params.body, 'application/*+json');

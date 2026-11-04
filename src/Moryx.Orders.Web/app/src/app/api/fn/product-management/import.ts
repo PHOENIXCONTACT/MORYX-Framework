@@ -17,8 +17,16 @@ import { RequestBuilder } from '../../request-builder';
 import { ProductModel } from '../../models/product-model';
 
 export interface Import$Params {
+
+/**
+ * Name of the importer
+ */
   importerName: string;
-      body?: Entry
+  
+    /**
+     * Parameters for the importer
+     */
+    body: Entry
 }
 
 export function import$(http: HttpClient, rootUrl: string, params: Import$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ProductModel>>> {

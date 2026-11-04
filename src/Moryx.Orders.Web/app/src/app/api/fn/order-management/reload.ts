@@ -14,21 +14,25 @@ import { RequestBuilder } from '../../request-builder';
 
 
 export interface Reload$Params {
+
+/**
+ * Id of the operation
+ */
   guid: string;
 }
 
-export function reload(http: HttpClient, rootUrl: string, params: Reload$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+export function reload(http: HttpClient, rootUrl: string, params: Reload$Params, context?: HttpContext): Observable<StrictHttpResponse<any>> {
   const rb = new RequestBuilder(rootUrl, reload.PATH, 'put');
   if (params) {
     rb.path('guid', params.guid, {});
   }
 
   return http.request(
-    rb.build({ responseType: 'text', accept: '*/*', context })
+    rb.build({ responseType: 'json', accept: 'application/json', context })
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+      return r as StrictHttpResponse<any>;
     })
   );
 }

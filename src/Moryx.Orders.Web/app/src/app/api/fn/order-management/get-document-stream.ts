@@ -12,13 +12,22 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
+import { FileStreamResult } from '../../models/file-stream-result';
 
 export interface GetDocumentStream$Params {
+
+/**
+ * Id of the operation
+ */
   guid: string;
+
+/**
+ * Identifier of the document
+ */
   identifier: string;
 }
 
-export function getDocumentStream(http: HttpClient, rootUrl: string, params: GetDocumentStream$Params, context?: HttpContext): Observable<StrictHttpResponse<Blob>> {
+export function getDocumentStream(http: HttpClient, rootUrl: string, params: GetDocumentStream$Params, context?: HttpContext): Observable<StrictHttpResponse<FileStreamResult>> {
   const rb = new RequestBuilder(rootUrl, getDocumentStream.PATH, 'get');
   if (params) {
     rb.path('guid', params.guid, {});
@@ -26,11 +35,11 @@ export function getDocumentStream(http: HttpClient, rootUrl: string, params: Get
   }
 
   return http.request(
-    rb.build({ responseType: 'blob', accept: 'application/json', context })
+    rb.build({ responseType: 'json', accept: 'application/json', context })
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Blob>;
+      return r as StrictHttpResponse<FileStreamResult>;
     })
   );
 }

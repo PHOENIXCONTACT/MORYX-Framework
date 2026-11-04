@@ -15,8 +15,16 @@ import { RequestBuilder } from '../../request-builder';
 import { ProductModel } from '../../models/product-model';
 
 export interface Duplicate$Params {
+
+/**
+ * Database id of the existing product type
+ */
   id: number;
-      body?: string
+  
+    /**
+     * Product identifier of the new product
+     */
+    body: string
 }
 
 export function duplicate(http: HttpClient, rootUrl: string, params: Duplicate$Params, context?: HttpContext): Observable<StrictHttpResponse<ProductModel>> {

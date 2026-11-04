@@ -15,10 +15,10 @@ import { RequestBuilder } from '../../request-builder';
 import { OperatorModel } from '../../models/operator-model';
 
 export interface Add$Params {
-      body?: OperatorModel
+      body: OperatorModel
 }
 
-export function add(http: HttpClient, rootUrl: string, params?: Add$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
+export function add(http: HttpClient, rootUrl: string, params: Add$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
   const rb = new RequestBuilder(rootUrl, add.PATH, 'post');
   if (params) {
     rb.body(params.body, 'application/*+json');

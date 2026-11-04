@@ -65,6 +65,10 @@ export class ProductManagementService extends BaseService {
   static readonly GetProductCustomizationPath = '/api/moryx/products/configuration';
 
   /**
+   * Loads dataset of existing products, recipes and importers for the UI.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `getProductCustomization()` instead.
    *
@@ -76,6 +80,10 @@ export class ProductManagementService extends BaseService {
   }
 
   /**
+   * Loads dataset of existing products, recipes and importers for the UI.
+   *
+   *
+   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getProductCustomization$Response()` instead.
    *
@@ -90,6 +98,10 @@ export class ProductManagementService extends BaseService {
   static readonly ImportPath = '/api/moryx/products/importers/{importerName}';
 
   /**
+   * Run the product importer with the given parameters.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `import()` instead.
    *
@@ -101,6 +113,10 @@ export class ProductManagementService extends BaseService {
   }
 
   /**
+   * Run the product importer with the given parameters.
+   *
+   *
+   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `import$Response()` instead.
    *
@@ -115,6 +131,10 @@ export class ProductManagementService extends BaseService {
   static readonly GetTypeByIdentityPath = '/api/moryx/products/types';
 
   /**
+   * Retrieves all product types, if no identity is specified. Otherwise the model identified by that id is returned.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `getTypeByIdentity()` instead.
    *
@@ -126,6 +146,10 @@ export class ProductManagementService extends BaseService {
   }
 
   /**
+   * Retrieves all product types, if no identity is specified. Otherwise the model identified by that id is returned.
+   *
+   *
+   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getTypeByIdentity$Response()` instead.
    *
@@ -140,23 +164,31 @@ export class ProductManagementService extends BaseService {
   static readonly SaveTypePath = '/api/moryx/products/types';
 
   /**
+   * Store the product type in the database.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `saveType()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  saveType$Response(params?: SaveType$Params, context?: HttpContext): Promise<StrictHttpResponse<number>> {
+  saveType$Response(params: SaveType$Params, context?: HttpContext): Promise<StrictHttpResponse<number>> {
     const obs = saveType(this.http, this.rootUrl, params, context);
     return firstValueFrom(obs);
   }
 
   /**
+   * Store the product type in the database.
+   *
+   *
+   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `saveType$Response()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  saveType(params?: SaveType$Params, context?: HttpContext): Promise<number> {
+  saveType(params: SaveType$Params, context?: HttpContext): Promise<number> {
     const resp = this.saveType$Response(params, context);
     return resp.then((r: StrictHttpResponse<number>): number => r.body);
   }
@@ -165,23 +197,31 @@ export class ProductManagementService extends BaseService {
   static readonly GetTypesPath = '/api/moryx/products/types/query';
 
   /**
+   * Query the product type database.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `getTypes()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  getTypes$Response(params?: GetTypes$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<ProductModel>>> {
+  getTypes$Response(params: GetTypes$Params, context?: HttpContext): Promise<StrictHttpResponse<Array<ProductModel>>> {
     const obs = getTypes(this.http, this.rootUrl, params, context);
     return firstValueFrom(obs);
   }
 
   /**
+   * Query the product type database.
+   *
+   *
+   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getTypes$Response()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  getTypes(params?: GetTypes$Params, context?: HttpContext): Promise<Array<ProductModel>> {
+  getTypes(params: GetTypes$Params, context?: HttpContext): Promise<Array<ProductModel>> {
     const resp = this.getTypes$Response(params, context);
     return resp.then((r: StrictHttpResponse<Array<ProductModel>>): Array<ProductModel> => r.body);
   }
@@ -190,6 +230,10 @@ export class ProductManagementService extends BaseService {
   static readonly GetTypeByIdPath = '/api/moryx/products/types/{id}';
 
   /**
+   * Get's a product type using the database id.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `getTypeById()` instead.
    *
@@ -201,6 +245,10 @@ export class ProductManagementService extends BaseService {
   }
 
   /**
+   * Get's a product type using the database id.
+   *
+   *
+   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getTypeById$Response()` instead.
    *
@@ -215,6 +263,10 @@ export class ProductManagementService extends BaseService {
   static readonly UpdateTypePath = '/api/moryx/products/types/{id}';
 
   /**
+   * Updates the existing product type.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `updateType()` instead.
    *
@@ -226,6 +278,10 @@ export class ProductManagementService extends BaseService {
   }
 
   /**
+   * Updates the existing product type.
+   *
+   *
+   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `updateType$Response()` instead.
    *
@@ -240,6 +296,10 @@ export class ProductManagementService extends BaseService {
   static readonly DuplicatePath = '/api/moryx/products/types/{id}';
 
   /**
+   * Create a clone of the product type identified with the id with the new identitiy.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `duplicate()` instead.
    *
@@ -251,6 +311,10 @@ export class ProductManagementService extends BaseService {
   }
 
   /**
+   * Create a clone of the product type identified with the id with the new identitiy.
+   *
+   *
+   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `duplicate$Response()` instead.
    *
@@ -265,6 +329,10 @@ export class ProductManagementService extends BaseService {
   static readonly DeleteTypePath = '/api/moryx/products/types/{id}';
 
   /**
+   * Deletes the product type with the given id.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `deleteType()` instead.
    *
@@ -276,6 +344,10 @@ export class ProductManagementService extends BaseService {
   }
 
   /**
+   * Deletes the product type with the given id.
+   *
+   *
+   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `deleteType$Response()` instead.
    *
@@ -290,6 +362,10 @@ export class ProductManagementService extends BaseService {
   static readonly GetRecipesPath = '/api/moryx/products/types/{id}/recipes/{classification}';
 
   /**
+   * Loads the recipe attached to the product type with the id.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `getRecipes()` instead.
    *
@@ -301,6 +377,10 @@ export class ProductManagementService extends BaseService {
   }
 
   /**
+   * Loads the recipe attached to the product type with the id.
+   *
+   *
+   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getRecipes$Response()` instead.
    *
@@ -315,6 +395,10 @@ export class ProductManagementService extends BaseService {
   static readonly GetInstancePath = '/api/moryx/products/instances/{id}';
 
   /**
+   * Get's the product instance with the given id.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `getInstance()` instead.
    *
@@ -326,6 +410,10 @@ export class ProductManagementService extends BaseService {
   }
 
   /**
+   * Get's the product instance with the given id.
+   *
+   *
+   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getInstance$Response()` instead.
    *
@@ -340,6 +428,10 @@ export class ProductManagementService extends BaseService {
   static readonly GetInstancesPath = '/api/moryx/products/instances';
 
   /**
+   * Loads multiple product instances at once.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `getInstances()` instead.
    *
@@ -351,6 +443,10 @@ export class ProductManagementService extends BaseService {
   }
 
   /**
+   * Loads multiple product instances at once.
+   *
+   *
+   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getInstances$Response()` instead.
    *
@@ -365,31 +461,43 @@ export class ProductManagementService extends BaseService {
   static readonly SaveInstancePath = '/api/moryx/products/instances';
 
   /**
+   * Save the instance in the product db.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `saveInstance()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  saveInstance$Response(params?: SaveInstance$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
+  saveInstance$Response(params: SaveInstance$Params, context?: HttpContext): Promise<StrictHttpResponse<any>> {
     const obs = saveInstance(this.http, this.rootUrl, params, context);
     return firstValueFrom(obs);
   }
 
   /**
+   * Save the instance in the product db.
+   *
+   *
+   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `saveInstance$Response()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  saveInstance(params?: SaveInstance$Params, context?: HttpContext): Promise<void> {
+  saveInstance(params: SaveInstance$Params, context?: HttpContext): Promise<any> {
     const resp = this.saveInstance$Response(params, context);
-    return resp.then((r: StrictHttpResponse<void>): void => r.body);
+    return resp.then((r: StrictHttpResponse<any>): any => r.body);
   }
 
   /** Path part for operation `createInstance()` */
   static readonly CreateInstancePath = '/api/moryx/products/instances';
 
   /**
+   * Create a new product instace of the product type identified via the identifier and revision.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `createInstance()` instead.
    *
@@ -401,6 +509,10 @@ export class ProductManagementService extends BaseService {
   }
 
   /**
+   * Create a new product instace of the product type identified via the identifier and revision.
+   *
+   *
+   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `createInstance$Response()` instead.
    *
@@ -415,6 +527,10 @@ export class ProductManagementService extends BaseService {
   static readonly GetRecipePath = '/api/moryx/products/recipes/{id}';
 
   /**
+   * Get's a recipe by it's db id.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `getRecipe()` instead.
    *
@@ -426,6 +542,10 @@ export class ProductManagementService extends BaseService {
   }
 
   /**
+   * Get's a recipe by it's db id.
+   *
+   *
+   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getRecipe$Response()` instead.
    *
@@ -440,6 +560,10 @@ export class ProductManagementService extends BaseService {
   static readonly UpdateRecipePath = '/api/moryx/products/recipes/{id}';
 
   /**
+   * Updates the existing recipes.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `updateRecipe()` instead.
    *
@@ -451,6 +575,10 @@ export class ProductManagementService extends BaseService {
   }
 
   /**
+   * Updates the existing recipes.
+   *
+   *
+   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `updateRecipe$Response()` instead.
    *
@@ -465,23 +593,31 @@ export class ProductManagementService extends BaseService {
   static readonly SaveRecipePath = '/api/moryx/products/recipes';
 
   /**
+   * Saves a new recipe in the database.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `saveRecipe()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  saveRecipe$Response(params?: SaveRecipe$Params, context?: HttpContext): Promise<StrictHttpResponse<number>> {
+  saveRecipe$Response(params: SaveRecipe$Params, context?: HttpContext): Promise<StrictHttpResponse<number>> {
     const obs = saveRecipe(this.http, this.rootUrl, params, context);
     return firstValueFrom(obs);
   }
 
   /**
+   * Saves a new recipe in the database.
+   *
+   *
+   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `saveRecipe$Response()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  saveRecipe(params?: SaveRecipe$Params, context?: HttpContext): Promise<number> {
+  saveRecipe(params: SaveRecipe$Params, context?: HttpContext): Promise<number> {
     const resp = this.saveRecipe$Response(params, context);
     return resp.then((r: StrictHttpResponse<number>): number => r.body);
   }

@@ -9,7 +9,7 @@
 import { WorkplanState } from '../models/workplan-state';
 export interface WorkplanModel {
   id?: number;
-  name?: string | null;
+  name?: (string | null);
   state?: WorkplanState;
   version?: number;
 }

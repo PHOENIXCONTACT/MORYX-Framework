@@ -15,7 +15,15 @@ import { RequestBuilder } from '../../request-builder';
 import { OperationRecipeModel } from '../../models/operation-recipe-model';
 
 export interface GetAssignableRecipes$Params {
+
+/**
+ * Product identifier
+ */
   identifier?: string;
+
+/**
+ * Product revision
+ */
   revision?: number;
 }
 

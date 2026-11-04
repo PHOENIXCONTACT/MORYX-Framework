@@ -18,7 +18,7 @@ export interface SignIn$Params {
   resourceId?: number;
 }
 
-export function signIn(http: HttpClient, rootUrl: string, params?: SignIn$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+export function signIn(http: HttpClient, rootUrl: string, params?: SignIn$Params, context?: HttpContext): Observable<StrictHttpResponse<any>> {
   const rb = new RequestBuilder(rootUrl, signIn.PATH, 'put');
   if (params) {
     rb.query('operatorIdentifier', params.operatorIdentifier, {});
@@ -26,11 +26,11 @@ export function signIn(http: HttpClient, rootUrl: string, params?: SignIn$Params
   }
 
   return http.request(
-    rb.build({ responseType: 'text', accept: '*/*', context })
+    rb.build({ responseType: 'json', accept: 'application/json', context })
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+      return r as StrictHttpResponse<any>;
     })
   );
 }

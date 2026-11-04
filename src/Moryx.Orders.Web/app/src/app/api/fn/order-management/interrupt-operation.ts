@@ -14,11 +14,19 @@ import { RequestBuilder } from '../../request-builder';
 
 
 export interface InterruptOperation$Params {
+
+/**
+ * Id of the operation
+ */
   guid: string;
+
+/**
+ * Identifier of the user requesting the interrupt (Optional depending on configuration)
+ */
   userIdentifier?: string;
 }
 
-export function interruptOperation(http: HttpClient, rootUrl: string, params: InterruptOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+export function interruptOperation(http: HttpClient, rootUrl: string, params: InterruptOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<any>> {
   const rb = new RequestBuilder(rootUrl, interruptOperation.PATH, 'post');
   if (params) {
     rb.path('guid', params.guid, {});
@@ -26,11 +34,11 @@ export function interruptOperation(http: HttpClient, rootUrl: string, params: In
   }
 
   return http.request(
-    rb.build({ responseType: 'text', accept: '*/*', context })
+    rb.build({ responseType: 'json', accept: 'application/json', context })
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+      return r as StrictHttpResponse<any>;
     })
   );
 }

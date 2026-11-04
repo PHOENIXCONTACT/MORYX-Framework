@@ -8,8 +8,8 @@
 
 import { LogLevel } from '../models/log-level';
 export interface OperationLogMessageModel {
-  exception?: string | null;
+  exception?: (string | null);
   logLevel?: LogLevel;
-  message?: string | null;
+  message?: (string | null);
   timeStamp?: string;
 }

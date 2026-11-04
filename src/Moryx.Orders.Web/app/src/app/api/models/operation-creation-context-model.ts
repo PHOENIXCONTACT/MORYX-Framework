@@ -10,21 +10,89 @@ import { Entry } from '@moryx/ngx-web-framework/entry-editor';
 
 import { PartCreationContext } from '../models/part-creation-context';
 export interface OperationCreationContextModel {
-  materialParameters?: Array<Entry> | null;
-  name?: string | null;
-  operationNumber?: string | null;
-  orderNumber?: string | null;
+
+  /**
+   * Additional operation depending parameters for the production
+   */
+  materialParameters?: (Array<Entry> | null);
+
+  /**
+   * Operation name
+   */
+  name?: (string | null);
+
+  /**
+   * The number of this operation
+   */
+  operationNumber?: (string | null);
+
+  /**
+   * The number of the order this operation belongs to
+   */
+  orderNumber?: (string | null);
+
+  /**
+   * Total amount planned for over delivery
+   */
   overDeliveryAmount?: number;
-  parts?: Array<PartCreationContext> | null;
+
+  /**
+   * Part list of the product of this operation
+   */
+  parts?: (Array<PartCreationContext> | null);
+
+  /**
+   * Expected end time
+   */
   plannedEnd?: string;
+
+  /**
+   * Expected start time
+   */
   plannedStart?: string;
-  productIdentifier?: string | null;
-  productName?: string | null;
+
+  /**
+   * Main product identifier
+   */
+  productIdentifier?: (string | null);
+
+  /**
+   * Name of the Product
+   */
+  productName?: (string | null);
+
+  /**
+   * Revision of the Product
+   */
   productRevision?: number;
+
+  /**
+   * Id of the preselected recipe
+   */
   recipePreselection?: number;
+
+  /**
+   * Target cycle time for the production of the depending product
+   */
   targetCycleTime?: number;
-  targetStock?: string | null;
+
+  /**
+   * Target stock for produced parts
+   */
+  targetStock?: (string | null);
+
+  /**
+   * The amount to produce
+   */
   totalAmount?: number;
+
+  /**
+   * Total amount planned for under delivery
+   */
   underDeliveryAmount?: number;
-  unit?: string | null;
+
+  /**
+   * Unit of product
+   */
+  unit?: (string | null);
 }
