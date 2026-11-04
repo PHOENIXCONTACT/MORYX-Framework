@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi;
-using Moryx.AspNetCore;
+using Moryx.AspNetCore.OpenApi;
 using Moryx.Launcher;
 using Moryx.Model;
 using Moryx.Runtime.Kernel;

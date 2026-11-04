@@ -8,13 +8,17 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi;
 
-namespace Moryx.AspNetCore;
+namespace Moryx.AspNetCore.OpenApi;
 
+/// <summary>
+/// Document transformer to improve our API documentation
+/// </summary>
 public class MoryxOpenApiDocumentTransformer : IOpenApiDocumentTransformer
 {
     private const string SseItemBaseSchemaId = "SseItemBase";
     private const string EventStreamResponseType = "text/event-stream";
 
+    /// <inheritdoc />
     public async Task TransformAsync(OpenApiDocument document, OpenApiDocumentTransformerContext context, CancellationToken cancellationToken)
     {
         SortPathEntries(document);
@@ -41,6 +45,10 @@ public class MoryxOpenApiDocumentTransformer : IOpenApiDocumentTransformer
         }
     }
 
+    /// <summary>
+    /// Sort path entries by tag
+    /// </summary>
+    /// <param name="document"></param>
     private static void SortPathEntries(OpenApiDocument document)
     {
         var path = new OpenApiPaths();
@@ -78,7 +86,11 @@ public class MoryxOpenApiDocumentTransformer : IOpenApiDocumentTransformer
         document.Paths = path;
     }
 
-    public async Task UpdateOperation(OpenApiOperation operation, OpenApiOperationTransformerContext context, CancellationToken cancellationToken)
+    /// <summary>
+    /// Update logic to run per operation. Schema from <see cref="IOpenApiOperationTransformer.TransformAsync(OpenApiOperation, OpenApiOperationTransformerContext, CancellationToken)" />
+    /// because it was originally separate. Moved in here to make configuration slightly simpler
+    /// </summary>
+    private async Task UpdateOperation(OpenApiOperation operation, OpenApiOperationTransformerContext context, CancellationToken cancellationToken)
     {
         SetOperationIds(operation, context);
 
