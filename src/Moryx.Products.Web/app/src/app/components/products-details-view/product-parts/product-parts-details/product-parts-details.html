@@ -6,9 +6,8 @@
 } @else if (part.properties?.subEntries?.length) {
   <navigable-entry-editor
     [disabled]="!isEditMode()"
-    [entry]="part.properties!"
-    queryParam="productPart"
-  ></navigable-entry-editor>
+    [entry]="part.properties!" (entryChange)="onPropertiesChange($event)"
+    queryParam="productPart" />
 } @else {
   <empty-state style="scale: 66%;" [header]="''" [message]="''" icon="assignment_turned_in" />
 }

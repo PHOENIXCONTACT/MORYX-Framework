@@ -1,2 +1,6 @@
-<navigable-entry-editor [entry]="properties()!" queryParam="productProperty" [disabled]="!isEditMode()"
-  class="property-navigation"></navigable-entry-editor>
+@let productProperties = properties();
+@if (productProperties) {
+  <navigable-entry-editor [entry]="productProperties" (entryChange)="onPropertiesChange($event)"
+    queryParam="productProperty" [disabled]="!isEditMode()"
+    class="property-navigation" />
+}

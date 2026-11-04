@@ -90,9 +90,11 @@
           </mat-select>
         </mat-form-field>
         <h2>{{ TranslationConstants.RECIPES.PROPERTIES | translate }}</h2>
-        @if (selectedRecipe()!.properties !== undefined) {
+        @let recipeProperties = selectedRecipe()?.properties;
+        @if (recipeProperties) {
           <navigable-entry-editor class="product-recipes-details-properties" queryParam="recipeParameter"
-            [entry]="selectedRecipe()!.properties!" [disabled]="isEditMode() === false"></navigable-entry-editor>
+            [entry]="recipeProperties" (entryChange)="onPropertiesChange($event)"
+            [disabled]="!isEditMode()" />
         }
       </div>
     }
