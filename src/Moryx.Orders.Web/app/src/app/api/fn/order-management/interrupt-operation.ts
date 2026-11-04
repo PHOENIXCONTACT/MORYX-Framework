@@ -14,7 +14,15 @@ import { RequestBuilder } from '../../request-builder';
 
 
 export interface InterruptOperation$Params {
+
+/**
+ * Id of the operation
+ */
   guid: string;
+
+/**
+ * Identifier of the user requesting the interrupt (Optional depending on configuration)
+ */
   userIdentifier?: string;
 }
 

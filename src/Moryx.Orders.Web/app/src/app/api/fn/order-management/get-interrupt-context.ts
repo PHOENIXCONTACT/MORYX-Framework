@@ -15,6 +15,10 @@ import { RequestBuilder } from '../../request-builder';
 import { ReportContext } from '../../models/report-context';
 
 export interface GetInterruptContext$Params {
+
+/**
+ * Id of the operation
+ */
   guid: string;
 }
 
