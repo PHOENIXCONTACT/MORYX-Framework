@@ -33,7 +33,7 @@ internal class ProcessHolderGroupStream(IResourceManagement resourceManagement)
 
         // using unsafe because resourceManagement.GetResources<T> is very restricted in the sense
         // that casting at line 55 doesn't work
-        var groups = resourceManagement.GetResourcesUnsafe<IProcessHolderGroup>(_ => true);
+        var groups = resourceManagement.GetResourcesUnsafe<IProcessHolderGroup>(_ => true).ToArray();
         var allPositions = resourceManagement.GetResourcesUnsafe<IProcessHolderPosition>(_ => true).ToArray();
 
         // Define event handlers using ProcessHolderEventHandlers with broadcast action

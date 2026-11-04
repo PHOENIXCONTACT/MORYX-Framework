@@ -148,7 +148,7 @@ public class ProcessEngineController : ControllerBase // TODO: Rename to Process
         {
             modelList.Add(Converter.ConvertActivity(a, _processControl, _resourceManagement));
         }
-        return modelList.ToArray(); ;
+        return modelList.ToArray();
     }
 
     [HttpGet]
@@ -295,9 +295,9 @@ public class ProcessEngineController : ControllerBase // TODO: Rename to Process
     {
         return HttpResponse(() =>
         {
-            var allPositions = _resourceManagement.GetResourcesUnsafe<IProcessHolderPosition>(x => true);
-            var ungrouped = allPositions.GetUngroupedPostions();
-            var groups = _resourceManagement.GetResourcesUnsafe<IProcessHolderGroup>(x => true);
+            var allPositions = _resourceManagement.GetResourcesUnsafe<IProcessHolderPosition>(_ => true);
+            var ungrouped = allPositions.GetUngroupedPositions();
+            var groups = _resourceManagement.GetResourcesUnsafe<IProcessHolderGroup>(_ => true);
 
             return new ApiResponse<ProcessHolderGroupModel[]>([.. groups.ToDto(), .. ungrouped.ToDto()]);
         });

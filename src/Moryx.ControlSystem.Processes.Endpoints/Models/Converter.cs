@@ -36,7 +36,7 @@ internal static class Converter
     {
         if (activities == null || activities.Count == 0)
             return ProcessProgress.Ready;
-        else if (!activities.Any(a => a.Tracing.Completed == null))
+        else if (activities.All(a => a.Tracing.Completed != null))
             return ProcessProgress.Completed;
         else if (activities.Any(a => a.Tracing.Started != null))
             return ProcessProgress.Running;
@@ -96,11 +96,11 @@ internal static class Converter
     private static string InferActivityState(Activity activity)
     {
         if (activity.Result != null)
-            return ActivityProgress.Completed.ToString();
+            return nameof(ActivityProgress.Completed);
         else if (activity.Tracing?.Started != null)
-            return ActivityProgress.Running.ToString();
+            return nameof(ActivityProgress.Running);
         else
-            return ActivityProgress.Ready.ToString();
+            return nameof(ActivityProgress.Ready);
     }
 
     internal static TracingModel ConvertTracing(Tracing tracing) => new()
