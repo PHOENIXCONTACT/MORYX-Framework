@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Globalization;
+using System.Reflection;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Localization;
@@ -127,6 +128,15 @@ app.UseAuthorization();
 
 app.MapControllers().WithMetadata(new AllowAnonymousAttribute());
 app.MapRazorPages();
+
+// Don't start moryx modules for openapi build time code generation
+// Taken from https://github.com/dotnet/AspNetCore.Docs/blob/2c37585a425dd64e91015e60146031859ff52865/aspnetcore/fundamentals/openapi/samples/9.x/AspireApp1/AspireApp1.Web/Program.cs#L5
+// according to https://github.com/dotnet/AspNetCore.Docs/blob/main/aspnetcore/fundamentals/openapi/aspnetcore-openapi.md#customize-runtime-behavior-during-build-time-document-generation
+if (Assembly.GetEntryAssembly()?.GetName().Name == "GetDocument.Insider")
+{
+    await app.RunAsync();
+    return;
+}
 
 var moduleManager = app.Services.GetRequiredService<IModuleManager>();
 await moduleManager.StartModulesAsync();
