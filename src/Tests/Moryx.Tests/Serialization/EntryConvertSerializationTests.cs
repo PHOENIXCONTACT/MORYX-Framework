@@ -284,18 +284,80 @@ public class EntryConvertSerializationTests
         Assert.That(dummy.Position, Is.EqualTo(new Vector3(1f, 2f, 3f)));
     }
 
+    [Test]
+    public void UpdateInstance_WithStructCollection_DecodesUpdatedAndAddedElements()
+    {
+        // Arrange
+        var dummy = new StructCollectionDummy { Positions = [new Vector3(1f, 2f, 3f)] };
+        var encoded = EntryConvert.EncodeObject(dummy);
+        var entry = encoded.SubEntries.Single(e => e.Identifier == nameof(StructCollectionDummy.Positions));
+        SetComponent(entry.SubEntries.Single(), "X", "7");
+        var added = entry.Prototypes.Single().Instantiate();
+        SetComponent(added, "Z", "9");
+        entry.SubEntries.Add(added);
+
+        // Act
+        EntryConvert.UpdateInstance(dummy, encoded);
+
+        // Assert
+        Assert.That(dummy.Positions, Is.EqualTo([new Vector3(7f, 2f, 3f), new Vector3(0f, 0f, 9f)]));
+    }
+
+    [Test]
+    public void UpdateInstance_WithStructDictionary_DecodesValues()
+    {
+        // Arrange
+        var dummy = new StructCollectionDummy { Named = new Dictionary<string, Vector3> { ["origin"] = Vector3.Zero } };
+        var encoded = EntryConvert.EncodeObject(dummy);
+        var value = encoded.SubEntries.Single(e => e.Identifier == nameof(StructCollectionDummy.Named)).SubEntries.Single();
+        SetComponent(value, "Y", "5");
+
+        // Act
+        EntryConvert.UpdateInstance(dummy, encoded);
+
+        // Assert
+        Assert.That(dummy.Named["origin"], Is.EqualTo(new Vector3(0f, 5f, 0f)));
+    }
+
+    [Test]
+    public void InvokeMethod_WithStructCollectionParameter_PassesAddedElements()
+    {
+        // Arrange
+        var dummy = new StructMethodDummy();
+        var encoded = EntryConvert.EncodeMethod(typeof(StructMethodDummy).GetMethod(nameof(StructMethodDummy.MoveAlong))!);
+        var parameter = encoded.Parameters.SubEntries.Single();
+        var added = parameter.Prototypes.Single().Instantiate();
+        SetComponent(added, "X", "4");
+        parameter.SubEntries.Add(added);
+
+        // Act
+        EntryConvert.InvokeMethod(dummy, encoded);
+
+        // Assert
+        Assert.That(dummy.Path, Is.EqualTo([new Vector3(4f, 0f, 0f)]));
+    }
+
+    private static void SetComponent(Entry structEntry, string component, string value) =>
+        structEntry.SubEntries.Single(e => e.Identifier == component).Value.Current = value;
+
     private static MethodInfo MoveMethod => typeof(StructMethodDummy).GetMethod(nameof(StructMethodDummy.Move))!;
 
     public class StructCollectionDummy
     {
         public List<Vector3> Positions { get; set; }
+
+        public Dictionary<string, Vector3> Named { get; set; }
     }
 
     public class StructMethodDummy
     {
         public Vector3 Position { get; private set; }
 
+        public List<Vector3> Path { get; private set; }
+
         public void Move(Vector3 position) => Position = position;
+
+        public void MoveAlong(List<Vector3> path) => Path = path;
     }
 
     private sealed class NoConverterSerialization : DefaultSerialization

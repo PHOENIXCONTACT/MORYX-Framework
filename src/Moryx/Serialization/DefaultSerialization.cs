@@ -323,6 +323,12 @@ public class DefaultSerialization : ICustomSerialization
         return EntryConvert.ResolveConverter(memberType, attributeProvider);
     }
 
+    /// <inheritdoc/>
+    public virtual EntryConverter GetItemConverter(Type memberType, ICustomAttributeProvider attributeProvider)
+    {
+        return EntryConvert.ResolveItemConverter(memberType, attributeProvider);
+    }
+
     /// <summary>
     /// Build collection object from entry
     /// </summary>

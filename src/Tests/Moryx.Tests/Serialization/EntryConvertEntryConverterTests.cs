@@ -111,8 +111,129 @@ public class EntryConvertEntryConverterTests
         });
     }
 
+    [Test]
+    public void EncodeObject_WithConverterOnCollection_ConvertsWholeCollection()
+    {
+        // Arrange
+        var dummy = new CollectionConverterDummy { Whole = [new Tagged { Tag = "a" }, new Tagged { Tag = "b" }] };
+
+        // Act
+        var encoded = EntryConvert.EncodeObject(dummy);
+
+        // Assert
+        var entry = SubEntry(encoded, nameof(CollectionConverterDummy.Whole));
+        Assert.Multiple(() =>
+        {
+            Assert.That(entry.Value.Current, Is.EqualTo("a,b"));
+            Assert.That(entry.SubEntries, Is.Empty);
+        });
+    }
+
+    [Test]
+    public void UpdateInstance_WithConverterOnCollection_DecodesWholeCollection()
+    {
+        // Arrange
+        var dummy = new CollectionConverterDummy { Whole = [new Tagged { Tag = "a" }] };
+        var encoded = EntryConvert.EncodeObject(dummy);
+        SubEntry(encoded, nameof(CollectionConverterDummy.Whole)).Value.Current = "c,d";
+
+        // Act
+        EntryConvert.UpdateInstance(dummy, encoded);
+
+        // Assert
+        Assert.That(dummy.Whole.Select(t => t.Tag), Is.EqualTo(["c", "d"]));
+    }
+
+    [Test]
+    public void EncodeObject_WithItemConverter_ConvertsEachItem()
+    {
+        // Arrange
+        var dummy = new CollectionConverterDummy
+        {
+            ByType = [new Tagged { Tag = "a" }],
+            ByProperty = [new Tagged { Tag = "b" }]
+        };
+
+        // Act
+        var encoded = EntryConvert.EncodeObject(dummy);
+
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(SubEntry(encoded, nameof(CollectionConverterDummy.ByType)).SubEntries.Single().Value.Current, Is.EqualTo("type:a"));
+            Assert.That(SubEntry(encoded, nameof(CollectionConverterDummy.ByProperty)).SubEntries.Single().Value.Current, Is.EqualTo("property:b"));
+        });
+    }
+
+    [Test]
+    public void EncodeObject_WithItemConverterWithoutPrototypes_UsesEmptyItemAsPrototype()
+    {
+        // Arrange
+        var dummy = new CollectionConverterDummy { ByProperty = [] };
+
+        // Act
+        var encoded = EntryConvert.EncodeObject(dummy);
+
+        // Assert
+        var entry = SubEntry(encoded, nameof(CollectionConverterDummy.ByProperty));
+        var prototype = entry.Prototypes.Single();
+        Assert.Multiple(() =>
+        {
+            Assert.That(prototype.Identifier, Is.EqualTo(nameof(Tagged)));
+            Assert.That(prototype.Value.Current, Is.EqualTo("property:"));
+            Assert.That(entry.Value.Possible.Select(p => p.Key), Is.EqualTo([nameof(Tagged)]));
+        });
+    }
+
+    [Test]
+    public void UpdateInstance_WithItemConverter_DecodesUpdatedAndAddedItems()
+    {
+        // Arrange
+        var dummy = new CollectionConverterDummy { ByProperty = [new Tagged { Tag = "a" }] };
+        var encoded = EntryConvert.EncodeObject(dummy);
+        var entry = SubEntry(encoded, nameof(CollectionConverterDummy.ByProperty));
+        entry.SubEntries.Single().Value.Current = "property:b";
+        var added = entry.Prototypes.Single().Instantiate();
+        added.Value.Current = "property:c";
+        entry.SubEntries.Add(added);
+
+        // Act
+        EntryConvert.UpdateInstance(dummy, encoded);
+
+        // Assert
+        Assert.That(dummy.ByProperty.Select(t => t.Tag), Is.EqualTo(["b", "c"]));
+    }
+
     private static Entry SubEntry(Entry entry, string identifier) =>
         entry.SubEntries.Single(e => e.Identifier == identifier);
+
+    public class CollectionConverterDummy
+    {
+        public List<Tagged> ByType { get; set; }
+
+        [EntryItemConverter(typeof(PropertyTagConverter))]
+        public List<Tagged> ByProperty { get; set; }
+
+        [EntryConverter(typeof(TagListConverter)), EntryItemConverter(typeof(PropertyTagConverter))]
+        public List<Tagged> Whole { get; set; }
+    }
+
+    public class TagListConverter : EntryConverter
+    {
+        public override bool CanConvert(Type memberType) => memberType == typeof(List<Tagged>);
+
+        public override Entry Encode(object value, EntryConverterContext context) => new()
+        {
+            Value = new EntryValue
+            {
+                Type = EntryValueType.String,
+                Current = string.Join(",", ((List<Tagged>)value ?? []).Select(t => t.Tag))
+            }
+        };
+
+        public override object Decode(Entry entry, object currentValue, EntryConverterContext context) =>
+            entry.Value.Current.Split(',').Select(tag => new Tagged { Tag = tag }).ToList();
+    }
 
     public class TaggedMethodDummy
     {

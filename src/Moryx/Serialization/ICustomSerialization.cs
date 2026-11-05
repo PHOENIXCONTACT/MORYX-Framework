@@ -107,9 +107,17 @@ public interface ICustomSerialization
     /// <param name="attributeProvider">The <see cref="PropertyInfo"/> or <see cref="ParameterInfo"/> to retrieve custom attributes</param>
     /// <returns>Converter of the member or <c>null</c>, if the member uses the default conversion</returns>
     EntryConverter GetConverter(Type memberType, ICustomAttributeProvider attributeProvider)
-    {
-        return EntryConvert.ResolveConverter(memberType, attributeProvider);
-    }
+        => EntryConvert.ResolveConverter(memberType, attributeProvider);
+
+    /// <summary>
+    /// Get the <see cref="EntryConverter"/> that takes over the conversion of each element of a collection member.
+    /// Only used if <see cref="GetConverter"/> did not return a converter for the whole collection.
+    /// </summary>
+    /// <param name="memberType">Collection type of the member</param>
+    /// <param name="attributeProvider">The <see cref="PropertyInfo"/> or <see cref="ParameterInfo"/> to retrieve custom attributes</param>
+    /// <returns>Converter of the elements or <c>null</c>, if the elements use the default conversion</returns>
+    EntryConverter GetItemConverter(Type memberType, ICustomAttributeProvider attributeProvider)
+        => EntryConvert.ResolveItemConverter(memberType, attributeProvider);
 }
 
 /// <summary>
