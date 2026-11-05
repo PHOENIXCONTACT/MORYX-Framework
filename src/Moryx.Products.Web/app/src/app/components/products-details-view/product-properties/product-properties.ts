@@ -4,7 +4,7 @@
 */
 
 import { Component, computed, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
+import { Entry, NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
 import { EditProductsService } from "@app/services/edit-products.service";
 
 @Component({
@@ -19,4 +19,11 @@ export class ProductProperties {
 
   protected isEditMode = this.editProductsService.editing;
   protected properties = computed(() => this.editProductsService.currentProduct()?.properties);
+
+  protected onPropertiesChange(updatedProperties: Entry) {
+    const product = this.editProductsService.currentProduct();
+    if (product) {
+      product.properties = updatedProperties;
+    }
+  }
 }

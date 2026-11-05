@@ -7,7 +7,7 @@
       <input matInput aria-label="Node Name" [(ngModel)]="node()!.displayName" [placeholder]="TranslationConstants.PLACEHOLDER.DISPLAY_NAME | translate" />
     </mat-form-field>
   }
-  @if (this.node()?.classification === workplanNodeClassification.Subworkplan) {
+  @if (node()?.classification === workplanNodeClassification.Subworkplan) {
     <button
       mat-stroked-button
       color="primary"
@@ -16,10 +16,11 @@
       {{ TranslationConstants.PROPERTIES.NAVIGATE | translate }}
     </button>
   }
-  @if (properties()?.subEntries?.length) {
+  @let params = parameters();
+  @if (params?.subEntries?.length) {
     <navigable-entry-editor
-      [entry]="properties()!"
+      [entry]="params!" (entryChange)="onParametersChange($event)"
       [disabled]="false"
-    queryParam="nodePropertiesEditor"></navigable-entry-editor>
+      queryParam="nodePropertiesEditor" />
   }
 }

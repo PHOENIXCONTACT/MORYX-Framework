@@ -7,7 +7,7 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { Component, computed, effect, inject, OnInit, signal, untracked, ChangeDetectionStrategy } from "@angular/core";
 import { ActivatedRoute, RouterLink } from "@angular/router";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
-import { NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
+import { Entry, NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
 import { TranslatePipe } from "@ngx-translate/core";
 import { TranslationConstants } from "@app/translation-constants";
 import { environment } from "../../../environments/environment";
@@ -168,6 +168,13 @@ export class OperationRecipes implements OnInit {
 
   protected onEdit() {
     this.isEditMode.update((_) => true);
+  }
+
+  protected onPropertiesChange(updatedProperties: Entry) {
+    const recipe = this.selectedRecipe();
+    if (recipe) {
+      recipe.properties = updatedProperties;
+    }
   }
 
   protected async onSave() {

@@ -6,7 +6,7 @@
 import { Component, inject, linkedSignal, ChangeDetectionStrategy } from '@angular/core';
 import { EditProductsService } from '@app/services/edit-products.service';
 
-import { NavigableEntryEditor } from '@moryx/ngx-web-framework/entry-editor';
+import { Entry, NavigableEntryEditor } from '@moryx/ngx-web-framework/entry-editor';
 import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
 
 @Component({
@@ -25,5 +25,12 @@ export class ProductPartsDetailsComponent {
   protected partConnector = linkedSignal(this.editProductsService.currentPartConnector);
   protected productPart = linkedSignal(this.editProductsService.currentPart);
   protected isEditMode = this.editProductsService.editing;
+
+  protected onPropertiesChange(updatedProperties: Entry) {
+    const part = this.productPart();
+    if (part) {
+      part.properties = updatedProperties;
+    }
+  }
 }
 
