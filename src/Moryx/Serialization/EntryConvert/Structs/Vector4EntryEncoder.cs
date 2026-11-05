@@ -5,7 +5,7 @@ using System.Numerics;
 
 namespace Moryx.Serialization;
 
-internal sealed class Vector4EntryConverter : NumericStructEntryConverter<Vector4>
+internal sealed class Vector4EntryEncoder : NumericStructEntryEncoder<Vector4>
 {
     protected override List<Entry> EncodeComponents(Vector4 value, IFormatProvider formatProvider) =>
     [

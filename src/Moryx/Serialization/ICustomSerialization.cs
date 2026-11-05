@@ -101,23 +101,23 @@ public interface ICustomSerialization
     EntryUnitType GetUnitTypeByAttributes(ICustomAttributeProvider property);
 
     /// <summary>
-    /// Get the <see cref="EntryConverter"/> that takes over the conversion of a member
+    /// Get the <see cref="EntryEncoderBase"/> that takes over the conversion of a member
     /// </summary>
     /// <param name="memberType">Either <see cref="PropertyInfo.PropertyType"/> or <see cref="ParameterInfo.ParameterType"/></param>
     /// <param name="attributeProvider">The <see cref="PropertyInfo"/> or <see cref="ParameterInfo"/> to retrieve custom attributes</param>
-    /// <returns>Converter of the member or <c>null</c>, if the member uses the default conversion</returns>
-    EntryConverter GetConverter(Type memberType, ICustomAttributeProvider attributeProvider)
-        => EntryConvert.ResolveConverter(memberType, attributeProvider);
+    /// <returns>Encoders of the member or <c>null</c>, if the member uses the default conversion</returns>
+    EntryEncoderBase GetEncoder(Type memberType, ICustomAttributeProvider attributeProvider)
+        => EntryConvert.ResolveEncoder(memberType, attributeProvider);
 
     /// <summary>
-    /// Get the <see cref="EntryConverter"/> that takes over the conversion of each element of a collection member.
-    /// Only used if <see cref="GetConverter"/> did not return a converter for the whole collection.
+    /// Get the <see cref="EntryEncoderBase"/> that takes over the conversion of each element of a collection member.
+    /// Only used if <see cref="GetEncoder"/> did not return a encoder for the whole collection.
     /// </summary>
     /// <param name="memberType">Collection type of the member</param>
     /// <param name="attributeProvider">The <see cref="PropertyInfo"/> or <see cref="ParameterInfo"/> to retrieve custom attributes</param>
-    /// <returns>Converter of the elements or <c>null</c>, if the elements use the default conversion</returns>
-    EntryConverter GetItemConverter(Type memberType, ICustomAttributeProvider attributeProvider)
-        => EntryConvert.ResolveItemConverter(memberType, attributeProvider);
+    /// <returns>Encoders of the elements or <c>null</c>, if the elements use the default conversion</returns>
+    EntryEncoderBase GetItemEncoder(Type memberType, ICustomAttributeProvider attributeProvider)
+        => EntryConvert.ResolveItemEncoder(memberType, attributeProvider);
 }
 
 /// <summary>

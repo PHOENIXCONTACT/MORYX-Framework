@@ -362,7 +362,7 @@ public class EntryConvertSerializationTests
 
     private sealed class NoConverterSerialization : DefaultSerialization
     {
-        public override EntryConverter GetConverter(Type memberType, ICustomAttributeProvider attributeProvider) => null;
+        public override EntryEncoderBase GetEncoder(Type memberType, ICustomAttributeProvider attributeProvider) => null;
     }
 
     [Test(Description = "Decimal maps to EntryValueType.Double.")]

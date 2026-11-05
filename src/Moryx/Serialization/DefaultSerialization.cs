@@ -318,15 +318,15 @@ public class DefaultSerialization : ICustomSerialization
     }
 
     /// <inheritdoc/>
-    public virtual EntryConverter GetConverter(Type memberType, ICustomAttributeProvider attributeProvider)
+    public virtual EntryEncoderBase GetEncoder(Type memberType, ICustomAttributeProvider attributeProvider)
     {
-        return EntryConvert.ResolveConverter(memberType, attributeProvider);
+        return EntryConvert.ResolveEncoder(memberType, attributeProvider);
     }
 
     /// <inheritdoc/>
-    public virtual EntryConverter GetItemConverter(Type memberType, ICustomAttributeProvider attributeProvider)
+    public virtual EntryEncoderBase GetItemEncoder(Type memberType, ICustomAttributeProvider attributeProvider)
     {
-        return EntryConvert.ResolveItemConverter(memberType, attributeProvider);
+        return EntryConvert.ResolveItemEncoder(memberType, attributeProvider);
     }
 
     /// <summary>

@@ -4,9 +4,9 @@
 namespace Moryx.Serialization;
 
 /// <summary>
-/// Target of the <see cref="EntrySerializeAttribute.ConverterType"/>
+/// Target of the <see cref="EntrySerializeAttribute.EncoderType"/>
 /// </summary>
-public enum EntryConverterTarget
+public enum EntryEncoderTarget
 {
     /// <summary>
     /// The member itself. For a collection member the whole collection is converted.

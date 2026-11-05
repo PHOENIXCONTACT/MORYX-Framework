@@ -5,7 +5,7 @@ using System.Numerics;
 
 namespace Moryx.Serialization;
 
-internal sealed class QuaternionEntryConverter : NumericStructEntryConverter<Quaternion>
+internal sealed class QuaternionEntryEncoder : NumericStructEntryEncoder<Quaternion>
 {
     protected override List<Entry> EncodeComponents(Quaternion value, IFormatProvider formatProvider) =>
     [

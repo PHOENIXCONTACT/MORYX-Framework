@@ -4,17 +4,17 @@
 namespace Moryx.Serialization;
 
 /// <summary>
-/// Base class for built-in converters of numeric structs, which are decomposed into float sub-entries
+/// Base class for built-in encoders of numeric structs, which are decomposed into float sub-entries
 /// </summary>
-internal abstract class NumericStructEntryConverter : EntryConverter
+internal abstract class NumericStructEntryEncoder : EntryEncoderBase
 {
     /// <summary>
-    /// The struct type this converter handles
+    /// The struct type this encoder handles
     /// </summary>
     public abstract Type TargetType { get; }
 
     /// <inheritdoc />
-    public override bool CanConvert(Type memberType) => memberType == TargetType;
+    public override bool CanEncode(Type memberType) => memberType == TargetType;
 
     /// <summary>
     /// Create a sub-entry for a single float component
@@ -49,16 +49,16 @@ internal abstract class NumericStructEntryConverter : EntryConverter
 }
 
 /// <summary>
-/// Typed base class for built-in converters of numeric structs
+/// Typed base class for built-in encoders of numeric structs
 /// </summary>
-internal abstract class NumericStructEntryConverter<TStruct> : NumericStructEntryConverter
+internal abstract class NumericStructEntryEncoder<TStruct> : NumericStructEntryEncoder
     where TStruct : struct
 {
     /// <inheritdoc />
     public override Type TargetType => typeof(TStruct);
 
     /// <inheritdoc />
-    public override Entry Encode(object value, EntryConverterContext context)
+    public override Entry Encode(object value, EntryEncoderContext context)
     {
         var typeName = typeof(TStruct).Name;
         return new Entry
@@ -74,7 +74,7 @@ internal abstract class NumericStructEntryConverter<TStruct> : NumericStructEntr
     }
 
     /// <inheritdoc />
-    public override object Decode(Entry entry, object currentValue, EntryConverterContext context) =>
+    public override object Decode(Entry entry, object currentValue, EntryEncoderContext context) =>
         DecodeComponents(entry, context.Serialization.FormatProvider);
 
     /// <summary>

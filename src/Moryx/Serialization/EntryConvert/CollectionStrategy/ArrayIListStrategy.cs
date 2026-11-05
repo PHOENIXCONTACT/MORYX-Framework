@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace Moryx.Serialization;
 
-// TODO: Make internal in MORYX 12
+// TODO: Make internal in next major MORYX release
 /// <summary>
 /// <see cref="IList"/> implementation of <see cref="ICollectionStrategy"/>
 /// </summary>

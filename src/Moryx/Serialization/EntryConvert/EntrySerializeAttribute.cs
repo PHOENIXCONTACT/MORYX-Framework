@@ -12,25 +12,25 @@ public class EntrySerializeAttribute : Attribute
     public EntrySerializeMode Mode { get; }
 
     /// <summary>
-    /// Type of the <see cref="EntryConverter"/> that takes over the conversion of this member,
-    /// or of all members of this type. Must derive from <see cref="EntryConverter"/> and provide
+    /// Type of the <see cref="EntryEncoderBase"/> that takes over the conversion of this member,
+    /// or of all members of this type. Must derive from <see cref="EntryEncoderBase"/> and provide
     /// a public parameterless constructor.
     /// </summary>
-    public Type ConverterType
+    public Type EncoderType
     {
         get => field;
         set
         {
-            EntryConverterAttributeValidation.ValidateConverterType(value, nameof(ConverterType));
+            EntryEncoderAttributeValidation.ValidateEncoderType(value, nameof(EncoderType));
             field = value;
         }
     }
 
     /// <summary>
-    /// Defines whether <see cref="ConverterType"/> converts this member or the items of this collection member.
-    /// The default is <see cref="EntryConverterTarget.Member"/>.
+    /// Defines whether <see cref="EncoderType"/> converts this member or the items of this collection member.
+    /// The default is <see cref="EntryEncoderTarget.Member"/>.
     /// </summary>
-    public EntryConverterTarget ConverterTarget { get; set; }
+    public EntryEncoderTarget EncoderTarget { get; set; }
 
     /// <summary>
     /// Creates a new instance of the <see cref="EntrySerializeAttribute"/>. The default mode is <see cref="EntrySerializeMode.Always"/>

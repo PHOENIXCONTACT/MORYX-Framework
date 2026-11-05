@@ -20,7 +20,7 @@ internal static class CollectionStrategyTools
     public static Entry CreateSub(object item, int index, ICustomSerialization customSerialization, Func<object, Entry> encodeItem = null)
     {
         var subEntry = EncodeItem(item, customSerialization, encodeItem);
-        // Converters may encode null items, which keep the name assigned by the converter
+        // Encoders may encode null items, which keep the name assigned by the encoder
         if (item != null)
         {
             subEntry.DisplayName ??= GetEntryName(item);
@@ -56,25 +56,7 @@ internal static class CollectionStrategyTools
         return itemType.GetMethod(nameof(ToString))!.DeclaringType == typeof(object) ? itemType.Name : item.ToString();
     }
 
-    private static string GetEntryDescription(object item)
-    {
-        var itemType = item.GetType();
-
-        // Value type do not have names
-        if (EntryConvert.ValueOrStringType(itemType))
-        {
-            return null;
-        }
-
-        // Check for display name declaration
-        var description = itemType.GetDescription();
-        if (string.IsNullOrWhiteSpace(description))
-        {
-            return null;
-        }
-
-        return description;
-    }
+    private static string GetEntryDescription(object item) => item.GetType().GetDescription();
 
     /// <summary>
     /// Generate a number of keys

@@ -11,12 +11,12 @@ using Moryx.Tools;
 namespace Moryx.AbstractionLayer.Identity;
 
 /// <summary>
-/// <see cref="EntryConverter"/> for members of type <see cref="IIdentity"/>.
+/// <see cref="EntryEncoderBase"/> for members of type <see cref="IIdentity"/>.
 /// Identities are encoded as a class entry with the identity type name as current value and the
 /// arguments of their constructor as sub-entries. All public identity types assignable to the member,
 /// which provide a public constructor with primitive or string parameters, are offered as prototypes.
 /// </summary>
-public sealed class IdentityEntryConverter : EntryConverter
+public sealed class IdentityEntryEncoder : EntryEncoderBase
 {
     /// <summary>
     /// Identity types per member type, keyed by type name
@@ -24,10 +24,10 @@ public sealed class IdentityEntryConverter : EntryConverter
     private static readonly ConcurrentDictionary<Type, IReadOnlyDictionary<string, Type>> _candidates = new();
 
     /// <inheritdoc />
-    public override bool CanConvert(Type memberType) => typeof(IIdentity).IsAssignableFrom(memberType);
+    public override bool CanEncode(Type memberType) => typeof(IIdentity).IsAssignableFrom(memberType);
 
     /// <inheritdoc />
-    public override Entry Encode(object value, EntryConverterContext context)
+    public override Entry Encode(object value, EntryEncoderContext context)
     {
         var candidates = GetCandidates(context.MemberType);
         var possible = candidates.Values.Select(t => t.ToEntryPossible()).ToArray();
@@ -124,7 +124,7 @@ public sealed class IdentityEntryConverter : EntryConverter
     }
 
     /// <inheritdoc />
-    public override object Decode(Entry entry, object currentValue, EntryConverterContext context)
+    public override object Decode(Entry entry, object currentValue, EntryEncoderContext context)
     {
         var key = entry.Value.Current ?? string.Empty;
         if (!GetCandidates(context.MemberType).TryGetValue(key, out var identityType))

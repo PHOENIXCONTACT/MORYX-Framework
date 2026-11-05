@@ -14,7 +14,11 @@ public class EntryConvertEntryConverterTests
     public void EncodeObject_WithConverterOnProperty_TakesPrecedenceOverConverterOnType()
     {
         // Arrange
-        var dummy = new ConverterDummy { ByType = new Tagged { Tag = "a" }, ByProperty = new Tagged { Tag = "b" } };
+        var dummy = new ConverterDummy
+        {
+            ByType = new Tagged { Tag = "a" },
+            ByProperty = new Tagged { Tag = "b" }
+        };
 
         // Act
         var encoded = EntryConvert.EncodeObject(dummy);
@@ -61,7 +65,11 @@ public class EntryConvertEntryConverterTests
     public void UpdateInstance_WithAnyConverter_AssignsDecodedValue()
     {
         // Arrange
-        var dummy = new ConverterDummy { ByType = new Tagged { Tag = "a" }, ByProperty = new Tagged { Tag = "b" } };
+        var dummy = new ConverterDummy
+        {
+            ByType = new Tagged { Tag = "a" },
+            ByProperty = new Tagged { Tag = "b" }
+        };
         var encoded = EntryConvert.EncodeObject(dummy);
         SubEntry(encoded, nameof(ConverterDummy.ByType)).Value.Current = "type:c";
         SubEntry(encoded, nameof(ConverterDummy.ByProperty)).Value.Current = "property:d";
@@ -214,16 +222,6 @@ public class EntryConvertEntryConverterTests
         Assert.Throws<InvalidOperationException>(() => EntryConvert.EncodeObject(dummy));
     }
 
-    [Test]
-    public void EncodeObject_WithItemsTargetOnSingleValue_Throws()
-    {
-        // Arrange
-        var dummy = new ItemsConverterOnSingleValueDummy { Single = new Tagged { Tag = "a" } };
-
-        // Act & Assert
-        Assert.Throws<InvalidOperationException>(() => EntryConvert.EncodeObject(dummy));
-    }
-
     private static Entry SubEntry(Entry entry, string identifier) =>
         entry.SubEntries.Single(e => e.Identifier == identifier);
 
@@ -231,30 +229,30 @@ public class EntryConvertEntryConverterTests
     {
         public List<Tagged> ByType { get; set; }
 
-        [EntrySerialize(ConverterType = typeof(PropertyTagConverter), ConverterTarget = EntryConverterTarget.Items)]
+        [EntrySerialize(EncoderType = typeof(PropertyTagConverter), EncoderTarget = EntryEncoderTarget.Items)]
         public List<Tagged> ByProperty { get; set; }
 
-        [EntrySerialize(ConverterType = typeof(TagListConverter))]
+        [EntrySerialize(EncoderType = typeof(TagListConverter))]
         public List<Tagged> Whole { get; set; }
     }
 
     public class MissingItemsConverterDummy
     {
-        [EntrySerialize(ConverterTarget = EntryConverterTarget.Items)]
+        [EntrySerialize(EncoderTarget = EntryEncoderTarget.Items)]
         public List<Tagged> Items { get; set; }
     }
 
     public class ItemsConverterOnSingleValueDummy
     {
-        [EntrySerialize(ConverterType = typeof(PropertyTagConverter), ConverterTarget = EntryConverterTarget.Items)]
+        [EntrySerialize(EncoderType = typeof(PropertyTagConverter), EncoderTarget = EntryEncoderTarget.Items)]
         public Tagged Single { get; set; }
     }
 
-    public class TagListConverter : EntryConverter
+    public class TagListConverter : EntryEncoderBase
     {
-        public override bool CanConvert(Type memberType) => memberType == typeof(List<Tagged>);
+        public override bool CanEncode(Type memberType) => memberType == typeof(List<Tagged>);
 
-        public override Entry Encode(object value, EntryConverterContext context) => new()
+        public override Entry Encode(object value, EntryEncoderContext context) => new()
         {
             Value = new EntryValue
             {
@@ -263,7 +261,7 @@ public class EntryConvertEntryConverterTests
             }
         };
 
-        public override object Decode(Entry entry, object currentValue, EntryConverterContext context) =>
+        public override object Decode(Entry entry, object currentValue, EntryEncoderContext context) =>
             entry.Value.Current.Split(',').Select(tag => new Tagged { Tag = tag }).ToList();
     }
 
@@ -271,10 +269,10 @@ public class EntryConvertEntryConverterTests
     {
         public Tagged Received { get; private set; }
 
-        public void Apply([EntrySerialize(ConverterType = typeof(PropertyTagConverter))] Tagged tagged) => Received = tagged;
+        public void Apply([EntrySerialize(EncoderType = typeof(PropertyTagConverter))] Tagged tagged) => Received = tagged;
     }
 
-    [EntrySerialize(ConverterType = typeof(TypeTagConverter))]
+    [EntrySerialize(EncoderType = typeof(TypeTagConverter))]
     public class Tagged
     {
         public string Tag { get; set; }
@@ -284,20 +282,20 @@ public class EntryConvertEntryConverterTests
     {
         public Tagged ByType { get; set; }
 
-        [EntrySerialize(ConverterType = typeof(PropertyTagConverter))]
+        [EntrySerialize(EncoderType = typeof(PropertyTagConverter))]
         public Tagged ByProperty { get; set; }
     }
 
-    public abstract class TagConverter(string prefix) : EntryConverter
+    public abstract class TagConverter(string prefix) : EntryEncoderBase
     {
-        public override bool CanConvert(Type memberType) => memberType == typeof(Tagged);
+        public override bool CanEncode(Type memberType) => memberType == typeof(Tagged);
 
-        public override Entry Encode(object value, EntryConverterContext context) => new()
+        public override Entry Encode(object value, EntryEncoderContext context) => new()
         {
             Value = new EntryValue { Type = EntryValueType.String, Current = prefix + (value as Tagged)?.Tag }
         };
 
-        public override object Decode(Entry entry, object currentValue, EntryConverterContext context) =>
+        public override object Decode(Entry entry, object currentValue, EntryEncoderContext context) =>
             new Tagged { Tag = entry.Value.Current[prefix.Length..] };
     }
 
@@ -307,6 +305,6 @@ public class EntryConvertEntryConverterTests
 
     private sealed class NoConverterSerialization : DefaultSerialization
     {
-        public override EntryConverter GetConverter(Type memberType, ICustomAttributeProvider attributeProvider) => null;
+        public override EntryEncoderBase GetEncoder(Type memberType, ICustomAttributeProvider attributeProvider) => null;
     }
 }

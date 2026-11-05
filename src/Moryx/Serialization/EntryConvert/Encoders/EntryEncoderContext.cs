@@ -6,9 +6,9 @@ using System.Reflection;
 namespace Moryx.Serialization;
 
 /// <summary>
-/// Context of a conversion executed by an <see cref="EntryConverter"/>
+/// Context of a conversion executed by an <see cref="EntryEncoderBase"/>
 /// </summary>
-public sealed class EntryConverterContext(Type memberType, ICustomAttributeProvider attributeProvider,
+public sealed class EntryEncoderContext(Type memberType, ICustomAttributeProvider attributeProvider,
     ICustomSerialization serialization, object instance)
 {
     /// <summary>

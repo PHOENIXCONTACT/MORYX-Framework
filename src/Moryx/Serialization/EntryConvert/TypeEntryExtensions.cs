@@ -6,9 +6,9 @@ using Moryx.Tools;
 namespace Moryx.Serialization;
 
 /// <summary>
-/// Extension methods for <see cref="EntryPossible"/>
+/// Extension methods for <see cref="Type"/> to create <see cref="EntryPossible"/> instances
 /// </summary>
-public static class EntryPossibleExtensions
+public static class TypeEntryExtensions
 {
     /// <summary>
     /// Creates an <see cref="EntryPossible"/> from the given <paramref name="type"/>

@@ -166,10 +166,10 @@ public class IdentityEntryConverterTests
 
     public class IdentityDummy
     {
-        [EntrySerialize(ConverterType = typeof(IdentityEntryConverter))]
+        [EntrySerialize(EncoderType = typeof(IdentityEntryEncoder))]
         public IIdentity Identity { get; set; }
 
-        [EntrySerialize(ConverterType = typeof(IdentityEntryConverter), ConverterTarget = EntryConverterTarget.Items)]
+        [EntrySerialize(EncoderType = typeof(IdentityEntryEncoder), EncoderTarget = EntryEncoderTarget.Items)]
         public List<IIdentity> Identities { get; set; }
     }
 }

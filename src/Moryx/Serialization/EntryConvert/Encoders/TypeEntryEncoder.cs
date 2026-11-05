@@ -6,7 +6,7 @@ using Moryx.Tools;
 namespace Moryx.Serialization;
 
 /// <summary>
-/// Built-in <see cref="EntryConverter"/> for members of type <see cref="Type"/>.
+/// Built-in <see cref="EntryEncoderBase"/> for members of type <see cref="Type"/>.
 /// Types are encoded as their name. Decoding is restricted to the types of a <see cref="PossibleTypesAttribute"/>,
 /// members without the attribute are read-only.
 /// </summary>
@@ -14,13 +14,13 @@ namespace Moryx.Serialization;
 /// The limitation by and coupling to <see cref="PossibleTypesAttribute"/> allows to prevent arbitrary
 /// <see cref="Type"/>s to be resolvable from an externally created <see cref="Entry"/>
 /// </remarks>
-internal sealed class TypeEntryConverter : EntryConverter
+internal sealed class TypeEntryEncoder : EntryEncoderBase
 {
     /// <inheritdoc />
-    public override bool CanConvert(Type memberType) => typeof(Type).IsAssignableFrom(memberType);
+    public override bool CanEncode(Type memberType) => typeof(Type).IsAssignableFrom(memberType);
 
     /// <inheritdoc />
-    public override Entry Encode(object value, EntryConverterContext context)
+    public override Entry Encode(object value, EntryEncoderContext context)
     {
         var type = value as Type;
         var possible = context.Serialization.PossibleValues(context.MemberType, context.AttributeProvider, context.Instance);
@@ -51,7 +51,7 @@ internal sealed class TypeEntryConverter : EntryConverter
     }
 
     /// <inheritdoc />
-    public override object Decode(Entry entry, object currentValue, EntryConverterContext context)
+    public override object Decode(Entry entry, object currentValue, EntryEncoderContext context)
     {
         var attribute = context.AttributeProvider.GetCustomAttribute<PossibleTypesAttribute>();
         if (attribute is null)

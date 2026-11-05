@@ -5,7 +5,7 @@ using System.Numerics;
 
 namespace Moryx.Serialization;
 
-internal sealed class PlaneEntryConverter : NumericStructEntryConverter<Plane>
+internal sealed class PlaneEntryEncoder : NumericStructEntryEncoder<Plane>
 {
     protected override List<Entry> EncodeComponents(Plane value, IFormatProvider formatProvider) =>
     [
