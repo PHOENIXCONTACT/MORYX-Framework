@@ -24,6 +24,7 @@ Because the `EntryConvert`-API can be confusing on first sight, we will split it
 | `double` | Double | Culture-aware with invariant fallback | — |
 | `decimal` | Double | Culture-aware with invariant fallback | Mapped to `Double; may lose precision beyond ~15 significant digits |
 | `string` | String | — | — |
+| `Type` | String | Type name or full name | Read-only without `PossibleTypesAttribute`; editable with it |
 | `enum` | Enum | String name | — |
 | `DateTime` | DateTime | ISO 8601 round-trip (`"O"`) | Converted to UTC; original `DateTimeKind` is lost |
 | `DateTimeOffset` | DateTime | ISO 8601 round-trip (`"O"`) | Converted to UTC; original timezone offset is lost |
@@ -235,9 +236,69 @@ dto.Properties[0].Value.Current = "Michael";
 EntryConvert.UpdateInstance(fooObj, dto.Properties, serialization);
 ```
 
+## EntryConverter
+
+An [EntryConverter](/src/Moryx/Serialization/EntryConvert/Converters/EntryConverter.cs) takes over the complete encoding and decoding of a member, including `Value`, `SubEntries`, and `Prototypes`. It is the primary extension point when the built-in type mapping or `ICustomSerialization` do not provide enough control.
+
+```cs
+public abstract class EntryConverter
+{
+    public abstract bool CanConvert(Type memberType);
+    public abstract Entry Encode(object value, EntryConverterContext context);
+    public abstract object Decode(Entry entry, object currentValue, EntryConverterContext context);
+}
+```
+
+The `EntryConverterContext` passed to both methods provides:
+
+* `MemberType` – declared type of the property or parameter
+* `AttributeProvider` – the `PropertyInfo` or `ParameterInfo` to read further attributes
+* `Serialization` – the active `ICustomSerialization`
+* `Instance` – the containing object (`null` when encoding a type without an instance)
+
+> [!IMPORTANT]
+> Only `Value`, `SubEntries`, and `Prototypes` of the returned entry are used by `EntryConvert`. Identifier, display name, description, validation, and the read-only flag are always taken from the member definition.
+
+> [!NOTE]
+> Converter instances are cached and shared. Implementations must be **stateless and thread-safe** and require a **public parameterless constructor**.
+
+Converters are resolved in the following priority order:
+
+1. `ConverterType` declared on the property or parameter via `[EntrySerialize]`
+2. `ConverterType` declared on the member's type via `[EntrySerialize]`
+3. Built-in default converters for `Type`, `Vector2`, `Vector3`, `Vector4`, `Quaternion`, and `Plane`
+4. Standard property or collection conversion
+
+Custom serializations can override resolution by implementing `GetConverter` and `GetItemConverter` on `ICustomSerialization`.
+
+> See [How to write a custom EntryConverter](~/tutorials/how-to-write-a-custom-entry-converter.md) for a step-by-step walkthrough.
+
 ## EntrySerialize Attribute
 
 The [EntrySerializeAttribute](/src/Moryx/Serialization/EntryConvert/EntrySerializeAttribute.cs) will be handled by the [EntrySerializeSerialization](/src/Moryx/Serialization/EntrySerializeSerialization.cs) which is a custom implementation of the [ICustomSerialization](/src/Moryx/Serialization/ICustomSerialization.cs). This serialization evaluates the attribute with some defined rules depending on the serialized type:
+
+### Custom Converter
+
+Setting `ConverterType` on the attribute assigns an `EntryConverter` to a member. The converter takes over the complete encoding and decoding of that entry:
+
+```cs
+// Applied to a type: all members of this type use the converter automatically
+[EntrySerialize(ConverterType = typeof(MyConverter))]
+public class MyModel { ... }
+
+// Applied to a property: overrides any converter declared on the type
+[EntrySerialize(ConverterType = typeof(MyConverter))]
+public MyModel Model { get; set; }
+```
+
+For collection members, `ConverterTarget = EntryConverterTarget.Items` applies the converter to each individual item rather than the whole collection. `ConverterType` is required when using this target:
+
+```cs
+[EntrySerialize(ConverterType = typeof(MyConverter), ConverterTarget = EntryConverterTarget.Items)]
+public List<MyModel> Models { get; set; }
+```
+
+The collection structure (adding and removing items) is still managed by `EntryConvert`. Prototypes for new items are derived from the converter result for an empty item.
 
 ### Serialize Properties
 

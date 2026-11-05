@@ -125,6 +125,15 @@ public List<PluginConfig> ActivePlugins { get; set; }
 
 This attribute generates possible values from given or derived types found at runtime, either as simple type name or full name. This attribute is useful when creating modules or components, that can be extended with derived types later.
 
+Properties of type `System.Type` are serialized by the built-in `TypeEntryConverter`. Without `PossibleTypesAttribute` the value is read-only; adding the attribute makes the property editable and restricts selection to the specified types:
+
+```cs
+[PossibleTypes(new []{ typeof(Type1), typeof(Type2) })]
+public Type ActiveType { get; set; }
+```
+
+The attribute can also be used on `string` properties that store only the type name rather than the `Type` object:
+
 ```cs
 [PossibleTypes(typeof(MyBaseType), UseFullName = true)]
 public string ConfiguredType { get; set; }
