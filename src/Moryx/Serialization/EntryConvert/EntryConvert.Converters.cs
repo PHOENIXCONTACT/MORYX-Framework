@@ -17,8 +17,19 @@ public static partial class EntryConvert
     /// </summary>
     private static readonly EntryConverter[] _defaultConverters =
     [
-        new TypeEntryConverter()
+        new TypeEntryConverter(),
+        new Vector2EntryConverter(),
+        new Vector3EntryConverter(),
+        new Vector4EntryConverter(),
+        new QuaternionEntryConverter(),
+        new PlaneEntryConverter()
     ];
+
+    /// <summary>
+    /// Struct types which are decomposed into sub-entries by the default converters
+    /// </summary>
+    private static readonly HashSet<Type> _structTypes =
+        _defaultConverters.OfType<NumericStructEntryConverter>().Select(c => c.TargetType).ToHashSet();
 
     /// <summary>
     /// Shared converter instances created from <see cref="EntryConverterAttribute"/>
@@ -37,6 +48,11 @@ public static partial class EntryConvert
         var converter = FromAttribute(attributeProvider, memberType) ?? FromAttribute(memberType, memberType);
         return converter ?? _defaultConverters.FirstOrDefault(c => c.CanConvert(memberType));
     }
+
+    /// <summary>
+    /// Check if the type is a struct decomposed into sub-entries by a default converter
+    /// </summary>
+    private static bool IsSupportedStructType(Type type) => _structTypes.Contains(type);
 
     private static EntryConverter FromAttribute(ICustomAttributeProvider attributeProvider, Type memberType)
     {

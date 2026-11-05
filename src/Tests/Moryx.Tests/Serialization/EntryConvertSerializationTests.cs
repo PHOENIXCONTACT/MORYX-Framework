@@ -1,12 +1,9 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Numerics;
-using System.Threading;
+using System.Reflection;
 using Moq;
 using Moryx.Configuration;
 using Moryx.Container;
@@ -206,6 +203,60 @@ public class EntryConvertSerializationTests
         // Assert
         Assert.That(structEntry.Value.Type, Is.EqualTo(EntryValueType.Struct));
         Assert.That(structEntry.SubEntries, Has.Count.EqualTo(expectedCount));
+    }
+
+    [Test]
+    public void EncodeObject_WithStructAsRoot_EncodesSubEntries()
+    {
+        // Act
+        var entry = EntryConvert.EncodeObject(new Vector3(1f, 2f, 3f));
+
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(entry.Identifier, Is.EqualTo(nameof(Vector3)));
+            Assert.That(entry.Value.Type, Is.EqualTo(EntryValueType.Struct));
+            Assert.That(entry.SubEntries.Select(e => e.Identifier), Is.EqualTo(["X", "Y", "Z"]));
+        });
+    }
+
+    [Test]
+    public void EncodeObject_WithStructCollection_EncodesSubEntriesPerElement()
+    {
+        // Arrange
+        var dummy = new StructCollectionDummy { Positions = [new Vector3(1f, 2f, 3f), new Vector3(4f, 5f, 6f)] };
+
+        // Act
+        var entry = EntryConvert.EncodeObject(dummy);
+
+        // Assert
+        var elements = entry.SubEntries.Single(e => e.Identifier == nameof(StructCollectionDummy.Positions)).SubEntries;
+        Assert.Multiple(() =>
+        {
+            Assert.That(elements, Has.Count.EqualTo(2));
+            Assert.That(elements.All(e => e.Value.Type == EntryValueType.Struct), Is.True);
+            Assert.That(elements.All(e => e.SubEntries.Count == 3), Is.True);
+        });
+    }
+
+    [Test]
+    public void EncodeObject_ForStructWithConvertersDisabled_DoesNotThrow()
+    {
+        // Arrange
+        var obj = new StructPropertiesClass { Position3D = new Vector3(1f, 2f, 3f) };
+
+        // Act & Assert
+        Assert.DoesNotThrow(() => EntryConvert.EncodeObject(obj, new NoConverterSerialization()));
+    }
+
+    public class StructCollectionDummy
+    {
+        public List<Vector3> Positions { get; set; }
+    }
+
+    private sealed class NoConverterSerialization : DefaultSerialization
+    {
+        public override EntryConverter GetConverter(Type memberType, ICustomAttributeProvider attributeProvider) => null;
     }
 
     [Test(Description = "Decimal maps to EntryValueType.Double.")]
