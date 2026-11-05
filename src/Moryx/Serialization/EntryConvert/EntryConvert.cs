@@ -85,43 +85,35 @@ public static partial class EntryConvert
     {
         var converter = customSerialization.GetConverter(property.PropertyType, property);
         if (converter == null)
-            return EncodePropertyDefault(property, customSerialization, instance);
-
-        object value = null;
-        try
         {
-            if (instance != null)
-                value = property.GetValue(instance);
+            return DefaultPropertyEncoding(property, customSerialization, instance);
         }
-        catch (Exception ex)
+
+        if (!TryGetValue(property, instance, out var value))
         {
-            var faulty = EncodePropertyDefault(property, customSerialization, instance);
+            var faulty = DefaultPropertyEncoding(property, customSerialization, instance);
             faulty.Value.Type = EntryValueType.Exception;
-            faulty.Value.Current = ex.ToString();
+            faulty.Value.Current = value.ToString();
             return faulty;
         }
 
-        return EncodeConverted(converter, customSerialization, property, instance, value);
+        return EncodePropertyWith(converter, customSerialization, property, instance, value);
     }
 
     /// <summary>
     /// Convert a single property without <see cref="EntryConverter"/>
     /// </summary>
-    private static Entry EncodePropertyDefault(PropertyInfo property, ICustomSerialization customSerialization, object instance = default)
+    private static Entry DefaultPropertyEncoding(PropertyInfo property, ICustomSerialization customSerialization, object instance = default)
     {
         // Fill with default if entry is null
-        var entry = new Entry
-        {
-            DisplayName = property.GetDisplayName() ?? property.Name,
-            Identifier = property.Name,
-            Description = property.GetDescription(),
-            Value = CreateEntryValue(property, customSerialization, instance),
-            Validation = customSerialization.CreateValidation(property.PropertyType, property)
-        };
+        var entry = CreateFromProperty(property, customSerialization);
+        entry.Value = CreateEntryValue(property, customSerialization, instance);
 
         // No prototypes for readonly entries or entries without flexible sub-entries
         if (entry.Value.IsReadOnly || entry.Value.Type != EntryValueType.Collection && entry.Value.Type != EntryValueType.Class)
+        {
             return entry;
+        }
 
         // Determine and convert prototypes
         var prototypes = Prototypes(property.PropertyType, property, customSerialization, instance);
@@ -130,34 +122,13 @@ public static partial class EntryConvert
         return entry;
     }
 
-    // TODO: Check for a clean split including the type conversion in EncodeObject
-    /// <summary>
-    /// Encode a property using an <see cref="EntryConverter"/>
-    /// </summary>
-    private static Entry EncodeConverted(EntryConverter converter, ICustomSerialization customSerialization,
-        PropertyInfo property, object instance = default, object value = default)
+    private static Entry CreateFromProperty(PropertyInfo property, ICustomSerialization serialization) => new Entry
     {
-        var context = new EntryConverterContext(property.PropertyType, property, customSerialization, instance);
-        var encoded = converter.Encode(value, context);
-
-        // Member metadata is always defined by the property
-        encoded.Identifier = property.Name;
-        encoded.DisplayName = property.GetDisplayName() ?? property.Name;
-        encoded.Description = property.GetDescription();
-        encoded.Validation = customSerialization.CreateValidation(property.PropertyType, property);
-        encoded.Value.IsReadOnly |= IsReadOnly(property);
-
-        return encoded;
-    }
-
-    private static bool IsReadOnly(PropertyInfo property)
-    {
-        if (!property.CanWrite)
-            return true;
-
-        var readOnlyAtt = property.GetCustomAttribute<ReadOnlyAttribute>();
-        return readOnlyAtt?.IsReadOnly ?? false;
-    }
+        Identifier = property.Name,
+        DisplayName = property.GetDisplayName() ?? property.Name,
+        Description = property.GetDescription(),
+        Validation = serialization.CreateValidation(property.PropertyType, property)
+    };
 
     /// <see cref="ICustomSerialization"/>
     private static EntryValue CreateEntryValue(PropertyInfo property, ICustomSerialization customSerialization, object instance = null)
@@ -190,6 +161,17 @@ public static partial class EntryConvert
         return entryValue;
     }
 
+    private static bool IsReadOnly(PropertyInfo property)
+    {
+        if (!property.CanWrite)
+        {
+            return true;
+        }
+
+        var readOnlyAtt = property.GetCustomAttribute<ReadOnlyAttribute>();
+        return readOnlyAtt?.IsReadOnly ?? false;
+    }
+
     /// <summary>
     /// Create prototypes for possible values of an entry
     /// </summary>
@@ -216,13 +198,49 @@ public static partial class EntryConvert
         }
     }
 
-    /// <summary>
-    /// Create a prototype entry for a certain type
-    /// </summary>
-    public static Entry Prototype(EntryPrototype prototype)
+    private static bool TryGetValue(PropertyInfo property, object instance, out object value)
     {
-        return Prototype(prototype, _serialization);
+        try
+        {
+            value = instance != null ? property.GetValue(instance) : null;
+            return true;
+        }
+        catch (Exception ex)
+        {
+            value = ex;
+            return false;
+        }
     }
+
+    /// <summary>
+    /// Encode a property using an <see cref="EntryConverter"/>
+    /// </summary>
+    private static Entry EncodePropertyWith(EntryConverter converter, ICustomSerialization customSerialization,
+        PropertyInfo property, object instance = default, object value = default)
+    {
+        var context = new EntryConverterContext(property.PropertyType, property, customSerialization, instance);
+        var encoded = EncodeWith(converter, context, value, CreateFromProperty(property, customSerialization));
+        encoded.Value.IsReadOnly |= IsReadOnly(property);
+
+        return encoded;
+    }
+
+    private static Entry EncodeWith(EntryConverter converter, EntryConverterContext context, object value, Entry metadata)
+    {
+        var encoded = converter.Encode(value, context);
+
+        encoded.Identifier = metadata.Identifier;
+        encoded.DisplayName = metadata.DisplayName;
+        encoded.Description = metadata.Description;
+        encoded.Validation = metadata.Validation;
+
+        return encoded;
+    }
+
+    /// <summary>
+    /// Create a prototype entry for a certain type using <see cref="DefaultSerialization"/>
+    /// </summary>
+    public static Entry Prototype(EntryPrototype prototype) => Prototype(prototype, _serialization);
 
     /// <summary>
     /// Create a prototype entry for a certain type
@@ -262,6 +280,7 @@ public static partial class EntryConvert
     {
         return EncodeClass(objType, _serialization);
     }
+
     /// <summary>
     /// Convert class into a list of generic entries using custom strategy
     /// </summary>
@@ -276,11 +295,11 @@ public static partial class EntryConvert
             var converter = customSerialization.GetConverter(property.PropertyType, property);
             if (converter is not null)
             {
-                encodedClass.SubEntries.Add(EncodeConverted(converter, customSerialization, property));
+                encodedClass.SubEntries.Add(EncodePropertyWith(converter, customSerialization, property));
                 continue;
             }
 
-            var converted = EncodePropertyDefault(property, customSerialization);
+            var converted = DefaultPropertyEncoding(property, customSerialization);
             // Assign default to current
             var value = converted.Value;
             value.Current = ConvertToString(value.Default, customSerialization.FormatProvider);
@@ -312,23 +331,16 @@ public static partial class EntryConvert
     public static Entry EncodeObject(object instance, ICustomSerialization customSerialization)
     {
         var instanceType = instance.GetType();
-        var isValueType = ValueOrStringType(instanceType);
 
-        var converted = CreateFromType(instanceType, customSerialization);
         // Converters encode the complete entry
         var instanceConverter = customSerialization.GetConverter(instanceType, instanceType);
         if (instanceConverter is not null)
         {
-            var context = new EntryConverterContext(instanceType, instanceType, customSerialization, null);
-            var encoded = instanceConverter.Encode(instance, context);
-
-            // Root metadata is always defined by the type
-            encoded.DisplayName = converted.DisplayName;
-            encoded.Identifier = converted.Identifier;
-            encoded.Description = converted.Description;
-            encoded.Validation = converted.Validation;
-            return encoded;
+            return EncodeConvertedInstance(instanceConverter, customSerialization, instance);
         }
+
+        var isValueType = ValueOrStringType(instanceType);
+        var converted = CreateFromType(instanceType, customSerialization);
 
         // Value or string are easily value encoded
         if (isValueType)
@@ -359,27 +371,17 @@ public static partial class EntryConvert
             if (propertyType == instanceType)
                 continue;
 
-            object value;
-            var isFaulty = false;
-            try
-            {
-                value = property.GetValue(instance);
-            }
-            catch (Exception ex)
-            {
-                value = ex;
-                isFaulty = true;
-            }
+            var isFaulty = !TryGetValue(property, instance, out var value);
 
             // Converters encode the complete entry
             var converter = customSerialization.GetConverter(propertyType, property);
             if (converter is not null && !isFaulty)
             {
-                converted.SubEntries.Add(EncodeConverted(converter, customSerialization, property, instance, value));
+                converted.SubEntries.Add(EncodePropertyWith(converter, customSerialization, property, instance, value));
                 continue;
             }
 
-            var convertedProperty = EncodePropertyDefault(property, customSerialization, instance);
+            var convertedProperty = DefaultPropertyEncoding(property, customSerialization, instance);
             // Change type in case of exception
             if (isFaulty)
                 convertedProperty.Value.Type = EntryValueType.Exception;
@@ -427,6 +429,16 @@ public static partial class EntryConvert
         }
 
         return converted;
+    }
+
+    /// <summary>
+    /// Encode an object instance using an <see cref="EntryConverter"/> for its type
+    /// </summary>
+    private static Entry EncodeConvertedInstance(EntryConverter converter, ICustomSerialization customSerialization, object instance)
+    {
+        var instanceType = instance.GetType();
+        var context = new EntryConverterContext(instanceType, instanceType, customSerialization, null);
+        return EncodeWith(converter, context, instance, CreateFromType(instanceType, customSerialization));
     }
 
     /// <summary>
