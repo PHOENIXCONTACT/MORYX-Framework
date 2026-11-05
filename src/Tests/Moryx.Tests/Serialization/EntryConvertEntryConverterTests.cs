@@ -90,8 +90,36 @@ public class EntryConvertEntryConverterTests
         Assert.That(SubEntry(encoded, nameof(ConverterDummy.ByType)).Value.Type, Is.EqualTo(EntryValueType.Class));
     }
 
+    [Test]
+    public void InvokeMethod_WithConverterOnParameter_TakesPrecedenceOverConverterOnType()
+    {
+        // Arrange
+        var dummy = new TaggedMethodDummy();
+        var encoded = EntryConvert.EncodeMethod(typeof(TaggedMethodDummy).GetMethod(nameof(TaggedMethodDummy.Apply))!);
+        var parameter = encoded.Parameters.SubEntries.Single();
+        var encodedValue = parameter.Value.Current;
+        parameter.Value.Current = "property:x";
+
+        // Act
+        EntryConvert.InvokeMethod(dummy, encoded);
+
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(encodedValue, Is.EqualTo("property:"));
+            Assert.That(dummy.Received.Tag, Is.EqualTo("x"));
+        });
+    }
+
     private static Entry SubEntry(Entry entry, string identifier) =>
         entry.SubEntries.Single(e => e.Identifier == identifier);
+
+    public class TaggedMethodDummy
+    {
+        public Tagged Received { get; private set; }
+
+        public void Apply([EntryConverter(typeof(PropertyTagConverter))] Tagged tagged) => Received = tagged;
+    }
 
     [EntryConverter(typeof(TypeTagConverter))]
     public class Tagged

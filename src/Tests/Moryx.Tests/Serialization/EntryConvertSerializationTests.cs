@@ -249,9 +249,53 @@ public class EntryConvertSerializationTests
         Assert.DoesNotThrow(() => EntryConvert.EncodeObject(obj, new NoConverterSerialization()));
     }
 
+    [Test]
+    public void EncodeMethod_WithStructParameter_EncodesSubEntries()
+    {
+        // Act
+        var encoded = EntryConvert.EncodeMethod(MoveMethod);
+
+        // Assert
+        var parameter = encoded.Parameters.SubEntries.Single();
+        Assert.Multiple(() =>
+        {
+            Assert.That(parameter.Identifier, Is.EqualTo("position"));
+            Assert.That(parameter.Value.Type, Is.EqualTo(EntryValueType.Struct));
+            Assert.That(parameter.SubEntries.Select(e => e.Identifier), Is.EqualTo(["X", "Y", "Z"]));
+            Assert.That(parameter.Validation.IsRequired, Is.True);
+        });
+    }
+
+    [Test]
+    public void InvokeMethod_WithStructParameter_PassesEncodedValues()
+    {
+        // Arrange
+        var dummy = new StructMethodDummy();
+        var encoded = EntryConvert.EncodeMethod(MoveMethod);
+        var components = encoded.Parameters.SubEntries.Single().SubEntries;
+        components.Single(e => e.Identifier == "X").Value.Current = "1";
+        components.Single(e => e.Identifier == "Y").Value.Current = "2";
+        components.Single(e => e.Identifier == "Z").Value.Current = "3";
+
+        // Act
+        EntryConvert.InvokeMethod(dummy, encoded);
+
+        // Assert
+        Assert.That(dummy.Position, Is.EqualTo(new Vector3(1f, 2f, 3f)));
+    }
+
+    private static MethodInfo MoveMethod => typeof(StructMethodDummy).GetMethod(nameof(StructMethodDummy.Move))!;
+
     public class StructCollectionDummy
     {
         public List<Vector3> Positions { get; set; }
+    }
+
+    public class StructMethodDummy
+    {
+        public Vector3 Position { get; private set; }
+
+        public void Move(Vector3 position) => Position = position;
     }
 
     private sealed class NoConverterSerialization : DefaultSerialization
