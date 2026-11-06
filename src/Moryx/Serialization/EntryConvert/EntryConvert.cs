@@ -5,7 +5,6 @@ using System.Collections;
 using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.Serialization;
-using Moryx.Configuration;
 using Moryx.Tools;
 
 namespace Moryx.Serialization;
@@ -84,45 +83,61 @@ public static partial class EntryConvert
     /// <returns>Converted property</returns>
     public static Entry EncodeProperty(PropertyInfo property, ICustomSerialization customSerialization, object instance)
     {
-        // Fill with default if entry is null
-        var entry = new Entry
+        var encoder = customSerialization.GetEncoder(property.PropertyType, property);
+        if (encoder == null)
         {
-            DisplayName = property.GetDisplayName() ?? property.Name,
-            Identifier = property.Name,
-            Description = property.GetDescription(),
-            Value = CreateEntryValue(property, customSerialization, instance),
-            Validation = customSerialization.CreateValidation(property.PropertyType, property)
-        };
+            return DefaultPropertyEncoding(property, customSerialization, instance);
+        }
+
+        if (!TryGetValue(property, instance, out var value))
+        {
+            var faulty = DefaultPropertyEncoding(property, customSerialization, instance);
+            faulty.Value.Type = EntryValueType.Exception;
+            faulty.Value.Current = value.ToString();
+            return faulty;
+        }
+
+        return EncodePropertyWith(encoder, customSerialization, property, instance, value);
+    }
+
+    /// <summary>
+    /// Convert a single property without <see cref="EntryEncoderBase"/>
+    /// </summary>
+    private static Entry DefaultPropertyEncoding(PropertyInfo property, ICustomSerialization customSerialization, object instance = default)
+    {
+        // Fill with default if entry is null
+        var entry = CreateFromProperty(property, customSerialization);
+        entry.Value = CreateEntryValue(property, customSerialization, instance);
 
         // No prototypes for readonly entries or entries without flexible sub-entries
         if (entry.Value.IsReadOnly || entry.Value.Type != EntryValueType.Collection && entry.Value.Type != EntryValueType.Class)
+        {
             return entry;
+        }
 
         // Determine and convert prototypes
-        var prototypes = Prototypes(property.PropertyType, property, customSerialization, instance);
-        entry.Prototypes.AddRange(prototypes);
+        AddPrototypes(entry, property.PropertyType, property, customSerialization, instance);
 
         return entry;
     }
 
+    private static Entry CreateFromProperty(PropertyInfo property, ICustomSerialization serialization) => new Entry
+    {
+        Identifier = property.Name,
+        DisplayName = property.GetDisplayName() ?? property.Name,
+        Description = property.GetDescription(),
+        Validation = serialization.CreateValidation(property.PropertyType, property)
+    };
+
     /// <see cref="ICustomSerialization"/>
     private static EntryValue CreateEntryValue(PropertyInfo property, ICustomSerialization customSerialization, object instance = null)
     {
-        // Set if the current entry is readonly by checking if the property has a setter
-        // or the ReadOnlyAttribute was set to true
-        var isReadOnly = !property.CanWrite;
-        if (!isReadOnly)
-        {
-            var readOnlyAtt = property.GetCustomAttribute<ReadOnlyAttribute>();
-            isReadOnly = readOnlyAtt?.IsReadOnly ?? false;
-        }
-
         // Prepare object
         var entryValue = new EntryValue
         {
             Type = TransformType(property.PropertyType),
             UnitType = customSerialization.GetUnitTypeByAttributes(property),
-            IsReadOnly = isReadOnly,
+            IsReadOnly = IsReadOnly(property),
             Possible = customSerialization.PossibleValues(property.PropertyType, property, instance)
         };
 
@@ -143,6 +158,56 @@ public static partial class EntryConvert
             entryValue.Current = ConvertToString(entryValue.Default, customSerialization.FormatProvider);
 
         return entryValue;
+    }
+
+    private static bool IsReadOnly(PropertyInfo property)
+    {
+        if (!property.CanWrite)
+        {
+            return true;
+        }
+
+        var readOnlyAtt = property.GetCustomAttribute<ReadOnlyAttribute>();
+        return readOnlyAtt?.IsReadOnly ?? false;
+    }
+
+    /// <summary>
+    /// Add the prototypes for possible values to an entry. Collections with an item encoder use the prototypes
+    /// of the encoder and offer them as possible values for new items.
+    /// </summary>
+    private static void AddPrototypes(Entry entry, Type memberType, ICustomAttributeProvider attributeProvider,
+        ICustomSerialization customSerialization, object instance)
+    {
+        var itemEncoder = IsCollection(memberType) ? customSerialization.GetItemEncoder(memberType, attributeProvider) : null;
+        if (itemEncoder is null)
+        {
+            entry.Prototypes.AddRange(Prototypes(memberType, attributeProvider, customSerialization, instance));
+            return;
+        }
+
+        var prototypes = ItemPrototypes(itemEncoder, memberType, attributeProvider, customSerialization, instance);
+        entry.Prototypes.AddRange(prototypes);
+        entry.Value.Possible = prototypes
+            .Select(p => new EntryPossible { Key = p.Identifier, DisplayName = p.DisplayName, Description = p.Description })
+            .ToArray();
+    }
+
+    /// <summary>
+    /// Create the prototypes of an item encoder, which are either the prototypes of the encoded empty item
+    /// or the encoded empty item itself
+    /// </summary>
+    private static IReadOnlyList<Entry> ItemPrototypes(EntryEncoderBase itemEncoder, Type memberType,
+        ICustomAttributeProvider attributeProvider, ICustomSerialization customSerialization, object instance)
+    {
+        var context = CreateItemContext(memberType, attributeProvider, customSerialization, instance);
+        var emptyItem = EncodeWith(itemEncoder, context, null, CreateFromType(context.MemberType, customSerialization));
+        if (emptyItem.Prototypes.Count > 0)
+        {
+            return emptyItem.Prototypes;
+        }
+
+        emptyItem.Identifier = context.MemberType.Name;
+        return [emptyItem];
     }
 
     /// <summary>
@@ -171,13 +236,49 @@ public static partial class EntryConvert
         }
     }
 
-    /// <summary>
-    /// Create a prototype entry for a certain type
-    /// </summary>
-    public static Entry Prototype(EntryPrototype prototype)
+    private static bool TryGetValue(PropertyInfo property, object instance, out object value)
     {
-        return Prototype(prototype, _serialization);
+        try
+        {
+            value = instance != null ? property.GetValue(instance) : null;
+            return true;
+        }
+        catch (Exception ex)
+        {
+            value = ex;
+            return false;
+        }
     }
+
+    /// <summary>
+    /// Encode a property using an <see cref="EntryEncoderBase"/>
+    /// </summary>
+    private static Entry EncodePropertyWith(EntryEncoderBase encoder, ICustomSerialization customSerialization,
+        PropertyInfo property, object instance = default, object value = default)
+    {
+        var context = new EntryEncoderContext(property.PropertyType, property, customSerialization, instance);
+        var encoded = EncodeWith(encoder, context, value, CreateFromProperty(property, customSerialization));
+        encoded.Value.IsReadOnly |= IsReadOnly(property);
+
+        return encoded;
+    }
+
+    private static Entry EncodeWith(EntryEncoderBase encoder, EntryEncoderContext context, object value, Entry metadata)
+    {
+        var encoded = encoder.Encode(value, context);
+
+        encoded.Identifier = metadata.Identifier;
+        encoded.DisplayName = metadata.DisplayName;
+        encoded.Description = metadata.Description;
+        encoded.Validation = metadata.Validation;
+
+        return encoded;
+    }
+
+    /// <summary>
+    /// Create a prototype entry for a certain type using <see cref="DefaultSerialization"/>
+    /// </summary>
+    public static Entry Prototype(EntryPrototype prototype) => Prototype(prototype, _serialization);
 
     /// <summary>
     /// Create a prototype entry for a certain type
@@ -217,6 +318,7 @@ public static partial class EntryConvert
     {
         return EncodeClass(objType, _serialization);
     }
+
     /// <summary>
     /// Convert class into a list of generic entries using custom strategy
     /// </summary>
@@ -227,7 +329,15 @@ public static partial class EntryConvert
         var filtered = customSerialization.GetProperties(objType);
         foreach (var property in filtered)
         {
-            var converted = EncodeProperty(property, customSerialization);
+            // Encoders encode the complete entry
+            var encoder = customSerialization.GetEncoder(property.PropertyType, property);
+            if (encoder is not null)
+            {
+                encodedClass.SubEntries.Add(EncodePropertyWith(encoder, customSerialization, property));
+                continue;
+            }
+
+            var converted = DefaultPropertyEncoding(property, customSerialization);
             // Assign default to current
             var value = converted.Value;
             value.Current = ConvertToString(value.Default, customSerialization.FormatProvider);
@@ -237,12 +347,6 @@ public static partial class EntryConvert
                 // Convert sub entries for classes
                 var subentry = EncodeClass(property.PropertyType, customSerialization);
                 converted.SubEntries.AddRange(subentry.SubEntries);
-            }
-            // Decomposed structs use the serializer to create default sub-entries
-            else if (converted.Value.Type == EntryValueType.Struct && TryGetSerializer(property.PropertyType, out var serializer))
-            {
-                var structEntry = serializer.Encode(Activator.CreateInstance(property.PropertyType), customSerialization.FormatProvider);
-                converted.SubEntries.AddRange(structEntry.SubEntries);
             }
 
             encodedClass.SubEntries.Add(converted);
@@ -265,17 +369,16 @@ public static partial class EntryConvert
     public static Entry EncodeObject(object instance, ICustomSerialization customSerialization)
     {
         var instanceType = instance.GetType();
-        var isValueType = ValueOrStringType(instanceType);
 
-        var converted = CreateFromType(instanceType, customSerialization);
-
-        // Structs with registered serializers are encoded via sub-entries
-        if (converted.Value.Type == EntryValueType.Struct && TryGetSerializer(instanceType, out var serializer))
+        // Encoders encode the complete entry
+        var instanceEncoder = customSerialization.GetEncoder(instanceType, instanceType);
+        if (instanceEncoder is not null)
         {
-            var structEntry = serializer.Encode(instance, customSerialization.FormatProvider);
-            converted.SubEntries = structEntry.SubEntries;
-            return converted;
+            return EncodeConvertedInstance(instanceEncoder, customSerialization, instance);
         }
+
+        var isValueType = ValueOrStringType(instanceType);
+        var converted = CreateFromType(instanceType, customSerialization);
 
         // Value or string are easily value encoded
         if (isValueType)
@@ -287,13 +390,7 @@ public static partial class EntryConvert
         // Collections are encoded as a root entry with subentries
         if (converted.Value.Type == EntryValueType.Collection)
         {
-            var possibleElementValues = customSerialization.PossibleElementValues(instanceType, instanceType);
-            var strategy = CreateStrategy(instance, instance, instanceType, customSerialization);
-            foreach (var entry in strategy.Serialize())
-            {
-                entry.Value.Possible = possibleElementValues;
-                converted.SubEntries.Add(entry);
-            }
+            converted.SubEntries.AddRange(EncodeItems(instance, instanceType, instanceType, customSerialization, null));
             return converted;
         }
 
@@ -306,19 +403,20 @@ public static partial class EntryConvert
             if (propertyType == instanceType)
                 continue;
 
-            var convertedProperty = EncodeProperty(property, customSerialization, instance);
+            var isFaulty = !TryGetValue(property, instance, out var value);
 
-            object value;
-            try
+            // Encoders encode the complete entry
+            var encoder = customSerialization.GetEncoder(propertyType, property);
+            if (encoder is not null && !isFaulty)
             {
-                value = property.GetValue(instance);
+                converted.SubEntries.Add(EncodePropertyWith(encoder, customSerialization, property, instance, value));
+                continue;
             }
-            catch (Exception ex)
-            {
-                value = ex;
-                // Change type in case of exception
+
+            var convertedProperty = DefaultPropertyEncoding(property, customSerialization, instance);
+            // Change type in case of exception
+            if (isFaulty)
                 convertedProperty.Value.Type = EntryValueType.Exception;
-            }
 
             switch (convertedProperty.Value.Type)
             {
@@ -327,20 +425,7 @@ public static partial class EntryConvert
                     if (value == null)
                         break;
 
-                    var possibleElementValues = customSerialization.PossibleElementValues(property.PropertyType, property);
-                    var strategy = CreateStrategy(value, value, property.PropertyType, customSerialization);
-                    foreach (var entry in strategy.Serialize())
-                    {
-                        entry.Value.Possible = possibleElementValues;
-                        convertedProperty.SubEntries.Add(entry);
-                    }
-                    break;
-                case EntryValueType.Struct:
-                    if (value != null && TryGetSerializer(propertyType, out var structSerializer))
-                    {
-                        var structEntry = structSerializer.Encode(value, customSerialization.FormatProvider);
-                        convertedProperty.SubEntries = structEntry.SubEntries;
-                    }
+                    convertedProperty.SubEntries.AddRange(EncodeItems(value, propertyType, property, customSerialization, instance));
                     break;
                 case EntryValueType.Class:
                     var subEntry = value == null
@@ -370,6 +455,53 @@ public static partial class EntryConvert
         }
 
         return converted;
+    }
+
+    private static IEnumerable<Entry> EncodeItems(object collection, Type memberType, ICustomAttributeProvider attributeProvider,
+        ICustomSerialization customSerialization, object instance)
+    {
+        var entryEncoder = customSerialization.GetItemEncoder(memberType, attributeProvider);
+        var itemEncoder = entryEncoder is null ? null
+            : CreateItemEncoder(entryEncoder, memberType, attributeProvider, customSerialization, instance);
+
+        var collectionStrategy = CreateStrategy(collection, collection, memberType, customSerialization, itemEncoding: itemEncoder);
+        var entries = collectionStrategy.Serialize();
+        if (entryEncoder is not null)
+        {
+            // Encoders define the possible values of their items
+            return entries;
+        }
+
+        var possibleElementValues = customSerialization.PossibleElementValues(memberType, attributeProvider);
+        return entries.Select(entry =>
+        {
+            entry.Value.Possible = possibleElementValues;
+            return entry;
+        });
+    }
+
+    private static Func<object, Entry> CreateItemEncoder(EntryEncoderBase itemEncoder, Type memberType,
+        ICustomAttributeProvider attributeProvider, ICustomSerialization customSerialization, object instance)
+    {
+        var context = CreateItemContext(memberType, attributeProvider, customSerialization, instance);
+        return item => EncodeWith(itemEncoder, context, item, CreateFromType(context.MemberType, customSerialization));
+    }
+
+    private static EntryEncoderContext CreateItemContext(Type memberType, ICustomAttributeProvider attributeProvider,
+        ICustomSerialization customSerialization, object instance)
+    {
+        TryGetElementType(memberType, out var elementType);
+        return new EntryEncoderContext(elementType, attributeProvider, customSerialization, instance);
+    }
+
+    /// <summary>
+    /// Encode an object instance using an <see cref="EntryEncoderBase"/> for its type
+    /// </summary>
+    private static Entry EncodeConvertedInstance(EntryEncoderBase encoder, ICustomSerialization customSerialization, object instance)
+    {
+        var instanceType = instance.GetType();
+        var context = new EntryEncoderContext(instanceType, instanceType, customSerialization, null);
+        return EncodeWith(encoder, context, instance, CreateFromType(instanceType, customSerialization));
     }
 
     /// <summary>
@@ -505,26 +637,25 @@ public static partial class EntryConvert
     private static Entry ConvertParameter(ParameterInfo parameter, ICustomSerialization serialization, object instance = null)
     {
         var parameterType = parameter.ParameterType;
-        var defaultValue = parameter.HasDefaultValue ? parameter.DefaultValue?.ToString() : null;
 
-        var parameterModel = new Entry
+        // Encoders encode the complete entry
+        var encoder = serialization.GetEncoder(parameterType, parameter);
+        if (encoder is not null)
         {
-            DisplayName = parameter.GetDisplayName() ?? parameter.Name,
-            Identifier = parameter.Name,
-            Description = parameter.GetDescription(),
-            Value = new EntryValue
-            {
-                Type = TransformType(parameter.ParameterType),
-                UnitType = serialization.GetUnitTypeByAttributes(parameter),
-                Current = defaultValue,
-                Default = defaultValue,
-                Possible = serialization.PossibleValues(parameterType, parameter, instance)
-            },
-            Validation = serialization.CreateValidation(parameterType, parameter)
-        };
+            var context = new EntryEncoderContext(parameterType, parameter, serialization, instance);
+            return EncodeWith(encoder, context, DefaultArgument(parameter), CreateFromParameter(parameter, serialization));
+        }
 
-        // mark the parameter as required when there is no default value
-        parameterModel.Validation.IsRequired = !parameter.HasDefaultValue;
+        var defaultValue = DefaultArgument(parameter)?.ToString();
+        var parameterModel = CreateFromParameter(parameter, serialization);
+        parameterModel.Value = new EntryValue
+        {
+            Type = TransformType(parameter.ParameterType),
+            UnitType = serialization.GetUnitTypeByAttributes(parameter),
+            Current = defaultValue,
+            Default = defaultValue,
+            Possible = serialization.PossibleValues(parameterType, parameter, instance)
+        };
 
         switch (parameterModel.Value.Type)
         {
@@ -536,11 +667,30 @@ public static partial class EntryConvert
             case EntryValueType.Collection:
                 var elemType = ElementType(parameterType);
                 parameterModel.Value.Current = elemType.Name;
-                parameterModel.Prototypes.AddRange(Prototypes(parameterType, parameter, serialization, instance));
+                AddPrototypes(parameterModel, parameterType, parameter, serialization, instance);
                 break;
         }
 
         return parameterModel;
+    }
+
+    private static object DefaultArgument(ParameterInfo parameter) =>
+        parameter.HasDefaultValue ? parameter.DefaultValue : null;
+
+    private static Entry CreateFromParameter(ParameterInfo parameter, ICustomSerialization serialization)
+    {
+        var entry = new Entry
+        {
+            Identifier = parameter.Name,
+            DisplayName = parameter.GetDisplayName() ?? parameter.Name,
+            Description = parameter.GetDescription(),
+            Validation = serialization.CreateValidation(parameter.ParameterType, parameter)
+        };
+
+        // mark the parameter as required when there is no default value
+        entry.Validation.IsRequired = !parameter.HasDefaultValue;
+
+        return entry;
     }
 
     #endregion
@@ -637,26 +787,35 @@ public static partial class EntryConvert
 
             // Try to assign value to the property
             var currentValue = mapped.Property.GetValue(instance);
+
+            // Encoders decode the complete entry, members without entry keep their current value
+            var encoder = customSerialization.GetEncoder(propertyType, property);
+            if (encoder is not null)
+            {
+                if (mapped.Entry is not null && property.CanWrite)
+                {
+                    var context = new EntryEncoderContext(propertyType, property, customSerialization, instance);
+                    property.SetValue(instance, encoder.Decode(mapped.Entry, currentValue, context));
+                }
+                continue;
+            }
+
             var value = mapped.Entry == null
                 ? customSerialization.DefaultValue(property, currentValue)
                 : customSerialization.ConvertValue(propertyType, property, mapped.Entry, currentValue);
 
             // Value types, strings and streams do not need recursion
-            if (ValueOrStringType(propertyType) && !TryGetSerializer(propertyType, out _) || typeof(Stream).IsAssignableFrom(propertyType))
+            if (ValueOrStringType(propertyType) || typeof(Stream).IsAssignableFrom(propertyType))
             {
 
-            }
-            // Structs with registered serializers are reconstructed from sub-entries
-            else if (TryGetSerializer(propertyType, out var structSerializer) && mapped.Entry != null)
-            {
-                value = structSerializer.Decode(mapped.Entry, customSerialization.FormatProvider);
             }
             // Update collection from entry
             else if (IsCollection(propertyType) && mapped.Entry != null)
             {
                 // Pick collection strategy
                 var strategy = CreateStrategy(value, currentValue, propertyType, customSerialization, mapped.Property, instance);
-                UpdateCollection(currentValue, mapped.Property.PropertyType, mapped.Property, mapped.Entry, strategy, customSerialization);
+                UpdateCollection(currentValue, mapped.Property.PropertyType, mapped.Property, mapped.Entry, strategy,
+                    customSerialization, instance);
                 if (strategy is ArrayIListStrategy)
                     doNotUpdateProperty = true;
             }
@@ -684,9 +843,14 @@ public static partial class EntryConvert
     /// Update or fill the collection using the mapping entry
     /// </summary>
     private static void UpdateCollection(object currentValue, Type memberType, ICustomAttributeProvider attributeProvider, Entry rootEntry,
-        ICollectionStrategy strategy, ICustomSerialization customSerialization)
+        ICollectionStrategy strategy, ICustomSerialization customSerialization, object instance = null)
     {
         var currentCollection = currentValue as ICollection;
+
+        // Encoders decode the complete item
+        var itemEncoder = customSerialization.GetItemEncoder(memberType, attributeProvider);
+        var itemContext = itemEncoder is null ? null
+            : CreateItemContext(memberType, attributeProvider, customSerialization, instance);
 
         // Loop over the collection and update the entries that are still present
         if (currentCollection != null)
@@ -701,7 +865,11 @@ public static partial class EntryConvert
                     continue;
                 }
 
-                if (match.Value.Type < EntryValueType.Class)
+                if (itemEncoder is not null)
+                {
+                    item = itemEncoder.Decode(match, item, itemContext);
+                }
+                else if (match.Value.Type < EntryValueType.Class)
                 {
                     item = CreatePrimitiveOrEnum(memberType, match.Value, customSerialization.FormatProvider);
                 }
@@ -717,8 +885,12 @@ public static partial class EntryConvert
         foreach (var subEntry in rootEntry.SubEntries.Where(se => se.Identifier.ToLower().StartsWith(Entry.CreatedIdentifier.ToLower())))
         {
             object item;
+            if (itemEncoder is not null)
+            {
+                item = itemEncoder.Decode(subEntry, null, itemContext);
+            }
             // All value types
-            if (subEntry.Value.Type < EntryValueType.Class)
+            else if (subEntry.Value.Type < EntryValueType.Class)
             {
                 // Create value type
                 item = CreatePrimitiveOrEnum(memberType, subEntry.Value, customSerialization.FormatProvider);
@@ -768,27 +940,32 @@ public static partial class EntryConvert
     /// </summary>
     private static ICollectionStrategy CreateStrategy(object collection, object currentCollection,
         Type collectionType, ICustomSerialization serialization, ICustomAttributeProvider attributeProvider = null,
-        object instance = null)
+        object instance = null, Func<object, Entry> itemEncoding = null)
     {
         ICollectionStrategy strategy;
         if (collectionType.IsArray)
         {
-            strategy = new ArrayStrategy((Array)collection, currentCollection as Array, serialization);
+            strategy = new ArrayStrategy((Array)collection, currentCollection as Array, serialization)
+            {
+                EncodeItem = itemEncoding
+            };
         }
-        else if (collection is IDictionary)
+        else if (collection is IDictionary dictionary)
         {
-            strategy = new DictionaryStrategy((IDictionary)collection, serialization);
+            strategy = new DictionaryStrategy(dictionary, serialization) { EncodeItem = itemEncoding };
         }
-        else if (collection is IList)
+        else if (collection is IList list)
         {
             if (currentCollection is Array)
             {
-                strategy = new ArrayIListStrategy(
-                    (IList)collection, serialization, attributeProvider, instance);
+                strategy = new ArrayIListStrategy(list, serialization, attributeProvider, instance)
+                {
+                    EncodeItem = itemEncoding
+                };
             }
             else
             {
-                strategy = new ListStrategy((IList)collection, serialization);
+                strategy = new ListStrategy(list, serialization) { EncodeItem = itemEncoding };
             }
         }
         else
@@ -830,7 +1007,7 @@ public static partial class EntryConvert
             throw new MissingMethodException($"Method {methodEntry.Name} not found on target {target.GetType().Name}.");
         }
 
-        var arguments = ConvertArguments(method, methodEntry, customSerialization);
+        var arguments = ConvertArguments(method, methodEntry, customSerialization, target);
         object invokeResult = null;
 
         // Also part of MethodEntry but be safer than sorry
@@ -884,7 +1061,8 @@ public static partial class EntryConvert
     /// <summary>
     /// Convert encoded parameters to argument array for method invocation
     /// </summary>
-    private static object[] ConvertArguments(MethodBase method, MethodEntry encodedMethod, ICustomSerialization customSerialization)
+    private static object[] ConvertArguments(MethodBase method, MethodEntry encodedMethod, ICustomSerialization customSerialization,
+        object instance = null)
     {
         var parameters = method.GetParameters();
         var arguments = new object[parameters.Length];
@@ -895,6 +1073,16 @@ public static partial class EntryConvert
             var entry = parameterEntries[i];
             var parameter = parameters[i];
             var paramType = parameter.ParameterType;
+
+            // Encoders decode the complete entry, rejected values fall back to the parameter default
+            var encoder = customSerialization.GetEncoder(paramType, parameter);
+            if (encoder is not null)
+            {
+                var context = new EntryEncoderContext(paramType, parameter, customSerialization, instance);
+                arguments[i] = encoder.Decode(entry, DefaultArgument(parameter), context);
+                continue;
+            }
+
             var argument = customSerialization.ConvertValue(paramType, parameter, entry, null);
 
             // Value types and strings do not need recursion
@@ -906,7 +1094,7 @@ public static partial class EntryConvert
             {
                 // Pick collection strategy
                 var strategy = CreateStrategy(argument, null, paramType, customSerialization);
-                UpdateCollection(null, paramType, parameter, entry, strategy, customSerialization);
+                UpdateCollection(null, paramType, parameter, entry, strategy, customSerialization, instance);
             }
             // Update class
             else if (paramType.IsClass)

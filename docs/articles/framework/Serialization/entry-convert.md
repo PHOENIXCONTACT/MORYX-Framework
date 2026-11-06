@@ -24,6 +24,7 @@ Because the `EntryConvert`-API can be confusing on first sight, we will split it
 | `double` | Double | Culture-aware with invariant fallback | — |
 | `decimal` | Double | Culture-aware with invariant fallback | Mapped to `Double; may lose precision beyond ~15 significant digits |
 | `string` | String | — | — |
+| `Type` | String | Type name or full name | Read-only without `PossibleTypesAttribute`; editable with it |
 | `enum` | Enum | String name | — |
 | `DateTime` | DateTime | ISO 8601 round-trip (`"O"`) | Converted to UTC; original `DateTimeKind` is lost |
 | `DateTimeOffset` | DateTime | ISO 8601 round-trip (`"O"`) | Converted to UTC; original timezone offset is lost |
@@ -235,9 +236,69 @@ dto.Properties[0].Value.Current = "Michael";
 EntryConvert.UpdateInstance(fooObj, dto.Properties, serialization);
 ```
 
+## Entry Encoders
+
+An implementation of [EntryEncoderBase](/src/Moryx/Serialization/EntryConvert/Encoders/EntryEncoderBase.cs) takes over the complete encoding and decoding of a member, including `Value`, `SubEntries`, and `Prototypes`. It is the primary extension point when the built-in type mapping or `ICustomSerialization` do not provide enough control.
+
+```cs
+public abstract class EntryEncoderBase
+{
+    public abstract bool CanEncode(Type memberType);
+    public abstract Entry Encode(object value, EntryEncoderContext context);
+    public abstract object Decode(Entry entry, object currentValue, EntryEncoderContext context);
+}
+```
+
+The `EntryEncoderContext` passed to both methods provides:
+
+* `MemberType` – declared type of the property or parameter
+* `AttributeProvider` – the `PropertyInfo` or `ParameterInfo` to read further attributes
+* `Serialization` – the active `ICustomSerialization`
+* `Instance` – the containing object (`null` when encoding a type without an instance)
+
+> [!IMPORTANT]
+> Only `Value`, `SubEntries`, and `Prototypes` of the returned entry are used by `EntryConvert`. Identifier, display name, description, validation, and the read-only flag are merged: the entry is read-only if either the encoder or the member definition marks it as such.
+
+> [!NOTE]
+> Encoder instances are cached and shared. Implementations must be **stateless and thread-safe** and require a **public parameterless constructor**.
+
+Converters are resolved in the following priority order:
+
+1. `EncoderType` declared on the property or parameter via `[EntrySerialize]`
+2. `EncoderType` declared on the member's type via `[EntrySerialize]`
+3. Built-in default encoders for `Type`, `Vector2`, `Vector3`, `Vector4`, `Quaternion`, and `Plane`
+4. Standard property or collection conversion
+
+Custom serializations can override resolution by implementing `GetEncoder` and `GetItemEncoder` on `ICustomSerialization`.
+
+> See [How to write a custom Entry Encoder](~/tutorials/how-to-write-a-custom-entry-encoder.md) for a step-by-step walkthrough.
+
 ## EntrySerialize Attribute
 
 The [EntrySerializeAttribute](/src/Moryx/Serialization/EntryConvert/EntrySerializeAttribute.cs) will be handled by the [EntrySerializeSerialization](/src/Moryx/Serialization/EntrySerializeSerialization.cs) which is a custom implementation of the [ICustomSerialization](/src/Moryx/Serialization/ICustomSerialization.cs). This serialization evaluates the attribute with some defined rules depending on the serialized type:
+
+### Custom Encoder
+
+Setting `EncoderType` on the attribute assigns an `EntryEncoderBase` implementation to a member. The encoder takes over the complete encoding and decoding of that entry:
+
+```cs
+// Applied to a type: all members of this type use the encoder automatically
+[EntrySerialize(EncoderType = typeof(MyEncoder))]
+public class MyModel { ... }
+
+// Applied to a property: overrides any encoder declared on the type
+[EntrySerialize(EncoderType = typeof(MyEncoder))]
+public MyModel Model { get; set; }
+```
+
+For collection members, `EncoderTarget = EntryEncoderTarget.Items` applies the encoder to each individual item rather than the whole collection. `EncoderType` is required when using this target:
+
+```cs
+[EntrySerialize(EncoderType = typeof(MyEncoder), EncoderTarget = EntryEncoderTarget.Items)]
+public List<MyModel> Models { get; set; }
+```
+
+The collection structure (adding and removing items) is still managed by `EntryConvert`. Prototypes for new items are derived from the encoder result for an empty item.
 
 ### Serialize Properties
 

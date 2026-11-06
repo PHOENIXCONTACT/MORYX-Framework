@@ -23,5 +23,6 @@
 
 ### Miscellaneous
 
+- [How To Write A Custom Entry Encoder](how-to-write-a-custom-entry-encoder.md)
 - [How To Create Everything For Production](how-to-create-everything-for-production.md)
 - [How to Simulate My Production](how-to-simulate-my-production.md)

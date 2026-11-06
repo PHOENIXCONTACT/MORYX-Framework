@@ -11,6 +11,9 @@ namespace Moryx.Resources.Samples;
 [ResourceAvailableAs(typeof(IIdentifiableObject))]
 public class IdentifiableResource : Resource, IIdentifiableObject
 {
-    [EntrySerialize, DataMember]
+    [EntrySerialize(EncoderType = typeof(IdentityEntryEncoder)), DataMember]
     public IIdentity Identity { get; set; }
+
+    [EntrySerialize, DataMember, PossibleTypes(typeof(IIdentity))]
+    public Type IdentityType { get; set; }
 }

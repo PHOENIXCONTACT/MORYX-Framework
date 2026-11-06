@@ -43,8 +43,10 @@ public class PossibleTypesAttribute : PossibleValuesAttribute
     public override bool UpdateFromPredecessor => false;
 
     /// <inheritdoc />
-    public override IEnumerable<string> GetValues(IContainer container, IServiceProvider serviceProvider)
-    {
-        return _types.Select(t => UseFullname ? t.FullName : t.Name);
-    }
+    public override IEnumerable<string> GetValues(IContainer localContainer, IServiceProvider serviceProvider)
+        => _types.Select(t => UseFullname ? t.FullName : t.Name);
+
+    /// <inheritdoc />
+    public override object Parse(IContainer container, IServiceProvider serviceProvider, string value)
+        => _types.FirstOrDefault(t => UseFullname ? t.FullName == value : t.Name == value);
 }

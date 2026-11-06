@@ -317,6 +317,18 @@ public class DefaultSerialization : ICustomSerialization
         return Activator.CreateInstance(elementType);
     }
 
+    /// <inheritdoc/>
+    public virtual EntryEncoderBase GetEncoder(Type memberType, ICustomAttributeProvider attributeProvider)
+    {
+        return EntryConvert.ResolveEncoder(memberType, attributeProvider);
+    }
+
+    /// <inheritdoc/>
+    public virtual EntryEncoderBase GetItemEncoder(Type memberType, ICustomAttributeProvider attributeProvider)
+    {
+        return EntryConvert.ResolveItemEncoder(memberType, attributeProvider);
+    }
+
     /// <summary>
     /// Build collection object from entry
     /// </summary>
