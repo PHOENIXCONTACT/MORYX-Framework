@@ -52,6 +52,11 @@ public interface IActivity : IDisposable
     ActivityResult Result { get; }
 
     /// <summary>
+    /// Create and sets a typed result object when aborting.
+    /// </summary>
+    ActivityResult Abort();
+
+    /// <summary>
     /// Creates and sets a typed result object for this result number
     /// </summary>
     ActivityResult Complete(long resultNumber);
