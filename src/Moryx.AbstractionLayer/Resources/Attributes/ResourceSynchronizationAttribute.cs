@@ -1,7 +1,5 @@
-﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
-
-using System;
 
 namespace Moryx.AbstractionLayer.Resources.Attributes;
 
@@ -10,7 +8,7 @@ namespace Moryx.AbstractionLayer.Resources.Attributes;
 /// across multiple application instances.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, Inherited = false)]
-public class ResourceSynchronizationAttribute(string SynchronizationTypeId): Attribute
+public class ResourceSynchronizationAttribute(string SynchronizationTypeId) : Attribute
 {
     /// <summary>
     /// Defines the property serialization strategy for this resource.

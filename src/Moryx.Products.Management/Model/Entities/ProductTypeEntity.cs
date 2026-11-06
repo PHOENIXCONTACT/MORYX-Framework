@@ -42,10 +42,14 @@ public class ProductTypeEntity : ModificationTrackedEntityBase
     public void SetCurrentVersion(ProductTypePropertiesEntity properties)
     {
         if (CurrentVersion == properties)
+        {
             return;
+        }
 
         if (CurrentVersion != null)
+        {
             OldVersions.Add(CurrentVersion);
+        }
 
         CurrentVersion = properties;
     }

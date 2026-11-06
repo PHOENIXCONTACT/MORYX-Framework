@@ -85,10 +85,14 @@ internal static class Converter
     private static StepState GetStepState(Tracing tracing)
     {
         if (tracing.Completed is not null)
+        {
             return StepState.Completed;
+        }
 
         if (tracing.Started is not null)
+        {
             return StepState.Running;
+        }
 
         return StepState.Initial;
     }

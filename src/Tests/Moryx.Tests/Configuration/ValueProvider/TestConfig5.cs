@@ -1,12 +1,11 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.ComponentModel;
 
 namespace Moryx.Tests.Configuration.ValueProvider;
 
-internal class ClassWithoutParamLessCtor
+internal sealed class ClassWithoutParamLessCtor
 {
     public ClassWithoutParamLessCtor(string a)
     {
@@ -14,7 +13,7 @@ internal class ClassWithoutParamLessCtor
     }
 }
 
-internal class TestConfig5
+internal sealed class TestConfig5
 {
     [DefaultValue(null)]
     public ClassWithoutParamLessCtor Field1 { get; set; }

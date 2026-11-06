@@ -9,7 +9,7 @@ using NUnit.Framework;
 namespace Moryx.Shifts.Management.IntegrationTests;
 
 [TestFixture]
-internal class ModuleTests : TestBase
+internal sealed class ModuleTests : TestBase
 {
     [SetUp]
     public override Task SetUp()

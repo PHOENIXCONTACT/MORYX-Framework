@@ -5,7 +5,7 @@ using Moryx.Collections;
 
 namespace Moryx.Tests.Collections;
 
-internal class SortObj : ISortableObject
+internal sealed class SortObj : ISortableObject
 {
     public SortObj(string name)
     {

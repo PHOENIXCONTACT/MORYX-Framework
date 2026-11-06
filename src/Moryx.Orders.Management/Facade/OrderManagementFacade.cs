@@ -116,14 +116,18 @@ internal class OrderManagementFacade : IOrderManagement, IFacadeControl
     private void OnOperationReportRequest(object sender, ReportRequestEventArgs e)
     {
         if (OperationReportRequest == null)
+        {
             return;
+        }
 
         var request = new OperationReportRequestEventArgs(e.OperationData.Operation, e.ReportType);
 
         OperationReportRequest(this, request);
 
         foreach (var restriction in request.Restrictions)
+        {
             e.AddRestriction(restriction);
+        }
     }
 
     public IReadOnlyList<Operation> GetOperations(Func<Operation, bool> filter)
@@ -254,7 +258,9 @@ internal class OrderManagementFacade : IOrderManagement, IFacadeControl
     {
         var operationData = OperationDataPool.Get(operation);
         if (operationData == null)
+        {
             throw new ArgumentException($"Operation with identifier {operation.Identifier} not found.");
+        }
 
         return operationData.UpdateAsync(update, cancellationToken);
     }
@@ -263,7 +269,9 @@ internal class OrderManagementFacade : IOrderManagement, IFacadeControl
     {
         var operationData = OperationDataPool.Get(operation);
         if (operationData == null)
+        {
             throw new ArgumentException($"Operation with identifier {operation.Identifier} not found.");
+        }
 
         return operationData;
     }
@@ -307,7 +315,9 @@ internal class OrderManagementFacade : IOrderManagement, IFacadeControl
         var operationData = OperationDataPool.Get(operation);
         var operationLogger = LoggerProvider.GetLogger(operationData);
         if (operationLogger == null)
+        {
             return Array.Empty<OperationLogMessage>();
+        }
 
         return operationLogger.Messages;
     }

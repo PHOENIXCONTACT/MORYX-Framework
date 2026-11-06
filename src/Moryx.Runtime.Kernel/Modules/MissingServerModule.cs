@@ -38,8 +38,13 @@ internal class MissingServerModule : IServerModule
                                                  RepresentedService.IsInterface;
 
         if (isInterfaceAndHasIasFirstCharacter)
+        {
             return RepresentedService.Name.Remove(0, 1); // remove "i" in the interface name
-        else return RepresentedService.Name;
+        }
+        else
+        {
+            return RepresentedService.Name;
+        }
     }
 
     public void AcknowledgeNotification(IModuleNotification notification)

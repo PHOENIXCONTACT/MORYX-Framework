@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
+using Moryx.Container;
 using Moryx.Runtime.Modules;
 using Moryx.Serialization;
-using Moryx.Container;
 using IContainer = Moryx.Container.IContainer;
 
 namespace Moryx.TestModule;
@@ -62,19 +62,19 @@ internal class ModuleConsole : IServerModuleConsole
     public IContainer Container { get; set; }
 
     [EntrySerialize, Description("Returns the string that was sent.")]
-    public string Echo(string message)
+    public static string Echo(string message)
     {
         return $"Echo: {message}";
     }
 
     [EntrySerialize, Description("Some short information about the server.")]
-    public ShortServerInfo ServerInfo()
+    public static ShortServerInfo ServerInfo()
     {
         return new ShortServerInfo().Fill();
     }
 
     [EntrySerialize, Description("Echos short information about the server.")]
-    public ShortServerInfo EchoServerInfo(ShortServerInfo shortServerInfo)
+    public static ShortServerInfo EchoServerInfo(ShortServerInfo shortServerInfo)
     {
         return shortServerInfo;
     }
@@ -86,7 +86,7 @@ internal class ModuleConsole : IServerModuleConsole
     }
 
     [EntrySerialize, Description("Echos a module config.")]
-    public ModuleConfig EchoModuleConfig(ModuleConfig moduleConfig)
+    public static ModuleConfig EchoModuleConfig(ModuleConfig moduleConfig)
     {
         return moduleConfig;
     }
@@ -99,7 +99,7 @@ internal class ModuleConsole : IServerModuleConsole
     }
 
     [EntrySerialize, Description("Executes the async method")]
-    public Task<string> TestAsync()
+    public static Task<string> TestAsync()
     {
         return Task.FromResult("Test");
     }

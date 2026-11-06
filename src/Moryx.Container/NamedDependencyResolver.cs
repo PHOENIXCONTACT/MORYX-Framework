@@ -1,14 +1,14 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Castle.Core;
-using Castle.MicroKernel.Context;
-using Castle.MicroKernel;
 using System.Reflection;
+using Castle.Core;
+using Castle.MicroKernel;
+using Castle.MicroKernel.Context;
 
 namespace Moryx.Container;
 
-internal class NamedDependencyResolver : ISubDependencyResolver
+internal sealed class NamedDependencyResolver : ISubDependencyResolver
 {
     private readonly IKernel _kernel;
 

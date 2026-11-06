@@ -23,14 +23,18 @@ public static class TextBindingResolverFactory
     {
         //null check to make sure the parameterWithBinding is not null
         if (parameterWithBindings == null)
+        {
             return new NullResolver(parameterWithBindings);
+        }
 
         // Parse bindings
         var matches = Regex.Matches(parameterWithBindings, BindingRegex);
 
         // No bindings, no resolver
         if (matches.Count == 0)
+        {
             return new NullResolver(parameterWithBindings);
+        }
 
         // Otherwise use the awesome regex resolver
         return BuildRegexResolver(matches, parameterWithBindings, resolverFactory);
@@ -70,7 +74,9 @@ public static class TextBindingResolverFactory
 
             var resolver = (IBindingResolverChain)resolverFactory.Create(binding);
             if (resolver == null) // Could not be resolved, just keep for later
+            {
                 continue;
+            }
 
             if (match.Groups["hasFormat"].Success)
             {

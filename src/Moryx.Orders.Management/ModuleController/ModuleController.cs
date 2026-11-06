@@ -1,19 +1,19 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.AbstractionLayer.Products;
-using Moryx.ControlSystem.Jobs;
-using Moryx.Notifications;
-using Moryx.Runtime.Modules;
 using System.ComponentModel;
+using Microsoft.Extensions.Logging;
+using Moryx.AbstractionLayer.Products;
+using Moryx.Configuration;
+using Moryx.Container;
+using Moryx.ControlSystem.Jobs;
 using Moryx.Model;
+using Moryx.Notifications;
 using Moryx.Orders.Advice;
 using Moryx.Orders.Assignment;
 using Moryx.Orders.Dispatcher;
+using Moryx.Runtime.Modules;
 using Moryx.Users;
-using Moryx.Container;
-using Moryx.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace Moryx.Orders.Management;
 
@@ -103,7 +103,9 @@ public class ModuleController : ServerModuleBase<ModuleConfig>,
     protected override async Task OnStartAsync(CancellationToken cancellationToken)
     {
         if (Config.Users.UserRequired && UserManagement is NullUserManagement)
+        {
             throw new InvalidOperationException("UserRequired configured but there is no UserManagement module available.");
+        }
 
         await Container.Resolve<ComponentOrchestration>().StartAsync(cancellationToken);
 

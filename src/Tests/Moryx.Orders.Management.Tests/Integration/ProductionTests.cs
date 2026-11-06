@@ -1,29 +1,23 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Logging.Abstractions;
+using Moq;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.AbstractionLayer.TestTools;
 using Moryx.ControlSystem.Jobs;
 using Moryx.ControlSystem.TestTools;
-using Moryx.StateMachines;
-using Moryx.Threading;
-using Moq;
+using Moryx.Logging;
 using Moryx.Model.InMemory;
 using Moryx.Model.Repositories;
-using Moryx.Notifications;
 using Moryx.Orders.Assignment;
 using Moryx.Orders.Management.Assignment;
 using Moryx.Orders.Management.Model;
+using Moryx.StateMachines;
+using Moryx.Threading;
 using Moryx.Users;
 using NUnit.Framework;
-using Moryx.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Moryx.Orders.Management.Tests;
 
@@ -205,7 +199,9 @@ public class ProductionTests
         var readyCallback = new EventHandler<OperationEventArgs>(delegate (object _, OperationEventArgs args)
         {
             if (args.OperationData.State.Classification == OperationStateClassification.Ready)
+            {
                 readyEvent.Set();
+            }
         });
 
         // Act

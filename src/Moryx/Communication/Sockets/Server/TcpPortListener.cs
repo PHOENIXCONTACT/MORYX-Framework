@@ -81,7 +81,9 @@ internal class TcpPortListener
     private void StartListening()
     {
         if (_listening)
+        {
             return;
+        }
 
         // Start tcp listener and accept clients
         _tcpListener ??= new TcpListener(new IPEndPoint(Address, Port));
@@ -122,7 +124,9 @@ internal class TcpPortListener
 
             // If we have listners without a connection keep accepting clients
             if (_listeners.Count > 0)
+            {
                 _tcpListener.BeginAcceptTcpClient(ClientConnected, null);
+            }
         }
         tcpTransmission.StartReading();
     }

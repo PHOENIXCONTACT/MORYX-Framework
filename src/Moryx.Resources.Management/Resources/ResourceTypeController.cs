@@ -80,9 +80,15 @@ internal class ResourceTypeController : IResourceTypeController, IResourceTypeTr
             do
             {
                 if (buffer.IsGenericType) // Generic base types appear multiple times, use only the generic type
+                {
                     buffer = buffer.GetGenericTypeDefinition();
+                }
+
                 if (!allTypes.Contains(buffer))
+                {
                     allTypes.Add(buffer);
+                }
+
                 buffer = buffer.BaseType;
             } while (buffer != null && buffer != typeof(Resource));
         }
@@ -100,10 +106,10 @@ internal class ResourceTypeController : IResourceTypeController, IResourceTypeTr
             BaseType = baseType,
             IsRegistered = registeredTypes.Contains(type),
             Constructors = (from method in type.GetMethods()
-                let att = method.GetCustomAttribute<ResourceConstructorAttribute>()
-                where att != null
-                orderby att.IsDefault descending
-                select method).ToArray()
+                            let att = method.GetCustomAttribute<ResourceConstructorAttribute>()
+                            where att != null
+                            orderby att.IsDefault descending
+                            select method).ToArray()
         };
 
         // Find all derived types
@@ -120,9 +126,14 @@ internal class ResourceTypeController : IResourceTypeController, IResourceTypeTr
     public Resource Create(string type)
     {
         if (!_typeCache.TryGetValue(type, out var linker))
+        {
             throw new KeyNotFoundException($"No resource of type {type} found.");
+        }
+
         if (!linker.Creatable)
+        {
             throw new InvalidOperationException($"The resource of type {type} is not creatable.");
+        }
 
         var instance = linker.IsRegistered
             ? (Resource)ResourceFactory.Create(type) // Create with factory
@@ -141,9 +152,13 @@ internal class ResourceTypeController : IResourceTypeController, IResourceTypeTr
 
         // Only factory instances need to be destroyed
         if (linker.IsRegistered)
+        {
             ResourceFactory.Destroy(instance);
+        }
         else
+        {
             ((IDisposable)instance).Dispose();
+        }
 
         // If there is currently a proxy for this resource detach and destroy it
         var id = instance.Id;
@@ -227,17 +242,17 @@ internal class ResourceTypeController : IResourceTypeController, IResourceTypeTr
 
         // Add all interfaces derived from IResource, including IResource itself
         relevantInterfaces.AddRange(from resourceInterface in interfaces
-            where resourceInterface.IsPublic
-                  && (typeof(IResource).IsAssignableFrom(resourceInterface)
-                      || additionalPublicInterfaces.Contains(resourceInterface))
-            select resourceInterface);
+                                    where resourceInterface.IsPublic
+                                          && (typeof(IResource).IsAssignableFrom(resourceInterface)
+                                              || additionalPublicInterfaces.Contains(resourceInterface))
+                                    select resourceInterface);
 
         // Add all interfaces that are NOT derived from IResource BUT part of any of the relevant interfaces
         relevantInterfaces.AddRange(from generalInterface in interfaces
-            where !generalInterface.IsAssignableFrom(typeof(IResource)) // It should not be a base type if IResource
-                  && !relevantInterfaces.Contains(generalInterface) // It should not be part of the relevant interfaces yet
-                  && relevantInterfaces.Any(generalInterface.IsAssignableFrom) // It is a base type of a relevant interface
-            select generalInterface);
+                                    where !generalInterface.IsAssignableFrom(typeof(IResource)) // It should not be a base type if IResource
+                                          && !relevantInterfaces.Contains(generalInterface) // It should not be part of the relevant interfaces yet
+                                          && relevantInterfaces.Any(generalInterface.IsAssignableFrom) // It is a base type of a relevant interface
+                                    select generalInterface);
 
         // Filter open generic interfaces (e.g. IFoo<>) that Castle cannot proxy
         relevantInterfaces = relevantInterfaces.Where(candidate => !candidate.IsGenericTypeDefinition).ToList();

@@ -7,7 +7,7 @@ using Moryx.Serialization;
 
 namespace Moryx.AbstractionLayer.Resources.Endpoints;
 
-internal class ResourceQueryConverter : ResourceToModelConverter
+internal sealed class ResourceQueryConverter : ResourceToModelConverter
 {
     protected ResourceQuery Query { get; }
 
@@ -72,7 +72,9 @@ internal class ResourceQueryConverter : ResourceToModelConverter
             }
 
             if (!filterMatched)
+            {
                 continue;
+            }
 
             // Convert reference and apply recursion
             var includedReference = ConvertReference(current, reference);
@@ -85,6 +87,8 @@ internal class ResourceQueryConverter : ResourceToModelConverter
     protected override void ConvertReferenceRecursion(Resource resource, ResourceModel model)
     {
         if (Query.ReferenceRecursion)
+        {
             model.References = FilteredReferences(resource);
+        }
     }
 }

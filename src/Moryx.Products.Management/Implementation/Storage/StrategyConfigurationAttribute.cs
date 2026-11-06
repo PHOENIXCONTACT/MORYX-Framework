@@ -46,7 +46,9 @@ public class StrategyConfigurationAttribute : Attribute
         do
         {
             if (SupportedTypes.Contains(current))
+            {
                 return compliance;
+            }
 
             current = current.BaseType;
             compliance++;
@@ -54,7 +56,9 @@ public class StrategyConfigurationAttribute : Attribute
 
         // Use full distance if it is an interface match
         if (targetType.GetInterfaces().Any(SupportedTypes.Contains))
+        {
             return compliance;
+        }
 
         // Otherwise it is no match
         return BadCompliance;

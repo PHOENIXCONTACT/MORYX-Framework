@@ -7,6 +7,6 @@ internal interface IReferencedResource : IResource
 {
 }
 
-internal class ReferencedResource : Resource, IReferencedResource
+internal sealed class ReferencedResource : Resource, IReferencedResource
 {
 }

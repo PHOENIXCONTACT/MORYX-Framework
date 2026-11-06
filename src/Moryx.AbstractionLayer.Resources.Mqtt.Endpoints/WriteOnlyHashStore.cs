@@ -10,7 +10,7 @@ namespace Moryx.AbstractionLayer.Resources.Mqtt.Endpoints;
 /// </summary>
 /// <typeparam name="T"></typeparam>
 /// <param name="parallelOperations"></param>
-internal class WriteOnlyHashStore<T>(IParallelOperations parallelOperations) : IDisposable
+internal sealed class WriteOnlyHashStore<T>(IParallelOperations parallelOperations) : IDisposable
 {
     private readonly List<T> _cache = [];
     private readonly Lock _lock = new();

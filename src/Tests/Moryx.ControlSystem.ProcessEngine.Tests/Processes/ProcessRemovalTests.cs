@@ -70,10 +70,12 @@ public class ProcessRemovalTests : ProcessTestsBase
         var process = Process(false);
         DataPool.AddProcess(process);
         if (currentlyRunningActivity)
+        {
             DataPool.AddActivity(process, new ActivityData(new AssignIdentityActivity { Process = process.Process, Id = 1 })
             {
                 State = ActivityState.Running
             });
+        }
 
         // Act
         DataPool.UpdateProcess(process, ProcessState.Aborting);
@@ -164,6 +166,7 @@ public class ProcessRemovalTests : ProcessTestsBase
             Recipe = new ProductRecipe()
         };
         if (mounted)
+        {
             process.AddActivity(new ActivityData(new MountActivity())
             {
                 Result = new ActivityResult
@@ -172,6 +175,8 @@ public class ProcessRemovalTests : ProcessTestsBase
                 },
                 State = ActivityState.Completed
             });
+        }
+
         process.AddActivity(new ActivityData(new DummyActivity())
         {
             Result = new ActivityResult

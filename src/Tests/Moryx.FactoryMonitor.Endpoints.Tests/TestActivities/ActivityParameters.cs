@@ -12,7 +12,6 @@ public class ActivityParameters : VisualInstructionParameters
 
     protected override void Populate(Process process, Parameters instance)
     {
-        var parameters = (ActivityParameters)instance;
     }
 
 }

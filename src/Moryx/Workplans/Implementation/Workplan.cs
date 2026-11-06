@@ -71,9 +71,13 @@ public class Workplan : IWorkplan, IPersistentObject
         {
             node.Id = ++MaxElementId;
             if (node is IConnector)
+            {
                 _connectors.Add((IConnector)node);
+            }
             else
+            {
                 _steps.Add((IWorkplanStep)node);
+            }
         }
     }
     /// <summary>

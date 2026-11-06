@@ -33,7 +33,9 @@ public static partial class EntryConvert
     public static bool IsDictionary(Type collectionType)
     {
         if (typeof(IDictionary).IsAssignableFrom(collectionType))
+        {
             return true;
+        }
 
         return collectionType.IsGenericType
                && collectionType.GetGenericTypeDefinition() == typeof(IDictionary<,>);
@@ -54,7 +56,9 @@ public static partial class EntryConvert
     {
         // If it is a dictionary create a key value pair
         if (IsDictionary(collectionType))
+        {
             return collectionType.GenericTypeArguments[1];
+        }
 
         // otherwise create the element's type. List<Test> --> Test
         return collectionType.IsArray ? collectionType.GetElementType() : collectionType.GenericTypeArguments[0];
@@ -144,9 +148,13 @@ public static partial class EntryConvert
         // Get most basic default
         var defaultAttribute = property.GetCustomAttribute<DefaultValueAttribute>();
         if (defaultAttribute != null)
+        {
             entryValue.Default = defaultAttribute.Value.ToString();
+        }
         else if (entryValue.Possible != null && entryValue.Possible.Length >= 1)
+        {
             entryValue.Default = entryValue.Possible[0].Key;
+        }
         else if (property.PropertyType.IsValueType && entryValue.Type != EntryValueType.Struct)
         {
             var underlyingType = Nullable.GetUnderlyingType(property.PropertyType);
@@ -155,7 +163,9 @@ public static partial class EntryConvert
         }
         // Value types should have the default value as current value (except decomposed structs)
         if (ValueOrStringType(property.PropertyType) && entryValue.Type != EntryValueType.Struct)
+        {
             entryValue.Current = ConvertToString(entryValue.Default, customSerialization.FormatProvider);
+        }
 
         return entryValue;
     }
@@ -401,7 +411,9 @@ public static partial class EntryConvert
             //exclude property that can lead to self reference
             var propertyType = property.PropertyType;
             if (propertyType == instanceType)
+            {
                 continue;
+            }
 
             var isFaulty = !TryGetValue(property, instance, out var value);
 
@@ -416,14 +428,18 @@ public static partial class EntryConvert
             var convertedProperty = DefaultPropertyEncoding(property, customSerialization, instance);
             // Change type in case of exception
             if (isFaulty)
+            {
                 convertedProperty.Value.Type = EntryValueType.Exception;
+            }
 
             switch (convertedProperty.Value.Type)
             {
                 case EntryValueType.Collection:
                     // Get collection and iterate if it has entries
                     if (value == null)
+                    {
                         break;
+                    }
 
                     convertedProperty.SubEntries.AddRange(EncodeItems(value, propertyType, property, customSerialization, instance));
                     break;
@@ -441,7 +457,9 @@ public static partial class EntryConvert
                     if (value is Stream stream)
                     {
                         if (stream.CanSeek)
+                        {
                             stream.Seek(0, SeekOrigin.Begin);
+                        }
 
                         convertedProperty.Value.Current = ConvertToBase64(stream);
                     }
@@ -783,11 +801,15 @@ public static partial class EntryConvert
             // Do not operate on faulty properties or read-only properties
             // For security reasons read the flag from the property again
             if (mapped.Entry?.Value.Type == EntryValueType.Exception || property.GetCustomAttribute<ReadOnlyAttribute>()?.IsReadOnly == true)
+            {
                 continue;
+            }
 
             // Try to read the current value, skip properties with faulty getters
             if (!TryGetValue(property, instance, out var currentValue))
+            {
                 continue;
+            }
 
             // Encoders decode the complete entry, members without entry keep their current value
             var encoder = customSerialization.GetEncoder(propertyType, property);
@@ -818,7 +840,9 @@ public static partial class EntryConvert
                 UpdateCollection(currentValue, mapped.Property.PropertyType, mapped.Property, mapped.Entry, strategy,
                     customSerialization, instance);
                 if (strategy is ArrayIListStrategy)
+                {
                     doNotUpdateProperty = true;
+                }
             }
             // Update class
             else if (propertyType.IsClass)
@@ -1101,9 +1125,13 @@ public static partial class EntryConvert
             else if (paramType.IsClass)
             {
                 if (entry == null)
+                {
                     UpdateInstance(argument, new Entry(), customSerialization);
+                }
                 else
+                {
                     UpdateInstance(argument, entry, customSerialization);
+                }
             }
 
             arguments[i] = argument;

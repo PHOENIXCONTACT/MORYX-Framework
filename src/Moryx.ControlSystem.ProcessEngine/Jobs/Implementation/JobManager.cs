@@ -148,7 +148,9 @@ internal class JobManager : IJobManager, IDisposable
 
         // Now schedule the scheduling
         if (_running)
+        {
             _taskQueue.Enqueue(UseAvailableSlots);
+        }
 
         // Return the jobs without awaiting the task
         return jobDatas;
@@ -170,7 +172,9 @@ internal class JobManager : IJobManager, IDisposable
     private void OnSlotsAvailable(object sender, EventArgs args)
     {
         if (_running)
+        {
             _taskQueue.Enqueue(UseAvailableSlots);
+        }
     }
 
     private void UseAvailableSlots()
@@ -185,7 +189,9 @@ internal class JobManager : IJobManager, IDisposable
         // Restore order of jobs
         var ordered = jobDatas.Where(jd => schedulable.Any(j => j == jd.Job)).ToList();
         if (ordered.Count == 0)
+        {
             return;
+        }
 
         // Split into chunks if schedulable jobs have gaps in JobList
         var totalJobs = new List<IJobData>();
@@ -198,27 +204,38 @@ internal class JobManager : IJobManager, IDisposable
 
             // See if there is a next one and it is a direct neighbor
             if (index < ordered.Count - 1 && ordered[index + 1] == JobList.Next(jobData))
+            {
                 continue;
+            }
 
             // Handle what we have so far and add to JobList
             foreach (var handler in JobHandlers)
+            {
                 handler.Handle(linkedJobs);
+            }
+
             JobList.Add(linkedJobs, JobPosition.Expand, JobStorage.Save);
 
             // Add to total jobs
             totalJobs.AddRange(linkedJobs);
             // Reset if we have more
             if (index < ordered.Count - 1)
+            {
                 linkedJobs = new LinkedList<IJobData>();
+            }
         }
 
         // If non of the available jobs could be readied
         if (totalJobs.Count == 0)
+        {
             return;
+        }
 
         // Set ready AFTER they were added to the job list to avoid race conditions
         foreach (var jobData in totalJobs)
+        {
             jobData.Ready();
+        }
 
         // Inform the scheduler about our new jobs
         _scheduler.JobsReady(totalJobs.Select(j => j.Job));
@@ -255,7 +272,9 @@ internal class JobManager : IJobManager, IDisposable
         var oldClassification = eventArgs.PreviousState.Classification;
         var classification = eventArgs.CurrentState.Classification;
         if (_running && oldClassification != classification && classification >= JobClassification.Running)
+        {
             _scheduler.JobUpdated(eventArgs.JobData.Job, classification);
+        }
     }
 
     private void ProcessJobCompleted(IJobData completedJob)

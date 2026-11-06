@@ -83,7 +83,9 @@ internal class ProcessDataCollector : IProcessDataCollector
         {
             var measurandConfig = listenerConfig.MeasurandConfigs.FirstOrDefault(m => m.Name == measurandName);
             if (measurandConfig != null)
+            {
                 continue;
+            }
 
             listenerConfig.MeasurandConfigs.Add(new MeasurandConfig
             {
@@ -94,10 +96,14 @@ internal class ProcessDataCollector : IProcessDataCollector
         }
 
         if (!modified)
+        {
             return;
+        }
 
         lock (_configSaveLock)
+        {
             RuntimeConfigManager.SaveConfiguration(ModuleConfig);
+        }
     }
 
     /// <inheritdoc />

@@ -1,14 +1,13 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Linq;
 using Moryx.Workplans;
 using Moryx.Workplans.Transitions;
 using Moryx.Workplans.WorkplanSteps;
 
 namespace Moryx.Tests.Workplans;
 
-internal class PausableStep : WorkplanStepBase
+internal sealed class PausableStep : WorkplanStepBase
 {
     public PausableStep()
     {
@@ -22,7 +21,7 @@ internal class PausableStep : WorkplanStepBase
     }
 }
 
-internal class PausableTransition : TransitionBase<MainToken>
+internal sealed class PausableTransition : TransitionBase<MainToken>
 {
     ///
     protected override void InputTokenAdded(object sender, IToken token)

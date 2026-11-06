@@ -9,7 +9,7 @@ using Moryx.Runtime.Modules;
 
 namespace Moryx.ProcessData.Endpoints.Services;
 
-internal class ListenerService : IListenerService
+internal sealed class ListenerService : IListenerService
 {
     private readonly IModuleManager _moduleManager;
     private readonly IConfigManager _configManager;
@@ -84,7 +84,7 @@ internal class ListenerService : IListenerService
             .SelectMany(info => (List<ProcessDataListenerConfig>)info.GetValue(config, null))
             .ToList();
 
-    public List<string> GetAvailableBindings(Type typeInQuestion)
+    public static List<string> GetAvailableBindings(Type typeInQuestion)
         => AppDomain.CurrentDomain.GetAssemblies()
             .SelectMany(domainAssembly => domainAssembly.GetTypes())
             .Where(type => typeInQuestion.IsAssignableFrom(type) && !type.IsAbstract)

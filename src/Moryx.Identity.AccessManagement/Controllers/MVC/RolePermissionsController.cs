@@ -40,7 +40,9 @@ public class RolePermissionsController : Controller
             var permissionViewModel = new PermissionViewModel { Value = permission };
 
             if (authorizedPermissions.Any(authorized => authorized == permission))
+            {
                 permissionViewModel.Selected = true;
+            }
 
             model.Permissions.Add(permissionViewModel);
         }

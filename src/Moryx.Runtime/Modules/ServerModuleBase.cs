@@ -154,11 +154,8 @@ public abstract class ServerModuleBase<TConf> : IServerModule, IServerModuleStat
     void IServerModuleStateContext.Destruct()
     {
         // Destroy local container
-        if (Container != null)
-        {
-            Container.Destroy();
-            Container = null;
-        }
+        Container?.Destroy();
+        Container = null;
 
         Logger.Log(LogLevel.Information, "{0} destructed!", Name);
     }
@@ -187,7 +184,9 @@ public abstract class ServerModuleBase<TConf> : IServerModule, IServerModuleStat
     protected void DeactivateFacade(IFacadeControl facade)
     {
         if (!_activeFacades.Remove(facade))
+        {
             return;
+        }
 
         facade.Deactivate();
         FillProperties(facade, (a, b) => null);
@@ -205,10 +204,14 @@ public abstract class ServerModuleBase<TConf> : IServerModule, IServerModuleStat
             type = typeof(Array).IsAssignableFrom(type) ? type.GetElementType() : type;
             var implementations = Container.GetRegisteredImplementations(type);
             if (!implementations.Any())
+            {
                 continue;
+            }
 
             if (prop.SetMethod == null)
+            {
                 continue;
+            }
 
             prop.SetValue(instance, fillingFunc(Container, prop));
         }
@@ -218,7 +221,9 @@ public abstract class ServerModuleBase<TConf> : IServerModule, IServerModuleStat
     {
         var propType = property.PropertyType;
         if (typeof(Array).IsAssignableFrom(propType))
+        {
             return container.ResolveAll(propType.GetElementType());
+        }
 
         var strategyName = Strategies.TryGetValue(propType, out var strategy) ? strategy : null;
         return strategyName == null ? Container.Resolve(propType)

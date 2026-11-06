@@ -5,7 +5,7 @@ using Moryx.Runtime.Modules;
 
 namespace Moryx.Runtime.Kernel.Tests.ModuleMocks;
 
-internal class ModuleADependent : ModuleBase, IFacadeContainer<IFacadeC>
+internal sealed class ModuleADependent : ModuleBase, IFacadeContainer<IFacadeC>
 {
     [RequiredModuleApi(IsStartDependency = true)]
     public IFacadeA Dependency { get; set; }
@@ -13,7 +13,7 @@ internal class ModuleADependent : ModuleBase, IFacadeContainer<IFacadeC>
     public IFacadeC Facade { get; set; } = new FacadeC();
 }
 
-internal class ModuleADependentTransient : ModuleBase
+internal sealed class ModuleADependentTransient : ModuleBase
 {
     [RequiredModuleApi(IsStartDependency = true)]
     public IFacadeC Dependency { get; set; }

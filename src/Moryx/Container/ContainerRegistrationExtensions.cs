@@ -64,7 +64,9 @@ public static class ContainerRegistrationExtensions
     {
         var att = type.GetCustomAttribute<ComponentAttribute>();
         if (att != null)
+        {
             return att.Services.Any() ? att.Services : [type];
+        }
 
         var interfaces = type.GetInterfaces();
         return interfaces.Any() ? interfaces : [type];

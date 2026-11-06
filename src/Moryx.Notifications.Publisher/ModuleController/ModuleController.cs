@@ -1,12 +1,12 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.ComponentModel;
 using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Model;
 using Moryx.Runtime.Modules;
-using System.ComponentModel;
 
 namespace Moryx.Notifications.Publisher;
 
@@ -51,7 +51,9 @@ public class ModuleController : ServerModuleBase<ModuleConfig>,
 
         // Register sources
         foreach (var source in NotificationSources)
+        {
             Container.SetInstance(source, source.Name);
+        }
 
         // Initialize components
         Container.Resolve<INotificationManager>().Initialize();

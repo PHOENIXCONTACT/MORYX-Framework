@@ -1,20 +1,15 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Runtime.InteropServices;
+using Moq;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.TestTools;
 using Moryx.Logging;
-using Moq;
 using Moryx.Orders.Assignment;
 using Moryx.Orders.Documents;
 using Moryx.Orders.Management.Assignment;
 using NUnit.Framework;
-using System.Runtime.InteropServices;
-using System.Threading;
 
 namespace Moryx.Orders.Management.Tests;
 
@@ -43,7 +38,9 @@ public class DocumentAssignStepTests
     public void Setup()
     {
         if (Directory.Exists(_materialDataFolder))
+        {
             Directory.Delete(_materialDataFolder, true);
+        }
 
         _documentLoaderMock = new Mock<IDocumentLoader>();
         var documentProviderConfig = new DocumentsConfig

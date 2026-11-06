@@ -74,10 +74,10 @@ public class Entry : ICloneable
     public Entry GetPrototype(string typeName)
     {
         return (from prototype in Prototypes
-            let value = prototype.Value
-            where value.Current == typeName
-                  || value.Type.ToString("G") == typeName
-            select prototype).FirstOrDefault();
+                let value = prototype.Value
+                where value.Current == typeName
+                      || value.Type.ToString("G") == typeName
+                select prototype).FirstOrDefault();
     }
 
     /// <summary>
@@ -177,16 +177,24 @@ public class Entry : ICloneable
         // TODO: Remove this overload in the next major and make order-sensitive comparison the default
 
         if (left == null || right == null)
+        {
             return false;
+        }
 
         if (ReferenceEquals(left, right))
+        {
             return true;
+        }
 
         if (left.Value.Current != right.Value.Current)
+        {
             return false;
+        }
 
         if (left.SubEntries.Count != right.SubEntries.Count)
+        {
             return false;
+        }
 
         for (var i = 0; i < left.SubEntries.Count; i++)
         {
@@ -196,10 +204,14 @@ public class Entry : ICloneable
                 : right.SubEntries.FirstOrDefault(p => p.Identifier == leftEntry.Identifier);
 
             if (rightEntry == null || leftEntry.Identifier != rightEntry.Identifier)
+            {
                 return false;
+            }
 
             if (!ValuesEqual(leftEntry, rightEntry, orderSensitive))
+            {
                 return false;
+            }
         }
 
         return true;

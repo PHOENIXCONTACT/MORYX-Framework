@@ -1,10 +1,10 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.ComponentModel.DataAnnotations;
 using Moryx.ControlSystem.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Processes;
 using Moryx.ControlSystem.ProcessEngine.Properties;
-using System.ComponentModel.DataAnnotations;
 
 namespace Moryx.ControlSystem.ProcessEngine.Jobs.Setup;
 
@@ -28,7 +28,9 @@ internal class AbortingSetupState : SetupJobStateBase
     public override void ProcessChanged(ProcessData processData, ProcessState trigger)
     {
         if (trigger < ProcessState.Interrupted)
+        {
             return;
+        }
 
         Context.ProcessCompleted(processData);
         NextState(StateCompleted);

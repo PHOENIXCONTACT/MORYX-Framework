@@ -40,9 +40,13 @@ public class Process : IProcess
         Activity[] result;
 
         if (predicate == null)
+        {
             result = _activities.ToArray();
+        }
         else
+        {
             result = _activities.Where(predicate).ToArray();
+        }
 
         _activitiesLock.ExitReadLock();
 

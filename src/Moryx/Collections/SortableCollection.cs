@@ -118,7 +118,9 @@ public class SortableCollection<T> : ISortableCollection<T> where T : class, ISo
 
         //Check if the given item is the first
         if (itemIndex == 0)
+        {
             return;
+        }
 
         //Move item up and return changed items
         Move(item, 1);
@@ -131,7 +133,9 @@ public class SortableCollection<T> : ISortableCollection<T> where T : class, ISo
 
         //Check if the given item is the last
         if (itemIndex == _items.Count - 1)
+        {
             return;
+        }
 
         //Move item down and return changed items
         Move(item, -1);
@@ -228,7 +232,10 @@ public class SortableCollection<T> : ISortableCollection<T> where T : class, ISo
     {
         var itemIndex = _items.IndexOf(item);
         if (itemIndex < 0)
+        {
             throw new ArgumentException("Item was not found in underlying collection.", nameof(item));
+        }
+
         return itemIndex;
     }
 

@@ -46,7 +46,9 @@ internal class JobDispatcher : IJobDispatcher, ILoggingComponent
     public void Stop()
     {
         foreach (var jobData in JobList.ToList())
+        {
             jobData.Interrupt();
+        }
     }
 
     /// <inheritdoc cref="IJobDispatcher"/>

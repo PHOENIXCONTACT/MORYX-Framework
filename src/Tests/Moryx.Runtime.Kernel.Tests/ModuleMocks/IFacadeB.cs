@@ -8,7 +8,7 @@ internal interface IFacadeB
 
 }
 
-internal class FacadeB : IFacadeB
+internal sealed class FacadeB : IFacadeB
 {
 
 }

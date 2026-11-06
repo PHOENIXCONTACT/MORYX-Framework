@@ -4,7 +4,6 @@
 using System.Collections;
 using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
 using Moryx.Configuration;
 using Moryx.Serialization;
 using NUnit.Framework;
@@ -46,7 +45,9 @@ public class ModelTransformerTest
             {
                 // find the property in the generic object
                 if (propertyInfo.Name != entry.Identifier)
+                {
                     continue;
+                }
 
                 found = true;
                 var attr = propertyInfo.GetCustomAttributes(false);
@@ -142,13 +143,22 @@ public class ModelTransformerTest
 
                 var propertyValue = propertyInfo.GetValue(config);
                 if (propertyValue == null)
+                {
                     Assert.That(entry.Value.Current, Is.EqualTo(entry.Value.Default), "The current value do not match.");
+                }
                 else if (typeof(IList).IsAssignableFrom(propertyInfo.PropertyType))
+                {
                     Assert.That(entry.SubEntries.Count, Is.EqualTo(((IList)propertyValue).Count));
+                }
                 else if (propertyInfo.PropertyType.IsClass && propertyInfo.PropertyType != typeof(string))
+                {
                     Assert.That(entry.Value.Current, Is.EqualTo(propertyInfo.PropertyType.Name));
+                }
                 else
+                {
                     Assert.That(propertyValue.ToString(), Is.EqualTo(entry.Value.Current), "The current value do not match.");
+                }
+
                 break;
             }
             Assert.That(found, $"Property is missing: {propertyInfo.Name}");

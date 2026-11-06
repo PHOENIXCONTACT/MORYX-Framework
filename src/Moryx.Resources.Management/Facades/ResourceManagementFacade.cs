@@ -126,7 +126,6 @@ internal class ResourceManagementFacade : FacadeBase, IResourceManagement
         return resource.Id;
     }
 
-
     public TResult ReadUnsafe<TResult>(long id, Func<Resource, TResult> accessor)
     {
         ValidateHealthState();
@@ -143,11 +142,15 @@ internal class ResourceManagementFacade : FacadeBase, IResourceManagement
 
         var resource = ResourceGraph.Get(id);
         if (resource == null)
+        {
             throw new KeyNotFoundException($"No resource with Id {id} found.");
+        }
 
         var result = await modifier(resource);
         if (result)
+        {
             await ResourceGraph.SaveAsync(resource, cancellationToken);
+        }
     }
 
     public async Task<bool> DeleteAsync(long id, CancellationToken cancellationToken = default)
@@ -156,7 +159,9 @@ internal class ResourceManagementFacade : FacadeBase, IResourceManagement
 
         var resource = ResourceGraph.Get(id);
         if (resource == null)
+        {
             return false;
+        }
 
         return await ResourceGraph.DestroyAsync(resource, cancellationToken);
     }
@@ -179,9 +184,8 @@ internal class ResourceManagementFacade : FacadeBase, IResourceManagement
     {
         ValidateHealthState();
 
-        var initializer =await InitializerFactory.Create(initializerConfig, cancellationToken);
-
-        var result = await ResourceManager.ExecuteInitializer(initializer, parameters);
+        var initializer = await InitializerFactory.Create(initializerConfig, cancellationToken);
+        _ = await ResourceManager.ExecuteInitializer(initializer, parameters);
 
         InitializerFactory.Destroy(initializer);
     }

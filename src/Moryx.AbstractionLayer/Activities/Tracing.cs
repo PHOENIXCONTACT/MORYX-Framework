@@ -47,7 +47,9 @@ public class Tracing
         : Tracing, new()
     {
         if (this is Sparta)
+        {
             return this as Sparta;
+        }
 
         var replacement = new Sparta();
         var replacementType = typeof(Sparta);
@@ -59,7 +61,9 @@ public class Tracing
         {
             var value = property.GetValue(this);
             if (property.CanWrite)
+            {
                 property.SetValue(replacement, value);
+            }
         }
 
         return replacement;

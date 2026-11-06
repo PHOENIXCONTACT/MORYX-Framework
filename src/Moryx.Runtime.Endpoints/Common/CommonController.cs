@@ -39,7 +39,9 @@ public class CommonController : ControllerBase
     {
         var entryAssembly = Assembly.GetEntryAssembly();
         if (entryAssembly is null)
+        {
             return BadRequest("Entry assembly could not be determined.");
+        }
 
         return new ApplicationInformationResponse
         {

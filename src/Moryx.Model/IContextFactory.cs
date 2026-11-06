@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.EntityFrameworkCore;
-using Moryx.Model.Configuration;
 
 namespace Moryx.Model;
 

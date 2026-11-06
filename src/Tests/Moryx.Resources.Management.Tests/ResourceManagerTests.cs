@@ -1,10 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moryx.AbstractionLayer.Capabilities;
@@ -13,7 +9,6 @@ using Moryx.AbstractionLayer.TestTools;
 using Moryx.Logging;
 using Moryx.Model.InMemory;
 using Moryx.Model.Repositories;
-using Moryx.Notifications;
 using Moryx.Resources.Management.Model;
 using NUnit.Framework;
 
@@ -52,8 +47,8 @@ public class ResourceManagerTests
             .ReturnsAsync(Array.Empty<Resource>());
 
         _initializerMock = new Mock<IResourceInitializer>();
-        _initializerMock.Setup(i => i.ExecuteAsync(It.IsAny<IResourceGraph>(), It.IsAny<object>(),It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new ResourceInitializerResult { InitializedResources = [_resourceMock]});
+        _initializerMock.Setup(i => i.ExecuteAsync(It.IsAny<IResourceGraph>(), It.IsAny<object>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new ResourceInitializerResult { InitializedResources = [_resourceMock] });
         _linkerMock.Setup(l => l.SaveRootsAsync(It.IsAny<IUnitOfWork>(), It.IsAny<IReadOnlyList<Resource>>()))
             .ReturnsAsync([_resourceMock]);
         _linkerMock.Setup(l => l.SaveReferencesAsync(It.IsAny<IUnitOfWork>(), It.IsAny<Resource>(), It.IsAny<ResourceEntity>(),
@@ -278,7 +273,6 @@ public class ResourceManagerTests
         Assert.That(notifications, Is.EqualTo(0));
     }
 
-
     [Test(Description = "Adds a resource while the ResourceManager was initialized but not started")]
     public async Task AddResourceWhileInitializedDoesNotStartResource()
     {
@@ -370,7 +364,7 @@ public class ResourceManagerTests
         }
     }
 
-    private class PublicResourceMock : ResourceMockBase, IResource, IReferenceResource
+    private sealed class PublicResourceMock : ResourceMockBase, IResource, IReferenceResource
     {
         public ICapabilities Capabilities { get; private set; }
 
@@ -384,12 +378,12 @@ public class ResourceManagerTests
 
     }
 
-    private class ResourceMock : ResourceMockBase
+    private sealed class ResourceMock : ResourceMockBase
     {
 
     }
 
-    private class TestCapabilities : ICapabilities
+    private sealed class TestCapabilities : ICapabilities
     {
         public bool IsCombined => false;
 

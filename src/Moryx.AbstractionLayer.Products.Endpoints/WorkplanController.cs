@@ -32,7 +32,10 @@ public class WorkplanController : ControllerBase
     {
         var workplans = new List<WorkplanModel>();
         foreach (var w in await _workplans.LoadAllWorkplansAsync())
+        {
             workplans.Add(ProductConverter.ConvertWorkplan(w));
+        }
+
         return workplans.ToArray();
     }
 
@@ -42,7 +45,10 @@ public class WorkplanController : ControllerBase
     public async Task<ActionResult<long>> SaveWorkplan(WorkplanModel model)
     {
         if (model == null)
+        {
             return BadRequest($"Model was null");
+        }
+
         var workplan = ProductConverter.ConvertWorkplanBack(model);
         return await _workplans.SaveWorkplanAsync(workplan);
     }
@@ -56,10 +62,16 @@ public class WorkplanController : ControllerBase
     public async Task<ActionResult<WorkplanModel[]>> GetVersions(long id)
     {
         if (id == 0)
+        {
             return BadRequest($"Workplan id was 0");
+        }
+
         var versions = await _workplans.LoadVersionsAsync(id);
         if (versions == null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = string.Format(CultureInfo.CurrentCulture, Strings.WorkplanController_WorkplanNotFound, id) });
+        }
+
         var model = new List<WorkplanModel>();
         foreach (var v in versions)
         {
@@ -77,10 +89,16 @@ public class WorkplanController : ControllerBase
     public async Task<ActionResult<WorkplanModel>> GetWorkplan(long id)
     {
         if (id == 0)
+        {
             return BadRequest($"Workplan id was 0");
+        }
+
         var workplan = await _workplans.LoadWorkplanAsync(id);
         if (workplan == null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = string.Format(CultureInfo.CurrentCulture, Strings.WorkplanController_WorkplanNotFound, id) });
+        }
+
         return ProductConverter.ConvertWorkplan(workplan);
     }
 
@@ -93,7 +111,10 @@ public class WorkplanController : ControllerBase
     {
         var workplan = await _workplans.LoadWorkplanAsync(id);
         if (workplan == null)
+        {
             return NotFound();
+        }
+
         await _workplans.DeleteWorkplanAsync(id);
         return Ok();
     }
@@ -105,12 +126,16 @@ public class WorkplanController : ControllerBase
     public async Task<ActionResult<long>> UpdateWorkplan(WorkplanModel model)
     {
         if (model == null)
+        {
             return BadRequest($"Workplan id was 0");
+        }
 
         var workplan = await _workplans.LoadWorkplanAsync(model.Id);
 
-        if (workplan== null)
+        if (workplan == null)
+        {
             return BadRequest($"Workplan with id {model.Id} does not exist");
+        }
 
         return await _workplans.SaveWorkplanAsync(ProductConverter.ConvertWorkplanBack(model));
     }

@@ -225,7 +225,7 @@ public class EntryEncoderTests
         Assert.Throws<InvalidOperationException>(() => EntryConvert.EncodeObject(dummy));
     }
 
-    private class MissingItemsEncoderDummy
+    private sealed class MissingItemsEncoderDummy
     {
         [EntrySerialize(EncoderTarget = EntryEncoderTarget.Items)]
         public List<EncoderTypeTargetDummy> Items { get; set; }

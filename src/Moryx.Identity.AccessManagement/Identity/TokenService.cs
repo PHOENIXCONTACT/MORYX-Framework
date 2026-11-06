@@ -15,7 +15,7 @@ using Moryx.Identity.Models;
 namespace Moryx.Identity.AccessManagement;
 
 /// <inheritdoc/>
-internal class TokenService : ITokenService
+internal sealed class TokenService : ITokenService
 {
     private readonly JwtSettings _jwtSettings;
     private readonly TokenValidationParameters _tokenValidationParameters;
@@ -60,10 +60,14 @@ internal class TokenService : ITokenService
         };
 
         if (!string.IsNullOrEmpty(user.Firstname))
+        {
             claims.Add(new Claim(ClaimTypes.GivenName, user.Firstname));
+        }
 
         if (!string.IsNullOrEmpty(user.LastName))
+        {
             claims.Add(new Claim(ClaimTypes.Surname, user.LastName));
+        }
 
         // Add roles of the user
         var roles = await _userManager.GetRolesAsync(user);
@@ -144,27 +148,41 @@ internal class TokenService : ITokenService
             var jwtSecurityToken = validatedToken as JwtSecurityToken;
             var result = jwtSecurityToken?.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase);
             if (result == false)
+            {
                 return FailureResult($"The token uses invalid security algorithm {jwtSecurityToken.Header.Alg}.", tokenRequest);
+            }
 
             var jtiClaim = principal.Claims.SingleOrDefault(x => x.Type == JwtRegisteredClaimNames.Jti);
             if (jtiClaim == null)
+            {
                 return FailureResult($"The token does not contain an ID.", tokenRequest);
+            }
 
             var storedRefreshToken = await _dbContext.RefreshTokens.FirstOrDefaultAsync(x => x.Token == tokenRequest.RefreshToken);
             if (storedRefreshToken == null)
+            {
                 return FailureResult("The token does not exist.", tokenRequest);
+            }
 
             if (DateTime.UtcNow > storedRefreshToken.ExpiryDate)
+            {
                 return FailureResult("The token has expired, user needs to login again.", tokenRequest);
+            }
 
             if (storedRefreshToken.IsUsed)
+            {
                 return FailureResult("The refresh token has already been used.", tokenRequest);
+            }
 
             if (storedRefreshToken.IsRevoked)
+            {
                 return FailureResult("The token has been revoked.", tokenRequest);
+            }
 
             if (storedRefreshToken.JwtId != jtiClaim.Value)
+            {
                 return FailureResult("The token does not matched the stored token for this user.", tokenRequest);
+            }
 
             storedRefreshToken.IsUsed = true;
             _dbContext.RefreshTokens.Update(storedRefreshToken);
@@ -202,7 +220,10 @@ internal class TokenService : ITokenService
         var refreshToken = await _dbContext.RefreshTokens.Where(token => token.JwtId == securityToken.Id).SingleOrDefaultAsync();
 
         if (refreshToken == null)
+        {
             return;
+        }
+
         _dbContext.RefreshTokens.Remove(refreshToken);
         await _dbContext.SaveChangesAsync();
     }
@@ -236,13 +257,5 @@ internal class TokenService : ITokenService
         const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         return new string(Enumerable.Repeat(chars, length)
             .Select(s => s[RandomNumberGenerator.GetInt32(s.Length)]).ToArray());
-    }
-
-    private static DateTime UnixTimeStampToDateTime(double unixTimeStamp)
-    {
-        // Unix timestamp is seconds past epoch
-        var dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
-        dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToUniversalTime();
-        return dtDateTime;
     }
 }

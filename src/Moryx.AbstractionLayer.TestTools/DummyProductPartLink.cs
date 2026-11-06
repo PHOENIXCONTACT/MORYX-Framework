@@ -15,10 +15,17 @@ public class DummyProductPartLink : ProductPartLink<DummyProductType>
     {
         var toCompareWith = obj as DummyProductPartLink;
         if (toCompareWith == null)
+        {
             return false;
+        }
 
         return GetType().GetProperties()
             .All(prop => (prop.GetValue(toCompareWith) is null && prop.GetValue(this) is null)
                          || prop.GetValue(toCompareWith).Equals(prop.GetValue(this)));
+    }
+
+    public override int GetHashCode()
+    {
+        throw new NotImplementedException();
     }
 }

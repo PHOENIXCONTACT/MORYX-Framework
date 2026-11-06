@@ -3,7 +3,6 @@
 
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Resources;
-using Moryx.ControlSystem.Cells;
 using Moryx.Factory;
 using Moryx.FactoryMonitor.Endpoints.Models;
 using Moryx.Orders;

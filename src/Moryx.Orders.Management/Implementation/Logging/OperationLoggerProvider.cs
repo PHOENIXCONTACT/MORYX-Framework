@@ -27,7 +27,9 @@ internal class OperationLoggerProvider : IOperationLoggerProvider
     {
         IOperationLogger operationLogger;
         if (_logger.TryGetValue(operationData, out var existingLogger))
+        {
             operationLogger = existingLogger;
+        }
         else
         {
             operationLogger = new OperationLogger(Logger, operationData);
@@ -40,7 +42,9 @@ internal class OperationLoggerProvider : IOperationLoggerProvider
     public void RemoveLogger(IOperationData operationData)
     {
         if (!_logger.ContainsKey(operationData))
+        {
             return;
+        }
 
         _logger.Remove(operationData);
     }

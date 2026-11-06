@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Model.Attributes;
-using Moryx.Model.Configuration;
 using Moryx.Tools;
 
 namespace Moryx.Model;
@@ -55,7 +54,9 @@ public class DbContextManager : IDbContextManager
                 var dbTypeAttributes = type.GetCustomAttributes<DatabaseTypeSpecificDbContextAttribute>()!;
                 return dbTypeAttributes.Select(attr => new
                 {
-                    DbContextType = type, BaseDbContextType = attr.BaseDbContextType ?? type, ModelConfiguratorType = attr.ModelConfiguratorType
+                    DbContextType = type,
+                    BaseDbContextType = attr.BaseDbContextType ?? type,
+                    ModelConfiguratorType = attr.ModelConfiguratorType
                 });
             }).GroupBy(pc => pc.BaseDbContextType).Select(g =>
             {
@@ -98,7 +99,9 @@ public class DbContextManager : IDbContextManager
             }
 
             if (configuratorType == null || specificDbContextType == null)
+            {
                 throw new InvalidOperationException($"No valid configurator found for DbContext '{possibleModel.DbContext.FullName}'.");
+            }
 
             var configType = configuratorType.BaseType.GenericTypeArguments.First();
 
@@ -162,7 +165,9 @@ public class DbContextManager : IDbContextManager
     {
         var possibleModel = _possibleModels.FirstOrDefault(pm => pm.DbContext == contextType);
         if (possibleModel == null)
+        {
             return null;
+        }
 
         if (possibleModel.ModelConfiguratorMap.TryGetValue(configuratorType, out var specificDbContextType))
         {
@@ -189,7 +194,9 @@ public class DbContextManager : IDbContextManager
     {
         var configuredContext = _configuredModels.FirstOrDefault(m => m.BaseDbContextType == contextType);
         if (configuredContext == null)
+        {
             throw new InvalidOperationException($"Context {contextType.FullName} not configured.");
+        }
 
         var setupExecutorType = typeof(ModelSetupExecutor<>).MakeGenericType(configuredContext.BaseDbContextType);
         return (IModelSetupExecutor)Activator.CreateInstance(setupExecutorType, this);
@@ -204,7 +211,9 @@ public class DbContextManager : IDbContextManager
     {
         var wrapper = _configuredModels.FirstOrDefault(k => k.BaseDbContextType == typeof(TContext));
         if (wrapper == null)
+        {
             throw new InvalidOperationException("Unknown model.");
+        }
 
         var configurator = wrapper.Configurator;
 
@@ -213,7 +222,7 @@ public class DbContextManager : IDbContextManager
             : (TContext)configurator.CreateContext();
     }
 
-    private class ConfiguredModelWrapper
+    private sealed class ConfiguredModelWrapper
     {
         public Type BaseDbContextType { get; set; }
 
@@ -224,7 +233,7 @@ public class DbContextManager : IDbContextManager
         public DatabaseConfig DatabaseConfig { get; set; }
     }
 
-    private class PossibleModelWrapper
+    private sealed class PossibleModelWrapper
     {
         public Type DbContext { get; set; }
 

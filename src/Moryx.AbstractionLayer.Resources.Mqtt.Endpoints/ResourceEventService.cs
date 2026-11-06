@@ -2,8 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Identity;
-using Moryx.AbstractionLayer.Resources;
-using Moryx.AspNetCore.Mqtt;
 using Moryx.AspNetCore.Mqtt.Builders;
 using Moryx.AspNetCore.Mqtt.Components;
 using Moryx.Runtime.Modules;
@@ -194,7 +192,7 @@ public class ResourceEventService : IMqttService
         _eventHandlers.Remove(resource.Id);
     }
 
-    private class ResourceEventSubscription
+    private sealed class ResourceEventSubscription
     {
         public object Resource { get; }
         public string EventName { get; }

@@ -7,7 +7,7 @@ using Moryx.Identity.AccessManagement.Data;
 
 namespace Moryx.Identity.AccessManagement;
 
-internal class PasswordResetService : IPasswordResetService
+internal sealed class PasswordResetService : IPasswordResetService
 {
     private readonly MoryxIdentitiesDbContext _dbContext;
 

@@ -1,18 +1,14 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Moryx.AbstractionLayer.Resources;
-using Moq;
-using Moryx.Model.Repositories;
-using NUnit.Framework;
 using Microsoft.Extensions.Logging.Abstractions;
+using Moq;
+using Moryx.AbstractionLayer.Resources;
 using Moryx.Logging;
+using Moryx.Model.Repositories;
 using Moryx.Resources.Management.Model;
+using NUnit.Framework;
 
 namespace Moryx.Resources.Management.Tests;
 
@@ -436,15 +432,24 @@ public class ResourceLinkerTests
 
         // Act
         if (!isNull)
+        {
             instance.Reference = reference;
+        }
+
         if (!isEmpty)
+        {
             instance.References.Add(reference);
+        }
 
         // Assert
         if (isNull || isEmpty)
+        {
             Assert.ThrowsAsync<ValidationException>(() => _linker.SaveReferencesAsync(dbMocks.Item1.Object, instance, new ResourceEntity()));
+        }
         else
+        {
             Assert.DoesNotThrowAsync(() => _linker.SaveReferencesAsync(dbMocks.Item1.Object, instance, new ResourceEntity()));
+        }
     }
 
     private static Tuple<Mock<IUnitOfWork>, Mock<IResourceRelationRepository>, Mock<IResourceRepository>> SetupDbMocks(List<ResourceRelationEntity> relations)

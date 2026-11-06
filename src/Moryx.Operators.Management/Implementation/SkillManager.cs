@@ -1,12 +1,12 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.Container;
 using System.Runtime.CompilerServices;
-using Moryx.Operators.Skills;
 using Microsoft.Extensions.Logging;
-using Moryx.Tools;
+using Moryx.Container;
 using Moryx.Logging;
+using Moryx.Operators.Skills;
+using Moryx.Tools;
 
 [assembly: InternalsVisibleTo("Moryx.Operators.Management.IntegrationTests")]
 

@@ -2,12 +2,12 @@
 // Licensed under the Apache License, Version 2.0
 
 using Castle.Core;
-using Castle.MicroKernel.Context;
 using Castle.MicroKernel;
+using Castle.MicroKernel.Context;
 
 namespace Moryx.Container;
 
-internal class StrategySubResolver : ISubDependencyResolver
+internal sealed class StrategySubResolver : ISubDependencyResolver
 {
     private readonly IKernel _kernel;
     private readonly IDictionary<Type, string> _strategies;

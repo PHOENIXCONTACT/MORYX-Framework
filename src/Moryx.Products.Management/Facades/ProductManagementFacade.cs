@@ -91,7 +91,10 @@ internal class ProductManagementFacade : FacadeBase, IProductManagement
         ValidateHealthState();
         var type = await ProductManager.LoadType(id);
         if (type == null)
+        {
             throw new ProductNotFoundException(id);
+        }
+
         return type;
     }
 
@@ -143,7 +146,9 @@ internal class ProductManagementFacade : FacadeBase, IProductManagement
         ValidateHealthState();
         var recipes = await RecipeManagement.LoadRecipes(productType, classification);
         if (recipes == null)
+        {
             return null;
+        }
 
         recipes.ForEach(ReplaceOrigin);
 
@@ -177,7 +182,10 @@ internal class ProductManagementFacade : FacadeBase, IProductManagement
         ValidateHealthState();
         var wp = await Workplans.LoadWorkplanAsync(workplanId, cancellationToken);
         if (wp == null)
+        {
             throw new KeyNotFoundException($"No workplan with id '{workplanId}' found.");
+        }
+
         return wp;
     }
 
@@ -286,7 +294,9 @@ internal class ProductManagementFacade : FacadeBase, IProductManagement
     private static void ValidateRecipe(IProductRecipe recipe)
     {
         if (recipe == null)
+        {
             throw new ArgumentException("Recipe could not be found.");
+        }
     }
 
     private void ReplaceOrigin<TRecipe>(TRecipe recipe)
