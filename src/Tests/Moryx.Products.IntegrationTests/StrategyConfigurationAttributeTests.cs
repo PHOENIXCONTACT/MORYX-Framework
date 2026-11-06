@@ -1,7 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using Moryx.Products.Management;
 using NUnit.Framework;
 
@@ -37,7 +36,7 @@ public class StrategyConfigurationAttributeTests
     {
     }
 
-    private class SomeInheritedType : SomeType
+    private sealed class SomeInheritedType : SomeType
     {
     }
 }

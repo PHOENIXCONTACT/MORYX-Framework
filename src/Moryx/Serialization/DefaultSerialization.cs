@@ -50,16 +50,24 @@ public class DefaultSerialization : ICustomSerialization
         else if (memberType.IsEnum)
         {
             foreach (Enum enumValue in Enum.GetValues(memberType))
+            {
                 prototypes.Add(new EntryPrototype(enumValue.ToString("G"), enumValue));
+            }
         }
         else
         {
             // check if this member is abstract
-            if (memberType.IsAbstract) return prototypes.ToArray();
+            if (memberType.IsAbstract)
+            {
+                return prototypes.ToArray();
+            }
 
             var prototype = Activator.CreateInstance(memberType);
             if (memberType.IsClass)
+            {
                 ValueProviderExecutor.Execute(prototype, new ValueProviderExecutorSettings().AddDefaultValueProvider());
+            }
+
             prototypes.Add(new EntryPrototype(memberType.Name, prototype));
         }
 
@@ -78,7 +86,9 @@ public class DefaultSerialization : ICustomSerialization
         // Element type for collections
         var isCollection = EntryConvert.IsCollection(memberType);
         if (isCollection)
+        {
             memberType = EntryConvert.ElementType(memberType);
+        }
 
         // Enum names, member name for collections, allowed values or null
         if (memberType.IsEnum)
@@ -116,7 +126,9 @@ public class DefaultSerialization : ICustomSerialization
 
         var validationAttributes = attributeProvider.GetCustomAttributes<ValidationAttribute>();
         if (validationAttributes.Length == 0)
+        {
             return validation;
+        }
 
         // Iterate over attributes reading all validation rules
         foreach (var attribute in validationAttributes)
@@ -173,12 +185,12 @@ public class DefaultSerialization : ICustomSerialization
     {
         // Return pairs where available
         return from entry in encoded
-            let property = sourceType.GetProperty(entry.Identifier)
-            select new MappedProperty
-            {
-                Entry = entry,
-                Property = property
-            };
+               let property = sourceType.GetProperty(entry.Identifier)
+               select new MappedProperty
+               {
+                   Entry = entry,
+                   Property = property
+               };
     }
 
     /// <see cref="ICustomSerialization"/>
@@ -186,16 +198,22 @@ public class DefaultSerialization : ICustomSerialization
     {
         // No default is better than the current value
         if (currentValue != null)
+        {
             return currentValue;
+        }
 
         // Try to read default from attribute
         var defaultAtt = property.GetCustomAttribute<DefaultValueAttribute>();
         if (defaultAtt != null)
+        {
             return defaultAtt.Value;
+        }
 
         // For arrays create empty element array
         if (property.PropertyType.IsArray)
+        {
             return Array.CreateInstance(property.PropertyType.GetElementType(), 0);
+        }
 
         // In all other cases use the activator
         return Activator.CreateInstance(property.PropertyType);
@@ -226,7 +244,9 @@ public class DefaultSerialization : ICustomSerialization
                 if (currentStream != null && !createNewMemoryStream)
                 {
                     if (currentStream.CanSeek)
+                    {
                         currentStream.Seek(0, SeekOrigin.Begin);
+                    }
 
                     targetStream = currentStream;
                     targetStream.Write(contentBytes, 0, contentBytes.Length);
@@ -250,7 +270,9 @@ public class DefaultSerialization : ICustomSerialization
             default:
                 var value = mappedEntry.Value.Current;
                 if (value is null)
+                {
                     return null;
+                }
 
                 try
                 {
@@ -259,7 +281,10 @@ public class DefaultSerialization : ICustomSerialization
                 catch (Exception e)
                 {
                     if (e is FormatException or OverflowException)
+                    {
                         throw new ArgumentException($"Invalid value {mappedEntry.Value.Current} for entry {mappedEntry.DisplayName ?? mappedEntry.Identifier}.", e);
+                    }
+
                     throw;
                 }
         }
@@ -280,11 +305,15 @@ public class DefaultSerialization : ICustomSerialization
         var unitType = EntryUnitType.None;
 
         if (HasFlagsAttribute(property))
+        {
             unitType = EntryUnitType.Flags;
+        }
 
         var passwordAttr = property.GetCustomAttribute<PasswordAttribute>();
         if (passwordAttr != null)
+        {
             unitType = EntryUnitType.Password;
+        }
 
         var fileAttr = property.GetCustomAttribute<FileSystemPathAttribute>();
         if (fileAttr != null)
@@ -348,7 +377,9 @@ public class DefaultSerialization : ICustomSerialization
         {
             // Use dictionary when interface where used
             if (collectionType.IsInterface)
+            {
                 collectionType = typeof(Dictionary<,>).MakeGenericType(collectionType.GenericTypeArguments);
+            }
             // Reuse current object if available
             return currentValue ?? Activator.CreateInstance(collectionType);
         }
@@ -358,7 +389,9 @@ public class DefaultSerialization : ICustomSerialization
         {
             // Use lists when interfaces where used
             if (collectionType.IsInterface)
+            {
                 collectionType = typeof(List<>).MakeGenericType(collectionType.GenericTypeArguments);
+            }
             // Reuse current object if available
             return currentValue ?? Activator.CreateInstance(collectionType);
         }

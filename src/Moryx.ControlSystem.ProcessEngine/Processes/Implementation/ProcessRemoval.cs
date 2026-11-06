@@ -129,7 +129,9 @@ internal class ProcessRemoval : IActivityPoolListener, IDisposable
         // If there are no more open activities, the process can be removed
         var openActivities = ActivityPool.GetAllOpen(processData);
         if (openActivities.Count == 0)
+        {
             ActivityPool.UpdateProcess(processData, ProcessState.RemoveBroken);
+        }
     }
 
     private void HandleRemoval(ProcessData processData)
@@ -213,11 +215,11 @@ internal class ProcessRemoval : IActivityPoolListener, IDisposable
     private static bool RequiresUnmount(ProcessData process)
     {
         var lastAction = (from activity in process.Activities
-            where activity.State >= ActivityState.Completed && activity.Activity is IMountingActivity
-            let action = ((IMountingActivity)activity.Activity).Operation
-            where action != MountOperation.Unchanged
-            orderby activity.Tracing.Completed descending
-            select action).FirstOrDefault();
+                          where activity.State >= ActivityState.Completed && activity.Activity is IMountingActivity
+                          let action = ((IMountingActivity)activity.Activity).Operation
+                          where action != MountOperation.Unchanged
+                          orderby activity.Tracing.Completed descending
+                          select action).FirstOrDefault();
         return lastAction == MountOperation.Mount;
     }
 

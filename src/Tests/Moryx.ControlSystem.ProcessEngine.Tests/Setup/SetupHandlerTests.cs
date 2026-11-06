@@ -1,10 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moryx.AbstractionLayer.Capabilities;
@@ -519,7 +516,10 @@ public class SetupManagerTests
         // Arrange
         var manager = CreateSetupManager();
         if (!hasPrepare)
+        {
             AdjustCurrentResourceCapabilities(42);
+        }
+
         var recipe = CreateRecipe(1783, 42);
         var jobData = CreateProductionJob("Ran-Tan-Plan", recipe);
         _jobList.Add(jobData.Object);
@@ -545,9 +545,14 @@ public class SetupManagerTests
         _jobListMock.Raise(r => r.StateChanged += null, this, new JobStateEventArgs(jobData.Object, null, stateMock.Object));
         // Now the clean-up ist started, which causes recipe update
         if (needsCleanup)
+        {
             AdjustCurrentResourceCapabilities(42);
+        }
         else
+        {
             AdjustCurrentResourceCapabilities(0);
+        }
+
         var setup = _setupJobs[hasPrepare ? 1 : 0];
         setup.SetupGet(j => j.RecipeRequired).Returns(true);
         var state = new Mock<IJobState>();
@@ -557,11 +562,18 @@ public class SetupManagerTests
 
         // Assert
         if (needsCleanup)
+        {
             _setupJobs[hasPrepare ? 1 : 0].Verify(j => j.UpdateSetup(It.IsNotNull<SetupRecipe>()), Times.Once);
+        }
         else
+        {
             _setupJobs[hasPrepare ? 1 : 0].Verify(j => j.UpdateSetup(null), Times.Once);
+        }
+
         if (hasPrepare)
+        {
             _setupJobs[0].Verify(j => j.Abort(), Times.Once);
+        }
     }
 
     [Test(Description = "A new Prepare is necessary if running jobs already executed their clean-up")]

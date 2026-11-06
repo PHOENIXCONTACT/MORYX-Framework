@@ -90,12 +90,20 @@ internal class ResourceEntityAccessor
 
         // All those checks are necessary since EF change tracker does not recognize equal values as such
         if (entity.Name != instance.Name)
+        {
             entity.Name = instance.Name;
+        }
+
         if (entity.Description != instance.Description)
+        {
             entity.Description = instance.Description;
+        }
+
         var extensionData = JsonConvert.SerializeObject(instance, JsonSettings.Minimal);
         if (entity.ExtensionData != extensionData)
+        {
             entity.ExtensionData = extensionData;
+        }
 
         return entity;
     }
@@ -109,8 +117,8 @@ internal class ResourceEntityAccessor
 
         var resources = await
             (from res in resourceRepo.Linq
-                where res.Deleted == null
-                select res)
+             where res.Deleted == null
+             select res)
             .ToListAsync();
 
         var resourceEntityAccessors = resources
@@ -123,13 +131,13 @@ internal class ResourceEntityAccessor
                     Description = res.Description,
                     ExtensionData = res.ExtensionData,
                     Relations = (from target in res.Targets
-                        where target.Target.Deleted == null
-                        // Attention: This is Copy&Paste because of LinQ limitations
-                        select new ResourceRelationAccessor
-                        {
-                            Entity = target,
-                            Role = ResourceReferenceRole.Target,
-                        }).Concat(
+                                 where target.Target.Deleted == null
+                                 // Attention: This is Copy&Paste because of LinQ limitations
+                                 select new ResourceRelationAccessor
+                                 {
+                                     Entity = target,
+                                     Role = ResourceReferenceRole.Target,
+                                 }).Concat(
                         from source in res.Sources
                         where source.Source.Deleted == null
                         // Attention: This is Copy&Paste because of LinQ limitations
@@ -194,17 +202,19 @@ internal class ResourceRelationAccessor
     public static async Task<ICollection<ResourceRelationAccessor>> FromEntity(IUnitOfWork uow, ResourceEntity entity)
     {
         if (entity.Id <= 0)
+        {
             return Array.Empty<ResourceRelationAccessor>();
+        }
 
         var relationRepo = uow.GetRepository<IResourceRelationRepository>();
         var result = (from target in relationRepo.Linq
-            where target.Target.Deleted == null && target.SourceId == entity.Id
-            // Attention: This is Copy&Paste because of LinQ limitations
-            select new ResourceRelationAccessor
-            {
-                Entity = target,
-                Role = ResourceReferenceRole.Target,
-            }).Concat(
+                      where target.Target.Deleted == null && target.SourceId == entity.Id
+                      // Attention: This is Copy&Paste because of LinQ limitations
+                      select new ResourceRelationAccessor
+                      {
+                          Entity = target,
+                          Role = ResourceReferenceRole.Target,
+                      }).Concat(
             from source in relationRepo.Linq
             where source.Source.Deleted == null && source.TargetId == entity.Id
             // Attention: This is Copy&Paste because of LinQ limitations
@@ -222,13 +232,13 @@ internal class ResourceRelationAccessor
     public static ICollection<ResourceRelationAccessor> FromQueryable(IQueryable<ResourceRelationEntity> relations, ResourceEntity instance)
     {
         var result = (from target in relations
-            where target.Target.Deleted == null && target.Source == instance
-            // Attention: This is Copy&Paste because of LinQ limitations
-            select new ResourceRelationAccessor
-            {
-                Entity = target,
-                Role = ResourceReferenceRole.Target,
-            }).Concat(
+                      where target.Target.Deleted == null && target.Source == instance
+                      // Attention: This is Copy&Paste because of LinQ limitations
+                      select new ResourceRelationAccessor
+                      {
+                          Entity = target,
+                          Role = ResourceReferenceRole.Target,
+                      }).Concat(
             from source in relations
             where source.Source.Deleted == null && source.Target == instance
             // Attention: This is Copy&Paste because of LinQ limitations

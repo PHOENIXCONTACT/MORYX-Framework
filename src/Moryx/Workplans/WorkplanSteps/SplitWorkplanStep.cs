@@ -27,7 +27,9 @@ public class SplitWorkplanStep : WorkplanStepBase
     public SplitWorkplanStep([Display(Name = "Outputs", Description = "Number of parallel paths")] int outputs = 2)
     {
         if (outputs <= 1)
+        {
             throw new ArgumentException("Split must have at least two outputs.");
+        }
 
         Outputs = new IConnector[outputs];
         OutputDescriptions = new OutputDescription[outputs];

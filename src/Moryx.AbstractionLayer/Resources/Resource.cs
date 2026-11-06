@@ -1,14 +1,14 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Capabilities;
+using Moryx.AbstractionLayer.Properties;
 using Moryx.Logging;
 using Moryx.Modules;
 using Moryx.Serialization;
-using System.ComponentModel.DataAnnotations;
-using Moryx.AbstractionLayer.Properties;
 
 namespace Moryx.AbstractionLayer.Resources;
 

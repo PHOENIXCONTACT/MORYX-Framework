@@ -30,9 +30,13 @@ public static class DateTimeKindAnnotation
     private static DateTime ConvertToUtc(DateTime dateTime)
     {
         if (dateTime.Kind == DateTimeKind.Utc)
+        {
             return dateTime;
+        }
         else
+        {
             return TimeZoneInfo.ConvertTimeToUtc(dateTime, TimeZoneInfo.Local);
+        }
     }
 
     private static DateTime ConvertToLocal(DateTime timeUtc)
@@ -87,7 +91,9 @@ public static class DateTimeKindAnnotation
     {
         var attribute = property.PropertyInfo.GetCustomAttribute<DateTimeKindAttribute>();
         if (attribute != null)
+        {
             return attribute.Kind;
+        }
 
         return (DateTimeKind?)property.FindAnnotation(AnnotationName)?.Value;
     }

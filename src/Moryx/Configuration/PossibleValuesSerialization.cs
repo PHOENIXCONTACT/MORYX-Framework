@@ -44,7 +44,9 @@ public class PossibleValuesSerialization : DefaultSerialization
         var possibleValuesAtt = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
         // We can not create prototypes for possible primitives
         if (possibleValuesAtt == null || IsPrimitiveCollection(memberType))
+        {
             return base.Prototypes(memberType, attributeProvider);
+        }
 
         // Create prototypes from possible values
         var list = new List<EntryPrototype>();
@@ -66,7 +68,9 @@ public class PossibleValuesSerialization : DefaultSerialization
         var possibleValuesAttribute = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
         // Possible values for primitive collections only apply to members
         if (possibleValuesAttribute == null || IsPrimitiveCollection(memberType))
+        {
             return base.PossibleValues(memberType, attributeProvider);
+        }
 
         // Use attribute
         return GetEntryPossibles(possibleValuesAttribute, instance);
@@ -93,7 +97,9 @@ public class PossibleValuesSerialization : DefaultSerialization
     private static bool IsPrimitiveCollection(Type memberType)
     {
         if (!EntryConvert.IsCollection(memberType))
+        {
             return false;
+        }
 
         var elementType = EntryConvert.ElementType(memberType);
         return EntryConvert.ValueOrStringType(elementType);
@@ -132,11 +138,15 @@ public class PossibleValuesSerialization : DefaultSerialization
 
         var att = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
         if (att == null || !att.OverridesConversion || value.Type == EntryValueType.Collection)
+        {
             return base.ConvertValue(memberType, attributeProvider, mappedEntry, currentValue);
+        }
 
         // If old and current type are identical, keep the object
         if (value.Type == EntryValueType.Class && currentValue != null && currentValue.GetType().Name == value.Current)
+        {
             return currentValue;
+        }
 
         var instance = att.Parse(Container, ServiceProvider, mappedEntry.Value.Current);
         if (mappedEntry.Value.Type == EntryValueType.Class)

@@ -3,7 +3,7 @@
 
 namespace Moryx.Tests.Serialization;
 
-class DictionaryClassDummy
+sealed class DictionaryClassDummy
 {
     public string Name { get; set; }
 

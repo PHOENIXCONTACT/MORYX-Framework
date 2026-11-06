@@ -22,11 +22,15 @@ internal class LoneWolfValidator : IWorkplanValidator
         {
             // Check if the step has inputs that a are used somewhere else as outputs
             if (step.Inputs.Length > 0 && step.Inputs.All(input => workplan.Steps.Any(otherStep => otherStep.Outputs.Contains(input))))
+            {
                 continue;
+            }
 
             // If we are linked to the start place we can skip too
             if (step.Inputs.Any(input => input.Classification.HasFlag(NodeClassification.Entry)))
+            {
                 continue;
+            }
 
             errors.Add(new LoneWolfValidationError(step.Id));
         }

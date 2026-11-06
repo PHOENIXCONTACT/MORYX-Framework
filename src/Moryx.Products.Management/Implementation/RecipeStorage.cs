@@ -39,7 +39,9 @@ public static class RecipeStorage
         productRecipe.Product = new ProductReference(recipeEntity.ProductId);
 
         if (productRecipe is IWorkplanRecipe workplanRecipe)
+        {
             workplanRecipe.Workplan = LoadWorkplan(recipeEntity.Workplan);
+        }
     }
 
     /// <summary>
@@ -58,7 +60,9 @@ public static class RecipeStorage
         entity.ProductId = recipe.Product.Id;
 
         if (recipe is IWorkplanRecipe workplanRecipe)
+        {
             entity.WorkplanId = workplanRecipe.Workplan.Id;
+        }
 
         return entity;
     }
@@ -118,7 +122,9 @@ public static class RecipeStorage
         foreach (var stepEntity in workplan.Steps)
         {
             if (!_stepTypes.Value.TryGetValue(stepEntity.TypeName, out var type))
+            {
                 throw new TypeLoadException($"Step type {stepEntity.TypeName} not found.");
+            }
 
             // Create instance using public and private constructors
             var step = (WorkplanStepBase)Activator.CreateInstance(type, true);
@@ -142,11 +148,15 @@ public static class RecipeStorage
 
             // Restore parameters from JSON
             if (step is ITaskStep<IParameters> taskStep)
+            {
                 PopulateStepParameters(stepEntity, taskStep);
+            }
 
             // Restore Subworkplan if necessary
             if (step is ISubworkplanStep subworkplanStep)
+            {
                 subworkplanStep.Workplan = LoadWorkplan(stepEntity.SubWorkplan);
+            }
 
             // Link inputs and outputs
             step.Inputs = RestoreReferences(stepEntity, ConnectorRole.Input, connectors);
@@ -161,11 +171,15 @@ public static class RecipeStorage
     private static void PopulateStepParameters(WorkplanStepEntity stepEntity, ITaskStep<IParameters> taskStep)
     {
         if (taskStep.Parameters is null)
+        {
             throw new InvalidOperationException($"{nameof(taskStep.Parameters)} could not " +
                                                 $"be populated from the database. Make sure the property of {taskStep.GetType()} " +
                                                 $"is initilized on instance creation.");
+        }
         else
+        {
             JsonConvert.PopulateObject(stepEntity.Parameters, taskStep.Parameters);
+        }
     }
 
     /// <summary>
@@ -180,7 +194,9 @@ public static class RecipeStorage
         {
             var referenceEntity = referenceEntities.First(f => f.Index == index);
             if (referenceEntity.ConnectorId.HasValue)
+            {
                 references[index] = connectors[referenceEntity.ConnectorId.Value];
+            }
         }
 
         return references;
@@ -316,11 +332,15 @@ public static class RecipeStorage
 
             // Task steps need parameters
             if (step is ITaskStep<IParameters> taskStep)
+            {
                 stepEntity.Parameters = JsonConvert.SerializeObject(taskStep.Parameters);
+            }
 
             // Subworkplan steps and need a reference to the workplan
             if (step is ISubworkplanStep subworkPlanStep)
+            {
                 stepEntity.SubWorkplanId = subworkPlanStep.WorkplanId;
+            }
 
             stepEntities[step.Id] = stepEntity;
         }

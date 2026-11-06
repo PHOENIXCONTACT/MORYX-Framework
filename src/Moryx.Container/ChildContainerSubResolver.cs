@@ -8,7 +8,7 @@ using Castle.MicroKernel.Context;
 
 namespace Moryx.Container;
 
-internal class ChildContainerSubResolver : ISubDependencyResolver
+internal sealed class ChildContainerSubResolver : ISubDependencyResolver
 {
     private readonly IKernel _kernel;
 

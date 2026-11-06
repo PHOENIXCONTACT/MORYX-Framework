@@ -53,8 +53,7 @@ public class JsonProductTypeImporter : ProductImporterBase<JsonProductTypeImport
 
             ComplexData1 = new ComplexData()
         };
-
-        var result = new ProductImporterResult
+        _ = new ProductImporterResult
         {
             ImportedTypes = [product]
         };

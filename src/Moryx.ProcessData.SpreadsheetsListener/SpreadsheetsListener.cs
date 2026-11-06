@@ -1,11 +1,11 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Microsoft.Extensions.Logging;
 using Moryx.Container;
 using Moryx.Modules;
 using Moryx.ProcessData.Listener;
 using Moryx.Threading;
-using Microsoft.Extensions.Logging;
 
 namespace Moryx.ProcessData.SpreadsheetsListener;
 
@@ -29,7 +29,10 @@ public class SpreadsheetsListener : ProcessDataListenerBase<SpreadsheetsListener
         lock (_pendingCsvMeasurements)
         {
             if (_timerId != 0)
+            {
                 ParallelOperations.StopExecution(_timerId);
+            }
+
             foreach (var csvStructure in _pendingCsvMeasurements.Values)
             {
                 csvStructure.WriteRows().Wait();
@@ -45,7 +48,9 @@ public class SpreadsheetsListener : ProcessDataListenerBase<SpreadsheetsListener
         lock (_pendingCsvMeasurements)
         {
             foreach (var measurement in measurand.Measurements)
+            {
                 AddPendingMeasurement(measurement).Wait();
+            }
         }
         CheckOrStartTimer();
     }
@@ -63,7 +68,9 @@ public class SpreadsheetsListener : ProcessDataListenerBase<SpreadsheetsListener
     private void CheckOrStartTimer()
     {
         if (_timerId == 0)
+        {
             _timerId = ParallelOperations.ScheduleExecution(Report, Config.ReportIntervalMs, -1);
+        }
     }
 
     private void Report()

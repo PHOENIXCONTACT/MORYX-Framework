@@ -75,14 +75,18 @@ public abstract class MoryxDbContext : DbContext
 
             // Added gets created
             if (entry.State == EntityState.Added)
+            {
                 entity.Created = timeStamp;
+            }
 
             // All states gets updated
             entity.Updated = timeStamp;
 
             // Override deleted date of entity to sync between updated and deleted
             if (entry.State == EntityState.Modified && entry.OriginalValues[nameof(IModificationTrackedEntity.Deleted)] == null && entity.Deleted != null)
+            {
                 entity.Deleted = timeStamp;
+            }
         }
     }
 }

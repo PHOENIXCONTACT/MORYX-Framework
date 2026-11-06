@@ -1,14 +1,14 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Collections;
+using System.Reflection;
+using Moryx.AbstractionLayer.Products.Endpoints.Models;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;
 using Moryx.Serialization;
 using Moryx.Tools;
 using Moryx.Workplans;
-using System.Collections;
-using System.Reflection;
-using Moryx.AbstractionLayer.Products.Endpoints.Models;
 
 namespace Moryx.AbstractionLayer.Products.Endpoints;
 
@@ -74,7 +74,9 @@ internal class ProductConverter
         };
 
         if (flat)
+        {
             return converted;
+        }
 
         // Properties
         var typeWrapper = _productManagement.GetTypeWrapper(productType.GetType().FullName);
@@ -155,7 +157,9 @@ internal class ProductConverter
         while (current != null && current != typeof(object))
         {
             if (current.IsGenericType && current.GetGenericTypeDefinition() == genericDefinition)
+            {
                 return current;
+            }
 
             current = current.BaseType;
         }
@@ -167,7 +171,9 @@ internal class ProductConverter
     {
         // No link, no DTO!
         if (link is null || link.Product is null)
+        {
             return null;
+        }
 
         var part = new PartModel
         {
@@ -196,26 +202,38 @@ internal class ProductConverter
                 productRecipe = (IProductRecipe)Activator.CreateInstance(type);
             }
             else
+            {
                 productRecipe = (IProductRecipe)await _productManagement.LoadRecipeAsync(recipeModel.Id);
+            }
 
             ConvertRecipeBack(recipeModel, productRecipe, converted);
             recipes.Add(productRecipe);
         }
         if (recipes.Any())
+        {
             foreach (var recipe in recipes)
+            {
                 await _productManagement.SaveRecipeAsync(recipe);
+            }
+        }
 
         // Product is flat
         if (source.Properties is null)
+        {
             return converted;
+        }
 
         // Delete recipes
         if (converted.Id != 0)
         {
             var recipesOfProduct = await _productManagement.LoadRecipesAsync(converted, RecipeClassification.CloneFilter);
             foreach (var recipe in recipesOfProduct)
+            {
                 if (recipes.FirstOrDefault(r => r.Id == recipe.Id) == null)
+                {
                     await _productManagement.DeleteRecipeAsync(recipe.Id);
+                }
+            }
         }
 
         // Copy extended properties
@@ -227,7 +245,9 @@ internal class ProductConverter
         foreach (var partConnector in source.Parts ?? Enumerable.Empty<PartConnector>())
         {
             if (partConnector.Parts is null)
+            {
                 continue;
+            }
 
             var prop = properties.First(p => p.Name == partConnector.Name);
             var value = prop.GetValue(converted);
@@ -271,7 +291,9 @@ internal class ProductConverter
         foreach (var partModel in parts)
         {
             if (partModel is null)
+            {
                 continue;
+            }
 
             var oldPartMatch = oldParts.Find(r => r.Id == partModel.Id);
             // new partlink
@@ -283,17 +305,23 @@ internal class ProductConverter
             }
             //modified reference
             else if (oldPartMatch.Product.Id != partModel.Product.Id)
+            {
                 oldPartMatch.Product = await _productManagement.LoadTypeAsync(partModel.Product.Id);
+            }
             else
+            {
                 // existing unchanged partlink: do not delete at the end
                 oldParts.Remove(oldPartMatch);
+            }
 
             EntryConvert.UpdateInstance(oldPartMatch, partModel.Properties);
         }
 
         // Clear all values no longer present in the model
         foreach (var part in oldParts)
+        {
             value.Remove(part);
+        }
     }
 
     private async Task UpdateReference(ProductPartLink value, PartModel part)
@@ -355,7 +383,9 @@ internal class ProductConverter
         // Only load workplan if it changed
         var workplanRecipe = productRecipe as IWorkplanRecipe;
         if (workplanRecipe != null && workplanRecipe.Workplan?.Id != recipe.WorkplanModel.Id)
+        {
             workplanRecipe.Workplan = await _productManagement.LoadWorkplanAsync(recipe.WorkplanModel.Id);
+        }
 
         if (productRecipe.Product == null)
         {
@@ -366,7 +396,9 @@ internal class ProductConverter
 
         // Do not update a clones classification
         if (productRecipe.Classification.HasFlag(RecipeClassification.Clone))
+        {
             return productRecipe;
+        }
 
         switch (recipe.Classification)
         {

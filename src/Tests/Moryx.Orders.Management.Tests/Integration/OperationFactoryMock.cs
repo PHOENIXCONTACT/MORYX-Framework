@@ -2,12 +2,11 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Logging;
-using Moryx.Notifications;
 using Moryx.Orders.Management.Assignment;
 
 namespace Moryx.Orders.Management.Tests;
 
-internal class OperationFactoryMock : IOperationFactory
+internal sealed class OperationFactoryMock : IOperationFactory
 {
     private readonly IModuleLogger _logger;
     private readonly IJobHandler _jobHandler;

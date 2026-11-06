@@ -1,21 +1,16 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Logging.Abstractions;
+using Moq;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.AbstractionLayer.TestTools;
-using Moryx.ControlSystem.TestTools;
-using Moq;
 using Moryx.ControlSystem.Jobs;
+using Moryx.ControlSystem.TestTools;
+using Moryx.Logging;
 using Moryx.Orders.Management.Assignment;
 using NUnit.Framework;
-using Moryx.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Moryx.Orders.Management.Tests;
 

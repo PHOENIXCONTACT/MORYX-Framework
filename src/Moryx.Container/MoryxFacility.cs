@@ -8,7 +8,7 @@ using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 
 namespace Moryx.Container;
 
-internal class MoryxFacility : IFacility
+internal sealed class MoryxFacility : IFacility
 {
     private IDictionary<Type, string> _strategies;
     private IServiceProvider _serviceProvider;
@@ -41,7 +41,9 @@ internal class MoryxFacility : IFacility
 
         // Bridge to ServiceProvider - added last so Windsor-registered components take precedence
         if (_serviceProvider != null)
+        {
             kernel.Resolver.AddSubResolver(new ServiceProviderSubResolver((IKernelInternal)kernel, _serviceProvider, _serviceProviderTypeFilter));
+        }
     }
 
     public void Terminate()

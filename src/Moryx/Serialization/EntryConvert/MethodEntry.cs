@@ -63,7 +63,7 @@ public class MethodEntry : ICloneable
             Name = Name,
             DisplayName = DisplayName,
             Description = Description,
-            IsAsync =  IsAsync
+            IsAsync = IsAsync
         };
 
         if (deep)

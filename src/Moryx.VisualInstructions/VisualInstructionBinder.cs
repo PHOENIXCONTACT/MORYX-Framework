@@ -27,12 +27,14 @@ public class VisualInstructionBinder
     {
         var instructions = new VisualInstruction[_instructionResolvers.Length];
         for (var index = 0; index < _instructionResolvers.Length; index++)
+        {
             instructions[index] = _instructionResolvers[index].Resolve(source);
+        }
 
         return instructions;
     }
 
-    private class InstructionResolver
+    private sealed class InstructionResolver
     {
         public InstructionResolver(VisualInstruction instruction, IBindingResolverFactory resolverFactory)
         {
@@ -40,7 +42,9 @@ public class VisualInstructionBinder
 
             _contentResolver = TextBindingResolverFactory.Create(instruction.Content ?? string.Empty, resolverFactory);
             if (!string.IsNullOrEmpty(instruction.Preview))
+            {
                 _previewResolver = TextBindingResolverFactory.Create(instruction.Preview, resolverFactory);
+            }
         }
 
         private readonly VisualInstruction _instruction;

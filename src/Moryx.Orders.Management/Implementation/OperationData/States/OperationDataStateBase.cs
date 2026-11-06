@@ -1,7 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.AbstractionLayer.Recipes;
 using Moryx.ControlSystem.Jobs;
 using Moryx.StateMachines;
 using Moryx.Users;
@@ -86,22 +85,44 @@ internal abstract class OperationDataStateBase : AsyncStateBase<OperationData>, 
 
         // TODO: This overrides the base classification, rework classification in next major. GitHub issue: #1066.
         if (IsFailed)
+        {
             classification = OperationStateClassification.Failed;
+        }
+
         if (IsAssigning)
+        {
             classification = OperationStateClassification.Assigning;
+        }
 
         if (CanAssign && Context.AssignState.HasFlag(OperationAssignState.Changed))
+        {
             classification |= OperationStateClassification.CanReload;
+        }
+
         if (CanBegin)
+        {
             classification |= OperationStateClassification.CanBegin;
+        }
+
         if (CanInterrupt)
+        {
             classification |= OperationStateClassification.CanInterrupt;
+        }
+
         if (CanPartialReport || CanFinalReport)
+        {
             classification |= OperationStateClassification.CanReport;
+        }
+
         if (CanAdvice)
+        {
             classification |= OperationStateClassification.CanAdvice;
+        }
+
         if (IsAmountReached)
+        {
             classification |= OperationStateClassification.IsAmountReached;
+        }
 
         return classification;
     }

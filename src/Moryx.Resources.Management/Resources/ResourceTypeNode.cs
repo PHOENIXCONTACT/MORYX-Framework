@@ -25,19 +25,19 @@ internal class ResourceTypeNode : IResourceTypeNode
             field = value;
             PropertiesOfResourceType = field.GetProperties();
             ReferenceOverrides = (from prop in PropertiesOfResourceType
-                let overrideAtt = prop.GetCustomAttribute<ReferenceOverrideAttribute>()
-                where overrideAtt != null
-                let targetType = typeof(IEnumerable<IResource>).IsAssignableFrom(prop.PropertyType)
-                    ? EntryConvert.ElementType(prop.PropertyType) : prop.PropertyType
-                group targetType by overrideAtt.Source into g
-                select new { g.Key, overrides = g.ToList() }).ToDictionary(v => v.Key, v => v.overrides);
+                                  let overrideAtt = prop.GetCustomAttribute<ReferenceOverrideAttribute>()
+                                  where overrideAtt != null
+                                  let targetType = typeof(IEnumerable<IResource>).IsAssignableFrom(prop.PropertyType)
+                                      ? EntryConvert.ElementType(prop.PropertyType) : prop.PropertyType
+                                  group targetType by overrideAtt.Source into g
+                                  select new { g.Key, overrides = g.ToList() }).ToDictionary(v => v.Key, v => v.overrides);
 
             References = (from prop in PropertiesOfResourceType
-                let propType = prop.PropertyType
-                // Find all properties referencing a resource or a collection of resources
-                // Exclude read only properties, because they are simple type overrides of other references
-                where prop.CanWrite && Attribute.IsDefined(prop, typeof(ResourceReferenceAttribute))
-                select prop).ToList();
+                          let propType = prop.PropertyType
+                          // Find all properties referencing a resource or a collection of resources
+                          // Exclude read only properties, because they are simple type overrides of other references
+                          where prop.CanWrite && Attribute.IsDefined(prop, typeof(ResourceReferenceAttribute))
+                          select prop).ToList();
         }
     }
 

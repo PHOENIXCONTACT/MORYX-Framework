@@ -53,7 +53,9 @@ public class AssignIdentityParameters : Parameters, IAssignIdentityParameters
         var parameters = (AssignIdentityParameters)instance;
 
         if (_resolver == null && !string.IsNullOrWhiteSpace(TargetBinding))
+        {
             _resolver = ResolverFactory.Create(TargetBinding);
+        }
 
         var target = _resolver?.Resolve(process)
                      ?? (process as ProductionProcess)?.ProductInstance;

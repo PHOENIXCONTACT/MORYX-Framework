@@ -55,7 +55,9 @@ public abstract class RecipeAssignmentBase<TConfig> : IRecipeAssignment
     {
         var product = await ProductManagement.LoadTypeAsync(identity, cancellationToken);
         if (product == null)
+        {
             return Array.Empty<IProductRecipe>();
+        }
 
         var recipes = await ProductManagement.LoadRecipesAsync(product, RecipeClassification.Default | RecipeClassification.Alternative, cancellationToken);
         return recipes;

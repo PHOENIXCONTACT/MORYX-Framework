@@ -5,7 +5,7 @@ using Moryx.AbstractionLayer.TestTools;
 
 namespace Moryx.AbstractionLayer.Resources.Endpoints.Tests.Mocks;
 
-internal class ReferencingResource : Resource
+internal sealed class ReferencingResource : Resource
 {
     [ResourceReference(ResourceRelationType.Custom)]
     public ReferenceCollectionMock<IReferencedResource> References { get; set; } = new();

@@ -14,7 +14,7 @@ namespace Moryx.AbstractionLayer.Resources.Mqtt.Endpoints;
 /// Converts any <see cref="IResource"/> that has the <see cref="ResourceSynchronizationAttribute"/> to JSON
 /// </summary>
 /// <param name="resourceManagement">Resource Management facade</param>
-internal class ResourceToJsonConverter(IResourceManagement resourceManagement) : JsonConverter<IResource>
+internal sealed class ResourceToJsonConverter(IResourceManagement resourceManagement) : JsonConverter<IResource>
 {
     //</inherit>
     public override IResource? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)

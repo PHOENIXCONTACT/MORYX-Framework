@@ -1,22 +1,18 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.Logging;
-using Moryx.TestTools.UnitTest;
-using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using CsvHelper;
 using CsvHelper.Configuration;
 using Microsoft.Extensions.Logging.Abstractions;
+using Moryx.Logging;
+using Moryx.TestTools.UnitTest;
+using NUnit.Framework;
 
 namespace Moryx.ProcessData.SpreadsheetsListener.Tests;
 
 [TestFixture]
-class SpreadsheetsListenerTest
+sealed class SpreadsheetsListenerTest
 {
     private SpreadsheetsListener _spreadsheetsListener;
     private readonly string _path = Path.Combine(Path.GetTempPath(), nameof(CsvStructure));
@@ -120,7 +116,9 @@ class SpreadsheetsListenerTest
         Assert.That(firstFileContent, Has.Count.EqualTo(secondFileContent.Count), "Files do not have the same number of rows");
 
         for (int i = 0; i < firstFileContent.Count; i++)
+        {
             Assert.That(firstFileContent[i].SequenceEqual(secondFileContent[i]), $"Row {i} was modified");
+        }
     }
 
     [Test]
@@ -173,7 +171,9 @@ class SpreadsheetsListenerTest
 
         Assert.That(changedHdrFileContent[0].SequenceEqual(ogHeader.Concat(new List<string>() { "A", "C" })), "Header was not changed properly");
         for (int i = 1; i < ogFileContent.Count; i++)
+        {
             Assert.That(changedHdrFileContent[i].SequenceEqual(ogFileContent[i]), $"Row {i} was modified");
+        }
 
         var lastRowValid = changedHdrFileContent[numOfMeasurements]
             .GetRange(ogHeader.Count - 2, 4)

@@ -8,7 +8,7 @@ using Moryx.Runtime.Modules;
 
 namespace Moryx.Runtime.Tests.Modules;
 
-internal class TestModule : ServerModuleBase<TestConfig>
+internal sealed class TestModule : ServerModuleBase<TestConfig>
 {
     public TestModule(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerManagement)
         : base(containerFactory, configManager, loggerManagement)

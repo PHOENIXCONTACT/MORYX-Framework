@@ -15,11 +15,18 @@ public class DummyWorkplan : Workplan
     {
         var toCompareWith = obj as DummyWorkplan;
         if (toCompareWith == null)
+        {
             return false;
+        }
 
         return toCompareWith.Id == Id && toCompareWith.Name == Name
                                       && toCompareWith.Version == toCompareWith.Version && toCompareWith.State == State
                                       && ((toCompareWith.Connectors is null && Connectors is null) || Enumerable.SequenceEqual(toCompareWith.Connectors, Connectors))
                                       && ((toCompareWith.Steps is null && Steps is null) || Enumerable.SequenceEqual(toCompareWith.Steps, Steps));
+    }
+
+    public override int GetHashCode()
+    {
+        throw new NotImplementedException();
     }
 }

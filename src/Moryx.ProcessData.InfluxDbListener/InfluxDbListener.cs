@@ -31,7 +31,9 @@ public class InfluxDbListener : ProcessDataListenerBase<InfluxDbListenerConfig>
     protected override void OnMeasurandAdded(Measurand measurand)
     {
         lock (_pendingPoints)
+        {
             _pendingPoints.AddRange(measurand.Measurements.Select(GetPointFromMeasurement));
+        }
 
         CheckOrStartTimer();
     }
@@ -40,7 +42,9 @@ public class InfluxDbListener : ProcessDataListenerBase<InfluxDbListenerConfig>
     protected override void OnMeasurementAdded(Measurement measurement)
     {
         lock (_pendingPoints)
+        {
             _pendingPoints.Add(GetPointFromMeasurement(measurement));
+        }
 
         CheckOrStartTimer();
     }
@@ -48,7 +52,9 @@ public class InfluxDbListener : ProcessDataListenerBase<InfluxDbListenerConfig>
     private void CheckOrStartTimer()
     {
         if (_timerId == 0)
+        {
             _timerId = ParallelOperations.ScheduleExecution(Report, Config.ReportIntervalMs, -1);
+        }
     }
 
     private void Report()
@@ -69,7 +75,9 @@ public class InfluxDbListener : ProcessDataListenerBase<InfluxDbListenerConfig>
         var payload = new LineProtocolPayload();
 
         foreach (var point in points)
+        {
             payload.Add(point);
+        }
 
         var client = new LineProtocolClient(new Uri($"http://{Config.Host}:{Config.Port}"), Config.DatabaseName, Config.Username, Config.Password);
         try
@@ -92,7 +100,9 @@ public class InfluxDbListener : ProcessDataListenerBase<InfluxDbListenerConfig>
         void AddPointsBackToTheList()
         {
             lock (_pendingPoints)
+            {
                 _pendingPoints.AddRange(points);
+            }
         }
     }
 

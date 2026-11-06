@@ -1,15 +1,15 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.AbstractionLayer.Drivers.Message;
-using Moryx.AbstractionLayer.Drivers;
-using Moryx.AbstractionLayer.Resources;
 using Moryx.AbstractionLayer.Activities;
+using Moryx.AbstractionLayer.Drivers;
+using Moryx.AbstractionLayer.Drivers.Message;
+using Moryx.AbstractionLayer.Resources;
 using Moryx.ControlSystem.Cells;
-using Moryx.StateMachines;
 using Moryx.ControlSystem.Simulation;
-using Moryx.Resources.Benchmarking.Messages;
 using Moryx.Resources.Benchmarking;
+using Moryx.Resources.Benchmarking.Messages;
+using Moryx.StateMachines;
 
 namespace Moryx.Simulation.Tests;
 
@@ -52,10 +52,10 @@ public class SimulatedDummyTestDriver : Driver, IMessageDriver, ISimulationDrive
     {
         switch (payload)
         {
-            case AssembleProductMessage assemble:
+            case AssembleProductMessage:
                 SimulatedState = SimulationState.Executing;
                 break;
-            case ReleaseWorkpieceMessage release:
+            case ReleaseWorkpieceMessage:
                 SimulatedState = SimulationState.Idle;
                 break;
         }

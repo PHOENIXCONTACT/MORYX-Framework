@@ -6,7 +6,7 @@ using Moryx.Serialization;
 
 namespace Moryx.VisualInstructions.Endpoints;
 
-internal class Converter(ICustomSerialization serialization)
+internal sealed class Converter(ICustomSerialization serialization)
 {
     internal ICustomSerialization _serialization = serialization;
 
@@ -26,7 +26,9 @@ internal class Converter(ICustomSerialization serialization)
     {
         InstructionResultModel[] results = [];
         if (instruction.Results?.Count > 0)
+        {
             results = instruction.Results.Select(i => new InstructionResultModel { Key = i.Key, DisplayValue = i.DisplayValue }).ToArray();
+        }
 
         var model = new InstructionModel
         {
@@ -46,7 +48,7 @@ internal class Converter(ICustomSerialization serialization)
         return model;
     }
 
-    internal class EmptyValueProvider : IEmptyPropertyProvider
+    internal sealed class EmptyValueProvider : IEmptyPropertyProvider
     {
         public void FillEmpty(object obj)
         {

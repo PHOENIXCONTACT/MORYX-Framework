@@ -36,7 +36,10 @@ public class UsersController : Controller
         var userModel = ModelConverter.GetUserUpdateModelFromUser(user);
         var pwReset = await _pwResetService.GetPasswordResetAsync(userId);
         if (pwReset != null)
+        {
             userModel.PasswordResetToken = pwReset.ResetToken;
+        }
+
         return View(userModel);
     }
 
@@ -44,11 +47,15 @@ public class UsersController : Controller
     {
         var user = await _userManager.FindByNameAsync(model.UserName);
         if (user == null)
+        {
             return NotFound(model.UserName);
+        }
 
         var oldPwReset = await _pwResetService.GetPasswordResetAsync(user.Id);
         if (oldPwReset != null)
+        {
             await _pwResetService.RemovePasswordResetAsync(oldPwReset);
+        }
 
         await _pwResetService.GeneratePasswordResetAsync(user.Id);
         return RedirectToAction("Edit", new { userId = user.Id });
@@ -58,7 +65,9 @@ public class UsersController : Controller
     {
         var user = await _userManager.FindByNameAsync(model.UserName);
         if (user == null)
+        {
             return NotFound(model.UserName);
+        }
 
         user.Email = model.Email;
         user.Firstname = model.FirstName;
@@ -72,11 +81,13 @@ public class UsersController : Controller
     {
         var user = await _userManager.FindByIdAsync(userId);
         if (user == null)
+        {
             return NotFound(userId);
+        }
 
         if (User.Identity.Name != user.UserName)
         {
-            var result = await _userManager.DeleteAsync(user);
+            _ = await _userManager.DeleteAsync(user);
         }
         else
         {

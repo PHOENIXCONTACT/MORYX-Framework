@@ -66,9 +66,13 @@ public sealed class WorkplanStepRecipe
         var consturctors = step.GetConstructors().ToList();
         MethodEntry constructor;
         if (consturctors.Count == 1 && step.GetConstructor([]) != null)
+        {
             constructor = null;
+        }
         else
+        {
             constructor = EntryConvert.EncodeConstructors(step).First();
+        }
 
         var recipe = new WorkplanStepRecipe
         {

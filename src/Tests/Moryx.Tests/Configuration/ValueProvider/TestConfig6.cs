@@ -5,7 +5,7 @@ using System.ComponentModel;
 
 namespace Moryx.Tests.Configuration.ValueProvider;
 
-internal class TestConfig6
+internal sealed class TestConfig6
 {
     public TestConfig6()
     {

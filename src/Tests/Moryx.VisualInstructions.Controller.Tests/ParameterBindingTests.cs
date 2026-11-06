@@ -1,8 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
 using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Processes;
@@ -257,7 +255,9 @@ public class ParameterBindingTests
         protected override void Populate(Process process, Parameters instance)
         {
             if (_resolver == null)
+            {
                 _resolver = ResolverFactory.Create(Part);
+            }
 
             var parameters = (InsertPartParameters)instance;
             parameters.Target = (ProductType)_resolver.Resolve(process);
@@ -311,14 +311,14 @@ public class ParameterBindingTests
         return process;
     }
 
-    private class DummyRecipe : ProductionRecipe
+    private sealed class DummyRecipe : ProductionRecipe
     {
         public string OrderNumber { get; set; }
 
         public Dictionary<string, string> Config { get; set; }
     }
 
-    private class DummyProduct : ProductType
+    private sealed class DummyProduct : ProductType
     {
         public int Foo { get; set; }
 
@@ -334,7 +334,7 @@ public class ParameterBindingTests
         public ProductPartLink<DummyProduct> Part { get; set; }
     }
 
-    private class DummyValue
+    private sealed class DummyValue
     {
         public DummyValue(DummyProduct product)
         {
@@ -347,7 +347,7 @@ public class ParameterBindingTests
         public DummyProduct Product { get; }
     }
 
-    private class DummyProductInstance : ProductInstance<DummyProduct>, IIdentifiableObject
+    private sealed class DummyProductInstance : ProductInstance<DummyProduct>, IIdentifiableObject
     {
         public IIdentity Identity { get; set; }
 

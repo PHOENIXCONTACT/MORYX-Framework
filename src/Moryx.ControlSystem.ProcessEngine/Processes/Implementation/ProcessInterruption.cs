@@ -97,7 +97,9 @@ internal sealed class ProcessInterruption : IActivityPoolListener, IDisposable
     private void OnActivityChanged(object sender, ActivityEventArgs args)
     {
         if (args.Trigger != ActivityState.Completed)
+        {
             return;
+        }
 
         var activityData = args.ActivityData;
         var processData = activityData.ProcessData;
@@ -110,7 +112,9 @@ internal sealed class ProcessInterruption : IActivityPoolListener, IDisposable
     private void ValidateStableState(ProcessState trigger, ProcessData processData)
     {
         if (trigger != ProcessState.Stopping)
+        {
             return;
+        }
 
         var activities = processData.Activities;
 
@@ -126,9 +130,13 @@ internal sealed class ProcessInterruption : IActivityPoolListener, IDisposable
         {
             // Check if process has any progress worth saving
             if (activities.Any(a => a.State >= ActivityState.Running))
+            {
                 ActivityPool.UpdateProcess(processData, ProcessState.Interrupted);
+            }
             else
+            {
                 ActivityPool.UpdateProcess(processData, ProcessState.Discarded);
+            }
         }
     }
 
@@ -141,7 +149,9 @@ internal sealed class ProcessInterruption : IActivityPoolListener, IDisposable
     {
         // Use manual timeout
         if (Config.TimeoutCalculation == TimeoutCalculationType.Manual)
+        {
             return Config.ManualShutdownTimeoutSec * 1000;
+        }
 
         // Fetch sample size and their execution times from db
         IList<double> executionTimes;
@@ -149,23 +159,25 @@ internal sealed class ProcessInterruption : IActivityPoolListener, IDisposable
         {
             var activityRepo = uow.GetRepository<IActivityEntityRepository>();
             executionTimes = (from activity in activityRepo.Linq
-                    where activity.Result != null
-                    orderby activity.Id descending
-                    // This is not fully correct, but faster then ordering by timestamp
-                    select new { activity.Completed, activity.Started })
+                              where activity.Result != null
+                              orderby activity.Id descending
+                              // This is not fully correct, but faster then ordering by timestamp
+                              select new { activity.Completed, activity.Started })
                 .Take(Config.SampleSize).ToList()
                 .Select(diff => (diff.Completed.Value - diff.Started.Value).TotalMilliseconds).ToList();
         }
 
         // If there are no activities yet we use manual value as well
         if (!executionTimes.Any())
+        {
             return Config.ManualShutdownTimeoutSec * 1000;
+        }
 
         // Calculate average and sigma range
         var averageTime = executionTimes.Average();
         var derivation = (from executionTime in executionTimes
-            let diff = averageTime - executionTime
-            select diff * diff).Average();
+                          let diff = averageTime - executionTime
+                          select diff * diff).Average();
         var deviation = Math.Sqrt(derivation);
 
         var timeout = averageTime;

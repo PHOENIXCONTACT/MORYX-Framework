@@ -62,7 +62,9 @@ internal class FFmpegPreviewCreator : PreviewCreatorBase<FFmpegPreviewCreatorCon
         process.Start();
         var exited = process.WaitForExit(5000);
         if (!exited)
+        {
             process.Kill();
+        }
 
         if (!File.Exists(tempPreview))
         {

@@ -12,7 +12,7 @@ using Activity = Moryx.AbstractionLayer.Activities.Activity;
 
 namespace Moryx.Simulation.Tests;
 
-internal class SimulationActivitiesTests : BaseTest
+internal sealed class SimulationActivitiesTests : BaseTest
 {
     private Mock<SimulatedDummyTestDriver> _assemblyDriverMock;
     private Mock<SimulatedDummyTestDriver> _anotherAssemblyDriverMock;

@@ -67,11 +67,15 @@ internal class DocumentAssignStep : IOperationAssignStep
         }
 
         if (availableDocuments.Count == 0)
+        {
             return true;
+        }
 
         var fullPath = GetFullFolderPath(identity);
         if (!Directory.Exists(fullPath))
+        {
             Directory.CreateDirectory(fullPath);
+        }
 
         var localDocuments = new List<Document>();
         foreach (var document in availableDocuments)

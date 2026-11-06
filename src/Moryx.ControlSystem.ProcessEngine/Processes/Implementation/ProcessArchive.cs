@@ -62,8 +62,8 @@ internal class ProcessArchive : IProcessArchive
         var processRepo = uow.GetRepository<IProcessEntityRepository>();
 
         var query = (from processEntity in processRepo.Linq
-        where processEntity.ReferenceId == productInstance.Id
-        select new { processEntity.Id, processEntity.Job.RecipeId }).ToList(); // TODO use ToListAsync and fix tests
+                     where processEntity.ReferenceId == productInstance.Id
+                     select new { processEntity.Id, processEntity.Job.RecipeId }).ToList(); // TODO use ToListAsync and fix tests
 
         var processes = new List<Process>();
         foreach (var match in query)
@@ -123,7 +123,9 @@ internal class ProcessArchive : IProcessArchive
         using var uow = UnitOfWorkFactory.Create();
         var relevantJobs = GetJobs(uow, filterType, start, end, jobIds);
         if (relevantJobs.Count == 0)
+        {
             yield break;
+        }
 
         foreach (var relevantJob in relevantJobs)
         {
@@ -145,11 +147,17 @@ internal class ProcessArchive : IProcessArchive
 
         var all = jobRepo.Linq.Where(j => j.RecipeProvider == ProductManagement.Name); // Filter only production jobs
         if (filterType.HasFlag(ProcessRequestFilter.Jobs))
+        {
             all = all.Where(j => ((IEnumerable<long>)jobIds).Contains(j.Id));
+        }
+
         if (filterType.HasFlag(ProcessRequestFilter.Timed))
+        {
             all = all.Where(job => job.Created >= start && job.Created <= end // Job began within the time frame
                                    || job.Updated >= start && job.Updated <= end // Job changed within the time frame
                                    || job.Created <= start && job.Updated >= end); // Job exceeds time frame
+        }
+
         return all.ToList();
     }
 
@@ -167,13 +175,13 @@ internal class ProcessArchive : IProcessArchive
         // Fetch all relevant processes for this job
         // This looks like partial Copy&Paste, but we need to optimize the s**t out of this
         var query = (from processEntity in processRepo.Linq
-            where processEntity.State >= (int)ProcessState.Success && processEntity.JobId == job.Id && processEntity.Activities.Any()
-            let firstActivity = processEntity.Activities.OrderBy(a => a.Started).FirstOrDefault()
-            let lastActivity = processEntity.Activities.OrderByDescending(a => a.Started).FirstOrDefault()
-            where firstActivity.Started >= start && firstActivity.Started <= end // Process started in the time frame
-                  || lastActivity.Completed >= start && lastActivity.Completed <= end // Process ended in the time frame
-                  || firstActivity.Started <= start && lastActivity.Completed >= end // Process spans over time frame
-            select new { processEntity.Id, processEntity.ReferenceId }).ToList(); // TODO use ToListAsync and fix tests
+                     where processEntity.State >= (int)ProcessState.Success && processEntity.JobId == job.Id && processEntity.Activities.Any()
+                     let firstActivity = processEntity.Activities.OrderBy(a => a.Started).FirstOrDefault()
+                     let lastActivity = processEntity.Activities.OrderByDescending(a => a.Started).FirstOrDefault()
+                     where firstActivity.Started >= start && firstActivity.Started <= end // Process started in the time frame
+                           || lastActivity.Completed >= start && lastActivity.Completed <= end // Process ended in the time frame
+                           || firstActivity.Started <= start && lastActivity.Completed >= end // Process spans over time frame
+                     select new { processEntity.Id, processEntity.ReferenceId }).ToList(); // TODO use ToListAsync and fix tests
         var processes = new Process[query.Count];
 
         // Prepare fake process and task map
@@ -223,7 +231,9 @@ internal class ProcessArchive : IProcessArchive
         private IProductionJobData TryGetJob()
         {
             if (_jobData.TryGetTarget(out var job))
+            {
                 return job;
+            }
 
             throw new ObjectDisposedException("Target of the chunk has been disposed.");
         }
@@ -272,8 +282,9 @@ internal class ProcessArchive : IProcessArchive
                     _currentProcess = _processes[_currentIndex];
 
                     if (_currentProcess.Completed >= _start && _currentProcess.Started <= _end)
+                    {
                         return true;
-
+                    }
                 }
 
                 _currentProcess = null;

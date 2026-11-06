@@ -40,14 +40,18 @@ public class EntryConvertTests
 
         var boolEntry = encoded.SubEntry(nameof(ClassDummy.BoolArray));
         for (var i = 0; i < 5; i++)
+        {
             boolEntry.SubEntries[i].Identifier = Entry.CreatedIdentifier + i;
+        }
 
         // Act
         var dummy = EntryConvert.CreateInstance<ClassDummy>(encoded);
 
         // Assert
         for (var i = 0; i < 5; i++)
+        {
             Assert.That(dummy.BoolArray[i], Is.True);
+        }
     }
 
     [Test]
@@ -59,14 +63,18 @@ public class EntryConvertTests
 
         var boolEntry = encoded.SubEntry(nameof(ClassDummy.BoolArray));
         for (var i = 0; i < 5; i++)
+        {
             boolEntry.SubEntries[i].Identifier = i + Entry.CreatedIdentifier;
+        }
 
         // Act
         var dummy = EntryConvert.CreateInstance<ClassDummy>(encoded);
 
         // Assert
         for (var i = 0; i < 5; i++)
+        {
             Assert.That(dummy.BoolArray[i], Is.Not.True);
+        }
     }
 
     [Test]
@@ -79,10 +87,14 @@ public class EntryConvertTests
         var entry2 = encoded.SubEntry(nameof(ClassDummy.EnumArray));
 
         for (var i = 1; i <= 5; i++)
+        {
             entry1.AddFromPrototype((i % 2 != 0).ToString());
+        }
 
         for (var i = 1; i <= 5; i++)
+        {
             entry2.AddFromPrototype(entry2.Prototypes[0].Value.Possible[i % 3].Key);
+        }
 
         // Act
         var dummy = EntryConvert.CreateInstance<ClassDummy>(encoded);
@@ -106,10 +118,14 @@ public class EntryConvertTests
         var entry2 = encoded.SubEntry(nameof(DictionaryClassDummy.EnumDictionary));
 
         for (var i = 1; i <= 5; i++)
+        {
             entry1.AddFromPrototype((1 + i).ToString(CultureInfo.InvariantCulture)).DisplayName = "Key" + i;
+        }
 
         for (var i = 1; i <= 3; i++)
+        {
             entry2.AddFromPrototype(((EnumDummy)(i % 3)).ToString()).DisplayName = "Key_0121" + i;
+        }
 
         // Act
         var dummy = EntryConvert.CreateInstance<DictionaryClassDummy>(encoded);
@@ -148,13 +164,17 @@ public class EntryConvertTests
         var entry2 = encoded.SubEntry(nameof(DictionaryClassDummy.EnumDictionary));
 
         for (var i = 1; i <= 2; i++)
+        {
             entry1.AddFromPrototype((1 + i).ToString(CultureInfo.InvariantCulture)).DisplayName = "Key" + i;
+        }
 
         entry1.SubEntries[0].Value.Current = "123";
         entry1.SubEntries[0].DisplayName = "022";
 
         for (var i = 1; i <= 3; i++)
+        {
             entry2.AddFromPrototype(((EnumDummy)(i % 3)).ToString()).DisplayName = "Key_0121" + i;
+        }
 
         entry2.SubEntries[0].Value.Current = nameof(EnumDummy.ValueA);
         entry2.SubEntries[0].DisplayName = "555";
@@ -222,7 +242,9 @@ public class EntryConvertTests
         var ent = encoded.SubEntry(nameof(ListDummy.DoubleList));
 
         for (var i = 1; i <= 5; i++)
+        {
             ent.AddFromPrototype((1 + i).ToString(CultureInfo.InvariantCulture));
+        }
 
         // Act
         var listDummy = EntryConvert.CreateInstance<ListDummy>(encoded);
@@ -486,9 +508,14 @@ public class EntryConvertTests
         // Act
         var colEntry = CollectionEntry(encoded, type);
         if (type == CollectionType.Dictionary)
+        {
             colEntry.SubEntries.RemoveAll(e => removedIndexes.Contains(int.Parse(e.Identifier, CultureInfo.InvariantCulture) - 1));
+        }
         else
+        {
             colEntry.SubEntries.RemoveAll(e => removedIndexes.Contains(int.Parse(e.Identifier, CultureInfo.InvariantCulture)));
+        }
+
         EntryConvert.UpdateInstance(obj, encoded);
 
         // Assert
@@ -502,7 +529,9 @@ public class EntryConvertTests
             for (var i = 0; i < prefill; i++)
             {
                 if (removedIndexes.Contains(i))
+                {
                     continue;
+                }
 
                 var match = array.FirstOrDefault(e => e.Key == i + 1);
                 Assert.That(match, Is.Not.Null);
@@ -514,7 +543,9 @@ public class EntryConvertTests
             for (var i = 0; i < prefill; i++)
             {
                 if (removedIndexes.Contains(i))
+                {
                     continue;
+                }
 
                 var match = array.FirstOrDefault(e => e.Foo == i + 1);
                 Assert.That(match, Is.Not.Null);

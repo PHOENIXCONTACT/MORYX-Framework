@@ -40,7 +40,9 @@ internal class SkillStorage : ISkillStorage, ILoggingComponent
             {
                 // Abstract classes and those without parameterles ctor will throw an exception
                 if (!c.IsAbstract && c.GetConstructor(Type.EmptyTypes) is not null)
+                {
                     return c;
+                }
 
                 Logger.LogInformation("Skipping {type}, because it is abstract or does not provide an empty constructor.", c.Name);
                 return null;
@@ -163,7 +165,9 @@ internal class SkillStorage : ISkillStorage, ILoggingComponent
 
         var capabilityType = capabilityContructor().GetType();
         if (JsonConvert.DeserializeObject(typeEntity.CapabilitiesData, capabilityType) is ICapabilities capabilityData)
+        {
             return capabilityData;
+        }
 
         Logger.LogError("Capability of type {type} could not be constructed. Deserialization of capability failed.", typeEntity.CapabilitiesType);
         return new FaultyCapabilities() { OriginalType = typeEntity.CapabilitiesType };

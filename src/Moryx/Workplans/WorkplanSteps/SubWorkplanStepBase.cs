@@ -28,13 +28,13 @@ public abstract class SubWorkplanStepBase : WorkplanStepBase, ISubworkplanStep
 
         // Step outputs are created from all exits of the sub workplan
         OutputDescriptions = (from connector in workplan.Connectors
-            where connector.Classification.HasFlag(NodeClassification.Exit)
-            select new OutputDescription
-            {
-                Name = connector.Name,
-                MappingValue = connector.Id,
-                OutputType = connector.Classification == NodeClassification.End ? OutputType.Success : OutputType.Failure
-            }).ToArray();
+                              where connector.Classification.HasFlag(NodeClassification.Exit)
+                              select new OutputDescription
+                              {
+                                  Name = connector.Name,
+                                  MappingValue = connector.Id,
+                                  OutputType = connector.Classification == NodeClassification.End ? OutputType.Success : OutputType.Failure
+                              }).ToArray();
         Outputs = new IConnector[OutputDescriptions.Length];
     }
 

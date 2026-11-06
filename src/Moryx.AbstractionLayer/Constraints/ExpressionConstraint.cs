@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.CompilerServices;
-using Moryx.Serialization;
 
 namespace Moryx.AbstractionLayer.Constraints;
 
@@ -95,7 +94,7 @@ public static class ExpressionConstraint
     /// <summary>
     /// Check if the expressions return value equals the <see cref="ExpressionConstraintBase{TContext}.Value"/>
     /// </summary>
-    private class ExpressionEqualsConstraint<TContext> : ExpressionConstraintBase<TContext>
+    private sealed class ExpressionEqualsConstraint<TContext> : ExpressionConstraintBase<TContext>
         where TContext : class, IConstraintContext
     {
 
@@ -114,7 +113,7 @@ public static class ExpressionConstraint
     /// <summary>
     /// Check if the expression return value is less or equal to <see cref="ExpressionConstraintBase{TContext}.Value"/>
     /// </summary>
-    private class ExpressionLessConstraint<TContext> : ExpressionConstraintBase<TContext>
+    private sealed class ExpressionLessConstraint<TContext> : ExpressionConstraintBase<TContext>
         where TContext : class, IConstraintContext
     {
         public ExpressionLessConstraint(Func<TContext, object> expression, object value, string expressionString) : base(expression, value, expressionString)
@@ -134,7 +133,7 @@ public static class ExpressionConstraint
     /// <summary>
     /// Check if the expression return value is greater or equal to <see cref="ExpressionConstraintBase{TContext}.Value"/>
     /// </summary>
-    private class ExpressionGreaterConstraint<TContext> : ExpressionConstraintBase<TContext>
+    private sealed class ExpressionGreaterConstraint<TContext> : ExpressionConstraintBase<TContext>
         where TContext : class, IConstraintContext
     {
         public ExpressionGreaterConstraint(Func<TContext, object> expression, object value, string expressionString) : base(expression, value, expressionString)
