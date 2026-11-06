@@ -257,7 +257,7 @@ The `EntryEncoderContext` passed to both methods provides:
 * `Instance` – the containing object (`null` when encoding a type without an instance)
 
 > [!IMPORTANT]
-> Only `Value`, `SubEntries`, and `Prototypes` of the returned entry are used by `EntryConvert`. Identifier, display name, description, validation, and the read-only flag are merged: the entry is read-only if either the encoder or the member definition marks it as such.
+> `Identifier` and `Validation` of the returned entry are always overridden from the member. `DisplayName` and `Description` are used from the encoder if set, otherwise they fall back to the member metadata. The read-only flag is merged: the entry is read-only if either the encoder or the member definition marks it as such.
 
 > [!NOTE]
 > Encoder instances are cached and shared. Implementations must be **stateless and thread-safe** and require a **public parameterless constructor**.
