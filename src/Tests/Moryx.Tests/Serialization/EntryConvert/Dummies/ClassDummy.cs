@@ -39,8 +39,9 @@ public class ClassDummy
 
     public int? NullablePrimitive { get; set; } = 0;
 
-    // TODO: This actually shows a bug in EntryConvert in the existing tests
-    //public int ThrowsException => throw new Exception("BAM.");
+#pragma warning disable CA2201 // Do not raise reserved exception types
+    public int ThrowsException => throw new Exception("BAM.");
+#pragma warning restore CA2201 // Do not raise reserved exception types
 
     public static ClassDummy Populate() => new()
     {

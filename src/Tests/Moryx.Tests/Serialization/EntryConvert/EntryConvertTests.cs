@@ -30,7 +30,7 @@ public class EntryConvertTests
         var encodedSub = EntryConvert.EncodeClass(subType).SubEntries;
 
         // Assert
-        DummyAssert(encoded, encodedSub);
+        DummyAssert(encoded, encodedSub, EntryValueType.Int32);
     }
 
     [Test]
@@ -324,21 +324,20 @@ public class EntryConvertTests
         Assert.That(se[1].Value.Current, Is.EqualTo(values[1]));
     }
 
-    // TODO: Fix Bug with Excpetions in getter only properties shown when activating entry in ClassDummy
-    //[Test]
-    //public void SurviveGetterException()
-    //{
-    //    // Arrange
-    //    var dummy = new ClassDummy();
+    [Test]
+    public void SurviveGetterException()
+    {
+        // Arrange
+        var dummy = new ClassDummy();
 
-    //    // Act
-    //    var encoded = EntryConvert.EncodeObject(dummy);
+        // Act
+        var encoded = EntryConvert.EncodeObject(dummy);
 
-    //    // Assert
-    //    Assert.That(encoded, Is.Not.Null);
-    //    Assert.That(encoded.SubEntries[17].Value.Type, Is.EqualTo(EntryValueType.Exception));
-    //    Assert.That(encoded.SubEntries[17].Value.Current, Is.Not.Null);
-    //}
+        // Assert
+        Assert.That(encoded, Is.Not.Null);
+        Assert.That(encoded.SubEntries[17].Value.Type, Is.EqualTo(EntryValueType.Exception));
+        Assert.That(encoded.SubEntries[17].Value.Current, Is.Not.Null);
+    }
 
     [TestCase(CollectionType.Array, 3, 2)]
     [TestCase(CollectionType.Array, 0, 4)]
@@ -975,7 +974,8 @@ public class EntryConvertTests
     private static void SelectPossible(Entry entry, int index) =>
         entry.Value.Current = entry.Value.Possible[index].Key;
 
-    private static void DummyAssert(IList<Entry> encoded, IList<Entry> encodedSub)
+    private static void DummyAssert(IList<Entry> encoded, IList<Entry> encodedSub,
+        EntryValueType throwsExceptionType = EntryValueType.Exception)
     {
         // Assert
         var expected = new[]
@@ -997,8 +997,8 @@ public class EntryConvertTests
             new { Name = "BoolEnumerable", Type = EntryValueType.Collection, ReadOnly = false },
             new { Name = "GetterOnly", Type = EntryValueType.Class, ReadOnly = true },
             new { Name = "NullablePrimitive", Type = EntryValueType.String, ReadOnly = false },
-            // TODO: Command in when ThrowsException member is active again
-            // new { Name = "ThrowsException", Type = EntryValueType.Exception, ReadOnly = true }
+            // Without an instance the getter is never invoked, so the exception cannot be detected
+            new { Name = "ThrowsException", Type = throwsExceptionType, ReadOnly = true }
         };
         Assert.That(encoded.Count, Is.EqualTo(expected.Length), "Number of entries does not match");
         for (var i = 0; i < encoded.Count; i++)
