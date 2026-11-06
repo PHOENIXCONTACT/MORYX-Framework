@@ -166,3 +166,4 @@ orleans.codegen.cs
 .claude/settings.local.json
 CLAUDE.md
 AGENTS.md
+/schemas/framework-api.json

@@ -20,8 +20,9 @@
 
   <PropertyGroup>
     <OpenApiGenerateDocumentsOnBuild>true</OpenApiGenerateDocumentsOnBuild>
-    <OpenApiDocumentsDirectory>$(MSBuildProjectDirectory)</OpenApiDocumentsDirectory>
-    <OpenApiGenerateDocumentsOptions>--openapi-version OpenApi3_1</OpenApiGenerateDocumentsOptions>
+    <OpenApiDocumentsDirectory>$(MSBuildProjectDirectory)/../../schemas</OpenApiDocumentsDirectory>
+    <OpenApiGenerateDocumentsOptions>--openapi-version OpenApi3_1 --file-name framework-api</OpenApiGenerateDocumentsOptions>
+    <OpenApiGenerationEnvironment>OpenApiBuildTime</OpenApiGenerationEnvironment>
   </PropertyGroup>
 
   <ItemGroup>
