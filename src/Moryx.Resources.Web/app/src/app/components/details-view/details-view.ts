@@ -49,12 +49,12 @@ export class DetailsView {
     this.router.events.subscribe(val => {
       if (val instanceof NavigationEnd || val instanceof NavigationCancel) {
         const url = this.router.url;
-        if (url.includes('/properties')) {
-          this.activeLink.set(1);
-        } else if (url.includes('/references')) {
+        if (url.includes('/references')) {
           this.activeLink.set(2);
         } else if (url.includes('/methods')) {
           this.activeLink.set(3);
+        } else {
+          this.activeLink.set(1);
         }
       }
     });
