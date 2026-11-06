@@ -111,7 +111,7 @@ export class App {
     if (this.isEditMode() || this.isLoading() || this.selected()?.id === id) {
       return;
     }
-    this.router.navigate(['details', id]);
+    this.router.navigate(['details', id, 'properties']);
   }
 
   protected clickContainer(event: MouseEvent) {
@@ -152,7 +152,7 @@ export class App {
         return;
       }
       this.editResourceService.registerNewResource(constructed);
-      this.router.navigate(['details', constructed.id]);
+      this.router.navigate(['details', constructed.id, 'properties']);
 
       if (!parent) {
         return;
