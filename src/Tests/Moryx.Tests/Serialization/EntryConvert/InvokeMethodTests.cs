@@ -57,7 +57,7 @@ public class InvokeMethodTests
     public void ProtectedMethodsWillNotBeInvoked()
     {
         // Act / Assert
-        Assert.Throws<System.MissingMethodException>(
+        Assert.Throws<MissingMethodException>(
             () => EntryConvert.InvokeMethod(_dummies, NoParamsMethodEntry("NonInvocableProtected")));
     }
 
@@ -65,7 +65,7 @@ public class InvokeMethodTests
     public void PrivateMethodsWillNotBeInvoked()
     {
         // Act / Assert
-        Assert.Throws<System.MissingMethodException>(
+        Assert.Throws<MissingMethodException>(
             () => EntryConvert.InvokeMethod(_dummies, NoParamsMethodEntry("NonInvocablePrivate")));
     }
 

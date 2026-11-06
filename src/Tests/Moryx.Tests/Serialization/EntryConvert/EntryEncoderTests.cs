@@ -11,7 +11,7 @@ namespace Moryx.Tests.Serialization;
 /// <see cref="EntryConvert"/>
 /// </summary>
 [TestFixture]
-public class EntryEncodererTests
+public class EntryEncoderTests
 {
     [Test]
     public void EncodeClass_WithAnyEncoder_EncodesWithoutValue()

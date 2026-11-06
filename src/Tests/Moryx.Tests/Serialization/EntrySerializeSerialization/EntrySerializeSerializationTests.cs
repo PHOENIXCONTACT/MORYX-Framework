@@ -195,7 +195,7 @@ public class EntrySerializeSerializationTests
         Assert.That(filteredProperties, Does.Not.Contain(baseTypeProperty));
     }
 
-    [Test(Description = "Class with EntrySerializationAttribute should not Override the attribute on the Base Class Resource|PublicResource")]
+    [Test(Description = "Derived type does not override the EntrySerialize attribute of its base class")]
     public void ClassWithSerializationAttribute_AndBaseClass()
     {
         // Arrange
@@ -210,7 +210,7 @@ public class EntrySerializeSerializationTests
         Assert.That(alwaysProperties, Is.EqualTo(encoded.SubEntries.Count));
     }
 
-    [Test(Description = "Class with EntrySerializationAttribute should not Override the attribute on the Base Class Resource|PublicResource")]
+    [Test(Description = "EntrySerialize attribute on class and members controls which properties are encoded")]
     public void ClassWithSerializationAttribute()
     {
         // Arrange

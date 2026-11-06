@@ -11,7 +11,7 @@ namespace Moryx.Tests.Serialization;
 
 /// <summary>
 /// Contains all tests concerned with the handling of <see cref="PossibleValuesAttribute"/>s,
-/// <see cref="AllowedValuesAttribute"/ and <see cref="DeniedValuesAttribute"/> within the <see cref="EntryConvert"/>
+/// <see cref="AllowedValuesAttribute"/> and <see cref="DeniedValuesAttribute"/> within the <see cref="EntryConvert"/>
 /// </summary>
 [TestFixture]
 public class PossibleValuesTests

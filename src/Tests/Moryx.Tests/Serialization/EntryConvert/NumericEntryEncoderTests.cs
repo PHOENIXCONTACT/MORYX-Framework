@@ -9,7 +9,7 @@ using NUnit.Framework;
 namespace Moryx.Tests.Serialization;
 
 /// <summary>
-/// Contains all tests concerned with the behvaiour of the <see cref="NumericStructEntryEncoder{TStruct}"/>s
+/// Contains all tests concerned with the behaviour of the <see cref="NumericStructEntryEncoder{TStruct}"/>s
 /// within the <see cref="EntryConvert"/>
 /// </summary>
 [TestFixture]
@@ -20,7 +20,7 @@ public class NumericEntryEncoderTests
     [TestCase(nameof(NumericsDummy.Position4D), 4)]
     [TestCase(nameof(NumericsDummy.Rotation), 4)]
     [TestCase(nameof(NumericsDummy.Surface), 4)]
-    public void EncodeClass_WithStructProperty_CreatesDefaultSubEntries(string propertyName, int expectedCount)
+    public void CreatesDefaultSubEntriesOnEncodeClass(string propertyName, int expectedCount)
     {
         // Act
         var entry = EntryConvert.EncodeClass(typeof(NumericsDummy));
@@ -36,7 +36,7 @@ public class NumericEntryEncoderTests
     [TestCase(nameof(NumericsDummy.Position4D), 4, new[] { "X", "Y", "Z", "W" })]
     [TestCase(nameof(NumericsDummy.Rotation), 4, new[] { "X", "Y", "Z", "W" })]
     [TestCase(nameof(NumericsDummy.Surface), 4, new[] { "X", "Y", "Z", "D" })]
-    public void EncodeObject_WithStructProperty_EncodesSubEntries(string propertyName, int expectedCount, string[] expectedIdentifiers)
+    public void EncodesStructWithSubEntries(string propertyName, int expectedCount, string[] expectedIdentifiers)
     {
         // Arrange
         var obj = new NumericsDummy
@@ -159,19 +159,19 @@ public class NumericEntryEncoderTests
     private static IEnumerable<TestCaseData> StructRoundTripCases()
     {
         yield return new TestCaseData(new NumericsDummy { Position2D = new Vector2(10f, 20f) }, nameof(NumericsDummy.Position2D))
-            .SetName(nameof(UpdateInstance_AfterEncodeRoundTrip_PreservesStructValues) + "(Vector2)");
+            .SetName(nameof(StructValuesOnRoundTripPreserved) + "(Vector2)");
         yield return new TestCaseData(new NumericsDummy { Position3D = new Vector3(1.5f, 2.5f, 3.5f) }, nameof(NumericsDummy.Position3D))
-            .SetName(nameof(UpdateInstance_AfterEncodeRoundTrip_PreservesStructValues) + "(Vector3)");
+            .SetName(nameof(StructValuesOnRoundTripPreserved) + "(Vector3)");
         yield return new TestCaseData(new NumericsDummy { Position4D = new Vector4(1f, 2f, 3f, 4f) }, nameof(NumericsDummy.Position4D))
-            .SetName(nameof(UpdateInstance_AfterEncodeRoundTrip_PreservesStructValues) + "(Vector4)");
+            .SetName(nameof(StructValuesOnRoundTripPreserved) + "(Vector4)");
         yield return new TestCaseData(new NumericsDummy { Rotation = new Quaternion(1f, 2f, 3f, 4f) }, nameof(NumericsDummy.Rotation))
-            .SetName(nameof(UpdateInstance_AfterEncodeRoundTrip_PreservesStructValues) + "(Quaternion)");
+            .SetName(nameof(StructValuesOnRoundTripPreserved) + "(Quaternion)");
         yield return new TestCaseData(new NumericsDummy { Surface = new Plane(new Vector3(0f, 1f, 0f), 5f) }, nameof(NumericsDummy.Surface))
-            .SetName(nameof(UpdateInstance_AfterEncodeRoundTrip_PreservesStructValues) + "(Plane)");
+            .SetName(nameof(StructValuesOnRoundTripPreserved) + "(Plane)");
     }
 
     [TestCaseSource(nameof(StructRoundTripCases))]
-    public void UpdateInstance_AfterEncodeRoundTrip_PreservesStructValues(NumericsDummy original, string propertyName)
+    public void StructValuesOnRoundTripPreserved(NumericsDummy original, string propertyName)
     {
         // Act
         var entry = EntryConvert.EncodeObject(original);

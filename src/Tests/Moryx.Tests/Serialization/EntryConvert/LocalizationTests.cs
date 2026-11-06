@@ -4,7 +4,6 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
-using System.Resources;
 using Moryx.Serialization;
 using NUnit.Framework;
 
@@ -12,7 +11,7 @@ namespace Moryx.Tests.Serialization;
 
 /// <summary>
 /// Contains all tests concerned with localized <see cref="DisplayAttribute"/>, <see cref="DisplayNameAttribute"/>
-/// and <see cref="DescriptionAttribute"/> within the <see cref="EntryConvert"/>
+/// and <see cref="System.ComponentModel.DescriptionAttribute"/> within the <see cref="EntryConvert"/>
 /// </summary>
 [TestFixture]
 public class LocalizationTests
