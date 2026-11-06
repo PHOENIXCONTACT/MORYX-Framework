@@ -268,8 +268,8 @@ public static partial class EntryConvert
         var encoded = encoder.Encode(value, context);
 
         encoded.Identifier = metadata.Identifier;
-        encoded.DisplayName = metadata.DisplayName;
-        encoded.Description = metadata.Description;
+        encoded.DisplayName ??= metadata.DisplayName;
+        encoded.Description ??= metadata.Description;
         encoded.Validation = metadata.Validation;
 
         return encoded;

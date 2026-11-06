@@ -22,8 +22,9 @@ public abstract class EntryEncoderBase
     /// <summary>
     /// Encode the value of a member into an <see cref="Entry"/>.
     /// Only <see cref="Entry.Value"/>, <see cref="Entry.SubEntries"/> and <see cref="Entry.Prototypes"/> of the
-    /// returned entry are used. Identifier, display name, description, validation are overriden afterwards from the
-    /// member. The read-only flag is merged, that is the entry is read-only if either the encoder or the member
+    /// returned entry are used by default. Identifier and validation are always overridden from the member.
+    /// Display name and description are used from the encoder if set, otherwise from the member.
+    /// The read-only flag is merged, that is the entry is read-only if either the encoder or the member
     /// definition marks it as such.
     /// </summary>
     /// <param name="value">Current value of the member. Can be <c>null</c> if no instance is available.</param>

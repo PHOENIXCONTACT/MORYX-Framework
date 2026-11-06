@@ -60,16 +60,25 @@ internal abstract class NumericStructEntryEncoder<TStruct> : NumericStructEntryE
     /// <inheritdoc />
     public override Entry Encode(object value, EntryEncoderContext context)
     {
+        var hasValue = value is TStruct;
+        var typedValue = hasValue ? (TStruct)value : default;
+        var subEntries = EncodeComponents(typedValue, context.Serialization.FormatProvider);
+
+        // Only set display name for actual values; prototypes pass null and should fall back to the member metadata
+        var displayName = hasValue ? string.Join(", ", subEntries.Select(e => $"{e.Identifier}={e.Value.Current}")) : null;
+
         var typeName = typeof(TStruct).Name;
+
         return new Entry
         {
+            DisplayName = displayName,
             Value = new EntryValue
             {
                 Type = EntryValueType.Struct,
                 Current = typeName,
                 Default = typeName
             },
-            SubEntries = EncodeComponents(value is TStruct typed ? typed : default, context.Serialization.FormatProvider)
+            SubEntries = subEntries
         };
     }
 
