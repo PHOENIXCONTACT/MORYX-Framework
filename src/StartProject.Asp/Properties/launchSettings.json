@@ -19,6 +19,16 @@
           "environmentVariables": {
               "ASPNETCORE_ENVIRONMENT": "PathBase"
         }
+    },
+    "Debug ApiSpecGeneration": {
+      "commandName": "Project",
+      "commandLineArgs": "--output ..\\..\\schemas --openapi-version OpenApi3_1 --file-name framework-api",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "OpenApiBuildTime"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "https://localhost:5001"
     }
   }
 }
