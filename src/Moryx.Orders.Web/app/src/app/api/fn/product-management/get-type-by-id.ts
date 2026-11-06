@@ -15,6 +15,10 @@ import { RequestBuilder } from '../../request-builder';
 import { ProductModel } from '../../models/product-model';
 
 export interface GetTypeById$Params {
+
+/**
+ * Database id
+ */
   id: number;
 }
 

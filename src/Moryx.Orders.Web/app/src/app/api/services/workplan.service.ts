@@ -68,7 +68,7 @@ export class WorkplanService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  saveWorkplan$Response(params?: SaveWorkplan$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
+  saveWorkplan$Response(params: SaveWorkplan$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = saveWorkplan(this.http, this.rootUrl, params, context);
     return firstValueFrom(obs);
   }
@@ -79,7 +79,7 @@ export class WorkplanService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  saveWorkplan(params?: SaveWorkplan$Params, context?: HttpContext): Promise<void> {
+  saveWorkplan(params: SaveWorkplan$Params, context?: HttpContext): Promise<void> {
     const resp = this.saveWorkplan$Response(params, context);
     return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
@@ -168,7 +168,7 @@ export class WorkplanService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  deleteWorkplan$Response(params: DeleteWorkplan$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
+  deleteWorkplan$Response(params: DeleteWorkplan$Params, context?: HttpContext): Promise<StrictHttpResponse<any>> {
     const obs = deleteWorkplan(this.http, this.rootUrl, params, context);
     return firstValueFrom(obs);
   }
@@ -179,9 +179,9 @@ export class WorkplanService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  deleteWorkplan(params: DeleteWorkplan$Params, context?: HttpContext): Promise<void> {
+  deleteWorkplan(params: DeleteWorkplan$Params, context?: HttpContext): Promise<any> {
     const resp = this.deleteWorkplan$Response(params, context);
-    return resp.then((r: StrictHttpResponse<void>): void => r.body);
+    return resp.then((r: StrictHttpResponse<any>): any => r.body);
   }
 
 }

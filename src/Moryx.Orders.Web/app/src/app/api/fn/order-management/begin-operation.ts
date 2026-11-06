@@ -15,11 +15,19 @@ import { RequestBuilder } from '../../request-builder';
 import { BeginModel } from '../../models/begin-model';
 
 export interface BeginOperation$Params {
+
+/**
+ * Id of the operation
+ */
   guid: string;
-      body?: BeginModel
+  
+    /**
+     * Begin parameters
+     */
+    body: BeginModel
 }
 
-export function beginOperation(http: HttpClient, rootUrl: string, params: BeginOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+export function beginOperation(http: HttpClient, rootUrl: string, params: BeginOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<any>> {
   const rb = new RequestBuilder(rootUrl, beginOperation.PATH, 'post');
   if (params) {
     rb.path('guid', params.guid, {});
@@ -27,11 +35,11 @@ export function beginOperation(http: HttpClient, rootUrl: string, params: BeginO
   }
 
   return http.request(
-    rb.build({ responseType: 'text', accept: '*/*', context })
+    rb.build({ responseType: 'json', accept: 'application/json', context })
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+      return r as StrictHttpResponse<any>;
     })
   );
 }

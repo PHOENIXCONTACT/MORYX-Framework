@@ -13,12 +13,12 @@ import { ProductState } from '../models/product-state';
 import { RecipeModel } from '../models/recipe-model';
 export interface ProductModel {
   id?: number;
-  identifier?: string | null;
-  name?: string | null;
-  parts?: Array<PartConnector> | null;
+  identifier?: (string | null);
+  name?: (string | null);
+  parts?: (Array<PartConnector> | null);
   properties?: Entry;
-  recipes?: Array<RecipeModel> | null;
+  recipes?: (Array<RecipeModel> | null);
   revision?: number;
   state?: ProductState;
-  type?: string | null;
+  type?: (string | null);
 }

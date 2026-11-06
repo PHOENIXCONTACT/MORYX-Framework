@@ -11,17 +11,67 @@ import { PropertyFilter } from '../models/property-filter';
 import { RecipeFilter } from '../models/recipe-filter';
 import { RevisionFilter } from '../models/revision-filter';
 import { Selector } from '../models/selector';
+
+/**
+ * Filter to fetch products from the product management
+ */
 export interface ProductQuery {
+
+  /**
+   * When filtering by type exclude derived types and only return specific matches
+   */
   excludeDerivedTypes?: boolean;
-  identifier?: string | null;
+
+  /**
+   * Material identifiers
+   */
+  identifier?: (string | null);
+
+  /**
+   * Flag if deleted products should be included in the query
+   */
   includeDeleted?: boolean;
+
+  /**
+   * If set to true, product queries return fully populated product types.
+   * Otherwise only the basic type information is returned.
+   */
   loadFullTypeInformation?: boolean;
-  name?: string | null;
-  propertyFilters?: Array<PropertyFilter> | null;
+
+  /**
+   * Material identifiers
+   */
+  name?: (string | null);
+
+  /**
+   * List of property filters
+   */
+  propertyFilters?: (Array<PropertyFilter> | null);
+
+  /**
+   * Optional recipe filter
+   */
   recipeFilter?: RecipeFilter;
-  requiredState?: ProductState;
+  requiredState?: (null | ProductState);
+
+  /**
+   * Optional specific revision if RevisionFilter ProductQuery.RevisionFilter is set to
+   * RevisionFilter.Specific
+   */
   revision?: number;
+
+  /**
+   * Revisions to filter
+   */
   revisionFilter?: RevisionFilter;
+
+  /**
+   * Selector
+   */
   selector?: Selector;
-  typeName?: string | null;
+
+  /**
+   * Product types to filter by
+   */
+  typeName?: (string | null);
 }

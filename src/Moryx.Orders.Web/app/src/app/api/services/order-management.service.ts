@@ -25,6 +25,7 @@ import { BeginContext } from '../models/begin-context';
 import { beginOperation } from '../fn/order-management/begin-operation';
 import { BeginOperation$Params } from '../fn/order-management/begin-operation';
 import { DocumentModel } from '../models/document-model';
+import { FileStreamResult } from '../models/file-stream-result';
 import { getAdviceContext } from '../fn/order-management/get-advice-context';
 import { GetAdviceContext$Params } from '../fn/order-management/get-advice-context';
 import { getAssignableRecipes } from '../fn/order-management/get-assignable-recipes';
@@ -49,7 +50,6 @@ import { getReportContext } from '../fn/order-management/get-report-context';
 import { GetReportContext$Params } from '../fn/order-management/get-report-context';
 import { interruptOperation } from '../fn/order-management/interrupt-operation';
 import { InterruptOperation$Params } from '../fn/order-management/interrupt-operation';
-import { OperationChangedModel } from '../models/operation-changed-model';
 import { OperationLogMessageModel } from '../models/operation-log-message-model';
 import { OperationModel } from '../models/operation-model';
 import { OperationRecipeModel } from '../models/operation-recipe-model';
@@ -61,6 +61,10 @@ import { Reload$Params } from '../fn/order-management/reload';
 import { ReportContext } from '../models/report-context';
 import { reportOperation } from '../fn/order-management/report-operation';
 import { ReportOperation$Params } from '../fn/order-management/report-operation';
+import { SseItemOfOperationAdvicedModel } from '../models/sse-item-of-operation-adviced-model';
+import { SseItemOfOperationModel } from '../models/sse-item-of-operation-model';
+import { SseItemOfOperationReportedModel } from '../models/sse-item-of-operation-reported-model';
+import { SseItemOfOperationStartedModel } from '../models/sse-item-of-operation-started-model';
 import { updateOperation } from '../fn/order-management/update-operation';
 import { UpdateOperation$Params } from '../fn/order-management/update-operation';
 
@@ -74,6 +78,11 @@ export class OrderManagementService extends BaseService {
   static readonly GetOperationsPath = '/api/moryx/orders';
 
   /**
+   * Retrieve all current operations that match the given filter parameters.
+   * Already completed or aborted Operations won't be included.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `getOperations()` instead.
    *
@@ -85,6 +94,11 @@ export class OrderManagementService extends BaseService {
   }
 
   /**
+   * Retrieve all current operations that match the given filter parameters.
+   * Already completed or aborted Operations won't be included.
+   *
+   *
+   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getOperations$Response()` instead.
    *
@@ -99,23 +113,31 @@ export class OrderManagementService extends BaseService {
   static readonly AddOperationPath = '/api/moryx/orders';
 
   /**
+   * Add an operation to the order stock.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `addOperation()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  addOperation$Response(params?: AddOperation$Params, context?: HttpContext): Promise<StrictHttpResponse<OperationModel>> {
+  addOperation$Response(params: AddOperation$Params, context?: HttpContext): Promise<StrictHttpResponse<OperationModel>> {
     const obs = addOperation(this.http, this.rootUrl, params, context);
     return firstValueFrom(obs);
   }
 
   /**
+   * Add an operation to the order stock.
+   *
+   *
+   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `addOperation$Response()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  addOperation(params?: AddOperation$Params, context?: HttpContext): Promise<OperationModel> {
+  addOperation(params: AddOperation$Params, context?: HttpContext): Promise<OperationModel> {
     const resp = this.addOperation$Response(params, context);
     return resp.then((r: StrictHttpResponse<OperationModel>): OperationModel => r.body);
   }
@@ -124,31 +146,44 @@ export class OrderManagementService extends BaseService {
   static readonly OperationStreamPath = '/api/moryx/orders/stream';
 
   /**
+   * Stream that allow subscribing to operation changes.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `operationStream()` instead.
    *
    * This method doesn't expect any request body.
    */
-  operationStream$Response(params?: OperationStream$Params, context?: HttpContext): Promise<StrictHttpResponse<OperationChangedModel>> {
+  operationStream$Response(params?: OperationStream$Params, context?: HttpContext): Promise<StrictHttpResponse<(SseItemOfOperationStartedModel | SseItemOfOperationModel | SseItemOfOperationReportedModel | SseItemOfOperationReportedModel | SseItemOfOperationReportedModel | SseItemOfOperationAdvicedModel | SseItemOfOperationModel)>> {
     const obs = operationStream(this.http, this.rootUrl, params, context);
     return firstValueFrom(obs);
   }
 
   /**
+   * Stream that allow subscribing to operation changes.
+   *
+   *
+   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `operationStream$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  operationStream(params?: OperationStream$Params, context?: HttpContext): Promise<OperationChangedModel> {
+  operationStream(params?: OperationStream$Params, context?: HttpContext): Promise<(SseItemOfOperationStartedModel | SseItemOfOperationModel | SseItemOfOperationReportedModel | SseItemOfOperationReportedModel | SseItemOfOperationReportedModel | SseItemOfOperationAdvicedModel | SseItemOfOperationModel)> {
     const resp = this.operationStream$Response(params, context);
-    return resp.then((r: StrictHttpResponse<OperationChangedModel>): OperationChangedModel => r.body);
+    return resp.then((r: StrictHttpResponse<(SseItemOfOperationStartedModel | SseItemOfOperationModel | SseItemOfOperationReportedModel | SseItemOfOperationReportedModel | SseItemOfOperationReportedModel | SseItemOfOperationAdvicedModel | SseItemOfOperationModel)>): (SseItemOfOperationStartedModel | SseItemOfOperationModel | SseItemOfOperationReportedModel | SseItemOfOperationReportedModel | SseItemOfOperationReportedModel | SseItemOfOperationAdvicedModel | SseItemOfOperationModel) => r.body);
   }
 
   /** Path part for operation `getOperation()` */
   static readonly GetOperationPath = '/api/moryx/orders/{guid}';
 
   /**
+   * Retrieves an operationmodel using the unique id of the operation
+   * (Can load completed operations from storage).
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `getOperation()` instead.
    *
@@ -160,6 +195,11 @@ export class OrderManagementService extends BaseService {
   }
 
   /**
+   * Retrieves an operationmodel using the unique id of the operation
+   * (Can load completed operations from storage).
+   *
+   *
+   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getOperation$Response()` instead.
    *
@@ -174,6 +214,10 @@ export class OrderManagementService extends BaseService {
   static readonly GetDocumentsPath = '/api/moryx/orders/{guid}/documents';
 
   /**
+   * Retrieve the documents attached to operation with the given id.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `getDocuments()` instead.
    *
@@ -185,6 +229,10 @@ export class OrderManagementService extends BaseService {
   }
 
   /**
+   * Retrieve the documents attached to operation with the given id.
+   *
+   *
+   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getDocuments$Response()` instead.
    *
@@ -199,31 +247,43 @@ export class OrderManagementService extends BaseService {
   static readonly GetDocumentStreamPath = '/api/moryx/orders/{guid}/document/{identifier}/stream';
 
   /**
+   * Retrieves the content of the document specified using the operation id and the identifier of the document.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `getDocumentStream()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getDocumentStream$Response(params: GetDocumentStream$Params, context?: HttpContext): Promise<StrictHttpResponse<Blob>> {
+  getDocumentStream$Response(params: GetDocumentStream$Params, context?: HttpContext): Promise<StrictHttpResponse<FileStreamResult>> {
     const obs = getDocumentStream(this.http, this.rootUrl, params, context);
     return firstValueFrom(obs);
   }
 
   /**
+   * Retrieves the content of the document specified using the operation id and the identifier of the document.
+   *
+   *
+   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getDocumentStream$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getDocumentStream(params: GetDocumentStream$Params, context?: HttpContext): Promise<Blob> {
+  getDocumentStream(params: GetDocumentStream$Params, context?: HttpContext): Promise<FileStreamResult> {
     const resp = this.getDocumentStream$Response(params, context);
-    return resp.then((r: StrictHttpResponse<Blob>): Blob => r.body);
+    return resp.then((r: StrictHttpResponse<FileStreamResult>): FileStreamResult => r.body);
   }
 
   /** Path part for operation `getProductParts()` */
   static readonly GetProductPartsPath = '/api/moryx/orders/{guid}/productparts';
 
   /**
+   * Retrieve a list of product parts attached to the given operation.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `getProductParts()` instead.
    *
@@ -235,6 +295,10 @@ export class OrderManagementService extends BaseService {
   }
 
   /**
+   * Retrieve a list of product parts attached to the given operation.
+   *
+   *
+   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getProductParts$Response()` instead.
    *
@@ -249,6 +313,10 @@ export class OrderManagementService extends BaseService {
   static readonly GetBeginContextPath = '/api/moryx/orders/{guid}/begin';
 
   /**
+   * Retrieves the begin context for the given operation.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `getBeginContext()` instead.
    *
@@ -260,6 +328,10 @@ export class OrderManagementService extends BaseService {
   }
 
   /**
+   * Retrieves the begin context for the given operation.
+   *
+   *
+   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getBeginContext$Response()` instead.
    *
@@ -274,31 +346,43 @@ export class OrderManagementService extends BaseService {
   static readonly BeginOperationPath = '/api/moryx/orders/{guid}/begin';
 
   /**
+   * Begin producing the operation using the given parameters.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `beginOperation()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  beginOperation$Response(params: BeginOperation$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
+  beginOperation$Response(params: BeginOperation$Params, context?: HttpContext): Promise<StrictHttpResponse<any>> {
     const obs = beginOperation(this.http, this.rootUrl, params, context);
     return firstValueFrom(obs);
   }
 
   /**
+   * Begin producing the operation using the given parameters.
+   *
+   *
+   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `beginOperation$Response()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  beginOperation(params: BeginOperation$Params, context?: HttpContext): Promise<void> {
+  beginOperation(params: BeginOperation$Params, context?: HttpContext): Promise<any> {
     const resp = this.beginOperation$Response(params, context);
-    return resp.then((r: StrictHttpResponse<void>): void => r.body);
+    return resp.then((r: StrictHttpResponse<any>): any => r.body);
   }
 
   /** Path part for operation `getReportContext()` */
   static readonly GetReportContextPath = '/api/moryx/orders/{guid}/report';
 
   /**
+   * Retrieves a report context for the given operation.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `getReportContext()` instead.
    *
@@ -310,6 +394,10 @@ export class OrderManagementService extends BaseService {
   }
 
   /**
+   * Retrieves a report context for the given operation.
+   *
+   *
+   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getReportContext$Response()` instead.
    *
@@ -324,31 +412,43 @@ export class OrderManagementService extends BaseService {
   static readonly ReportOperationPath = '/api/moryx/orders/{guid}/report';
 
   /**
+   * Report produced amounts of a given operation.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `reportOperation()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  reportOperation$Response(params: ReportOperation$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
+  reportOperation$Response(params: ReportOperation$Params, context?: HttpContext): Promise<StrictHttpResponse<any>> {
     const obs = reportOperation(this.http, this.rootUrl, params, context);
     return firstValueFrom(obs);
   }
 
   /**
+   * Report produced amounts of a given operation.
+   *
+   *
+   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `reportOperation$Response()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  reportOperation(params: ReportOperation$Params, context?: HttpContext): Promise<void> {
+  reportOperation(params: ReportOperation$Params, context?: HttpContext): Promise<any> {
     const resp = this.reportOperation$Response(params, context);
-    return resp.then((r: StrictHttpResponse<void>): void => r.body);
+    return resp.then((r: StrictHttpResponse<any>): any => r.body);
   }
 
   /** Path part for operation `getInterruptContext()` */
   static readonly GetInterruptContextPath = '/api/moryx/orders/{guid}/interrupt';
 
   /**
+   * Retrieves a interrupt context for the given operation.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `getInterruptContext()` instead.
    *
@@ -360,6 +460,10 @@ export class OrderManagementService extends BaseService {
   }
 
   /**
+   * Retrieves a interrupt context for the given operation.
+   *
+   *
+   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getInterruptContext$Response()` instead.
    *
@@ -374,31 +478,43 @@ export class OrderManagementService extends BaseService {
   static readonly InterruptOperationPath = '/api/moryx/orders/{guid}/interrupt';
 
   /**
+   * Interrupt the given operation.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `interruptOperation()` instead.
    *
    * This method doesn't expect any request body.
    */
-  interruptOperation$Response(params: InterruptOperation$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
+  interruptOperation$Response(params: InterruptOperation$Params, context?: HttpContext): Promise<StrictHttpResponse<any>> {
     const obs = interruptOperation(this.http, this.rootUrl, params, context);
     return firstValueFrom(obs);
   }
 
   /**
+   * Interrupt the given operation.
+   *
+   *
+   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `interruptOperation$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  interruptOperation(params: InterruptOperation$Params, context?: HttpContext): Promise<void> {
+  interruptOperation(params: InterruptOperation$Params, context?: HttpContext): Promise<any> {
     const resp = this.interruptOperation$Response(params, context);
-    return resp.then((r: StrictHttpResponse<void>): void => r.body);
+    return resp.then((r: StrictHttpResponse<any>): any => r.body);
   }
 
   /** Path part for operation `getAdviceContext()` */
   static readonly GetAdviceContextPath = '/api/moryx/orders/{guid}/advice';
 
   /**
+   * Retrieves a advice context for the given operation.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `getAdviceContext()` instead.
    *
@@ -410,6 +526,10 @@ export class OrderManagementService extends BaseService {
   }
 
   /**
+   * Retrieves a advice context for the given operation.
+   *
+   *
+   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getAdviceContext$Response()` instead.
    *
@@ -424,31 +544,43 @@ export class OrderManagementService extends BaseService {
   static readonly AdviceOperationPath = '/api/moryx/orders/{guid}/advice';
 
   /**
+   * Advice operation.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `adviceOperation()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  adviceOperation$Response(params: AdviceOperation$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
+  adviceOperation$Response(params: AdviceOperation$Params, context?: HttpContext): Promise<StrictHttpResponse<any>> {
     const obs = adviceOperation(this.http, this.rootUrl, params, context);
     return firstValueFrom(obs);
   }
 
   /**
+   * Advice operation.
+   *
+   *
+   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `adviceOperation$Response()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  adviceOperation(params: AdviceOperation$Params, context?: HttpContext): Promise<void> {
+  adviceOperation(params: AdviceOperation$Params, context?: HttpContext): Promise<any> {
     const resp = this.adviceOperation$Response(params, context);
-    return resp.then((r: StrictHttpResponse<void>): void => r.body);
+    return resp.then((r: StrictHttpResponse<any>): any => r.body);
   }
 
   /** Path part for operation `getLogs()` */
   static readonly GetLogsPath = '/api/moryx/orders/{guid}/logs';
 
   /**
+   * Retrieves logs written during the creation of the operation.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `getLogs()` instead.
    *
@@ -460,6 +592,10 @@ export class OrderManagementService extends BaseService {
   }
 
   /**
+   * Retrieves logs written during the creation of the operation.
+   *
+   *
+   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getLogs$Response()` instead.
    *
@@ -474,6 +610,10 @@ export class OrderManagementService extends BaseService {
   static readonly GetAssignableRecipesPath = '/api/moryx/orders/recipes';
 
   /**
+   * Get's the list of recipes available to produce the given product.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `getAssignableRecipes()` instead.
    *
@@ -485,6 +625,10 @@ export class OrderManagementService extends BaseService {
   }
 
   /**
+   * Get's the list of recipes available to produce the given product.
+   *
+   *
+   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getAssignableRecipes$Response()` instead.
    *
@@ -499,75 +643,99 @@ export class OrderManagementService extends BaseService {
   static readonly AbortOperationPath = '/api/moryx/orders/{guid}/abort';
 
   /**
+   * Abort the specified operation (Remove it before being started).
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `abortOperation()` instead.
    *
    * This method doesn't expect any request body.
    */
-  abortOperation$Response(params: AbortOperation$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
+  abortOperation$Response(params: AbortOperation$Params, context?: HttpContext): Promise<StrictHttpResponse<any>> {
     const obs = abortOperation(this.http, this.rootUrl, params, context);
     return firstValueFrom(obs);
   }
 
   /**
+   * Abort the specified operation (Remove it before being started).
+   *
+   *
+   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `abortOperation$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  abortOperation(params: AbortOperation$Params, context?: HttpContext): Promise<void> {
+  abortOperation(params: AbortOperation$Params, context?: HttpContext): Promise<any> {
     const resp = this.abortOperation$Response(params, context);
-    return resp.then((r: StrictHttpResponse<void>): void => r.body);
+    return resp.then((r: StrictHttpResponse<any>): any => r.body);
   }
 
   /** Path part for operation `updateOperation()` */
   static readonly UpdateOperationPath = '/api/moryx/orders/{guid}/update';
 
   /**
+   * Update the operation.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `updateOperation()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  updateOperation$Response(params: UpdateOperation$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
+  updateOperation$Response(params: UpdateOperation$Params, context?: HttpContext): Promise<StrictHttpResponse<any>> {
     const obs = updateOperation(this.http, this.rootUrl, params, context);
     return firstValueFrom(obs);
   }
 
   /**
+   * Update the operation.
+   *
+   *
+   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `updateOperation$Response()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  updateOperation(params: UpdateOperation$Params, context?: HttpContext): Promise<void> {
+  updateOperation(params: UpdateOperation$Params, context?: HttpContext): Promise<any> {
     const resp = this.updateOperation$Response(params, context);
-    return resp.then((r: StrictHttpResponse<void>): void => r.body);
+    return resp.then((r: StrictHttpResponse<any>): any => r.body);
   }
 
   /** Path part for operation `reload()` */
   static readonly ReloadPath = '/api/moryx/orders/{guid}/reload';
 
   /**
+   * Reload the operation, rerunning the order assignment steps.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `reload()` instead.
    *
    * This method doesn't expect any request body.
    */
-  reload$Response(params: Reload$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
+  reload$Response(params: Reload$Params, context?: HttpContext): Promise<StrictHttpResponse<any>> {
     const obs = reload(this.http, this.rootUrl, params, context);
     return firstValueFrom(obs);
   }
 
   /**
+   * Reload the operation, rerunning the order assignment steps.
+   *
+   *
+   *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `reload$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  reload(params: Reload$Params, context?: HttpContext): Promise<void> {
+  reload(params: Reload$Params, context?: HttpContext): Promise<any> {
     const resp = this.reload$Response(params, context);
-    return resp.then((r: StrictHttpResponse<void>): void => r.body);
+    return resp.then((r: StrictHttpResponse<any>): any => r.body);
   }
 
 }

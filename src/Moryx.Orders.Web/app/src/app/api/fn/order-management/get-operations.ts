@@ -15,7 +15,15 @@ import { RequestBuilder } from '../../request-builder';
 import { OperationModel } from '../../models/operation-model';
 
 export interface GetOperations$Params {
+
+/**
+ * Optional. If specified only operations that belong to this order will be returned
+ */
   orderNumber?: string;
+
+/**
+ * Optional. If specified only operations with this operation number will be returned
+ */
   operationNumber?: string;
 }
 

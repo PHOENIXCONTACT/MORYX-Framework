@@ -13,6 +13,10 @@
 
   <ItemGroup>
     <!-- Test libraries -->
+    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.14" />
+    <PackageVersion Include="Microsoft.Extensions.ApiDescription.Server" Version="10.0.14" />
+    <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerUi" Version="10.3.1" />
+
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.8.0" />
     <PackageVersion Include="Moq" Version="4.20.72" />
     <PackageVersion Include="NUnit" Version="4.6.1" />
@@ -22,8 +26,8 @@
     <PackageVersion Include="coverlet.collector" Version="10.0.1" />
 
     <!-- Asp.Net Core Framework dependency -->
-    <FrameworkReference Update="Microsoft.AspNetCore.App" Version="$(dotnetVersion)" />
 
+    <FrameworkReference Update="Microsoft.AspNetCore.App" Version="$(dotnetVersion)" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="$(dotnetVersion)" />
     <PackageVersion Include="Microsoft.Extensions.Logging" Version="$(dotnetVersion)" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="$(dotnetVersion)" />
@@ -51,13 +55,9 @@
     <PackageVersion Include="Microsoft.Identity.Web.DownstreamApi" Version="4.0.0" />
 
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.400" />
-
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
-    <PackageVersion Include="Swashbuckle.AspNetCore" Version="10.2.3" />
-
     <PackageVersion Include="Castle.Windsor" Version="6.0.0" />
     <PackageVersion Include="Castle.Core" Version="5.2.1" />
-
     <!-- Dependencies for drivers and adapters -->
     <PackageVersion Include="System.IO.Ports" Version="10.0.0" />
     <PackageVersion Include="MQTTnet" Version="5.0.1.1416" />

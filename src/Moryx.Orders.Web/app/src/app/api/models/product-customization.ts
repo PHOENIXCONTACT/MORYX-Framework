@@ -10,7 +10,7 @@ import { ProductDefinitionModel } from '../models/product-definition-model';
 import { ProductImporter } from '../models/product-importer';
 import { RecipeDefinitionModel } from '../models/recipe-definition-model';
 export interface ProductCustomization {
-  importers?: Array<ProductImporter> | null;
-  productTypes?: Array<ProductDefinitionModel> | null;
-  recipeTypes?: Array<RecipeDefinitionModel> | null;
+  importers?: (Array<ProductImporter> | null);
+  productTypes?: (Array<ProductDefinitionModel> | null);
+  recipeTypes?: (Array<RecipeDefinitionModel> | null);
 }

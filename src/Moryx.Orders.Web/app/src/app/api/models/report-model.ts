@@ -8,9 +8,9 @@
 
 import { ConfirmationType } from '../models/confirmation-type';
 export interface ReportModel {
-  comment?: string | null;
+  comment?: (string | null);
   confirmationType?: ConfirmationType;
   failureCount?: number;
   successCount?: number;
-  userIdentifier?: string | null;
+  userIdentifier?: (string | null);
 }

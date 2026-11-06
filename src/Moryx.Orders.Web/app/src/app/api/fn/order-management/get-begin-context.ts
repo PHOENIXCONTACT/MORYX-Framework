@@ -15,6 +15,10 @@ import { RequestBuilder } from '../../request-builder';
 import { BeginContext } from '../../models/begin-context';
 
 export interface GetBeginContext$Params {
+
+/**
+ * Id of the operation
+ */
   guid: string;
 }
 

@@ -15,11 +15,19 @@ import { RequestBuilder } from '../../request-builder';
 import { ReportModel } from '../../models/report-model';
 
 export interface ReportOperation$Params {
+
+/**
+ * Id of the operation
+ */
   guid: string;
-      body?: ReportModel
+  
+    /**
+     * Parameter object
+     */
+    body: ReportModel
 }
 
-export function reportOperation(http: HttpClient, rootUrl: string, params: ReportOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+export function reportOperation(http: HttpClient, rootUrl: string, params: ReportOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<any>> {
   const rb = new RequestBuilder(rootUrl, reportOperation.PATH, 'post');
   if (params) {
     rb.path('guid', params.guid, {});
@@ -27,11 +35,11 @@ export function reportOperation(http: HttpClient, rootUrl: string, params: Repor
   }
 
   return http.request(
-    rb.build({ responseType: 'text', accept: '*/*', context })
+    rb.build({ responseType: 'json', accept: 'application/json', context })
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+      return r as StrictHttpResponse<any>;
     })
   );
 }

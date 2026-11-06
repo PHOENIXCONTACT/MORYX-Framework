@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -6,12 +6,24 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+    <PackageReference Include="Microsoft.Extensions.ApiDescription.Server">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUi" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
+
+  <PropertyGroup>
+    <OpenApiGenerateDocumentsOnBuild>true</OpenApiGenerateDocumentsOnBuild>
+    <OpenApiDocumentsDirectory>$(MSBuildProjectDirectory)/../../schemas</OpenApiDocumentsDirectory>
+    <OpenApiGenerateDocumentsOptions>--openapi-version OpenApi3_1 --file-name framework-api</OpenApiGenerateDocumentsOptions>
+    <OpenApiGenerationEnvironment>OpenApiBuildTime</OpenApiGenerationEnvironment>
+  </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Moryx.AspNetCore\Moryx.AspNetCore.csproj" />
@@ -65,6 +77,7 @@
     <ProjectReference Include="..\Moryx.ControlSystem.Simulator\Moryx.ControlSystem.Simulator.csproj" />
     <ProjectReference Include="..\Moryx.Workplans.Editing\Moryx.Workplans.Editing.csproj" />
     <ProjectReference Include="..\Moryx.Workplans.Web\Moryx.Workplans.Web.csproj" />
+    <ProjectReference Include="..\Moryx.AspNetCore.OpenApi\Moryx.AspNetCore.OpenApi.csproj" />
   </ItemGroup>
 
 </Project>

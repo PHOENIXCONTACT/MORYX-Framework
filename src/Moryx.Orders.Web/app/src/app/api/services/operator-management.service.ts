@@ -82,7 +82,7 @@ export class OperatorManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  add$Response(params?: Add$Params, context?: HttpContext): Promise<StrictHttpResponse<string>> {
+  add$Response(params: Add$Params, context?: HttpContext): Promise<StrictHttpResponse<string>> {
     const obs = add(this.http, this.rootUrl, params, context);
     return firstValueFrom(obs);
   }
@@ -93,7 +93,7 @@ export class OperatorManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  add(params?: Add$Params, context?: HttpContext): Promise<string> {
+  add(params: Add$Params, context?: HttpContext): Promise<string> {
     const resp = this.add$Response(params, context);
     return resp.then((r: StrictHttpResponse<string>): string => r.body);
   }
@@ -107,7 +107,7 @@ export class OperatorManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  deleteOperator$Response(params?: DeleteOperator$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
+  deleteOperator$Response(params?: DeleteOperator$Params, context?: HttpContext): Promise<StrictHttpResponse<any>> {
     const obs = deleteOperator(this.http, this.rootUrl, params, context);
     return firstValueFrom(obs);
   }
@@ -118,9 +118,9 @@ export class OperatorManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  deleteOperator(params?: DeleteOperator$Params, context?: HttpContext): Promise<void> {
+  deleteOperator(params?: DeleteOperator$Params, context?: HttpContext): Promise<any> {
     const resp = this.deleteOperator$Response(params, context);
-    return resp.then((r: StrictHttpResponse<void>): void => r.body);
+    return resp.then((r: StrictHttpResponse<any>): any => r.body);
   }
 
   /** Path part for operation `get()` */
@@ -282,7 +282,7 @@ export class OperatorManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  signIn$Response(params?: SignIn$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
+  signIn$Response(params?: SignIn$Params, context?: HttpContext): Promise<StrictHttpResponse<any>> {
     const obs = signIn(this.http, this.rootUrl, params, context);
     return firstValueFrom(obs);
   }
@@ -293,9 +293,9 @@ export class OperatorManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  signIn(params?: SignIn$Params, context?: HttpContext): Promise<void> {
+  signIn(params?: SignIn$Params, context?: HttpContext): Promise<any> {
     const resp = this.signIn$Response(params, context);
-    return resp.then((r: StrictHttpResponse<void>): void => r.body);
+    return resp.then((r: StrictHttpResponse<any>): any => r.body);
   }
 
   /** Path part for operation `signOut()` */
@@ -307,7 +307,7 @@ export class OperatorManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  signOut$Response(params?: SignOut$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
+  signOut$Response(params?: SignOut$Params, context?: HttpContext): Promise<StrictHttpResponse<any>> {
     const obs = signOut(this.http, this.rootUrl, params, context);
     return firstValueFrom(obs);
   }
@@ -318,9 +318,9 @@ export class OperatorManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  signOut(params?: SignOut$Params, context?: HttpContext): Promise<void> {
+  signOut(params?: SignOut$Params, context?: HttpContext): Promise<any> {
     const resp = this.signOut$Response(params, context);
-    return resp.then((r: StrictHttpResponse<void>): void => r.body);
+    return resp.then((r: StrictHttpResponse<any>): any => r.body);
   }
 
   /** Path part for operation `stream()` */
@@ -332,7 +332,7 @@ export class OperatorManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  stream$Response(params?: Stream$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
+  stream$Response(params?: Stream$Params, context?: HttpContext): Promise<StrictHttpResponse<any>> {
     const obs = stream(this.http, this.rootUrl, params, context);
     return firstValueFrom(obs);
   }
@@ -343,9 +343,9 @@ export class OperatorManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  stream(params?: Stream$Params, context?: HttpContext): Promise<void> {
+  stream(params?: Stream$Params, context?: HttpContext): Promise<any> {
     const resp = this.stream$Response(params, context);
-    return resp.then((r: StrictHttpResponse<void>): void => r.body);
+    return resp.then((r: StrictHttpResponse<any>): any => r.body);
   }
 
 }
