@@ -1,0 +1,34 @@
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using Moryx.Container;
+using Moryx.Serialization;
+
+namespace Moryx.Tests.Serialization;
+
+public class PossibleValuesWithContextDummyAttribute : PossibleValuesAttribute
+{
+    public override bool OverridesConversion => false;
+
+    public override bool UpdateFromPredecessor => false;
+
+    public PossibleValuesWithContextDummyAttribute()
+    {
+        RequiresPossibleValuesContext = true;
+    }
+
+    public override IEnumerable<string> GetValues(IContainer localContainer, IServiceProvider serviceProvider)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override IEnumerable<string> GetValues(PossibleValuesContext context = null)
+    {
+        if (context!.Instance is not PossibleValuesWithContextClassDummy value)
+        {
+            throw new InvalidOperationException();
+        }
+
+        return value.AllowedValues;
+    }
+}

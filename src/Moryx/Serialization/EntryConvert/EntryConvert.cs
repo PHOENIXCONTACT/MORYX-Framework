@@ -785,8 +785,9 @@ public static partial class EntryConvert
             if (mapped.Entry?.Value.Type == EntryValueType.Exception || property.GetCustomAttribute<ReadOnlyAttribute>()?.IsReadOnly == true)
                 continue;
 
-            // Try to assign value to the property
-            var currentValue = mapped.Property.GetValue(instance);
+            // Try to read the current value, skip properties with faulty getters
+            if (!TryGetValue(property, instance, out var currentValue))
+                continue;
 
             // Encoders decode the complete entry, members without entry keep their current value
             var encoder = customSerialization.GetEncoder(propertyType, property);
