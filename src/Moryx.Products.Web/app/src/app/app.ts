@@ -43,6 +43,7 @@ import { TranslationConstants } from "./translation-constants";
 import { DuplicateProductInfos } from "./models/DuplicateProductInfos";
 import { CacheProductsService } from "./services/cache-products.service";
 import { EditProductsService } from "./services/edit-products.service";
+import { ProductNavigationService } from "./services/product-navigation.service";
 import {
   ProductStorageDetails,
   SessionService,
@@ -90,9 +91,11 @@ export class App implements OnInit, OnDestroy {
   private snackBar = inject(MatSnackBar);
   private sessionService = inject(SessionService);
   private translateService = inject(TranslateService);
+  private navigationService = inject(ProductNavigationService);
 
   protected isEditMode = this.editService.editing;
   protected selected = this.editService.currentProduct;
+  protected selectedId = this.navigationService.activeId;
   protected products = signal<ProductModel[]>([]);
   protected productDefinitions = signal<ProductDefinitionModel[]>([]);
   protected hierarchic = signal(false);
@@ -318,12 +321,15 @@ export class App implements OnInit, OnDestroy {
     if (this.isEditMode()) {
       await this.editService.onCancel();
     }
+    this.navigationService.setActiveId(undefined);
     this.editService.resetProduct();
     await this.router.navigate([``]);
   }
 
+  protected isLoading = this.navigationService.loading;
+
   protected onSelect(id: number) {
-    if (this.isEditMode()) {
+    if (this.isEditMode() || this.isLoading()) {
       return;
     }
 
@@ -331,7 +337,7 @@ export class App implements OnInit, OnDestroy {
       return;
     }
 
-    if (id === this.selected()?.id) {
+    if (id === this.selectedId()) {
       return;
     }
 

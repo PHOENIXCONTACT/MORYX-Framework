@@ -3,9 +3,9 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, linkedSignal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, effect, inject, linkedSignal, signal, untracked, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/translation-constants';
 import { PartConnector, PartModel } from '@api/models';
@@ -40,6 +40,7 @@ import { MatTooltip } from "@angular/material/tooltip";
 export class ProductParts {
   private editProductsService = inject(EditProductsService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private dialog = inject(MatDialog);
 
   protected isEditMode = this.editProductsService.editing;
@@ -47,6 +48,32 @@ export class ProductParts {
   protected expandedPart = linkedSignal(this.editProductsService.currentPartConnector);
   protected selectedPart = linkedSignal(this.editProductsService.currentPart);
   protected TranslationConstants = TranslationConstants;
+
+  private connectorName = signal(this.route.snapshot.paramMap.get('partName'));
+  private partId = signal(Number(this.route.snapshot.paramMap.get('partId')));
+
+  constructor() {
+    // Track route param changes (component is reused when navigating between parts)
+    this.route.paramMap.subscribe(params => {
+      this.connectorName.set(params.get('partName'));
+      this.partId.set(Number(params.get('partId')));
+    });
+
+    // Resolve connector/part when product loads or params change
+    effect(() => {
+      const product = this.editProductsService.currentProduct();
+      const connectorName = this.connectorName();
+      const partId = this.partId();
+      if (!product) {
+        return;
+      }
+      untracked(() => {
+        const connector = product.parts?.find(p => p.name === connectorName);
+        this.editProductsService.setPartConnector(connector);
+        this.editProductsService.setPart(connector?.parts?.find(p => p.id === partId));
+      });
+    });
+  }
 
   protected getPartRoute(part: PartModel): string[] {
     return ['/', 'details', this.currentProduct()!.id!.toString(), 'parts', this.expandedPart()!.name!, part.id!.toString()];

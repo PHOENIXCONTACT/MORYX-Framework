@@ -9,6 +9,10 @@
   padding-bottom: 48px;
   touch-action: auto;
   display: block;
+
+  &.disabled .tree-item {
+    color: color-mix(in srgb, var(--mat-sys-on-surface) 50%, transparent);
+  }
   @include mat.tree-overrides((
     node-min-height: 40px,
     container-background-color: var(--mat-sys-surface-container-lowest),
