@@ -6,9 +6,9 @@ using Moryx.Runtime.Modules;
 namespace Moryx.ControlSystem.MaterialManager;
 
 [ServerModuleConsole]
-internal class ModuleConsole : IServerModuleConsole
+internal sealed class ModuleConsole : IServerModuleConsole
 {
-    public void ExecuteCommand(string[] args, Action<string> outputStream)
+    public static void ExecuteCommand(string[] args, Action<string> outputStream)
     {
     }
 }

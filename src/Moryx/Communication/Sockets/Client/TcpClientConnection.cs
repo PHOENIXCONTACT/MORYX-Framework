@@ -91,14 +91,18 @@ public class TcpClientConnection : IBinaryConnection, IStateContext
     public void Start()
     {
         lock (_stateLock)
+        {
             _state.Connect();
+        }
     }
 
     /// <inheritdoc />
     public void Stop()
     {
         lock (_stateLock)
+        {
             _state.Disconnect();
+        }
     }
 
     /// <summary>
@@ -132,7 +136,9 @@ public class TcpClientConnection : IBinaryConnection, IStateContext
     {
         var addresses = Dns.GetHostAddresses(hostName);
         if (addresses.Length == 0)
+        {
             throw new ArgumentException("Unable to retrieve address from specified host name.", nameof(hostName));
+        }
 
         return new IPEndPoint(addresses[0], port);
     }
@@ -147,7 +153,9 @@ public class TcpClientConnection : IBinaryConnection, IStateContext
     public void Reconnect(int delayMs)
     {
         lock (_stateLock)
+        {
             _state.Reconnect(delayMs);
+        }
     }
 
     #region Connection and transmission
@@ -164,7 +172,9 @@ public class TcpClientConnection : IBinaryConnection, IStateContext
     private void ConnectionCallback(IAsyncResult ar)
     {
         lock (_stateLock)
+        {
             _state.ConnectionCallback(ar, _tcpClient);
+        }
     }
 
     internal void Connected()
@@ -186,7 +196,9 @@ public class TcpClientConnection : IBinaryConnection, IStateContext
     private void ConnectionClosed(object sender, EventArgs eventArgs)
     {
         lock (_stateLock)
+        {
             _state.ConnectionClosed();
+        }
     }
 
     internal void Disconnect()
@@ -221,14 +233,18 @@ public class TcpClientConnection : IBinaryConnection, IStateContext
         ((Timer)state).Dispose();
 
         lock (_stateLock)
+        {
             _state.ScheduledConnectTimerElapsed();
+        }
     }
 
     /// <inheritdoc />
     public void Send(BinaryMessage message)
     {
         lock (_stateLock)
+        {
             _state.Send(message);
+        }
     }
 
     internal void ExecuteSend(BinaryMessage data)
@@ -240,7 +256,9 @@ public class TcpClientConnection : IBinaryConnection, IStateContext
     public Task SendAsync(BinaryMessage message, CancellationToken cancellationToken = default)
     {
         lock (_stateLock)
+        {
             return _state.SendAsync(message);
+        }
     }
 
     internal Task ExecuteSendAsync(BinaryMessage message)

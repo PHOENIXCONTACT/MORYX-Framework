@@ -3,9 +3,6 @@
 
 using Moryx.Orders.Endpoints.Models;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moryx.Orders.Endpoints.Tests;
 

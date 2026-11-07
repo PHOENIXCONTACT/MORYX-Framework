@@ -82,7 +82,9 @@ public abstract class DelimitedMessageInterpreter : IMessageInterpreter
         {
             var segment = new ArraySegment<byte>(delimited.ReadBuffer, index, EndDelimiter.Length);
             if (!EndDelimiter.SequenceEqual(segment))
+            {
                 continue;
+            }
 
             // Wrap up message and publish
             delimited.MessageEnd = index + EndDelimiter.Length - 1;
@@ -105,7 +107,9 @@ public abstract class DelimitedMessageInterpreter : IMessageInterpreter
     private bool FindStart(int readBytes, DelimitedMessageContext context)
     {
         if (StartDelimiter.Length == 0)
+        {
             return true;
+        }
 
         var searchStart = context.CurrentIndex > StartDelimiter.Length ? context.CurrentIndex - StartDelimiter.Length : 0;
         var searchEnd = (context.CurrentIndex + readBytes) - StartDelimiter.Length;
@@ -114,7 +118,9 @@ public abstract class DelimitedMessageInterpreter : IMessageInterpreter
         {
             var segment = new ArraySegment<byte>(context.ReadBuffer, index, StartDelimiter.Length);
             if (!StartDelimiter.SequenceEqual(segment))
+            {
                 continue;
+            }
 
             context.MessageStart = index;
             return true;
@@ -135,7 +141,9 @@ public abstract class DelimitedMessageInterpreter : IMessageInterpreter
         //                  Entire read buffer                   Full first message
         var overlap = (readBytes + context.CurrentIndex) - (context.MessageEnd + 1);
         if (overlap > 0)
+        {
             Buffer.BlockCopy(context.ReadBuffer, context.MessageEnd + 1, context.ReadBuffer, 0, overlap);
+        }
 
         // Reset message
         context.StartFound = false;
@@ -186,9 +194,26 @@ public abstract class DelimitedMessageInterpreter : IMessageInterpreter
     /// <inheritdoc />
     public override bool Equals(object obj)
     {
-        if (ReferenceEquals(null, obj)) return false;
-        if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != GetType()) return false;
+        if (ReferenceEquals(null, obj))
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, obj))
+        {
+            return true;
+        }
+
+        if (obj.GetType() != GetType())
+        {
+            return false;
+        }
+
         return Equals((DelimitedMessageInterpreter)obj);
+    }
+
+    public override int GetHashCode()
+    {
+        throw new NotImplementedException();
     }
 }

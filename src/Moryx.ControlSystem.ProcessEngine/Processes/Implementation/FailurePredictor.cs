@@ -79,7 +79,9 @@ internal class FailurePredictor : IFailurePredictor, IDisposable
     {
         // Only monitor production jobs
         if (!(processData.Recipe is IProductRecipe))
+        {
             return;
+        }
 
         var recipe = (IWorkplanRecipe)processData.Recipe;
         if (!_predictorCache.TryGetValue(recipe.Id, out var cachedPredictor))
@@ -97,7 +99,10 @@ internal class FailurePredictor : IFailurePredictor, IDisposable
     {
         var recipe = process.Recipe;
         if (!_predictorCache.TryGetValue(recipe.Id, out var predictor) || !predictor.Remove(process.Engine) || predictor.MonitoredEngines > 0)
+        {
             return;
+        }
+
         predictor.Dispose();
         _predictorCache.Remove(recipe.Id);
     }
@@ -108,7 +113,9 @@ internal class FailurePredictor : IFailurePredictor, IDisposable
         var processData = ActivityPool.GetProcess(processContext.Process);
 
         if (predictionEventArgs.PredictedOutcome == NodeClassification.Failed)
+        {
             ProcessWillFail?.Invoke(this, processData);
+        }
     }
 
     public event EventHandler<ProcessData> ProcessWillFail;

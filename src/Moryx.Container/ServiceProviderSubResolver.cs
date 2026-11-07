@@ -12,7 +12,7 @@ namespace Moryx.Container;
 /// Castle Windsor sub-resolver that delegates to an <see cref="IServiceProvider"/>
 /// for types not registered in Windsor. This bridges the ServiceProvider into module containers.
 /// </summary>
-internal class ServiceProviderSubResolver(IKernelInternal kernel, IServiceProvider serviceProvider, Predicate<Type> typeFilter = null) : ISubDependencyResolver
+internal sealed class ServiceProviderSubResolver(IKernelInternal kernel, IServiceProvider serviceProvider, Predicate<Type> typeFilter = null) : ISubDependencyResolver
 {
     public bool CanResolve(CreationContext context, ISubDependencyResolver contextHandlerResolver, ComponentModel model, DependencyModel dep)
     {

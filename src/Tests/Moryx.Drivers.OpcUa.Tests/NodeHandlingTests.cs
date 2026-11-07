@@ -3,7 +3,6 @@
 
 using Moq;
 using Moryx.AbstractionLayer.Drivers;
-using Moryx.Drivers.OpcUa.States;
 using Moryx.Modules;
 using NUnit.Framework;
 using Opc.Ua;

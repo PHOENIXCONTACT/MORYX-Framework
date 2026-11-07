@@ -5,7 +5,7 @@ using Moryx.Threading;
 
 namespace Moryx.TestTools.UnitTest;
 
-internal class TimerInfo
+internal sealed class TimerInfo
 {
     public int TimerId { get; set; }
     public Timer Timer { get; set; }

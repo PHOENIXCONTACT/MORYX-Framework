@@ -94,9 +94,13 @@ public class TcpListenerConnection : IBinaryConnection, IStateContext
         _config = (TcpListenerConfig)config;
 
         if (IPAddress.TryParse(_config.IpAddress, out var address))
+        {
             Address = address;
+        }
         else
+        {
             throw new FormatException($"Failed to parse IPAddress: {_config.IpAddress}.");
+        }
 
         StateMachine.ForContext(this).With<ServerStateBase>();
     }
@@ -107,14 +111,18 @@ public class TcpListenerConnection : IBinaryConnection, IStateContext
     public void Start()
     {
         lock (_stateLock)
+        {
             _state.Open();
+        }
     }
 
     /// <inheritdoc />
     public void Stop()
     {
         lock (_stateLock)
+        {
             _state.Close();
+        }
     }
 
     /// <summary>
@@ -179,13 +187,17 @@ public class TcpListenerConnection : IBinaryConnection, IStateContext
         ((Timer)state).Dispose();
 
         lock (_stateLock)
+        {
             _state.ScheduledConnectTimerElapsed();
+        }
     }
 
     internal void AssignConnection(TcpTransmission transmission, BinaryMessage message = null)
     {
         lock (_stateLock)
+        {
             _state.ConnectionAssigned(transmission, message);
+        }
     }
 
     /// <summary>
@@ -228,14 +240,18 @@ public class TcpListenerConnection : IBinaryConnection, IStateContext
     private void Disconnected(object sender, EventArgs eventArgs)
     {
         lock (_stateLock)
+        {
             _state.ConnectionLost();
+        }
     }
 
     /// <inheritdoc />
     public void Send(BinaryMessage message)
     {
         lock (_stateLock)
+        {
             _state.Send(message);
+        }
     }
 
     internal void ExecuteSend(BinaryMessage message)
@@ -247,7 +263,9 @@ public class TcpListenerConnection : IBinaryConnection, IStateContext
     public Task SendAsync(BinaryMessage message, CancellationToken cancellationToken = default)
     {
         lock (_stateLock)
+        {
             return _state.SendAsync(message);
+        }
     }
 
     internal Task ExecuteSendAsync(BinaryMessage message)

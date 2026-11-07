@@ -6,7 +6,7 @@ using Moryx.Configuration;
 
 namespace Moryx.Tests.Configuration.ValueProvider;
 
-internal class ThreeProvider : IValueProvider
+internal sealed class ThreeProvider : IValueProvider
 {
     public ValueProviderResult Handle(object parent, PropertyInfo property)
     {

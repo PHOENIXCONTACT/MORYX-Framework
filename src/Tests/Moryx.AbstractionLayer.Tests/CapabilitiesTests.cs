@@ -3,7 +3,6 @@
 
 using Moryx.AbstractionLayer.Resources;
 using NUnit.Framework;
-using System;
 
 namespace Moryx.AbstractionLayer.Tests;
 

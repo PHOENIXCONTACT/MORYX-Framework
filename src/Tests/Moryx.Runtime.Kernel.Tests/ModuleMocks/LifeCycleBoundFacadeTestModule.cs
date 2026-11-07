@@ -1,8 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Container;
@@ -51,8 +49,12 @@ public class LifeCycleBoundFacadeTestModule : ServerModuleBase<RuntimeConfigMana
     private void OnFacadeActivated(object sender, bool activated)
     {
         if (activated)
+        {
             ++ActivatedCount;
+        }
         else
+        {
             ++DeactivatedCount;
+        }
     }
 }

@@ -40,13 +40,17 @@ internal class ProductAssignStep : IOperationAssignStep
     public async Task<bool> RestoreStep(IOperationData operationData, IOperationLogger operationLogger)
     {
         if (operationData.Product == null)
+        {
             return false;
+        }
 
         var productId = operationData.Product.Id;
 
         ProductType product = null;
         if (productId != 0)
+        {
             product = await ProductManagement.LoadTypeAsync(operationData.Product.Id);
+        }
 
         if (product == null)
         {

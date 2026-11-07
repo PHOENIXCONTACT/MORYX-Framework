@@ -1,8 +1,8 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.ControlSystem.Activities;
 using System.Runtime.Serialization;
+using Moryx.ControlSystem.Activities;
 
 namespace Moryx.FactoryMonitor.Endpoints.Models;
 

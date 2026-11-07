@@ -25,7 +25,7 @@ public class PossibleValuesContext(object instance, IServiceProvider provider, I
     /// Instance of the current class needed for the possible values.
     /// </summary>
     public object Instance { get; } = instance;
-   
+
     /// <summary>
     /// See <see cref="IServiceProvider.GetService(Type)" /> and <see cref="IContainer.Resolve(Type, string)" />.
     /// </summary>

@@ -2,8 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Diagnostics;
-using System.Linq;
-using System.Threading;
 using Moryx.Tools;
 using Moryx.Workplans;
 using NUnit.Framework;
@@ -63,7 +61,10 @@ public class PathPredictionTests
 
         // Assert
         while (finalResult == NodeClassification.Intermediate)
+        {
             Thread.Sleep(1); // Await completion
+        }
+
         stopWatch.Stop();
         Assert.That(predictionTime, Is.LessThan(completionTime), "Engine was completed before a prediction was published.");
         Assert.That(prediction, Is.EqualTo(finalResult), "Predication was incorrect");
@@ -98,7 +99,10 @@ public class PathPredictionTests
 
         // Assert
         while (finalResult == NodeClassification.Intermediate)
+        {
             Thread.Sleep(1); // Await completion
+        }
+
         Assert.That(prediction, Is.EqualTo(finalResult), "Predication was incorrect");
     }
 
@@ -131,11 +135,14 @@ public class PathPredictionTests
 
         // Assert
         while (finalResult == NodeClassification.Intermediate)
+        {
             Thread.Sleep(1); // Await completion
+        }
+
         Assert.That(prediction, Is.EqualTo(finalResult), "Predication was incorrect");
     }
 
-    private class SingleLoopExecution
+    private sealed class SingleLoopExecution
     {
         private bool _loopTaken;
 
@@ -144,7 +151,9 @@ public class PathPredictionTests
             var transition = (DummyTransition)state;
             Thread.Sleep(100);
             if (_loopTaken || transition.Name != "Set pole")
+            {
                 transition.ResumeAsync(0);
+            }
             else
             {
                 transition.ResumeAsync(1);

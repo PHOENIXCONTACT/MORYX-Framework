@@ -1,9 +1,7 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Collections.Concurrent;
-using System.Threading.Tasks;
-using System.Threading;
 
 namespace Moryx.Simulation.Simulator.Extensions;
 

@@ -7,9 +7,6 @@ using Moryx.AbstractionLayer.Resources;
 using Moryx.Factory;
 using Moryx.Tools;
 using NUnit.Framework;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Moryx.FactoryMonitor.Endpoints.Tests;
 

@@ -9,7 +9,7 @@ namespace Moryx.ControlSystem.SetupProvider;
 internal class ModuleConsole : IServerModuleConsole
 {
 
-    public void ExecuteCommand(string[] args, Action<string> outputStream)
+    public static void ExecuteCommand(string[] args, Action<string> outputStream)
     {
     }
 }

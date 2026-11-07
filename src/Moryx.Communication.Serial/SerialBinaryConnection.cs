@@ -82,7 +82,9 @@ public class SerialBinaryConnection : IBinaryConnection, ILoggingComponent
     public void Stop()
     {
         if (_serialPort == null)
+        {
             return;
+        }
 
         _serialPort.DataReceived -= OnDataReceived;
         _serialPort.Dispose();
@@ -121,7 +123,7 @@ public class SerialBinaryConnection : IBinaryConnection, ILoggingComponent
     {
         // Create bytes from message
         var bytes = _validator.Interpreter.SerializeMessage(message);
-        await _serialPort.BaseStream.WriteAsync(bytes, 0, bytes.Length, cancellationToken);
+        await _serialPort.BaseStream.WriteAsync(bytes, cancellationToken);
         await _serialPort.BaseStream.FlushAsync(cancellationToken);
     }
 

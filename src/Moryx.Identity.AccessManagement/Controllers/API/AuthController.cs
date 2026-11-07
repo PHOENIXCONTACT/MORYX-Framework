@@ -154,7 +154,9 @@ public class AuthController : ControllerBase
 
             var user = await _userManager.GetUserAsync(HttpContext.User);
             if (user is null)
+            {
                 return NotFound("User not found");
+            }
 
             var token = Request.Cookies[MoryxIdentityDefaults.JWT_COOKIE_NAME];
             await _tokenService.InvalidateRefreshTokenAsync(token);
@@ -186,7 +188,9 @@ public class AuthController : ControllerBase
 
         var result = await _tokenService.VerifyAndGenerateRefreshTokenAsync(tokenRequest);
         if (!result.Success)
+        {
             return BadRequest(result);
+        }
 
         HttpContext.Response.Cookies.SetJwtCookie(result);
         return Ok(JsonSerializer.Serialize<AuthResult>(result));
@@ -200,7 +204,9 @@ public class AuthController : ControllerBase
     {
         var user = await _userManager.GetUserAsync(HttpContext.User);
         if (user is null)
+        {
             return NotFound("User not found");
+        }
 
         var userModel = ModelConverter.GetUserModelFromUser(user);
         return Ok(userModel);
@@ -227,7 +233,9 @@ public class AuthController : ControllerBase
     {
         var user = await _userManager.GetUserAsync(HttpContext.User);
         if (user is null)
+        {
             return NotFound("User not found");
+        }
 
         filter ??= "";
         var roles = await _userManager.GetRolesAsync(user);
@@ -247,7 +255,9 @@ public class AuthController : ControllerBase
     {
         var isValid = _tokenService.IsTokenValid(token);
         if (isValid)
+        {
             return Accepted();
+        }
 
         return Forbid();
     }
@@ -380,7 +390,9 @@ public class AuthController : ControllerBase
         var result = await _permissionManager.AddToRoleAsync(roleName, [permission]);
 
         if (result.Succeeded)
+        {
             return Ok();
+        }
 
         return Problem(result.Errors.First().Description, null, 500);
     }
@@ -476,7 +488,9 @@ public class AuthController : ControllerBase
         var result = await _permissionManager.CreateAsync(permission);
 
         if (result.Succeeded)
+        {
             return Ok();
+        }
 
         return Problem(result.Errors.First().Description, null, 500);
     }
@@ -492,7 +506,9 @@ public class AuthController : ControllerBase
         var result = await _permissionManager.DeleteAsync(permissionId);
 
         if (result.Succeeded)
+        {
             return Ok();
+        }
 
         return Problem(result.Errors.First().Description, null, 500);
     }
@@ -520,7 +536,9 @@ public class AuthController : ControllerBase
         var result = await _userManager.DeleteAsync(user);
 
         if (result.Succeeded)
+        {
             return Ok();
+        }
 
         return Problem(result.Errors.First().Description, null, 500);
     }

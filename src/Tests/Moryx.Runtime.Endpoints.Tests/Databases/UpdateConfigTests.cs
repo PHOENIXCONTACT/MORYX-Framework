@@ -2,19 +2,18 @@
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.Logging;
-using Moryx.Model;
-using Moryx.Runtime.Kernel;
-using Moryx.TestTools.Test.Model;
-using System;
 using Moryx.Configuration;
+using Moryx.Model;
 using Moryx.Model.Sqlite;
 using Moryx.Runtime.Endpoints.Databases.Services;
+using Moryx.Runtime.Kernel;
+using Moryx.TestTools.Test.Model;
 using Moryx.Tools;
 using NUnit.Framework;
 
 namespace Moryx.Runtime.Endpoints.Tests.Databases;
 
-internal class UpdateConfigTests
+internal sealed class UpdateConfigTests
 {
     private DbContextManager _dbContextManager;
     private DatabaseConfigUpdateService _databaseConfigUpdateService;

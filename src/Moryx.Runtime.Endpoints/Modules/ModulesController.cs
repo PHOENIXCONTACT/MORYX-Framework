@@ -77,7 +77,9 @@ public class ModulesController : ControllerBase
     {
         var module = _moduleManager.AllModules.FirstOrDefault(m => m.Name == moduleName);
         if (module != null)
+        {
             return module.State;
+        }
 
         return NotFound($"Module with name \"{moduleName}\" could not be found");
     }
@@ -90,7 +92,9 @@ public class ModulesController : ControllerBase
     {
         var module = _moduleManager.AllModules.FirstOrDefault(m => m.Name == moduleName);
         if (module != null)
+        {
             return Ok(module.Notifications.Select(n => new ModuleNotificationModel(n)));
+        }
 
         return NotFound($"Module with name \"{moduleName}\" could not be found");
     }
@@ -103,7 +107,9 @@ public class ModulesController : ControllerBase
     {
         var module = GetModuleFromManager(moduleName);
         if (module == null)
+        {
             return NotFound($"Module with name \"{moduleName}\" could not be found");
+        }
 
         Task.Run(() => _moduleManager.StartModuleAsync(module));
         return Ok();
@@ -117,7 +123,9 @@ public class ModulesController : ControllerBase
     {
         var module = GetModuleFromManager(moduleName);
         if (module == null)
+        {
             return NotFound($"Module with name \"{moduleName}\" could not be found");
+        }
 
         Task.Run(() => _moduleManager.StopModuleAsync(module));
         return Ok();
@@ -131,7 +139,9 @@ public class ModulesController : ControllerBase
     {
         var module = GetModuleFromManager(moduleName);
         if (module == null)
+        {
             return NotFound($"Module with name \"{moduleName}\" could not be found");
+        }
 
         Task.Run(() => _moduleManager.ReincarnateModuleAsync(module));
         return Ok();
@@ -145,19 +155,27 @@ public class ModulesController : ControllerBase
     public ActionResult Update([FromRoute] string moduleName, [FromBody] ServerModuleModel module)
     {
         if (module == null)
+        {
             return BadRequest("Module is required");
+        }
 
         var serverModule = GetModuleFromManager(moduleName);
         if (serverModule == null)
+        {
             return NotFound($"Server module with name \"{moduleName}\" could not be found");
+        }
 
         var startBehaviour = _moduleManager.BehaviourAccess<ModuleStartBehaviour>(serverModule);
         if (startBehaviour.Behaviour != module.StartBehaviour)
+        {
             startBehaviour.Behaviour = module.StartBehaviour;
+        }
 
         var failureBehaviour = _moduleManager.BehaviourAccess<FailureBehaviour>(serverModule);
         if (failureBehaviour.Behaviour != module.FailureBehaviour)
+        {
             failureBehaviour.Behaviour = module.FailureBehaviour;
+        }
 
         return Ok();
     }
@@ -170,11 +188,15 @@ public class ModulesController : ControllerBase
     {
         var module = GetModuleFromManager(moduleName);
         if (module == null)
+        {
             return NotFound($"Module with name \"{moduleName}\" could not be found");
+        }
 
         var notifications = module.Notifications.ToArray();
         foreach (var notification in notifications)
+        {
             module.AcknowledgeNotification(notification);
+        }
 
         _moduleManager.InitializeModuleAsync(module);
         return Ok();
@@ -191,7 +213,9 @@ public class ModulesController : ControllerBase
         {
             var module = GetModuleFromManager(moduleName);
             if (module == null)
+            {
                 return NotFound($"Module with name \"{moduleName}\" could not be found");
+            }
 
             var serialization = CreateSerialization(module);
 
@@ -217,13 +241,17 @@ public class ModulesController : ControllerBase
     public ActionResult SetConfig([FromRoute] string moduleName, [FromBody] SaveConfigRequest request)
     {
         if (request.Config == null)
+        {
             return BadRequest("Config is required");
+        }
 
         try
         {
             var module = GetModuleFromManager(moduleName);
             if (module == null)
+            {
                 return NotFound($"Module with name \"{moduleName}\" could not be found");
+            }
 
             var serialization = CreateSerialization(module);
             var config = GetConfig(module, true);
@@ -231,8 +259,11 @@ public class ModulesController : ControllerBase
             _configManager.SaveConfiguration(config, request.UpdateMode == ConfigUpdateMode.UpdateLiveAndSave);
 
             if (request.UpdateMode == ConfigUpdateMode.SaveAndReincarnate)
+            {
                 // This has to be done parallel so we can also reincarnate the Maintenance itself
                 Task.Run(() => _moduleManager.ReincarnateModuleAsync(module));
+            }
+
             return Ok();
         }
         catch (Exception ex)
@@ -250,10 +281,14 @@ public class ModulesController : ControllerBase
         var methods = Enumerable.Empty<MethodEntry>();
         var serverModule = GetModuleFromManager(moduleName);
         if (serverModule == null)
+        {
             return NotFound($"Server module with name \"{moduleName}\" could not be found");
+        }
 
         if (serverModule?.Console != null)
+        {
             methods = EntryConvert.EncodeMethods(serverModule.Console, CreateEditorSerializeSerialization(serverModule));
+        }
 
         return Ok(methods);
     }
@@ -267,11 +302,15 @@ public class ModulesController : ControllerBase
     public async Task<ActionResult<Entry>> InvokeMethod([FromRoute] string moduleName, [FromBody] MethodEntry method)
     {
         if (method == null)
+        {
             return BadRequest("Method is required");
+        }
 
         var serverModule = GetModuleFromManager(moduleName);
         if (serverModule == null)
+        {
             return NotFound($"Server module with name \"{moduleName}\" could not be found");
+        }
 
         try
         {
@@ -288,7 +327,7 @@ public class ModulesController : ControllerBase
             }
 
         }
-        catch (Exception e)
+        catch (Exception)
         {
             return StatusCode(StatusCodes.Status500InternalServerError, $"Error while invoking function: {method.DisplayName}.");
         }

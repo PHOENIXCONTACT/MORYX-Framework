@@ -77,12 +77,16 @@ public class ResourceModel
     {
         // Do not compare values that were not transmitted
         if (resource.Descriptor == null || PartiallyLoaded)
+        {
             return false;
+        }
 
         // Compare obvious base properties
         var different = resource.Name != Name || resource.Description != Description;
         if (different)
+        {
             return true;
+        }
 
         var resourceProperties = EntryConvert.EncodeObject(resource.Descriptor, serialization);
         return !Entry.ValuesEqual(Properties, resourceProperties);

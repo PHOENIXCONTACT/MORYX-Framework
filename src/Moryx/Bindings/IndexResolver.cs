@@ -51,7 +51,7 @@ public class IndexResolver : BindingResolverBase
     {
         IIndexStrategy resolver = null;
 
-        var numericIndex = 0;
+        int numericIndex;
         if (int.TryParse(_index, out numericIndex))
         {
             var dict = source as IDictionary;

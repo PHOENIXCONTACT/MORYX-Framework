@@ -4,7 +4,6 @@
 using System.Globalization;
 using System.Text.Json;
 using Moryx.AbstractionLayer.Identity;
-using Moryx.AspNetCore.Mqtt;
 using Moryx.AspNetCore.Mqtt.Components;
 using Moryx.AspNetCore.Mqtt.Converters;
 using MQTTnet;
@@ -46,7 +45,7 @@ public class ResourceEventHandler<T>(IManagedMqttClient client, JsonSerializerOp
             messageBuilder.WithContentType("application/json");
             await client.EnqueueAsync(messageBuilder.Build(), CancellationToken.None);
         }
-        catch (Exception e)
+        catch (Exception)
         {
             throw; // TODO handle exception
         }

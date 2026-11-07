@@ -58,9 +58,15 @@ internal static class OperationStorage
         entity.PlannedStart = ConvertToUtc(operation.PlannedStart);
         entity.PlannedEnd = ConvertToUtc(operation.PlannedEnd);
         if (operation.Start != null)
+        {
             entity.ActualStart = ConvertToUtc((DateTime)operation.Start);
+        }
+
         if (operation.End != null)
+        {
             entity.ActualEnd = ConvertToUtc((DateTime)operation.End);
+        }
+
         entity.TargetCycleTime = operation.TargetCycleTime;
         entity.TargetStock = operation.TargetStock;
         entity.Unit = operation.Unit;
@@ -248,12 +254,14 @@ internal static class OperationStorage
         var entity = operationRepo.Linq.FirstOrDefault(o => o.Identifier.Equals(operationData.Identifier));
 
         if (entity == null) // This operation was not saved before
+        {
             return;
+        }
 
         operationRepo.Remove(entity);
     }
 
-    private static DateTime ConvertToUtc(DateTime dateTime, [CallerArgumentExpression(nameof(dateTime))]string member = "")
+    private static DateTime ConvertToUtc(DateTime dateTime, [CallerArgumentExpression(nameof(dateTime))] string member = "")
     {
         switch (dateTime.Kind)
         {

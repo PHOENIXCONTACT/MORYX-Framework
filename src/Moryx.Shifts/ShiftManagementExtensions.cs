@@ -12,7 +12,10 @@ public static class ShiftManagementExtensions
         public IEnumerable<Shift> GetShifts(DateOnly? earliestDate, DateOnly? latestDate)
         {
             IEnumerable<Shift> shifts = source.Shifts;
-            if (!earliestDate.HasValue && !latestDate.HasValue) return shifts;
+            if (!earliestDate.HasValue && !latestDate.HasValue)
+            {
+                return shifts;
+            }
 
             if (earliestDate.HasValue)
             {
@@ -29,7 +32,10 @@ public static class ShiftManagementExtensions
 
         public IEnumerable<ShiftAssignement> GetShiftAssignements(DateOnly? earliestDate, DateOnly? latestDate)
         {
-            if (!earliestDate.HasValue && !latestDate.HasValue) return source.ShiftAssignements;
+            if (!earliestDate.HasValue && !latestDate.HasValue)
+            {
+                return source.ShiftAssignements;
+            }
 
             IEnumerable<Shift> shifts = source.GetShifts(earliestDate, latestDate);
             return source.ShiftAssignements.Where(a => shifts.Contains(a.Shift));

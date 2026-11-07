@@ -9,7 +9,7 @@ namespace Moryx.Container;
 /// <summary>
 /// Component selector for name based selection
 /// </summary>
-internal class NameBasedComponentSelector : DefaultTypedFactoryComponentSelector, INameBasedComponentSelector
+internal sealed class NameBasedComponentSelector : DefaultTypedFactoryComponentSelector, INameBasedComponentSelector
 {
     /// <summary>
     /// Selecting the right component name based on first argument

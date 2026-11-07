@@ -8,5 +8,5 @@ namespace Moryx.ControlSystem.Simulator;
 [ServerModuleConsole]
 public class ModuleConsole : IServerModuleConsole
 {
-        
+
 }

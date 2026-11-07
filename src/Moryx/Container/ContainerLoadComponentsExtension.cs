@@ -1,8 +1,8 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.Tools;
 using System.Reflection;
+using Moryx.Tools;
 
 namespace Moryx.Container;
 
@@ -39,7 +39,9 @@ public static class ContainerLoadComponentsExtension
             {
                 // Register all we want
                 if (ShallInstall(type) && predicate(type))
+                {
                     container.Register(type);
+                }
             }
         }
     }
@@ -58,16 +60,22 @@ public static class ContainerLoadComponentsExtension
     private static bool TypeRequired(DependencyRegistrationAttribute att, Type foundType)
     {
         if (att.InstallerMode == InstallerMode.All)
+        {
             return true;
+        }
 
         // Check if interface was specified as required
         if (foundType.IsInterface && att.RequiredTypes.Contains(foundType))
+        {
             return true;
+        }
 
         // Check if class exports required type
         var services = ContainerRegistrationExtensions.GetComponentServices(foundType);
         if (foundType.IsClass && att.RequiredTypes.Intersect(services).Any())
+        {
             return true;
+        }
 
         return false;
     }
@@ -106,10 +114,14 @@ public static class ContainerLoadComponentsExtension
     private static bool LoadComponentCandidate(Type type)
     {
         if (type.Assembly.GetCustomAttribute<ComponentLoaderIgnoreAttribute>() != null)
+        {
             return false;
+        }
 
         if (type.GetCustomAttribute<ComponentAttribute>(true) == null)
+        {
             return false;
+        }
 
         return true;
     }
@@ -118,15 +130,21 @@ public static class ContainerLoadComponentsExtension
     {
         var att = implementation.GetCustomAttribute<DependencyRegistrationAttribute>();
         if (att == null)
+        {
             return;
+        }
 
         container.LoadFromAssembly(implementation.Assembly, att);
 
         if (att.Initializer == null)
+        {
             return;
+        }
 
         if (!typeof(ISubInitializer).IsAssignableFrom(att.Initializer))
+        {
             throw new InvalidCastException($"SubInitializer {att.Initializer.Name} of component {implementation.Name} does not implement interface {nameof(ISubInitializer)}.");
+        }
 
         container.Register(att.Initializer, [typeof(ISubInitializer), att.Initializer], null, LifeCycle.Singleton);
     }

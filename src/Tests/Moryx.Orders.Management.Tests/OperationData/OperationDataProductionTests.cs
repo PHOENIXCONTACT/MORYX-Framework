@@ -1,13 +1,10 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Moryx.ControlSystem.Jobs;
 using Moq;
 using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Recipes;
+using Moryx.ControlSystem.Jobs;
 using NUnit.Framework;
 
 namespace Moryx.Orders.Management.Tests;
@@ -116,7 +113,7 @@ public class OperationDataProductionTests : OperationDataTestBase
 
     [Test(Description = "If an operation is running or interrupting the target " +
                         "amount can be reduced. A new job with the residual amount should be dispatched.")]
-    public async Task  Adjust_WithNegativeAmountToOneRemaining_CompletesJobAndDispatchesNewForRemaining()
+    public async Task Adjust_WithNegativeAmountToOneRemaining_CompletesJobAndDispatchesNewForRemaining()
     {
         // Arrange
         var operationData = await GetRunningOperation(10, false, 10, 10);
@@ -137,7 +134,7 @@ public class OperationDataProductionTests : OperationDataTestBase
     [TestCase(8, 6, 2, 2, 0, 8, 2, Description = "Validate begin context without replace scrap: In this case, rework is equal to failure.")]
     [TestCase(8, 6, 2, 0, 2, 8, 2, Description = "Validate begin context without replace scrap: In this case, rework is less than failure.")]
     [TestCase(8, 0, 4, 2, 2, 8, 2, Description = "Validate begin context without replace scrap: In this case, rework failed.")]
-    public async Task  ValidateBeginContextWithoutReplaceScrap(int targetAmount, int success, int failure, int reworked, int expScrap, int expPartial, int expResidual)
+    public async Task ValidateBeginContextWithoutReplaceScrap(int targetAmount, int success, int failure, int reworked, int expScrap, int expPartial, int expResidual)
     {
         // Arrange
         var operationData = await GetReadyOperation(10, false, 10, 10);
@@ -164,7 +161,7 @@ public class OperationDataProductionTests : OperationDataTestBase
     [TestCase(9, 9, 2, 5, 0, 9, 1, Description = "Validate begin context with replace scrap: In this case, there are more rework than failure.")]
     [TestCase(8, 8, 2, 2, 0, 8, 2, Description = "Validate begin context with replace scrap: In this case, rework is equal to failure.")]
     [TestCase(8, 8, 2, 0, 2, 8, 2, Description = "Validate begin context with replace scrap: In this case, rework is less than failure.")]
-    public async Task  ValidateBeginContextWithReplaceScrap(int amount, int success, int failure, int reworked, int expScrap, int expPartial, int expResidual)
+    public async Task ValidateBeginContextWithReplaceScrap(int amount, int success, int failure, int reworked, int expScrap, int expPartial, int expResidual)
     {
         // Arrange
         var operationData = await GetReadyOperation(10, true, 10, 10);
@@ -226,7 +223,7 @@ public class OperationDataProductionTests : OperationDataTestBase
 
     [Test(Description = "Validate begin context without replace scrap: In this case a job will be completed prematurely " +
                         "but should be considered in the begin context")]
-    public async Task  ValidateBeginContextWithPrematurelyCompletedJob()
+    public async Task ValidateBeginContextWithPrematurelyCompletedJob()
     {
         // Arrange
         var operationData = await GetReadyOperation(10, false, 10, 10);
@@ -249,7 +246,7 @@ public class OperationDataProductionTests : OperationDataTestBase
 
     [Test(Description = "If a operation is interrupting, the worker should have the possibility " +
                         "to begin the operation again. A new job with the residual amount should be dispatched.")]
-    public async Task  BeginOperationWhileInterrupting()
+    public async Task BeginOperationWhileInterrupting()
     {
         // Arrange
         var operationData = await GetInterruptingOperation(10, false, 10, 10);
@@ -278,7 +275,7 @@ public class OperationDataProductionTests : OperationDataTestBase
 
     [Test(Description = "If a operation is interrupted, the worker should have the possibility " +
                         "to begin the operation again. A new job should be dispatched.")]
-    public async Task  BeginOperationWhileInterrupted()
+    public async Task BeginOperationWhileInterrupted()
     {
         // Arrange
         var operationData = await GetInterruptedOperation(10, false, 10, 10);
@@ -296,7 +293,7 @@ public class OperationDataProductionTests : OperationDataTestBase
 
     [Test(Description = "If a operation is interrupted, the worker should have the possibility " +
                         "to begin the operation with an amount of zero to start the operation.")]
-    public async Task  BeginOperationWhileInterruptedWithAmountOfZero()
+    public async Task BeginOperationWhileInterruptedWithAmountOfZero()
     {
         // Arrange
         var operationData = await GetInterruptedOperation(10, false, 10, 10);
@@ -370,7 +367,7 @@ public class OperationDataProductionTests : OperationDataTestBase
     [TestCase(3, 0, Description = "Will simulate replacing scrap if parts fail in completing job.")]
     [TestCase(0, 2, Description = "Will simulate replacing scrap if parts are predicted to fail in completing job.")]
     [TestCase(2, 1, Description = "Will simulate replacing scrap if parts failed and are predicted to fail in completing job.")]
-    public async Task  ReplaceScrapWhileRunning(int failure, int predictedFailure)
+    public async Task ReplaceScrapWhileRunning(int failure, int predictedFailure)
     {
         var targetAmount = 10;
         // Arrange
@@ -400,7 +397,7 @@ public class OperationDataProductionTests : OperationDataTestBase
     }
 
     [Test(Description = "Will simulate replacing scrap if a part fails in completing scrap job.")]
-    public async Task  ReplaceScrapOfScrapJobWhileRunning()
+    public async Task ReplaceScrapOfScrapJobWhileRunning()
     {
         // Arrange
         var operationData = await GetRunningOperation(10, true, 10, 10);
@@ -446,7 +443,7 @@ public class OperationDataProductionTests : OperationDataTestBase
     }
 
     [Test(Description = "Will interrupt a running operation. Jobs should be complete.")]
-    public async Task  InterruptWhileRunning()
+    public async Task InterruptWhileRunning()
     {
         // Arrange
         var operationData = await GetRunningOperation(10, false, 10, 10);
@@ -465,7 +462,7 @@ public class OperationDataProductionTests : OperationDataTestBase
     }
 
     [Test(Description = "Operation should be interrupted if all jobs are completed while interrupting.")]
-    public async Task  JobCompletionWhileInterrupting()
+    public async Task JobCompletionWhileInterrupting()
     {
         // Arrange
         var operationData = await GetInterruptingOperation(10, false, 10, 10);

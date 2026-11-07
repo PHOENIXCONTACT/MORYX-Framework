@@ -1,10 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using Moryx.Tools;
 using NUnit.Framework;
 
@@ -145,7 +142,7 @@ public class ReflectionToolTests
         var prop = childType.GetProperty(nameof(ChildClass1.Foo));
         var accessor = ReflectionTool.PropertyAccessor<BaseClass, int>(prop);
         // Run once for JIT
-        var value = prop.GetValue(new ChildClass1());
+        _ = prop.GetValue(new ChildClass1());
         prop.SetValue(new ChildClass1(), 1);
         accessor.ReadProperty(new ChildClass1());
         accessor.WriteProperty(new ChildClass1(), 1);

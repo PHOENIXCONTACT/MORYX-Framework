@@ -1,7 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Moryx.AbstractionLayer.Capabilities;
 using Moryx.Operators.Attendances;
 using Moryx.Operators.Skills;
@@ -50,7 +49,8 @@ internal static class Converter
         LastName = @operator.LastName,
         Pseudonym = @operator.Pseudonym,
         Identifier = @operator.Identifier,
-        AssignedResources = @operator switch {
+        AssignedResources = @operator switch
+        {
             AssignableOperator assignable => assignable.AssignedResources.Select(ToModel),
             _ => []
         }
@@ -62,7 +62,10 @@ internal static class Converter
         var capabilitySerialize = EntryConvert.EncodeObject(type.AcquiredCapabilities);
         model.Capabilities = capabilitySerialize;
 
-        if (!full) return model;
+        if (!full)
+        {
+            return model;
+        }
 
         // Only serialize prototypes for detail view
         model.Capabilities.Prototypes = [.. _capabilitiyPrototypes.Values];
@@ -86,8 +89,7 @@ internal static class Converter
         ExpiresOn = skill.ObtainedOn.AddDays((int)skill.Type.Duration.TotalDays)
     };
 
-
-    internal static SignInStatusChangedModel ToModel(this SignInStatusChangedArgs eventArgs) => new ()
+    internal static SignInStatusChangedModel ToModel(this SignInStatusChangedArgs eventArgs) => new()
     {
         Status = eventArgs.Status,
         Operator = ToModel(eventArgs.Operator),

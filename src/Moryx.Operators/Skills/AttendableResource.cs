@@ -1,16 +1,15 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.AbstractionLayer.Capabilities;
-using Moryx.AbstractionLayer.Resources;
-using Moryx.Serialization;
-using Moryx.Tools;
-using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
+using Moryx.AbstractionLayer.Capabilities;
+using Moryx.AbstractionLayer.Resources;
 using Moryx.Operators.Attendances;
 using Moryx.Operators.Properties;
+using Moryx.Serialization;
+using Moryx.Tools;
 
 namespace Moryx.Operators.Skills;
 

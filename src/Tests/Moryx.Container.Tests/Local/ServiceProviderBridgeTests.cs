@@ -92,9 +92,9 @@ public class ServiceProviderBridgeTests
         public TimeProvider TimeProvider { get; } = timeProvider;
     }
 
-    private class FakeTimeProvider : TimeProvider;
+    private sealed class FakeTimeProvider : TimeProvider;
 
-    private class ServiceProviderMock(Func<Type, object> resolver) : IServiceProvider
+    private sealed class ServiceProviderMock(Func<Type, object> resolver) : IServiceProvider
     {
         public object GetService(Type serviceType) => resolver(serviceType);
     }

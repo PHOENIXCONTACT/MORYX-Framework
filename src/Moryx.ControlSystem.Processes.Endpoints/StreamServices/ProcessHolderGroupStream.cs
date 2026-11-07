@@ -13,7 +13,7 @@ namespace Moryx.ControlSystem.Processes.Endpoints.StreamServices;
 /// <summary>
 /// Provides the streaming functionality for the process holder Group
 /// </summary>
-internal class ProcessHolderGroupStream(IResourceManagement resourceManagement)
+internal sealed class ProcessHolderGroupStream(IResourceManagement resourceManagement)
 {
     private static readonly JsonSerializerOptions _serializerOptions = new()
     {

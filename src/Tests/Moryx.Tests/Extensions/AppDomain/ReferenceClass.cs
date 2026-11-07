@@ -1,11 +1,9 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
-
 namespace Moryx.Tests.Extensions;
 
-internal class ReferenceClass
+internal sealed class ReferenceClass
 {
     public int Ignore { get; set; }
 

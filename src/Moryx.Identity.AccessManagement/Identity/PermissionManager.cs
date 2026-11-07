@@ -9,7 +9,7 @@ using Moryx.Identity.AccessManagement.Data;
 namespace Moryx.Identity.AccessManagement;
 
 /// <inheritdoc/>
-internal class PermissionManager : IPermissionManager
+internal sealed class PermissionManager : IPermissionManager
 {
     private readonly MoryxRoleManager _roleManager;
     private readonly MoryxIdentitiesDbContext _identitiesDbContext;
@@ -32,13 +32,17 @@ internal class PermissionManager : IPermissionManager
     public async Task<IdentityResult> CreateAsync(string permission)
     {
         if (string.IsNullOrEmpty(permission))
+        {
             return IdentityResult.Failed(new IdentityError { Description = "Permission cannot be empty" });
+        }
 
         var friendlyName = FriendlyName(permission);
 
         var existing = await _identitiesDbContext.Permissions.FirstOrDefaultAsync(p => p.Name == friendlyName);
         if (existing != null)
+        {
             return IdentityResult.Failed(new IdentityError { Description = "Permission already exists" });
+        }
 
         var permissionEntity = new Permission { Name = friendlyName };
 
@@ -53,7 +57,9 @@ internal class PermissionManager : IPermissionManager
     {
         var existing = await _identitiesDbContext.Permissions.FirstOrDefaultAsync(p => p.Id == permissionId);
         if (existing == null)
+        {
             return IdentityResult.Failed(new IdentityError { Description = "Permission does not exists" });
+        }
 
         _identitiesDbContext.Permissions.Remove(existing);
 
@@ -66,7 +72,9 @@ internal class PermissionManager : IPermissionManager
     public Task<IList<Permission>> FindForRoleAsync(string roleName)
     {
         if (roleName == Roles.SuperAdmin)
+        {
             return GetSuperAdminPermissionsAsync();
+        }
 
         var role = _roleManager.Roles
             .Include(r => r.Permissions)
@@ -84,13 +92,17 @@ internal class PermissionManager : IPermissionManager
     {
         var role = await _roleManager.FindByNameAsync(roleName);
         if (role == null)
+        {
             return IdentityResult.Failed(new IdentityError { Description = "Role was not found" });
+        }
 
         foreach (var permissionToRemove in permissions)
         {
             var permissionEntry = role.Permissions.FirstOrDefault(p => p.Id == permissionToRemove.Id);
             if (permissionEntry != null)
+            {
                 role.Permissions.Remove(permissionEntry);
+            }
         }
 
         await _identitiesDbContext.SaveChangesAsync();
@@ -131,7 +143,9 @@ internal class PermissionManager : IPermissionManager
             .FirstOrDefaultAsync(r => r.Name == roleName);
 
         if (role == null)
+        {
             return IdentityResult.Failed(new IdentityError { Description = "Role was not found" });
+        }
 
         var permissionEntities = _identitiesDbContext.Permissions.Where(permissionEntity =>
             permissions.Contains(permissionEntity.Name));

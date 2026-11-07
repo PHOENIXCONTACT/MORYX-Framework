@@ -43,12 +43,16 @@ public readonly struct ProcessReference : IEquatable<ProcessReference>
     public bool Matches(Process process)
     {
         if (_processId != IrrelevantId)
+        {
             return _processId == process.Id;
+        }
 
         var prodProcess = process as ProductionProcess;
         var identity = (prodProcess?.ProductInstance as IIdentifiableObject)?.Identity;
         if (identity == null || _identity == null)
+        {
             return false;
+        }
 
         return identity.Equals(_identity);
     }
@@ -72,7 +76,9 @@ public readonly struct ProcessReference : IEquatable<ProcessReference>
     public override string ToString()
     {
         if (IsEmpty)
+        {
             return "Empty reference";
+        }
 
         return _processId == IrrelevantId ? $"Identity: {_identity}" : $"ProcessId: {_processId}";
     }
@@ -91,7 +97,10 @@ public readonly struct ProcessReference : IEquatable<ProcessReference>
     public override bool Equals(object obj)
     {
         if (ReferenceEquals(null, obj))
+        {
             return false;
+        }
+
         return obj is ProcessReference && Equals((ProcessReference)obj);
     }
 

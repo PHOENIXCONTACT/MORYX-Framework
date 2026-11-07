@@ -31,7 +31,9 @@ public class DatabaseConfig : ConfigBase
     public void UpdatePropertiesFromConnectionString()
     {
         if (string.IsNullOrEmpty(ConnectionString))
+        {
             return;
+        }
 
         var keyPropertyMap = GetType()
             .GetProperties(BindingFlags.Public | BindingFlags.Instance)
@@ -48,7 +50,9 @@ public class DatabaseConfig : ConfigBase
         {
             var keyValue = stringPair.Split(['='], 2);
             if (keyValue.Length != 2)
+            {
                 continue;
+            }
 
             if (keyPropertyMap.TryGetValue(keyValue[0], out var property))
             {

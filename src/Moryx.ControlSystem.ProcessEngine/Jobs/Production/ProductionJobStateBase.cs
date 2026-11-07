@@ -19,9 +19,13 @@ internal abstract class ProductionJobStateBase : JobStateBase
     {
         Context.LoadProcesses();
         if (Context.RunningProcesses.Any())
+        {
             NextState(StateCleanUp);
+        }
         else
+        {
             NextState(StateCompleted);
+        }
     }
 
     [StateDefinition(typeof(InitialState), IsInitial = true)]

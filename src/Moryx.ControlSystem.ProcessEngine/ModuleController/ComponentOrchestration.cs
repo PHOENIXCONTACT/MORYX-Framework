@@ -55,7 +55,9 @@ internal class ComponentOrchestration
 
         // Boot all listeners
         foreach (var listener in PoolListeners.OrderBy(l => l.StartOrder))
+        {
             listener.Initialize();
+        }
 
         JobList.Start();
 
@@ -68,10 +70,14 @@ internal class ComponentOrchestration
 
         // Start execution
         foreach (var listener in PoolListeners.OrderBy(l => l.StartOrder))
+        {
             listener.Start();
+        }
 
         if (JobManager.AwaitBoot(Config.BootSyncTimeoutSec))
+        {
             Logger.Log(LogLevel.Warning, new TimeoutException("Job manager ran into a timeout trying to restore the previous job list state!"), "Timeout");
+        }
     }
 
     public void Stop()

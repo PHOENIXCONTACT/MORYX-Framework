@@ -6,7 +6,7 @@ using Opc.Ua.Client;
 
 namespace Moryx.Drivers.OpcUa.Tests.Mocks;
 
-internal class FakeSubscriptionFactory : SubscriptionFactory
+internal sealed class FakeSubscriptionFactory : SubscriptionFactory
 {
     public override Subscription CreateSubscription(Subscription fromSubscription)
     {

@@ -2,21 +2,21 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections;
-using Moryx.Model;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;
+using Moryx.Logging;
+using Moryx.Model;
 using Moryx.Model.Repositories;
+using Moryx.Products.Management.Model;
 using Moryx.Tools;
 using static Moryx.Products.Management.ProductExpressionHelpers;
-using Moryx.Logging;
-using Microsoft.Extensions.Logging;
-using Moryx.AbstractionLayer.Identity;
-using Moryx.Products.Management.Model;
 
 namespace Moryx.Products.Management;
 
@@ -92,10 +92,14 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
         foreach (var config in Config.TypeStrategies)
         {
             var strategy = await StrategyFactory.CreateTypeStrategy(config, cancellationToken);
-            if (!_typeInformation.ContainsKey(config.TargetType))
-                _typeInformation.Add(config.TargetType, new ProductTypeInformation(strategy.TargetType));
-            _typeInformation[config.TargetType].Strategy = strategy;
-            _typeInformation[config.TargetType].Constructor = ReflectionTool.ConstructorDelegate<ProductType>(strategy.TargetType);
+            if (!_typeInformation.TryGetValue(config.TargetType, out var value))
+            {
+                value = new ProductTypeInformation(strategy.TargetType);
+                _typeInformation.Add(config.TargetType, value);
+            }
+
+            value.Strategy = strategy;
+            value.Constructor = ReflectionTool.ConstructorDelegate<ProductType>(strategy.TargetType);
         }
 
         // Create instance strategies
@@ -109,13 +113,17 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
         foreach (var config in Config.LinkStrategies)
         {
             if (!_typeInformation.TryGetValue(config.TargetType, out var typeInfo))
+            {
                 continue;
+            }
 
             var strategy = await StrategyFactory.CreateLinkStrategy(config, cancellationToken);
-            if (!typeInfo.PartLinksInformation.ContainsKey(config.PartName))
-                typeInfo.PartLinksInformation.Add(config.PartName, new ConstructorStrategyInformation<ProductPartLink, ProductLinkConfiguration, IProductLinkStrategy>());
+            if (!typeInfo.PartLinksInformation.TryGetValue(config.PartName, out var partLinkInfo))
+            {
+                partLinkInfo = new ConstructorStrategyInformation<ProductPartLink, ProductLinkConfiguration, IProductLinkStrategy>();
+                typeInfo.PartLinksInformation.Add(config.PartName, partLinkInfo);
+            }
 
-            var partLinkInfo = typeInfo.PartLinksInformation[config.PartName];
             partLinkInfo.Strategy = strategy;
 
             var property = strategy.TargetType.GetProperty(config.PartName);
@@ -141,11 +149,14 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
         foreach (var config in Config.RecipeStrategies)
         {
             var strategy = await StrategyFactory.CreateRecipeStrategy(config, cancellationToken);
-            if (!_recipeInformation.ContainsKey(config.TargetType))
-                _recipeInformation.Add(config.TargetType, new ConstructorStrategyInformation<IProductRecipe, ProductRecipeConfiguration, IProductRecipeStrategy>());
+            if (!_recipeInformation.TryGetValue(config.TargetType, out var value))
+            {
+                value = new ConstructorStrategyInformation<IProductRecipe, ProductRecipeConfiguration, IProductRecipeStrategy>();
+                _recipeInformation.Add(config.TargetType, value);
+            }
 
-            _recipeInformation[config.TargetType].Strategy = strategy;
-            _recipeInformation[config.TargetType].Constructor = ReflectionTool.ConstructorDelegate<IProductRecipe>(strategy.TargetType);
+            value.Strategy = strategy;
+            value.Constructor = ReflectionTool.ConstructorDelegate<IProductRecipe>(strategy.TargetType);
         }
     }
 
@@ -175,7 +186,9 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
         var repo = uow.GetRepository<IProductTypeRepository>();
         var productEntity = repo.GetByKey(productId);
         if (productEntity == null)
+        {
             return null;
+        }
 
         var classificationMask = (int)classifications;
         var recipeEntities = (from recipeEntity in uow.GetRepository<IProductRecipeRepository>().Linq.Active()
@@ -273,7 +286,9 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
         if (!string.IsNullOrEmpty(query.TypeName))
         {
             if (query.ExcludeDerivedTypes)
+            {
                 productsQuery = productsQuery.Where(p => p.TypeName == query.TypeName);
+            }
             else
             {
                 var baseType = _typeInformation[query.TypeName].Type;
@@ -281,10 +296,15 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
                 {
                     // Check if any interface matches
                     if (type.GetInterface(query.TypeName) != null)
+                    {
                         return true;
+                    }
                     // Check if type or base type matches
                     if (baseType == null)
+                    {
                         return false;
+                    }
+
                     return baseType.IsAssignableFrom(type);
                 }).Select(t => t.FullName);
                 productsQuery = productsQuery.Where(p => allTypes.Contains(p.TypeName));
@@ -323,13 +343,21 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
             var identifierMatches = Regex.Match(query.Identifier, "(?<startCard>\\*)?(?<filter>\\w*)(?<endCard>\\*)?");
             var identifier = identifierMatches.Groups["filter"].Value.ToLower();
             if (identifierMatches.Groups["startCard"].Success && identifierMatches.Groups["endCard"].Success)
+            {
                 productsQuery = productsQuery.Where(p => p.Identifier.ToLower().Contains(identifier));
+            }
             else if (identifierMatches.Groups["startCard"].Success)
+            {
                 productsQuery = productsQuery.Where(p => p.Identifier.ToLower().EndsWith(identifier));
+            }
             else if (identifierMatches.Groups["endCard"].Success)
+            {
                 productsQuery = productsQuery.Where(p => p.Identifier.ToLower().StartsWith(identifier));
+            }
             else
+            {
                 productsQuery = productsQuery.Where(p => p.Identifier.ToLower() == identifier);
+            }
         }
 
         // Filter by revision
@@ -345,13 +373,19 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
 
         // Filter by name
         if (!string.IsNullOrEmpty(query.Name))
+        {
             productsQuery = productsQuery.Where(p => p.Name.ToLower().Contains(query.Name.ToLower()));
+        }
 
         // Filter by recipe
         if (query.RecipeFilter == RecipeFilter.WithRecipe)
+        {
             productsQuery = productsQuery.Where(p => p.Recipes.Any());
+        }
         else if (query.RecipeFilter == RecipeFilter.WithoutRecipes)
+        {
             productsQuery = productsQuery.Where(p => p.Recipes.Count == 0);
+        }
 
         // Apply selector
         productsQuery = query.Selector switch
@@ -438,13 +472,14 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
         // No query or no result => Nothing to do
         List<ProductTypeEntity> entities;
         if (query == null || (entities = query.ToList()).Count == 0)
+        {
             return Array.Empty<TType>();
+        }
 
         var loadedProducts = new Dictionary<long, ProductType>();
 
         var transformed = entities.Select(entity => Transform(uow, entity, false, cancellationToken, loadedProducts));
         var instances = (await Task.WhenAll(transformed)).OfType<TType>().ToArray();
-
 
         // Final check against compiled expression
         var compiledSelector = selector.Compile();
@@ -486,9 +521,13 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
                 .Where(p => p.Identifier == identity.Identifier)
                 .Select(p => p.Revision).ToList();
             if (revisions.Any())
+            {
                 revision = revisions.Max();
+            }
             else
+            {
                 return null;
+            }
         }
 
         var product = uow.GetRepository<IProductTypeRepository>().Linq.Active()
@@ -503,7 +542,9 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
 
         // Take converted product from dictionary if we already transformed it
         if (loadedProducts.TryGetValue(typeEntity.Id, out var loadedProduct))
+        {
             return loadedProduct;
+        }
 
         // Strategy to load product and its parts
         var strategy = _typeInformation[typeEntity.TypeName].Strategy;
@@ -518,7 +559,9 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
 
         // Don't load parts and parent for partial view
         if (full)
+        {
             await LoadParts(uow, typeEntity, product, loadedProducts, cancellationToken);
+        }
 
         // Assign instance to dictionary of loaded products
         loadedProducts[typeEntity.Id] = product;
@@ -716,7 +759,9 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
         }
 
         if (link.Product.Id == 0)
+        {
             return await SaveType(saverContext, link.Product, cancellationToken);
+        }
 
         return saverContext.UnitOfWork.GetEntity<ProductTypeEntity>(link.Product);
     }
@@ -823,7 +868,9 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
         // No query or no result => Nothing to do
         List<ProductInstanceEntity> entities;
         if (query == null || (entities = query.ToList()).Count == 0)
+        {
             return Array.Empty<TInstance>();
+        }
 
         var instances = (await TransformInstances(uow, entities, cancellationToken)).OfType<TInstance>().ToArray();
         // Final check against compiled expression
@@ -877,7 +924,9 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
         // Check if instances of this type are persisted
         var strategy = _instanceStrategies[productInstance.ProductInstanceTypeName()];
         if (strategy.SkipInstances)
+        {
             return;
+        }
 
         // Transform entity to instance
         await strategy.LoadInstanceAsync(entity, productInstance, cancellationToken);
@@ -951,7 +1000,9 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
 
         // Write all to entity objects
         foreach (var instance in productInstances)
+        {
             await SaveInstance(uow, instance, cancellationToken);
+        }
 
         // Save transaction
         uow.SaveChanges();
@@ -965,7 +1016,9 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
         // Check if this type is persisted
         var strategy = _instanceStrategies[productInstance.ProductInstanceTypeName()];
         if (strategy.SkipInstances)
+        {
             return null;
+        }
 
         // Save to entity
         var archived = uow.GetEntity<ProductInstanceEntity>(productInstance);
@@ -981,7 +1034,9 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
             {
                 var partEntity = await SaveInstance(uow, part, cancellationToken);
                 if (partEntity == null) // Parts are null when they are skipped
+                {
                     continue;
+                }
 
                 partEntity.Parent = archived;
                 partEntity.PartLinkEntityId = part.PartLink.Id;
@@ -994,10 +1049,14 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
     public IProductRecipe CreateRecipe(string recipeType)
     {
         if (!_recipeInformation.TryGetValue(recipeType, out var recipeInfo))
+        {
             return null;
+        }
 
         if (recipeInfo.Constructor == null)
+        {
             return null;
+        }
 
         var result = recipeInfo.Constructor();
 
@@ -1007,7 +1066,9 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
     public ProductTypeWrapper GetTypeWrapper(string typeName)
     {
         if (!_typeInformation.TryGetValue(typeName, out var typeInfo))
+        {
             return null;
+        }
 
         return typeInfo.GetTypeWrapper();
     }
@@ -1034,11 +1095,15 @@ internal class ProductStorage : IProductStorage, IConfiguredTypesProvider
                            }).FirstOrDefault();
         // No match, nothing removed!
         if (queryResult == null)
+        {
             return Task.FromResult(false);
+        }
 
         // If products would be affected by the removal, we do not remove it
         if (queryResult.parentCount >= 1)
+        {
             return Task.FromResult(false);
+        }
 
         // No products affected, so we can remove the product
         productRepo.Remove(queryResult.entity);

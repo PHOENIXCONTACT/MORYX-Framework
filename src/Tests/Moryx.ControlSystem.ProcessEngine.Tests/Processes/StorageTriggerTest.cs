@@ -1,8 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Threading;
 using Moq;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Processes;
@@ -121,8 +119,9 @@ public class StorageTriggerTest : ProcessTestsBase
             var instance = ((ProductionProcess)process.Process).ProductInstance;
             Assert.That(instance, Is.Not.Null);
             if (triggerState == ProcessState.Ready)
+            {
                 _productManagementMock.Verify(p => p.SaveInstanceAsync(It.IsAny<DummyProductInstance>()), Times.Once, "There should be a SaveInstance call");
-
+            }
         }
     }
 
@@ -180,7 +179,10 @@ public class StorageTriggerTest : ProcessTestsBase
         var activity = CreateActivityData(modification, process.Id);
         DataPool.AddProcess(process);
         if (processType > ProcessTypes.ProductionProcessWithInstance)
+        {
             ((ProductionProcess)process.Process).ProductInstance.Id = articleId;
+        }
+
         DataPool.AddActivity(process, activity);
 
         // Act

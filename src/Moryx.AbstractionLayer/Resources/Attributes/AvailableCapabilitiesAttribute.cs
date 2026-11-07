@@ -66,19 +66,21 @@ public class AvailableCapabilitiesAttribute : PossibleValuesAttribute
     {
         // Value Types can be instantiated like this
         if (type.IsValueType)
+        {
             return Activator.CreateInstance(type);
+        }
 
         // Check if there is a default constructor for that type
         var defaultCtor = type.GetConstructor(Type.EmptyTypes);
         if (defaultCtor != null)
+        {
             return Activator.CreateInstance(type);
+        }
 
         // If nothing helps: get a parameter constructor and instanciate default values for the parameters.
         var constructorInfo = type.GetConstructors().First();
-
-        object[] ctorArgs = null;
         var parameters = constructorInfo.GetParameters();
-        ctorArgs = new object[parameters.Length];
+        var ctorArgs = new object[parameters.Length];
         for (int i = 0; i < parameters.Length; i++)
         {
             var parameterInfo = parameters[i];
