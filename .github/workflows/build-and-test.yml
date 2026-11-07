@@ -46,6 +46,21 @@ jobs:
       node_version: ${{ needs.EnvVar.outputs.node_version }}
       REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
 
+  FormatCheck:
+    name: Format check
+    needs: [EnvVar]
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
+
+      - name: Verify formatting
+        run: dotnet format "${{ github.workspace }}/MORYX-Framework.slnx" --verify-no-changes --verbosity minimal
+
   UnitTests:
     name: Unit Tests
     needs: [EnvVar, Build]
