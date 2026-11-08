@@ -1,4 +1,4 @@
-openapi: '3.1.1'
+openapi: 3.0.4
 info:
   title: StartProject.Asp | v1
   version: 1.0.0
@@ -692,8 +692,6 @@ paths:
       responses:
         '200':
           description: OK
-          content:
-            application/json: { }
   '/api/moryx/jobs/{jobId}/abort':
     post:
       tags:
@@ -709,8 +707,6 @@ paths:
       responses:
         '200':
           description: OK
-          content:
-            application/json: { }
   /api/moryx/jobs/stream:
     get:
       tags:
@@ -719,8 +715,6 @@ paths:
       responses:
         '200':
           description: OK
-          content:
-            application/json: { }
   /api/moryx/media:
     get:
       tags:
@@ -1562,8 +1556,6 @@ paths:
       responses:
         '200':
           description: OK
-          content:
-            application/json: { }
         '404':
           description: Not Found
           content:
@@ -1618,8 +1610,6 @@ paths:
       responses:
         '204':
           description: No Content
-          content:
-            application/json: { }
         '400':
           description: Bad Request
           content:
@@ -1849,8 +1839,6 @@ paths:
       responses:
         '200':
           description: OK
-          content:
-            application/json: { }
         '400':
           description: Bad Request
           content:
@@ -1881,8 +1869,6 @@ paths:
       responses:
         '200':
           description: OK
-          content:
-            application/json: { }
         '400':
           description: Bad Request
           content:
@@ -1903,8 +1889,6 @@ paths:
       responses:
         '200':
           description: OK
-          content:
-            application/json: { }
   /api/moryx/orders:
     get:
       tags:
@@ -1981,20 +1965,13 @@ paths:
             text/event-stream:
               schema:
                 oneOf:
-                  - description: 'Published with type ''Start'': Published when operation has been started'
-                    $ref: '#/components/schemas/SseItemOfOperationStartedModel'
-                  - description: Published with type 'Progress'
-                    $ref: '#/components/schemas/SseItemOfOperationModel'
-                  - description: Published with type 'Completed'
-                    $ref: '#/components/schemas/SseItemOfOperationReportedModel'
-                  - description: Published with type 'Interrupted'
-                    $ref: '#/components/schemas/SseItemOfOperationReportedModel'
-                  - description: Published with type 'Report'
-                    $ref: '#/components/schemas/SseItemOfOperationReportedModel'
-                  - description: Published with type 'Advice'
-                    $ref: '#/components/schemas/SseItemOfOperationAdvicedModel'
-                  - description: Published with type 'Update'
-                    $ref: '#/components/schemas/SseItemOfOperationModel'
+                  - $ref: '#/components/schemas/SseItemOfOperationStartedModel'
+                  - $ref: '#/components/schemas/SseItemOfOperationModel'
+                  - $ref: '#/components/schemas/SseItemOfOperationReportedModel'
+                  - $ref: '#/components/schemas/SseItemOfOperationReportedModel'
+                  - $ref: '#/components/schemas/SseItemOfOperationReportedModel'
+                  - $ref: '#/components/schemas/SseItemOfOperationAdvicedModel'
+                  - $ref: '#/components/schemas/SseItemOfOperationModel'
                 discriminator:
                   propertyName: type
                   mapping:
@@ -2209,8 +2186,6 @@ paths:
       responses:
         '200':
           description: OK
-          content:
-            application/json: { }
         '400':
           description: Bad Request
           content:
@@ -2285,8 +2260,6 @@ paths:
       responses:
         '200':
           description: OK
-          content:
-            application/json: { }
         '400':
           description: Bad Request
           content:
@@ -2353,8 +2326,6 @@ paths:
       responses:
         '200':
           description: OK
-          content:
-            application/json: { }
         '400':
           description: Bad Request
           content:
@@ -2429,8 +2400,6 @@ paths:
       responses:
         '200':
           description: OK
-          content:
-            application/json: { }
         '400':
           description: Bad Request
           content:
@@ -2516,8 +2485,6 @@ paths:
       responses:
         '200':
           description: OK
-          content:
-            application/json: { }
         '400':
           description: Bad Request
           content:
@@ -2560,8 +2527,6 @@ paths:
       responses:
         '200':
           description: OK
-          content:
-            application/json: { }
         '400':
           description: Bad Request
           content:
@@ -2591,8 +2556,6 @@ paths:
       responses:
         '200':
           description: OK
-          content:
-            application/json: { }
         '400':
           description: Bad Request
           content:
@@ -2845,8 +2808,6 @@ paths:
       responses:
         '200':
           description: OK
-          content:
-            application/json: { }
         '404':
           description: Not Found
           content:
@@ -2868,8 +2829,6 @@ paths:
       responses:
         '200':
           description: OK
-          content:
-            application/json: { }
         '404':
           description: Not Found
           content:
@@ -3322,8 +3281,6 @@ paths:
       responses:
         '200':
           description: OK
-          content:
-            application/json: { }
         '400':
           description: Bad Request
           content:
@@ -3555,8 +3512,6 @@ paths:
                 $ref: '#/components/schemas/ProblemDetails'
         '500':
           description: Internal Server Error
-          content:
-            application/json: { }
   /api/moryx/resources/query:
     post:
       tags:
@@ -3664,8 +3619,6 @@ paths:
                 $ref: '#/components/schemas/ProblemDetails'
         '500':
           description: Internal Server Error
-          content:
-            application/json: { }
     delete:
       tags:
         - ResourceModification
@@ -3680,8 +3633,6 @@ paths:
       responses:
         '200':
           description: OK
-          content:
-            application/json: { }
         '400':
           description: Bad Request
           content:
@@ -3855,8 +3806,6 @@ paths:
       responses:
         '200':
           description: OK
-          content:
-            application/json: { }
   /api/moryx/shifts/filter:
     get:
       tags:
@@ -3897,8 +3846,6 @@ paths:
       responses:
         '200':
           description: OK
-          content:
-            application/json: { }
   /api/moryx/shifts/types:
     get:
       tags:
@@ -3955,8 +3902,6 @@ paths:
       responses:
         '200':
           description: OK
-          content:
-            application/json: { }
   '/api/moryx/shifts/types/{id}':
     delete:
       tags:
@@ -3972,8 +3917,6 @@ paths:
       responses:
         '200':
           description: OK
-          content:
-            application/json: { }
   /api/moryx/shifts/assignements:
     get:
       tags:
@@ -4030,8 +3973,6 @@ paths:
       responses:
         '200':
           description: OK
-          content:
-            application/json: { }
   /api/moryx/shifts/assignements/filter:
     get:
       tags:
@@ -4072,8 +4013,6 @@ paths:
       responses:
         '200':
           description: OK
-          content:
-            application/json: { }
   /api/moryx/skills/types:
     get:
       tags:
@@ -4142,8 +4081,6 @@ paths:
       responses:
         '204':
           description: No Content
-          content:
-            application/json: { }
         '400':
           description: Bad Request
           content:
@@ -4201,8 +4138,6 @@ paths:
       responses:
         '204':
           description: No Content
-          content:
-            application/json: { }
         '400':
           description: Bad Request
           content:
@@ -4333,8 +4268,6 @@ paths:
       responses:
         '204':
           description: No Content
-          content:
-            application/json: { }
         '400':
           description: Bad Request
           content:
@@ -4437,8 +4370,6 @@ paths:
       responses:
         '200':
           description: OK
-          content:
-            application/json: { }
     delete:
       tags:
         - VisualInstructions
@@ -4464,8 +4395,6 @@ paths:
       responses:
         '200':
           description: OK
-          content:
-            application/json: { }
   '/api/moryx/instructions/{identifier}/response':
     put:
       tags:
@@ -4492,8 +4421,6 @@ paths:
       responses:
         '200':
           description: OK
-          content:
-            application/json: { }
         '404':
           description: Not Found
           content:
@@ -4629,8 +4556,6 @@ paths:
       responses:
         '200':
           description: OK
-          content:
-            application/json: { }
         '404':
           description: Not Found
           content:
@@ -4782,8 +4707,6 @@ paths:
       responses:
         '200':
           description: OK
-          content:
-            application/json: { }
   '/api/moryx/workplans/sessions/{sessionId}/autolayout':
     get:
       tags:
@@ -5092,6 +5015,12 @@ components:
         orderReferenceModel:
           $ref: '#/components/schemas/OrderReferenceModel'
     ActivityClassification:
+      enum:
+        - Unknown
+        - Production
+        - Setup
+        - Maintenance
+        - Preparation
       type: string
       description: "Defines different classifications of activities. A resource will define accepted classifications\r\nin the published ReadyToWork. An activity declares its classification which is compared\r\nto the accepted classification within the kernel. While a ReadyToWork can accept multiple\r\nclassifications (by combining flags), an activity has only one classification."
     ActivityResourceModel:
@@ -5101,9 +5030,8 @@ components:
           type: integer
           format: int64
         name:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
     AdviceContext:
       type: object
       properties:
@@ -5116,17 +5044,15 @@ components:
       type: object
       properties:
         toteBoxNumber:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         amount:
           type: integer
           format: int32
         partId:
-          type:
-            - 'null'
-            - integer
+          type: integer
           format: int64
+          nullable: true
     ApiError:
       required:
         - errorCode
@@ -5134,30 +5060,26 @@ components:
       type: object
       properties:
         errorCode:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         message:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         exception:
           $ref: '#/components/schemas/Exception'
     'ApiResponseOfProcessHolderGroupModel[]':
       type: object
       properties:
         data:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/ProcessHolderGroupModel'
+          nullable: true
         errors:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/ApiError'
+          nullable: true
         succeeded:
           type: boolean
         timestamp:
@@ -5167,64 +5089,50 @@ components:
       type: object
       properties:
         assemblyProduct:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         assemblyVersion:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         assemblyInformationalVersion:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         assemblyDescription:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         assemblyCompanyName:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         assemblyTitle:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         assemblyConfiguration:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         targetFramework:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         assemblyCopyright:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         assemblyTrademark:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
     AssemblyModel:
       type: object
       properties:
         name:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         version:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         fileVersion:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         informationalVersion:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
     AssignableOperator:
       required:
         - identifier
@@ -5239,37 +5147,64 @@ components:
         identifier:
           type: string
         firstName:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         lastName:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         pseudonym:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
     AssignedDays:
+      enum:
+        - All
+        - First
+        - Second
+        - Third
+        - Fourth
+        - Fifth
+        - Sixth
+        - Seventh
+        - Eighth
+        - Ninth
+        - Tenth
+        - Eleventh
+        - Twelfth
+        - Thirteenth
+        - Fourteenth
+        - Fifteenth
+        - Sixteenth
+        - Seventeenth
+        - Eighteenth
+        - Nineteenth
+        - Twentieth
+        - TwentyFirst
+        - TwentySecond
+        - TwentyThird
+        - TwentyFourth
+        - TwentyFifth
+        - TwentySixth
+        - TwentySeventh
+        - TwentyEighth
+        - TwentyNinth
+        - Thirtieth
+        - ThirtyFirst
       type: string
     AttendableResourceModel:
       type: object
       properties:
         id:
-          type:
-            - 'null'
-            - integer
+          type: integer
           format: int64
+          nullable: true
         name:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         requiredSkills:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             type: string
+          nullable: true
     BeginContext:
       type: object
       properties:
@@ -5292,12 +5227,11 @@ components:
           type: boolean
           description: Indicator if an adjustment of the operation is possible
         restrictions:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/RestrictionDescription'
           description: Reasons why a begin is not possible
+          nullable: true
         successCount:
           type: integer
           description: Current success count of the operation
@@ -5314,13 +5248,13 @@ components:
           type: integer
           format: int32
         userId:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
     Category:
       enum:
         - ProcessHolderGroup
         - ParentResource
+      type: string
     CellLocationModel:
       type: object
       properties:
@@ -5337,37 +5271,33 @@ components:
       type: object
       properties:
         valueUnit:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         iconName:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         isDisplayed:
           type: boolean
         currentValue: { }
         displayName:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
     CellSettingsModel:
       type: object
       properties:
         image:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         icon:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
     CellState:
       enum:
         - Idle
         - Requested
         - Running
         - NotReadyToWork
+      type: string
     CellStateChangedModel:
       type: object
       properties:
@@ -5386,10 +5316,12 @@ components:
         - OnlySave
         - SaveAndReincarnate
         - UpdateLiveAndSave
+      type: string
     ConfirmationType:
       enum:
         - Partial
         - Final
+      type: string
       description: Confirmation type while reporting amounts of an operation
     ContentDescriptorModel:
       type: object
@@ -5398,99 +5330,85 @@ components:
           type: string
           format: uuid
         name:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         variants:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/VariantDescriptor'
+          nullable: true
         master:
           $ref: '#/components/schemas/VariantDescriptor'
     DatabaseConfigModel:
       type: object
       properties:
         configuratorType:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         connectionString:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         properties:
           $ref: '#/components/schemas/Entry'
     DatabaseMigrationSummary:
       type: object
       properties:
         result:
-          description: Flag that any updates were performed
           $ref: '#/components/schemas/MigrationResult'
         errors:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             type: string
           description: 'Reason, in case an error occured during migration'
+          nullable: true
         executedMigrations:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             type: string
           description: All updates that were executed
+          nullable: true
       description: Result object created from running a database update
     DatabasesResponse:
       type: object
       properties:
         databases:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/DataModel'
+          nullable: true
         configurators:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/ModelConfiguratorModel'
+          nullable: true
     DataModel:
       type: object
       properties:
         targetModel:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         config:
           $ref: '#/components/schemas/DatabaseConfigModel'
         possibleConfigurators:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             type: string
+          nullable: true
         setups:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/SetupModel'
+          nullable: true
         availableMigrations:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/DbMigrationsModel'
+          nullable: true
         appliedMigrations:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/DbMigrationsModel'
+          nullable: true
     DataType:
       enum:
         - Custom
@@ -5510,13 +5428,13 @@ components:
         - CreditCard
         - PostalCode
         - Upload
+      type: string
     DbMigrationsModel:
       type: object
       properties:
         name:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
     DependencyEvaluation:
       type: object
       properties:
@@ -5536,96 +5454,73 @@ components:
       type: object
       properties:
         identifier:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         number:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         revision:
           type: integer
           format: int16
         type:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         description:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         contentType:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         source:
-          type:
-            - 'null'
-            - string
-    EntityTagHeaderValue:
-      type: object
-      properties:
-        tag:
-          $ref: '#/components/schemas/StringSegment'
-        isWeak:
-          type: boolean
+          type: string
+          nullable: true
     Entry:
       type: object
       properties:
         displayName:
-          type:
-            - 'null'
-            - string
+          type: string
           description: Name of the item - property name or list item name
+          nullable: true
         identifier:
-          type:
-            - 'null'
-            - string
+          type: string
           description: Unique identifier - property name or item index
+          nullable: true
         description:
-          type:
-            - 'null'
-            - string
+          type: string
           description: Description of the entry
+          nullable: true
         value:
-          description: Value of the entry
           $ref: '#/components/schemas/EntryValue'
         validation:
-          description: Validation information
           $ref: '#/components/schemas/EntryValidation'
         subEntries:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/Entry'
           description: Subentries of this entry - properties or list items
+          nullable: true
         prototypes:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/Entry'
           description: Prototypes that can be used to create subentries
+          nullable: true
       description: Model class representing a single property of a config class
     EntryPossible:
       type: object
       properties:
         key:
-          type:
-            - 'null'
-            - string
+          type: string
           description: Invariant key of the possible value.
+          nullable: true
         displayName:
-          type:
-            - 'null'
-            - string
+          type: string
           description: Display name of the possible value.
+          nullable: true
         description:
-          type:
-            - 'null'
-            - string
+          type: string
           description: Description of the possible value.
+          nullable: true
       description: Possible value for an entry.
     EntryUnitType:
       enum:
@@ -5635,12 +5530,12 @@ components:
         - DirectoryPath
         - Flags
         - Base64
+      type: string
       description: Enum describes the unit type of a entry
     EntryValidation:
       type: object
       properties:
         dataType:
-          description: Logical data types that may appear
           $ref: '#/components/schemas/DataType'
         minimum:
           type: number
@@ -5651,10 +5546,9 @@ components:
           description: Maximum value or maximal length of strings
           format: double
         regex:
-          type:
-            - 'null'
-            - string
+          type: string
           description: Regex pattern for this entry
+          nullable: true
         isRequired:
           type: boolean
           description: Indicated if the field is required and should not be empty
@@ -5663,28 +5557,23 @@ components:
       type: object
       properties:
         type:
-          description: Type of this entry
           $ref: '#/components/schemas/EntryValueType'
         unitType:
-          description: Unit type of this entry
           $ref: '#/components/schemas/EntryUnitType'
         current:
-          type:
-            - 'null'
-            - string
+          type: string
           description: Current value of this entry
+          nullable: true
         default:
-          type:
-            - 'null'
-            - string
+          type: string
           description: Default value of this entry
+          nullable: true
         possible:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/EntryPossible'
           description: Possible values for this entry
+          nullable: true
         isReadOnly:
           type: boolean
           description: Indicates wether the field is read only
@@ -5712,6 +5601,7 @@ components:
         - Date
         - Time
         - TimeSpan
+      type: string
       description: Possible value types
     Exception:
       type: object
@@ -5719,30 +5609,25 @@ components:
         targetSite:
           $ref: '#/components/schemas/MethodBase'
         message:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         data:
-          type:
-            - 'null'
-            - object
+          type: object
+          nullable: true
         innerException:
           $ref: '#/components/schemas/Exception'
         helpLink:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         source:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         hResult:
           type: integer
           format: int32
         stackTrace:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
     ExecuteSetupRequest:
       type: object
       properties:
@@ -5754,27 +5639,22 @@ components:
       type: object
       properties:
         assignedResources:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/AttendableResourceModel'
+          nullable: true
         identifier:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         firstName:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         lastName:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         pseudonym:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
     FactoryModel:
       type: object
       properties:
@@ -5785,84 +5665,58 @@ components:
           type: integer
           format: int64
         backgroundURL:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         title:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
     FactoryStateModel:
       type: object
       properties:
         backgroundURL:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         hasManufacturingFactory:
           type: boolean
         orderModels:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/OrderModel'
+          nullable: true
         activityChangedModels:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/ActivityChangedModel'
+          nullable: true
         cellStateChangedModels:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/CellStateChangedModel'
+          nullable: true
         resourceChangedModels:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/ResourceChangedModel'
+          nullable: true
         id:
           type: integer
           format: int64
         location:
           $ref: '#/components/schemas/CellLocationModel'
         iconName:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         isACell:
           type: boolean
     FailureBehaviour:
+      enum:
+        - Stop
+        - StopAndNotify
       type: string
       description: 'Enum flags: Notify - Reincarnate'
     FileStreamResult:
-      type: object
-      properties:
-        fileStream:
-          $ref: '#/components/schemas/Stream'
-        contentType:
-          type:
-            - 'null'
-            - string
-        fileDownloadName:
-          type:
-            - 'null'
-            - string
-        lastModified:
-          type:
-            - 'null'
-            - string
-          format: date-time
-        entityTag:
-          oneOf:
-            - type: 'null'
-            - $ref: '#/components/schemas/EntityTagHeaderValue'
-        enableRangeProcessing:
-          type: boolean
+      type: string
+      format: binary
     Foo:
       type: object
       properties:
@@ -5873,13 +5727,11 @@ components:
       type: object
       properties:
         machineName:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         osInformation:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         upTime:
           type: integer
           format: int64
@@ -5898,19 +5750,18 @@ components:
         - Unknown
         - Text
         - Media
+      type: string
     InstructionItemModel:
       type: object
       properties:
         contentType:
           $ref: '#/components/schemas/InstructionContentType'
         content:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         preview:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
     InstructionModel:
       type: object
       properties:
@@ -5918,25 +5769,22 @@ components:
           type: integer
           format: int64
         sender:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         type:
           $ref: '#/components/schemas/InstructionType'
         items:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/InstructionItemModel'
+          nullable: true
         inputs:
           $ref: '#/components/schemas/Entry'
         results:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/InstructionResultModel'
+          nullable: true
     InstructionResponseModel:
       type: object
       properties:
@@ -5946,26 +5794,24 @@ components:
         inputs:
           $ref: '#/components/schemas/Entry'
         result:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         selectedResult:
           $ref: '#/components/schemas/InstructionResultModel'
     InstructionResultModel:
       type: object
       properties:
         key:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         displayValue:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
     InstructionType:
       enum:
         - Display
         - Execute
+      type: string
     InternalOperationClassification:
       enum:
         - Initial
@@ -5978,19 +5824,18 @@ components:
         - Interrupted
         - Completed
         - AmountReached
+      type: string
     InvocationResponse:
       type: object
       properties:
         success:
           type: boolean
         exceptionType:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         errorMessage:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
     IOperatorAssignable:
       type: object
       properties:
@@ -6001,12 +5846,10 @@ components:
           description: Id of the resource
           format: int64
         name:
-          type:
-            - 'null'
-            - string
+          type: string
           description: Name of this resource instance
+          nullable: true
         capabilities:
-          description: The resource's capabilities
           $ref: '#/components/schemas/ICapabilities'
     JobModel:
       type: object
@@ -6018,17 +5861,14 @@ components:
           type: integer
           format: int64
         state:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         displayState:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         workplan:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         canComplete:
           type: boolean
         canAbort:
@@ -6061,11 +5901,10 @@ components:
           type: string
           format: date-time
         activities:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/ProcessActivityModel'
+          nullable: true
         isRunning:
           type: boolean
     LogLevel:
@@ -6077,30 +5916,27 @@ components:
         - Error
         - Critical
         - None
+      type: string
     MethodBase: { }
     MethodEntry:
       type: object
       properties:
         name:
-          type:
-            - 'null'
-            - string
+          type: string
           description: Name of the method
+          nullable: true
         isConstructor:
           type: boolean
           description: Flag if this structure represents a server side constructor
         displayName:
-          type:
-            - 'null'
-            - string
+          type: string
           description: Display name for the button
+          nullable: true
         description:
-          type:
-            - 'null'
-            - string
+          type: string
           description: Description of the method
+          nullable: true
         parameters:
-          description: Arguments of the
           $ref: '#/components/schemas/Entry'
         isAsync:
           type: boolean
@@ -6111,28 +5947,25 @@ components:
         - Migrated
         - NoMigrationsAvailable
         - Error
+      type: string
       description: Result enum for executing database migrations
     ModelConfiguratorModel:
       type: object
       properties:
         name:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         configuratorType:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         connectionStringKeys:
-          type:
-            - 'null'
-            - object
+          type: object
           additionalProperties:
             type: string
+          nullable: true
         connectionStringPrototype:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         configPrototype:
           $ref: '#/components/schemas/Entry'
     ModuleNotificationModel:
@@ -6144,9 +5977,8 @@ components:
         exception:
           $ref: '#/components/schemas/SerializableException'
         message:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         severity:
           $ref: '#/components/schemas/Severity'
     ModuleStartBehaviour:
@@ -6154,18 +5986,17 @@ components:
         - Auto
         - Manual
         - OnDependency
+      type: string
       description: Start behaviour
     MoryxExceptionResponse:
       type: object
       properties:
         title:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         exception:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
     NodeConnectionPoint:
       type: object
       properties:
@@ -6173,15 +6004,13 @@ components:
           type: integer
           format: int32
         name:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         connections:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/NodeConnector'
+          nullable: true
     NodeConnector:
       type: object
       properties:
@@ -6198,39 +6027,33 @@ components:
           type: string
           format: uuid
         type:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         title:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         message:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         severity:
           $ref: '#/components/schemas/Severity'
         created:
           type: string
           format: date-time
         acknowledged:
-          type:
-            - 'null'
-            - string
+          type: string
           format: date-time
+          nullable: true
         isAcknowledgable:
           type: boolean
         properties:
           $ref: '#/components/schemas/Entry'
         sender:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         source:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
     OpenSessionRequest:
       type: object
       properties:
@@ -6254,34 +6077,29 @@ components:
           description: The amount to produce
           format: int32
         name:
-          type:
-            - 'null'
-            - string
+          type: string
           description: Operation name
+          nullable: true
         orderNumber:
-          type:
-            - 'null'
-            - string
+          type: string
           description: The number of the order this operation belongs to
+          nullable: true
         operationNumber:
-          type:
-            - 'null'
-            - string
+          type: string
           description: The number of this operation
+          nullable: true
         productIdentifier:
-          type:
-            - 'null'
-            - string
+          type: string
           description: Main product identifier
+          nullable: true
         productRevision:
           type: integer
           description: Revision of the Product
           format: int16
         productName:
-          type:
-            - 'null'
-            - string
+          type: string
           description: Name of the Product
+          nullable: true
         recipePreselection:
           type: integer
           description: Id of the preselected recipe
@@ -6307,42 +6125,36 @@ components:
           description: Target cycle time for the production of the depending product
           format: double
         unit:
-          type:
-            - 'null'
-            - string
+          type: string
           description: Unit of product
+          nullable: true
         targetStock:
-          type:
-            - 'null'
-            - string
+          type: string
           description: Target stock for produced parts
+          nullable: true
         parts:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/PartCreationContext'
           description: Part list of the product of this operation
+          nullable: true
         materialParameters:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/Entry'
           description: Additional operation depending parameters for the production
+          nullable: true
     OperationLogMessageModel:
       type: object
       properties:
         logLevel:
           $ref: '#/components/schemas/LogLevel'
         message:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         exception:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         timeStamp:
           type: string
           format: date-time
@@ -6356,13 +6168,11 @@ components:
           type: integer
           format: int32
         number:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         name:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         overDeliveryAmount:
           type: integer
           format: int32
@@ -6376,67 +6186,57 @@ components:
           type: string
           format: date-time
         start:
-          type:
-            - 'null'
-            - string
+          type: string
           format: date-time
+          nullable: true
         end:
-          type:
-            - 'null'
-            - string
+          type: string
           format: date-time
+          nullable: true
         targetCycleTime:
           type: number
           format: double
         unit:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         sortOrder:
           type: integer
           format: int32
         order:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         classification:
           $ref: '#/components/schemas/OperationStateClassification'
         stateDisplayName:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         productId:
           type: integer
           format: int64
         productIdentifier:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         productRevision:
           type: integer
           format: int16
         productName:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         recipeName:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         recipeIds:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             type: integer
             format: int64
+          nullable: true
         jobIds:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             type: integer
             format: int64
+          nullable: true
         reportedSuccessCount:
           type: integer
           format: int32
@@ -6501,9 +6301,8 @@ components:
           type: integer
           format: int64
         name:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
     OperationReportedModel:
       type: object
       properties:
@@ -6515,116 +6314,112 @@ components:
       type: object
       properties:
         userId:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         operationModel:
           $ref: '#/components/schemas/OperationModel'
     OperationStateClassification:
+      enum:
+        - Initial
+        - Assigning
+        - Failed
+        - Aborted
+        - Ready
+        - Running
+        - Interrupting
+        - Interrupted
+        - Completed
+        - CanReload
+        - CanBegin
+        - CanInterrupt
+        - CanReport
+        - CanAdvice
+        - IsAmountReached
       type: string
       description: "Enum providing the classification of the internal state machine of the operation for an external representation\r\nThe lowest 8 bits define the state of the operation. The following 16 bits contain flags for the executable\r\nactions on the operation and the trailing 8 bits overall classification information.\r\nBit:    31 - 24  |  23 - 8  |  7 - 0  |\r\nFlag:   Overall  |   Usage  |  State  |"
     OperationUpdateModel:
       type: object
       properties:
         sortIndex:
-          type:
-            - 'null'
-            - integer
+          type: integer
           format: int32
+          nullable: true
         plannedStart:
-          type:
-            - 'null'
-            - string
+          type: string
           format: date-time
+          nullable: true
         plannedEnd:
-          type:
-            - 'null'
-            - string
+          type: string
           format: date-time
+          nullable: true
         totalAmount:
-          type:
-            - 'null'
-            - integer
+          type: integer
           format: int32
+          nullable: true
         overDeliveryAmount:
-          type:
-            - 'null'
-            - integer
+          type: integer
           format: int32
+          nullable: true
         underDeliveryAmount:
-          type:
-            - 'null'
-            - integer
+          type: integer
           format: int32
+          nullable: true
         targetCycleTime:
-          type:
-            - 'null'
-            - number
+          type: number
           format: double
+          nullable: true
         targetStock:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
     OperatorModel:
       type: object
       properties:
         identifier:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         firstName:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         lastName:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         pseudonym:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
     OrderChangedModel:
       type: object
       properties:
         order:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         operation:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         state:
           $ref: '#/components/schemas/InternalOperationClassification'
     OrderModel:
       type: object
       properties:
         color:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         order:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         operation:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         state:
           $ref: '#/components/schemas/InternalOperationClassification'
     OrderReferenceModel:
       type: object
       properties:
         order:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         operation:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
     PartClassification:
       enum:
         - Unknown
@@ -6633,58 +6428,50 @@ components:
         - CarrierMaterial
         - ScrapMaterial
         - BranchMaterial
+      type: string
     PartConnector:
       type: object
       properties:
         name:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         displayName:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         type:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         isCollection:
           type: boolean
         parts:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/PartModel'
+          nullable: true
         propertyTemplates:
           $ref: '#/components/schemas/Entry'
     PartCreationContext:
       type: object
       properties:
         name:
-          type:
-            - 'null'
-            - string
+          type: string
           description: Name of the part like the product name
+          nullable: true
         number:
-          type:
-            - 'null'
-            - string
+          type: string
           description: Identifier of this part
+          nullable: true
         quantity:
           type: number
           description: Quantity of this part which are necessary to produce one product
           format: double
         unit:
-          type:
-            - 'null'
-            - string
+          type: string
           description: Unit of the quantity
+          nullable: true
         stagingIndicator:
-          description: Staging indicator
           $ref: '#/components/schemas/StagingIndicator'
         classification:
-          description: Classification of this part
           $ref: '#/components/schemas/PartClassification'
       description: Information about a part of the product which should be produced for an operation
     PartModel:
@@ -6710,20 +6497,16 @@ components:
       type: object
       properties:
         state:
-          description: Current state of the preview
           $ref: '#/components/schemas/PreviewState'
         fileHash:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         extension:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         mimeType:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         size:
           type: integer
           format: int64
@@ -6735,31 +6518,27 @@ components:
         - Failed
         - Unsupported
         - Removed
+      type: string
       description: State of the preview
     ProblemDetails:
       type: object
       properties:
         type:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         title:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         status:
-          type:
-            - 'null'
-            - integer
+          type: integer
           format: int32
+          nullable: true
         detail:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         instance:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
     ProcessActivityModel:
       type: object
       properties:
@@ -6769,39 +6548,32 @@ components:
         resource:
           $ref: '#/components/schemas/ActivityResourceModel'
         type:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         state:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         classification:
           $ref: '#/components/schemas/ActivityClassification'
         requiredCapabilities:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         possibleResources:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/ActivityResourceModel'
+          nullable: true
         result:
-          type:
-            - 'null'
-            - integer
+          type: integer
           format: int64
+          nullable: true
         resultName:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         instanceId:
-          type:
-            - 'null'
-            - integer
+          type: integer
           format: int64
+          nullable: true
         tracing:
           $ref: '#/components/schemas/TracingModel'
         isCompleted:
@@ -6813,17 +6585,15 @@ components:
           type: integer
           format: int64
         name:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         isEmpty:
           type: boolean
         positions:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/ProcessHolderPositionModel'
+          nullable: true
         visualization:
           $ref: '#/components/schemas/VisualizationModel'
     ProcessHolderPositionModel:
@@ -6836,24 +6606,20 @@ components:
           type: integer
           format: int64
         name:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         position:
           type: integer
           format: int32
         activity:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         order:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         process:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         isEmpty:
           type: boolean
     ProcessProgress:
@@ -6862,52 +6628,46 @@ components:
         - Running
         - Interrupted
         - Completed
+      type: string
       description: Enum representing the progress of a process within the kernel
     ProductCustomization:
       type: object
       properties:
         productTypes:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/ProductDefinitionModel'
+          nullable: true
         recipeTypes:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/RecipeDefinitionModel'
+          nullable: true
         importers:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/ProductImporter'
+          nullable: true
     ProductDefinitionModel:
       type: object
       properties:
         name:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         displayName:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         baseDefinition:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         properties:
           $ref: '#/components/schemas/Entry'
     ProductImporter:
       type: object
       properties:
         name:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         parameters:
           $ref: '#/components/schemas/Entry'
     ProductInstanceModel:
@@ -6917,25 +6677,28 @@ components:
           type: integer
           format: int64
         type:
-          type:
-            - 'null'
-            - string
+          type: string
           description: The name of the product type of this instance
+          nullable: true
         state:
-          description: The current state of the instance
           $ref: '#/components/schemas/ProductInstanceState'
         properties:
           $ref: '#/components/schemas/Entry'
     ProductInstanceState:
+      enum:
+        - Unset
+        - InProduction
+        - Paused
+        - Success
+        - Failure
       type: string
       description: "The state of an ProductInstance.\r\nThis will not occupy more than 4 Bits. Other enums can be added by bit-shifting"
     ProductionJobModel:
       type: object
       properties:
         productIdentity:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         amount:
           type: integer
           format: int32
@@ -6958,36 +6721,31 @@ components:
           type: integer
           format: int64
         name:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         state:
           $ref: '#/components/schemas/ProductState'
         identifier:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         revision:
           type: integer
           format: int16
         type:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         properties:
           $ref: '#/components/schemas/Entry'
         parts:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/PartConnector'
+          nullable: true
         recipes:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/RecipeModel'
+          nullable: true
     ProductPartModel:
       type: object
       properties:
@@ -6995,20 +6753,17 @@ components:
           type: integer
           format: int64
         name:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         identifier:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         quantity:
           type: number
           format: double
         unit:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         stagingIndicator:
           $ref: '#/components/schemas/StagingIndicator'
         classification:
@@ -7020,63 +6775,60 @@ components:
           type: boolean
           description: Flag if deleted products should be included in the query
         typeName:
-          type:
-            - 'null'
-            - string
+          type: string
           description: Product types to filter by
+          nullable: true
         excludeDerivedTypes:
           type: boolean
           description: When filtering by type exclude derived types and only return specific matches
         identifier:
-          type:
-            - 'null'
-            - string
+          type: string
           description: Material identifiers
+          nullable: true
         requiredState:
           oneOf:
-            - type: 'null'
-            - description: State of the product
-              $ref: '#/components/schemas/ProductState'
+            - enum:
+                - null
+              nullable: true
+            - $ref: '#/components/schemas/ProductState'
         revisionFilter:
-          description: Revisions to filter
           $ref: '#/components/schemas/RevisionFilter'
         name:
-          type:
-            - 'null'
-            - string
+          type: string
           description: Material identifiers
+          nullable: true
         revision:
           type: integer
           description: "Optional specific revision if RevisionFilter ProductQuery.RevisionFilter is set to\r\nRevisionFilter.Specific"
           format: int16
         recipeFilter:
-          description: Optional recipe filter
           $ref: '#/components/schemas/RecipeFilter'
         selector:
-          description: Selector
           $ref: '#/components/schemas/Selector'
         propertyFilters:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/PropertyFilter'
           description: List of property filters
+          nullable: true
         loadFullTypeInformation:
           type: boolean
           description: "If set to true, product queries return fully populated product types.\r\nOtherwise only the basic type information is returned."
       description: Filter to fetch products from the product management
     ProductState:
+      enum:
+        - Created
+        - Released
+        - Deprecated
+        - Generated
       type: string
       description: Current state of a product
     PropertyFilter:
       type: object
       properties:
         entry:
-          description: Entry to filter
           $ref: '#/components/schemas/Entry'
         operator:
-          description: Operator for the filter expression
           $ref: '#/components/schemas/PropertyFilterOperator'
       description: Property filter wrapper for the filtered entry
     PropertyFilterOperator:
@@ -7084,6 +6836,7 @@ components:
         - Equals
         - GreaterThen
         - LessThen
+      type: string
       description: Property filter operator expression
     RecipeClassificationModel:
       enum:
@@ -7092,18 +6845,17 @@ components:
         - Alternative
         - Intermediate
         - Part
+      type: string
       description: Webservice compatible recipe classification enum
     RecipeDefinitionModel:
       type: object
       properties:
         name:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         displayName:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         hasWorkplans:
           type: boolean
     RecipeFilter:
@@ -7111,6 +6863,7 @@ components:
         - Unset
         - WithRecipe
         - WithoutRecipes
+      type: string
       description: Different options regarding the recipes of the product
     RecipeModel:
       type: object
@@ -7120,30 +6873,24 @@ components:
           description: Id of the recipe
           format: int64
         name:
-          type:
-            - 'null'
-            - string
+          type: string
           description: Name of the recipe
+          nullable: true
         state:
-          description: This recipe's state
           $ref: '#/components/schemas/RecipeState'
         revision:
           type: integer
           description: Revision of the recipe
           format: int32
         type:
-          type:
-            - 'null'
-            - string
+          type: string
           description: Type of the recipe
+          nullable: true
         properties:
-          description: Properties of the recipe
           $ref: '#/components/schemas/Entry'
         workplanModel:
-          description: A model of the currently referenced workplan
           $ref: '#/components/schemas/WorkplanModel'
         classification:
-          description: Classification of the recipe
           $ref: '#/components/schemas/RecipeClassificationModel'
         isClone:
           type: boolean
@@ -7154,61 +6901,52 @@ components:
         - New
         - Released
         - Revoked
+      type: string
       description: A Recipe's state
     ReferenceFilter:
       type: object
       properties:
         name:
-          type:
-            - 'null'
-            - string
+          type: string
           description: Name of the reference
+          nullable: true
         relationType:
-          description: Resource relation type
           $ref: '#/components/schemas/ResourceRelationType'
         role:
-          description: Role of the reference
           $ref: '#/components/schemas/ResourceReferenceRole'
         valueConstraint:
-          description: Filter criteria for the reference property
           $ref: '#/components/schemas/ReferenceValue'
       description: Filter criteria for required or requested references
     ReferenceTypeModel:
       type: object
       properties:
         name:
-          type:
-            - 'null'
-            - string
+          type: string
           description: 'Name of the reference, usually name of the property'
+          nullable: true
         isCollection:
           type: boolean
           description: Flag if this reference is a collection
         displayName:
-          type:
-            - 'null'
-            - string
+          type: string
           description: Display name of the reference
+          nullable: true
         description:
-          type:
-            - 'null'
-            - string
+          type: string
           description: Description of this reference
+          nullable: true
         isRequired:
           type: boolean
           description: Reference is required and must be set
         supportedTypes:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             type: string
           description: Types that can be assigned to this reference
+          nullable: true
         role:
-          description: Role of the referenced resource in the relationship
           $ref: '#/components/schemas/ResourceReferenceRole'
         relationType:
-          description: Type of resource relation
           $ref: '#/components/schemas/ResourceRelationType'
       description: Type model for a reference property on a resource type
     ReferenceValue:
@@ -7216,6 +6954,7 @@ components:
         - Irrelevant
         - NullOrEmpty
         - NotEmpty
+      type: string
       description: Enum to classify the current value of the reference property
     ReportContext:
       type: object
@@ -7243,12 +6982,11 @@ components:
           description: Value of unreported failure parts
           format: int32
         restrictions:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/RestrictionDescription'
           description: Reasons why a report is not possible
+          nullable: true
         successCount:
           type: integer
           description: Current success count of the operation
@@ -7264,9 +7002,8 @@ components:
         confirmationType:
           $ref: '#/components/schemas/ConfirmationType'
         comment:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         successCount:
           type: integer
           format: int32
@@ -7274,44 +7011,38 @@ components:
           type: integer
           format: int32
         userIdentifier:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
     ResourceChangedModel:
       type: object
       properties:
         cellName:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         cellIconName:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         cellImageURL:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         id:
           type: integer
           format: int64
         cellLocation:
           $ref: '#/components/schemas/CellLocationModel'
         cellPropertySettings:
-          type:
-            - 'null'
-            - object
+          type: object
           additionalProperties:
             $ref: '#/components/schemas/CellPropertySettings'
+          nullable: true
         factoryId:
           type: integer
           format: int64
         location:
           $ref: '#/components/schemas/CellLocationModel'
         iconName:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         isACell:
           type: boolean
     ResourceModel:
@@ -7326,136 +7057,133 @@ components:
           description: Reference id in case of recursion in the returned model
           format: int64
         name:
-          type:
-            - 'null'
-            - string
+          type: string
           description: Name of the resource.
+          nullable: true
         description:
-          type:
-            - 'null'
-            - string
+          type: string
           description: Description of the resource
+          nullable: true
         type:
-          type:
-            - 'null'
-            - string
+          type: string
           description: Resource type model reference
+          nullable: true
         partiallyLoaded:
           type: boolean
           description: "Indicates that this model does not represent the full\r\nresource but only its key properties"
         properties:
-          description: A list of configs of the resource.
           $ref: '#/components/schemas/Entry'
         methods:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/MethodEntry'
           description: User callable methods for instances of this type
+          nullable: true
         references:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/ResourceReferenceModel'
           description: 'References of this resource, including children'
+          nullable: true
       description: Base model used by details view and tree
     ResourceQuery:
       type: object
       properties:
         types:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             type: string
           description: Type constraints to filter instances
+          nullable: true
         referenceCondition:
-          description: Reference condition to filter instances
           $ref: '#/components/schemas/ReferenceFilter'
         referenceRecursion:
           type: boolean
           description: Flag if included references should be processed recursively
         includedReferences:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/ReferenceFilter'
           description: References that should be included in the response
+          nullable: true
       description: Filter object to fetch resources from the server
     ResourceReferenceModel:
       type: object
       properties:
         name:
-          type:
-            - 'null'
-            - string
+          type: string
           description: 'Name of the reference, usually name of the property'
+          nullable: true
         targets:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/ResourceModel'
           description: Targets of this reference
+          nullable: true
       description: DTO that represents the reference of one resource with another
     ResourceReferenceRole:
       enum:
         - Target
         - Source
+      type: string
       description: Role of a resource in a relation decorated with the ResourceReferenceAttribute
     ResourceRelationType:
+      enum:
+        - Unset
+        - Aggregation
+        - Composition
+        - Usage
+        - ParentChild
+        - Driver
+        - TransportSystem
+        - TransportRoute
+        - CurrentExchangeablePart
+        - PossibleExchangeablePart
+        - Decorated
+        - Extension
+        - Custom
       type: string
       description: "Enum representing the relation between two entities and definition of their life cycle coupling.\r\nThe lowest 3 bits define the UML association type. The other 29 bits are for free use\r\nBit:    31 - 3 |    2    |      1      |     0\r\nFlag:    Type  |  Usage  | Composition | Aggregation\r\nUsage: Pick a number and bitshift it by 3 and add the UML type, e.g. 42 =&gt; (42 &lt;&lt; 3) + 1"
     ResourceTypeModel:
       type: object
       properties:
         name:
-          type:
-            - 'null'
-            - string
+          type: string
           description: The name of the resource type.
+          nullable: true
         displayName:
-          type:
-            - 'null'
-            - string
+          type: string
           description: Display name of this resource type
+          nullable: true
         creatable:
           type: boolean
           description: Flag that this type is registered and can be instantiated
         description:
-          type:
-            - 'null'
-            - string
+          type: string
           description: Description of this resource type
+          nullable: true
         constructors:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/MethodEntry'
           description: Resource constructors used to build new instances
+          nullable: true
         references:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/ReferenceTypeModel'
           description: Reference properties of this type
+          nullable: true
         baseType:
-          type:
-            - 'null'
-            - string
+          type: string
           description: Back reference to the base type
+          nullable: true
         derivedTypes:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/ResourceTypeModel'
           description: Types derived from this type
+          nullable: true
       description: Type item for the tree
     RestrictionDescription:
       required:
@@ -7464,12 +7192,10 @@ components:
       type: object
       properties:
         text:
-          type:
-            - 'null'
-            - string
+          type: string
           description: Description of the result
+          nullable: true
         severity:
-          description: Severity of the result
           $ref: '#/components/schemas/RestrictionSeverity'
       description: Description of the result of a performed rule
     RestrictionSeverity:
@@ -7477,12 +7203,14 @@ components:
         - Info
         - Warning
         - Error
+      type: string
       description: Severity of a rule result
     RevisionFilter:
       enum:
         - All
         - Latest
         - Specific
+      type: string
       description: Filter for revisions
     SaveConfigRequest:
       type: object
@@ -7496,31 +7224,28 @@ components:
         - Direct
         - Parent
         - Parts
+      type: string
       description: Determine which objects to select for the query
     SerializableException:
       type: object
       properties:
         exceptionTypeName:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         message:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         stackTrace:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         innerException:
           $ref: '#/components/schemas/SerializableException'
     ServerModuleModel:
       type: object
       properties:
         name:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         healthState:
           $ref: '#/components/schemas/ServerModuleState'
         startBehaviour:
@@ -7528,17 +7253,15 @@ components:
         failureBehaviour:
           $ref: '#/components/schemas/FailureBehaviour'
         dependencies:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/ServerModuleModel'
+          nullable: true
         notifications:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/ModuleNotificationModel'
+          nullable: true
         assembly:
           $ref: '#/components/schemas/AssemblyModel'
     ServerModuleState:
@@ -7551,20 +7274,21 @@ components:
         - Missing
         - Running
         - Stopping
+      type: string
       description: Different health states a server module can have
     ServerTimeResponse:
       type: object
       properties:
         serverTime:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
     SetupJobClassification:
       enum:
         - None
         - Prepare
         - Cleanup
         - Manual
+      type: string
     SetupJobModel:
       type: object
       properties:
@@ -7574,44 +7298,37 @@ components:
           type: integer
           format: int64
         steps:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/SetupStepModel'
+          nullable: true
     SetupModel:
       type: object
       properties:
         fullname:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         sortOrder:
           type: integer
           format: int32
         name:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         description:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         supportedFileRegex:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         setupData:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
     SetupStepModel:
       type: object
       properties:
         name:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         state:
           $ref: '#/components/schemas/StepState'
     Severity:
@@ -7620,6 +7337,7 @@ components:
         - Warning
         - Error
         - Fatal
+      type: string
       description: Different levels to differentiate the severity of a message
     ShiftAssignementCreationContextModel:
       type: object
@@ -7631,13 +7349,11 @@ components:
           type: integer
           format: int64
         operatorIdentifier:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         note:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         priority:
           type: integer
           format: int32
@@ -7653,16 +7369,14 @@ components:
           type: integer
           format: int64
         operatorIdentifier:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         shiftId:
           type: integer
           format: int64
         note:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         priority:
           type: integer
           format: int32
@@ -7693,9 +7407,8 @@ components:
       type: object
       properties:
         name:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         startTime:
           type: string
           format: time
@@ -7712,9 +7425,8 @@ components:
           type: integer
           format: int64
         name:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         startTime:
           type: string
           format: time
@@ -7734,9 +7446,8 @@ components:
           type: integer
           format: int64
         operatorIdentifier:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
     SkillModel:
       type: object
       properties:
@@ -7753,24 +7464,24 @@ components:
           type: integer
           format: int64
         operatorIdentifier:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         isExpired:
           type: boolean
     SkillTypeCreationContextModel:
       type: object
       properties:
         name:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         duration:
           pattern: '^-?(\d+\.)?\d{2}:\d{2}:\d{2}(\.\d{1,7})?$'
           type: string
         capabilities:
           oneOf:
-            - type: 'null'
+            - enum:
+                - null
+              nullable: true
             - $ref: '#/components/schemas/Entry'
     SkillTypeModel:
       type: object
@@ -7779,15 +7490,16 @@ components:
           type: integer
           format: int64
         name:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         duration:
           pattern: '^-?(\d+\.)?\d{2}:\d{2}:\d{2}(\.\d{1,7})?$'
           type: string
         capabilities:
           oneOf:
-            - type: 'null'
+            - enum:
+                - null
+              nullable: true
             - $ref: '#/components/schemas/Entry'
     SseItemBase:
       type: object
@@ -7831,34 +7543,14 @@ components:
         - ReleaseOrderPart
         - ManualStaging
         - EwmStaging
+      type: string
       description: "The material staging indicator defines the method of how needed materials can be supplied for production with the assistance of the Warehouse Management system.\r\nAs with the location coordinates(warehouse number, storage type, and storage bin), the system files this indicator in the control cycle."
     StepState:
       enum:
         - Initial
         - Running
         - Completed
-    Stream:
       type: string
-      format: binary
-    StringSegment:
-      type: object
-      properties:
-        buffer:
-          type:
-            - 'null'
-            - string
-        offset:
-          type: integer
-          format: int32
-        length:
-          type: integer
-          format: int32
-        value:
-          type:
-            - 'null'
-            - string
-        hasValue:
-          type: boolean
     TestConnectionResponse:
       type: object
       properties:
@@ -7871,28 +7563,25 @@ components:
         - ConnectionOkDbDoesNotExist
         - PendingMigrations
         - Success
+      type: string
       description: Result enum for function TestConnection
     TracingModel:
       type: object
       properties:
         type:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         text:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         started:
-          type:
-            - 'null'
-            - string
+          type: string
           format: date-time
+          nullable: true
         completed:
-          type:
-            - 'null'
-            - string
+          type: string
           format: date-time
+          nullable: true
         errorCode:
           type: integer
           format: int32
@@ -7908,18 +7597,16 @@ components:
           type: integer
           format: int64
         paths:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/Position'
+          nullable: true
     ValidationErrorModel:
       type: object
       properties:
         error:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         position:
           type: integer
           format: int64
@@ -7929,38 +7616,32 @@ components:
         success:
           type: boolean
         errors:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/ValidationErrorModel'
+          nullable: true
     VariantDescriptor:
       type: object
       properties:
         name:
-          type:
-            - 'null'
-            - string
+          type: string
           description: Name of the variant
+          nullable: true
         creationDate:
           type: string
           description: Date of the creation
           format: date-time
         preview:
-          description: Preview information for this variant
           $ref: '#/components/schemas/PreviewDescriptor'
         fileHash:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         extension:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         mimeType:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         size:
           type: integer
           format: int64
@@ -7974,18 +7655,16 @@ components:
         location:
           $ref: '#/components/schemas/CellLocationModel'
         iconName:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         isACell:
           type: boolean
     VisualizationModel:
       type: object
       properties:
         icon:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         category:
           $ref: '#/components/schemas/Category'
     WorkplanModel:
@@ -7995,9 +7674,8 @@ components:
           type: integer
           format: int64
         name:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         version:
           type: integer
           format: int32
@@ -8010,6 +7688,7 @@ components:
         - Execution
         - ControlFlow
         - Subworkplan
+      type: string
     WorkplanNodeModel:
       type: object
       properties:
@@ -8017,17 +7696,14 @@ components:
           type: integer
           format: int64
         type:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         name:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         displayName:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         positionTop:
           type: integer
           format: int32
@@ -8037,17 +7713,15 @@ components:
         classification:
           $ref: '#/components/schemas/WorkplanNodeClassification'
         inputs:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/NodeConnectionPoint'
+          nullable: true
         outputs:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/NodeConnectionPoint'
+          nullable: true
         properties:
           $ref: '#/components/schemas/Entry'
         subworkplanId:
@@ -8057,48 +7731,43 @@ components:
       type: object
       properties:
         sessionToken:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         workplanId:
           type: integer
           format: int64
         name:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         version:
           type: integer
           format: int32
         state:
           $ref: '#/components/schemas/WorkplanState'
         nodes:
-          type:
-            - 'null'
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/WorkplanNodeModel'
+          nullable: true
     WorkplanState:
       enum:
         - New
         - Released
         - Revoked
+      type: string
       description: A workplan state
     WorkplanStepRecipe:
       type: object
       properties:
         type:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         name:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         description:
-          type:
-            - 'null'
-            - string
+          type: string
+          nullable: true
         positionTop:
           type: integer
           format: int32

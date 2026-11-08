@@ -7,7 +7,7 @@ using Microsoft.OpenApi;
 
 namespace Moryx.AspNetCore.OpenApi;
 
-internal class MoryxOperationIdOperationTransformer : IOpenApiOperationTransformer
+internal class SetOperationIdOperationTransformer : IOpenApiOperationTransformer
 {
     public async Task TransformAsync(OpenApiOperation operation, OpenApiOperationTransformerContext context, CancellationToken cancellationToken)
     {

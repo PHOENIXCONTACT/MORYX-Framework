@@ -11,7 +11,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;
 using Moryx.AspNetCore;
 
-internal class MoryxSseOperationTransformer(IOptions<OpenApiOptions> openapiOptions) : IOpenApiOperationTransformer
+internal class SseOperationTransformer(IOptions<OpenApiOptions> openapiOptions) : IOpenApiOperationTransformer
 {
     internal const string SseItemBaseSchemaId = "SseItemBase";
     private const string EventStreamResponseType = "text/event-stream";

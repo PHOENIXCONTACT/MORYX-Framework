@@ -16,8 +16,11 @@ public static class OpenApiExtensions
         public OpenApiOptions ConfigureMoryxTransformers()
         {
             options.AddDocumentTransformer<MoryxOpenApiDocumentTransformer>();
-            options.AddOperationTransformer<MoryxOperationIdOperationTransformer>();
-            options.AddOperationTransformer<MoryxSseOperationTransformer>();
+            options.AddOperationTransformer<SetOperationIdOperationTransformer>();
+            options.AddOperationTransformer<SseOperationTransformer>();
+            options.AddOperationTransformer<RemoveEmptyResponseTypeOperationTransformer>();
+            options.AddSchemaTransformer<EnumSchemaTransformer>();
+            options.AddSchemaTransformer<FileStreamSchemaTransformer>();
             return options;
         }
     }

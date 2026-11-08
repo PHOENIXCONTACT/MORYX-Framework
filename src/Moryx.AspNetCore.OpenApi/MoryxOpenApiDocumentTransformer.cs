@@ -65,6 +65,6 @@ internal class MoryxOpenApiDocumentTransformer : IOpenApiDocumentTransformer
                 }
             }
         };
-        document.AddComponent(MoryxSseOperationTransformer.SseItemBaseSchemaId, sseItemBaseSchema);
+        document.AddComponent(SseOperationTransformer.SseItemBaseSchemaId, sseItemBaseSchema);
     }
 }
