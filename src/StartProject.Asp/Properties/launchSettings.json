@@ -22,7 +22,7 @@
     },
     "Debug ApiSpecGeneration": {
       "commandName": "Project",
-      "commandLineArgs": "--output ..\\..\\schemas --openapi-version OpenApi3_1 --file-name framework-api",
+      "commandLineArgs": "--output ..\\..\\schemas --openapi-version OpenApi3_0 --file-name framework-api",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "OpenApiBuildTime"

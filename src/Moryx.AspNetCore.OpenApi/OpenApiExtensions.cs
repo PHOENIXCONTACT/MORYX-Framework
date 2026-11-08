@@ -73,7 +73,7 @@ public static class OpenApiExtensions
             using var textWriter = File.CreateText(filePath);
             var writer = new OpenApiYamlWriter(textWriter);
 
-            document.SerializeAsV31(writer);
+            document.SerializeAsV3(writer);
             await writer.FlushAsync();
             await textWriter.FlushAsync();
         }

@@ -61,10 +61,9 @@ builder.Services.AddControllers();
 
 builder.Services.AddOpenApi(static options =>
 {
-    options.OpenApiVersion = OpenApiSpecVersion.OpenApi3_1; // OpenApi3_2 is only available with .net 11
+    options.OpenApiVersion = OpenApiSpecVersion.OpenApi3_0; // OpenApi3_2 is only available with .net 11
     options.ConfigureMoryxTransformers();
-}
-);
+});
 
 builder.Services.AddSingleton<IAuthorizationPolicyProvider, ExamplePolicyProvider>();
 
