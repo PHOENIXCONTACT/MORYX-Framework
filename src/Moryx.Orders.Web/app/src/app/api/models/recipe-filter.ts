@@ -10,5 +10,8 @@
 /**
  * Different options regarding the recipes of the product
  */
-export type RecipeFilter = 'Unset' | 'WithRecipe' | 'WithoutRecipes';
-
+export enum RecipeFilter {
+  Unset = 'Unset',
+  WithRecipe = 'WithRecipe',
+  WithoutRecipes = 'WithoutRecipes'
+}

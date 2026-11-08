@@ -8,5 +8,5 @@
 
 export interface BeginModel {
   amount?: number;
-  userId?: (string | null);
+  userId?: string | null;
 }

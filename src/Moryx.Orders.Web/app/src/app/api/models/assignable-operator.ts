@@ -9,9 +9,9 @@
 import { IOperatorAssignable } from '../models/i-operator-assignable';
 export interface AssignableOperator {
   assignedResources?: Array<IOperatorAssignable>;
-  firstName?: (string | null);
+  firstName?: string | null;
   identifier: string;
-  lastName?: (string | null);
-  pseudonym?: (string | null);
+  lastName?: string | null;
+  pseudonym?: string | null;
   signedIn?: boolean;
 }

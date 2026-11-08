@@ -11,5 +11,11 @@
  * The material staging indicator defines the method of how needed materials can be supplied for production with the assistance of the Warehouse Management system.
  * As with the location coordinates(warehouse number, storage type, and storage bin), the system files this indicator in the control cycle.
  */
-export type StagingIndicator = 'NotRelevant' | 'PickPart' | 'CrateOrKanbanPart' | 'ReleaseOrderPart' | 'ManualStaging' | 'EwmStaging';
-
+export enum StagingIndicator {
+  NotRelevant = 'NotRelevant',
+  PickPart = 'PickPart',
+  CrateOrKanbanPart = 'CrateOrKanbanPart',
+  ReleaseOrderPart = 'ReleaseOrderPart',
+  ManualStaging = 'ManualStaging',
+  EwmStaging = 'EwmStaging'
+}

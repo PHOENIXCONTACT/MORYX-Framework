@@ -41,7 +41,7 @@ export interface BeginContext {
   /**
    * Reasons why a begin is not possible
    */
-  restrictions?: (Array<RestrictionDescription> | null);
+  restrictions?: Array<RestrictionDescription> | null;
 
   /**
    * Current failure count of the operation

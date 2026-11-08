@@ -8,6 +8,6 @@
 
 export interface AdviceModel {
   amount?: number;
-  partId?: (number | null);
-  toteBoxNumber?: (string | null);
+  partId?: number | null;
+  toteBoxNumber?: string | null;
 }

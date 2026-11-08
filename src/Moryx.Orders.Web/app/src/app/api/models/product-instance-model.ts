@@ -12,14 +12,10 @@ import { ProductInstanceState } from '../models/product-instance-state';
 export interface ProductInstanceModel {
   id?: number;
   properties?: Entry;
-
-  /**
-   * The current state of the instance
-   */
   state?: ProductInstanceState;
 
   /**
    * The name of the product type of this instance
    */
-  type?: (string | null);
+  type?: string | null;
 }

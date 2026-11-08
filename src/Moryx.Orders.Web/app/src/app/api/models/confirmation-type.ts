@@ -10,5 +10,7 @@
 /**
  * Confirmation type while reporting amounts of an operation
  */
-export type ConfirmationType = 'Partial' | 'Final';
-
+export enum ConfirmationType {
+  Partial = 'Partial',
+  Final = 'Final'
+}

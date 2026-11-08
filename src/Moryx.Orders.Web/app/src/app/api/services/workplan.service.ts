@@ -168,7 +168,7 @@ export class WorkplanService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  deleteWorkplan$Response(params: DeleteWorkplan$Params, context?: HttpContext): Promise<StrictHttpResponse<any>> {
+  deleteWorkplan$Response(params: DeleteWorkplan$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = deleteWorkplan(this.http, this.rootUrl, params, context);
     return firstValueFrom(obs);
   }
@@ -179,9 +179,9 @@ export class WorkplanService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  deleteWorkplan(params: DeleteWorkplan$Params, context?: HttpContext): Promise<any> {
+  deleteWorkplan(params: DeleteWorkplan$Params, context?: HttpContext): Promise<void> {
     const resp = this.deleteWorkplan$Response(params, context);
-    return resp.then((r: StrictHttpResponse<any>): any => r.body);
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
 }

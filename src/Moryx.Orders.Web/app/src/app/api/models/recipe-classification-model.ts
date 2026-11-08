@@ -10,5 +10,10 @@
 /**
  * Webservice compatible recipe classification enum
  */
-export type RecipeClassificationModel = 'Unset' | 'Default' | 'Alternative' | 'Intermediate' | 'Part';
-
+export enum RecipeClassificationModel {
+  Unset = 'Unset',
+  Default = 'Default',
+  Alternative = 'Alternative',
+  Intermediate = 'Intermediate',
+  Part = 'Part'
+}

@@ -25,7 +25,7 @@ export interface ProductQuery {
   /**
    * Material identifiers
    */
-  identifier?: (string | null);
+  identifier?: string | null;
 
   /**
    * Flag if deleted products should be included in the query
@@ -41,37 +41,25 @@ export interface ProductQuery {
   /**
    * Material identifiers
    */
-  name?: (string | null);
+  name?: string | null;
 
   /**
    * List of property filters
    */
-  propertyFilters?: (Array<PropertyFilter> | null);
-
-  /**
-   * Optional recipe filter
-   */
+  propertyFilters?: Array<PropertyFilter> | null;
   recipeFilter?: RecipeFilter;
-  requiredState?: (null | ProductState);
+  requiredState?: ('null' | ProductState);
 
   /**
    * Optional specific revision if RevisionFilter ProductQuery.RevisionFilter is set to
    * RevisionFilter.Specific
    */
   revision?: number;
-
-  /**
-   * Revisions to filter
-   */
   revisionFilter?: RevisionFilter;
-
-  /**
-   * Selector
-   */
   selector?: Selector;
 
   /**
    * Product types to filter by
    */
-  typeName?: (string | null);
+  typeName?: string | null;
 }

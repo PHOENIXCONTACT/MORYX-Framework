@@ -10,5 +10,8 @@
 /**
  * A workplan state
  */
-export type WorkplanState = 'New' | 'Released' | 'Revoked';
-
+export enum WorkplanState {
+  New = 'New',
+  Released = 'Released',
+  Revoked = 'Revoked'
+}

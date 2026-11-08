@@ -10,5 +10,8 @@
 /**
  * Determine which objects to select for the query
  */
-export type Selector = 'Direct' | 'Parent' | 'Parts';
-
+export enum Selector {
+  Direct = 'Direct',
+  Parent = 'Parent',
+  Parts = 'Parts'
+}

@@ -10,5 +10,8 @@
 /**
  * Filter for revisions
  */
-export type RevisionFilter = 'All' | 'Latest' | 'Specific';
-
+export enum RevisionFilter {
+  All = 'All',
+  Latest = 'Latest',
+  Specific = 'Specific'
+}

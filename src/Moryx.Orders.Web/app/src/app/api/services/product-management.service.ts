@@ -470,7 +470,7 @@ export class ProductManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  saveInstance$Response(params: SaveInstance$Params, context?: HttpContext): Promise<StrictHttpResponse<any>> {
+  saveInstance$Response(params: SaveInstance$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = saveInstance(this.http, this.rootUrl, params, context);
     return firstValueFrom(obs);
   }
@@ -485,9 +485,9 @@ export class ProductManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  saveInstance(params: SaveInstance$Params, context?: HttpContext): Promise<any> {
+  saveInstance(params: SaveInstance$Params, context?: HttpContext): Promise<void> {
     const resp = this.saveInstance$Response(params, context);
-    return resp.then((r: StrictHttpResponse<any>): any => r.body);
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
   /** Path part for operation `createInstance()` */

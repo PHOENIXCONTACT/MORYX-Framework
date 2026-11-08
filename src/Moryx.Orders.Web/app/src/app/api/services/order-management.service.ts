@@ -355,7 +355,7 @@ export class OrderManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  beginOperation$Response(params: BeginOperation$Params, context?: HttpContext): Promise<StrictHttpResponse<any>> {
+  beginOperation$Response(params: BeginOperation$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = beginOperation(this.http, this.rootUrl, params, context);
     return firstValueFrom(obs);
   }
@@ -370,9 +370,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  beginOperation(params: BeginOperation$Params, context?: HttpContext): Promise<any> {
+  beginOperation(params: BeginOperation$Params, context?: HttpContext): Promise<void> {
     const resp = this.beginOperation$Response(params, context);
-    return resp.then((r: StrictHttpResponse<any>): any => r.body);
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
   /** Path part for operation `getReportContext()` */
@@ -421,7 +421,7 @@ export class OrderManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  reportOperation$Response(params: ReportOperation$Params, context?: HttpContext): Promise<StrictHttpResponse<any>> {
+  reportOperation$Response(params: ReportOperation$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = reportOperation(this.http, this.rootUrl, params, context);
     return firstValueFrom(obs);
   }
@@ -436,9 +436,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  reportOperation(params: ReportOperation$Params, context?: HttpContext): Promise<any> {
+  reportOperation(params: ReportOperation$Params, context?: HttpContext): Promise<void> {
     const resp = this.reportOperation$Response(params, context);
-    return resp.then((r: StrictHttpResponse<any>): any => r.body);
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
   /** Path part for operation `getInterruptContext()` */
@@ -487,7 +487,7 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  interruptOperation$Response(params: InterruptOperation$Params, context?: HttpContext): Promise<StrictHttpResponse<any>> {
+  interruptOperation$Response(params: InterruptOperation$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = interruptOperation(this.http, this.rootUrl, params, context);
     return firstValueFrom(obs);
   }
@@ -502,9 +502,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  interruptOperation(params: InterruptOperation$Params, context?: HttpContext): Promise<any> {
+  interruptOperation(params: InterruptOperation$Params, context?: HttpContext): Promise<void> {
     const resp = this.interruptOperation$Response(params, context);
-    return resp.then((r: StrictHttpResponse<any>): any => r.body);
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
   /** Path part for operation `getAdviceContext()` */
@@ -553,7 +553,7 @@ export class OrderManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  adviceOperation$Response(params: AdviceOperation$Params, context?: HttpContext): Promise<StrictHttpResponse<any>> {
+  adviceOperation$Response(params: AdviceOperation$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = adviceOperation(this.http, this.rootUrl, params, context);
     return firstValueFrom(obs);
   }
@@ -568,9 +568,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  adviceOperation(params: AdviceOperation$Params, context?: HttpContext): Promise<any> {
+  adviceOperation(params: AdviceOperation$Params, context?: HttpContext): Promise<void> {
     const resp = this.adviceOperation$Response(params, context);
-    return resp.then((r: StrictHttpResponse<any>): any => r.body);
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
   /** Path part for operation `getLogs()` */
@@ -652,7 +652,7 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  abortOperation$Response(params: AbortOperation$Params, context?: HttpContext): Promise<StrictHttpResponse<any>> {
+  abortOperation$Response(params: AbortOperation$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = abortOperation(this.http, this.rootUrl, params, context);
     return firstValueFrom(obs);
   }
@@ -667,9 +667,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  abortOperation(params: AbortOperation$Params, context?: HttpContext): Promise<any> {
+  abortOperation(params: AbortOperation$Params, context?: HttpContext): Promise<void> {
     const resp = this.abortOperation$Response(params, context);
-    return resp.then((r: StrictHttpResponse<any>): any => r.body);
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
   /** Path part for operation `updateOperation()` */
@@ -685,7 +685,7 @@ export class OrderManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  updateOperation$Response(params: UpdateOperation$Params, context?: HttpContext): Promise<StrictHttpResponse<any>> {
+  updateOperation$Response(params: UpdateOperation$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = updateOperation(this.http, this.rootUrl, params, context);
     return firstValueFrom(obs);
   }
@@ -700,9 +700,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  updateOperation(params: UpdateOperation$Params, context?: HttpContext): Promise<any> {
+  updateOperation(params: UpdateOperation$Params, context?: HttpContext): Promise<void> {
     const resp = this.updateOperation$Response(params, context);
-    return resp.then((r: StrictHttpResponse<any>): any => r.body);
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
   /** Path part for operation `reload()` */
@@ -718,7 +718,7 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  reload$Response(params: Reload$Params, context?: HttpContext): Promise<StrictHttpResponse<any>> {
+  reload$Response(params: Reload$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = reload(this.http, this.rootUrl, params, context);
     return firstValueFrom(obs);
   }
@@ -733,9 +733,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  reload(params: Reload$Params, context?: HttpContext): Promise<any> {
+  reload(params: Reload$Params, context?: HttpContext): Promise<void> {
     const resp = this.reload$Response(params, context);
-    return resp.then((r: StrictHttpResponse<any>): any => r.body);
+    return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
 
 }

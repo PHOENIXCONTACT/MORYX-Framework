@@ -8,10 +8,6 @@
 
 import { ICapabilities } from '../models/i-capabilities';
 export interface IOperatorAssignable {
-
-  /**
-   * The resource's capabilities
-   */
   capabilities?: ICapabilities;
 
   /**
@@ -22,6 +18,6 @@ export interface IOperatorAssignable {
   /**
    * Name of this resource instance
    */
-  name?: (string | null);
+  name?: string | null;
   requiredSkills?: ICapabilities;
 }

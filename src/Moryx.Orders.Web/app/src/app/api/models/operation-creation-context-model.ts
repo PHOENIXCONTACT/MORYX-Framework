@@ -14,22 +14,22 @@ export interface OperationCreationContextModel {
   /**
    * Additional operation depending parameters for the production
    */
-  materialParameters?: (Array<Entry> | null);
+  materialParameters?: Array<Entry> | null;
 
   /**
    * Operation name
    */
-  name?: (string | null);
+  name?: string | null;
 
   /**
    * The number of this operation
    */
-  operationNumber?: (string | null);
+  operationNumber?: string | null;
 
   /**
    * The number of the order this operation belongs to
    */
-  orderNumber?: (string | null);
+  orderNumber?: string | null;
 
   /**
    * Total amount planned for over delivery
@@ -39,7 +39,7 @@ export interface OperationCreationContextModel {
   /**
    * Part list of the product of this operation
    */
-  parts?: (Array<PartCreationContext> | null);
+  parts?: Array<PartCreationContext> | null;
 
   /**
    * Expected end time
@@ -54,12 +54,12 @@ export interface OperationCreationContextModel {
   /**
    * Main product identifier
    */
-  productIdentifier?: (string | null);
+  productIdentifier?: string | null;
 
   /**
    * Name of the Product
    */
-  productName?: (string | null);
+  productName?: string | null;
 
   /**
    * Revision of the Product
@@ -79,7 +79,7 @@ export interface OperationCreationContextModel {
   /**
    * Target stock for produced parts
    */
-  targetStock?: (string | null);
+  targetStock?: string | null;
 
   /**
    * The amount to produce
@@ -94,5 +94,5 @@ export interface OperationCreationContextModel {
   /**
    * Unit of product
    */
-  unit?: (string | null);
+  unit?: string | null;
 }

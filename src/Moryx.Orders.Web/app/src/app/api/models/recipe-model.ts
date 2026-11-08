@@ -16,10 +16,6 @@ import { WorkplanModel } from '../models/workplan-model';
  * DTO representation of a recipe
  */
 export interface RecipeModel {
-
-  /**
-   * Classification of the recipe
-   */
   classification?: RecipeClassificationModel;
 
   /**
@@ -35,30 +31,18 @@ export interface RecipeModel {
   /**
    * Name of the recipe
    */
-  name?: (string | null);
-
-  /**
-   * Properties of the recipe
-   */
+  name?: string | null;
   properties?: Entry;
 
   /**
    * Revision of the recipe
    */
   revision?: number;
-
-  /**
-   * This recipe's state
-   */
   state?: RecipeState;
 
   /**
    * Type of the recipe
    */
-  type?: (string | null);
-
-  /**
-   * A model of the currently referenced workplan
-   */
+  type?: string | null;
   workplanModel?: WorkplanModel;
 }

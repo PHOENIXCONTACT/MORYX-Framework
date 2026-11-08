@@ -10,5 +10,9 @@
 /**
  * Current state of a product
  */
-export type ProductState = string;
-
+export enum ProductState {
+  Created = 'Created',
+  Released = 'Released',
+  Deprecated = 'Deprecated',
+  Generated = 'Generated'
+}

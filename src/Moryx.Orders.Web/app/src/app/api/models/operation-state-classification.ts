@@ -14,5 +14,20 @@
  * Bit:    31 - 24  |  23 - 8  |  7 - 0  |
  * Flag:   Overall  |   Usage  |  State  |
  */
-export type OperationStateClassification = string;
-
+export enum OperationStateClassification {
+  Initial = 'Initial',
+  Assigning = 'Assigning',
+  Failed = 'Failed',
+  Aborted = 'Aborted',
+  Ready = 'Ready',
+  Running = 'Running',
+  Interrupting = 'Interrupting',
+  Interrupted = 'Interrupted',
+  Completed = 'Completed',
+  CanReload = 'CanReload',
+  CanBegin = 'CanBegin',
+  CanInterrupt = 'CanInterrupt',
+  CanReport = 'CanReport',
+  CanAdvice = 'CanAdvice',
+  IsAmountReached = 'IsAmountReached'
+}

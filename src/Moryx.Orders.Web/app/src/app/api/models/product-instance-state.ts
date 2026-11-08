@@ -11,5 +11,10 @@
  * The state of an ProductInstance.
  * This will not occupy more than 4 Bits. Other enums can be added by bit-shifting
  */
-export type ProductInstanceState = string;
-
+export enum ProductInstanceState {
+  Unset = 'Unset',
+  InProduction = 'InProduction',
+  Paused = 'Paused',
+  Success = 'Success',
+  Failure = 'Failure'
+}

@@ -36,7 +36,7 @@ export interface ReportContext {
   /**
    * Reasons why a report is not possible
    */
-  restrictions?: (Array<RestrictionDescription> | null);
+  restrictions?: Array<RestrictionDescription> | null;
 
   /**
    * Current failure count of the operation

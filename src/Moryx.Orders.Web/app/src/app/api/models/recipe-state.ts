@@ -10,5 +10,8 @@
 /**
  * A Recipe's state
  */
-export type RecipeState = 'New' | 'Released' | 'Revoked';
-
+export enum RecipeState {
+  New = 'New',
+  Released = 'Released',
+  Revoked = 'Revoked'
+}

@@ -21,18 +21,18 @@ export interface AbortOperation$Params {
   guid: string;
 }
 
-export function abortOperation(http: HttpClient, rootUrl: string, params: AbortOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<any>> {
+export function abortOperation(http: HttpClient, rootUrl: string, params: AbortOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
   const rb = new RequestBuilder(rootUrl, abortOperation.PATH, 'post');
   if (params) {
     rb.path('guid', params.guid, {});
   }
 
   return http.request(
-    rb.build({ responseType: 'json', accept: 'application/json', context })
+    rb.build({ responseType: 'text', accept: '*/*', context })
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<any>;
+      return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
     })
   );
 }

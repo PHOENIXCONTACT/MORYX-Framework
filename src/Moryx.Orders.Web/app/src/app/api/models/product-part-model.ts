@@ -11,9 +11,9 @@ import { StagingIndicator } from '../models/staging-indicator';
 export interface ProductPartModel {
   classification?: PartClassification;
   id?: number;
-  identifier?: (string | null);
-  name?: (string | null);
+  identifier?: string | null;
+  name?: string | null;
   quantity?: number;
   stagingIndicator?: StagingIndicator;
-  unit?: (string | null);
+  unit?: string | null;
 }

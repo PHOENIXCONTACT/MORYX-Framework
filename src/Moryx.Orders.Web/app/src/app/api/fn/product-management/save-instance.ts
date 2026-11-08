@@ -22,18 +22,18 @@ export interface SaveInstance$Params {
     body: ProductInstanceModel
 }
 
-export function saveInstance(http: HttpClient, rootUrl: string, params: SaveInstance$Params, context?: HttpContext): Observable<StrictHttpResponse<any>> {
+export function saveInstance(http: HttpClient, rootUrl: string, params: SaveInstance$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
   const rb = new RequestBuilder(rootUrl, saveInstance.PATH, 'put');
   if (params) {
     rb.body(params.body, 'application/*+json');
   }
 
   return http.request(
-    rb.build({ responseType: 'json', accept: 'application/json', context })
+    rb.build({ responseType: 'text', accept: '*/*', context })
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<any>;
+      return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
     })
   );
 }

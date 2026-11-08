@@ -27,7 +27,7 @@ export interface ReportOperation$Params {
     body: ReportModel
 }
 
-export function reportOperation(http: HttpClient, rootUrl: string, params: ReportOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<any>> {
+export function reportOperation(http: HttpClient, rootUrl: string, params: ReportOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
   const rb = new RequestBuilder(rootUrl, reportOperation.PATH, 'post');
   if (params) {
     rb.path('guid', params.guid, {});
@@ -35,11 +35,11 @@ export function reportOperation(http: HttpClient, rootUrl: string, params: Repor
   }
 
   return http.request(
-    rb.build({ responseType: 'json', accept: 'application/json', context })
+    rb.build({ responseType: 'text', accept: '*/*', context })
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<any>;
+      return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
     })
   );
 }
