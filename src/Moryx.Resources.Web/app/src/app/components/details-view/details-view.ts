@@ -64,7 +64,10 @@ export class DetailsView {
       if (!resource) {
         return;
       }
-      if (this.navigationService.activeId() === resource.id) {
+      // Read activeId untracked so this effect only re-runs when activeResource changes,
+      // not when activeId is set during loadResource (which would cause a navigation loop).
+      const activeId = untracked(() => this.navigationService.activeId());
+      if (activeId === resource.id) {
         return;
       }
       untracked(() => {
