@@ -74,7 +74,7 @@ public class LoginController : Controller
 
     public async Task<IActionResult> RegisterExecute(MoryxUserRegisterModel userModel)
     {
-        var user = ModelConverter.GetUserFromUserRegisterModel(userModel);;
+        var user = ModelConverter.GetUserFromUserRegisterModel(userModel);
 
         var userCreateResult = await _userManager.CreateAsync(user, userModel.Password);
         if (userCreateResult.Succeeded)
