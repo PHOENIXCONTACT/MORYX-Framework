@@ -6,7 +6,7 @@ using Moryx.Workplans.Transitions;
 
 namespace Moryx.Tests.Workplans;
 
-internal class MoveTransition : TransitionBase
+internal sealed class MoveTransition : TransitionBase
 {
     protected override void InputTokenAdded(object sender, IToken token)
     {

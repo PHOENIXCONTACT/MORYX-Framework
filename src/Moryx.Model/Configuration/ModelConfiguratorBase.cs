@@ -37,8 +37,10 @@ public abstract class ModelConfiguratorBase<TConfig> : IModelConfigurator
 
         Config = config as TConfig;
         if (Config == null)
+        {
             throw new InvalidOperationException(
                 $"Configuration for model '{contextType.FullName}' is not of expected type '{typeof(TConfig).FullName}'");
+        }
     }
 
     /// <inheritdoc />
@@ -64,24 +66,32 @@ public abstract class ModelConfiguratorBase<TConfig> : IModelConfigurator
     public virtual async Task<TestConnectionResult> TestConnectionAsync(DatabaseConfig config, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(config.ConnectionString))
+        {
             return TestConnectionResult.ConfigurationError;
+        }
 
         // Simple ef independent database connection
         var connectionResult = await TestServerConnection(config, cancellationToken);
         if (!connectionResult)
+        {
             return TestConnectionResult.ConnectionError;
+        }
 
         await using var context = CreateContext(config);
 
         // Ef dependent database connection
         var canConnect = await context.Database.CanConnectAsync(cancellationToken);
         if (!canConnect)
+        {
             return TestConnectionResult.ConnectionOkDbDoesNotExist;
+        }
 
         // If connection is ok, test migrations
         var pendingMigrations = (await context.Database.GetPendingMigrationsAsync(cancellationToken: cancellationToken)).ToArray();
         if (pendingMigrations.Any())
+        {
             return TestConnectionResult.PendingMigrations;
+        }
 
         return TestConnectionResult.Success;
     }
@@ -246,7 +256,9 @@ public abstract class ModelConfiguratorBase<TConfig> : IModelConfigurator
     private async Task<bool> TestServerConnection(DatabaseConfig config, CancellationToken cancellationToken)
     {
         if (!CheckDatabaseConfig(config))
+        {
             return false;
+        }
 
         await using var conn = CreateConnection(config, false);
         try
@@ -254,7 +266,7 @@ public abstract class ModelConfiguratorBase<TConfig> : IModelConfigurator
             await conn.OpenAsync(cancellationToken);
             return true;
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             return false;
         }

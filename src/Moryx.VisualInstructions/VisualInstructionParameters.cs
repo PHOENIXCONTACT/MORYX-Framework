@@ -37,11 +37,15 @@ public class VisualInstructionParameters : Parameters
 
         // No instructions, no binding!
         if (Instructions == null || Instructions.Length == 0)
+        {
             return;
+        }
 
         // Create binder for our instructions
         if (InstructionBinder == null)
+        {
             InstructionBinder = new VisualInstructionBinder(Instructions, ResolverFactory);
+        }
 
         // Resolve instructions
         parameters.Instructions = InstructionBinder.ResolveInstructions(process) ?? Instructions;

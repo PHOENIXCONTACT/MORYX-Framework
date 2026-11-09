@@ -13,7 +13,7 @@ namespace Moryx.Container;
 /// Selector that uses the given config object to determine component name and execute initialize.
 /// The Create method must have the first parameter "config" of type T.
 /// </summary>
-internal class ConfigBasedComponentSelector : DefaultTypedFactoryComponentSelector, IConfigBasedComponentSelector
+internal sealed class ConfigBasedComponentSelector : DefaultTypedFactoryComponentSelector, IConfigBasedComponentSelector
 {
     private const string ConfigParameterName = "config";
     private const string CancellationTokenParameterName = "cancellationToken";
@@ -64,7 +64,9 @@ internal class ConfigBasedComponentSelector : DefaultTypedFactoryComponentSelect
             {
                 ExecuteInitialize(targetComponentType, configType, instance, config, kernel);
                 if (!isAsync)
+                {
                     return instance;
+                }
 
                 // Warn if mixing sync initialize with async factory
                 kernel.Logger.WarnFormat(CultureInfo.InvariantCulture,
@@ -180,7 +182,7 @@ internal class ConfigBasedComponentSelector : DefaultTypedFactoryComponentSelect
         return typedTask;
     }
 
-    private class TaskHelperClass
+    private sealed class TaskHelperClass
     {
         public static Task<T> CastTaskResult<T>(Task<object> task)
         {

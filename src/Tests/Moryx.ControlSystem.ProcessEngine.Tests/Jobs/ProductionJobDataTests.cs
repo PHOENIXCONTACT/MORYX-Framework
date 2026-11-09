@@ -55,9 +55,13 @@ public class ProductionJobDataTests : JobDataTestBase
 
         // Act
         if (useAbort)
+        {
             jobData.Abort();
+        }
         else
+        {
             jobData.Complete();
+        }
 
         // Assert
         Assert.That(jobData.Classification, Is.EqualTo(JobClassification.Completed));
@@ -231,7 +235,7 @@ public class ProductionJobDataTests : JobDataTestBase
 
         // Assert
         Assert.That(jobData.Classification, Is.EqualTo(JobClassification.Idle));
-        Assert.DoesNotThrow(() => jobData.Interrupt(), "Interrupt an interrupted job should be okay");
+        Assert.DoesNotThrow(jobData.Interrupt, "Interrupt an interrupted job should be okay");
     }
 
     [Test(Description = "A completing job will be interrupted")]

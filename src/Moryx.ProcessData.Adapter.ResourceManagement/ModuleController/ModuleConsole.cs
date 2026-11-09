@@ -6,7 +6,7 @@ using Moryx.Runtime.Modules;
 namespace Moryx.ProcessData.Adapter.ResourceManagement;
 
 [ServerModuleConsole]
-internal class ModuleConsole : IServerModuleConsole
+internal sealed class ModuleConsole : IServerModuleConsole
 {
     public void ExecuteCommand(string[] args, Action<string> outputStream)
     {

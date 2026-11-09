@@ -4,7 +4,6 @@
 using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
-using Microsoft.Extensions.Logging;
 
 namespace Moryx.Tools;
 
@@ -28,11 +27,11 @@ public static class ReflectionTool
         // Fetch location of binaries from our assembly
         var currentDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location).ToLower();
         var relevantAssemblies = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
-            // Only load non-dynamic assemblies from our directory
-            where !assembly.IsDynamic && !string.IsNullOrEmpty(assembly.Location)
-            let path = Path.GetDirectoryName(assembly.Location).ToLower()
-            where TestMode || path == currentDir
-            select assembly).ToArray();
+                                      // Only load non-dynamic assemblies from our directory
+                                  where !assembly.IsDynamic && !string.IsNullOrEmpty(assembly.Location)
+                                  let path = Path.GetDirectoryName(assembly.Location).ToLower()
+                                  where TestMode || path == currentDir
+                                  select assembly).ToArray();
         return relevantAssemblies;
     }
 
@@ -103,8 +102,8 @@ public static class ReflectionTool
     public static Type[] GetPublicClasses(Type baseType, Predicate<Type> filter)
     {
         return (from publicClass in _publicClasses.Value
-            where baseType.IsAssignableFrom(publicClass) && filter(publicClass)
-            select publicClass).ToArray();
+                where baseType.IsAssignableFrom(publicClass) && filter(publicClass)
+                select publicClass).ToArray();
     }
 
     /// <summary>
@@ -178,19 +177,25 @@ public static class ReflectionTool
         Type accessorType;
 
         if (property.DeclaringType == typeof(TBase) && typeof(TValue) == property.PropertyType)
+        {
             accessorType = typeof(DirectAccessor<,>).MakeGenericType(typeof(TBase), typeof(TValue));
-
+        }
         else if (typeof(TBase).IsAssignableFrom(property.DeclaringType) && typeof(TValue) == property.PropertyType)
+        {
             accessorType = typeof(InstanceCastAccessor<,,>).MakeGenericType(property.DeclaringType, typeof(TBase), typeof(TValue));
-
+        }
         else if (typeof(TBase).IsAssignableFrom(property.DeclaringType) && typeof(TValue).IsAssignableFrom(property.PropertyType) && typeof(TValue) != typeof(object))
+        {
             accessorType = typeof(ValueCastAccessor<,,,>).MakeGenericType(property.DeclaringType, typeof(TBase), property.PropertyType, typeof(TValue));
-
+        }
         else if (typeof(TBase).IsAssignableFrom(property.DeclaringType) && property.PropertyType.IsAssignableFrom(typeof(TValue)) && typeof(TValue) != typeof(object))
+        {
             accessorType = typeof(PropertyCastAccessor<,,,>).MakeGenericType(property.DeclaringType, typeof(TBase), property.PropertyType, typeof(TValue));
-
+        }
         else
+        {
             accessorType = typeof(ConversionAccessor<,,,>).MakeGenericType(property.DeclaringType, typeof(TBase), property.PropertyType, typeof(TValue));
+        }
 
         return (IPropertyAccessor<TBase, TValue>)Activator.CreateInstance(accessorType, property);
     }
@@ -231,8 +236,7 @@ public static class ReflectionTool
     public static bool IsExplicitInterfaceImplementation(PropertyInfo propertyInfo)
     {
         // At least one accessor must exists
-        return IsExplicitInterfaceImplementation(propertyInfo.GetMethod != null
-            ? propertyInfo.GetMethod : propertyInfo.SetMethod);
+        return IsExplicitInterfaceImplementation(propertyInfo.GetMethod ?? propertyInfo.SetMethod);
     }
 
     /// <summary>
@@ -252,14 +256,18 @@ public static class ReflectionTool
 
             // Only look at declaring types
             if (mapping.TargetType != declaringType)
+            {
                 continue;
+            }
 
             for (var index = 0; index < mapping.TargetMethods.Length; index++)
             {
                 // If mapped method and interface method name do not match, it is explicit
                 if (mapping.TargetMethods[index] == methodInfo &&
                     mapping.InterfaceMethods[index]?.Name.Equals(methodInfo.Name, StringComparison.Ordinal) == false)
+                {
                     return true;
+                }
             }
         }
 

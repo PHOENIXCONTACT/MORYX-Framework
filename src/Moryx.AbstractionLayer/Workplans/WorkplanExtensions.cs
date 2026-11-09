@@ -37,7 +37,9 @@ public static class WorkplanExtensions
             }
 
             if (task.Outputs.Length != outputs.Length)
+            {
                 throw new ArgumentException($"Wrong number of outputs for the task {task.Name}.");
+            }
 
             workplan.Add(task);
 
@@ -66,7 +68,9 @@ public static class WorkplanExtensions
             }
 
             if (task.Outputs.Length != outputs.Length)
+            {
                 throw new ArgumentException($"Wrong number of outputs for the task {task.Name}.");
+            }
 
             workplan.Add(task);
 

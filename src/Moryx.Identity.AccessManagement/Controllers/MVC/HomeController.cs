@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Moryx.Identity.AccessManagement.Models;
-using System.Diagnostics;
 
 namespace Moryx.Identity.AccessManagement.Controllers;
 

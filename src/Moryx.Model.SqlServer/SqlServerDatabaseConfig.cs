@@ -41,7 +41,7 @@ public class SqlServerDatabaseConfig : DatabaseConfig
     /// </summary>
     [DefaultValue("sa")]
     [Description("User ID to be used when connecting to SQL Server")]
-    [ConnectionStringKey("User Id") ]
+    [ConnectionStringKey("User Id")]
     public string UserId { get; set; }
 
     /// <summary>

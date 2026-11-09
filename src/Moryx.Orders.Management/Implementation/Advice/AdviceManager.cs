@@ -73,7 +73,9 @@ internal class AdviceManager : IAdviceManager
         }
 
         if (result.Success)
+        {
             await operationData.Advice(advice);
+        }
 
         return result;
     }

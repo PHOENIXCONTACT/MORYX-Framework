@@ -154,10 +154,15 @@ internal class SetupJobHandler : ILoggingComponent, ISetupJobHandler
         {
             // Skip all identical production jobs
             if (next.Recipe.Id == recipeId)
+            {
                 continue;
+            }
 
             if (next is ISetupJobData cleanup && cleanup.Recipe.TargetRecipe.Id == recipeId)
+            {
                 return cleanup;
+            }
+
             break;
         }
         return null;
@@ -238,7 +243,9 @@ internal class SetupJobHandler : ILoggingComponent, ISetupJobHandler
             if (FirstOfRecipe(jobToBeAborted.Value))
             {
                 if (previous?.Value is SetupJobData setupJobData && setupJobData.Recipe.TargetRecipe.Id != jobToBeAborted.Value.Recipe.Id)
+                {
                     break;
+                }
 
                 // Interrupt the setup for this set of jobs
                 abortedJobIds.Add(previous.Value.Id);
@@ -268,9 +275,13 @@ internal class SetupJobHandler : ILoggingComponent, ISetupJobHandler
     {
         var jobData = args.JobData;
         if (args.CurrentState.Classification < JobClassification.Completed)
+        {
             CheckRecipeUpdate(jobData);
+        }
         else
+        {
             OnJobCompleted(jobData);
+        }
     }
 
     private void CheckRecipeUpdate(IJobData jobData)
@@ -278,7 +289,9 @@ internal class SetupJobHandler : ILoggingComponent, ISetupJobHandler
         // Check if setup job requires a new recipe
         var setupJob = jobData as ISetupJobData;
         if (setupJob?.RecipeRequired != true)
+        {
             return;
+        }
 
         // Fetch current recipe and check if setup is complete
         var currentRecipe = setupJob.Recipe;
@@ -294,12 +307,16 @@ internal class SetupJobHandler : ILoggingComponent, ISetupJobHandler
         // Otherwise check if a production job was completed
         var productionJob = jobData as IProductionJobData;
         if (productionJob == null)
+        {
             return;
+        }
 
         // If we have a follow-up job with the same recipe, we don't have to do anything
         var followUp = JobList.Next(jobData)?.Recipe.Id == jobData.Recipe.Id;
         if (followUp)
+        {
             return;
+        }
 
         // Check if the previous job is a setup targeting the completed job
         // Clean-up jobs don't need to be aborted. They are updated when started by the scheduler

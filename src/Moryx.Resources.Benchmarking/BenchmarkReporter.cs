@@ -10,9 +10,9 @@ using Moryx.Benchmarking;
 using Moryx.ControlSystem.Activities;
 using Moryx.ControlSystem.Cells;
 using Moryx.ControlSystem.VisualInstructions;
-using Moryx.VisualInstructions;
 using Moryx.Serialization;
 using Moryx.Threading;
+using Moryx.VisualInstructions;
 
 namespace Moryx.Resources.Benchmarking;
 
@@ -109,7 +109,9 @@ public class BenchmarkReporter : Cell
     {
         var reports = BenchmarkCells.Select(r => r.GetReport()).Where(r => r.ActivityCount > 0).ToArray();
         if (reports.Length == 0)
+        {
             return; // Machine idle
+        }
 
         var total = reports.Sum(r => r.ActivityCount);
         var avgRtwWait = reports.Average(r => r.ReadyToWorkWait / r.ActivityCount);

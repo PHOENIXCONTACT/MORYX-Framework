@@ -1,12 +1,12 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.AbstractionLayer.Resources;
-using Moryx.ControlSystem.Activities;
-using Moryx.Serialization;
 using System.Reflection;
 using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Processes;
+using Moryx.AbstractionLayer.Resources;
+using Moryx.ControlSystem.Activities;
+using Moryx.Serialization;
 
 namespace Moryx.ControlSystem.Processes.Endpoints;
 
@@ -35,13 +35,21 @@ internal static class Converter
     private static ProcessProgress InferProcessState(List<Activity> activities)
     {
         if (activities == null || activities.Count == 0)
+        {
             return ProcessProgress.Ready;
+        }
         else if (activities.All(a => a.Tracing.Completed != null))
+        {
             return ProcessProgress.Completed;
+        }
         else if (activities.Any(a => a.Tracing.Started != null))
+        {
             return ProcessProgress.Running;
+        }
         else
+        {
             return ProcessProgress.Ready;
+        }
     }
 
     /// <summary>
@@ -87,20 +95,31 @@ internal static class Converter
     private static ActivityClassification InferActivityClassification(Activity activity)
     {
         if (activity.Process is ProductionProcess)
+        {
             return ActivityClassification.Production;
+        }
         else if (activity is IControlSystemActivity controlActivity)
+        {
             return controlActivity.Classification;
+        }
+
         return ActivityClassification.Unknown;
     }
 
     private static string InferActivityState(Activity activity)
     {
         if (activity.Result != null)
+        {
             return nameof(ActivityProgress.Completed);
+        }
         else if (activity.Tracing?.Started != null)
+        {
             return nameof(ActivityProgress.Running);
+        }
         else
+        {
             return nameof(ActivityProgress.Ready);
+        }
     }
 
     internal static TracingModel ConvertTracing(Tracing tracing) => new()

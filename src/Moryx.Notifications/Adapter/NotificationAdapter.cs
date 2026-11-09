@@ -59,10 +59,14 @@ public class NotificationAdapter : INotificationAdapter, INotificationSourceAdap
     public void Publish(INotificationSender sender, Notification notification, object tag)
     {
         if (string.IsNullOrEmpty(sender.Identifier))
+        {
             throw new InvalidOperationException("The identifier of the sender must be set.");
+        }
 
         if (notification == null)
+        {
             throw new ArgumentNullException(nameof(notification), "Notification must be set");
+        }
 
         lock (_listLock)
         {
@@ -71,7 +75,10 @@ public class NotificationAdapter : INotificationAdapter, INotificationSourceAdap
                 .Any(n => n.Notification == notification);
 
             if (isPending)
+            {
                 throw new InvalidOperationException("Notification cannot be published twice.");
+            }
+
             notification.Created = DateTime.Now;
             notification.Sender = sender.Identifier;
 
@@ -85,10 +92,14 @@ public class NotificationAdapter : INotificationAdapter, INotificationSourceAdap
     public void Acknowledge(INotificationSender sender, Notification notification)
     {
         if (string.IsNullOrEmpty(sender.Identifier))
+        {
             throw new InvalidOperationException("The identifier of the sender must be set.");
+        }
 
         if (notification == null)
+        {
             throw new ArgumentNullException(nameof(notification), "Notification must be set");
+        }
 
         notification.Acknowledged = DateTime.Now;
         notification.Acknowledger = sender.Identifier;
@@ -98,14 +109,18 @@ public class NotificationAdapter : INotificationAdapter, INotificationSourceAdap
         {
             published = _published.SingleOrDefault(n => n.Notification.Identifier == notification.Identifier);
             if (published is not null)
+            {
                 _published.Remove(published);
+            }
             else
             {
                 published = _pendingPubs.SingleOrDefault(n => n.Notification.Identifier == notification.Identifier);
 
                 if (published is null)
+                {
                     throw new InvalidOperationException("Notification was not managed by the adapter. " +
                                                         "The sender was not registered on the adapter.");
+                }
 
                 _pendingPubs.Remove(published);
             }
@@ -114,7 +129,9 @@ public class NotificationAdapter : INotificationAdapter, INotificationSourceAdap
         }
 
         if (published is not null)
+        {
             Acknowledged?.Invoke(this, published.Notification);
+        }
     }
 
     /// <inheritdoc />
@@ -151,7 +168,9 @@ public class NotificationAdapter : INotificationAdapter, INotificationSourceAdap
         }
 
         foreach (var published in publishes ?? [])
+        {
             Acknowledged?.Invoke(this, published.Notification);
+        }
     }
 
     #endregion
@@ -191,7 +210,9 @@ public class NotificationAdapter : INotificationAdapter, INotificationSourceAdap
 
             // Maybe already removed from this adapter
             if (map is not null)
+            {
                 _pendingAcks.Remove(map);
+            }
         }
     }
 
@@ -259,7 +280,7 @@ public class NotificationAdapter : INotificationAdapter, INotificationSourceAdap
 
     #endregion
 
-    private class NotificationMap
+    private sealed class NotificationMap
     {
         public NotificationMap(INotificationSender sender, Notification notification, object tag)
         {

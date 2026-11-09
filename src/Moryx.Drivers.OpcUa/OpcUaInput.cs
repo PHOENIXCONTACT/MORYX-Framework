@@ -20,7 +20,9 @@ internal class OpcUaInput : IInput
     private void OnReceived(object sender, object e)
     {
         if (e is not IIdentifierMessage opcUaMessage)
+        {
             return;
+        }
 
         var eventArgs = new InputChangedEventArgs(opcUaMessage.Identifier, opcUaMessage);
         InputChanged?.Invoke(this, eventArgs);

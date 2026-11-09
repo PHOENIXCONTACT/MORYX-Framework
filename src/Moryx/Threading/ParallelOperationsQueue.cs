@@ -83,6 +83,8 @@ public class ParallelOperationsQueue<TElement>
         _eventQueue.Enqueue(element);
 
         if (Interlocked.Increment(ref _pendingElements) == 1)
+        {
             ParallelOperations.ExecuteParallel(ProcessEventQueue);
+        }
     }
 }

@@ -1,26 +1,20 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using Moq;
+using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Capabilities;
+using Moryx.AbstractionLayer.Processes;
 using Moryx.ControlSystem.Cells;
 using Moryx.ControlSystem.Processes;
 using Moryx.FactoryMonitor.Endpoints.Models;
 using NUnit.Framework;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Threading;
-using System.Threading.Tasks;
-using Moryx.AbstractionLayer.Activities;
-using Moryx.AbstractionLayer.Processes;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Moryx.FactoryMonitor.Endpoints.Tests;
 
@@ -64,8 +58,10 @@ public class FactoryMonitorController_StateStreamTest : BaseTest
         Assert.That(GetLocations().Length, Is.EqualTo(endpointResult.Value.ResourceChangedModels.Count));
 
         foreach (var endpointCell in endpointResult.Value.ResourceChangedModels)
+        {
             //machine location matches
             Assert.That(GetLocations().Any(l => l.Id == endpointCell.Location.Id));
+        }
     }
 
     [Test]
@@ -116,7 +112,9 @@ public class FactoryMonitorController_StateStreamTest : BaseTest
             {
                 o.SerializerOptions.PropertyNamingPolicy = _serializerOptions.PropertyNamingPolicy;
                 foreach (var c in _serializerOptions.Converters)
+                {
                     o.SerializerOptions.Converters.Add(c);
+                }
             })
             .BuildServiceProvider();
 
@@ -231,9 +229,13 @@ public class FactoryMonitorController_StateStreamTest : BaseTest
                     break;
                 case "processes":
                     var order = JsonSerializer.Deserialize<OrderModel>(data, _serializerOptions);
-                    if (order != null) orders.Add(order);
+                    if (order != null)
+                    {
+                        orders.Add(order);
+                    }
+
                     break;
-                // resourceChangedModel is intentionally ignored in these tests
+                    // resourceChangedModel is intentionally ignored in these tests
             }
         }
     }

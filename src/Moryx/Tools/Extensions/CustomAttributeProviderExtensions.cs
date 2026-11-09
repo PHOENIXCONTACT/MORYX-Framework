@@ -68,7 +68,9 @@ public static class CustomAttributeProviderExtensions
             var name = attributeProvider.GetCustomAttribute<DisplayAttribute>(false)?.GetName();
 
             if (string.IsNullOrEmpty(name))
+            {
                 name = attributeProvider.GetCustomAttribute<DisplayNameAttribute>(false)?.DisplayName;
+            }
 
             return name;
         }
@@ -84,7 +86,9 @@ public static class CustomAttributeProviderExtensions
             var description = attributeProvider.GetCustomAttribute<DisplayAttribute>(false)?.GetDescription();
 
             if (string.IsNullOrEmpty(description))
+            {
                 description = attributeProvider.GetCustomAttribute<DescriptionAttribute>(false)?.Description;
+            }
 
             return description;
         }

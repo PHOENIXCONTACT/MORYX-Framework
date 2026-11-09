@@ -1,8 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Linq;
 using System.Runtime.Serialization;
 using Moryx.Serialization;
 using Moryx.Workplans;
@@ -55,13 +53,17 @@ public class DummyTransition : TransitionBase, IObservableTransition
         StoredTokens.Add(token);
         Triggered(this, EventArgs.Empty);
         if (ResultOutput >= 0) // Resume directly
+        {
             PlaceToken(Outputs[ResultOutput], StoredTokens.First());
+        }
     }
 
     public override void Resume()
     {
         if (StoredTokens.Any())
+        {
             Triggered(this, EventArgs.Empty);
+        }
     }
 
     public void ResumeAsync(int result)

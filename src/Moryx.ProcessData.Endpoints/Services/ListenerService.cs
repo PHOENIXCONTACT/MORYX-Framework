@@ -9,7 +9,7 @@ using Moryx.Runtime.Modules;
 
 namespace Moryx.ProcessData.Endpoints.Services;
 
-internal class ListenerService : IListenerService
+internal sealed class ListenerService : IListenerService
 {
     private readonly IModuleManager _moduleManager;
     private readonly IConfigManager _configManager;

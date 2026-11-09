@@ -60,7 +60,9 @@ public class JobSlots<TSlot> : IEnumerable<TSlot>
     {
         AvailableSlots = slotCount;
         for (int i = 0; i < slotCount; i++)
+        {
             _slots.Add(new TSlot()); // Prepare slot wrapper for each slot
+        }
     }
 
     /// <summary>
@@ -102,21 +104,29 @@ public class JobSlots<TSlot> : IEnumerable<TSlot>
     {
         // If the size is identical this is easy
         if (size == Size)
+        {
             return true;
+        }
 
         // Make sure the new size fits all assigned slots
         // Decreasing is only possible if all taken slots fit in the new size
         if (size < Size - AvailableSlots)
+        {
             return false;
+        }
 
         // Now add or remove slots until the size matches
         AvailableSlots += size - Size;
         while (size != Size)
         {
             if (size > Size)
+            {
                 _slots.Add(new TSlot());
+            }
             else
+            {
                 _slots.RemoveAll(s => s.Target == null);
+            }
         }
         return true;
     }
@@ -128,7 +138,10 @@ public class JobSlots<TSlot> : IEnumerable<TSlot>
     {
         var result = TryReplace(null, runningJob);
         if (result)
+        {
             AvailableSlots--;
+        }
+
         return result;
     }
 
@@ -139,7 +152,10 @@ public class JobSlots<TSlot> : IEnumerable<TSlot>
     {
         var result = TryReplace(runningJob, null);
         if (result)
+        {
             AvailableSlots++;
+        }
+
         return result;
     }
 
@@ -152,7 +168,9 @@ public class JobSlots<TSlot> : IEnumerable<TSlot>
         var currentSlot = _slots.FirstOrDefault(s => s.Target == currentReference && s.CanAssign(newReference));
         // We failed to assign this job to a slot
         if (currentSlot == null)
+        {
             return false;
+        }
 
         // Assign new job to the slot
         currentSlot.Assign(newReference);

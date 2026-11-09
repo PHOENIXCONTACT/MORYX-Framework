@@ -40,20 +40,29 @@ public class LoginController : Controller
 
         var user = await _userManager.FindByNameAsync(userLoginModel.UserName);
         if (user is null)
+        {
             return ReturnIndexWithError(returnUrl);
+        }
 
         var passwordCorrect = await _userManager.CheckPasswordAsync(user, userLoginModel.Password);
         if (!passwordCorrect)
+        {
             return ReturnIndexWithError(returnUrl);
+        }
 
         var tokenResult = await _tokenService.GenerateTokenAsync(user);
         HttpContext.Response.Cookies.SetJwtCookie(tokenResult, user);
 
         if (!string.IsNullOrEmpty(returnUrl))
+        {
             return Redirect(Request.Query["returnUrl"]);
+        }
 
         if (await _userManager.IsInRoleAsync(user, Roles.SuperAdmin))
+        {
             return RedirectToAction("Index", "Users");
+        }
+
         return RedirectToAction("Index", "Home");
     }
 
@@ -62,7 +71,9 @@ public class LoginController : Controller
         ViewBag.ErrorMessage = "UserName or Password incorrect!";
 
         if (returnUrl != null)
+        {
             return RedirectToAction("Index", "Login", new { returnUrl = returnUrl, viewBagError = ViewBag.ErrorMessage });
+        }
 
         return RedirectToAction("Index", "Login", new { viewBagError = ViewBag.ErrorMessage });
     }
@@ -78,7 +89,9 @@ public class LoginController : Controller
 
         var userCreateResult = await _userManager.CreateAsync(user, userModel.Password);
         if (userCreateResult.Succeeded)
+        {
             return RedirectToAction("Index", "Home");
+        }
 
         ViewBag.ErrorMessage = userCreateResult.Errors.First().Description;
         return View("Register");

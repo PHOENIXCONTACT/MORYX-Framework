@@ -4,7 +4,6 @@
 using System.ComponentModel.DataAnnotations;
 using Moryx.AbstractionLayer.Capabilities;
 using Moryx.AbstractionLayer.Recipes;
-using Moryx.AbstractionLayer.Resources;
 using Moryx.ControlSystem.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Jobs.Setup;
@@ -106,7 +105,9 @@ internal class JobManagementFacade : IJobManagement, IFacadeControl
     {
         ValidateHealthState();
         if (recipe is not ProductionRecipe prodRecipe)
+        {
             throw new ArgumentException($"Process engine only supports {nameof(ProductionRecipe)}.", nameof(recipe));
+        }
 
         return new JobEvaluation
         {
@@ -128,7 +129,9 @@ internal class JobManagementFacade : IJobManagement, IFacadeControl
     public async Task<IReadOnlyList<Job>> AddAsync(JobCreationContext context, CancellationToken cancellationToken = default)
     {
         if (!JobManager.AcceptingExternalJobs)
+        {
             throw new HealthStateException(ServerModuleState.Stopping);
+        }
 
         context.Templates.ForEach(t => ValidateRecipe(t.Recipe));
 
@@ -170,7 +173,9 @@ internal class JobManagementFacade : IJobManagement, IFacadeControl
         ArgumentNullException.ThrowIfNull(recipe);
 
         if (recipe.Origin == null)
+        {
             throw new ArgumentException("Origin must not be null on recipe.", nameof(recipe));
+        }
 
         var productionRecipe = recipe as ProductionRecipe
                                ?? throw new NotSupportedException($"Process engine only supports '{nameof(ProductionRecipe)}'.");

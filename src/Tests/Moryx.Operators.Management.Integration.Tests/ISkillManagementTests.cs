@@ -6,7 +6,7 @@ using Moryx.Operators.Skills;
 namespace Moryx.Operators.Management.Tests;
 
 [TestFixture]
-internal class ISkillManagementTests : TestsBase
+internal sealed class ISkillManagementTests : TestsBase
 {
     private ISkillManagement _facade;
 

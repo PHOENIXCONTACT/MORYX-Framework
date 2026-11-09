@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 namespace Moryx.Media.Endpoints.Models;
 
 [DataContract]
-internal class PreviewDescriptorModel : FileDescriptorModel
+internal sealed class PreviewDescriptorModel : FileDescriptorModel
 {
     /// <summary>
     /// State of the preview

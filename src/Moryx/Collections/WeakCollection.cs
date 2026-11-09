@@ -28,12 +28,16 @@ public sealed class WeakCollection<T> where T : class
             T item;
 
             if (!weakReference.TryGetTarget(out item))
+            {
                 continue;
+            }
 
             ret.Add(item);
 
             if (readIndex != writeIndex)
+            {
                 _list[writeIndex] = _list[readIndex];
+            }
 
             ++writeIndex;
         }
@@ -65,7 +69,9 @@ public sealed class WeakCollection<T> where T : class
             T entry;
 
             if (!weakReference.TryGetTarget(out entry) || entry != item)
+            {
                 continue;
+            }
 
             _list.RemoveAt(i);
             return true;

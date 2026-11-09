@@ -46,14 +46,18 @@ internal class OperationDataPool : IOperationDataPool, IOperationPool
             .Where(o => o.State < OperationDataStateBase.CompletedKey).ToArrayAsync(cancellationToken);
 
         foreach (var entity in restored)
+        {
             await RestoreByEntity(entity);
+        }
 
         _lock.EnterReadLock();
         var operations = _operations.ToList();
         _lock.ExitReadLock();
 
         foreach (var operationData in operations)
+        {
             await operationData.Resume();
+        }
     }
 
     public Task StopAsync(CancellationToken cancellationToken = default)
@@ -157,7 +161,9 @@ internal class OperationDataPool : IOperationDataPool, IOperationPool
         }
 
         if (operationData != null)
+        {
             return operationData;
+        }
 
         // Look into the database because the requested order and operation could be already completed
         using var uow = UnitOfWorkFactory.Create();
@@ -166,7 +172,9 @@ internal class OperationDataPool : IOperationDataPool, IOperationPool
             .SingleOrDefault(entityPredicate);
 
         if (operationEntity == null)
+        {
             return null;
+        }
 
         operationData = await RestoreByEntity(operationEntity);
 
@@ -201,7 +209,9 @@ internal class OperationDataPool : IOperationDataPool, IOperationPool
         // If operation is existing and not completed, it can be returned without creating a new one
         var existingOperation = orderData.Operations.FirstOrDefault(o => o.Number.Equals(context.Number) && o.State.Key < OperationDataStateBase.CompletedKey);
         if (existingOperation != null)
+        {
             return existingOperation;
+        }
 
         // Create new operation
         var operationData = OperationFactory.Create(_savingContext);

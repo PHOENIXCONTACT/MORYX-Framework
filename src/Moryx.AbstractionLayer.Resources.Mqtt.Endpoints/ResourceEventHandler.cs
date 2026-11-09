@@ -4,7 +4,6 @@
 using System.Globalization;
 using System.Text.Json;
 using Moryx.AbstractionLayer.Identity;
-using Moryx.AspNetCore.Mqtt;
 using Moryx.AspNetCore.Mqtt.Components;
 using Moryx.AspNetCore.Mqtt.Converters;
 using MQTTnet;

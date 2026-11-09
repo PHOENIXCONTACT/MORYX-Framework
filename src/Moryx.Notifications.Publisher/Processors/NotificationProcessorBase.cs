@@ -62,7 +62,9 @@ public abstract class NotificationProcessorBase<TNotification, TNotificationType
     {
         // Clear loaded types if initialized
         if (_types == null)
+        {
             return;
+        }
 
         _typeLock.EnterWriteLock();
 
@@ -107,7 +109,9 @@ public abstract class NotificationProcessorBase<TNotification, TNotificationType
 
         // If ignored, we do not have to save
         if (processResult == NotificationProcessorResult.Ignored)
+        {
             return processResult;
+        }
 
         using var uow = UnitOfWorkFactory.Create();
         var entity = GetNotificationByIdentifier(uow, notification.Identifier);
@@ -218,7 +222,9 @@ public abstract class NotificationProcessorBase<TNotification, TNotificationType
 
         var ackResult = OnAcknowledge(notification, type);
         if (ackResult == NotificationProcessorResult.Ignored)
+        {
             return ackResult;
+        }
 
         using var uow = UnitOfWorkFactory.Create();
         var entity = GetNotificationByIdentifier(uow, notification.Identifier);
@@ -303,9 +309,15 @@ public abstract class NotificationProcessorBase<TNotification, TNotificationType
         entity.Title = notification.Title;
         entity.Message = notification.Message;
         if (notification.Created != null)
+        {
             entity.Created = ConvertToUtc((DateTime)notification.Created);
+        }
+
         if (notification.Acknowledged != null)
+        {
             entity.Acknowledged = ConvertToUtc((DateTime)notification.Acknowledged);
+        }
+
         entity.Sender = notification.Sender;
         entity.Source = notification.Source;
 
@@ -315,9 +327,15 @@ public abstract class NotificationProcessorBase<TNotification, TNotificationType
     private static DateTime ConvertToUtc(DateTime dateTime)
     {
         if (dateTime.Kind == DateTimeKind.Utc)
+        {
             return dateTime;
+        }
+
         if (dateTime.Kind == DateTimeKind.Local)
+        {
             return TimeZoneInfo.ConvertTimeToUtc(dateTime, TimeZoneInfo.Local);
+        }
+
         throw new ArgumentException($"Provided {nameof(DateTime)} is neither UTC nor Local Time.");
     }
 
@@ -340,7 +358,9 @@ public abstract class NotificationProcessorBase<TNotification, TNotificationType
         CopyTypeInformationToNotification(type, notification);
 
         if (!string.IsNullOrEmpty(entity.ExtensionData))
+        {
             JsonConvert.PopulateObject(entity.ExtensionData, notification, JsonSettings.Minimal);
+        }
 
         return notification;
     }
@@ -378,13 +398,15 @@ public abstract class NotificationProcessorBase<TNotification, TNotificationType
         var notificationRepo = uow.GetRepository<INotificationEntityRepository>();
 
         var filter = from n in notificationRepo.Linq
-            where n.Created >= start && n.Created <= end &&
-                  n.Type.Severity == (int)severity &&
-                  n.Type.Type == typeof(TNotification).Name
-            select n;
+                     where n.Created >= start && n.Created <= end &&
+                           n.Type.Severity == (int)severity &&
+                           n.Type.Type == typeof(TNotification).Name
+                     select n;
 
         if (!string.IsNullOrEmpty(title))
+        {
             filter = filter.Where(n => n.Title.Equals(title));
+        }
 
         var results = filter.ToArray();
 

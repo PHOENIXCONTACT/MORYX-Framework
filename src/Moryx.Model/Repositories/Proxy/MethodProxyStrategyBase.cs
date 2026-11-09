@@ -29,10 +29,14 @@ internal abstract class MethodProxyStrategyBase : IMethodProxyStrategy
         var targetProperty = targetType.GetProperty(propertyName);
 
         if (targetProperty == null)
+        {
             throw new InvalidOperationException($"Cannot find property with name '{propertyName}' on target type '{targetType.Name}'.");
+        }
 
         if (!targetProperty.PropertyType.IsAssignableFrom(parameterInfo.ParameterType))
+        {
             throw new InvalidOperationException($"Types doesn't match: Property '{parameterInfo.Name}', Target type: {targetProperty.PropertyType}, Source type: {parameterInfo.ParameterType}.");
+        }
 
         return new ParameterPropertyMap(parameterInfo, targetProperty);
     }
@@ -48,17 +52,23 @@ internal abstract class MethodProxyStrategyBase : IMethodProxyStrategy
             //TODO: Find more / better ways to check generic return type
             // More than one generic argument
             if (methodReturnType.GetGenericArguments().Length != 1)
+            {
                 throw exception;
+            }
 
             var genericArg = methodReturnType.GetGenericArguments()[0];
             if (!genericArg.IsAssignableFrom(targetType))
+            {
                 throw exception;
+            }
         }
         else
         {
             // If type is not assignable
             if (!methodInfo.ReturnType.IsAssignableFrom(targetType))
+            {
                 throw exception;
+            }
         }
     }
 

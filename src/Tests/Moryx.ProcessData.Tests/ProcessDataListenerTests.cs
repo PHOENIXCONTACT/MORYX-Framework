@@ -1,12 +1,12 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moq.Protected;
+using Moryx.Logging;
 using Moryx.ProcessData.Listener;
 using NUnit.Framework;
-using Moryx.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Moryx.ProcessData.Tests;
 

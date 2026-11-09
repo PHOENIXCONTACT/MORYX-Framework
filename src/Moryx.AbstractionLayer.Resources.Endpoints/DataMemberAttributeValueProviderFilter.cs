@@ -7,7 +7,7 @@ using Moryx.Configuration;
 
 namespace Moryx.AbstractionLayer.Resources.Endpoints;
 
-internal class DataMemberAttributeValueProviderFilter : IValueProviderFilter
+internal sealed class DataMemberAttributeValueProviderFilter : IValueProviderFilter
 {
     private readonly bool _filterDataMembers;
 
@@ -19,7 +19,10 @@ internal class DataMemberAttributeValueProviderFilter : IValueProviderFilter
     public bool CheckProperty(PropertyInfo propertyInfo)
     {
         if (_filterDataMembers)
+        {
             return propertyInfo.GetCustomAttribute<DataMemberAttribute>() == null;
+        }
+
         return propertyInfo.GetCustomAttribute<DataMemberAttribute>() != null;
     }
 }

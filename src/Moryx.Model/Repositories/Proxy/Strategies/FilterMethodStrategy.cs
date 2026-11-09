@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace Moryx.Model.Repositories.Proxy;
 
-internal class FilterMethodStrategy : MethodProxyStrategyBase
+internal sealed class FilterMethodStrategy : MethodProxyStrategyBase
 {
     private static readonly IDictionary<Filter, MethodInfo> FilterMethods = new Dictionary<Filter, MethodInfo>();
     private static readonly Regex FilterRegex;
@@ -187,7 +187,7 @@ internal class FilterMethodStrategy : MethodProxyStrategyBase
         typeBuilder.DefineMethodOverride(methodBuilder, methodInfo);
     }
 
-    private class MethodFilter
+    private sealed class MethodFilter
     {
         public Filter Filter { get; set; }
         public Selector Selector { get; set; }

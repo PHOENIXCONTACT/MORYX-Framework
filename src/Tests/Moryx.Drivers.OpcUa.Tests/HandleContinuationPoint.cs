@@ -3,11 +3,11 @@
 
 using Moq;
 using Moryx.Drivers.OpcUa.States;
+using Moryx.Modules;
 using Moryx.Tools;
 using NUnit.Framework;
-using Opc.Ua.Client;
 using Opc.Ua;
-using Moryx.Modules;
+using Opc.Ua.Client;
 
 namespace Moryx.Drivers.OpcUa.Tests;
 

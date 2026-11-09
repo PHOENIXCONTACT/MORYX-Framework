@@ -1,9 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moryx.AbstractionLayer.Activities;
@@ -100,9 +97,14 @@ public class ProcessStorageTests
                 processData = activityData.ProcessData = processData ?? activityData.ProcessData;
                 activityData.Id = IdShiftGenerator.Generate(processId, ProcessTestsBase.NextId);
                 if (i > 0)
+                {
                     activityData.Task = task;
+                }
                 else // Append another completed activity where the task is missing later
+                {
                     activityData.Task = new TaskTransition<UnmountActivity>(new MountingParameters(), null) { Id = 1337 };
+                }
+
                 activityData.Resource = new CellReference(i * 100);
                 activityData.State = ActivityState.Running;
 

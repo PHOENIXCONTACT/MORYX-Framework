@@ -49,17 +49,25 @@ internal class TcpTransmission : IBinaryTransmission, IDisposable
     private void RaiseException(Exception ex)
     {
         if (ExceptionOccurred == null)
+        {
             _logger.Log(LogLevel.Error, ex, "TcpTransmission encountered an error");
+        }
         else
+        {
             ExceptionOccurred(this, ex);
+        }
     }
 
     private void RaiseDisconnected()
     {
         if (Disconnected == null)
+        {
             _logger.Log(LogLevel.Warning, "Client disconnected, but listener already removed!");
+        }
         else
+        {
             Disconnected(this, EventArgs.Empty);
+        }
     }
 
     /// <summary>
@@ -71,7 +79,9 @@ internal class TcpTransmission : IBinaryTransmission, IDisposable
     public void ConfigureKeepAlive(TcpKeepAliveConfig config)
     {
         if (!config.UseKeepAlive)
+        {
             return;
+        }
 
         var socket = _client.Client;
 
@@ -169,7 +179,9 @@ internal class TcpTransmission : IBinaryTransmission, IDisposable
         try
         {
             if (_disconnected)
+            {
                 return;
+            }
 
             _stream.BeginRead(transmission.ReadBuffer, transmission.CurrentIndex, transmission.ReadSize, ReadCallback, transmission);
         }
@@ -194,7 +206,9 @@ internal class TcpTransmission : IBinaryTransmission, IDisposable
         int read;
 
         if (_disconnected)
+        {
             return;
+        }
 
         try
         {
@@ -223,7 +237,9 @@ internal class TcpTransmission : IBinaryTransmission, IDisposable
         if (result == ByteReadResult.Failure)
         {
             if (_interpreter.ErrorResponse(transmission, out var lastWill))
+            {
                 _stream.Write(lastWill, 0, lastWill.Length);
+            }
 
             Disconnect(new InvalidHeaderException("Header invalid or no matching validator found!"));
             return;
@@ -235,9 +251,13 @@ internal class TcpTransmission : IBinaryTransmission, IDisposable
     private void PublishMessage(BinaryMessage message)
     {
         if (Received == null && _disconnected) // Still feels like a hack
+        {
             _logger.Log(LogLevel.Error, "Connection already closed, but a final message was received and can not be published!");
+        }
         else
+        {
             Received.Invoke(this, message);
+        }
     }
 
     public event EventHandler<BinaryMessage> Received;
@@ -255,7 +275,10 @@ internal class TcpTransmission : IBinaryTransmission, IDisposable
         lock (this)
         {
             if (_disconnected)
+            {
                 return;
+            }
+
             _disconnected = true;
         }
 

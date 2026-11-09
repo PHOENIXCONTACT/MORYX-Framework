@@ -54,16 +54,24 @@ public class RegexOperationValidation : IOperationValidation
         var recipesResult = operation.Recipes.Any() && operation.Recipes.All(ValidateRecipe);
 
         if (numberResult && amountResult && recipesResult)
+        {
             return Task.FromResult(true);
+        }
 
         if (!numberResult)
+        {
             operationLogger.Log(LogLevel.Error, Strings.RegexOperationValidation_Regex_Match_Failed, _config.RegularExpression);
+        }
 
         if (!amountResult)
+        {
             operationLogger.Log(LogLevel.Error, Strings.RegexOperationValidation_Wrong_Amount);
+        }
 
         if (!recipesResult)
+        {
             operationLogger.Log(LogLevel.Error, Strings.RegexOperationValidation_No_Valid_Recipe);
+        }
 
         return Task.FromResult(false);
     }
@@ -77,7 +85,9 @@ public class RegexOperationValidation : IOperationValidation
                                    ValidateOperationAmount(operation.TotalAmount);
 
             if (validationResult == false)
+            {
                 return Task.FromResult(false);
+            }
         }
 
         return Task.FromResult(true);

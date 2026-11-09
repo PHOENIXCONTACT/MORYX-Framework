@@ -1,6 +1,9 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Reflection;
+using Moryx.AbstractionLayer.Activities;
+using Moryx.AbstractionLayer.Processes;
 using Moryx.Configuration;
 using Moryx.Modules;
 using Moryx.Notifications;
@@ -8,13 +11,10 @@ using Moryx.ProcessData.Configuration;
 using Moryx.ProcessData.Endpoints.Models;
 using Moryx.Runtime.Modules;
 using Moryx.Tools;
-using System.Reflection;
-using Moryx.AbstractionLayer.Activities;
-using Moryx.AbstractionLayer.Processes;
 
 namespace Moryx.ProcessData.Endpoints.Services;
 
-internal class ConfigurationService : IConfigurationService
+internal sealed class ConfigurationService : IConfigurationService
 {
     private readonly IModuleManager _moduleManager;
     private readonly IConfigManager _configManager;
@@ -66,7 +66,9 @@ internal class ConfigurationService : IConfigurationService
             .FirstOrDefault(p => p.PropertyType == typeof(List<MeasurementBinding>) && p.Name == measurandName);
 
         if (bindings == null)
+        {
             return [];
+        }
 
         return bindings.GetMeasurementBindings(config);
     }
@@ -126,11 +128,20 @@ internal class ConfigurationService : IConfigurationService
     private static string GetGeneratedName(PropertyInfo p)
     {
         if (p.Name == "ActivityBindings")
+        {
             return "controlSystem_activities";
+        }
+
         if (p.Name == "ProcessBindings")
+        {
             return "controlSystem_processes";
+        }
+
         if (p.Name == "NotificationBindings")
+        {
             return "notifications_acknowledged";
+        }
+
         return p.Name;
     }
 

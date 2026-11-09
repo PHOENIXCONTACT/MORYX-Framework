@@ -188,7 +188,9 @@ internal abstract class JobDataBase : IStateContext, IPersistentObject, IJobData
         }
         // Only publish changes of classification
         if (oldState != State)
+        {
             StateChanged?.Invoke(this, new JobStateEventArgs(this, oldState, State));
+        }
     }
 
     /// <inheritdoc />
@@ -281,7 +283,9 @@ internal abstract class JobDataBase : IStateContext, IPersistentObject, IJobData
     {
         // Only raise progress changed while we have running processes
         if (RunningProcesses.Count > 0)
+        {
             RaiseProgressChanged();
+        }
     }
 
     /// <inheritdoc />

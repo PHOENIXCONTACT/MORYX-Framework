@@ -1,12 +1,8 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Globalization;
-using System.Linq;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moryx.AbstractionLayer.Products;
@@ -112,7 +108,7 @@ public class TestDriverMqttChannelFunctions
         topic.Logger = new ModuleLogger("Dummy", new NullLoggerFactory());
         _driver.Channels.Add(topic);
         await ((IAsyncInitializable)topic).InitializeAsync();
-        await((IAsyncPlugin)topic).StartAsync();
+        await ((IAsyncPlugin)topic).StartAsync();
     }
 
     [Test(Description = "Find Channel with one parameter")]

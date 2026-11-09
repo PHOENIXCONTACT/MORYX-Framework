@@ -14,7 +14,9 @@ internal sealed class JoinTransition : TransitionBase
     protected override void InputTokenAdded(object sender, IToken token)
     {
         lock (this)
+        {
             Executing(() => EvaluateTokens(sender, token));
+        }
     }
 
     /// <summary>
@@ -33,7 +35,9 @@ internal sealed class JoinTransition : TransitionBase
         for (var i = 0; i < length; i++)
         {
             if (Inputs[i].Equals(sender))
+            {
                 _receivedTokens[i] = token;
+            }
 
             var splitToken = _receivedTokens[i] as SplitToken;
             if (splitToken == null)
@@ -48,7 +52,9 @@ internal sealed class JoinTransition : TransitionBase
         }
 
         if (allSet)
+        {
             TriggerTransition(original);
+        }
     }
 
     /// <summary>

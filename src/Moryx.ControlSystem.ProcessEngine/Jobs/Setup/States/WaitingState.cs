@@ -44,11 +44,15 @@ internal class WaitingState : SetupJobStateBase
     public override void UpdateSetup(SetupRecipe newRecipe)
     {
         if (newRecipe == null)
+        {
             // Empty recipe means setup is no longer necessary
             NextState(StateCompleted);
+        }
         else
+        {
             // Until the process is started, we can still update the recipe
             Context.UpdateRecipe(newRecipe);
+        }
     }
 
     public override void Interrupt()

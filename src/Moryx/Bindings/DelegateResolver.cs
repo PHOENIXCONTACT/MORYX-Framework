@@ -37,7 +37,9 @@ public class DelegateResolver : BindingResolverBase
     protected sealed override bool Update(object source, object value)
     {
         if (_assignmentExpression == null)
+        {
             return false;
+        }
 
         _assignmentExpression(source, value);
         return true;

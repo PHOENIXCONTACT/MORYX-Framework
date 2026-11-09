@@ -80,7 +80,9 @@ public abstract class NumberIdentity : IIdentity
     public static bool operator ==(NumberIdentity id1, NumberIdentity id2)
     {
         if (((object)id1) == null || ((object)id2) == null)
+        {
             return Equals(id1, id2);
+        }
 
         return id1.Equals(id2);
     }
@@ -94,7 +96,9 @@ public abstract class NumberIdentity : IIdentity
     public static bool operator !=(NumberIdentity id1, NumberIdentity id2)
     {
         if (((object)id1) == null || ((object)id2) == null)
+        {
             return !Equals(id1, id2);
+        }
 
         return !(id1.Equals(id2));
     }

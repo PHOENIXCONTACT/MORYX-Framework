@@ -6,11 +6,11 @@ using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.TestTools;
+using Moryx.ControlSystem.Assemble;
 using Moryx.ControlSystem.TestTools;
+using Moryx.ControlSystem.TestTools.Identity;
 using Moryx.VisualInstructions;
 using NUnit.Framework;
-using Moryx.ControlSystem.Assemble;
-using Moryx.ControlSystem.TestTools.Identity;
 
 namespace Moryx.ControlSystem.ProcessEngine.Tests.Activities;
 
@@ -66,7 +66,9 @@ public class AssembleParametersTests
         };
         process.ProductInstance.Id = 42;
         if (process.ProductInstance is IIdentifiableObject identifiableObject)
+        {
             identifiableObject.Identity = new TestNumberIdentity(0, "0816");
+        }
 
         return process;
     }

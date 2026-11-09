@@ -41,7 +41,7 @@ internal class ModuleConsole : IServerModuleConsole
             }
             catch (Exception e)
             {
-                Logger.LogError(e,"Resource initializer failed for plugin {Plugin}",config.PluginName);
+                Logger.LogError(e, "Resource initializer failed for plugin {Plugin}", config.PluginName);
                 return $"{config.PluginName} failed to run: {e.Message}";
             }
         }

@@ -70,15 +70,21 @@ public class CastleContainer : IContainer
     public object Resolve(Type service, string name)
     {
         if (name == null && _strategies.TryGetValue(service, out var strategy))
+        {
             name = strategy;
+        }
 
         // Resolve by name if given or determined
         if (name != null && _container.Kernel.HasComponent(name))
+        {
             return _container.Resolve(name, service);
+        }
 
         // Resolve by type if found
         if (_container.Kernel.HasComponent(service))
+        {
             return _container.Resolve(service);
+        }
 
         // Otherwise return null
         return null;
@@ -111,7 +117,9 @@ public class CastleContainer : IContainer
         // Make sure component is not registered yet
         var componentName = name ?? type.FullName;
         if (_container.Kernel.HasComponent(componentName))
+        {
             return;
+        }
 
         var registration = Component.For(services).ImplementedBy(type);
 
@@ -170,7 +178,9 @@ public class CastleContainer : IContainer
         var registration = Component.For(services).Instance(instance);
 
         if (!string.IsNullOrEmpty(name))
+        {
             registration.Named(name);
+        }
 
         _container.Register(registration);
     }

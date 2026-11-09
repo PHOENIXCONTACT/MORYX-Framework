@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.EntityFrameworkCore;
-using Moryx.Model.Configuration;
 using Moryx.Model.Repositories.Proxy;
 using Moryx.Tools;
 
@@ -58,9 +57,9 @@ public sealed class UnitOfWorkFactory<TContext> : IUnitOfWorkFactory<TContext>
         var types = typeof(TContext).Assembly.GetTypes();
 
         var repoApis = from type in types
-            let genericApi = type.GetInterfaces().FirstOrDefault(i => i.GetGenericArguments().Length == 1 && typeof(IRepository<>) == i.GetGenericTypeDefinition())
-            where type.IsInterface && genericApi != null
-            select new { RepoApi = type, GenericApi = genericApi };
+                       let genericApi = type.GetInterfaces().FirstOrDefault(i => i.GetGenericArguments().Length == 1 && typeof(IRepository<>) == i.GetGenericTypeDefinition())
+                       where type.IsInterface && genericApi != null
+                       select new { RepoApi = type, GenericApi = genericApi };
 
         foreach (var apiPair in repoApis)
         {

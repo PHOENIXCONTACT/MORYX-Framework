@@ -23,10 +23,14 @@ internal class ImportState
     public void TaskCompleted(Task<ProductImporterResult> task)
     {
         if (task.IsCompleted)
+        {
             _manager.HandleResult(task.Result);
+        }
 
         Completed = task.IsCompleted | task.IsFaulted;
         if (task.IsFaulted)
+        {
             ErrorMsg = task.Exception.Message;
+        }
     }
 }

@@ -3,7 +3,6 @@
 
 using System.ComponentModel;
 using System.Runtime.Serialization;
-using Moryx.Modules;
 
 namespace Moryx.Configuration;
 
