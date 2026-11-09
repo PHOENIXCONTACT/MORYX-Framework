@@ -12,7 +12,12 @@ internal class ConnectingToBrokerState : DriverMqttState
 
     }
 
-    internal override void TriedConnecting(bool successful)
+    public override void OnEnter()
+    {
+        Context.TriggerConnect();
+    }
+
+    internal override void ClientStateChanged(bool successful)
     {
         if (successful)
         {
@@ -20,7 +25,7 @@ internal class ConnectingToBrokerState : DriverMqttState
         }
         else
         {
-            Context.DelayedConnectionAttempt();
+            NextState(ReconnectBackoffState);
         }
     }
 
@@ -28,6 +33,7 @@ internal class ConnectingToBrokerState : DriverMqttState
     {
         // Since Disconnect is an overriden member that returns void, we can only make this
         // method async void (not preferable) or use Wait here (also ugly but better).
+        NextState(StateDisconnected);
         ExecuteDisconnect().Wait();
     }
 }

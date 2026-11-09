@@ -1,23 +1,23 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Buffers;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Runtime.Serialization;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Drivers;
 using Moryx.AbstractionLayer.Drivers.Message;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Bindings;
+using Moryx.Drivers.Mqtt.Messages;
+using Moryx.Drivers.Mqtt.Properties;
 using Moryx.Serialization;
 using Moryx.Threading;
 using Moryx.Tools;
-using Moryx.Drivers.Mqtt.Properties;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
-using Moryx.Drivers.Mqtt.Messages;
-using System.Buffers;
-using System.Text.Json;
 
 namespace Moryx.Drivers.Mqtt;
 
@@ -401,30 +401,54 @@ public abstract class MqttTopic<TMessage> : MqttTopic, IMessageChannel
 
     internal override void OnReceived(string receivedTopic, ReadOnlySequence<byte> messageAsBytes, string responseTopic, bool retain)
     {
-        TMessage msg;
-        using (var span = ActivitySource.StartActivity("parsing", ActivityKind.Internal, parentContext: default, tags: new Dictionary<string, object>{
-                   { "topic.name", Name },
-                   { "topic.id", Id },
-                   { "topic.type", MessageName }
-               }))
-        {
-            if (MessageType == null)
-            {
-                Logger.Log(LogLevel.Error, "Message was received, but no MessageType was set.");
-                span.SetStatus(ActivityStatusCode.Error, "MessageType not set");
-                return;
-            }
-            try
-            {
-                msg = Deserialize(messageAsBytes);
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex, "Failed to deserialize message");
-                span?.AddException(ex);
-                return;
-            }
+        using var span = ActivitySource.StartActivity("MessageReceived",
+            ActivityKind.Internal, parentContext: default, tags: new Dictionary<string, object>{
+                    { "topic.name", Name },
+                    { "topic.id", Id },
+                    { "topic.type", MessageName }
+        });
 
+        var (parsingSuccessful, msg) = ParseMessage(receivedTopic, messageAsBytes, responseTopic, retain);
+
+        if (!parsingSuccessful)
+        {
+            return;
+        }
+
+        if (!TryEnrichMessage(receivedTopic, responseTopic, retain, msg))
+        {
+            return;
+        }
+
+        HandleReceived(msg);
+    }
+
+    private (bool success, TMessage message) ParseMessage(string receivedTopic, ReadOnlySequence<byte> messageAsBytes, string responseTopic, bool retain)
+    {
+
+        if (MessageType == null)
+        {
+            Logger.Log(LogLevel.Error, "Message was received, but no MessageType was set.");
+            return (false, default);
+        }
+
+        try
+        {
+            var msg = Deserialize(messageAsBytes);
+            return (true, msg);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Failed to deserialize message");
+            Activity.Current?.AddException(ex);
+            return (false, default);
+        }
+    }
+
+    private bool TryEnrichMessage(string receivedTopic, string responseTopic, bool retain, TMessage msg)
+    {
+        try
+        {
             if (msg is IIdentifierMessage identMessage)
             {
                 identMessage.Identifier = receivedTopic;
@@ -460,22 +484,33 @@ public abstract class MqttTopic<TMessage> : MqttTopic, IMessageChannel
                     Logger.Log(LogLevel.Warning, "Number of found Placeholders does not match of number of possible corresponding values");
                 }
 
-                if (TraceDecodedMessage && span is not null)
+                if (TraceDecodedMessage)
                 {
-                    span.AddTag("message.decoded", JsonSerializer.Serialize(msg));
+                    Activity.Current?.AddTag("message.decoded", JsonSerializer.Serialize(msg));
                 }
             }
-        }
+            return true;
 
-        using (var span = ActivitySource.StartActivity("PublishReceived",
-                   ActivityKind.Internal, parentContext: default, tags: new Dictionary<string, object>{
-                       { "topic.name", Name },
-                       { "topic.id", Id },
-                       { "topic.type", MessageName }
-                   }))
+        }
+        catch (Exception ex)
+        {
+            Activity.Current?.AddException(ex);
+            Logger.LogError("Failed to enrich message");
+            return false;
+        }
+    }
+
+    private void HandleReceived(TMessage msg)
+    {
+        try
         {
             RaiseReceived(msg);
             MqttDriver.OnReceived(msg);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Failed to handle received message");
+            Activity.Current?.AddException(ex);
         }
     }
 

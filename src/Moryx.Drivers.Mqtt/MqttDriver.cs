@@ -1,25 +1,26 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Runtime.Serialization;
-using Moryx.AbstractionLayer.Drivers;
-using MQTTnet;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
+using System.Runtime.Serialization;
+using System.Security.Claims;
+using Microsoft.Extensions.Logging;
+using Moryx.AbstractionLayer.Drivers;
 using Moryx.AbstractionLayer.Drivers.Message;
 using Moryx.AbstractionLayer.Resources;
+using Moryx.Configuration;
+using Moryx.Drivers.Mqtt.Properties;
+using Moryx.Drivers.Mqtt.States;
 using Moryx.Serialization;
 using Moryx.StateMachines;
 using Moryx.Threading;
-using MQTTnet.Formatter;
-using Microsoft.Extensions.Logging;
-using MQTTnet.Protocol;
-using Moryx.Configuration;
-using System.Security.Claims;
-using Moryx.Drivers.Mqtt.Properties;
-using System.ComponentModel.DataAnnotations;
-using Moryx.Drivers.Mqtt.States;
-using System.Diagnostics;
+using MQTTnet;
 using MQTTnet.Exceptions;
+using MQTTnet.Formatter;
+using MQTTnet.Packets;
+using MQTTnet.Protocol;
 
 namespace Moryx.Drivers.Mqtt;
 
@@ -98,7 +99,7 @@ public class MqttDriver : Driver, IMessageDriver
         ResourceType = typeof(Strings))]
     public void Reconnect()
     {
-        if (State is null || State.Classification != StateClassification.Running)
+        if (State is null)
         {
             return;
         }
@@ -290,31 +291,20 @@ public class MqttDriver : Driver, IMessageDriver
 
     #endregion
 
-    internal async Task Connect(bool firstConnect = true)
+    internal void TriggerConnect()
     {
+        if (_mqttClient.IsConnected)
+        {
+            Logger.LogWarning("Connection attempt, while client is still connected");
+        }
         var options = ConfigureMqttClient().Build();
         try
         {
-            var result = await _mqttClient.ConnectAsync(
-                options, CancellationToken.None);
-            if (result.ReasonString != null)
-            {
-                Logger.Log(LogLevel.Information, "Server returned {reason} on connection attemt", result.ReasonString);
-            }
-            else
-            {
-                Logger.Log(LogLevel.Information, "Connection attempt to mqtt broker");
-            }
+            var _ = _mqttClient.ConnectAsync(options, CancellationToken.None);
         }
         catch (Exception e)
         {
-            // This only throws an exceptions if the server is not available, other cases could still mean we are not connected
-            if (firstConnect)
-            {
-                Logger.Log(LogLevel.Warning, "Error while connecting to Broker: {message}", e.Message);
-            }
-
-            State.TriedConnecting(false);
+            // catch and ignore exceptions. They are handled in the disconnected event handler
         }
     }
 
@@ -356,11 +346,25 @@ public class MqttDriver : Driver, IMessageDriver
     {
         Logger.Log(LogLevel.Information, "Driver {id} connected to MqttBroker", _mqttClient.Options?.ClientId);
 
-        State.TriedConnecting(true);
-        var tasks = Channels
-            .Where(c => c.TopicType != TopicType.PublishOnly)
-            .Select(c => SubscribeTopicAsync(c.SubscribedTopic));
-        await Task.WhenAll(tasks);
+        State.ClientStateChanged(true);
+        var qos = ConvertStringToQoS(QualityOfService);
+        var subscribeOptions = new MqttClientSubscribeOptions()
+        {
+            TopicFilters = [
+                .. Channels
+                .Where(c => c.TopicType != TopicType.PublishOnly)
+                .Select(c => new MqttTopicFilter() {
+                    Topic = Identifier + c.SubscribedTopic,
+                    QualityOfServiceLevel = qos,
+                    NoLocal = MqttVersion == MqttProtocolVersion.V500
+                })
+            ]
+        };
+        await _mqttClient.SubscribeAsync(subscribeOptions);
+        foreach (var filter in subscribeOptions.TopicFilters)
+        {
+            Logger.LogInformation("Subscribed to {topic}", filter.Topic);
+        }
     }
 
     private Task OnDisconnected(MqttClientDisconnectedEventArgs args)
@@ -369,15 +373,19 @@ public class MqttDriver : Driver, IMessageDriver
         {
             Logger.Log(LogLevel.Information, "Driver {id} disconnected from MqttBroker. Reason: {reason}", _mqttClient.Options.ClientId, args.ReasonString);
         }
+        else
+        {
+            Logger.LogWarning(args.Exception, "Connection attempt to Broker failed. Reason: {reason}", args.ReasonString);
+        }
 
-        State.ConnectionToBrokerLost();
+        State.ClientStateChanged(false);
 
         return Task.CompletedTask;
     }
 
     internal async Task Disconnect()
     {
-        if(_scheduledReconnect != 0)
+        if (_scheduledReconnect != 0)
         {
             ParallelOperations.StopExecution(_scheduledReconnect);
             _scheduledReconnect = 0;
@@ -562,13 +570,13 @@ public class MqttDriver : Driver, IMessageDriver
 
         if (topicList.Count >= 1)
         {
+            var responseTopic = MqttVersion switch
+            {
+                MqttProtocolVersion.V500 => appMessage.ResponseTopic,
+                _ => null
+            };
             foreach (var topicResource in topicList)
             {
-                var responseTopic = MqttVersion switch
-                {
-                    MqttProtocolVersion.V500 => appMessage.ResponseTopic,
-                    _ => null
-                };
                 topicResource.OnReceived(topic, message, responseTopic, appMessage.Retain);
             }
         }
@@ -678,15 +686,12 @@ public class MqttDriver : Driver, IMessageDriver
         {
             // early return, when reconnect was cancelled
             if (_scheduledReconnect == 0)
+            {
                 return;
-            try
-            {
-                await Connect(false);
             }
-            catch (Exception ex)
-            {
-                Logger.LogWarning(ex, "Failed to connect to broker");
-            }
+            _scheduledReconnect = 0;
+
+            State.ReconnectTimerElapsed();
         }, ReconnectDelayMs, -1);
     }
 }

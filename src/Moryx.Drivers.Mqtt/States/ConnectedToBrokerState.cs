@@ -25,11 +25,15 @@ internal class ConnectedToBrokerState : DriverMqttState
         return topic.OnSend(message, cancellationToken);
     }
 
-    internal override void ConnectionToBrokerLost()
+    internal override void ClientStateChanged(bool connected)
     {
+        if (connected)
+        {
+            return;
+        }
+
         Context.Logger.Log(LogLevel.Information, "Connection to broker lost");
         NextState(StateConnecting);
-        Context.ParallelOperations.ScheduleExecution(() => Context.Connect(true).Wait(), Context.ReconnectDelayMs, -1);
     }
 
     internal override void AddTopic(string topic)
@@ -37,13 +41,4 @@ internal class ConnectedToBrokerState : DriverMqttState
         Context.SubscribeTopicAsync(topic).Wait();
     }
 
-    internal override void TriedConnecting(bool successful)
-    {
-        if (successful)
-        {
-            return;
-        }
-
-        base.TriedConnecting(successful);
-    }
 }

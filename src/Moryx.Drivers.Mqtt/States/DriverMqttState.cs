@@ -15,8 +15,6 @@ internal abstract class DriverMqttState : SyncDriverState<MqttDriver>
 
     protected async Task ExecuteDisconnect()
     {
-        NextState(StateDisconnected);
-
         await Context.Disconnect();
     }
 
@@ -25,14 +23,9 @@ internal abstract class DriverMqttState : SyncDriverState<MqttDriver>
         throw new InvalidOperationException($"Current state {GetType().Name} can net send message of type {message.GetType().Name}.");
     }
 
-    internal virtual void TriedConnecting(bool successful)
+    internal virtual void ClientStateChanged(bool connected)
     {
-        InvalidState();
-    }
-
-    internal virtual void ConnectionToBrokerLost()
-    {
-        //do nothing
+        
     }
 
     internal virtual void AddTopic(string mqttTopic)
@@ -40,8 +33,17 @@ internal abstract class DriverMqttState : SyncDriverState<MqttDriver>
         //do nothing
     }
 
+    internal virtual void ReconnectTimerElapsed()
+    {
+        // do nothing
+    }
+
     [StateDefinition(typeof(DisconnectedState), IsInitial = true)]
     protected const int StateDisconnected = 10;
+
+    
+    [StateDefinition(typeof(ReconnectBackoffState))]
+    protected const int ReconnectBackoffState = 15;
 
     [StateDefinition(typeof(ConnectingToBrokerState))]
     protected const int StateConnecting = 20;
