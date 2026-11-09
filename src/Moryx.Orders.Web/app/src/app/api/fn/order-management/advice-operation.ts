@@ -15,8 +15,16 @@ import { RequestBuilder } from '../../request-builder';
 import { AdviceModel } from '../../models/advice-model';
 
 export interface AdviceOperation$Params {
+
+/**
+ * Id of the operation
+ */
   guid: string;
-      body?: AdviceModel
+  
+    /**
+     * Parameter object
+     */
+    body: AdviceModel
 }
 
 export function adviceOperation(http: HttpClient, rootUrl: string, params: AdviceOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {

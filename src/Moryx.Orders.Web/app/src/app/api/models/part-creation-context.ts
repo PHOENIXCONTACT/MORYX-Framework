@@ -8,11 +8,31 @@
 
 import { PartClassification } from '../models/part-classification';
 import { StagingIndicator } from '../models/staging-indicator';
+
+/**
+ * Information about a part of the product which should be produced for an operation
+ */
 export interface PartCreationContext {
   classification?: PartClassification;
+
+  /**
+   * Name of the part like the product name
+   */
   name?: string | null;
+
+  /**
+   * Identifier of this part
+   */
   number?: string | null;
+
+  /**
+   * Quantity of this part which are necessary to produce one product
+   */
   quantity?: number;
   stagingIndicator?: StagingIndicator;
+
+  /**
+   * Unit of the quantity
+   */
   unit?: string | null;
 }

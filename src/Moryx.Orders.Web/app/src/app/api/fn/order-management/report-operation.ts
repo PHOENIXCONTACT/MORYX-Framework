@@ -15,8 +15,16 @@ import { RequestBuilder } from '../../request-builder';
 import { ReportModel } from '../../models/report-model';
 
 export interface ReportOperation$Params {
+
+/**
+ * Id of the operation
+ */
   guid: string;
-      body?: ReportModel
+  
+    /**
+     * Parameter object
+     */
+    body: ReportModel
 }
 
 export function reportOperation(http: HttpClient, rootUrl: string, params: ReportOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {

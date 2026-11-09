@@ -13,5 +13,9 @@ export interface ProductInstanceModel {
   id?: number;
   properties?: Entry;
   state?: ProductInstanceState;
+
+  /**
+   * The name of the product type of this instance
+   */
   type?: string | null;
 }

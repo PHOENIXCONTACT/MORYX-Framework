@@ -188,7 +188,7 @@ export class OperationRecipes implements OnInit {
     await this.productManagementService
       .updateRecipe({
         id: this.selectedRecipe()!.id!,
-        body: this.selectedRecipe()
+        body: this.selectedRecipe()!
       })
       .catch(
         async (e: HttpErrorResponse) => await this.snackbarService.handleError(e)

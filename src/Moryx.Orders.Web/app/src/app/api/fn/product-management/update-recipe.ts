@@ -15,8 +15,16 @@ import { RequestBuilder } from '../../request-builder';
 import { RecipeModel } from '../../models/recipe-model';
 
 export interface UpdateRecipe$Params {
+
+/**
+ * Database id of the recipe
+ */
   id: number;
-      body?: RecipeModel
+  
+    /**
+     * Updated recipe model
+     */
+    body: RecipeModel
 }
 
 export function updateRecipe(http: HttpClient, rootUrl: string, params: UpdateRecipe$Params, context?: HttpContext): Observable<StrictHttpResponse<number>> {

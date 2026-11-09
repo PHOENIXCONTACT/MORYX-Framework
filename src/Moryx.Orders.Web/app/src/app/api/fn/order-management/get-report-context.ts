@@ -15,6 +15,10 @@ import { RequestBuilder } from '../../request-builder';
 import { ReportContext } from '../../models/report-context';
 
 export interface GetReportContext$Params {
+
+/**
+ * Id of the operation
+ */
   guid: string;
 }
 

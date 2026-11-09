@@ -5,7 +5,8 @@ using System.Globalization;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.OpenApi;
+using Moryx.AspNetCore.OpenApi;
 using Moryx.Launcher;
 using Moryx.Model;
 using Moryx.Runtime.Kernel;
@@ -51,12 +52,17 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddRazorPages();
 
-builder.Services.AddControllers()
-    .AddJsonOptions(jo => jo.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
-
-builder.Services.AddSwaggerGen(c =>
+builder.Services.ConfigureHttpJsonOptions(options =>
 {
-    c.CustomOperationIds(api => ((ControllerActionDescriptor)api.ActionDescriptor).MethodInfo.Name);
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    options.SerializerOptions.NumberHandling = JsonNumberHandling.Strict; // https://github.com/dotnet/aspnetcore/issues/64501
+});
+builder.Services.AddControllers();
+
+builder.Services.AddOpenApi(static options =>
+{
+    options.OpenApiVersion = OpenApiSpecVersion.OpenApi3_0; // OpenApi3_2 is only available with .net 11
+    options.ConfigureMoryxTransformers();
 });
 
 builder.Services.AddSingleton<IAuthorizationPolicyProvider, ExamplePolicyProvider>();
@@ -82,8 +88,11 @@ if (!string.IsNullOrEmpty(pathBase))
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
-    app.UseSwagger();
-    app.UseSwaggerUI();
+
+    app.MapOpenApi("/openapi/{documentName}.yaml");
+    app.MapOpenApi("/openapi/{documentName}.json");
+    app.UseSwaggerUI(options => options.SwaggerEndpoint("/openapi/v1.yaml", "v1")
+    );
 }
 
 app.UseRequestLocalization();
@@ -104,6 +113,13 @@ app.UseAuthorization();
 
 app.MapControllers().WithMetadata(new AllowAnonymousAttribute());
 app.MapRazorPages();
+
+if (app.Environment.IsOpenApiBuildTime())
+{
+    await app.Services.WriteYamlOpenApiSpec("framework-api.yaml");
+    await app.RunAsync();
+    return;
+}
 
 var moduleManager = app.Services.GetRequiredService<IModuleManager>();
 await moduleManager.StartModulesAsync();

@@ -14,6 +14,10 @@ import { RequestBuilder } from '../../request-builder';
 
 
 export interface Reload$Params {
+
+/**
+ * Id of the operation
+ */
   guid: string;
 }
 

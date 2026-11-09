@@ -6,14 +6,14 @@ using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Moryx.AbstractionLayer.Recipes;
-using Moryx.Tools;
-using Moryx.Serialization;
 using Moryx.AbstractionLayer.Products.Endpoints.Models;
 using Moryx.AbstractionLayer.Products.Endpoints.Properties;
+using Moryx.AbstractionLayer.Recipes;
 using Moryx.AspNetCore;
 using Moryx.Configuration;
 using Moryx.Runtime.Modules;
+using Moryx.Serialization;
+using Moryx.Tools;
 
 namespace Moryx.AbstractionLayer.Products.Endpoints;
 
@@ -43,6 +43,9 @@ public class ProductManagementController : ControllerBase
     }
 
     #region importers
+    /// <summary>
+    /// Loads dataset of existing products, recipes and importers for the UI
+    /// </summary>
     [HttpGet]
     [Route("configuration")]
     [Authorize(Policy = ProductPermissions.CanViewTypes)]
@@ -78,6 +81,11 @@ public class ProductManagementController : ControllerBase
         return typeModels.ToArray();
     }
 
+    /// <summary>
+    /// Run the product importer with the given parameters
+    /// </summary>
+    /// <param name="importerName">Name of the importer</param>
+    /// <param name="importParameters">Parameters for the importer</param>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -111,6 +119,11 @@ public class ProductManagementController : ControllerBase
 
     #endregion
     #region product type
+    /// <summary>
+    /// Store the product type in the database
+    /// </summary>
+    /// <param name="newTypeModel">Model of the new product</param>
+    /// <returns>The assigned database id of the product</returns>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -129,6 +142,10 @@ public class ProductManagementController : ControllerBase
         return await _productManagement.SaveTypeAsync(newType);
     }
 
+    /// <summary>
+    /// Retrieves all product types, if no identity is specified. Otherwise the model identified by that id is returned
+    /// </summary>
+    /// <param name="identity">Optional. The id to look for</param>
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -160,6 +177,11 @@ public class ProductManagementController : ControllerBase
         };
     }
 
+    /// <summary>
+    /// Query the product type database
+    /// </summary>
+    /// <param name="query">Query parameters</param>
+    /// <returns>The products models matching the query</returns>
     [HttpPost]
     [Route("types/query")]
     [Authorize(Policy = ProductPermissions.CanViewTypes)]
@@ -174,6 +196,10 @@ public class ProductManagementController : ControllerBase
         return productModels.ToArray();
     }
 
+    /// <summary>
+    /// Get's a product type using the database id
+    /// </summary>
+    /// <param name="id">Database id</param>
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -197,6 +223,11 @@ public class ProductManagementController : ControllerBase
         return await _productConverter.ConvertProduct(productType, false);
     }
 
+    /// <summary>
+    /// Deletes the product type with the given id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpDelete]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -210,6 +241,11 @@ public class ProductManagementController : ControllerBase
         return result;
     }
 
+    /// <summary>
+    /// Updates the existing product type
+    /// </summary>
+    /// <param name="id">Database id of the product type</param>
+    /// <param name="modifiedType">New product model</param>
     [HttpPut]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -226,6 +262,11 @@ public class ProductManagementController : ControllerBase
         return await _productManagement.SaveTypeAsync(type);
     }
 
+    /// <summary>
+    /// Create a clone of the product type identified with the id with the new identitiy
+    /// </summary>
+    /// <param name="id">Database id of the existing product type</param>
+    /// <param name="newIdentity">Product identifier of the new product</param>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -256,6 +297,11 @@ public class ProductManagementController : ControllerBase
         return await _productConverter.ConvertProduct(newProductType, false);
     }
 
+    /// <summary>
+    /// Loads the recipe attached to the product type with the id
+    /// </summary>
+    /// <param name="id">Database id</param>
+    /// <param name="classification">Recipe classification <see cref="RecipeClassification"/></param>
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -275,6 +321,11 @@ public class ProductManagementController : ControllerBase
     #endregion
 
     #region product instances
+    /// <summary>
+    /// Get's the product instance with the given id
+    /// </summary>
+    /// <param name="id">Database id of the product instance</param>
+    /// <returns></returns>
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -291,6 +342,10 @@ public class ProductManagementController : ControllerBase
         return ProductConverter.ConvertProductInstance(productInstance);
     }
 
+    /// <summary>
+    /// Loads multiple product instances at once
+    /// </summary>
+    /// <param name="ids">A list of product instance ids</param>
     [HttpGet]
     [Route("instances")]
     [Authorize(Policy = ProductPermissions.CanViewInstances)]
@@ -303,6 +358,12 @@ public class ProductManagementController : ControllerBase
         return modelList.ToArray();
     }
 
+    /// <summary>
+    /// Create a new product instace of the product type identified via the identifier and revision
+    /// </summary>
+    /// <param name="identifier">Product identifier</param>
+    /// <param name="revision">Revision of the product</param>
+    /// <param name="save">If save is false, the new instance won't be stored in the db</param>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -318,6 +379,10 @@ public class ProductManagementController : ControllerBase
         return ProductConverter.ConvertProductInstance(instance);
     }
 
+    /// <summary>
+    /// Save the instance in the product db
+    /// </summary>
+    /// <param name="instanceModel">Model of the product instance</param>
     [HttpPut]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -339,6 +404,11 @@ public class ProductManagementController : ControllerBase
 
     #endregion
     #region recipes
+    /// <summary>
+    /// Get's a recipe by it's db id
+    /// </summary>
+    /// <param name="id">Database id of the recipe</param>
+    /// <returns></returns>
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -355,6 +425,11 @@ public class ProductManagementController : ControllerBase
         return _productConverter.ConvertRecipe(recipe);
     }
 
+    /// <summary>
+    /// Saves a new recipe in the database
+    /// </summary>
+    /// <param name="recipe">Model of the recipe</param>
+    /// <returns>The database id of the newly created recipe</returns>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -373,6 +448,11 @@ public class ProductManagementController : ControllerBase
         return await _productManagement.SaveRecipeAsync(await _productConverter.ConvertRecipeBack(recipe, productRecipe, null));
     }
 
+    /// <summary>
+    /// Updates the existing recipes
+    /// </summary>
+    /// <param name="id">Database id of the recipe</param>
+    /// <param name="recipeModel">Updated recipe model</param>
     [HttpPut]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
