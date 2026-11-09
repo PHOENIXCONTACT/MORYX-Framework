@@ -74,11 +74,6 @@ internal class JobList : IJobDataList, IJobList
                 nameof(JobList), Config.JobListStopTimeout, string.Join(", ", _jobs.Select(j => j.Id)));
     }
 
-    /// <inheritdoc cref="IJobDataList"/>
-    public void Dispose()
-    {
-    }
-
     #endregion
 
     /// <inheritdoc cref="IJobDataList"/>

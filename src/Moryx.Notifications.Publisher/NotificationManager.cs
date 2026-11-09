@@ -114,10 +114,6 @@ internal class NotificationManager : INotificationManager
         Processors.ForEach(p => p.Stop());
     }
 
-    public void Dispose()
-    {
-    }
-
     private void OnSourceStateChanged(object sender, bool activated)
     {
         var source = (INotificationSource)sender;
