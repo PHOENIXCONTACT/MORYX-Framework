@@ -123,13 +123,19 @@ internal class OperationManager : IOperationManager, ILoggingComponent
         var canFinal = operationData.State.CanFinalReport;
 
         if (canPartial == false && canFinal == false)
+        {
             restrictions.Add(new ReportRestriction(false, false, Strings.OperationManager_NoReportErrorText, RestrictionSeverity.Error));
+        }
 
         if (!canPartial && canFinal)
+        {
             restrictions.Add(new ReportRestriction(false, true, Strings.OperationManager_NoPartialReportErrorText, RestrictionSeverity.Warning));
+        }
 
         if (canPartial && !canFinal)
+        {
             restrictions.Add(new ReportRestriction(true, false, Strings.OperationManager_NoFinalReportErrorText, RestrictionSeverity.Warning));
+        }
 
         // Collect external restrictions
         var externalRequest = new ReportRequestEventArgs(operationData, reportType);

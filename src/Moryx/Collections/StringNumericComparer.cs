@@ -21,13 +21,24 @@ public class StringNumericComparer : IComparer<string>
     {
         // First check for null or simple equality
         if (string.IsNullOrWhiteSpace(a) && string.IsNullOrWhiteSpace(b))
+        {
             return 0;
+        }
+
         if (string.IsNullOrWhiteSpace(a))
+        {
             return -1;
+        }
+
         if (string.IsNullOrWhiteSpace(b))
+        {
             return 1;
+        }
+
         if (a == b)
+        {
             return 0;
+        }
 
         // Now detect text and numeric part of the string
         var regex = new Regex(@"(?<text>(?:[A-Za-z]+\s*)+)?(?<number>\d+)?");
@@ -49,15 +60,26 @@ public class StringNumericComparer : IComparer<string>
             // Compare texts first
             var textCompare = string.Compare(textA, textB, StringComparison.OrdinalIgnoreCase);
             if (textCompare != 0)
+            {
                 return textCompare;
+            }
 
             // Compare numeric suffix
             if (hasNumberA & hasNumberB)
+            {
                 return numberA.CompareTo(numberB);
+            }
+
             if (hasNumberA)
+            {
                 return 1;
+            }
+
             if (hasNumberB)
+            {
                 return -1;
+            }
+
             return 0;
         }
         // Only the first hast text
@@ -67,7 +89,9 @@ public class StringNumericComparer : IComparer<string>
         }
         // Only the second has text
         if (hasTextB)
+        {
             return -1;
+        }
         // None has text
         return numberA.CompareTo(numberB);
     }

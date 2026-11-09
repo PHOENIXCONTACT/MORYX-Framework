@@ -1,7 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Threading;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moryx.Logging;
 using Moryx.Threading;

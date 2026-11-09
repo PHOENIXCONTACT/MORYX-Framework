@@ -109,7 +109,9 @@ internal class ParallelScheduler : JobSchedulerBase<ParallelSchedulerConfig>
     {
         // Changes below Completing do not interest us
         if (classification < JobClassification.Completing)
+        {
             return;
+        }
 
         // If the completed job was a cleanup, release the slot
         if (classification == JobClassification.Completed && job.IsCleanup() && _slots.TryRelease(job))
@@ -135,7 +137,9 @@ internal class ParallelScheduler : JobSchedulerBase<ParallelSchedulerConfig>
             // Flag if this job is a follow-up for the completing job
             var followUp = next.SameRecipeAs(job) && RemoveDependency(next, job);
             if (followUp && _slots.TryReplace(job, next))
+            {
                 RaiseJobScheduled(next);
+            }
         }
         else
         {

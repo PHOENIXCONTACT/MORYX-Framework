@@ -12,10 +12,14 @@ internal static class ABehaviourAccess
     public static ABehaviourAccess<T> Create<T>(ModuleManagerConfig config, IConfigManager configManager, IModule module)
     {
         if (typeof(T) == typeof(ModuleStartBehaviour))
+        {
             return new StartBehaviorAccess(config, configManager, module) as ABehaviourAccess<T>;
+        }
 
         if (typeof(T) == typeof(FailureBehaviour))
+        {
             return new FailureBehaviourAccess(config, configManager, module) as ABehaviourAccess<T>;
+        }
 
         return null;
     }

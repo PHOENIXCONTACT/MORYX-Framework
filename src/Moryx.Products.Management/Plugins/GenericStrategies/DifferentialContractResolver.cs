@@ -30,13 +30,19 @@ internal class DifferentialContractResolver<TReference> : DefaultContractResolve
     private bool ShouldSerialize(JsonProperty property)
     {
         if (_ignoredProperties.Any(prop => prop == property.PropertyName))
+        {
             return false;
+        }
 
         if (typeof(TReference).IsAssignableFrom(property.PropertyType))
+        {
             return false;
+        }
 
         if (typeof(IEnumerable<TReference>).IsAssignableFrom(property.PropertyType))
+        {
             return false;
+        }
 
         return true;
     }

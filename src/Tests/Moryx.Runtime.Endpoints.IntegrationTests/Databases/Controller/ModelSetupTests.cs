@@ -1,21 +1,18 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.Model;
-using Moryx.TestTools.Test.Model;
-using NUnit.Framework;
-using System.Threading.Tasks;
 using Moryx.AbstractionLayer.TestTools;
-using System;
-using System.Collections.Generic;
+using Moryx.Model;
 using Moryx.Model.Sqlite;
 using Moryx.Runtime.Endpoints.Databases;
 using Moryx.Runtime.Endpoints.Databases.Models;
 using Moryx.Serialization;
+using Moryx.TestTools.Test.Model;
+using NUnit.Framework;
 
 namespace Moryx.Runtime.Endpoints.IntegrationTests.Databases.Controller;
 
-internal class ModelSetupTests
+internal sealed class ModelSetupTests
 {
     private IDbContextManager? _dbContextManager;
     private DatabaseController? _databaseController;

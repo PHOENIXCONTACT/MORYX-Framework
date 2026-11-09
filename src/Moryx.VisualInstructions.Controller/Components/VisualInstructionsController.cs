@@ -101,21 +101,28 @@ internal class VisualInstructionsController : IVisualInstructionsController
 
         // Load instructions from sources
         if (_instructionSources.TryGetValue(identifier, out var source))
+        {
             instructions.AddRange(source.Instructions);
+        }
 
         // Include external instructions
         if (_facadeInstructions.TryGetValue(identifier, out var instruction))
+        {
             instructions.AddRange(instruction);
+        }
 
         return instructions;
     }
 
     public void AddInstruction(string identifier, ActiveInstruction instruction)
     {
-        if (!_facadeInstructions.ContainsKey(identifier))
-            _facadeInstructions[identifier] = new List<ActiveInstruction>();
+        if (!_facadeInstructions.TryGetValue(identifier, out var value))
+        {
+            value = new List<ActiveInstruction>();
+            _facadeInstructions[identifier] = value;
+        }
 
-        _facadeInstructions[identifier].Add(instruction);
+        value.Add(instruction);
 
         ProcessInstructionItems(instruction);
 
@@ -125,7 +132,9 @@ internal class VisualInstructionsController : IVisualInstructionsController
     public void ClearInstruction(string identifier, ActiveInstruction instruction)
     {
         if (_facadeInstructions.TryGetValue(identifier, out var facadeInstruction))
+        {
             facadeInstruction.Remove(instruction);
+        }
 
         InstructionCleared(this, new InstructionEventArgs(identifier, instruction));
     }

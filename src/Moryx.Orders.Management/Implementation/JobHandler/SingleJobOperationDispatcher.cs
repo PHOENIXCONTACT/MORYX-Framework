@@ -27,7 +27,9 @@ public class SingleJobOperationDispatcher : OperationDispatcherBase
         // Wait until all jobs are completing to avoid separate jobs for every scrap
         var allCompleting = operation.Jobs.All(j => j.Classification >= JobClassification.Completing);
         if (!allCompleting)
+        {
             return;
+        }
 
         var lastJob = operation.Jobs.LastOrDefault(j => j.Classification < JobClassification.Completed);
 
@@ -35,7 +37,9 @@ public class SingleJobOperationDispatcher : OperationDispatcherBase
         dispatchContexts.ForEach(c => creationContext.Add(c.Recipe, c.Amount));
 
         if (lastJob != null)
+        {
             creationContext.After(lastJob);
+        }
 
         try
         {

@@ -1,9 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Net;
-using System.Threading;
 using Moryx.Communication.Sockets.IntegrationTests.DelimiterProtocol;
 using NUnit.Framework;
 

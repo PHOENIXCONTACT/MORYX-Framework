@@ -1,25 +1,25 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Runtime.Serialization;
-using Moryx.AbstractionLayer.Drivers;
-using MQTTnet;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
+using System.Runtime.Serialization;
+using System.Security.Claims;
+using Microsoft.Extensions.Logging;
+using Moryx.AbstractionLayer.Drivers;
 using Moryx.AbstractionLayer.Drivers.Message;
 using Moryx.AbstractionLayer.Resources;
+using Moryx.Configuration;
+using Moryx.Drivers.Mqtt.Properties;
+using Moryx.Drivers.Mqtt.States;
 using Moryx.Serialization;
 using Moryx.StateMachines;
 using Moryx.Threading;
-using MQTTnet.Formatter;
-using Microsoft.Extensions.Logging;
-using MQTTnet.Protocol;
-using Moryx.Configuration;
-using System.Security.Claims;
-using Moryx.Drivers.Mqtt.Properties;
-using System.ComponentModel.DataAnnotations;
-using Moryx.Drivers.Mqtt.States;
-using System.Diagnostics;
+using MQTTnet;
 using MQTTnet.Exceptions;
+using MQTTnet.Formatter;
+using MQTTnet.Protocol;
 
 namespace Moryx.Drivers.Mqtt;
 
@@ -377,7 +377,7 @@ public class MqttDriver : Driver, IMessageDriver
 
     internal async Task Disconnect()
     {
-        if(_scheduledReconnect != 0)
+        if (_scheduledReconnect != 0)
         {
             ParallelOperations.StopExecution(_scheduledReconnect);
             _scheduledReconnect = 0;
@@ -678,7 +678,10 @@ public class MqttDriver : Driver, IMessageDriver
         {
             // early return, when reconnect was cancelled
             if (_scheduledReconnect == 0)
+            {
                 return;
+            }
+
             try
             {
                 await Connect(false);

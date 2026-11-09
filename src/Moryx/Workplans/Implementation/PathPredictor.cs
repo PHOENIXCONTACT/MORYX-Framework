@@ -73,7 +73,9 @@ internal class PathPredictor : IPathPredictor
         {
             // Continue recursively
             foreach (var input in reversedRelations[currentNode.Id])
+            {
                 Analyze(input, resultNode, reversedRelations);
+            }
         }
     }
 
@@ -98,7 +100,9 @@ internal class PathPredictor : IPathPredictor
 
             var wasMonitored = _monitoredEngines.Remove(monitoredEngine);
             if (wasMonitored)
+            {
                 UnregisterEvents(monitoredEngine);
+            }
 
             return wasMonitored;
         }
@@ -140,7 +144,9 @@ internal class PathPredictor : IPathPredictor
         lock (_monitoredEngines)
         {
             foreach (var engine in _monitoredEngines)
+            {
                 UnregisterEvents(engine);
+            }
 
             _monitoredEngines.Clear();
         }
@@ -198,7 +204,9 @@ internal class PossibleResults
     public bool AddResult(IConnector result)
     {
         if (_results.Contains(result))
+        {
             return false;
+        }
 
         _results.Add(result);
         return true;

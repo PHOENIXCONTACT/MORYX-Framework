@@ -3,6 +3,9 @@
 
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
+using Moryx.AbstractionLayer.Activities;
+using Moryx.AbstractionLayer.Constraints;
+using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.ControlSystem.Activities;
 using Moryx.ControlSystem.Cells;
@@ -12,10 +15,6 @@ using Moryx.ControlSystem.TestTools.Activities;
 using Moryx.Logging;
 using Moryx.TestTools.UnitTest;
 using NUnit.Framework;
-using System.Collections.Generic;
-using Moryx.AbstractionLayer.Activities;
-using Moryx.AbstractionLayer.Constraints;
-using Moryx.AbstractionLayer.Processes;
 
 namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes;
 
@@ -385,9 +384,13 @@ public class ActivityDispatcherTests : ProcessTestsBase
         DataPool.UpdateProcess(processData, processState);
         ReadyToWork readyToWork;
         if (processId is null)
+        {
             readyToWork = Session.StartSession(ActivityClassification.Production, rtwType);
+        }
         else
+        {
             readyToWork = Session.StartSession(ActivityClassification.Production, rtwType, processId.Value);
+        }
 
         // Act
         RaiseReadyToWork(_serialCellMock, readyToWork);

@@ -135,7 +135,6 @@ internal class SimpleGraph
         }
     }
 
-
     /// <summary>
     /// Appends a leaf node to the current <see cref="SimpleGraph"/>
     /// </summary>

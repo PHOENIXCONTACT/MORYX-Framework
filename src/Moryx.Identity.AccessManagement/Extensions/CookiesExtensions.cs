@@ -30,12 +30,14 @@ internal static class CookiesExtensions
             });
 
             if (user != null)
+            {
                 cookies.Append(MoryxIdentityDefaults.USER_COOKIE_NAME, user.UserName, new CookieOptions
                 {
                     Secure = true,
                     SameSite = SameSiteMode.Lax,
                     Domain = authResult.Domain,
                 });
+            }
         }
 
         internal void RemoveJwtCookie(string domain)

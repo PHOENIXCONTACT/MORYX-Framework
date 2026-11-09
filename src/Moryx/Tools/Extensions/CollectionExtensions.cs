@@ -14,7 +14,9 @@ public static class CollectionExtensions
     public static void AddRange<TSource>(this ICollection<TSource> source, IEnumerable<TSource> items) where TSource : class
     {
         foreach (var item in items)
+        {
             source.Add(item);
+        }
     }
 
     /// <summary>
@@ -24,11 +26,15 @@ public static class CollectionExtensions
     {
         var oldItem = list.FirstOrDefault(match);
         if (oldItem == null)
+        {
             return;
+        }
 
         var oldIndex = list.IndexOf(oldItem);
         if (oldIndex != -1)
+        {
             list[oldIndex] = newItem;
+        }
     }
 
     extension<TSource>(ICollection<TSource> collection) where TSource : class
@@ -40,7 +46,9 @@ public static class CollectionExtensions
         {
             var itemsArray = new List<TSource>(items).ToArray();
             for (var i = itemsArray.Length - 1; i >= 0; i--)
+            {
                 collection.Remove(itemsArray[i]);
+            }
         }
 
         /// <summary>
@@ -49,7 +57,9 @@ public static class CollectionExtensions
         public void AddIfNotExists(TSource item)
         {
             if (!collection.Contains(item))
+            {
                 collection.Add(item);
+            }
         }
     }
 
@@ -63,7 +73,9 @@ public static class CollectionExtensions
             for (var i = collection.Count - 1; i >= 0; i--)
             {
                 if (condition(collection[i]))
+                {
                     collection.RemoveAt(i);
+                }
             }
         }
 

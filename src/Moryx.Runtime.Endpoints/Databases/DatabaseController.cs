@@ -1,14 +1,14 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Text.RegularExpressions;
-using Moryx.Model;
-using Moryx.Model.Configuration;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
 using System.Reflection;
+using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Moryx.Configuration;
+using Moryx.Model;
 using Moryx.Model.Attributes;
+using Moryx.Model.Configuration;
 using Moryx.Runtime.Endpoints.Databases.Models;
 using Moryx.Runtime.Endpoints.Databases.Request;
 using Moryx.Runtime.Endpoints.Databases.Response;
@@ -47,7 +47,7 @@ public class DatabaseController : ControllerBase
 
         var dataModels = await Task.WhenAll(contexts.Select(ConvertAsync));
 
-        var configurators = contexts.SelectMany(c => _dbContextManager.GetConfigurators(c)).Distinct().ToArray();
+        var configurators = contexts.SelectMany(_dbContextManager.GetConfigurators).Distinct().ToArray();
         var configuratorModels = configurators.Select(configurator => new ModelConfiguratorModel
         {
             Name = configurator.GetDisplayName(),
@@ -70,7 +70,9 @@ public class DatabaseController : ControllerBase
     {
         var model = _dbContextManager.Contexts.FirstOrDefault(context => TargetModelName(context) == targetModel);
         if (model == null)
+        {
             return NotFound($"Model \"{targetModel}\" could not be found");
+        }
 
         return await ConvertAsync(model);
     }
@@ -81,13 +83,17 @@ public class DatabaseController : ControllerBase
     {
         var targetConfigurator = GetTargetConfigurator(targetModel, config);
         if (targetConfigurator == null)
+        {
             return NotFound($"Configurator for target model \"{targetModel}\" could not be found");
+        }
 
         var configInstance = DeserializeConfig(targetConfigurator, config);
 
         var dbContextType = _dbContextManager.Contexts.FirstOrDefault(c => c.FullName == targetModel);
         if (dbContextType == null)
+        {
             return NotFound($"Model \"{targetModel}\" could not be found");
+        }
 
         var result = _databaseUpdateService.UpdateModel(dbContextType, configInstance);
         var dbContext = _dbContextManager.Contexts.First(c => TargetModelName(c) == targetModel);
@@ -102,7 +108,9 @@ public class DatabaseController : ControllerBase
     {
         var targetConfigurator = GetTargetConfigurator(targetModel, config);
         if (targetConfigurator == null)
+        {
             return NotFound($"Configurator for target model \"{targetModel}\" could not be found");
+        }
 
         if (targetConfigurator is NullModelConfigurator)
         {
@@ -130,7 +138,9 @@ public class DatabaseController : ControllerBase
     {
         var targetConfigurator = GetTargetConfigurator(targetModel, config);
         if (targetConfigurator == null)
+        {
             return NotFound($"Configurator for target model \"{targetModel}\" could not be found");
+        }
 
         var configInstance = DeserializeConfig(targetConfigurator, config);
 
@@ -170,7 +180,9 @@ public class DatabaseController : ControllerBase
     {
         var targetConfigurator = GetTargetConfigurator(targetModel, configModel);
         if (targetConfigurator == null)
+        {
             return NotFound($"Configurator for target model \"{targetModel}\" could not be found");
+        }
 
         var configInstance = DeserializeConfig(targetConfigurator, configModel);
 
@@ -184,7 +196,9 @@ public class DatabaseController : ControllerBase
         var contextType = _dbContextManager.Contexts.First(c => TargetModelName(c) == targetModel);
         var targetConfigurator = _dbContextManager.GetConfigurator(contextType);
         if (targetConfigurator == null)
+        {
             return NotFound($"Configurator for target model \"{targetModel}\" could not be found");
+        }
 
         // Update config copy from model
         var configInstance = DeserializeConfig(targetConfigurator, request.Config);
@@ -193,7 +207,9 @@ public class DatabaseController : ControllerBase
         var setupExecutor = _dbContextManager.GetSetupExecutor(contextType);
         var targetSetup = setupExecutor.GetAllSetups().FirstOrDefault(s => s.GetType().FullName == request.Setup.Fullname);
         if (targetSetup == null)
+        {
             return NotFound("No matching setup found");
+        }
 
         // Provide logger for model
         await setupExecutor.ExecuteAsync(configInstance, targetSetup, request.Setup.SetupData);
@@ -344,7 +360,9 @@ public class DatabaseController : ControllerBase
             .Select(ConvertSetup).OrderBy(setup => setup.SortOrder).ToList();
         string[] files;
         if (!Directory.Exists(_dataDirectory) || !(files = Directory.GetFiles(_dataDirectory)).Any())
+        {
             return setups.ToArray();
+        }
 
         var fileSetups = allSetups.Where(setup => !string.IsNullOrEmpty(setup.SupportedFileRegex))
             .Select(ConvertSetup).ToList();
@@ -410,7 +428,7 @@ public class DatabaseController : ControllerBase
     }
 }
 
-internal class DatabaseConfigSerialization : DefaultSerialization
+internal sealed class DatabaseConfigSerialization : DefaultSerialization
 {
     public override IEnumerable<PropertyInfo> GetProperties(Type sourceType)
     {

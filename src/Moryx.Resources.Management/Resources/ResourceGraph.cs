@@ -92,7 +92,9 @@ internal class ResourceGraph : IManagedResourceGraph
         // Return a single resource
         var match = GetResources(predicate).SingleOrDefault();
         if (match == null)
+        {
             throw new ResourceNotFoundException();
+        }
 
         return match;
     }
@@ -107,9 +109,9 @@ internal class ResourceGraph : IManagedResourceGraph
         IEnumerable<TResource> matches;
         _graphLock.EnterReadLock();
         matches = from resource in _graph.Values
-            let target = resource as TResource
-            where target != null && predicate(target)
-            select target;
+                  let target = resource as TResource
+                  where target != null && predicate(target)
+                  select target;
         _graphLock.ExitReadLock();
 
         return matches;

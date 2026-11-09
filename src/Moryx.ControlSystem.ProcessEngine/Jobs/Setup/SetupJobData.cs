@@ -101,7 +101,9 @@ internal sealed class SetupJobData : JobDataBase, ISetupJobData, INotificationSe
                 var step = recipe.Workplan.Steps.FirstOrDefault(step => step.GetType() == disabledStep.GetType());
                 // set disabled step in new recipe
                 if (step != null)
+                {
                     recipe.DisabledSteps.Add(step.Id);
+                }
             }
         }
 
@@ -112,7 +114,9 @@ internal sealed class SetupJobData : JobDataBase, ISetupJobData, INotificationSe
     internal bool IsRetryLimitReached()
     {
         if (ModuleConfig.SetupJobRetryLimit < 0)
+        {
             return false;
+        }
 
         return _retryCounter > ModuleConfig.SetupJobRetryLimit;
     }
@@ -181,7 +185,9 @@ internal sealed class SetupJobData : JobDataBase, ISetupJobData, INotificationSe
 
         // Only publish progress changed while we execute something
         if (RunningCount > 0)
+        {
             RaiseProgressChanged();
+        }
     }
 
     /// <inheritdoc/>

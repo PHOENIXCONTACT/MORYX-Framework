@@ -67,11 +67,15 @@ internal class JobList : IJobDataList, IJobList
         stopWatch.Start();
         var timeOut = Config.JobListStopTimeout * 1000;
         while (stopWatch.ElapsedMilliseconds < timeOut && _jobs.Any(j => !j.IsStable))
+        {
             Thread.Sleep(1);
+        }
 
         if (_jobs.Any(j => !j.IsStable))
+        {
             Logger.LogWarning("Reached shutdown-timout of the {name} after {seconds}s. Unfinished jobs: {jobs}",
                 nameof(JobList), Config.JobListStopTimeout, string.Join(", ", _jobs.Select(j => j.Id)));
+        }
     }
 
     #endregion
@@ -183,7 +187,9 @@ internal class JobList : IJobDataList, IJobList
         {
             // Do not restore completed jobs
             if (jobData.Classification == JobClassification.Completed)
+            {
                 continue;
+            }
 
             // Add and attach
             _jobs.AddLast(jobData);
@@ -201,7 +207,9 @@ internal class JobList : IJobDataList, IJobList
     public void Add(LinkedList<IJobData> jobDatas, JobPosition jobPosition, Action<ModifiedJobsFragment> saveCallback)
     {
         if (jobDatas is null || jobDatas.Count == 0)
+        {
             return;
+        }
 
         // Enter write lock because we generate a new sort order
         _jobLock.EnterWriteLock();
@@ -288,7 +296,9 @@ internal class JobList : IJobDataList, IJobList
             affectedJobs.Add(jobData);
         }
         if (node.Next != null)
+        {
             affectedJobs.Add(node.Next.Value);
+        }
 
         return null;
     }
@@ -303,13 +313,17 @@ internal class JobList : IJobDataList, IJobList
             && referenceNode.Previous?.Value is ISetupJobData setup
             && setup.Recipe.Execution == Setups.SetupExecution.BeforeProduction
             && setup.Recipe.TargetRecipe.Id == referenceNode.Value.Recipe.Id)
+        {
             referenceNode = referenceNode.Previous;
+        }
 
         if (referenceNode.Value.Recipe.Id != jobDatas.First().Recipe.Id
             && referenceNode.Previous?.Value is ISetupJobData cleanup
             && cleanup.Recipe.Execution == Setups.SetupExecution.AfterProduction
             && cleanup.Recipe.TargetRecipe.Id == jobDatas.Last().Recipe.Id)
+        {
             referenceNode = referenceNode.Previous;
+        }
 
         var previousId = referenceNode.Previous?.Value.Id;
         foreach (var jobData in jobDatas)
@@ -331,7 +345,9 @@ internal class JobList : IJobDataList, IJobList
         if (referenceNode.Value.Recipe.Id != jobDatas.First().Recipe.Id
             && referenceNode.Next?.Value is ISetupJobData setup
             && setup.Recipe.TargetRecipe.Id == referenceNode.Value.Recipe.Id)
+        {
             referenceNode = referenceNode.Next;
+        }
 
         var previousId = referenceNode.Value.Id;
         foreach (var jobData in jobDatas)
@@ -340,7 +356,9 @@ internal class JobList : IJobDataList, IJobList
             affectedJobs.Add(jobData);
         }
         if (referenceNode.Next != null)
+        {
             affectedJobs.Add(referenceNode.Next.Value);
+        }
 
         return previousId;
     }
@@ -351,7 +369,10 @@ internal class JobList : IJobDataList, IJobList
         while (currentNode != null)
         {
             if (currentNode.Value.Id == id)
+            {
                 return currentNode;
+            }
+
             currentNode = currentNode.Next;
         }
 
@@ -398,7 +419,9 @@ internal class JobList : IJobDataList, IJobList
             {
                 // For existing nodes skip forward till we are in sync again
                 while (referenceNode != null && currentNode.Value != referenceNode.Value)
+                {
                     referenceNode = referenceNode.Next;
+                }
 
                 if (referenceNode == null)
                 {
@@ -414,7 +437,9 @@ internal class JobList : IJobDataList, IJobList
 
         // Job directly after the affected jobs is also affected
         if (referenceNode.Next != null)
+        {
             affectedJobs.Add(referenceNode.Next.Value);
+        }
 
         return previousId;
     }
@@ -427,7 +452,9 @@ internal class JobList : IJobDataList, IJobList
         {
             var job = referenceNode.Value;
             if (job.Recipe.Id == jobPosition.ReferenceId)
+            {
                 break;
+            }
 
             referenceNode = referenceNode.Previous;
         }
@@ -440,7 +467,9 @@ internal class JobList : IJobDataList, IJobList
             affectedJobs.Add(jobData);
         }
         if (referenceNode.Next != null)
+        {
             affectedJobs.Add(referenceNode.Next.Value);
+        }
 
         return previousId;
     }
@@ -493,7 +522,10 @@ internal class JobList : IJobDataList, IJobList
                 return;
             }
             if (jobNode.Next != null)
+            {
                 affected.Add(jobNode.Next.Value);
+            }
+
             var previousId = jobNode.Previous?.Value.Id;
 
             // Completed jobs should be removed
@@ -591,9 +623,13 @@ internal class JobList : IJobDataList, IJobList
             }
 
             if (_current == null)
+            {
                 _current = _forward ? _parent._jobs.First : _parent._jobs.Last;
+            }
             else
+            {
                 _current = _forward ? _current.Next : _current.Previous;
+            }
 
             return _current != null;
         }

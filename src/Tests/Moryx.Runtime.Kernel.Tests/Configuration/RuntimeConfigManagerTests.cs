@@ -1,9 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.IO;
-using System.Threading;
 using Moryx.Configuration;
 using Moryx.Runtime.Kernel.Tests.Dummies;
 using NUnit.Framework;
@@ -189,7 +186,9 @@ public class RuntimeConfigManagerTests
     private void DeleteTempFolder()
     {
         if (Directory.Exists(_tempDirectory))
+        {
             Directory.Delete(_tempDirectory, true);
+        }
 
         Assert.That(Directory.Exists(_tempDirectory), Is.False);
     }

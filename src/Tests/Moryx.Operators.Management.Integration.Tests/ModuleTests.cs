@@ -8,7 +8,7 @@ using Moryx.Runtime.Modules;
 namespace Moryx.Operators.Management.Tests;
 
 [TestFixture]
-internal class ModuleTests : TestsBase
+internal sealed class ModuleTests : TestsBase
 {
     private IOperatorManagement _operatorsFacade;
     private ISkillManagement _skillsFacade;

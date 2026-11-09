@@ -1,7 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Text;
 using Moryx.Serialization;
 using Moryx.Workplans.Validation;
 using Moryx.Workplans.WorkplanSteps;
@@ -19,11 +18,15 @@ internal static class ModelConverter
 
         // Split and join are recognized explicitly
         if (type == typeof(SplitWorkplanStep) || type == typeof(JoinWorkplanStep))
+        {
             classification = WorkplanNodeClassification.ControlFlow;
+        }
 
         // And subworkpans are another exception
         else if (typeof(ISubworkplanStep).IsAssignableFrom(type))
+        {
             classification = WorkplanNodeClassification.Subworkplan;
+        }
 
         return classification;
     }
@@ -123,13 +126,17 @@ internal static class ModelConverter
             connections[i] = new NodeConnectionPoint { Name = "Input_" + i, Index = i };
             var connector = step.Inputs[i];
             if (connector == null)
+            {
                 continue;
+            }
 
             connections[i].Connections.AddRange(steps.SelectMany(s => s.Outputs.Where(o => o == connector)
                 .Select(o => new NodeConnector { NodeId = s.Id, Index = Array.IndexOf(s.Outputs, connector) })));
 
             if (connector.Classification != NodeClassification.Intermediate)
+            {
                 connections[i].Connections.Add(new NodeConnector { NodeId = connector.Id, Index = 0 });
+            }
         }
         nodeModel.Inputs = connections;
 
@@ -139,13 +146,17 @@ internal static class ModelConverter
             connections[i] = new NodeConnectionPoint { Name = step.OutputDescriptions[i].Name, Index = i };
             var connector = step.Outputs[i];
             if (connector == null)
+            {
                 continue;
+            }
 
             connections[i].Connections.AddRange(steps.SelectMany(s => s.Inputs.Where(i => i == connector)
                 .Select(o => new NodeConnector { NodeId = s.Id, Index = Array.IndexOf(s.Inputs, connector) })));
 
             if (connector.Classification != NodeClassification.Intermediate)
+            {
                 connections[i].Connections.Add(new NodeConnector { NodeId = connector.Id, Index = 0 });
+            }
         }
         nodeModel.Outputs = connections;
 

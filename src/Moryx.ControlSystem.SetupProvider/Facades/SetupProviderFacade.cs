@@ -48,8 +48,8 @@ internal class SetupProviderFacade : ISetupProvider, IFacadeControl
         ValidateHealthState();
 
         var setup = SetupManager.RequiredSetup(execution, recipe, targetSystem);
-        if (setup != null)
-            setup.Origin = this;
+        setup?.Origin = this;
+
         return setup;
     }
 

@@ -1,7 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Moryx.Configuration;
@@ -31,7 +30,7 @@ internal enum TestConfig1Enum
 /// <summary>
 /// Test config
 /// </summary>
-internal class TransformerTestConfig
+internal sealed class TransformerTestConfig
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="TransformerTestConfig"/> class.
@@ -143,7 +142,7 @@ internal class TransformerTestConfig
 /// <summary>
 /// Test subconfig
 /// </summary>
-internal class SubConfig
+internal sealed class SubConfig
 {
     /// <summary>
     /// Gets or sets the int field.

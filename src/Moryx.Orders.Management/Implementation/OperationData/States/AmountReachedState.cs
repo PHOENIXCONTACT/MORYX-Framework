@@ -1,10 +1,10 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.ComponentModel.DataAnnotations;
 using Microsoft.Extensions.Logging;
 using Moryx.ControlSystem.Jobs;
 using Moryx.Logging;
-using System.ComponentModel.DataAnnotations;
 using Moryx.Orders.Management.Properties;
 using Moryx.Users;
 

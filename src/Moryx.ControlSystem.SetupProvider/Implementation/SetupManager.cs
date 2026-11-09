@@ -254,7 +254,7 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
 
         return;
 
-        void ValidateStep(IWorkplanStep step)
+        static void ValidateStep(IWorkplanStep step)
         {
             if (step.Outputs.Length != 3)
             {

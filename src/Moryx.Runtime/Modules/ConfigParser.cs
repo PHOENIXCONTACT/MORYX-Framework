@@ -24,7 +24,9 @@ internal class ConfigParser
 
             // Check for class properties
             if (!propType.IsClass)
+            {
                 continue;
+            }
 
             // Check for plugin config and strategy attribute
             ModuleStrategyAttribute attribute;
@@ -38,7 +40,9 @@ internal class ConfigParser
 
             // Now filter strings
             if (propType == typeof(string))
+            {
                 continue;
+            }
 
             // Check for collection
             if (typeof(IEnumerable).IsAssignableFrom(propType))

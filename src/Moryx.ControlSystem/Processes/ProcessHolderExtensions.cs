@@ -99,7 +99,10 @@ public static class ProcessHolderExtensions
         foreach (var possible in group.Positions)
         {
             if (!possible.IsEmpty())
+            {
                 continue;
+            }
+
             position = possible;
             return true;
         }
@@ -127,7 +130,9 @@ public static class ProcessHolderExtensions
     public static IEnumerable<Session> Attach(this ProcessHolderPosition position)
     {
         if (position.Session != null)
+        {
             return [position.Session];
+        }
 
         return position.Process == null ? [] : [position.StartSession()];
     }
@@ -155,10 +160,14 @@ public static class ProcessHolderExtensions
             }
 
             if (position.Process is null)
+            {
                 continue;
+            }
 
             if (position is ProcessHolderPosition php)
+            {
                 sessions.Add(php.StartSession());
+            }
         }
         return sessions;
     }
@@ -269,10 +278,12 @@ public static class ProcessHolderExtensions
         public void Update(Session session)
         {
             if (position.Session.Id != session.Id)
+            {
                 throw new InvalidOperationException($"Tried to update the {nameof(Session)} on an " +
                                                     $"{nameof(IProcessHolderPosition)} with a different session. Make sure to " +
                                                     $"{nameof(IProcessHolderPosition.Reset)} the {nameof(IProcessHolderPosition)} before " +
                                                     $"assigning a new {nameof(Session)}.");
+            }
 
             if (position is ProcessHolderPosition explicitPosition)
             {

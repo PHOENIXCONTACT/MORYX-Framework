@@ -1,12 +1,8 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Net;
-using System.Threading;
 using NUnit.Framework;
 
 namespace Moryx.Communication.Sockets.IntegrationTests;
@@ -67,7 +63,9 @@ public abstract class CommunicationSocketsTestsBase<TMessage> where TMessage : B
         foreach (var s in ServerConnections)
         {
             if (s.Connection == null)
+            {
                 return;
+            }
 
             s.Connection.Dispose();
             Assert.That(s.Connection.CurrentState, Is.EqualTo(BinaryConnectionState.Disconnected),
@@ -85,7 +83,9 @@ public abstract class CommunicationSocketsTestsBase<TMessage> where TMessage : B
         foreach (var c in Clients)
         {
             if (c.Connection == null)
+            {
                 return;
+            }
 
             c.Connection.Dispose();
             // Client should be disconnected
@@ -107,7 +107,9 @@ public abstract class CommunicationSocketsTestsBase<TMessage> where TMessage : B
         stopWatch.Start();
 
         while (!Clients[clientIdx].Connection.CurrentState.Equals(wantedState) && stopWatch.ElapsedMilliseconds < timeToWait.TotalMilliseconds)
+        {
             Thread.Sleep(new TimeSpan(0, 0, 0, 0, 100));
+        }
 
         stopWatch.Stop();
 

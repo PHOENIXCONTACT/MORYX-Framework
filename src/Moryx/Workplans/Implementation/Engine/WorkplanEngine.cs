@@ -44,7 +44,9 @@ internal class WorkplanEngine : IMonitoredEngine, IStateContext
         {
             transition.Initialize();
             if (transition is IObservableTransition)
+            {
                 ((IObservableTransition)transition).Triggered += OnTransitionTriggered;
+            }
         }
         // Register to events of exit places
         foreach (var place in ExecutedWorkplan.Places)
@@ -126,14 +128,14 @@ internal class WorkplanEngine : IMonitoredEngine, IStateContext
 
         // Extract snapshot from holders
         snapShot.Holders = (from holder in GetAllHolders()
-            let tokens = holder.Tokens.ToArray()
-            where tokens.Length > 0
-            select new HolderSnapshot
-            {
-                HolderId = holder.Id,
-                Tokens = tokens,
-                HolderState = holder.InternalState
-            }).ToArray();
+                            let tokens = holder.Tokens.ToArray()
+                            where tokens.Length > 0
+                            select new HolderSnapshot
+                            {
+                                HolderId = holder.Id,
+                                Tokens = tokens,
+                                HolderState = holder.InternalState
+                            }).ToArray();
 
         CurrentSnapshot = snapShot;
     }

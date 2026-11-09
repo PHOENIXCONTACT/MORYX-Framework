@@ -44,7 +44,10 @@ public class FacadeBase : IFacadeControl, ILifeCycleBoundFacade
         set
         {
             if (field == value)
+            {
                 return;
+            }
+
             field = value;
             RaiseActivatedStateChanged(field);
         }

@@ -1,17 +1,12 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
-using System.Threading.Tasks;
-using Moryx.Media.Server.Previews;
-using Moq;
-using NUnit.Framework;
 using Microsoft.Extensions.Logging.Abstractions;
+using Moq;
 using Moryx.Logging;
+using Moryx.Media.Server.Previews;
+using NUnit.Framework;
 
 namespace Moryx.Media.Server.Tests;
 
@@ -74,7 +69,7 @@ public class ContentManagerTests
         using (var master = _contentManager.GetStream(descriptor.GetMaster()))
         {
             masterContent = new byte[master.Length];
-            master.Read(masterContent, 0, masterContent.Length);
+            master.ReadExactly(masterContent);
         }
 
         // Assert
@@ -217,13 +212,13 @@ public class ContentManagerTests
         using (var master = _contentManager.GetStream(descriptor.GetMaster()))
         {
             masterContent = new byte[master.Length];
-            master.Read(masterContent, 0, masterContent.Length);
+            master.ReadExactly(masterContent);
         }
 
         using (var variant = _contentManager.GetStream(variantDescriptor))
         {
             variantContent = new byte[variant.Length];
-            variant.Read(variantContent, 0, variantContent.Length);
+            variant.ReadExactly(variantContent);
         }
 
         // Assert

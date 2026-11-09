@@ -5,7 +5,7 @@ using Moryx.Runtime.Modules;
 
 namespace Moryx.Runtime.Kernel.Tests.ModuleMocks;
 
-internal class ModuleA : ModuleBase, IFacadeContainer<IFacadeA>
+internal sealed class ModuleA : ModuleBase, IFacadeContainer<IFacadeA>
 {
     public ModuleA()
     {
@@ -21,6 +21,6 @@ internal class ModuleA : ModuleBase, IFacadeContainer<IFacadeA>
     public IFacadeA Facade { get; private set; }
 }
 
-internal class FacadaA : IFacadeA
+internal sealed class FacadaA : IFacadeA
 {
 }

@@ -1,13 +1,13 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Microsoft.Extensions.Logging;
 using Moryx.Container;
 using Moryx.Logging;
 using Moryx.Model.Repositories;
+using Moryx.Notifications.Publisher.Model;
 using Moryx.Threading;
 using Moryx.Tools;
-using Microsoft.Extensions.Logging;
-using Moryx.Notifications.Publisher.Model;
 
 namespace Moryx.Notifications.Publisher;
 
@@ -81,7 +81,9 @@ internal class NotificationManager : INotificationManager
 
         // Add to private list
         lock (_current)
+        {
             _current.AddRange(current);
+        }
 
         // Register to all sources
         foreach (var source in Sources)
@@ -90,7 +92,9 @@ internal class NotificationManager : INotificationManager
             source.Acknowledged += OnNotificationAcknowledged;
 
             if (source.IsActivated)
+            {
                 source.Sync();
+            }
 
             source.StateChanged += OnSourceStateChanged;
         }
@@ -141,13 +145,17 @@ internal class NotificationManager : INotificationManager
 
         // Add to running tasks
         lock (_deactivationTasks)
+        {
             _deactivationTasks.Add(task);
+        }
 
         // If task finishes, remove from running tasks
         task.ContinueWith(delegate (Task target)
         {
             lock (_deactivationTasks)
+            {
                 _deactivationTasks.Remove(target);
+            }
         });
     }
 
@@ -156,10 +164,14 @@ internal class NotificationManager : INotificationManager
         // Load published
         NotificationMap[] current;
         lock (_current)
+        {
             current = _current.Where(m => m.Source == source).ToArray();
+        }
 
         if (current.Length <= 0)
+        {
             return;
+        }
 
         // Acknowledge in database
         using (var uow = UnitOfWorkFactory.Create())
@@ -167,8 +179,8 @@ internal class NotificationManager : INotificationManager
             var notificationRepo = uow.GetRepository<INotificationEntityRepository>();
 
             var entities = (from entity in notificationRepo.Linq
-                where !entity.Acknowledged.HasValue && entity.Source == source.Name
-                select entity).ToArray();
+                            where !entity.Acknowledged.HasValue && entity.Source == source.Name
+                            select entity).ToArray();
 
             var timeStamp = DateTime.UtcNow;
             if (entities.Length > 0)
@@ -180,7 +192,9 @@ internal class NotificationManager : INotificationManager
 
         // Remove from private list
         lock (_current)
+        {
             _current.RemoveRange(current);
+        }
 
         // Log and raise
         foreach (var notification in current.Select(c => c.Notification))
@@ -196,7 +210,9 @@ internal class NotificationManager : INotificationManager
     public Notification[] GetAll()
     {
         lock (_current)
+        {
             return _current.Select(m => m.Notification).ToArray();
+        }
     }
 
     /// <inheritdoc />
@@ -204,7 +220,9 @@ internal class NotificationManager : INotificationManager
     {
         NotificationMap map;
         lock (_current)
+        {
             map = _current.SingleOrDefault(m => m.Notification.Identifier == identifier);
+        }
 
         // Acknowledge on Source
         map?.Source.Acknowledge(map.Notification);
@@ -220,7 +238,9 @@ internal class NotificationManager : INotificationManager
         };
 
         lock (_current)
+        {
             _current.Add(map);
+        }
 
         // Change to a different thread so the caller doesn't have to wait, or breaks down if an exception occurs...
         ParallelOperations.ExecuteParallel(ProcessNotification, map);
@@ -250,11 +270,15 @@ internal class NotificationManager : INotificationManager
 
         // Raise event for processed notifications
         if (processResult == NotificationProcessorResult.Processed)
+        {
             RaiseNotificationPublished(notification);
+        }
 
         // Check if notification was acknowledged
         if (isPendingAck)
+        {
             ProcessAcknowledgement(map);
+        }
     }
 
     private void OnNotificationAcknowledged(object sender, Notification notification)
@@ -267,7 +291,9 @@ internal class NotificationManager : INotificationManager
     {
         NotificationMap map;
         lock (_current)
+        {
             map = _current.Single(m => m.Notification == notification);
+        }
 
         ProcessAcknowledgement(map);
     }
@@ -299,7 +325,9 @@ internal class NotificationManager : INotificationManager
 
         // Remove from private list
         lock (_current)
+        {
             _current.Remove(map);
+        }
 
         // Log and raise
         Logger.Log(LogLevel.Information, "{0} was acknowledged by {1}. Title: {2}", notification.GetType().Name,
@@ -307,7 +335,9 @@ internal class NotificationManager : INotificationManager
 
         // Raise event for acknowledged notifications
         if (ackResult == NotificationProcessorResult.Processed)
+        {
             RaiseNotificationAcknowledged(notification);
+        }
     }
 
     private void SyncWithDatabase(IReadOnlyList<Notification> existing)
@@ -315,13 +345,15 @@ internal class NotificationManager : INotificationManager
         using var uow = UnitOfWorkFactory.Create();
         var notificationRepo = uow.GetRepository<INotificationEntityRepository>();
         var entities = (from entity in notificationRepo.Linq
-            where !entity.Acknowledged.HasValue
-            select entity).ToArray();
+                        where !entity.Acknowledged.HasValue
+                        select entity).ToArray();
 
         // If entity exists which is not existing anymore, we acknowledge it
         var acknowledged = entities.Where(entity => existing.All(n => n.Identifier != entity.Identifier)).ToArray();
         if (acknowledged.Length <= 0)
+        {
             return;
+        }
 
         acknowledged.ForEach(a => a.Acknowledged = DateTime.UtcNow);
         uow.SaveChanges();

@@ -64,9 +64,14 @@ internal sealed class SeamlessScheduler : JobSchedulerBase<SeamlessSchedulerConf
             {
                 // Initial job or follow up
                 if (last == null || last.SameRecipeAs(job))
+                {
                     yield return job;
+                }
                 else
+                {
                     yield break;
+                }
+
                 last = job;
             }
         }

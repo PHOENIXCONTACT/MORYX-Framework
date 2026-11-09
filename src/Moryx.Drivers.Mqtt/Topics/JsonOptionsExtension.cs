@@ -11,7 +11,8 @@ namespace Moryx.Drivers.Mqtt.Topics;
 /// </summary>
 public static class JsonOptionsExtension
 {
-    extension(JsonIgnoreCondition ignoreCondition) {
+    extension(JsonIgnoreCondition ignoreCondition)
+    {
         /// <summary>
         /// Converts to specific JsonIgnoreCondition for System.Text.Json
         /// </summary>

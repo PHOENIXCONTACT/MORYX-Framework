@@ -29,7 +29,6 @@ internal class GenericEntityMapper<TBase, TReference> : IGenericMapper
 
     private IPropertyMapper[] _configuredMappers;
 
-
     private JsonSerializerSettings _jsonSettings;
 
     private IPropertyAccessor<IGenericColumns, string> _jsonAccessor;

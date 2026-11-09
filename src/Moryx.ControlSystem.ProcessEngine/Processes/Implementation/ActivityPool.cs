@@ -49,7 +49,9 @@ internal sealed class ActivityPool : ILoggingComponent, IActivityDataPool, IActi
     public void AddProcess(ProcessData processData)
     {
         lock (_runningProcesses)
+        {
             _runningProcesses.Add(processData);
+        }
 
         RaiseProcessChanged(processData, processData.State);
     }
@@ -59,7 +61,10 @@ internal sealed class ActivityPool : ILoggingComponent, IActivityDataPool, IActi
         activityData.ProcessData = processData;
         // Generate an id BEFORE adding to the pool
         if (activityData.Id == 0)
+        {
             activityData.Id = IdShiftGenerator.Generate(processData.Id, processData.ActivityIndex++);
+        }
+
         processData.AddActivity(activityData);
 
         _activitiesLock.EnterWriteLock();
@@ -90,7 +95,9 @@ internal sealed class ActivityPool : ILoggingComponent, IActivityDataPool, IActi
 
             // Remove the process
             lock (_runningProcesses)
+            {
                 _runningProcesses.Remove(processData);
+            }
         }
     }
 
@@ -157,7 +164,10 @@ internal sealed class ActivityPool : ILoggingComponent, IActivityDataPool, IActi
             case ProcessState.Interrupted:
             case ProcessState.Discarded:
                 foreach (var activity in processData.Activities.Where(a => a.State <= ActivityState.Configured))
+                {
                     ActivityUpdated?.Invoke(this, new ActivityUpdatedEventArgs(activity.Activity, ActivityProgress.Completed));
+                }
+
                 progress = ProcessProgress.Interrupted;
                 break;
             case ProcessState.Success:
@@ -266,7 +276,9 @@ internal sealed class ActivityPool : ILoggingComponent, IActivityDataPool, IActi
     public ProcessData GetProcess(ProcessReference reference)
     {
         if (reference.IsEmpty)
+        {
             return null;
+        }
 
         lock (_runningProcesses)
         {
@@ -340,7 +352,10 @@ internal sealed class ActivityPool : ILoggingComponent, IActivityDataPool, IActi
     {
         var extracted = new TDomain[source.Count];
         for (int i = 0; i < source.Count; i++)
+        {
             extracted[i] = extractor(source[i]);
+        }
+
         return extracted;
     }
 }

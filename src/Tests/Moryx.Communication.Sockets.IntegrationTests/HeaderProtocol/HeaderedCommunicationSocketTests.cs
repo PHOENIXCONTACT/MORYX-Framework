@@ -1,11 +1,8 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Net;
-using System.Threading;
 using NUnit.Framework;
 
 namespace Moryx.Communication.Sockets.IntegrationTests;
@@ -159,14 +156,21 @@ public class HeaderedCommunicationSocketTests : CommunicationSocketsTestsBase<Bi
         var stopWatch = new Stopwatch();
         stopWatch.Start();
         while (server.Connection.CurrentState != BinaryConnectionState.Connected && stopWatch.ElapsedMilliseconds < 5000)
+        {
             Thread.Sleep(1);
+        }
 
         // Act
         var binMessage = CreateMessage(42, [1, 3, 3, 7, 42]);
         if (clientSendsMessage)
+        {
             client.Connection.Send(binMessage);
+        }
         else
+        {
             server.Connection.Send(binMessage);
+        }
+
         Thread.Sleep(20);
 
         // Assert

@@ -44,7 +44,9 @@ public static class BindingResolverExtension
             var next = resolver.NextResolver;
             resolver.Extend(insertedResolver);
             if (next != null)
+            {
                 insertedResolver.Extend(next);
+            }
 
             return insertedResolver;
         }

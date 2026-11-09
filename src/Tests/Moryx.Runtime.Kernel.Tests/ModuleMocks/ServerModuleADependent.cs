@@ -4,12 +4,11 @@
 using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Container;
-using Moryx.Runtime.Kernel.Tests.Dummies;
 using Moryx.Runtime.Modules;
 
 namespace Moryx.Runtime.Kernel.Tests.ModuleMocks;
 
-internal class ServerModuleADependent : MockServerModuleBase
+internal sealed class ServerModuleADependent : MockServerModuleBase
 {
     public ServerModuleADependent(
         IModuleContainerFactory containerFactory,

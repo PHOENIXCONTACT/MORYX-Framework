@@ -16,13 +16,20 @@ public class DummyProductRecipe : ProductRecipe
     {
         var toCompareWith = obj as DummyProductRecipe;
         if (toCompareWith == null)
+        {
             return false;
+        }
 
         return toCompareWith.Name == Name && toCompareWith.Revision == Revision
                                           && toCompareWith.State == State && toCompareWith.Classification == Classification
                                           && ((toCompareWith.Origin is null && Origin is null) || Origin.Equals(toCompareWith.Origin))
                                           && ((toCompareWith.Product is null && Product is null) || Product.Equals(toCompareWith.Product))
                                           && ((toCompareWith.Target is null && Target is null) || Target.Equals(toCompareWith.Target));
+    }
+
+    public override int GetHashCode()
+    {
+        throw new NotImplementedException();
     }
 }
 
@@ -42,10 +49,17 @@ public class DummyProductWorkplanRecipe : DummyProductRecipe, IWorkplanRecipe
     {
         var toCompareWith = obj as DummyProductWorkplanRecipe;
         if (toCompareWith == null)
+        {
             return false;
+        }
 
         return base.Equals(toCompareWith)
                && ((toCompareWith.Workplan is null && Workplan is null) || Workplan.Equals(toCompareWith.Workplan))
                && ((toCompareWith.DisabledSteps is null && DisabledSteps is null) || Enumerable.SequenceEqual<long>(DisabledSteps, toCompareWith.DisabledSteps));
+    }
+
+    public override int GetHashCode()
+    {
+        throw new NotImplementedException();
     }
 }

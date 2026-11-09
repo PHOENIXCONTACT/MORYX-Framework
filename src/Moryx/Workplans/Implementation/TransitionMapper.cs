@@ -43,7 +43,9 @@ internal class TransitionMapper : ITransitionMapper
         foreach (var invocation in _delegateMaps)
         {
             if (invocation.TryInvoke(transition))
+            {
                 break;
+            }
         }
     }
 
@@ -63,9 +65,13 @@ internal class TransitionMapper : ITransitionMapper
         where T : class, ITransition
     {
         if (_parallelOperations == null)
+        {
             Map(new AttemptInvocation<T>(transitionHandler));
+        }
         else
+        {
             Map(new AsyncAttemptInvocation<T>(_parallelOperations, transitionHandler));
+        }
 
         return this;
     }
@@ -87,7 +93,9 @@ internal class TransitionMapper : ITransitionMapper
         {
             var casted = transition as T;
             if (casted == null)
+            {
                 return false;
+            }
 
             _callback(casted);
             return true;
@@ -112,7 +120,9 @@ internal class TransitionMapper : ITransitionMapper
         public bool TryInvoke(ITransition transition)
         {
             if (!(transition is T casted))
+            {
                 return false;
+            }
 
             _parallelOperations.ExecuteParallel(_callback, casted);
             return true;

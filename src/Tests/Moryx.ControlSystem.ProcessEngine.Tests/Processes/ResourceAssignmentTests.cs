@@ -1,10 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moryx.AbstractionLayer.Activities;
@@ -193,10 +189,12 @@ public class ResourceAssignmentTests : ProcessTestsBase
             Assert.That(activityData.Targets.Count, Is.EqualTo(1));
             Assert.That(activityData.Targets[0], Is.EqualTo(_mountCellMock.Object));
             if (!providedBefore)
+            {
                 Assert.DoesNotThrow(delegate
                 {
                     _notificationAdapterMock.Verify(na => na.AcknowledgeAll(It.IsAny<INotificationSender>(), activityData), Times.Once);
                 });
+            }
         }
         else
         {

@@ -20,7 +20,9 @@ public static class EditableObjectExtensions
         public void BeginEdit()
         {
             foreach (var editableObject in editableObjects)
+            {
                 editableObject.BeginEdit();
+            }
         }
 
         /// <summary>
@@ -29,7 +31,9 @@ public static class EditableObjectExtensions
         public void CancelEdit()
         {
             foreach (var editableObject in editableObjects)
+            {
                 editableObject.CancelEdit();
+            }
         }
 
         /// <summary>
@@ -38,7 +42,9 @@ public static class EditableObjectExtensions
         public void EndEdit()
         {
             foreach (var editableObject in editableObjects)
+            {
                 editableObject.EndEdit();
+            }
         }
     }
 }
