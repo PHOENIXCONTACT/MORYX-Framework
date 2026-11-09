@@ -24,10 +24,6 @@ internal class SseOperationTransformer(IOptions<OpenApiOptions> openapiOptions) 
             return;
         }
 
-        foreach (var attribute in producesAttributes)
-        {
-
-        }
         var pseudoResponseKeys = operation.Responses.Keys.Where(x => int.TryParse(x, out var v) && v >= 1000).ToList();
         foreach (var pseudoKeys in pseudoResponseKeys)
         {
