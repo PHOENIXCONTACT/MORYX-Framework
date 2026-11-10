@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Globalization;
+using Moryx.AbstractionLayer.Resources;
 using Moryx.Serialization;
 using NUnit.Framework;
 
@@ -224,4 +225,13 @@ public class EntrySerializeSerializationTests
         var alwaysProperties = 3;
         Assert.That(alwaysProperties, Is.EqualTo(encoded.SubEntries.Count));
     }
+
+    [Test]
+    public void SerializeStateBaseClass()
+    {
+        //Arrange
+        var resource = new MyResourceWithStateBaseProperty();
+        Assert.DoesNotThrow(() => EntryConvert.EncodeObject(resource));
+    }
 }
+

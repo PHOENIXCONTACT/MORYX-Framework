@@ -410,7 +410,7 @@ public static partial class EntryConvert
         {
             //exclude property that can lead to self reference
             var propertyType = property.PropertyType;
-            if (propertyType == instanceType)
+            if (propertyType == instanceType || propertyType.IsAssignableFrom(instanceType))
             {
                 continue;
             }
