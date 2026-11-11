@@ -1,7 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.AbstractionLayer.Resources;
 using Moryx.Serialization;
 
 namespace Moryx.Tests.Serialization;
@@ -126,8 +125,11 @@ public class AlwaysAttributedDerivedType : NeverAttributedBaseType
     public bool NullProperty3 { get; set; }
 }
 
-public class MyResourceWithStateBaseProperty : Resource
+public class SelfReferencingBase
 {
-    [EntrySerialize]
-    internal MyStateBase State { get; private set; }
+    public SelfReferencingBase Self { get; set; }
+}
+
+public class SelfReferencingDerived : SelfReferencingBase
+{
 }

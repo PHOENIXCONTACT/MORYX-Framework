@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Globalization;
-using Moryx.AbstractionLayer.Resources;
 using Moryx.Serialization;
 using NUnit.Framework;
 
@@ -227,11 +226,11 @@ public class EntrySerializeSerializationTests
     }
 
     [Test]
-    public void SerializeStateBaseClass()
+    public void SerializeClassWithSelfReference()
     {
-        //Arrange
-        var resource = new MyResourceWithStateBaseProperty();
-        Assert.DoesNotThrow(() => EntryConvert.EncodeObject(resource));
+        var instance = new SelfReferencingDerived();
+        instance.Self = instance;
+        Assert.DoesNotThrow(() => EntryConvert.EncodeObject(instance));
     }
 }
 
