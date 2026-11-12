@@ -72,6 +72,8 @@ public class VisualInstructionsController : ControllerBase
             using var lifeCycleHandler = new LifeCycleSseHandler(_visualInstructions as ILifeCycleBoundFacade,
                 channel.Writer, onReady: Broadcast, _serializerOptions);
 
+            lifeCycleHandler.Start();
+
             var result = TypedResults.ServerSentEvents(Subscribe(cancellationToken));
 
             // Register event handlers after result creation but before execution to ensure finally cleanup

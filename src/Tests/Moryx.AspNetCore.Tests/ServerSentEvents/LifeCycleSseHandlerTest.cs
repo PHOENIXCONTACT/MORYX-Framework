@@ -63,4 +63,5 @@ public class LifeCycleSseHandlerTests
             Assert.That(onReadyCalled, Is.EqualTo(expectedOnReadyCalled));
         });
     }
+
 }

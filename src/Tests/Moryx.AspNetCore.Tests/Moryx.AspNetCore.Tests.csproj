@@ -9,16 +9,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="NUnit" />
-    <PackageReference Include="NUnit3TestAdapter" />
-    <PackageReference Include="Moq" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\src\Moryx.AspNetCore\Moryx.AspNetCore.csproj" />
+    <PackageReference Include="Moq"/>
   </ItemGroup>
   
+  <ItemGroup>
+    <ProjectReference Include="..\..\Moryx.AspNetCore\Moryx.AspNetCore.csproj" />
+    <ProjectReference Include="..\..\Moryx.Runtime\Moryx.Runtime.csproj" />
+  </ItemGroup>
+
   <ItemGroup>
     <Using Include="NUnit.Framework" />
   </ItemGroup>
