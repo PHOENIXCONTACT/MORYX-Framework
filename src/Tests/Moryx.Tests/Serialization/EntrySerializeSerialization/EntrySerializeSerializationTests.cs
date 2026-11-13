@@ -224,4 +224,13 @@ public class EntrySerializeSerializationTests
         var alwaysProperties = 3;
         Assert.That(alwaysProperties, Is.EqualTo(encoded.SubEntries.Count));
     }
+
+    [Test]
+    public void SerializeClassWithSelfReference()
+    {
+        var instance = new SelfReferencingDerived();
+        instance.Self = instance;
+        Assert.DoesNotThrow(() => EntryConvert.EncodeObject(instance));
+    }
 }
+

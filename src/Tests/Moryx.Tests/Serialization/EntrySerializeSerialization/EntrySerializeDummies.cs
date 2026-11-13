@@ -124,3 +124,12 @@ public class AlwaysAttributedDerivedType : NeverAttributedBaseType
 
     public bool NullProperty3 { get; set; }
 }
+
+public class SelfReferencingBase
+{
+    public SelfReferencingBase Self { get; set; }
+}
+
+public class SelfReferencingDerived : SelfReferencingBase
+{
+}
