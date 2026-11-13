@@ -2,12 +2,14 @@
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.AspNetCore.Mvc.Controllers;
+using Moryx.AspNetCore;
 using Moryx.Launcher;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Localization;
 using System.Globalization;
+using Moryx.AbstractionLayer.Resources.Endpoints;
 
 namespace StartProject.Asp;
 
@@ -26,6 +28,8 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddMoryxLauncher();
+
+        services.AddMoryxProblemDetails();
 
         services.AddLocalization();
 

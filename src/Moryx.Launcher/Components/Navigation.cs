@@ -25,7 +25,7 @@ internal class Navigation : INavigation
     private readonly MoryxAccessManagementClient _client;
     private readonly IReadOnlyList<ExternalModuleItem> _externalModules;
     private readonly LauncherConfig _launcherConfig;
-
+    private readonly ILogger _logger;
     private readonly EndpointDataSource _endpointsDataSource;
     private readonly PageLoader _pageLoader;
 
@@ -50,6 +50,7 @@ internal class Navigation : INavigation
 
         _launcherConfig = GetConfiguration(configManager);
         _externalModules = LoadExternalModules();
+        _logger = logger.CreateLogger($"{nameof(Navigation)}:{nameof(MoryxAccessManagementClient)}");
     }
 
     /// <inheritdoc />
