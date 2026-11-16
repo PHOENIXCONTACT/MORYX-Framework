@@ -6,7 +6,7 @@ using Moryx.Operators.Attendances;
 namespace Moryx.Operators.Management.Tests;
 
 [TestFixture]
-internal class IAttendanceManagementTests : TestsBase
+internal sealed class IAttendanceManagementTests : TestsBase
 {
     private IAttendanceManagementExtended _facade;
     private readonly string _defaultOperatorIdentifier = "Default Operator Identifier";
@@ -112,11 +112,9 @@ internal class IAttendanceManagementTests : TestsBase
         var eventArgs = InvalidAssignableOperator;
         SignInStatusChangedArgs? signInStatusArgs = null;
 
-
         _facade.SignIn(AssignableOperator, FirstResourceMock.Object);
         _facade.OperatorSignedIn += (sender, op) => eventArgs = op;
         _facade.SignInStatusChanged += (sender, args) => signInStatusArgs = args;
-
 
         // Act
         // Assert

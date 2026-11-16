@@ -11,7 +11,10 @@ internal static class TypeTool
     {
         var type = ReflectionTool.GetPublicClasses<TTpye>(t => t.Name == typeName).FirstOrDefault();
         if (type == null)
+        {
             return null;
+        }
+
         var obj = Activator.CreateInstance(type);
         return obj;
     }

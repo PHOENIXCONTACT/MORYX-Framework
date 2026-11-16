@@ -1,14 +1,13 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Reflection;
 using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Bindings;
 
 namespace Moryx.ProcessData.Adapter.ProcessEngine;
 
-internal class ResourceActivityBindingResolverFactory : ActivityBindingResolverFactory
+internal sealed class ResourceActivityBindingResolverFactory : ActivityBindingResolverFactory
 {
     private readonly IResourceManagement _resourceManagement;
 
@@ -27,7 +26,7 @@ internal class ResourceActivityBindingResolverFactory : ActivityBindingResolverF
     }
 }
 
-internal class TracingResourceResolver : BindingResolverBase
+internal sealed class TracingResourceResolver : BindingResolverBase
 {
     private readonly IResourceManagement _resourceManagement;
 
@@ -40,7 +39,9 @@ internal class TracingResourceResolver : BindingResolverBase
     {
         var tracing = ((Activity)source).Tracing.Transform<Tracing>();
         if (tracing == null)
+        {
             return null;
+        }
 
         // Usage of original resource instead of proxy
         var resource = _resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == tracing.ResourceId)

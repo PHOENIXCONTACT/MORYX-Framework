@@ -3,7 +3,6 @@
 
 using Moryx.AspNetCore.Mqtt.Builders;
 
-
 namespace Moryx.AbstractionLayer.Resources.Mqtt.Endpoints;
 
 /// <summary>

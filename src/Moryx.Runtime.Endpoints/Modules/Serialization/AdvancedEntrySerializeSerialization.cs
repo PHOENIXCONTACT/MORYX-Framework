@@ -9,7 +9,7 @@ using Moryx.Serialization;
 namespace Moryx.Runtime.Endpoints.Modules.Serialization;
 
 /// <inheritdoc />
-internal class AdvancedEntrySerializeSerialization : PossibleValuesSerialization
+internal sealed class AdvancedEntrySerializeSerialization : PossibleValuesSerialization
 {
     private readonly EntrySerializeSerialization _entrySerializeSerialization;
 

@@ -1,9 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moq;
 using Moryx.AbstractionLayer.Activities;
-using Moryx.AbstractionLayer.Capabilities;
 using Moryx.AbstractionLayer.Constraints;
 using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Products;

@@ -50,11 +50,15 @@ public class PartialSerialization<T> : PossibleValuesSerialization
         if (typeof(ProductType).IsAssignableFrom(type) ||
             typeof(ProductPartLink).IsAssignableFrom(type) ||
             typeof(IEnumerable<ProductPartLink>).IsAssignableFrom(type))
+        {
             return false;
+        }
 
         // Filter default properties
         if (FilteredProperties.Contains(prop.Name))
+        {
             return false;
+        }
 
         return true;
     }

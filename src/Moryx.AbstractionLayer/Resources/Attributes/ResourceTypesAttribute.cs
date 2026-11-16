@@ -53,7 +53,10 @@ public class ResourceTypesAttribute : PossibleValuesAttribute
         foreach (var linker in linkers)
         {
             if (linker.Creatable)
+            {
                 names.Add(linker.Name);
+            }
+
             SelectTypeNames(linker.DerivedTypes, names);
         }
         return names;

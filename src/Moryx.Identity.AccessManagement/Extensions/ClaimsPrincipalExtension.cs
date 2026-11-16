@@ -12,7 +12,9 @@ internal static class ClaimsPrincipalExtension
         public string GeUserId()
         {
             if (principal == null)
+            {
                 return string.Empty;
+            }
 
             var userId = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
             return userId != null ? userId.Value : string.Empty;
@@ -21,7 +23,9 @@ internal static class ClaimsPrincipalExtension
         public string GetFullName()
         {
             if (principal == null)
+            {
                 return string.Empty;
+            }
 
             var firstName = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.GivenName);
             var lastName = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Surname);

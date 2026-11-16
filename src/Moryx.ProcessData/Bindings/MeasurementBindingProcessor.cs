@@ -35,16 +35,22 @@ public class MeasurementBindingProcessor
         {
             var value = resolver.BindingResolver.Resolve(source);
             if (value == null)
+            {
                 continue;
+            }
 
             if (resolver.IsField)
+            {
                 measurement.Add(new DataField(resolver.Name, value));
+            }
             else
+            {
                 measurement.Add(new DataTag(resolver.Name, value.ToString()));
+            }
         }
     }
 
-    private class ResolverDescription
+    private sealed class ResolverDescription
     {
         public string Name { get; set; }
 

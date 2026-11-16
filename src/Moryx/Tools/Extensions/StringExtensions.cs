@@ -26,7 +26,9 @@ public static class StringExtensions
             //Aggregate invalid with the replacement
             var result = str;
             foreach (var c in invalid)
+            {
                 result = result.Replace(c.ToString(CultureInfo.InvariantCulture), replacement);
+            }
 
             return result.Replace(" ", "_");
         }
@@ -77,20 +79,28 @@ public static class StringExtensions
         public string Reduce(int count, string endings)
         {
             if (count < endings.Length)
+            {
                 throw new Exception("Failed to reduce to less then endings length.");
+            }
 
             int sLength = str.Length;
             int len = sLength;
 
             if (endings != null)
+            {
                 len += endings.Length;
+            }
 
             if (count > sLength)
+            {
                 return str; //it's too short to reduce
+            }
 
             str = str.Substring(0, sLength - len + count);
             if (endings != null)
+            {
                 str += endings;
+            }
 
             return str;
         }

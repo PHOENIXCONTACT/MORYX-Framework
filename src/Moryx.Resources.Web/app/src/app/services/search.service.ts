@@ -98,7 +98,7 @@ export class SearchService {
     if (this.editService.editing() || this.editService.activeResource()?.id === id) {
       return;
     }
-    this.router.navigate([`/details/${id}`]);
+    this.router.navigate(['details', id, 'properties']);
   }
 
   private updateSuggestions(possibleResults: ResourceModel[]) {

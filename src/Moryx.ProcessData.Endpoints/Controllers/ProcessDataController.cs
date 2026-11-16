@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.AspNetCore.Mvc;
-using Moryx.ProcessData.Endpoints.Services;
-using Moryx.ProcessData.Endpoints.Models;
-using Moryx.Runtime.Modules;
 using Moryx.Configuration;
+using Moryx.ProcessData.Endpoints.Models;
+using Moryx.ProcessData.Endpoints.Services;
+using Moryx.Runtime.Modules;
 
 namespace Moryx.ProcessData.Endpoints.Controllers;
 

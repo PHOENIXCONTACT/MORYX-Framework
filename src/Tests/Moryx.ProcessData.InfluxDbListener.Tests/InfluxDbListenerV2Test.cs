@@ -5,7 +5,6 @@ using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Moryx.Logging;
-using Moryx.ProcessData.Listener;
 using Moryx.TestTools.UnitTest;
 using Moryx.Tools;
 using WireMock.RequestBuilders;

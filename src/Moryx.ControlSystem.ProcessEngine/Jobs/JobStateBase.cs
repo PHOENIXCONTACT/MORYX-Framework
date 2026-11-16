@@ -1,12 +1,12 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Logging;
 using Moryx.ControlSystem.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Processes;
 using Moryx.Logging;
 using Moryx.StateMachines;
-using System.Runtime.CompilerServices;
 
 namespace Moryx.ControlSystem.ProcessEngine.Jobs;
 

@@ -27,7 +27,9 @@ internal class RecipeManagement : IRecipeManagement, IWorkplans
     {
         var recipe = Storage.LoadRecipeAsync(recipeId);
         if (recipe == null)
+        {
             throw new RecipeNotFoundException(recipeId);
+        }
 
         return recipe;
     }
@@ -63,13 +65,13 @@ internal class RecipeManagement : IRecipeManagement, IWorkplans
         using var uow = ModelFactory.Create();
         var repo = uow.GetRepository<IWorkplanRepository>();
         var workplans = (from entity in repo.Linq.Active()
-            select new Workplan
-            {
-                Id = entity.Id,
-                Name = entity.Name,
-                Version = entity.Version,
-                State = (WorkplanState)entity.State
-            }).ToArray();
+                         select new Workplan
+                         {
+                             Id = entity.Id,
+                             Name = entity.Name,
+                             Version = entity.Version,
+                             State = (WorkplanState)entity.State
+                         }).ToArray();
 
         return Task.FromResult<IReadOnlyList<Workplan>>(workplans);
     }
@@ -90,7 +92,9 @@ internal class RecipeManagement : IRecipeManagement, IWorkplans
 
         var currentVersion = workplanRepo.GetByKey(workplanId);
         if (currentVersion == null)
+        {
             return Task.FromResult<IReadOnlyList<Workplan>>(versions);
+        }
 
         // Convert current version
         versions.Add(new Workplan
@@ -106,18 +110,20 @@ internal class RecipeManagement : IRecipeManagement, IWorkplans
         do
         {
             var result = (from reference in referenceRepo.Linq
-                where reference.TargetId == currentId && reference.ReferenceType == (int)WorkplanReferenceType.NewVersion
-                let entity = reference.Source
-                select new Workplan
-                {
-                    Id = entity.Id,
-                    Name = entity.Name,
-                    Version = entity.Version,
-                    State = (WorkplanState)entity.State
-                }).FirstOrDefault();
+                          where reference.TargetId == currentId && reference.ReferenceType == (int)WorkplanReferenceType.NewVersion
+                          let entity = reference.Source
+                          select new Workplan
+                          {
+                              Id = entity.Id,
+                              Name = entity.Name,
+                              Version = entity.Version,
+                              State = (WorkplanState)entity.State
+                          }).FirstOrDefault();
 
             if (result == null)
+            {
                 break;
+            }
 
             versions.Add(result);
             currentId = result.Id;
@@ -128,18 +134,20 @@ internal class RecipeManagement : IRecipeManagement, IWorkplans
         do
         {
             var result = (from reference in referenceRepo.Linq
-                where reference.SourceId == currentId && reference.ReferenceType == (int)WorkplanReferenceType.NewVersion
-                let entity = reference.Target
-                select new Workplan
-                {
-                    Id = entity.Id,
-                    Name = entity.Name,
-                    Version = entity.Version,
-                    State = (WorkplanState)entity.State
-                }).FirstOrDefault();
+                          where reference.SourceId == currentId && reference.ReferenceType == (int)WorkplanReferenceType.NewVersion
+                          let entity = reference.Target
+                          select new Workplan
+                          {
+                              Id = entity.Id,
+                              Name = entity.Name,
+                              Version = entity.Version,
+                              State = (WorkplanState)entity.State
+                          }).FirstOrDefault();
 
             if (result == null)
+            {
                 break;
+            }
 
             versions.Add(result);
             currentId = result.Id;
@@ -188,7 +196,10 @@ internal class RecipeManagement : IRecipeManagement, IWorkplans
         var repo = uow.GetRepository<IWorkplanRepository>();
         var workplan = repo.GetByKey(workplanId);
         if (workplan == null)
+        {
             return Task.FromResult(false);
+        }
+
         repo.Remove(workplan);
         uow.SaveChanges();
         return Task.FromResult(true);

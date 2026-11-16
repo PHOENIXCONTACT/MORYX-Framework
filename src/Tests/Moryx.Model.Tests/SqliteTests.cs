@@ -2,10 +2,8 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Model.Sqlite;
-using NUnit.Framework;
-using System.IO;
-using System.Threading.Tasks;
 using Moryx.TestTools.Test.Model;
+using NUnit.Framework;
 
 namespace Moryx.Model.Tests;
 
@@ -61,7 +59,9 @@ public class SqliteTests
     public void Destroy()
     {
         if (File.Exists(_dataSource))
+        {
             //remove the database
             _configurator.DeleteDatabaseAsync(_dbConfig).Wait();
+        }
     }
 }

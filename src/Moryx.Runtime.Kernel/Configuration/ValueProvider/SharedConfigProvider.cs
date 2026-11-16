@@ -20,7 +20,9 @@ internal class SharedConfigProvider : IValueProvider
     {
         var sharedAtt = property.GetCustomAttribute<SharedConfigAttribute>();
         if (sharedAtt == null || !typeof(ConfigBase).IsAssignableFrom(property.PropertyType))
+        {
             return ValueProviderResult.Skipped;
+        }
 
         var sharedConf = _configManager.GetConfiguration(property.PropertyType, sharedAtt.UseCopy);
         property.SetValue(parent, sharedConf);
@@ -40,11 +42,15 @@ internal class SharedConfigProvider : IValueProvider
         {
             var sharedAtt = property.GetCustomAttribute<SharedConfigAttribute>();
             if (sharedAtt == null || sharedAtt.UseCopy)
+            {
                 continue;
+            }
 
             var config = (ConfigBase)property.GetValue(instance);
             if (!foundShared.Contains(config))
+            {
                 foundShared.Add(config);
+            }
         }
     }
 }

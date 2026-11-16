@@ -1,19 +1,14 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Extensions.Logging.Abstractions;
-using Moq;
 using Moryx.AbstractionLayer.Processes;
-using Moryx.AbstractionLayer.Recipes;
 using Moryx.ControlSystem.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Jobs;
 using Moryx.ControlSystem.Recipes;
 using Moryx.ControlSystem.Setups;
 using Moryx.ControlSystem.TestTools;
 using Moryx.Logging;
-using Moryx.TestTools.UnitTest;
 using NUnit.Framework;
 
 namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs;

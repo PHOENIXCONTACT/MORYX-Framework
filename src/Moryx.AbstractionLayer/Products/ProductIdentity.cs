@@ -50,7 +50,9 @@ public partial class ProductIdentity : IIdentity
         var match = IdentityPattern().Match(identityString);
         if (!match.Success || !short.TryParse(match.Groups["revision"].Value,
                 NumberStyles.None, CultureInfo.InvariantCulture, out var revision))
+        {
             throw new FormatException($"'{identityString}' does not match the expected pattern '{IdentityPattern()}'.");
+        }
 
         return new ProductIdentity(match.Groups["identifier"].Value, revision);
     }
@@ -133,7 +135,9 @@ public partial class ProductIdentity : IIdentity
     public static bool operator ==(ProductIdentity id1, ProductIdentity id2)
     {
         if (((object)id1) == null || ((object)id2) == null)
+        {
             return Object.Equals(id1, id2);
+        }
 
         return id1.Equals(id2);
     }
@@ -147,7 +151,9 @@ public partial class ProductIdentity : IIdentity
     public static bool operator !=(ProductIdentity id1, ProductIdentity id2)
     {
         if (((object)id1) == null || ((object)id2) == null)
+        {
             return !Object.Equals(id1, id2);
+        }
 
         return !(id1.Equals(id2));
     }

@@ -46,7 +46,9 @@ internal class PreviewService : IPreviewService
     public void Stop()
     {
         lock (_jobLock)
+        {
             _jobs.Clear();
+        }
     }
 
     private void PreviewCreationThread()
@@ -57,9 +59,13 @@ internal class PreviewService : IPreviewService
             lock (_jobLock)
             {
                 if (_jobs.Any())
+                {
                     job = _jobs.Dequeue();
+                }
                 else
+                {
                     return;
+                }
             }
 
             var creator = PickCreator(job);
@@ -85,7 +91,9 @@ internal class PreviewService : IPreviewService
         lock (_jobLock)
         {
             if (_jobs.Any())
+            {
                 ParallelOperations.ExecuteParallel(PreviewCreationThread);
+            }
         }
     }
 

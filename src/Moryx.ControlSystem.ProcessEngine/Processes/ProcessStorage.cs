@@ -61,14 +61,18 @@ internal class ProcessStorage : IProcessStorage, ILoggingComponent
             {
                 // Check if entity and type represent the same tracing
                 if (entity.NameSpace != tracingType.Namespace || entity.Classname != tracingType.Name)
+                {
                     return false;
+                }
 
                 tracingWrapper.Id = entity.Id;
                 return true;
             });
 
             if (isEntityExisting)
+            {
                 continue;
+            }
 
             var typeEntity = typeRepo.Create(tracingType.Assembly.GetName().Name, tracingType.Namespace, tracingType.Name);
             uow.LinkEntityToBusinessObject(tracingWrapper, typeEntity);
@@ -99,16 +103,16 @@ internal class ProcessStorage : IProcessStorage, ILoggingComponent
             }).ToList();
 
         return (from dbProcess in dbProcesses
-            let process = job.Recipe.CreateProcess()
-            select new ProcessData(process)
-            {
-                Id = dbProcess.Id,
-                Recipe = job.Recipe,
-                EntityCreated = true,
-                Rework = dbProcess.Rework,
-                ReferenceId = dbProcess.ReferenceId,
-                ActivityIndex = (int)IdShiftGenerator.ExtractChild(dbProcess.MaxIndex) + 1,
-            }).ToList();
+                let process = job.Recipe.CreateProcess()
+                select new ProcessData(process)
+                {
+                    Id = dbProcess.Id,
+                    Recipe = job.Recipe,
+                    EntityCreated = true,
+                    Rework = dbProcess.Rework,
+                    ReferenceId = dbProcess.ReferenceId,
+                    ActivityIndex = (int)IdShiftGenerator.ExtractChild(dbProcess.MaxIndex) + 1,
+                }).ToList();
     }
 
     /// <inheritdoc />
@@ -142,9 +146,13 @@ internal class ProcessStorage : IProcessStorage, ILoggingComponent
             if (process is ProductionProcess prodProcess)
             {
                 if (processData.ReferenceId > 0) // Only load article if the process already has one!
+                {
                     prodProcess.ProductInstance = ProductManagement.LoadInstanceAsync(processData.ReferenceId).GetAwaiter().GetResult();
+                }
                 else // Otherwise provide a prepared, unsaved instance
+                {
                     prodProcess.ProductInstance = ((IProductRecipe)prodProcess.Recipe).Target.CreateInstance();
+                }
             }
 
             // Restore activities from workflow
@@ -153,7 +161,9 @@ internal class ProcessStorage : IProcessStorage, ILoggingComponent
                 .Select(step => step.CreateInstance(context))
                 .OfType<ITask>().ToDictionary(task => task.Id, task => task);
             foreach (var activityData in LoadCompletedActivities(uow, processData, taskMap))
+            {
                 processData.AddActivity(activityData);
+            }
 
             allProcesses.Add(processData);
         }
@@ -202,7 +212,9 @@ internal class ProcessStorage : IProcessStorage, ILoggingComponent
         var configured = activityRepo.GetRunning(processId);
         var match = configured.FirstOrDefault(ae => ae.TaskId == activityData.Task.Id);
         if (match == null)
+        {
             return;
+        }
 
         activityData.Id = match.Id;
         activityData.EntityCreated = true;
@@ -265,11 +277,15 @@ internal class ProcessStorage : IProcessStorage, ILoggingComponent
 
         // Process holder tracing
         if (tracing is ProcessHolderTracing processHolderTracing)
+        {
             processHolderTracing.HolderId = activityEntity.ProcessHolderId ?? -1;
+        }
 
         // Load extended properties from JSON if there is any
         if (activityEntity.TracingData?.Length > 2)
+        {
             JsonConvert.PopulateObject(activityEntity.TracingData, tracing);
+        }
 
         return tracing;
     }
@@ -378,7 +394,9 @@ internal class ProcessStorage : IProcessStorage, ILoggingComponent
 
         // Only set the other values for completed activities
         if (activityData.Result == null)
+        {
             return;
+        }
 
         // Save result
         var activityResult = activity.Result;
@@ -406,23 +424,36 @@ internal class ProcessStorage : IProcessStorage, ILoggingComponent
 
         // Process holder tracing data
         if (source.Tracing is ProcessHolderTracing processHolderTracing)
+        {
             target.ProcessHolderId = processHolderTracing.HolderId;
+        }
 
         // Extended tracing data
         var json = JsonConvert.SerializeObject(source.Tracing, JsonSettings.Minimal);
         if (json.Length > 2)
+        {
             target.TracingData = json;
+        }
     }
 
     private static DateTime? ConvertToUtc(DateTime? dateTime)
     {
-        if (dateTime == null) return null;
+        if (dateTime == null)
+        {
+            return null;
+        }
 
         var nonNullDateTime = (DateTime)dateTime;
         if (nonNullDateTime.Kind == DateTimeKind.Utc)
+        {
             return nonNullDateTime;
+        }
+
         if (nonNullDateTime.Kind == DateTimeKind.Local)
+        {
             return TimeZoneInfo.ConvertTimeToUtc(nonNullDateTime, TimeZoneInfo.Local);
+        }
+
         throw new ArgumentException($"Provided {nameof(DateTime)} is neither UTC nor Local Time.");
     }
 

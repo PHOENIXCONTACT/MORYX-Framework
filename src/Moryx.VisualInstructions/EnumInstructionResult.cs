@@ -37,10 +37,14 @@ public static class EnumInstructionResult
     public static int ResultToEnumValue(Type resultEnum, ActiveInstructionResponse response)
     {
         if (response.SelectedResult != null)
+        {
             return ResultToEnumValue(resultEnum, response.SelectedResult);
+        }
 
         if (response.SelectedResult != null)
+        {
             return ResultToEnumValue(resultEnum, response.SelectedResult);
+        }
 
         throw new ArgumentException("No result found on response.", nameof(response));
     }

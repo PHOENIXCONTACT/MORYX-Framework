@@ -117,7 +117,9 @@ internal sealed class ActivityDispatcher : IActivityPoolListener, IActivityDispa
             try
             {
                 foreach (var session in cell.ProcessEngineDetached().OfType<ActivityCompleted>())
+                {
                     HandleActivityCompleted(cell, session);
+                }
             }
             catch (Exception e)
             {
@@ -146,7 +148,9 @@ internal sealed class ActivityDispatcher : IActivityPoolListener, IActivityDispa
     public ResourceAndSession[] ExportSessions()
     {
         lock (_reportedSessions)
+        {
             return _reportedSessions.ToArray();
+        }
     }
 
     private void HandleAttachedCells(IEnumerable<ResourceAndSession> pairs)
@@ -161,7 +165,10 @@ internal sealed class ActivityDispatcher : IActivityPoolListener, IActivityDispa
             {
                 Logger.Log(LogLevel.Warning, "Received {0} for unknown process {1}!", session.GetType().Name, session.Reference);
                 if (session is ReadyToWork rtw)
+                {
                     Decouple(() => cell.SequenceCompleted(rtw.CompleteSequence(null, false)), nameof(ICell.SequenceCompleted), cell);
+                }
+
                 continue;
             }
 
@@ -170,7 +177,10 @@ internal sealed class ActivityDispatcher : IActivityPoolListener, IActivityDispa
             if (processData is { State: < ProcessState.EngineStarted })
             {
                 lock (processData.ReportedSessions)
+                {
                     processData.ReportedSessions.Add(pair);
+                }
+
                 continue;
             }
 
@@ -193,10 +203,14 @@ internal sealed class ActivityDispatcher : IActivityPoolListener, IActivityDispa
     private void OnResourcesAdded(object sender, IResource e)
     {
         if (e is not ICell cell)
+        {
             return;
+        }
 
         if (_cells.Any(c => c.Id == cell.Id))
+        {
             return;
+        }
 
         _cells.Add(cell);
 
@@ -215,7 +229,9 @@ internal sealed class ActivityDispatcher : IActivityPoolListener, IActivityDispa
     {
         var cell = e as ICell;
         if (cell == null)
+        {
             return;
+        }
 
         _cells.Remove(cell);
 
@@ -226,14 +242,18 @@ internal sealed class ActivityDispatcher : IActivityPoolListener, IActivityDispa
 
         // Remove already reported session
         lock (_reportedSessions)
+        {
             _reportedSessions.RemoveAll(s => s.Resource.Equals(e));
+        }
     }
 
     private void UpdateToRunning(ActivityStart activityStart)
     {
         var activity = ActivityPool.GetByActivity(activityStart.Activity);
         if (activity != null)
+        {
             ActivityPool.TryUpdateActivity(activity, ActivityState.Running);
+        }
     }
 
     private void OnActivityChanged(object sender, ActivityEventArgs args)
@@ -247,7 +267,10 @@ internal sealed class ActivityDispatcher : IActivityPoolListener, IActivityDispa
                 // Do not dispatch activities before the engine was flagged as started
                 if (processData.State >= ProcessState.EngineStarted // OR any activities are still processing results
                     && processData.Activities.All(a => a.State <= ActivityState.Running | a.State >= ActivityState.Completed))
+                {
                     HandleConfiguredActivity(activityData, processData);
+                }
+
                 break;
             case ActivityState.EngineProceeded:
                 // First complete the session
@@ -257,7 +280,10 @@ internal sealed class ActivityDispatcher : IActivityPoolListener, IActivityDispa
                 // NOW dispatch new activities
                 var configured = processData.Activities.Where(a => a.State == ActivityState.Configured);
                 foreach (var activity in configured)
+                {
                     HandleConfiguredActivity(activity, processData);
+                }
+
                 break;
         }
 
@@ -297,15 +323,23 @@ internal sealed class ActivityDispatcher : IActivityPoolListener, IActivityDispa
 
         // We found no match for the activity
         if (match == null)
+        {
             return;
+        }
 
         // Start the activity if we have a match AND it's a ready to work
         if (match.ReadyToWork != null)
+        {
             ParallelOperations.ExecuteParallel(() => StartActivity(match.Resource, match.ReadyToWork, activityData));
+        }
         else if (match.Session is ActivityStart)
+        {
             ActivityPool.TryUpdateActivity(activityData, ActivityState.Running);
+        }
         else if (match.Session is ActivityCompleted completedSession)
+        {
             HandleActivityCompleted(match.Resource, completedSession);
+        }
     }
 
     /// <summary>
@@ -339,7 +373,9 @@ internal sealed class ActivityDispatcher : IActivityPoolListener, IActivityDispa
         // Now that the process is loaded we can process its open activities
         var openActivities = ActivityPool.GetAllOpen(processData);
         foreach (var openActivity in openActivities)
+        {
             HandleConfiguredActivity(openActivity, processData);
+        }
 
         // The code above already takes care of all matching sessions, for all remaining
         // session we can send Finish OR SequenceCompleted
@@ -394,7 +430,9 @@ internal sealed class ActivityDispatcher : IActivityPoolListener, IActivityDispa
     {
         // A completed process might still have running activities, we should inform the cells
         if (processData.State >= ProcessState.Success)
+        {
             ProcessAborting(processData);
+        }
 
         // Complete and clear open sessions
         lock (processData.ReportedSessions)
@@ -552,15 +590,25 @@ internal sealed class ActivityDispatcher : IActivityPoolListener, IActivityDispa
         var activity = ActivityPool.GetByActivity(message.CompletedActivity);
 
         if (activity is null)
+        {
             HandleForUnknownActivity(resource, message);
+        }
         else if (activity.State == ActivityState.Completed)
+        {
             HandleForAlreadyCompletedActivity(resource, message, activity);
+        }
         else if (activity.State >= ActivityState.ResultReceived)
+        {
             HandleForCurrentlyCompletingActivity(resource, message, activity);
+        }
         else if (message is UnknownActivityAborted)
+        {
             HandleForUnknownSession(resource, activity);
+        }
         else
+        {
             HandleActivityCompleted(resource, message, activity);
+        }
     }
 
     private void HandleForUnknownActivity(ICell resource, ActivityCompleted message)
@@ -593,8 +641,8 @@ internal sealed class ActivityDispatcher : IActivityPoolListener, IActivityDispa
     {
         Logger.Log(LogLevel.Debug, "Received result '{result}' for activity '{activity}'", message.CompletedActivity.Result.Numeric, activity);
 
-            void ApplyDataAfterCompletion(ActivityData data)
-            {
+        void ApplyDataAfterCompletion(ActivityData data)
+        {
             // Update session and resource
             data.Session = message;
             data.Resource = resource;
@@ -603,7 +651,7 @@ internal sealed class ActivityDispatcher : IActivityPoolListener, IActivityDispa
             data.Result = message.CompletedActivity.Result;
             data.Tracing = message.CompletedActivity.Tracing;
             data.Tracing.Completed = DateTime.Now;
-            }
+        }
 
         ActivityPool.TryUpdateActivity(activity, ActivityState.ResultReceived, ApplyDataAfterCompletion);
     }
@@ -639,7 +687,9 @@ internal sealed class ActivityDispatcher : IActivityPoolListener, IActivityDispa
 
         var sessionCache = GetSessionCache(message.Reference);
         lock (sessionCache)
+        {
             sessionCache.RemoveAll(resourceAndSession => resourceAndSession.ReadyToWork?.Id == message.Id);
+        }
     }
 
     /// <summary>

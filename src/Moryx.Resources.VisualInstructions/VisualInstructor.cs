@@ -49,7 +49,9 @@ public class VisualInstructor : Resource, IVisualInstructor, IVisualInstructionS
         get
         {
             lock (_instructionDict)
+            {
                 return _instructionDict.Keys.ToArray();
+            }
         }
     }
 
@@ -66,7 +68,9 @@ public class VisualInstructor : Resource, IVisualInstructor, IVisualInstructionS
         get
         {
             lock (_instructionDict)
+            {
                 return _instructionDict.Values.Select(p => p?.Model).ToList();
+            }
         }
     }
 
@@ -80,11 +84,15 @@ public class VisualInstructor : Resource, IVisualInstructor, IVisualInstructionS
         lock (_instructionDict)
         {
             if (!_instructionDict.TryGetValue(response.Id, out pair))
+            {
                 return;
+            }
         }
 
         if (pair.Model.Results.Count == 0)
+        {
             return;
+        }
 
         // Invoke callback
         pair.Callback(response);
@@ -114,7 +122,9 @@ public class VisualInstructor : Resource, IVisualInstructor, IVisualInstructionS
         };
 
         lock (_instructionDict)
+        {
             _instructionDict.Add(activeInstruction.Id, instructionPair);
+        }
 
         Added?.Invoke(this, activeInstruction);
 
@@ -135,11 +145,13 @@ public class VisualInstructor : Resource, IVisualInstructor, IVisualInstructionS
         activeInstruction.Id = instructionId;
 
         lock (_instructionDict)
+        {
             _instructionDict.Add(instructionId, new InstructionResultPair()
             {
                 Model = activeInstruction,
                 Callback = callback
             });
+        }
 
         Added?.Invoke(this, activeInstruction);
 
@@ -163,7 +175,9 @@ public class VisualInstructor : Resource, IVisualInstructor, IVisualInstructionS
         lock (_instructionDict)
         {
             if (!_instructionDict.Remove(instructionId))
+            {
                 return;
+            }
         }
 
         Cleared?.Invoke(this, instruction);

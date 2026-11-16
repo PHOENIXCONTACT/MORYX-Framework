@@ -14,7 +14,9 @@ internal class ServerListeningState : ServerStateBase
         Context.ExecuteAssignConnection(transmission);
         NextState(StateConnected);
         if (message != null)
+        {
             Context.PublishInitialMessage(message);
+        }
     }
 
     public override void Close()

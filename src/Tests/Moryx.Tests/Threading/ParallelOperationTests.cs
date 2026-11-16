@@ -1,14 +1,12 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Diagnostics;
-using System.Threading;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moryx.Logging;
 using Moryx.Threading;
 using NUnit.Framework;
-using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.Extensions.Logging;
 
 namespace Moryx.Tests.Threading;
 
@@ -203,7 +201,7 @@ public class ParallelOperationTests
         }
     }
 
-    private class StateObject
+    private sealed class StateObject
     {
         public int Counter { get; set; }
     }

@@ -7,7 +7,7 @@ using Moryx.ControlSystem.Processes.Endpoints.Extensions;
 
 namespace Moryx.ControlSystem.Processes.Endpoints.EventHandlers;
 
-internal class ProcessHolderEventHandlers
+internal sealed class ProcessHolderEventHandlers
 {
     public static EventHandler<IResource> OnResourceRemoved(EventHandler<Process> processChanged, EventHandler groupChanged)
     {

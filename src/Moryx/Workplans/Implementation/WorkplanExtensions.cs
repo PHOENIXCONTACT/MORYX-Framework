@@ -19,7 +19,9 @@ public static class WorkplanExtensions
         {
             var startConnector = workplan.Connectors.FirstOrDefault(c => c.Classification == NodeClassification.Start);
             if (startConnector == null)
+            {
                 throw new ArgumentException("The workplan does not have any start connector.");
+            }
 
             return ExtractPath(workplan, startConnector, startConnector);
         }
@@ -33,7 +35,9 @@ public static class WorkplanExtensions
         {
             var endConnector = workplan.Connectors.FirstOrDefault(c => c.Classification == NodeClassification.End);
             if (endConnector == null)
+            {
                 throw new ArgumentException("The workplan does not have any end connector.");
+            }
 
             return ExtractPath(workplan, startConnector, endConnector);
         }
@@ -47,10 +51,14 @@ public static class WorkplanExtensions
         public IReadOnlyList<IWorkplanStep> ExtractPath(IConnector startConnector, IConnector endConnector)
         {
             if (!workplan.Connectors.Contains(startConnector))
+            {
                 throw new ArgumentException("The start connector is not part of the workplan.");
+            }
 
             if (!workplan.Connectors.Contains(endConnector))
+            {
                 throw new ArgumentException("The end connector is not part of the workplan.");
+            }
 
             var path = new List<IWorkplanStep>();
 
@@ -62,7 +70,9 @@ public static class WorkplanExtensions
 
                 var output = step.Outputs[0];
                 if (output == endConnector)
+                {
                     break;
+                }
 
                 currentConnector = output;
             }

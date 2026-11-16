@@ -83,7 +83,10 @@ internal class ProductManager : IProductManager
     {
         var wrapper = Storage.GetTypeWrapper(type);
         if (wrapper == null || wrapper.Constructor == null)
+        {
             return (ProductType)TypeTool.CreateInstance<ProductType>(type);
+        }
+
         return wrapper.Constructor();
     }
 
@@ -98,10 +101,14 @@ internal class ProductManager : IProductManager
         var existing = await LoadTypes(new ProductQuery { Identifier = newIdentity.Identifier });
         // Check if the same revision already exists
         if (existing.Any(e => ((ProductIdentity)e.Identity).Revision == newProductIdentity.Revision))
+        {
             throw new IdentityConflictException();
+        }
         // If there are any products for this identifier, the source object must be one of them
         if (existing.Any() && template.Identity.Identifier != newIdentity.Identifier)
+        {
             throw new IdentityConflictException(true);
+        }
 
         // Reset database id, assign identity and save
         var duplicate = await Storage.LoadTypeAsync(template.Id);
@@ -142,10 +149,14 @@ internal class ProductManager : IProductManager
     internal void HandleResult(ProductImporterResult result)
     {
         if (result.Saved)
+        {
             return;
+        }
 
         foreach (var product in result.ImportedTypes)
+        {
             SaveType(product).GetAwaiter().GetResult(); // TODO save async
+        }
     }
 
     public ImportState ImportParallel(string importerName, object parameters)
@@ -160,7 +171,9 @@ internal class ProductManager : IProductManager
 
         // Wait for the task unless it is long running
         if (!importer.LongRunning)
+        {
             task.Wait(new TimeSpan(0, 0, 0, Config.MaxImporterWait));
+        }
 
         // Return session object, it can be running, completed or faulted in the meantime
         return session;
@@ -180,7 +193,10 @@ internal class ProductManager : IProductManager
     {
         var instance = productType.CreateInstance();
         if (save)
+        {
             await SaveInstances(instance);
+        }
+
         return instance;
     }
 

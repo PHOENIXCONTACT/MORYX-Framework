@@ -130,9 +130,13 @@ internal sealed class ResourceAssignment : IActivityPoolListener, IResourceAssig
     {
         var activityData = args.ActivityData;
         if (args.Trigger == ActivityState.Initial)
+        {
             AssignAndUpdateActivity(activityData);
+        }
         else if (args.Trigger == ActivityState.ResultReceived)
+        {
             activityData.Targets = ActivityData.EmptyTargets;
+        }
     }
 
     private void OnProcessChanged(object sender, ProcessEventArgs e)
@@ -141,7 +145,9 @@ internal sealed class ResourceAssignment : IActivityPoolListener, IResourceAssig
         {
             // Restore cell on completed activities
             foreach (var completedActivity in e.ProcessData.Activities.Where(a => a.State == ActivityState.Completed))
+            {
                 completedActivity.Resource = ResourceManagement.GetResource<ICell>(completedActivity.Resource.Id);
+            }
         }
         else if (e.Trigger >= ProcessState.Interrupted)
         {
@@ -186,7 +192,9 @@ internal sealed class ResourceAssignment : IActivityPoolListener, IResourceAssig
     {
         // Check if the sender was a sell
         if (sender is not ICell cell)
+        {
             return;
+        }
 
         // Update possible resources for non-running activities
         var openActivities = ActivityPool.GetAllOpen();
@@ -263,7 +271,9 @@ internal sealed class ResourceAssignment : IActivityPoolListener, IResourceAssig
     {
         // Check if the sender was a sell
         if (resource is not ICell cell)
+        {
             return;
+        }
 
         // Update possible resources for non-running activities
         var openActivities = ActivityPool.GetAllOpen();
@@ -289,12 +299,16 @@ internal sealed class ResourceAssignment : IActivityPoolListener, IResourceAssig
     {
         var activityData = tag as ActivityData;
         if (activityData == null)
+        {
             return;
+        }
 
         // Check if activity has a target before accepting the acknowledgement
         if (activityData.Resource is null // Check whether assignement was already successful
             && activityData.Targets.Count == 0)  // Check whether assignement could now be done successfully
+        {
             return;
+        }
 
         NotificationAdapter.Acknowledge(this, notification);
     }

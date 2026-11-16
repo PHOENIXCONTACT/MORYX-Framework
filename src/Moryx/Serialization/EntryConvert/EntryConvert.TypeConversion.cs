@@ -7,30 +7,10 @@ using System.Globalization;
 namespace Moryx.Serialization;
 
 /// <summary>
-/// Type conversion, struct serializer registry and string formatting for EntryConvert
+/// Type conversion and string formatting for EntryConvert
 /// </summary>
 public static partial class EntryConvert
 {
-    /// <summary>
-    /// Registry of serializers for structs that are decomposed into sub-entries
-    /// </summary>
-    private static readonly Dictionary<Type, IStructSerializer> _structSerializers = new IStructSerializer[]
-    {
-        new Vector2EntrySerializer(),
-        new Vector3EntrySerializer(),
-        new Vector4EntrySerializer(),
-        new QuaternionEntrySerializer(),
-        new PlaneEntrySerializer()
-    }.ToDictionary(s => s.TargetType);
-
-    /// <summary>
-    /// Try to find a registered <see cref="IStructSerializer"/> for the given type
-    /// </summary>
-    private static bool TryGetSerializer(Type type, out IStructSerializer serializer)
-    {
-        return _structSerializers.TryGetValue(type, out serializer);
-    }
-
     /// <summary>
     /// Converts given value typed instance to a string with the given <see cref="IFormatProvider"/>
     /// </summary>
@@ -128,7 +108,7 @@ public static partial class EntryConvert
         {
             valueType = EntryValueType.DateTime;
         }
-        else if (_structSerializers.ContainsKey(propertyType))
+        else if (IsSupportedStructType(propertyType))
         {
             valueType = EntryValueType.Struct;
         }

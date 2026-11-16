@@ -8,7 +8,7 @@ using Moryx.Modules;
 namespace Moryx.ProcessData.Adapter.ResourceManagement;
 
 [Plugin(LifeCycle.Singleton)]
-internal class ResourceManagementAdapter : IPlugin
+internal sealed class ResourceManagementAdapter : IPlugin
 {
     private readonly ICollection<IProcessDataPublisher> _resources = new List<IProcessDataPublisher>();
 
@@ -28,7 +28,9 @@ internal class ResourceManagementAdapter : IPlugin
 
         var processDataPublishers = ResourceManagement.GetResources<IResource>().OfType<IProcessDataPublisher>();
         foreach (var publisher in processDataPublishers)
+        {
             RegisterToResource(publisher);
+        }
     }
 
     /// <summary>
@@ -40,7 +42,9 @@ internal class ResourceManagementAdapter : IPlugin
         ResourceManagement.ResourceRemoved -= OnResourceRemoved;
 
         foreach (var resource in _resources)
+        {
             resource.ProcessDataOccurred -= OnProcessDataOccurred;
+        }
 
         _resources.Clear();
     }
@@ -48,13 +52,17 @@ internal class ResourceManagementAdapter : IPlugin
     private void OnResourceAdded(object sender, IResource addedResource)
     {
         if (addedResource is IProcessDataPublisher publisher)
+        {
             RegisterToResource(publisher);
+        }
     }
 
     private void OnResourceRemoved(object sender, IResource addedResource)
     {
         if (addedResource is IProcessDataPublisher publisher)
+        {
             UnregisterFromResource(publisher);
+        }
     }
 
     private void RegisterToResource(IProcessDataPublisher publisher)

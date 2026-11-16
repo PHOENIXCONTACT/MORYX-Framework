@@ -12,7 +12,7 @@ public class SomeComplexClass
     public SomeComplexClass OtherSubClass { get; set; }
 }
 
-internal class SomeComplexClassResolver : BindingResolverBase
+internal sealed class SomeComplexClassResolver : BindingResolverBase
 {
     protected override object Resolve(object source)
     {

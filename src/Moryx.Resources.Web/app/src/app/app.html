@@ -161,6 +161,7 @@
       <app-resource-tree
         [resources]="resources()"
         [selected]="selected()"
+        [disabled]="isLoading() || isEditMode()"
         (nodeSelected)="selectResource($event)"
         (nodeContextMenu)="openContextMenuByClicking($event.event, $event.id)"
       />

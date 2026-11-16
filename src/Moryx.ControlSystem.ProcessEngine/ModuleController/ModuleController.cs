@@ -87,7 +87,9 @@ public class ModuleController : ServerModuleBase<ModuleConfig>,
             .SetInstance(ProductManagement);
         // Register optional setup dependency
         if (SetupProvider != null)
+        {
             Container.SetInstance(SetupProvider);
+        }
 
         // Register process plugins
         Container.LoadComponents<ICellSelector>();

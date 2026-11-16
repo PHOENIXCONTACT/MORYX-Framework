@@ -234,7 +234,9 @@ public class BenchmarkResource : Cell, IBenchmarkResource, INotificationSender
     {
         var notifications = NotificationAdapter.GetPublished(this);
         if (notifications.Any())
+        {
             NotificationAdapter.Acknowledge(this, notifications.Last());
+        }
     }
 
     [EntrySerialize]

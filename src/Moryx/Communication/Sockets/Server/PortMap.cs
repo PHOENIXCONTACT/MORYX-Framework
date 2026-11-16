@@ -50,16 +50,22 @@ internal class PortMap
         {
             IEnumerable<PortMap> addressRelevant;
             if (IsAny(address))
+            {
                 // If this is a registration for all IPAddresses, we need to compare against all entries
                 addressRelevant = _registrations;
+            }
             else
+            {
                 // Find all registrations on the same or all addresses
                 addressRelevant = _registrations.Where(r => IsAny(r._address) | r._address.Equals(address));
+            }
 
             // Within relevant addresses find an entry with the same port
             var match = addressRelevant.FirstOrDefault(m => m._port == port);
             if (match != null && !match._interpreter.Equals(protocol))
+            {
                 return false; // Conflict
+            }
 
             // Create a registration
             _registrations.Add(new PortMap(address, port, protocol));

@@ -1,12 +1,8 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Moryx.ControlSystem.Jobs;
 using Moq;
+using Moryx.ControlSystem.Jobs;
 using Moryx.Model.InMemory;
 using Moryx.Model.Repositories;
 using Moryx.Orders.Management.Model;
@@ -77,9 +73,15 @@ public class OperationDataRestoreTests : OperationDataTestBase
         Assert.That(operationData.State.CanAdvice);
         Assert.That(operationData.State.CanInterrupt, Is.False);
         if (operationData.Operation.Start != null)
+        {
             Assert.That(operationData.Operation.Start?.Kind, Is.EqualTo(DateTimeKind.Utc));
+        }
+
         if (operationData.Operation.End != null)
+        {
             Assert.That(operationData.Operation.End?.Kind, Is.EqualTo(DateTimeKind.Utc));
+        }
+
         Assert.That(operationData.Operation.PlannedStart.Kind, Is.EqualTo(DateTimeKind.Utc));
         Assert.That(operationData.Operation.PlannedEnd.Kind, Is.EqualTo(DateTimeKind.Utc));
     }

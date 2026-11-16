@@ -49,7 +49,9 @@ public class TaskTransition<TActivity> : TransitionBase, IObservableTransition, 
 
         // Raise the triggered event if engine is still running
         if (!_paused)
+        {
             Triggered(this, EventArgs.Empty);
+        }
     }
 
     /// <see cref="IObservableTransition"/>
@@ -66,7 +68,10 @@ public class TaskTransition<TActivity> : TransitionBase, IObservableTransition, 
     {
         // Only trigger if we did not return from a pause
         if (!_paused)
+        {
             Triggered(this, EventArgs.Empty);
+        }
+
         _paused = false;
     }
 

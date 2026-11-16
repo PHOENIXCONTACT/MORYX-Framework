@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Activities;
-using Moryx.AbstractionLayer.Constraints;
 using Moryx.AbstractionLayer.Recipes;
 
 namespace Moryx.AbstractionLayer.Processes;

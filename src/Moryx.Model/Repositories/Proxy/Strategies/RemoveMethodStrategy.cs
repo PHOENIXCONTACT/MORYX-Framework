@@ -6,7 +6,7 @@ using System.Reflection.Emit;
 
 namespace Moryx.Model.Repositories.Proxy;
 
-internal class RemoveMethodStrategy : MethodProxyStrategyBase
+internal sealed class RemoveMethodStrategy : MethodProxyStrategyBase
 {
     public override bool CanImplement(MethodInfo methodInfo)
     {

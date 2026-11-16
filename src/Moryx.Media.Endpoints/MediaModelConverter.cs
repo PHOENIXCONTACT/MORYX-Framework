@@ -10,7 +10,9 @@ internal static class MediaModelConverter
     public static ContentDescriptorModel ConvertContent(ContentDescriptor contentDescriptor)
     {
         if (contentDescriptor == null)
+        {
             return null;
+        }
 
         var variants = contentDescriptor.Variants.ToList();
         return new ContentDescriptorModel

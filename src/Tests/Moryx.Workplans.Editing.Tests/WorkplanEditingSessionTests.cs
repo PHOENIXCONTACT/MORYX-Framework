@@ -3,8 +3,8 @@
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
-using NUnit.Framework;
 using Moryx.Tests.Workplans;
+using NUnit.Framework;
 
 namespace Moryx.Workplans.Editing.Tests;
 
@@ -85,9 +85,14 @@ public class WorkplanEditingSessionTests
         foreach (var connector in workplan.Connectors)
         {
             if (connector.Classification != NodeClassification.Intermediate)
+            {
                 continue;
+            }
+
             if (!workplan.Steps.Any(s => s.Outputs.Contains(connector)) && !workplan.Steps.Any(s => s.Inputs.Contains(connector)))
+            {
                 return true;
+            }
         }
         return false;
     }

@@ -1,12 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Moq;
 using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Processes;
@@ -134,15 +129,24 @@ public class ProcessArchiveTests
         // Assert
         Assert.That(chunks.Count, Is.EqualTo(expectedJobCount));
         if (chunks.Count > 0)
+        {
             Assert.That(chunks[0].Count(), Is.EqualTo(expectedProcessCountJob1));
+        }
 
         if (chunks.Count > 1)
+        {
             Assert.That(chunks[1].Count(), Is.EqualTo(expectedProcessCountJob2));
+        }
 
         if (chunks.Count > 2)
+        {
             Assert.That(chunks[2].Count(), Is.EqualTo(0));
+        }
+
         if (chunks.Count > 3)
+        {
             Assert.That(chunks[3].Count(), Is.EqualTo(0));
+        }
     }
 
     [Test]

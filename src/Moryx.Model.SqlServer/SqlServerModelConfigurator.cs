@@ -1,11 +1,11 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.ComponentModel;
+using System.Data.Common;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Moryx.Model.Configuration;
-using System.ComponentModel;
-using System.Data.Common;
 
 namespace Moryx.Model.SqlServer;
 

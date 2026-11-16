@@ -1,10 +1,10 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Microsoft.Extensions.Logging;
-using Moryx.Logging;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.Extensions.Logging;
+using Moryx.Logging;
 
 namespace Moryx.Media.Server;
 
@@ -83,7 +83,9 @@ internal class HashPath
         try
         {
             if (!Directory.Exists(targetPath))
+            {
                 Directory.CreateDirectory(targetPath);
+            }
         }
         catch (Exception e)
         {
@@ -92,7 +94,9 @@ internal class HashPath
 
         var fileName = FilePath(storagePath);
         if (File.Exists(fileName))
+        {
             return;
+        }
 
         try
         {
@@ -149,7 +153,9 @@ internal class HashPath
         try
         {
             if (File.Exists(filePath))
+            {
                 File.Delete(filePath);
+            }
         }
         catch (Exception e)
         {
@@ -163,7 +169,9 @@ internal class HashPath
         try
         {
             if (Directory.GetFiles(directoryPath).Length == 0)
+            {
                 Directory.Delete(directoryPath);
+            }
         }
         catch (Exception e)
         {

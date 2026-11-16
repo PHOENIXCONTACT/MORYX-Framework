@@ -1,7 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Net;
 using Moryx.Communication;
 using Moryx.Communication.Sockets;
@@ -30,9 +29,13 @@ public class PortMapTests
 
         // Assert
         if (allowed)
+        {
             Assert.That(success, "Failed to register despite different address");
+        }
         else
+        {
             Assert.That(success, Is.False, "Should not allow registration");
+        }
     }
 
     [TestCase(13, 14, false, true)]
@@ -50,12 +53,16 @@ public class PortMapTests
 
         // Assert
         if (allowed)
+        {
             Assert.That(success, "Failed to register despite different address");
+        }
         else
+        {
             Assert.That(success, Is.False, "Should not allow registration");
+        }
     }
 
-    private class DummyProtocol : IMessageInterpreter
+    private sealed class DummyProtocol : IMessageInterpreter
     {
         private int ProtocolId { get; }
 

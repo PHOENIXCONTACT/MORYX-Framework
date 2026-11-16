@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Moryx.Orders.Endpoints;
 
 [Display(Name = "MORYX Orders Endpoint Source", Description = "Source for operations created at the MORYX Orders Endpoint")]
-internal class ClientOperationSource : IOperationSource
+internal sealed class ClientOperationSource : IOperationSource
 {
     public string Type => typeof(ClientOperationSource).ToString();
 

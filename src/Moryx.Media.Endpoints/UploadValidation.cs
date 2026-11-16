@@ -1,8 +1,8 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Microsoft.AspNetCore.Http;
 using System.Net;
+using Microsoft.AspNetCore.Http;
 
 namespace Moryx.Media.Endpoints;
 
@@ -39,12 +39,16 @@ public static class UploadValidation
 
         errorMessage = $"{trustedFileName} file size of 0 MB is to small!";
         if (formFile.Length == 0)
+        {
             return false;
+        }
 
         var megabyteSizeLimit = mediaServer.FileSizeLimitInMb();
         errorMessage = $"{trustedFileName} exceeds {megabyteSizeLimit:N1} MB.";
         if (formFile.Length > megabyteSizeLimit * Megabyte)
+        {
             return false;
+        }
 
         try
         {
@@ -53,16 +57,22 @@ public static class UploadValidation
             // Check if the file's only content was a BOM
             errorMessage = $"{trustedFileName} file size of 0 MB is to small!";
             if (reader.EndOfStream)
+            {
                 return false;
+            }
 
             var fileTypes = mediaServer.GetSupportedFileTypes();
             errorMessage = $"{trustedFileName} file type isn't permitted.";
             if (!fileTypes.Contains(Path.GetExtension(formFile.FileName)))
+            {
                 return false;
+            }
 
             errorMessage = $"{trustedFileName} file signature doesn't match the file's extension.";
             if (!IsValidFileExtensionAndSignature(formFile.FileName, readStream, fileTypes))
+            {
                 return false;
+            }
         }
         catch
         {
@@ -77,11 +87,15 @@ public static class UploadValidation
     private static bool IsValidFileExtensionAndSignature(string fileName, Stream data, string[] permittedExtensions)
     {
         if (string.IsNullOrEmpty(fileName) || data == null || data.Length == 0)
+        {
             return false;
+        }
 
         var extension = Path.GetExtension(fileName).ToLowerInvariant();
         if (string.IsNullOrEmpty(extension) || !permittedExtensions.Contains(extension))
+        {
             return false;
+        }
 
         data.Position = 0;
 
@@ -90,8 +104,12 @@ public static class UploadValidation
         {
             // Limits characters to ASCII encoding.
             for (var i = 0; i < data.Length; i++)
+            {
                 if (reader.ReadByte() > sbyte.MaxValue)
+                {
                     return false;
+                }
+            }
 
             return true;
         }

@@ -175,7 +175,9 @@ public abstract class TransitionBase : ITransition
             for (var i = 0; i < _descriptions.Length; i++)
             {
                 if (_descriptions[i].MappingValue == mappingValue)
+                {
                     return i;
+                }
             }
             throw new ArgumentOutOfRangeException(nameof(mappingValue));
         }

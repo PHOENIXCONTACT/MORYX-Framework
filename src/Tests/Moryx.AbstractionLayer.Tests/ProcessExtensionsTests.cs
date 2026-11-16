@@ -1,8 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Linq;
 using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Products;
@@ -204,16 +202,6 @@ public class ProcessExtensionsTests
         Recipe = useProductRecipe ? new ProductRecipe { Product = new DummyProductType() }
                 : new TestRecipe()
     };
-
-    private static Process CreateProcess(ProcessKind processKind) => processKind switch
-    {
-        ProcessKind.ProductionWithExpectedInstance => CreateProductionProcess(new DummyProductType()),
-        ProcessKind.ProductionWithOtherInstance => CreateProductionProcess(new OtherTestProductType()),
-        _ => new Process()
-    };
-
-    private static ProductionProcess CreateProductionProcess(ProductType productType) =>
-        CreateProductionProcess(productType, productType.CreateInstance());
 
     private static ProductionProcess CreateProductionProcess(ProductType productType, ProductInstance productInstance)
     {

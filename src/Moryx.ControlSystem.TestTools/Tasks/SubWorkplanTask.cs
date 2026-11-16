@@ -41,7 +41,9 @@ public abstract class SubWorkplanTask<TParameters> : SubWorkplanStepBase
     protected override TransitionBase Instantiate(IWorkplanContext context)
     {
         if (context.IsDisabled(this))
+        {
             return new NullTransition();
+        }
 
         // Lazy index resolver creation
         var indexResolver = _indexResolver ?? (_indexResolver = TransitionBase.CreateIndexResolver(OutputDescriptions));

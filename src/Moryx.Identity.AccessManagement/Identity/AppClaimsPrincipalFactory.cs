@@ -34,13 +34,19 @@ public class MoryxClaimsPrincipalFactory : UserClaimsPrincipalFactory<MoryxUser,
 
         var claimIdentity = ((ClaimsIdentity)principal.Identity);
         if (claimIdentity == null)
+        {
             return principal;
+        }
 
         if (!string.IsNullOrEmpty(user.Firstname))
+        {
             claimIdentity.AddClaim(new Claim(ClaimTypes.GivenName, user.Firstname));
+        }
 
         if (!string.IsNullOrEmpty(user.LastName))
+        {
             claimIdentity.AddClaim(new Claim(ClaimTypes.Surname, user.LastName));
+        }
 
         return principal;
     }

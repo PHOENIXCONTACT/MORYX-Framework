@@ -21,14 +21,21 @@ public class PlacesTests
 
         // Act
         if (paused)
+        {
             place.Pause();
+        }
+
         place.Add(dummy);
 
         // Assert
         if (paused)
+        {
             Assert.That(raised, Is.Null);
+        }
         else
+        {
             Assert.That(raised, Is.EqualTo(dummy));
+        }
     }
 
     [Test]
@@ -58,11 +65,16 @@ public class PlacesTests
         var place = new Place();
         var dummy = new DummyToken();
         if (eventRaised)
+        {
             place.TokenRemoved += (sender, token) => { };
+        }
 
         // Act
         if (exisiting)
+        {
             place.Tokens = [dummy];
+        }
+
         place.Remove(dummy);
     }
 }

@@ -6,7 +6,7 @@ using Moryx.Operators.Exceptions;
 namespace Moryx.Operators.Management.Tests;
 
 [TestFixture]
-internal class IOperatorManagementTests : TestsBase
+internal sealed class IOperatorManagementTests : TestsBase
 {
     private IOperatorManagement _facade;
 

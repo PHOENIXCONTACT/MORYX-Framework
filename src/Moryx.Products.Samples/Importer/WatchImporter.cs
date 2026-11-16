@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel.DataAnnotations;
+using Moryx.AbstractionLayer.Products;
 using Moryx.Modules;
 using Moryx.Products.Management;
-using Moryx.AbstractionLayer.Products;
 
 namespace Moryx.Products.Samples;
 

@@ -5,13 +5,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Moryx.AbstractionLayer.Products.Endpoints;
 using Moryx.AbstractionLayer.Workplans;
 using Moryx.AspNetCore;
 using Moryx.Serialization;
-using Moryx.Workplans.Validation;
 using Moryx.Workplans.Web.Models;
 using Moryx.Workplans.Web.Properties;
 

@@ -5,9 +5,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
-using System;
-using System.IO;
-using System.Threading.Tasks;
 
 namespace Moryx.Media.Endpoints.Tests;
 
@@ -54,7 +51,9 @@ public class MediaServerControllerTests
         }
 
         else
+        {
             Assert.That(actionResult.Result.GetType().IsAssignableTo(resultType));
+        }
     }
 
     [TestCase("11111111-1111-1111-1111-111111111111", "11111111-1111-1111-1111-111111111111", typeof(OkResult), Description = "Variant successfully retrieved")]
@@ -73,9 +72,13 @@ public class MediaServerControllerTests
 
         // Assert
         if (actionResult.Result is null)
+        {
             Assert.That(actionResult.Value, Is.EqualTo(returnedVariant));
+        }
         else
+        {
             Assert.That(actionResult.Result.GetType().IsAssignableTo(resultType));
+        }
     }
 
     [TestCase("SomeFileHash", "image/jpeg", typeof(FileStreamResult), Description = "Successfully recieve FileStream")]

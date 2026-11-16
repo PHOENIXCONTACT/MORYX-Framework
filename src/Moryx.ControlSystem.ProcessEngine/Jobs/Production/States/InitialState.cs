@@ -46,7 +46,9 @@ internal sealed class InitialState : ProductionJobStateBase
     {
         // Nothing to interrupt
         if (Context.Dispatcher.RebootCompleteInitial)
+        {
             NextState(StateCompleted);
+        }
     }
 
     public override void ProcessChanged(ProcessData processData, ProcessState trigger)

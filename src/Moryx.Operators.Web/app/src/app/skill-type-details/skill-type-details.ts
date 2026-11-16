@@ -101,6 +101,13 @@ export class SkillTypeDetails {
     });
   }
 
+  protected onCapabilitiesChange(updatedCapabilities: Entry) {
+    this.skillType.update(skill => {
+      skill.acquiredCapabilities = updatedCapabilities;
+      return skill;
+    });
+  }
+
   protected onSave() {
     this.skillType.update(skill => {
       skill.name = this.form.value.name ?? "";

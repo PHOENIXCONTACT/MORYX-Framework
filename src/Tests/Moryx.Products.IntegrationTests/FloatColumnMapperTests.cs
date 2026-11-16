@@ -56,7 +56,7 @@ public class FloatColumnMapperTests
         return mock.Object;
     }
 
-    private class TestObject(double value = 0)
+    private sealed class TestObject(double value = 0)
     {
         public double Value { get; set; } = value;
     }

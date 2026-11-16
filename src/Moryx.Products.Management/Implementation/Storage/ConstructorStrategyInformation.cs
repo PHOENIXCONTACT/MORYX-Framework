@@ -66,9 +66,14 @@ internal class ProductTypeInformation
             var value = property.GetValue(modifiedInstance);
             var partLink = new PartLinkInfo(linkStrategy, value);
             if (typeof(ProductPartLink).IsAssignableFrom(property.PropertyType))
+            {
                 partLink.Type = PartLinkType.single;
+            }
             else if (typeof(IEnumerable<ProductPartLink>).IsAssignableFrom(property.PropertyType))
+            {
                 partLink.Type = PartLinkType.list;
+            }
+
             result.Add(partLink);
         }
         return result;
@@ -78,7 +83,10 @@ internal class ProductTypeInformation
     {
         var partLinks = new Dictionary<string, Func<ProductPartLink>>();
         foreach (var partLinkInfo in PartLinksInformation)
+        {
             partLinks.Add(partLinkInfo.Key, partLinkInfo.Value.Constructor);
+        }
+
         return new ProductTypeWrapper(Identifier, Constructor, partLinks, _properties.Values.ToList());
     }
 

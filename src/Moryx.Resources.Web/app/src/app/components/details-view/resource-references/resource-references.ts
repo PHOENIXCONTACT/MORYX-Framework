@@ -75,7 +75,7 @@ export class ResourceReferences {
     // In the unlikely case that the resource types haven't been loaded yet,
     // navigate to the empty details screen.
     if (!resourceType) {
-      this.router.navigate([`/details/${resource.id}`]);
+      this.router.navigate(['details', resource.id, 'properties']);
       return;
     }
     this.referenceTypes.set(resourceType?.references);

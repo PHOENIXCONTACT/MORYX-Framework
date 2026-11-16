@@ -37,7 +37,6 @@ public class MqttTopicJson : MqttTopic<object>
     [Display(Name = nameof(Strings.MqttTopicJson_Format), ResourceType = typeof(Strings))]
     public JsonFormat Format { get; set; }
 
-        
     /// <summary>
     /// Controls if enums should be serialized as strings or as ints
     /// </summary>

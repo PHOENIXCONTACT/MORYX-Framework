@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel.DataAnnotations;
-using Moryx.AbstractionLayer.Constraints;
 using Moryx.ControlSystem.Activities;
 using Moryx.ControlSystem.Cells;
 using Moryx.ControlSystem.ProcessEngine.Jobs;

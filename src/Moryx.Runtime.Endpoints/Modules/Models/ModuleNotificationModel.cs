@@ -27,7 +27,10 @@ public class ModuleNotificationModel
     {
         Timestamp = notification.Timestamp;
         if (notification.Exception != null)
+        {
             Exception = new SerializableException(notification.Exception);
+        }
+
         Message = notification.Message;
         Severity = notification.Severity;
     }

@@ -158,7 +158,9 @@ public class ParallelOperations : IParallelOperations
             finally
             {
                 if (periodMs <= 0)
+                {
                     StopExecution(id);
+                }
             }
         }), userState, delayMs, periodMs);
 
@@ -178,7 +180,10 @@ public class ParallelOperations : IParallelOperations
         lock (_runningTimers)
         {
             if (!_runningTimers.TryGetValue(timerId, out var timer))
+            {
                 return;
+            }
+
             timer.Dispose();
             _runningTimers.Remove(timerId);
         }
@@ -212,7 +217,9 @@ public class ParallelOperations : IParallelOperations
         var decoupler = new EventDecoupler<TEventArgs>(target, this, logger);
 
         lock (_eventDecouplers)
+        {
             _eventDecouplers.Add(target, decoupler);
+        }
 
         return decoupler;
     }
@@ -240,7 +247,9 @@ public class ParallelOperations : IParallelOperations
         lock (_eventDecouplers)
         {
             if (!_eventDecouplers.ContainsKey(target))
+            {
                 throw new InvalidOperationException("Can not remove a previously unregistered listener.");
+            }
 
             decoupler = (EventDecoupler<TEventArgs>)_eventDecouplers[target];
             _eventDecouplers.Remove(target);

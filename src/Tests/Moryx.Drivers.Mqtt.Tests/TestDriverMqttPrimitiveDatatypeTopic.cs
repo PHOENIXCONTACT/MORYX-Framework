@@ -1,12 +1,9 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Buffers;
 using System.Linq.Expressions;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moryx.AbstractionLayer.TestTools;
@@ -95,8 +92,7 @@ public class TestDriverMqttPrimitiveDatatypeTopic
         //Arrange
         _mockClient.Setup(m => m.PublishAsync(
                 It.IsAny<MqttApplicationMessage>(), It.IsAny<CancellationToken>()))
-            .Callback<MqttApplicationMessage, CancellationToken>((sentMsg, token)
-                => SendMessagIntIConvertible(sentMsg, token));
+            .Callback<MqttApplicationMessage, CancellationToken>(SendMessagIntIConvertible);
 
         //Act
         _mqttTopicInt.Send(MESSAGE_VALUE_INT);
@@ -125,8 +121,7 @@ public class TestDriverMqttPrimitiveDatatypeTopic
         //Arrange
         _mockClient.Setup(m => m.PublishAsync(
                 It.IsAny<MqttApplicationMessage>(), It.IsAny<CancellationToken>()))
-            .Callback<MqttApplicationMessage, CancellationToken>((sentMsg, token)
-                => SendMessagStringIConvertible(sentMsg, token));
+            .Callback<MqttApplicationMessage, CancellationToken>(SendMessagStringIConvertible);
 
         //Act
         _mqttTopicString.Send(MESSAGE_VALUE_STRING);

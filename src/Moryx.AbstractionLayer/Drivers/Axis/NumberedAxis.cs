@@ -48,7 +48,10 @@ public struct NumberedAxis : IEquatable<NumberedAxis>
     public override bool Equals(object obj)
     {
         if (ReferenceEquals(null, obj))
+        {
             return false;
+        }
+
         return obj is NumberedAxis && Equals((NumberedAxis)obj);
     }
 

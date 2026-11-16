@@ -2,95 +2,108 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections;
+using System.Globalization;
 using System.Reflection;
 
 namespace Moryx.Serialization;
 
-/// <inheritdoc/>
-public class ArrayIListStrategy : ICollectionStrategy
+// TODO: Make internal in next major MORYX release
+/// <summary>
+/// <see cref="IList"/> implementation of <see cref="ICollectionStrategy"/>
+/// </summary>
+public class ArrayIListStrategy(IList list, ICustomSerialization customSerialization,
+    ICustomAttributeProvider attributeProvider, object instance) : ICollectionStrategy
 {
-    private readonly IList _list;
     private readonly IList _toDelete = new List<object>();
-    private readonly ICustomSerialization _customSerialization;
-    private readonly ICustomAttributeProvider _property;
-    private readonly object _instance;
-    private readonly IList _toAdd = new List<object>();
+    private readonly Dictionary<string, object> _addedItems = [];
+    private IReadOnlyList<string> _newOrder;
 
-    /// <inheritdoc/>
-    public ArrayIListStrategy(IList list, ICustomSerialization customSerialization,
-        ICustomAttributeProvider attributeProvider, object instance)
-    {
-        _list = list;
-        _customSerialization = customSerialization;
-        _property = attributeProvider;
-        _instance = instance;
-    }
+    /// <summary>
+    /// Optional encoder for the items of the array
+    /// </summary>
+    internal Func<object, Entry> EncodeItem { get; init; }
 
     /// <inheritdoc/>
     public IEnumerable<Entry> Serialize()
     {
         var entries = new List<Entry>();
-        for (int index = 0; index < _list.Count; index++)
+        for (int index = 0; index < list.Count; index++)
         {
-            var entry = CollectionStrategyTools.CreateSub(_list[index], index, _customSerialization);
+            var entry = CollectionStrategyTools.CreateSub(list[index], index, customSerialization, EncodeItem);
             entries.Add(entry);
         }
         return entries;
     }
 
     /// <inheritdoc/>
-    public IEnumerable<string> Keys()
-    {
-        return CollectionStrategyTools.GenerateKeys(_list.Count);
-    }
+    public IEnumerable<string> Keys() => CollectionStrategyTools.GenerateKeys(list.Count);
 
     /// <inheritdoc/>
-    public object ElementAt(string key)
-    {
-        return _list[int.Parse(key)];
-    }
+    public object ElementAt(string key) => list[int.Parse(key, CultureInfo.InvariantCulture)];
 
     /// <inheritdoc/>
     public void Added(Entry entry, object addedValue)
     {
-        _toAdd.Add(addedValue);
+        _addedItems[entry.Identifier] = addedValue;
     }
 
     /// <inheritdoc/>
-    public void Updated(Entry entry, object updatedValue)
-    {
-        _list[int.Parse(entry.Identifier)] = updatedValue;
-    }
+    public void Updated(Entry entry, object updatedValue) => list[int.Parse(entry.Identifier, CultureInfo.InvariantCulture)] = updatedValue;
 
     /// <inheritdoc/>
-    public void Removed(string key)
+    public void Removed(string key) => _toDelete.Add(list[int.Parse(key, CultureInfo.InvariantCulture)]);
+
+    /// <inheritdoc />
+    public void Reorder(IReadOnlyList<string> newKeyOrder)
     {
-        _toDelete.Add(_list[int.Parse(key)]);
+        if (CollectionStrategyTools.NeedsReordering(newKeyOrder, list, _toDelete, _addedItems))
+        {
+            _newOrder = newKeyOrder;
+        }
     }
 
     /// <inheritdoc/>
     public void Flush()
     {
-
-        if (_property is PropertyInfo propertyInfo)
+        if (attributeProvider is PropertyInfo propertyInfo)
         {
             var type = propertyInfo.PropertyType;
             var elementType = type.GenericTypeArguments[0];
-            var list = Array.CreateInstance(elementType, _list.Count - _toDelete.Count + _toAdd.Count);
-            var index = 0;
-            foreach (var e in _list)
-            {
-                if (!_toDelete.Contains(e))
-                {
-                    list.SetValue(e, index++);
-                }
-            }
-            foreach (var e in _toAdd)
-            {
-                list.SetValue(e, index++);
-            }
 
-            propertyInfo.SetValue(_instance, list);
+            if (_newOrder != null)
+            {
+                var itemsByKey = CollectionStrategyTools.BuildItemLookup(list, _toDelete, _addedItems);
+
+                // Rebuild array in the desired order
+                var array = Array.CreateInstance(elementType, _newOrder.Count);
+                var index = 0;
+                foreach (var key in _newOrder)
+                {
+                    if (itemsByKey.TryGetValue(key, out var item))
+                    {
+                        array.SetValue(item, index++);
+                    }
+                }
+                propertyInfo.SetValue(instance, list);
+            }
+            else
+            {
+                // No reordering: filter deleted, append added
+                var array = Array.CreateInstance(elementType, list.Count - _toDelete.Count + _addedItems.Count);
+                var index = 0;
+                foreach (var e in list)
+                {
+                    if (!_toDelete.Contains(e))
+                    {
+                        array.SetValue(e, index++);
+                    }
+                }
+                foreach (var (_, value) in _addedItems)
+                {
+                    array.SetValue(value, index++);
+                }
+                propertyInfo.SetValue(instance, list);
+            }
         }
     }
 }

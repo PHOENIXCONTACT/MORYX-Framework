@@ -1,11 +1,9 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-
 namespace Moryx.Container.Tests;
 
-internal class Parent : INamedChildContainer<Child>
+internal sealed class Parent : INamedChildContainer<Child>
 {
     public string Name { get; set; }
 
@@ -24,7 +22,7 @@ internal class Parent : INamedChildContainer<Child>
     }
 }
 
-internal class Child : IContainerChild<Parent>
+internal sealed class Child : IContainerChild<Parent>
 {
     public string Name { get; set; }
     public Type Target { get; set; }

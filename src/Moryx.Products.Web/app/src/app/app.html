@@ -302,7 +302,8 @@
 
           <app-product-tree
             [treeData]="treeData()"
-            [selected]="selected()"
+            [selectedId]="selectedId()"
+            [disabled]="isLoading() || isEditMode()"
             (nodeSelected)="onSelect($event)"
             (nodeContextMenu)="onProductContext($event.event, $event.id)"
           />

@@ -5,42 +5,41 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Moryx.Identity.AccessManagement.Migrations
+namespace Moryx.Identity.AccessManagement.Migrations;
+
+/// <inheritdoc />
+public partial class ChangeRefreshTokensOnDelete : Migration
 {
     /// <inheritdoc />
-    public partial class ChangeRefreshTokensOnDelete : Migration
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropForeignKey(
-                name: "FK_RefreshTokens_AspNetUsers_UserId",
-                table: "RefreshTokens");
+        migrationBuilder.DropForeignKey(
+            name: "FK_RefreshTokens_AspNetUsers_UserId",
+            table: "RefreshTokens");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_RefreshTokens_AspNetUsers_UserId",
-                table: "RefreshTokens",
-                column: "UserId",
-                principalTable: "AspNetUsers",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-        }
+        migrationBuilder.AddForeignKey(
+            name: "FK_RefreshTokens_AspNetUsers_UserId",
+            table: "RefreshTokens",
+            column: "UserId",
+            principalTable: "AspNetUsers",
+            principalColumn: "Id",
+            onDelete: ReferentialAction.Cascade);
+    }
 
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropForeignKey(
-                name: "FK_RefreshTokens_AspNetUsers_UserId",
-                table: "RefreshTokens");
+    /// <inheritdoc />
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.DropForeignKey(
+            name: "FK_RefreshTokens_AspNetUsers_UserId",
+            table: "RefreshTokens");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_RefreshTokens_AspNetUsers_UserId",
-                table: "RefreshTokens",
-                column: "UserId",
-                principalTable: "AspNetUsers",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-        }
+        migrationBuilder.AddForeignKey(
+            name: "FK_RefreshTokens_AspNetUsers_UserId",
+            table: "RefreshTokens",
+            column: "UserId",
+            principalTable: "AspNetUsers",
+            principalColumn: "Id",
+            onDelete: ReferentialAction.Restrict);
     }
 }
 

@@ -3,30 +3,30 @@
 
 namespace Moryx.Container.Tests;
 
-internal class ParentOnly
+internal sealed class ParentOnly
 {
     public Parent Parent { get; set; }
 }
 
-internal class NamedParentOnly
+internal sealed class NamedParentOnly
 {
     [Named("Parent2")]
     public Parent Parent { get; set; }
 }
 
-internal class TypedChild
+internal sealed class TypedChild
 {
     [UseChild]
     public Child Child { get; set; }
 }
 
-internal class NamedChild
+internal sealed class NamedChild
 {
     [UseChild("Child")]
     public Child Child { get; set; }
 }
 
-internal class NamedChildNamedParent
+internal sealed class NamedChildNamedParent
 {
     [UseChild("Child", "Parent2")]
     public Child Child { get; set; }

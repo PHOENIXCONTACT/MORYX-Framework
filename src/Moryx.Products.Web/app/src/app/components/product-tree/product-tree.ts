@@ -6,7 +6,6 @@
 import { Component, inject, viewChild, input, output, effect, untracked, ChangeDetectionStrategy } from '@angular/core';
 import { MatTree, MatTreeModule } from '@angular/material/tree';
 import { MatIconModule } from '@angular/material/icon';
-import { ProductModel } from '@api/models';
 import { EditProductsService } from '@app/services/edit-products.service';
 import { SessionService } from '@app/services/session.service';
 import { ProductNode } from '@app/app';
@@ -17,7 +16,10 @@ import { MatIconButton } from '@angular/material/button';
   templateUrl: './product-tree.html',
   styleUrls: ['./product-tree.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [MatTreeModule, MatIconModule, MatIconButton]
+  imports: [MatTreeModule, MatIconModule, MatIconButton],
+  host: {
+    '[class.disabled]': 'disabled()'
+  }
 })
 export class ProductTree {
   private sessionService = inject(SessionService);
@@ -26,7 +28,8 @@ export class ProductTree {
 
   // Inputs
   readonly treeData = input.required<ProductNode[]>();
-  readonly selected = input<ProductModel | undefined>(undefined);
+  readonly selectedId = input<number | undefined>(undefined);
+  readonly disabled = input(false);
 
   // Outputs
   readonly nodeSelected = output<number>();
@@ -59,7 +62,7 @@ export class ProductTree {
 
     // Expand parent nodes to make the selected product visible in the tree
     effect(() => {
-      const selectedId = this.selected()?.id;
+      const selectedId = this.selectedId();
       if (selectedId) {
         untracked(() => {
           this.expandToSelected();
@@ -97,7 +100,7 @@ export class ProductTree {
 
   private expandToSelected() {
     const data = this.treeData();
-    const selectedId = this.selected()?.id;
+    const selectedId = this.selectedId();
     if (!data.length || !selectedId) {
       return;
     }

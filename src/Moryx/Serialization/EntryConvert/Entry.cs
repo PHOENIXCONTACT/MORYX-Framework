@@ -74,10 +74,10 @@ public class Entry : ICloneable
     public Entry GetPrototype(string typeName)
     {
         return (from prototype in Prototypes
-            let value = prototype.Value
-            where value.Current == typeName
-                  || value.Type.ToString("G") == typeName
-            select prototype).FirstOrDefault();
+                let value = prototype.Value
+                where value.Current == typeName
+                      || value.Type.ToString("G") == typeName
+                select prototype).FirstOrDefault();
     }
 
     /// <summary>
@@ -87,7 +87,7 @@ public class Entry : ICloneable
     public Entry Instantiate()
     {
         var instance = Clone(true);
-        instance.Identifier = CreatedIdentifier;
+        instance.Identifier = CreatedIdentifier + "-" + Guid.NewGuid().ToString("N");
         return instance;
     }
 
@@ -164,28 +164,54 @@ public class Entry : ICloneable
     /// <summary>
     /// Compare two entries recursive to detect changes
     /// </summary>
-    public static bool ValuesEqual(Entry left, Entry right)
+
+    public static bool ValuesEqual(Entry left, Entry right) =>
+        ValuesEqual(left, right, false);
+
+    /// <summary>
+    /// Compare two entries recursive to detect changes.
+    /// When <paramref name="orderSensitive"/> is true, sub-entries must also be in the same order.
+    /// </summary>
+    public static bool ValuesEqual(Entry left, Entry right, bool orderSensitive)
     {
+        // TODO: Remove this overload in the next major and make order-sensitive comparison the default
+
         if (left == null || right == null)
+        {
             return false;
+        }
 
         if (ReferenceEquals(left, right))
+        {
             return true;
+        }
 
         if (left.Value.Current != right.Value.Current)
+        {
             return false;
+        }
 
         if (left.SubEntries.Count != right.SubEntries.Count)
-            return false;
-
-        foreach (var leftEntry in left.SubEntries)
         {
-            var rightEntry = right.SubEntries.FirstOrDefault(p => p.Identifier == leftEntry.Identifier);
-            if (rightEntry == null)
-                return false;
+            return false;
+        }
 
-            if (!ValuesEqual(leftEntry, rightEntry))
+        for (var i = 0; i < left.SubEntries.Count; i++)
+        {
+            var leftEntry = left.SubEntries[i];
+            var rightEntry = orderSensitive
+                ? right.SubEntries[i]
+                : right.SubEntries.FirstOrDefault(p => p.Identifier == leftEntry.Identifier);
+
+            if (rightEntry == null || leftEntry.Identifier != rightEntry.Identifier)
+            {
                 return false;
+            }
+
+            if (!ValuesEqual(leftEntry, rightEntry, orderSensitive))
+            {
+                return false;
+            }
         }
 
         return true;

@@ -1,10 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moryx.Logging;
@@ -112,7 +109,7 @@ public class EventDecouplerTests
 
     #region ExceptionAndLogging
 
-    private class InvocationTarget : ILoggingComponent
+    private sealed class InvocationTarget : ILoggingComponent
     {
         public Tuple<LogLevel, string, Exception> Message { get; set; }
 
@@ -137,9 +134,13 @@ public class EventDecouplerTests
         // Arrange
         var target = new InvocationTarget();
         if (targetHasLogger)
+        {
             SimpleEventSource += _parallelOperations.DecoupleListener(target.FaultyListener);
+        }
         else
+        {
             SimpleEventSource += _parallelOperations.DecoupleListener(FaultyListener);
+        }
         // Act
         SimpleEventSource(this, EventArgs.Empty);
         while (target.Message == null && _message == null)
@@ -199,7 +200,9 @@ public class EventDecouplerTests
             // Give the queue time to catch up
             var runFragment = MaxIndex / run;
             while (_count < (index > runFragment ? index : runFragment))
+            {
                 Thread.Sleep(1);
+            }
         }
 
         // Assert

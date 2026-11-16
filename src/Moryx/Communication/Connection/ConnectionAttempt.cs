@@ -34,7 +34,9 @@ public class ConnectionAttempt : DeviceCommunicationBase, IConnectionAttempt
     public override void Start(Func<FunctionResult> communicate)
     {
         if (_started)
+        {
             return;
+        }
 
         _execute = communicate
                    ?? throw new ArgumentException(nameof(communicate));
@@ -54,10 +56,12 @@ public class ConnectionAttempt : DeviceCommunicationBase, IConnectionAttempt
         {
             RaiseFailureEvent(result);
             if (RetryOnFailure)
+            {
                 _timerId = ParallelOperations.ScheduleExecution(
                     Start,
                     TimeoutInMs,
                     0);
+            }
         }
     }
 }

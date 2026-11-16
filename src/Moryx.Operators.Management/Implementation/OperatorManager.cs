@@ -1,12 +1,12 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.Container;
-using Moryx.Model.Repositories;
-using Moryx.Operators.Management.Model;
 using Moryx.AbstractionLayer.Resources;
+using Moryx.Container;
 using Moryx.Model;
+using Moryx.Model.Repositories;
 using Moryx.Operators.Attendances;
+using Moryx.Operators.Management.Model;
 
 namespace Moryx.Operators.Management;
 

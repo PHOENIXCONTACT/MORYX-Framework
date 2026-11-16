@@ -31,7 +31,9 @@ public class LogListener : ProcessDataListenerBase
             strBuilder.Append($"{field.Name}: {field}");
 
             if (index < measurement.Fields.Count - 1)
+            {
                 strBuilder.Append(", ");
+            }
         }
 
         strBuilder.Append(") Tags (");
@@ -42,10 +44,12 @@ public class LogListener : ProcessDataListenerBase
             strBuilder.Append($"{tag.Name}: {tag.Value}");
 
             if (index < measurement.Tags.Count - 1)
+            {
                 strBuilder.Append(", ");
+            }
         }
 
-        strBuilder.Append(")");
+        strBuilder.Append(')');
         Logger.Log(LogLevel.Trace, strBuilder.ToString());
     }
 }

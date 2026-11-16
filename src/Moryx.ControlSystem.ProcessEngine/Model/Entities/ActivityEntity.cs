@@ -18,7 +18,9 @@ public class ActivityEntity : IEntity
         set
         {
             if (field == value)
+            {
                 return;
+            }
 
             field = value;
             IdChanged?.Invoke(this, EventArgs.Empty);

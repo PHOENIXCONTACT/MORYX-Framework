@@ -1,9 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Moryx.AbstractionLayer.Resources;
 
 namespace Moryx.Resources.Management.Tests;
@@ -99,7 +96,9 @@ public class ReferenceResource : Resource, IReferenceResource
     public void SetMany(IReadOnlyList<ISimpleResource> references)
     {
         foreach (var reference in references)
+        {
             References.Add(reference);
+        }
     }
 
     public INonPublicResource NonPublic { get; set; }

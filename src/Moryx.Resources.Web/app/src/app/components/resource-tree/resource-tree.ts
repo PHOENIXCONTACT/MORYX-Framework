@@ -18,7 +18,10 @@ import { getHierarchieLineFor } from '@app/models/TypeTree';
   templateUrl: './resource-tree.html',
   styleUrls: ['./resource-tree.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [MatTreeModule, MatIconModule, MatButtonModule, TranslatePipe]
+  imports: [MatTreeModule, MatIconModule, MatButtonModule, TranslatePipe],
+  host: {
+    '[class.disabled]': 'disabled()'
+  }
 })
 export class ResourceTree {
   private sessionService = inject(SessionService);
@@ -26,6 +29,7 @@ export class ResourceTree {
 
   readonly resources = input.required<ResourceModel[]>();
   readonly selected = input<ResourceModel | undefined>(undefined);
+  readonly disabled = input(false);
 
   readonly nodeSelected = output<number>();
   readonly nodeContextMenu = output<{ event: MouseEvent; id: number }>();

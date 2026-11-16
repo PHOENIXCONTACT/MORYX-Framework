@@ -62,7 +62,9 @@ public class Place : IPlace
     {
         _tokens.Add(token);
         if (_running)
+        {
             TokenAdded(this, token);
+        }
     }
 
     /// <summary>
@@ -72,7 +74,9 @@ public class Place : IPlace
     public virtual void Remove(IToken token)
     {
         if (_tokens.Remove(token))
+        {
             TokenRemoved?.Invoke(this, token);
+        }
     }
 
     /// 

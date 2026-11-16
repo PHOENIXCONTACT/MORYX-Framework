@@ -1,13 +1,13 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.ComponentModel;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.ControlSystem.Processes;
 using Moryx.Runtime.Modules;
-using System.ComponentModel;
 
 namespace Moryx.ControlSystem.Simulator;
 

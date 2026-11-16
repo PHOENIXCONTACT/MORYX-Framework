@@ -1,9 +1,9 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.ComponentModel;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Serialization;
-using System.ComponentModel;
 
 namespace Moryx.Products.Samples.Recipe;
 

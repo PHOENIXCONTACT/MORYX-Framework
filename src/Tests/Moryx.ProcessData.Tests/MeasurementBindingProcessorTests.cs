@@ -1,11 +1,10 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
+using Moq;
 using Moryx.Bindings;
 using Moryx.ProcessData.Bindings;
 using Moryx.ProcessData.Configuration;
-using Moq;
 using NUnit.Framework;
 
 namespace Moryx.ProcessData.Tests;

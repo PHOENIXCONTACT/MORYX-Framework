@@ -5,8 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Moryx.AbstractionLayer.Resources;
 using NUnit.Framework;
-using System;
-using System.Threading.Tasks;
 
 namespace Moryx.FactoryMonitor.Endpoints.Tests;
 

@@ -24,6 +24,7 @@ Because the `EntryConvert`-API can be confusing on first sight, we will split it
 | `double` | Double | Culture-aware with invariant fallback | — |
 | `decimal` | Double | Culture-aware with invariant fallback | Mapped to `Double; may lose precision beyond ~15 significant digits |
 | `string` | String | — | — |
+| `Type` | String | Type name or full name | Read-only without `PossibleTypesAttribute`; editable with it |
 | `enum` | Enum | String name | — |
 | `DateTime` | DateTime | ISO 8601 round-trip (`"O"`) | Converted to UTC; original `DateTimeKind` is lost |
 | `DateTimeOffset` | DateTime | ISO 8601 round-trip (`"O"`) | Converted to UTC; original timezone offset is lost |
@@ -235,9 +236,69 @@ dto.Properties[0].Value.Current = "Michael";
 EntryConvert.UpdateInstance(fooObj, dto.Properties, serialization);
 ```
 
+## Entry Encoders
+
+An implementation of [EntryEncoderBase](/src/Moryx/Serialization/EntryConvert/Encoders/EntryEncoderBase.cs) takes over the complete encoding and decoding of a member, including `Value`, `SubEntries`, and `Prototypes`. It is the primary extension point when the built-in type mapping or `ICustomSerialization` do not provide enough control.
+
+```cs
+public abstract class EntryEncoderBase
+{
+    public abstract bool CanEncode(Type memberType);
+    public abstract Entry Encode(object value, EntryEncoderContext context);
+    public abstract object Decode(Entry entry, object currentValue, EntryEncoderContext context);
+}
+```
+
+The `EntryEncoderContext` passed to both methods provides:
+
+* `MemberType` – declared type of the property or parameter
+* `AttributeProvider` – the `PropertyInfo` or `ParameterInfo` to read further attributes
+* `Serialization` – the active `ICustomSerialization`
+* `Instance` – the containing object (`null` when encoding a type without an instance)
+
+> [!IMPORTANT]
+> `Identifier` and `Validation` of the returned entry are always overridden from the member. `DisplayName` and `Description` are used from the encoder if set, otherwise they fall back to the member metadata. The read-only flag is merged: the entry is read-only if either the encoder or the member definition marks it as such.
+
+> [!NOTE]
+> Encoder instances are cached and shared. Implementations must be **stateless and thread-safe** and require a **public parameterless constructor**.
+
+Converters are resolved in the following priority order:
+
+1. `EncoderType` declared on the property or parameter via `[EntrySerialize]`
+2. `EncoderType` declared on the member's type via `[EntrySerialize]`
+3. Built-in default encoders for `Type`, `Vector2`, `Vector3`, `Vector4`, `Quaternion`, and `Plane`
+4. Standard property or collection conversion
+
+Custom serializations can override resolution by implementing `GetEncoder` and `GetItemEncoder` on `ICustomSerialization`.
+
+> See [How to write a custom Entry Encoder](~/tutorials/how-to-write-a-custom-entry-encoder.md) for a step-by-step walkthrough.
+
 ## EntrySerialize Attribute
 
 The [EntrySerializeAttribute](/src/Moryx/Serialization/EntryConvert/EntrySerializeAttribute.cs) will be handled by the [EntrySerializeSerialization](/src/Moryx/Serialization/EntrySerializeSerialization.cs) which is a custom implementation of the [ICustomSerialization](/src/Moryx/Serialization/ICustomSerialization.cs). This serialization evaluates the attribute with some defined rules depending on the serialized type:
+
+### Custom Encoder
+
+Setting `EncoderType` on the attribute assigns an `EntryEncoderBase` implementation to a member. The encoder takes over the complete encoding and decoding of that entry:
+
+```cs
+// Applied to a type: all members of this type use the encoder automatically
+[EntrySerialize(EncoderType = typeof(MyEncoder))]
+public class MyModel { ... }
+
+// Applied to a property: overrides any encoder declared on the type
+[EntrySerialize(EncoderType = typeof(MyEncoder))]
+public MyModel Model { get; set; }
+```
+
+For collection members, `EncoderTarget = EntryEncoderTarget.Items` applies the encoder to each individual item rather than the whole collection. `EncoderType` is required when using this target:
+
+```cs
+[EntrySerialize(EncoderType = typeof(MyEncoder), EncoderTarget = EntryEncoderTarget.Items)]
+public List<MyModel> Models { get; set; }
+```
+
+The collection structure (adding and removing items) is still managed by `EntryConvert`. Prototypes for new items are derived from the encoder result for an empty item.
 
 ### Serialize Properties
 
@@ -291,3 +352,32 @@ public Entry InvokeMethod(MethodEntry method)
 ### Serialize Constructors
 
 In the previous sections, it was described that `EntryConvert` can also serialize constructors. The [EntrySerializeSerialization](/src/Moryx/Serialization/EntrySerializeSerialization.cs) only serializes constructors like methods with the [EntrySerializeAttribute](/src/Moryx/Serialization/EntryConvert/EntrySerializeAttribute.cs) defined.
+
+## Collections
+
+### The CREATED Identifier
+
+When adding new items to a collection, each new entry must have an identifier that starts with `CREATED`. This prefix signals to `EntryConvert` that the entry is a new item to be added, rather than an update to an existing one.
+
+Each new entry should have a unique identifier to enable reordering support. The recommended pattern is `CREATED-<unique-suffix>`, for example `CREATED-a1b2c3d4`. The `Entry.Instantiate()` method generates these automatically using a GUID.
+
+If you create identifiers manually, ensure they start with `CREATED` (case-insensitive) and are unique within the collection. Non-unique identifiers (e.g. all set to `CREATED`) will still work for adding items, but reordering will be disabled for that update.
+
+### Collection Reordering
+
+`EntryConvert` supports reordering of collection items. When a client changes the order of `SubEntries` within a collection entry, the new order is applied to the target collection during deserialization.
+
+Each collection item is identified by its original index (e.g. `"0"`, `"1"`, `"2"`). When `UpdateInstance` processes a collection, it compares the order of identifiers in the incoming `SubEntries` against the original order. If the order differs, the collection is rebuilt to match the new sequence.
+
+Newly created items (with `CREATED` identifiers) can be interleaved between existing items. For example, a client could send `SubEntries` in the order `["2", "CREATED1", "0"]` to move the third item to the front, insert a new item, and place the first item at the end.
+
+Reordering is only applied when the order actually changes. If the `SubEntries` arrive in the original order (existing items followed by new items), no reordering takes place and the standard add/update/remove logic is used.
+
+#### Supported Collection Types
+
+| Collection Type | Reordering | Notes |
+|----------------|------------|-------|
+| `List<T>` | Supported | Items are reordered in-place |
+| `T[]` (arrays) | Supported | Array is rebuilt in new order |
+| `IList<T>` (array-backed) | Supported | Array is rebuilt and reassigned via reflection |
+| `Dictionary<TKey, TValue>` | Not supported | The order of items in a dictionary is not guaranteed by the [.NET specification](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.dictionary-2#remarks) |

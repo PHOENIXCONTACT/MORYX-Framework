@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace Moryx.Shifts.Management.IntegrationTests;
 
 [TestFixture]
-internal class FacadeTests : TestBase
+internal sealed class FacadeTests : TestBase
 {
     [SetUp]
     public override Task SetUp()

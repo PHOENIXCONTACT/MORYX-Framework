@@ -1,14 +1,9 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using Castle.Core.Logging;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moryx.AbstractionLayer.Activities;
-using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.AbstractionLayer.TestTools.Resources;
 using Moryx.ControlSystem.Cells;

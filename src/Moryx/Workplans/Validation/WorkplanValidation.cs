@@ -33,7 +33,9 @@ internal static class WorkplanValidation
         foreach (var validator in Validators)
         {
             if (aspects.HasFlag(validator.TargetAspect))
+            {
                 valid &= validator.Validate(workplan, errors);
+            }
         }
 
         return new ValidationResult

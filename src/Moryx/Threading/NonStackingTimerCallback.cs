@@ -55,7 +55,10 @@ public class NonStackingTimerCallback
         lock (_syncLock)
         {
             if (_callbackExecuting)
+            {
                 return;
+            }
+
             _callbackExecuting = true;
         }
 

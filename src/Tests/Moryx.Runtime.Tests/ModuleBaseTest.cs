@@ -1,13 +1,12 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Threading.Tasks;
+using Moq;
+using Moryx.Configuration;
 using Moryx.Runtime.Modules;
 using Moryx.Runtime.Tests.Mocks;
 using Moryx.Runtime.Tests.Modules;
-using Moq;
 using NUnit.Framework;
-using Moryx.Configuration;
 
 namespace Moryx.Runtime.Tests;
 

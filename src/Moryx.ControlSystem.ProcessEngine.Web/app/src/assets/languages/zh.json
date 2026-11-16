@@ -2,6 +2,7 @@
   "PROCESSES": {
     "ACTIVITIES": "活动",
     "ACTIVITY_DETAILS": "活动详情",
+    "ACTIVITY_ID": "编号",
     "STARTED": "已开始",
     "COMPLETED": "已完成",
     "CAPABILITIES": "能力",

@@ -1,8 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Linq;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moryx.AbstractionLayer.Activities;
@@ -177,9 +175,13 @@ public class ActivityProviderTests : ProcessTestsBase
         do
         {
             if (success)
+            {
                 activity.Activity.Complete(0);
+            }
             else
+            {
                 activity.Activity.Fail();
+            }
 
             DataPool.TryUpdateActivity(activity, ActivityState.ResultProcessed); // This call replaces the reference in ModifedActivity
         } while ((activity = process.Activities.Last()).State < ActivityState.EngineProceeded); // ModifedActivity is not replaced when last task was completed

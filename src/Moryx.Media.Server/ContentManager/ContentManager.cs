@@ -48,11 +48,15 @@ internal class ContentManager : IContentManager
         PreviewService.PreviewJobCompleted += OnPreviewJobCompleted;
 
         if (!Directory.Exists(Config.StoragePath))
+        {
             Directory.CreateDirectory(Config.StoragePath);
+        }
 
         _descriptorDirectory = Path.Combine(Config.StoragePath, "descriptors");
         if (!Directory.Exists(_descriptorDirectory))
+        {
             Directory.CreateDirectory(_descriptorDirectory);
+        }
 
         LoadDescriptors();
 
@@ -87,8 +91,10 @@ internal class ContentManager : IContentManager
     {
         var descriptors = new List<ContentDescriptor>((int)offset);
         if (start > _descriptors.Count)
+        {
             throw new ArgumentOutOfRangeException(nameof(start), start,
                 $"Start value is greater than list count {_descriptors.Count}");
+        }
 
         for (var idx = start; idx < start + offset && idx < _descriptors.Count; idx++)
         {
@@ -102,7 +108,9 @@ internal class ContentManager : IContentManager
     public Stream GetStream(FileDescriptor fileDescriptor)
     {
         if (string.IsNullOrEmpty(fileDescriptor.FileHash))
+        {
             return null;
+        }
 
         var variantFilePath = HashPath.FromHash(fileDescriptor.FileHash).FilePath(Config.StoragePath);
         return File.Exists(variantFilePath) ? new FileStream(variantFilePath, FileMode.Open, FileAccess.Read) : null;
@@ -111,7 +119,9 @@ internal class ContentManager : IContentManager
     public async Task<ContentAddingInfo> AddMaster(string fileName, Stream contentStream)
     {
         if (!contentStream.CanSeek)
+        {
             throw new NotSupportedException("Stream needs to be seekable.");
+        }
 
         var hashPath = HashPath.FromStream(contentStream);
 
@@ -155,12 +165,16 @@ internal class ContentManager : IContentManager
     public async Task<ContentAddingInfo> AddVariant(Guid contentId, string variantName, string fileName, Stream contentStream)
     {
         if (variantName == MediaConstants.MasterName)
+        {
             return new ContentAddingInfo { Descriptor = null, Result = ContentAddingResult.VariantNameReserved };
+        }
 
         var descriptor = GetDescriptor(contentId);
         var variant = descriptor?.GetVariant(variantName);
         if (variant != null)
+        {
             return new ContentAddingInfo { Descriptor = descriptor, Result = ContentAddingResult.AlreadyExists };
+        }
 
         var hash = HashPath.FromStream(contentStream);
         if (File.Exists(hash.FilePath(Config.StoragePath)))
@@ -238,7 +252,9 @@ internal class ContentManager : IContentManager
             }
 
             if (existingVariant != null)
+            {
                 return new Tuple<ContentDescriptor, VariantDescriptor>(currentDescriptor, existingVariant);
+            }
         }
 
         return null;
@@ -248,11 +264,16 @@ internal class ContentManager : IContentManager
     {
         var variants = contentDescriptor.Variants.ToArray();
         foreach (var variantDescriptor in variants)
+        {
             Delete(contentDescriptor, variantDescriptor);
+        }
 
         var descriptorFile = Path.Combine(_descriptorDirectory, contentDescriptor.Id.ToString());
         if (File.Exists(descriptorFile))
+        {
             File.Delete(descriptorFile);
+        }
+
         var hashPath = HashPath.FromHash(contentDescriptor.FileHash);
         hashPath.DeleteFile(Config.StoragePath, Logger);
 
@@ -265,11 +286,16 @@ internal class ContentManager : IContentManager
         hashPath.DeleteFile(Config.StoragePath, Logger);
 
         if (variantDescriptor.Preview.State == PreviewState.Created)
+        {
             RemovePreview(variantDescriptor);
+        }
 
         contentDescriptor.Variants.Remove(variantDescriptor);
         if (contentDescriptor.Variants.Count > 0)
+        {
             SaveDescriptorToFile(contentDescriptor);
+        }
+
         return true;
     }
 
@@ -280,7 +306,9 @@ internal class ContentManager : IContentManager
         var variant = descriptor?.GetVariant(variantName);
 
         if (variant == null)
+        {
             return false;
+        }
 
         return isMaster ? Delete(descriptor) : Delete(descriptor, variant);
     }
@@ -288,7 +316,9 @@ internal class ContentManager : IContentManager
     private async Task AddPreview(VariantDescriptor variantDescriptor, Stream previewStream)
     {
         if (!string.IsNullOrWhiteSpace(variantDescriptor.Preview.FileHash))
+        {
             RemovePreview(variantDescriptor);
+        }
 
         var hashPath = HashPath.FromStream(previewStream);
         await hashPath.SaveStream(previewStream, Config.StoragePath, Logger);
@@ -320,7 +350,9 @@ internal class ContentManager : IContentManager
         try
         {
             if (result.PreviewState == PreviewState.Created)
+            {
                 await AddPreview(variant, result.Preview);
+            }
 
             result.Dispose();
 
@@ -364,7 +396,9 @@ internal class ContentManager : IContentManager
 
             // Remove old file
             if (!string.IsNullOrEmpty(descriptor.FileHash) && descriptor.FileHash != file.Hash)
+            {
                 HashPath.FromHash(descriptor.FileHash).DeleteFile(Config.StoragePath, Logger);
+            }
 
             // Overwrite hash on object
             descriptor.FileHash = file.Hash;

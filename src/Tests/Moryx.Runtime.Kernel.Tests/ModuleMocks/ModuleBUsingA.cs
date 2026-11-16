@@ -5,7 +5,7 @@ using Moryx.Runtime.Modules;
 
 namespace Moryx.Runtime.Kernel.Tests.ModuleMocks;
 
-internal class ModuleBUsingA : ModuleBase, IFacadeContainer<IFacadeB>
+internal sealed class ModuleBUsingA : ModuleBase, IFacadeContainer<IFacadeB>
 {
     public ModuleBUsingA()
     {

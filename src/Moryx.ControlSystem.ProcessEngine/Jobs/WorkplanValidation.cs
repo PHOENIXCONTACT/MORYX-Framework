@@ -28,7 +28,9 @@ internal class WorkplanValidation
         foreach (var step in workplan.Steps)
         {
             if (step.Outputs.Any(o => o is null))
+            {
                 errors.Add(string.Format(Strings.WorkplanValidation_OutputUnset, step.Name));
+            }
         }
 
         // Validate step parameters
@@ -44,7 +46,9 @@ internal class WorkplanValidation
                     DisplayName = property.GetDisplayName() ?? property.Name
                 });
                 if (!string.IsNullOrEmpty(result?.ErrorMessage))
+                {
                     errors.Add(result.ErrorMessage);
+                }
             }
         }
 

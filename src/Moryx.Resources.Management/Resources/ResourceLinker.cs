@@ -492,7 +492,7 @@ internal class ResourceLinker : IResourceLinker
         // Try to find a property on the reference back-linking to the deleted instance
         var type = reference.GetType();
         var backReference = (from property in ReferenceProperties(type, false)
-                             // Instead of comparing the resource type we simply look for the object reference
+                                 // Instead of comparing the resource type we simply look for the object reference
                              let value = property.GetValue(reference)
                              where value == deletedInstance || ((value as IEnumerable<IResource>)?.Contains(deletedInstance) ?? false)
                              select property).FirstOrDefault();

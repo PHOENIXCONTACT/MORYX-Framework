@@ -1,13 +1,13 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Globalization;
+using System.Runtime.CompilerServices;
 using CsvHelper;
 using CsvHelper.Configuration;
 using Microsoft.Extensions.Logging;
 using Moryx.Logging;
 using Moryx.Tools;
-using System.Globalization;
-using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Moryx.ProcessData.SpreadsheetsListener.Tests")]
 namespace Moryx.ProcessData.SpreadsheetsListener;
@@ -39,7 +39,10 @@ internal class CsvStructure
         _measurand = measurand;
         _maxNumOfRows = Math.Max(2, config.MaxNumOfRows);
         if (config.Delimiter != null)
+        {
             _csvConfig.Delimiter = config.Delimiter;
+        }
+
         _logger = logger;
         CreateNewFile();
     }
@@ -56,16 +59,24 @@ internal class CsvStructure
     {
         List<string> tempHeader;
         lock (_headerLock)
+        {
             tempHeader = _header.ToList();
+        }
 
         var addHeadings = header.Except(tempHeader).ToArray();
         if (addHeadings.Length != 0)
         {
             lock (_headerLock)
+            {
                 _header.AddRange(addHeadings);
+            }
+
             await OverwriteHeader();
             if (_writtenRows == 0)
+            {
                 _writtenRows++;
+            }
+
             OpenFile();
         }
 
@@ -82,17 +93,19 @@ internal class CsvStructure
             csvRow = new CsvRow(rowArray);
         }
         lock (_rowsLock)
+        {
             _rows.Add(csvRow);
+        }
     }
 
     public void Close()
     {
         if (_csvWriter != null && _fileStream != null && _fileStream.CanWrite)
-            _csvWriter.Flush();
-        if (_streamWriter != null)
         {
-            _streamWriter.Close();
+            _csvWriter.Flush();
         }
+
+        _streamWriter?.Close();
     }
 
     private void CreateNewFile()
@@ -128,11 +141,15 @@ internal class CsvStructure
             measurement.Tags.ForEach(f => sortedDictionary.Add(f.Name, f.Value));
             var currentPlatform = Platform.Current;
             if (currentPlatform != null)
+            {
                 sortedDictionary.Add("application", currentPlatform.ProductName);
+            }
 
             // time stamps should be in the first column
             foreach (var element in sortedDictionary)
+            {
                 measurementDictionary.Add(element.Key, element.Value);
+            }
 
             return measurementDictionary;
         }
@@ -147,7 +164,9 @@ internal class CsvStructure
     {
         List<string> tempHeader;
         lock (_headerLock)
+        {
             tempHeader = _header.ToList();
+        }
 
         Close();
         string tempfile = Path.GetTempFileName();
@@ -163,7 +182,9 @@ internal class CsvStructure
             await csv.NextRecordAsync();
             await reader.ReadLineAsync();
             while (!reader.EndOfStream)
+            {
                 await writer.WriteLineAsync(reader.ReadLine());
+            }
         }
         File.Copy(tempfile, _completeFilePath, true);
         File.Delete(tempfile);
@@ -173,7 +194,9 @@ internal class CsvStructure
     {
         List<string> tempHeader;
         lock (_headerLock)
+        {
             tempHeader = _header.ToList();
+        }
 
         _logger.Log(LogLevel.Debug, "Writing {0} headings to header of spreadsheet '{1}'", tempHeader.Count, Path.GetFileName(_completeFilePath));
         foreach (var heading in tempHeader)
@@ -221,14 +244,19 @@ internal class CsvStructure
             if (tempRows.Count > 0)
             {
                 lock (_rowsLock)
+                {
                     _rows.AddRange(tempRows);
+                }
+
                 Close();
                 CreateNewFile();
                 await WriteHeader();
                 await WriteRows();
             }
             else
+            {
                 await _csvWriter.FlushAsync();
+            }
         }
         catch (Exception e)
         {

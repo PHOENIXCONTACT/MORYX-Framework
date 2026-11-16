@@ -1,15 +1,12 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Moryx.Logging;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
+using Moryx.Logging;
 using Moryx.Orders.Management.Assignment;
 using NUnit.Framework;
-using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.Extensions.Logging;
 
 namespace Moryx.Orders.Management.Tests;
 

@@ -211,9 +211,15 @@ public class TestCapabilities : CapabilitiesBase
     protected override bool ProvidedBy(ICapabilities provided)
     {
         if (provided is not TestCapabilities providedTestCapabilities)
+        {
             return false;
+        }
+
         if (providedTestCapabilities.Number != Number)
+        {
             return false;
+        }
+
         return true;
     }
 }

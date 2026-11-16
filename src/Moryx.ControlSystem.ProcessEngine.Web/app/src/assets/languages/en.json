@@ -2,6 +2,7 @@
   "PROCESSES": {
     "ACTIVITIES": "Activities",
     "ACTIVITY_DETAILS": "Activity Details",
+    "ACTIVITY_ID": "Id",
     "STARTED": "Started",
     "COMPLETED": "Completed",
     "CAPABILITIES": "Capabilities",

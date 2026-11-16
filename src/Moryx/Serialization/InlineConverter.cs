@@ -16,7 +16,10 @@ public static class InlineConverter
     public static unsafe void Include(short value, byte[] bytes, ref int index)
     {
         fixed (byte* b = bytes)
+        {
             *((short*)(b + index)) = value;
+        }
+
         index += 2;
     }
 
@@ -26,7 +29,10 @@ public static class InlineConverter
     public static unsafe void Include(ushort value, byte[] bytes, ref int index)
     {
         fixed (byte* b = bytes)
+        {
             *((ushort*)(b + index)) = value;
+        }
+
         index += 2;
     }
 
@@ -36,7 +42,10 @@ public static class InlineConverter
     public static unsafe void Include(int value, byte[] bytes, ref int index)
     {
         fixed (byte* b = bytes)
+        {
             *((int*)(b + index)) = value;
+        }
+
         index += 4;
     }
 
@@ -46,7 +55,10 @@ public static class InlineConverter
     public static unsafe void Include(uint value, byte[] bytes, ref int index)
     {
         fixed (byte* b = bytes)
+        {
             *((uint*)(b + index)) = value;
+        }
+
         index += 4;
     }
 
@@ -56,7 +68,10 @@ public static class InlineConverter
     public static unsafe void Include(long value, byte[] bytes, ref int index)
     {
         fixed (byte* b = bytes)
+        {
             *((long*)(b + index)) = value;
+        }
+
         index += 8;
     }
 
@@ -66,7 +81,10 @@ public static class InlineConverter
     public static unsafe void Include(ulong value, byte[] bytes, ref int index)
     {
         fixed (byte* b = bytes)
+        {
             *((ulong*)(b + index)) = value;
+        }
+
         index += 8;
     }
 
@@ -76,7 +94,10 @@ public static class InlineConverter
     public static unsafe void Include(float value, byte[] bytes, ref int index)
     {
         fixed (byte* b = bytes)
+        {
             *((float*)(b + index)) = value;
+        }
+
         index += 4;
     }
 
@@ -86,7 +107,10 @@ public static class InlineConverter
     public static unsafe void Include(double value, byte[] bytes, ref int index)
     {
         fixed (byte* b = bytes)
+        {
             *((double*)(b + index)) = value;
+        }
+
         index += 8;
     }
 
@@ -103,7 +127,9 @@ public static class InlineConverter
             for (length = 0; length < maxLength; length++)
             {
                 if (bytes[index + length] == 0)
+                {
                     break;
+                }
             }
         }
         else

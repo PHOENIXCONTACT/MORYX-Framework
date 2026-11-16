@@ -102,7 +102,9 @@ public class InfluxDbListenerV2 : ProcessDataListenerBase<InfluxDbListenerConfig
     protected override void OnMeasurandAdded(Measurand measurand)
     {
         lock (_pendingPointsLock)
+        {
             _pendingPoints.AddRange(measurand.Measurements.Select(GetPointFromMeasurement));
+        }
 
         StartTimerIfStopped();
     }
@@ -111,7 +113,9 @@ public class InfluxDbListenerV2 : ProcessDataListenerBase<InfluxDbListenerConfig
     protected override void OnMeasurementAdded(Measurement measurement)
     {
         lock (_pendingPointsLock)
+        {
             _pendingPoints.Add(GetPointFromMeasurement(measurement));
+        }
 
         StartTimerIfStopped();
     }
@@ -138,7 +142,9 @@ public class InfluxDbListenerV2 : ProcessDataListenerBase<InfluxDbListenerConfig
         }
 
         if (points.Length > 0)
+        {
             await UploadAsync(points, cancellationToken);
+        }
     }
 
     private async Task UploadAsync(PointData[] points, CancellationToken cancellationToken)
@@ -158,7 +164,9 @@ public class InfluxDbListenerV2 : ProcessDataListenerBase<InfluxDbListenerConfig
                                "Remaining retries: {retries}", Config.DatabaseName, points.Length, --_retries);
 
             lock (_pendingPointsLock)
+            {
                 _pendingPoints.AddRange(points);
+            }
 
             if (_retries < 0)
             {
@@ -174,9 +182,15 @@ public class InfluxDbListenerV2 : ProcessDataListenerBase<InfluxDbListenerConfig
         {
             var builder = PointData.Builder.Measurement(measurement.Measurand);
             foreach (var tag in measurement.Tags)
+            {
                 builder.Tag(tag.Name, tag.Value);
+            }
+
             foreach (var field in measurement.Fields)
+            {
                 AddDataToPoint(builder, field.Name, field.Value);
+            }
+
             builder.Tag("application", Platform.Current.ProductName);
             builder.Timestamp(measurement.TimeStamp.ToUniversalTime(), WritePrecision.Ms);
 
@@ -253,15 +267,15 @@ public class InfluxDbListenerV2 : ProcessDataListenerBase<InfluxDbListenerConfig
                 }
                 break;
             case IEnumerable enumerable:
-            {
-                var i = 0;
-                foreach (var elem in enumerable)
                 {
-                    AddDataToPoint(point, $"{prefix}_{i}", elem);
-                    i++;
+                    var i = 0;
+                    foreach (var elem in enumerable)
+                    {
+                        AddDataToPoint(point, $"{prefix}_{i}", elem);
+                        i++;
+                    }
+                    point.Field($"{prefix}_Length", i);
                 }
-                point.Field($"{prefix}_Length", i);
-            }
                 break;
             default:
                 var type = value.GetType();

@@ -1,19 +1,14 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.Logging;
-using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using CsvHelper;
 using CsvHelper.Configuration;
-using Moryx.Tools;
-using NUnit.Framework.Interfaces;
 using Moq;
+using Moryx.Logging;
+using Moryx.Tools;
+using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 
 namespace Moryx.ProcessData.SpreadsheetsListener.Tests;
 
@@ -53,15 +48,16 @@ public class CsvStructureTest
     [TearDown]
     public void TearDown()
     {
-        if (_csvStructure != null)
-        {
-            _csvStructure.Close();
-            _csvStructure = null;
-        }
+        _csvStructure?.Close();
+        _csvStructure = null;
 
         if (TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Passed)
+        {
             foreach (var file in _files)
+            {
                 File.Delete(file);
+            }
+        }
     }
 
     [Test]
@@ -82,9 +78,13 @@ public class CsvStructureTest
     public async Task ShouldWriteOnlyHeader([Values(true, false)] bool compareOrder)
     {
         if (compareOrder)
+        {
             await WriteMeasurementsTwiceToCsvCompare(numOfMeasurements: 0);
+        }
         else
+        {
             await WriteMeasurementsToCsvCheckContent(numOfMeasurements: 0);
+        }
     }
 
     [Test]
@@ -92,9 +92,13 @@ public class CsvStructureTest
     {
         var numOfMeasurements = 1 + (maxNumOfRowsPerFile - 1) * (numOfFiles - 1);
         if (compareOrder)
+        {
             await WriteMeasurementsTwiceToCsvCompare(overwriteHeader, numOfMeasurements, numOfFiles);
+        }
         else
+        {
             await WriteMeasurementsToCsvCheckContent(overwriteHeader, numOfMeasurements, numOfFiles, maxNumOfRowsPerFile);
+        }
     }
 
     [Test]
@@ -102,9 +106,13 @@ public class CsvStructureTest
     {
         var numOfMeasurements = (maxNumOfRowsPerFile - 1) * numOfFiles - 1;
         if (compareOrder)
+        {
             await WriteMeasurementsTwiceToCsvCompare(overwriteHeader, numOfMeasurements, numOfFiles);
+        }
         else
+        {
             await WriteMeasurementsToCsvCheckContent(overwriteHeader, numOfMeasurements, numOfFiles, maxNumOfRowsPerFile);
+        }
     }
 
     [Test]
@@ -112,19 +120,26 @@ public class CsvStructureTest
     {
         var numOfMeasurements = (maxNumOfRowsPerFile - 1) * numOfFiles;
         if (compareOrder)
+        {
             await WriteMeasurementsTwiceToCsvCompare(overwriteHeader, numOfMeasurements, numOfFiles);
+        }
         else
+        {
             await WriteMeasurementsToCsvCheckContent(overwriteHeader, numOfMeasurements, numOfFiles, maxNumOfRowsPerFile);
+        }
     }
 
     [Test]
     public async Task ShouldWriteMeasurementsToCsv([Values(true, false)] bool compareOrder, [Values(true, false)] bool overwriteHeader, [Random(5000, 15000, 1)] int numOfMeasurements, [Values(1, 2, 3)] int numOfFiles)
     {
         if (compareOrder)
+        {
             await WriteMeasurementsTwiceToCsvCompare(overwriteHeader, numOfMeasurements, numOfFiles);
+        }
         else
+        {
             await WriteMeasurementsToCsvCheckContent(overwriteHeader, numOfMeasurements, numOfFiles);
-
+        }
     }
 
     public async Task WriteMeasurementsTwiceToCsvCompare(bool addOrRemoveRandom = false, int numOfMeasurements = 0, int numOfFiles = 1, int maxNumOfRowsPerFile = -1)
@@ -133,7 +148,10 @@ public class CsvStructureTest
         Measurement firstMeasurement = RandomMeasurement(_random.Next(0, 8), _random.Next(0, 8));
         List<Measurement> randomMeasurements = [firstMeasurement];
         if (maxNumOfRowsPerFile < 0) // unless maxNumOfRowsPerFile was specified, every file (except possibly the last one) has the same number of rows
+        {
             maxNumOfRowsPerFile = (int)Math.Ceiling(1 + (double)numOfMeasurements / numOfFiles);
+        }
+
         _slConfig.MaxNumOfRows = maxNumOfRowsPerFile;
 
         // Act
@@ -144,11 +162,16 @@ public class CsvStructureTest
             Measurement newRndMeasurement = RandomMeasurement(basedOn: firstMeasurement);
             await _csvStructure.AddMeasurement(newRndMeasurement);
             if (_random.NextDouble() < 0.1) // write rows at random and not after every measurement
+            {
                 await _csvStructure.WriteRows();
+            }
+
             randomMeasurements.Add(newRndMeasurement);
         }
         if (numOfMeasurements > 0)
+        {
             await _csvStructure.WriteRows();
+        }
 
         // Assert
         AssertFilesAreValid();
@@ -169,7 +192,9 @@ public class CsvStructureTest
             await _csvStructure.AddMeasurement(randomMeasurements[i]);
         }
         if (numOfMeasurements > 0)
+        {
             await _csvStructure.WriteRows();
+        }
 
         // Assert
         AssertFilesAreValid();
@@ -190,7 +215,10 @@ public class CsvStructureTest
         var headingsOfFirstMeasurement = GetNames(firstMeasurement);
 
         if (maxNumOfRowsPerFile < 0) // unless maxNumOfRowsPerFile was specified, every file (except possibly the last one) has the same number of rows
+        {
             maxNumOfRowsPerFile = (int)Math.Ceiling(1 + (double)numOfMeasurements / numOfFiles);
+        }
+
         _slConfig.MaxNumOfRows = maxNumOfRowsPerFile;
         var expectedNumOfRows = maxNumOfRowsPerFile;
 
@@ -214,10 +242,14 @@ public class CsvStructureTest
             randomMeasurements.Add(newRndMeasurement);
             await _csvStructure.AddMeasurement(newRndMeasurement);
             if (_random.NextDouble() < 0.1) // write rows at random and not after every measurement
+            {
                 await _csvStructure.WriteRows();
+            }
         }
         if (numOfMeasurements > 0)
+        {
             await _csvStructure.WriteRows();
+        }
 
         // Assert
         AssertFilesAreValid();
@@ -226,7 +258,9 @@ public class CsvStructureTest
         for (var fileIndex = 0; fileIndex < _files.Length; fileIndex++)
         {
             if (fileIndex == _files.Length - 1) // last file is possibly not maxed out
+            {
                 expectedNumOfRows = 1 + numOfMeasurements - numOfValidatedMeasurements;
+            }
 
             var actualWrittenCsv = ReadInCsv(_files[fileIndex]);
             var actualWrittenHeader = actualWrittenCsv[0];
@@ -248,7 +282,9 @@ public class CsvStructureTest
                 var expectedValues = GetValues(toBeTestedMeasurement);
                 everyFieldAndTag = expectedValues.All(h => actualWrittenCsv[i].Contains(h));
                 if (!everyFieldAndTag)
+                {
                     break;
+                }
             }
 
             Assert.That(everyFieldAndTag, "File does not contain every field or tag of at least one measurement");
@@ -268,13 +304,13 @@ public class CsvStructureTest
             { // remove random field
                 editedFields.RemoveAt(_random.Next(0, editedFields.Count));
                 editedFields.ForEach(f => editedMeasurement.Add(new DataField(f.Name, f.Value)));
-                measurement.Tags.ForEach(t => editedMeasurement.Add(t));
+                measurement.Tags.ForEach(editedMeasurement.Add);
             }
             else if (editedTags.Count > 0)
             { // remove random tag
                 editedTags.RemoveAt(_random.Next(0, editedTags.Count));
                 editedTags.ForEach(t => editedMeasurement.Add(new DataTag(t.Name, t.Value)));
-                measurement.Fields.ForEach(f => editedMeasurement.Add(f));
+                measurement.Fields.ForEach(editedMeasurement.Add);
             }
             else
             {
@@ -284,20 +320,31 @@ public class CsvStructureTest
             measurement = editedMeasurement;
         }
         else
+        {
             AddRandomFieldOrTag(measurement, 0.5);
+        }
     }
 
     private void AddRandomFieldOrTag(Measurement measurement, double fieldProbability, string name = null, string value = null)
     {
         if (name == null)
+        {
             name = NewGuidString();
+        }
+
         if (value == null)
+        {
             value = NewGuidString();
+        }
 
         if (_random.NextDouble() < fieldProbability)
+        {
             measurement.Add(new DataField(name, value));
+        }
         else
+        {
             measurement.Add(new DataTag(name, value));
+        }
     }
 
     public void AssertCsvIsValidResult(string[] originalFiles, string[] resultFiles, IList<Measurement> measurements)
@@ -328,12 +375,18 @@ public class CsvStructureTest
                         {
                             var valueInFirstCsv = firstWrittenCsv[row][col];
                             if (!string.IsNullOrEmpty(valueInSecondCsv)) // values in both CSV files should be the same in this case
+                            {
                                 Assert.That(valueInFirstCsv, Is.EqualTo(valueInSecondCsv), $"Values in row {row + 1} column {col + 1} are not equal in both files");
+                            }
                             else // value was removed before writing to second CSV, should not be empty in first CSV
+                            {
                                 Assert.That(string.IsNullOrEmpty(valueInFirstCsv), Is.False, $"Value in row {row + 1} column {col + 1} is null or empty in file {originalFiles[fileIndex]}");
+                            }
                         }
                         else // value should be null because the header was overwritten but no corresponding value was inserted
+                        {
                             Assert.That(string.IsNullOrEmpty(valueInSecondCsv), $"Value in row {row + 1} column {col + 1} is not null or empty");
+                        }
                     }
                     else
                     {
@@ -376,7 +429,9 @@ public class CsvStructureTest
                 Assert.That(IsFileLocked(_fileInfo), Is.False, "Stream should be closed but file was not accessible");
             }
             else
+            {
                 Assert.That(IsFileLocked(_fileInfo), Is.False, "Stream should be closed after new file was created but file was not accessible");
+            }
         }
     }
 
@@ -403,7 +458,9 @@ public class CsvStructureTest
         try
         {
             using (FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None))
+            {
                 stream.Close();
+            }
         }
         catch (IOException) { return true; }
         return false;

@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace Moryx.Model.Repositories.Proxy;
 
-internal class ParameterPropertyMap
+internal sealed class ParameterPropertyMap
 {
     public ParameterPropertyMap(ParameterInfo parameter, PropertyInfo property)
     {

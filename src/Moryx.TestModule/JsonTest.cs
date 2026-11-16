@@ -187,8 +187,8 @@ public class JsonTest : IPlugin
     private static ConfigBase ReadLoop(IUnitOfWork uow, long id, JsonSerializerSettings settings)
     {
         var json = (from e in uow.GetRepository<IJsonEntityRepository>().Linq
-            where e.Id == id
-            select e.JsonData).FirstOrDefault();
+                    where e.Id == id
+                    select e.JsonData).FirstOrDefault();
         return JsonConvert.DeserializeObject<ConfigBase>(json, settings);
     }
 }

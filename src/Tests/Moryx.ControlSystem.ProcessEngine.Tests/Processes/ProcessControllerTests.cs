@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.ObjectModel;
-using System.Linq;
 using Moq;
 using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Recipes;

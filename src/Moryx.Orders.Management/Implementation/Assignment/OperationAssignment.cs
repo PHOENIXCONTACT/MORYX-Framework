@@ -88,7 +88,9 @@ internal class OperationAssignment : IOperationAssignment
             {
                 result = await createStep.AssignStep(operationData, operationLogger);
                 if (!result)
+                {
                     break;
+                }
 
                 operationLogger.Log(LogLevel.Information, Strings.OperationAssignment_Successful, createStep.GetType().Name);
             }
@@ -143,7 +145,9 @@ internal class OperationAssignment : IOperationAssignment
         {
             var result = await restoreStep.RestoreStep(operationData, operationLogger);
             if (result)
+            {
                 continue;
+            }
 
             throw new InvalidOperationException($"{restoreStep.GetType().Name} has failed.");
         }

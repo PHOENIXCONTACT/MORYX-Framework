@@ -44,7 +44,9 @@ public class PermissionsController : Controller
         var creationResult = await _permissionManager.CreateAsync(permission);
 
         if (!creationResult.Succeeded)
+        {
             ViewBag.ErrorMessage = creationResult.Errors.First().Description;
+        }
 
         return RedirectToAction("Index", routeValues: new { viewBagError = ViewBag.ErrorMessage });
     }
@@ -54,7 +56,9 @@ public class PermissionsController : Controller
         var deletionResult = await _permissionManager.DeleteAsync(permissionId);
 
         if (!deletionResult.Succeeded)
+        {
             return BadRequest(deletionResult);
+        }
 
         return RedirectToAction("Index");
     }

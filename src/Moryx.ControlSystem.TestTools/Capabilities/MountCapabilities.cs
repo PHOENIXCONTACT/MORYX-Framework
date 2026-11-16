@@ -47,7 +47,9 @@ public class MountCapabilities : CapabilitiesBase
     {
         var capabilities = provided as MountCapabilities;
         if (capabilities == null)
+        {
             return false;
+        }
 
         if (CanMount && !capabilities.CanMount)
         {

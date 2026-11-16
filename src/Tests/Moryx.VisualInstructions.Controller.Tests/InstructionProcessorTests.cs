@@ -26,13 +26,25 @@ public class InstructionProcessorTests
         // Arrange
         var config = new InstructionProcessorConfig();
         if (contentPattern)
+        {
             config.ContentPattern = GuidPattern;
+        }
+
         if (previewPattern)
+        {
             config.PreviewPattern = GuidPattern;
+        }
+
         if (contentReplacement)
+        {
             config.ContentReplacement = GuidContentReplacement;
+        }
+
         if (previewReplacement)
+        {
             config.PreviewReplacement = GuidPreviewReplacement;
+        }
+
         var processor = new InstructionProcessor(config);
 
         // Act
@@ -45,8 +57,13 @@ public class InstructionProcessorTests
 
         // Assert
         if (contentReplacement)
+        {
             Assert.That(item.Content, Is.EqualTo(@"moryx://media/guid/35afe06d-8393-4559-b6d7-74d35ce131d8?v=Master"));
+        }
+
         if (previewReplacement)
+        {
             Assert.That(item.Preview, Is.EqualTo(@"http://moryx-server/media/preview/35afe06d-8393-4559-b6d7-74d35ce131d8"));
+        }
     }
 }

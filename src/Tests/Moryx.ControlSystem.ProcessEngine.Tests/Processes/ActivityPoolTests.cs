@@ -1,10 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using Moryx.AbstractionLayer.Processes;
 using Moryx.ControlSystem.ProcessEngine.Processes;
 using Moryx.ControlSystem.TestTools;
@@ -215,7 +211,9 @@ public class ActivityPoolTests : ProcessTestsBase
                     // Keep a stable amount of 20 processes
                     int procCount;
                     lock (_allProcesses)
+                    {
                         procCount = _allProcesses.Count;
+                    }
 
                     if (procCount < 20)
                     {
@@ -239,7 +237,10 @@ public class ActivityPoolTests : ProcessTestsBase
                         var index = random.Next(procCount - 5);
                         ProcessData someProcess;
                         lock (_allProcesses)
+                        {
                             someProcess = _allProcesses[index];
+                        }
+
                         DataPool.AddActivity(someProcess, new ActivityData(new DummyActivity()));
                     }
 

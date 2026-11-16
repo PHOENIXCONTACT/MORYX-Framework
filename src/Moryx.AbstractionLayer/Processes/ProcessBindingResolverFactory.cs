@@ -53,10 +53,14 @@ public class ProcessBindingResolverFactory : BindingResolverFactory
         resolver = resolver.Extend(new PartLinkShortCut());
 
         if (property == nameof(IIdentity.Identifier))
+        {
             return resolver.Extend(new IdentifierShortCut());
+        }
 
         if (property == nameof(ProductType) || property == nameof(ProductInstance.Type))
+        {
             return resolver.Extend(new ProductResolver(property));
+        }
 
         return base.AddToChain(resolver, property);
     }
@@ -142,15 +146,15 @@ public class ProductResolver : BindingResolverBase
         switch (source)
         {
             case Process process:
-            {
-                var product = (process.Recipe as IProductRecipe)?.Product;
-                return product;
-            }
+                {
+                    var product = (process.Recipe as IProductRecipe)?.Product;
+                    return product;
+                }
             case Activity activity:
-            {
-                var product = (activity.Process.Recipe as IProductRecipe)?.Product;
-                return product;
-            }
+                {
+                    var product = (activity.Process.Recipe as IProductRecipe)?.Product;
+                    return product;
+                }
             case ProductInstance instance:
                 return instance.Type;
         }

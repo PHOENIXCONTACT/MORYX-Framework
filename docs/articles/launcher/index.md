@@ -84,3 +84,19 @@ the available space.
 4. You have placed the partial view inside a folder called `Pages`.
 5. The project in which you defined your partial view support Razor Pages and references the Launcher package or project.
 
+## Static File Caching
+
+Since module navigation triggers full page reloads, enabling cache headers on static files significantly improves load times on repeated visits. By default, ASP.NET Core does not set any `Cache-Control` header, causing browsers to re-download all assets on every navigation.
+
+Add `Cache-Control: public, no-cache` to enable [ETag-based revalidation](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/ETag). This lets the browser cache assets locally while always checking with the server, which responds with `304 Not Modified` when files haven't changed — avoiding redundant downloads.
+
+```cs
+app.UseStaticFiles(new StaticFileOptions
+{
+    OnPrepareResponse = ctx =>
+        ctx.Context.Response.Headers.CacheControl = "public, no-cache"
+});
+```
+
+For more details on static file caching in ASP.NET Core, see the [official documentation](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/static-files#set-http-response-headers).
+

@@ -48,7 +48,7 @@ public class SimulatedInput : IInput
     /// <summary>
     /// Raise the input changed event for a given key
     /// </summary>
-    public void RaiseInputChanged(object value) => InputChanged?.Invoke(this, new InputChangedEventArgs { Value = value});
+    public void RaiseInputChanged(object value) => InputChanged?.Invoke(this, new InputChangedEventArgs { Value = value });
 
     /// <summary>
     /// Raise the input changed event for a given key

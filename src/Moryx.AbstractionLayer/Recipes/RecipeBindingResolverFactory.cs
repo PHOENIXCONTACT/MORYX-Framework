@@ -39,22 +39,28 @@ public class RecipeBindingResolverFactory : BindingResolverFactory
         resolver = resolver.Extend(new PartLinkShortCut());
 
         if (property == nameof(IIdentity.Identifier))
+        {
             return resolver.Extend(new IdentifierShortCut());
+        }
 
         var wpResolver = resolver as WorkplanResolver;
         if (wpResolver == null)
+        {
             return base.AddToChain(resolver, property);
+        }
 
         var match = _wpOperationRegex.Match(property);
         if (!match.Success)
+        {
             return base.AddToChain(resolver, property);
+        }
 
         var argument = match.Groups["name"].Value;
         var stepResolver = new StepResolver(argument);
         return resolver.Append(stepResolver);
     }
 
-    private class WorkplanResolver : BindingResolverBase
+    private sealed class WorkplanResolver : BindingResolverBase
     {
         protected override object Resolve(object source)
         {
@@ -68,7 +74,7 @@ public class RecipeBindingResolverFactory : BindingResolverFactory
         }
     }
 
-    private class StepResolver : BindingResolverBase
+    private sealed class StepResolver : BindingResolverBase
     {
         private readonly string _stepName;
 

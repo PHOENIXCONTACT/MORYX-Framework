@@ -42,7 +42,10 @@ public class ModifiedEntity<TEntity> : DataModification<TEntity>, IEquatable<Mod
     public bool Equals(ModifiedEntity<TEntity> other)
     {
         if (other == null)
+        {
             return false;
+        }
+
         return Data.Id == other.Data.Id;
     }
 }
@@ -62,7 +65,10 @@ public class ModifiedId : DataModification<long>, IEquatable<ModifiedId>
     public bool Equals(ModifiedId other)
     {
         if (other == null)
+        {
             return false;
+        }
+
         return Data == other.Data;
     }
 }

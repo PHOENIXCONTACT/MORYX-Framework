@@ -1,19 +1,19 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Moryx.AbstractionLayer.Products;
-using Moryx.Orders.Endpoints.Properties;
-using Moryx.Users;
 using System.Net;
 using System.Net.ServerSentEvents;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Channels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Moryx.AbstractionLayer.Products;
 using Moryx.AspNetCore;
 using Moryx.Orders.Endpoints.Models;
+using Moryx.Orders.Endpoints.Properties;
+using Moryx.Users;
 
 namespace Moryx.Orders.Endpoints;
 
@@ -152,7 +152,9 @@ public class OrderManagementController : ControllerBase
     {
         var operation = await _orderManagement.LoadOperationAsync(guid);
         if (operation == null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
+        }
 
         return Converter.ToModel(operation);
     }
@@ -167,7 +169,9 @@ public class OrderManagementController : ControllerBase
     {
         var operation = await _orderManagement.LoadOperationAsync(guid);
         if (operation == null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_GetDocuments_DocumentNotFound });
+        }
 
         return operation.Documents.Select(Converter.ToModel).ToArray();
     }
@@ -183,14 +187,20 @@ public class OrderManagementController : ControllerBase
     {
         var operation = await _orderManagement.LoadOperationAsync(guid);
         if (operation == null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_GetDocuments_DocumentNotFound });
+        }
 
         var document = operation.Documents.FirstOrDefault(x => x.Identifier == identifier);
         if (document == null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_GetDocuments_DocumentNotFound });
+        }
 
         if (string.IsNullOrEmpty(document.ContentType))
+        {
             return BadRequest();
+        }
 
         return new FileStreamResult(document.GetStream(), document.ContentType);
     }
@@ -205,7 +215,9 @@ public class OrderManagementController : ControllerBase
     {
         var operation = await _orderManagement.LoadOperationAsync(guid);
         if (operation == null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_GetProductParts_ProductPartsNotFound });
+        }
 
         return operation.Parts.Select(Converter.ToModel).ToArray();
     }
@@ -243,11 +255,15 @@ public class OrderManagementController : ControllerBase
     {
         var operation = await _orderManagement.LoadOperationAsync(guid);
         if (operation == null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
+        }
 
         var reportContext = _orderManagement.GetReportContext(operation);
         if (reportContext == null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
+        }
 
         return reportContext;
     }
@@ -262,11 +278,15 @@ public class OrderManagementController : ControllerBase
     {
         var operation = await _orderManagement.LoadOperationAsync(guid);
         if (operation == null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
+        }
 
         var reportContext = _orderManagement.GetInterruptContext(operation);
         if (reportContext == null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
+        }
 
         return reportContext;
     }
@@ -281,11 +301,15 @@ public class OrderManagementController : ControllerBase
     {
         var operation = await _orderManagement.LoadOperationAsync(guid);
         if (operation == null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
+        }
 
         var adviceContext = _orderManagement.GetAdviceContext(operation);
         if (adviceContext == null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
+        }
 
         return adviceContext;
     }
@@ -299,7 +323,9 @@ public class OrderManagementController : ControllerBase
     {
         var operation = await _orderManagement.LoadOperationAsync(guid);
         if (operation == null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
+        }
 
         return _orderManagement.GetLogs(operation).Select(Converter.ToModel).ToArray();
     }
@@ -326,7 +352,9 @@ public class OrderManagementController : ControllerBase
         var context = contextModel.ConvertToContext();
 
         if (context == null)
+        {
             return BadRequest("Context is null");
+        }
 
         if (sourceId == null)
         {
@@ -350,7 +378,9 @@ public class OrderManagementController : ControllerBase
     {
         var operation = await _orderManagement.LoadOperationAsync(guid);
         if (operation == null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
+        }
 
         if (beginModel.UserId is null)
         {
@@ -374,7 +404,9 @@ public class OrderManagementController : ControllerBase
     {
         var operation = await _orderManagement.LoadOperationAsync(guid);
         if (operation == null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
+        }
 
         await _orderManagement.AbortOperationAsync(operation);
         return Ok();
@@ -428,13 +460,19 @@ public class OrderManagementController : ControllerBase
     {
         var operation = await _orderManagement.LoadOperationAsync(guid);
         if (operation == null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
+        }
 
         var result = await _orderManagement.TryAdviceAsync(operation, Converter.FromModel(advice, operation));
         if (result.Success)
+        {
             return Ok();
+        }
         else
+        {
             return BadRequest(result.Message);
+        }
     }
     #endregion
 
@@ -450,7 +488,9 @@ public class OrderManagementController : ControllerBase
     {
         var operation = await _orderManagement.LoadOperationAsync(guid);
         if (operation == null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
+        }
 
         await _orderManagement.UpdateOperationAsync(operation, Converter.FromModel(update));
         return Ok();
@@ -466,7 +506,9 @@ public class OrderManagementController : ControllerBase
     {
         var operation = await _orderManagement.LoadOperationAsync(guid);
         if (operation == null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
+        }
 
         await _orderManagement.ReloadAsync(operation);
         return Ok();

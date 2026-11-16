@@ -21,15 +21,21 @@ internal class DeadEndValidator : IWorkplanValidator
         {
             // Find a step using the connector as input
             if (workplan.Steps.Any(step => step.Inputs.Contains(connector)))
+            {
                 continue;
+            }
 
             //  or if it is the end connector
             if (connector.Classification.HasFlag(NodeClassification.Exit))
+            {
                 continue;
+            }
 
             //  or if it is not used as an output anywhere and is not a start connector
             if (!workplan.Steps.Any(step => step.Outputs.Contains(connector)) && !connector.Classification.HasFlag(NodeClassification.Entry))
+            {
                 continue;
+            }
 
             errors.Add(new DeadEndValidationError(connector.Id));
         }

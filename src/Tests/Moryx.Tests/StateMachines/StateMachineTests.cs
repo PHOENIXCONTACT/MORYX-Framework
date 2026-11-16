@@ -1,7 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using Moryx.StateMachines;
 using NUnit.Framework;
 
@@ -15,13 +14,10 @@ public class StateMachineTests
     {
         //Arrange
         var context = CreateContext();
+        // Act
 
         // Assert
-        Assert.DoesNotThrow(delegate
-        {
-            // Act
-            context.State.Initial();
-        });
+        Assert.DoesNotThrow(context.State.Initial);
     }
 
     [Test(Description = "Test transition from A to B state. This state is only possible in AState")]
@@ -99,7 +95,7 @@ public class StateMachineTests
         // Assert
         using var _ = Assert.EnterMultipleScope();
         Assert.That(context.State.Key == bkey);
-        Assert.Throws<InvalidOperationException>(() => context.State.Initial());
+        Assert.Throws<InvalidOperationException>(context.State.Initial);
     }
 
     [Test(Description = "Create a StateMachine with an unknown initial state key.")]
@@ -127,7 +123,7 @@ public class StateMachineTests
         StateMachine.Force(context.State, MyStateBase.StateA);
 
         // Assert
-        Assert.DoesNotThrow(() => context.State.AtoB());
+        Assert.DoesNotThrow(context.State.AtoB);
     }
 
     [Test(Description = "Brings the StateMachine to B and force to A with exiting the current state.")]
