@@ -24,20 +24,4 @@ public class ResourceRegistrationAttribute : PluginAttribute
         : base(LifeCycle.Transient, typeof(IResource))
     {
     }
-
-    /// <summary>
-    /// Constructor of custom type with lifecycle <see cref="LifeCycle.Singleton"/>
-    /// </summary>
-    public ResourceRegistrationAttribute(Type customRegistration)
-        : base(LifeCycle.Singleton, typeof(IResource), customRegistration)
-    {
-    }
-
-    /// <summary>
-    /// Constructor of custom type with lifecycle <see cref="LifeCycle.Singleton"/>
-    /// </summary>
-    public ResourceRegistrationAttribute(Type customRegistration, params Type[] customRegistrations)
-        : base(LifeCycle.Singleton, customRegistrations.Union([typeof(IResource), customRegistration]).ToArray())
-    {
-    }
 }
