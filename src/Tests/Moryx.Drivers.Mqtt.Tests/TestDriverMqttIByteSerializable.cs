@@ -1,11 +1,8 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Buffers;
 using System.Linq.Expressions;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moryx.AbstractionLayer.TestTools;
@@ -93,7 +90,7 @@ public class TestDriverMqttIByteSerializable
         //Arrange
         _mockClient.Setup(m => m.PublishAsync(
                 It.IsAny<MqttApplicationMessage>(), It.IsAny<CancellationToken>()))
-            .Callback<MqttApplicationMessage, CancellationToken>((sentMsg, token) => SendMessageBoolMqttMessage(sentMsg, token));
+            .Callback<MqttApplicationMessage, CancellationToken>(SendMessageBoolMqttMessage);
         //Act
         _driver.Send(new BoolMqttMessage { Message = MESSAGE_VALUE, Identifier = _topicBoolMqtt.Identifier });
 
@@ -108,8 +105,7 @@ public class TestDriverMqttIByteSerializable
         //Arrange
         _mockClient.Setup(m => m.PublishAsync(
                 It.IsAny<MqttApplicationMessage>(), It.IsAny<CancellationToken>()))
-            .Callback<MqttApplicationMessage, CancellationToken>((sentMsg, token)
-                => SendMessageBoolMqttMessage(sentMsg, token));
+            .Callback<MqttApplicationMessage, CancellationToken>(SendMessageBoolMqttMessage);
         //Act
         _topicBoolMqtt.Send(new BoolMqttMessage { Message = MESSAGE_VALUE, Identifier = _topicBoolMqtt.Identifier });
 
@@ -138,8 +134,7 @@ public class TestDriverMqttIByteSerializable
         //Arrange
         _mockClient.Setup(m => m.PublishAsync(
                 It.IsAny<MqttApplicationMessage>(), It.IsAny<CancellationToken>()))
-            .Callback<MqttApplicationMessage, CancellationToken>((sentMsg, token)
-                => SendMessageBoolIByteSerializableMessage(sentMsg, token));
+            .Callback<MqttApplicationMessage, CancellationToken>(SendMessageBoolIByteSerializableMessage);
 
         //Act
         _topicBoolIByteSerializable.Send(new BoolByteSerializableMessage { Message = MESSAGE_VALUE });

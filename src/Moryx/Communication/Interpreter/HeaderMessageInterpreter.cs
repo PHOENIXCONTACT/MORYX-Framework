@@ -86,7 +86,9 @@ public abstract class HeaderMessageInterpreter<THeader> : IMessageInterpreter
                     // Prepare message for payload
                     var payloadLength = headerContext.Header.PayloadLength + FooterSize;
                     if (payloadLength > 0)
+                    {
                         PrepareContext(headerContext, payloadLength, ParsingState.ReadingPayload);
+                    }
                     else
                     {
                         publishCompleteMessage(ToMessage(headerContext));
@@ -120,7 +122,9 @@ public abstract class HeaderMessageInterpreter<THeader> : IMessageInterpreter
         context.CurrentIndex = 0;
         context.ReadSize = size;
         if (context.ReadBuffer.Length < size) // Only increase read buffer if it is too small
+        {
             context.ReadBuffer = new byte[size];
+        }
 
         context.State = nextState;
     }
@@ -135,7 +139,9 @@ public abstract class HeaderMessageInterpreter<THeader> : IMessageInterpreter
 
         var payload = includesPayload ? new byte[payloadLength] : BinaryMessage.EmptyBytes;
         if (includesPayload)
+        {
             Buffer.BlockCopy(headerContext.ReadBuffer, 0, payload, 0, payloadLength);
+        }
 
         return new BinaryMessage<THeader>(headerContext.Header, payload);
     }
@@ -172,9 +178,26 @@ public abstract class HeaderMessageInterpreter<THeader> : IMessageInterpreter
     /// <inheritdoc />
     public override bool Equals(object obj)
     {
-        if (ReferenceEquals(null, obj)) return false;
-        if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != GetType()) return false;
+        if (ReferenceEquals(null, obj))
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, obj))
+        {
+            return true;
+        }
+
+        if (obj.GetType() != GetType())
+        {
+            return false;
+        }
+
         return Equals((HeaderMessageInterpreter<THeader>)obj);
+    }
+
+    public override int GetHashCode()
+    {
+        throw new NotImplementedException();
     }
 }

@@ -1,13 +1,13 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Moryx.Media.Endpoints.Properties;
-using System.Net;
 using Moryx.AspNetCore;
 using Moryx.Media.Endpoints.Models;
+using Moryx.Media.Endpoints.Properties;
 
 namespace Moryx.Media.Endpoints;
 
@@ -36,7 +36,10 @@ public class MediaServerController : ControllerBase
         var contents = _mediaServer.GetAll();
         var contentModels = new List<ContentDescriptorModel>();
         foreach (var c in contents)
+        {
             contentModels.Add(MediaModelConverter.ConvertContent(c));
+        }
+
         return contentModels.ToArray();
     }
 
@@ -50,11 +53,15 @@ public class MediaServerController : ControllerBase
     public ActionResult<ContentDescriptorModel> Get(string guid)
     {
         if (!Guid.TryParse(guid, out var parsedGuid))
+        {
             return BadRequest();
+        }
 
         var content = _mediaServer.Get(parsedGuid);
         if (content is null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = Strings.MediaServerController_MediaNotFound });
+        }
 
         return MediaModelConverter.ConvertContent(content);
     }
@@ -69,11 +76,15 @@ public class MediaServerController : ControllerBase
     public ActionResult<VariantDescriptor> GetVariant(string guid, string variantName)
     {
         if (!Guid.TryParse(guid, out var parsedGuid))
+        {
             return BadRequest();
+        }
 
         var variant = _mediaServer.GetVariant(parsedGuid, variantName);
         if (variant is null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = Strings.MediaServerController_MediaNotFound });
+        }
 
         return variant;
     }
@@ -88,24 +99,36 @@ public class MediaServerController : ControllerBase
     public async Task<ActionResult> GetVariantStream(string guid, string variantName, bool preview = false)
     {
         if (!Guid.TryParse(guid, out var parsedGuid))
+        {
             return BadRequest();
+        }
 
         var variant = _mediaServer.GetVariant(parsedGuid, variantName);
         if (variant is null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = Strings.MediaServerController_MediaNotFound });
+        }
 
         if (string.IsNullOrEmpty(variant.FileHash) || string.IsNullOrEmpty(variant.MimeType))
+        {
             return BadRequest();
+        }
 
         FileDescriptor usedDescriptor;
         if (preview)
+        {
             usedDescriptor = variant.Preview;
+        }
         else
+        {
             usedDescriptor = variant;
+        }
 
         var stream = _mediaServer.GetStream(usedDescriptor);
         if (stream is null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = Strings.MediaServerController_MediaNotFound });
+        }
 
         return new FileStreamResult(stream, usedDescriptor.MimeType)
         {
@@ -123,7 +146,9 @@ public class MediaServerController : ControllerBase
     public async Task<ActionResult<Guid>> AddMaster(IFormFile formFile)
     {
         if (!UploadValidation.ValidateFormFile(formFile, _mediaServer, out var errorMessage))
+        {
             return BadRequest(errorMessage);
+        }
 
         if (formFile.Length > 0)
         {
@@ -154,13 +179,19 @@ public class MediaServerController : ControllerBase
     {
 
         if (!UploadValidation.ValidateFormFile(formFile, _mediaServer, out var errorMessage))
+        {
             return BadRequest(errorMessage);
+        }
 
         if (!Guid.TryParse(contentId, out var parsedGuid))
+        {
             return BadRequest($"Invalid guid {contentId}");
+        }
 
         if (_mediaServer.Get(parsedGuid) is null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = Strings.MediaServerController_MediaNotFound });
+        }
 
         if (formFile.Length > 0)
         {
@@ -171,7 +202,9 @@ public class MediaServerController : ControllerBase
             if (resultData.Result != ContentAddingResult.Ok)
             {
                 if (resultGuid.Equals(contentId))
+                {
                     return Conflict($"{trustedFileName} file already exists in this content.");
+                }
                 else
                 {
                     return Conflict($"{trustedFileName} file already exists in content {resultGuid} with content name {resultData.Descriptor.Name}.");
@@ -194,10 +227,14 @@ public class MediaServerController : ControllerBase
     public ActionResult RemoveContent(string guid)
     {
         if (!Guid.TryParse(guid, out var parsedGuid))
+        {
             return BadRequest();
+        }
 
         if (!_mediaServer.DeleteContent(parsedGuid))
+        {
             return NotFound(new MoryxExceptionResponse { Title = Strings.MediaServerController_MediaNotFound });
+        }
 
         return Ok();
     }
@@ -211,10 +248,14 @@ public class MediaServerController : ControllerBase
     public ActionResult RemoveVariant(string guid, string variantName)
     {
         if (!Guid.TryParse(guid, out var parsedGuid))
+        {
             return BadRequest();
+        }
 
         if (!_mediaServer.DeleteVariant(parsedGuid, variantName))
+        {
             return NotFound(new MoryxExceptionResponse { Title = Strings.MediaServerController_MediaNotFound });
+        }
 
         return Ok();
     }

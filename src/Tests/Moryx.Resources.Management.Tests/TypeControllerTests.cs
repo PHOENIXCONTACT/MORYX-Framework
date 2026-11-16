@@ -1,14 +1,11 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Moq;
+using Moryx.AbstractionLayer.Capabilities;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
-using Moq;
 using NUnit.Framework;
-using Moryx.AbstractionLayer.Capabilities;
 
 namespace Moryx.Resources.Management.Tests;
 
@@ -304,7 +301,7 @@ public class TypeControllerTests
         var proxy = (ISimpleResource)_typeController.GetProxy(resource);
 
         // Act & Assert
-        Assert.Throws<InvalidOperationException>(() => proxy.ThrowingMethod());
+        Assert.Throws<InvalidOperationException>(proxy.ThrowingMethod);
     }
 
     [Test]

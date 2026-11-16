@@ -139,7 +139,9 @@ public static class HostExtensions
             {
                 logger.LogError("Super admin role could not be created");
                 foreach (var error in roleCreationResult.Errors)
+                {
                     logger.LogError("{0}: {1}", error.Code, error.Description);
+                }
 
                 return false;
             }
@@ -168,7 +170,9 @@ public static class HostExtensions
             {
                 logger.LogError("Admin user could not be created");
                 foreach (var error in userResult.Errors)
+                {
                     logger.LogError("{0}: {1}", error.Code, error.Description);
+                }
 
                 return false;
             }
@@ -188,7 +192,9 @@ public static class HostExtensions
             {
                 logger.LogError("Permission '{0}' could not be created", permission);
                 foreach (var error in permissionResult.Errors)
+                {
                     logger.LogError("{0}: {1}", error.Code, error.Description);
+                }
             }
         }
 

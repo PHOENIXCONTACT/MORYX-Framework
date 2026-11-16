@@ -1,8 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Linq;
 using Moryx.Model.InMemory;
 using Moryx.Model.Repositories;
 using Moryx.Notifications.Publisher;

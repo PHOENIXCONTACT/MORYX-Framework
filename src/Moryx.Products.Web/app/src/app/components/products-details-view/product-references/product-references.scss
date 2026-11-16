@@ -1,5 +1,9 @@
 @use "@moryx/ngx-web-framework/styles/variables" as *;
 
+.loading-spinner {
+  margin: auto;
+}
+
 .table-description-header-row {
   height: 24px;
 }

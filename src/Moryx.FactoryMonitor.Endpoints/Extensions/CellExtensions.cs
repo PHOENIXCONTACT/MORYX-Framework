@@ -4,7 +4,6 @@
 using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Capabilities;
 using Moryx.AbstractionLayer.Processes;
-using Moryx.AbstractionLayer.Resources;
 using Moryx.ControlSystem.Activities;
 using Moryx.ControlSystem.Cells;
 using Moryx.ControlSystem.Processes;
@@ -39,9 +38,13 @@ internal static class CellExtensions
             };
 
             if (activity.Process is ProductionProcess)
+            {
                 activityChangedModel.Classification = ActivityClassification.Production;
+            }
             else if (activity is IControlSystemActivity controlActivity)
+            {
                 activityChangedModel.Classification = controlActivity.Classification;
+            }
 
             var recipe = activity.Process.Recipe as IOrderBasedRecipe;
             var orderModel = orderModels.
@@ -56,12 +59,16 @@ internal static class CellExtensions
         {
             var state = GetCellState(cell);
             if (state is CellState.NotReadyToWork)
+            {
                 return state;
+            }
 
             // Currently we are targetting running activity or completed activity
             // to-do: add more cellstate, state like tearup, teardown etc...
             if (activityProgress is ActivityProgress.Running)
+            {
                 return CellState.Running;
+            }
 
             return CellState.Idle;
         }
@@ -70,7 +77,9 @@ internal static class CellExtensions
         {
             var currentCapabilities = cell.Capabilities.GetAll();
             if ((currentCapabilities.Count() == 1 && currentCapabilities.Single() is NullCapabilities) || !currentCapabilities.Any())
+            {
                 return CellState.NotReadyToWork;
+            }
 
             return CellState.Idle;
         }

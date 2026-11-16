@@ -1,7 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using Moq;
 using Moryx.AbstractionLayer.Activities;
 using NUnit.Framework;
@@ -134,7 +133,7 @@ public class TracingActivityTest
         Done = 100
     }
 
-    private class FooTracing : Tracing
+    private sealed class FooTracing : Tracing
     {
         public string FooName { get; set; }
 

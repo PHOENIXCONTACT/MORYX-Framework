@@ -11,7 +11,7 @@ using Moryx.Logging;
 namespace Moryx.ControlSystem.MaterialManager;
 
 [Component(LifeCycle.Singleton, typeof(IMaterialManager))]
-internal class MaterialManager : IMaterialManager
+internal sealed class MaterialManager : IMaterialManager
 {
     /// <summary>
     /// Access material containers
@@ -67,7 +67,9 @@ internal class MaterialManager : IMaterialManager
     private async Task SetProduct(IMaterialContainer container)
     {
         if (container.ProvidedMaterial == null)
+        {
             return;
+        }
 
         // Update reference with values from product management
         if (container.ProvidedMaterial is ProductReference && container.ProvidedMaterial.Identity is ProductIdentity prodIdent)

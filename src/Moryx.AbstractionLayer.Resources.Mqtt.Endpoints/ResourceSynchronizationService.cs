@@ -420,7 +420,7 @@ public class ResourceSynchronizationService : IMqttService
     /// <summary>
     /// Message for deleted resource synchronization
     /// </summary>
-    private class DeletedResourceMessage
+    private sealed class DeletedResourceMessage
     {
         public string? SynchronizationTypeId { get; set; }
 

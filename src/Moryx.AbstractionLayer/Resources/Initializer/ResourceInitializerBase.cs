@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Logging;
-using Moryx.Modules;
 
 namespace Moryx.AbstractionLayer.Resources;
 

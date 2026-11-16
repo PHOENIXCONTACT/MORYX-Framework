@@ -5,13 +5,13 @@ using Moryx.Runtime.Modules;
 
 namespace Moryx.Runtime.Kernel.Tests.ModuleMocks;
 
-internal class ModuleC : ModuleBase
+internal sealed class ModuleC : ModuleBase
 {
     [RequiredModuleApi(IsStartDependency = true)]
     public IFacadeB[] Facades { get; set; }
 }
 
-internal class ModuleCSingle : ModuleBase
+internal sealed class ModuleCSingle : ModuleBase
 {
     [RequiredModuleApi(IsStartDependency = true)]
     public IFacadeB Facades { get; set; }

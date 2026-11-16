@@ -2,8 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Drawing;
-using System.Linq;
-using System.Threading.Tasks;
 using Moq;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Model.InMemory;

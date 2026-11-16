@@ -4,6 +4,7 @@
 using Moryx.AbstractionLayer.Resources;
 
 namespace Moryx.ControlSystem.Processes.Endpoints.Extensions;
+
 internal static class ResourceExtensions
 {
     public static Category ParentCategory(this Resource resource)

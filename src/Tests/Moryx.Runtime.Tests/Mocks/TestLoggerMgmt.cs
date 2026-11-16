@@ -1,12 +1,11 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using Microsoft.Extensions.Logging;
 
 namespace Moryx.Runtime.Tests.Mocks;
 
-internal class TestLoggerMgmt : ILoggerFactory, ILogger
+internal sealed class TestLoggerMgmt : ILoggerFactory, ILogger
 {
     public void AddProvider(ILoggerProvider provider)
     {

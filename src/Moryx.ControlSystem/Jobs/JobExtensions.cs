@@ -21,7 +21,9 @@ public static class JobExtensions
         public int CountPredictedFailures()
         {
             if (job is IPredictiveJob predictiveJob)
+            {
                 return predictiveJob.PredictedFailures.Count;
+            }
 
             return 0;
         }

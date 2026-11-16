@@ -43,10 +43,14 @@ internal class JobDataFactory : IJobDataFactory
         IJobData jobData = null;
 
         if (recipe is ProductionRecipe)
+        {
             jobData = InternalFactory.CreateProductionJob(recipe, amount);
+        }
 
         if (recipe is SetupRecipe)
+        {
             jobData = InternalFactory.CreateSetupJob(recipe);
+        }
 
         ValidateCreatedJob(jobData, recipe);
 
@@ -58,10 +62,14 @@ internal class JobDataFactory : IJobDataFactory
         IJobData jobData = null;
 
         if (recipe is ProductionRecipe)
+        {
             jobData = InternalFactory.CreateProductionJob(recipe, entity);
+        }
 
         if (recipe is SetupRecipe)
+        {
             jobData = InternalFactory.CreateSetupJob(recipe, entity);
+        }
 
         ValidateCreatedJob(jobData, recipe);
 
@@ -71,7 +79,9 @@ internal class JobDataFactory : IJobDataFactory
     private static void ValidateCreatedJob(IJobData jobData, IWorkplanRecipe recipe)
     {
         if (jobData == null)
+        {
             throw new InvalidOperationException($"Cannot find job type for recipe of type: {recipe.GetType().FullName}.");
+        }
     }
 
     public void Destroy(IJobData jobData) => InternalFactory.Destroy(jobData);

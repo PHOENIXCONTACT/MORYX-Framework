@@ -20,7 +20,9 @@ public static class AppDomainBuilder
         foreach (var assemblyFile in assemblies)
         {
             if (AppDomain.CurrentDomain.GetAssemblies().Any(loadedAssembly => NamesMatch(loadedAssembly, assemblyFile)))
+            {
                 continue;
+            }
 
             try
             {

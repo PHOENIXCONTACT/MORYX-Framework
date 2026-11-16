@@ -11,7 +11,7 @@ namespace Moryx.Workplans.Web.Models;
 /// <summary>
 /// Implementation of <see cref="ICustomSerialization"/> for types derived from <see cref="WorkplanStepBase"/>
 /// </summary>
-internal class WorkplanStepSerialization : PossibleValuesSerialization
+internal sealed class WorkplanStepSerialization : PossibleValuesSerialization
 {
     public WorkplanStepSerialization() : base(null, null, new EmptyValueProvider())
     {
@@ -27,7 +27,7 @@ internal class WorkplanStepSerialization : PossibleValuesSerialization
             : new EntrySerializeSerialization().GetProperties(sourceType);
     }
 
-    private class EmptyValueProvider : IEmptyPropertyProvider
+    private sealed class EmptyValueProvider : IEmptyPropertyProvider
     {
         public void FillEmpty(object obj)
         {

@@ -1,8 +1,8 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.Model;
-using Moryx.Model.Repositories;
+using Microsoft.Extensions.Logging;
+using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;
@@ -11,11 +11,11 @@ using Moryx.ControlSystem.ProcessEngine.Jobs.Setup;
 using Moryx.ControlSystem.ProcessEngine.Model;
 using Moryx.ControlSystem.ProcessEngine.Processes;
 using Moryx.ControlSystem.Setups;
-using ProcessContext = Moryx.ControlSystem.ProcessEngine.Model.ProcessContext;
-using Microsoft.Extensions.Logging;
-using Moryx.AbstractionLayer.Processes;
 using Moryx.Logging;
+using Moryx.Model;
+using Moryx.Model.Repositories;
 using Moryx.Threading;
+using ProcessContext = Moryx.ControlSystem.ProcessEngine.Model.ProcessContext;
 
 namespace Moryx.ControlSystem.ProcessEngine.Jobs;
 
@@ -85,7 +85,9 @@ internal class JobStorage : IJobStorage, IJobHistory, ILoggingComponent
     {
         // Await all pending storage tasks
         while (_pendingTasks > 0)
+        {
             Thread.Sleep(100);
+        }
     }
 
     #endregion
@@ -118,7 +120,9 @@ internal class JobStorage : IJobStorage, IJobHistory, ILoggingComponent
 
         // If there are still jobs left, the database was corrupted
         if (dbJobs.Any())
+        {
             throw new InvalidOperationException("Failed to restore sorted jobs. Database corrupted.");
+        }
 
         // return sorted list
         return jobs;
@@ -157,32 +161,38 @@ internal class JobStorage : IJobStorage, IJobHistory, ILoggingComponent
         using var uow = UnitOfWorkFactory.Create();
         var repo = uow.GetRepository<IJobEntityRepository>();
         var result = (from entity in repo.Linq
-            where entity.Id == jobId
-            select new QueryJob
-            {
-                Id = entity.Id,
-                EntityAmount = entity.Amount,
-                Classification = JobClassification.Completed,
-                SuccessCount = entity.Processes.Count(p => p.State == (int)ProcessState.Success),
-                FailureCount = entity.Processes.Count(p => p.State == (int)ProcessState.Failure),
-                ReworkedCount = entity.Processes.Count(p => p.JobId == jobId && p.Rework &&
-                                                            (p.State == (int)ProcessState.Success ||
-                                                             p.State == (int)ProcessState.Failure)),
-                RecipeId = entity.RecipeId,
+                      where entity.Id == jobId
+                      select new QueryJob
+                      {
+                          Id = entity.Id,
+                          EntityAmount = entity.Amount,
+                          Classification = JobClassification.Completed,
+                          SuccessCount = entity.Processes.Count(p => p.State == (int)ProcessState.Success),
+                          FailureCount = entity.Processes.Count(p => p.State == (int)ProcessState.Failure),
+                          ReworkedCount = entity.Processes.Count(p => p.JobId == jobId && p.Rework &&
+                                                                      (p.State == (int)ProcessState.Success ||
+                                                                       p.State == (int)ProcessState.Failure)),
+                          RecipeId = entity.RecipeId,
 
-                StateKey = entity.State,
-                RecipeProvider = entity.RecipeProvider
-            }).FirstOrDefault();
+                          StateKey = entity.State,
+                          RecipeProvider = entity.RecipeProvider
+                      }).FirstOrDefault();
 
         if (result == null)
+        {
             return null;
+        }
 
         if (result.StateKey != JobStateBase.CompletedKey)
+        {
             throw new InvalidOperationException("Only completed jobs can be loaded by the history.");
+        }
 
         var provider = RecipeProviders.First(p => p.Name == result.RecipeProvider);
         if (provider is not IProductManagement)
+        {
             throw new InvalidOperationException("Only jobs based on product recipes can be reloaded.");
+        }
 
         result.DelayedRecipe = provider.LoadRecipeAsync(result.RecipeId).GetAwaiter().GetResult();
         return result;
@@ -220,9 +230,13 @@ internal class JobStorage : IJobStorage, IJobHistory, ILoggingComponent
             // Fetch entity and update state OR create new one
             var jobEntity = jobEntities.FirstOrDefault(j => j.Id == job.Id);
             if (jobEntity == null)
+            {
                 jobEntity = Add(uow, job, previousJob);
+            }
             else if (jobEntity.State != job.State.Key)
+            {
                 jobEntity.State = job.State.Key;
+            }
 
             // Do not update previousJob for completed jobs to close the gap
             if (job.State.Classification == JobClassification.Completed)
@@ -234,7 +248,9 @@ internal class JobStorage : IJobStorage, IJobHistory, ILoggingComponent
 
             // Update previous link
             if (jobEntity.Previous != previousJob)
+            {
                 jobEntity.Previous = previousJob;
+            }
 
             previousJob = jobEntity;
         }
@@ -253,7 +269,9 @@ internal class JobStorage : IJobStorage, IJobHistory, ILoggingComponent
         var stateKey = jobData.State.Key;
         // Completion should only be set by CompletionFragment
         if (jobEntity.State != stateKey && stateKey != JobStateBase.CompletedKey)
+        {
             jobEntity.State = stateKey;
+        }
     }
 
     private void ConcurrentAccess<TArgument>(IReadOnlyList<IJobData> modifiedJobs, Action<IUnitOfWork, TArgument> callback, TArgument argument)
@@ -289,7 +307,9 @@ internal class JobStorage : IJobStorage, IJobHistory, ILoggingComponent
             {
                 // Remove jobs as they are no longer updated
                 foreach (var job in modifiedJobs)
+                {
                     _processedJobs.Remove(job);
+                }
             }
 
             Interlocked.Decrement(ref _pendingTasks);

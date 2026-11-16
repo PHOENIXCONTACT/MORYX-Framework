@@ -47,7 +47,9 @@ public abstract class ProcessDataListenerBase<TConf> : IProcessDataListener, ILo
     public void MeasurandAdded(Measurand measurand)
     {
         if (!IsMeasurandEnabled(measurand.Name))
+        {
             return;
+        }
 
         OnMeasurandAdded(measurand);
     }
@@ -56,7 +58,9 @@ public abstract class ProcessDataListenerBase<TConf> : IProcessDataListener, ILo
     public void MeasurementAdded(Measurement measurement)
     {
         if (!IsMeasurandEnabled(measurement.Measurand))
+        {
             return;
+        }
 
         OnMeasurementAdded(measurement);
     }

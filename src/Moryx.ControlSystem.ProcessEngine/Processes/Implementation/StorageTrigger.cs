@@ -80,19 +80,28 @@ internal sealed class StorageTrigger : IActivityPoolListener, IDisposable
         {
             case ProcessState.Ready:
                 if (processData.Process is ProductionProcess prodProcess)
+                {
                     prodProcess.ProductInstance = ((IProductRecipe)prodProcess.Recipe).Target.CreateInstance();
+                }
+
                 break;
             case ProcessState.CleaningUp:
             case ProcessState.Restored:
                 if (processData.Process is ProductionProcess)
+                {
                     ParallelOperations.ExecuteParallel(LoadProductInstance, processData);
+                }
+
                 break;
             case ProcessState.Interrupted:
                 // Interrupted processes are saved synchronous for secure shutdown
                 ProcessStorage.SaveProcess(args.ProcessData);
                 // Save instances if existing and configured
                 if (ModuleConfig.SaveInstancesOnInterrupt && (processData.Process as ProductionProcess)?.ProductInstance?.Id > 0)
+                {
                     ParallelOperations.ExecuteParallel(SaveInstance, processData);
+                }
+
                 break;
             case ProcessState.Success:
             case ProcessState.Failure:
@@ -100,7 +109,10 @@ internal sealed class StorageTrigger : IActivityPoolListener, IDisposable
                 ParallelOperations.ExecuteParallel(ProcessStorage.SaveProcess, args.ProcessData);
                 //Only update the instance if it exists and is not just a prepared object
                 if ((processData.Process as ProductionProcess)?.ProductInstance?.Id > 0)
+                {
                     ParallelOperations.ExecuteParallel(SaveInstance, processData);
+                }
+
                 break;
         }
     }
@@ -112,14 +124,18 @@ internal sealed class StorageTrigger : IActivityPoolListener, IDisposable
     {
         // Only completed activities can change an article
         if (args.Trigger != ActivityState.ResultReceived)
+        {
             return;
+        }
 
         var activityData = args.ActivityData;
         var processData = activityData.ProcessData;
 
         // We are only interested in IArticleModificationActivities on ProductionProcesses
         if (activityData.ProcessData.Process is ProductionProcess && activityData.Activity is IInstanceModificationActivity activity)
+        {
             ProcessArticleModification(activityData, processData, activity);
+        }
 
         SaveCompletedActivity(processData, activityData);
 
@@ -139,7 +155,9 @@ internal sealed class StorageTrigger : IActivityPoolListener, IDisposable
             {
                 // Someone else is creating/created the process
                 if (processData.EntityCreated || _creatingProcesses.Contains(processData))
+                {
                     continue;
+                }
 
                 // We create the process
                 _creatingProcesses.Add(processData);
@@ -197,15 +215,23 @@ internal sealed class StorageTrigger : IActivityPoolListener, IDisposable
     {
         var prodProcess = (ProductionProcess)processData.Process;
         if (processData.ReferenceId > 0) // Only load article if the process already has one!
+        {
             prodProcess.ProductInstance = ProductManagement.LoadInstanceAsync(processData.ReferenceId).GetAwaiter().GetResult();
+        }
         else // Otherwise provide a prepared, unsaved instance
+        {
             prodProcess.ProductInstance = ((IProductRecipe)prodProcess.Recipe).Target.CreateInstance();
+        }
 
         // Signal process ready for execution
         if (processData.State == ProcessState.Restored)
+        {
             ActivityPool.UpdateProcess(processData, ProcessState.RestoredReady);
+        }
         else if (processData.State == ProcessState.CleaningUp)
+        {
             ActivityPool.UpdateProcess(processData, ProcessState.CleaningUpReady);
+        }
     }
 
     /// <summary>

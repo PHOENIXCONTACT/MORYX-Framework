@@ -21,7 +21,9 @@ public static class DbSetExtensions
     {
         var entity = dbSet.FirstOrDefault(e => e.Id == obj.Id);
         if (entity != null)
+        {
             return entity;
+        }
 
         entity = new TEntity();
         dbSet.Add(entity);

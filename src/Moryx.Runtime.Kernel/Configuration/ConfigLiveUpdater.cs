@@ -17,11 +17,13 @@ internal class ConfigLiveUpdater
     private bool UpdateObject(Type sharedType, object target, object source)
     {
         var modifiedProperties = (from propertyInfo in sharedType.GetProperties()
-            where UpdateProperty(propertyInfo, target, source)
-            select propertyInfo.Name).ToList();
+                                  where UpdateProperty(propertyInfo, target, source)
+                                  select propertyInfo.Name).ToList();
 
         if (modifiedProperties.Any() & target is IUpdatableConfig)
+        {
             ((IUpdatableConfig)target).RaiseConfigChanged(modifiedProperties.ToArray());
+        }
 
         return modifiedProperties.Any();
     }
@@ -45,11 +47,15 @@ internal class ConfigLiveUpdater
         var targetValue = prop.GetValue(target);
         var sourceValue = prop.GetValue(source);
         if (targetValue != null && targetValue.Equals(sourceValue) || sourceValue == null)
+        {
             return false;
+        }
 
         if (prop.PropertyType.IsClass && prop.PropertyType != typeof(string)
                                       && (targetValue != null && targetValue.GetType() == sourceValue.GetType()))
+        {
             return UpdateObject(GetSharedType(prop.PropertyType, targetValue, sourceValue), targetValue, sourceValue);
+        }
 
         prop.SetValue(target, sourceValue);
         return true;
@@ -60,13 +66,20 @@ internal class ConfigLiveUpdater
         // Check if both objects are identical or have the same type
         Type targetType = target.GetType(), sourceType;
         if (target == source || target.GetType() == (sourceType = source.GetType()))
+        {
             return targetType;
+        }
 
         // Check if they are are direct relatives
         if (targetType.IsInstanceOfType(source))
+        {
             return targetType;
+        }
+
         if (sourceType.IsInstanceOfType(targetType))
+        {
             return sourceType;
+        }
 
         // Check if their inheritance trees meet somewhere
         var targetsBases = GetBaseTypes(targetType);

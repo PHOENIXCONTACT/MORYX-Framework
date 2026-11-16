@@ -30,7 +30,9 @@ public class ActivityStart : Session
     public ActivityCompleted CreateResult()
     {
         if (Activity.Result == null)
+        {
             throw new InvalidOperationException("Can not create completed message for activity without result.");
+        }
 
         return new ActivityCompleted(Activity, this);
     }
@@ -41,7 +43,9 @@ public class ActivityStart : Session
     public ActivityCompleted CreateResult(long result)
     {
         if (Activity.Result == null)
+        {
             Activity.Complete(result);
+        }
 
         return new ActivityCompleted(Activity, this);
     }

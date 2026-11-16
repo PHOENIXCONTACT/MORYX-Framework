@@ -3,12 +3,12 @@
 
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading.Channels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Moryx.ControlSystem.Jobs.Endpoints.Properties;
-using System.Threading.Channels;
 using Moryx.AspNetCore;
+using Moryx.ControlSystem.Jobs.Endpoints.Properties;
 
 namespace Moryx.ControlSystem.Jobs.Endpoints;
 
@@ -40,7 +40,9 @@ public class JobManagementController : ControllerBase
     {
         var job = _jobManagement.Get(jobId);
         if (job == null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = Strings.JobManagementController_JobNotFound });
+        }
 
         return Converter.ToModel(job);
     }
@@ -59,7 +61,9 @@ public class JobManagementController : ControllerBase
     {
         var job = _jobManagement.Get(jobId);
         if (job == null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = Strings.JobManagementController_JobNotFound });
+        }
 
         _jobManagement.Complete(job);
         return Ok();
@@ -72,7 +76,9 @@ public class JobManagementController : ControllerBase
     {
         var job = _jobManagement.Get(jobId);
         if (job == null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = Strings.JobManagementController_JobNotFound });
+        }
 
         _jobManagement.Abort(job);
         return Ok();

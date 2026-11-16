@@ -3,7 +3,7 @@
 
 namespace Moryx.Launcher.Models;
 
-internal class CultureModel
+internal sealed class CultureModel
 {
     public string Name { get; set; }
 

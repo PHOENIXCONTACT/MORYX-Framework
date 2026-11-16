@@ -31,7 +31,9 @@ public class IntegerStrategyConfigurationAttribute : PropertyStrategyConfigurati
     public override int TypeCompliance(Type targetType)
     {
         if (targetType.IsEnum)
+        {
             return PerfectMatch;
+        }
 
         return base.TypeCompliance(targetType);
     }

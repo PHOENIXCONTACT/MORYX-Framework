@@ -2,12 +2,12 @@
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moryx.Configuration;
-using Moryx.Model.InMemory;
 using Moryx.Model;
+using Moryx.Model.InMemory;
 using Moryx.Runtime.Kernel;
 using Moryx.Runtime.Modules;
 using Moryx.TestTools.UnitTest;
@@ -44,7 +44,9 @@ public class MoryxTestEnvironment
         _moduleType = serverModuleType;
 
         if (!serverModuleType.IsAssignableTo(typeof(IServerModule)))
+        {
             throw new ArgumentException("Provided parameter is no server module.", nameof(serverModuleType));
+        }
 
         var dependencyTypes = serverModuleType.GetProperties()
             .Where(p => p.GetCustomAttribute<RequiredModuleApiAttribute>() is not null)
@@ -105,7 +107,9 @@ public class MoryxTestEnvironment
 
         var strategies = module.GetType().GetProperty(nameof(ServerModuleBase<ConfigBase>.Strategies)).GetValue(module) as Dictionary<Type, string>;
         if (strategies is not null && !strategies.Any(s => s.Value == nameof(NotSoParallelOps)))
+        {
             strategies.Add(typeof(IParallelOperations), nameof(NotSoParallelOps));
+        }
 
         await module.StartAsync(cancellationToken);
         return module;

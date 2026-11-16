@@ -9,7 +9,7 @@ using NUnit.Framework;
 
 namespace Moryx.Simulation.Tests;
 
-internal class SimulationStatesTests : BaseTest
+internal sealed class SimulationStatesTests : BaseTest
 {
     [SetUp]
     public override void Setup()

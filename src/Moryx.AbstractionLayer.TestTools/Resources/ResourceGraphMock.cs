@@ -118,9 +118,9 @@ public class ResourceGraphMock : IResourceGraph
     {
         var resourceType = instance.GetType();
         var properties = (from prop in resourceType.GetProperties()
-            let propType = prop.PropertyType
-            where propType.IsGenericType && propType.GetGenericTypeDefinition() == typeof(IReferences<>)
-            select prop).ToList();
+                          let propType = prop.PropertyType
+                          where propType.IsGenericType && propType.GetGenericTypeDefinition() == typeof(IReferences<>)
+                          select prop).ToList();
         foreach (var property in properties)
         {
             var listType = typeof(ReferenceCollectionMock<>).MakeGenericType(property.PropertyType.GetGenericArguments()[0]);

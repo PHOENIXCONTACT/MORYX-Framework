@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Resources;
@@ -23,7 +23,9 @@ internal static class OperatorStorage
         entity.Pseudonym = operatorData.Pseudonym;
 
         if (AttendancesChanged(operatorData, entity))
+        {
             SaveAttendances(operatorData, uow, entity);
+        }
 
         uow.SaveChanges();
         return entity;

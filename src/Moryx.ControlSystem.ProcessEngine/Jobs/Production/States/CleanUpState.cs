@@ -25,7 +25,9 @@ internal class CleanUpState : ProductionJobStateBase
             Context.LoadProcesses();
 
             if (Context.RunningProcesses.Count == 0)
+            {
                 NextState(StateCompleted);
+            }
         }
         catch (Exception)
         {

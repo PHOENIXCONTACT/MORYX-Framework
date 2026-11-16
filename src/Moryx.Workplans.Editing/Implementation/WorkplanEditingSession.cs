@@ -28,7 +28,9 @@ internal class WorkplanEditingSession : IWorkplanEditingSession
     public void AddStep(IWorkplanStep step)
     {
         if (step is ISubworkplanStep stepSubWorkplan && _workplan.Id == stepSubWorkplan.Workplan.Id)
+        {
             throw new ArgumentException(Strings.WorkplanEditingSession_SameWorkplanReference);
+        }
 
         _workplan.Add(step);
     }
@@ -50,10 +52,14 @@ internal class WorkplanEditingSession : IWorkplanEditingSession
     {
         var step = _workplan.Steps.FirstOrDefault(s => s.Id == stepId);
         if (step == null)
+        {
             return false;
+        }
 
         if (!_workplan.Remove(step))
+        {
             return false;
+        }
 
         // Check for each connector if another step uses it in the same role
         // Otherwise all remaining usages no longer represent a connection and can be deleted
@@ -61,7 +67,9 @@ internal class WorkplanEditingSession : IWorkplanEditingSession
         {
             var otherInput = _workplan.Steps.Any(s => s.Inputs.Contains(input));
             if (otherInput)
+            {
                 continue;
+            }
 
             // If no other input uses it, we can remove all output references
             foreach (var otherStep in _workplan.Steps)
@@ -69,13 +77,17 @@ internal class WorkplanEditingSession : IWorkplanEditingSession
                 for (int i = 0; i < otherStep.Outputs.Length; i++)
                 {
                     if (otherStep.Outputs[i] == input)
+                    {
                         otherStep.Outputs[i] = null;
+                    }
                 }
             }
 
             // Now we can remove the connector
             if (input.Classification == NodeClassification.Intermediate)
+            {
                 _workplan.Remove(input);
+            }
         }
 
         // The same logic applied to outputs
@@ -83,7 +95,9 @@ internal class WorkplanEditingSession : IWorkplanEditingSession
         {
             var otherOutput = _workplan.Steps.Any(s => s.Outputs.Contains(output));
             if (otherOutput)
+            {
                 continue;
+            }
 
             // If no other output uses it, we can remove all input references
             foreach (var otherStep in _workplan.Steps)
@@ -91,13 +105,17 @@ internal class WorkplanEditingSession : IWorkplanEditingSession
                 for (int i = 0; i < otherStep.Inputs.Length; i++)
                 {
                     if (otherStep.Inputs[i] == output)
+                    {
                         otherStep.Inputs[i] = null;
+                    }
                 }
             }
 
             // Now we can remove the connector
             if (output.Classification == NodeClassification.Intermediate)
+            {
                 _workplan.Remove(output);
+            }
         }
 
         return true;
@@ -113,7 +131,9 @@ internal class WorkplanEditingSession : IWorkplanEditingSession
         // Get the connector
         var connector = _workplan.Connectors.FirstOrDefault(c => c.Id == connectorId);
         if (connector == null)
+        {
             return false;
+        }
 
         // All references to this connector
         foreach (var step in _workplan.Steps)
@@ -121,12 +141,16 @@ internal class WorkplanEditingSession : IWorkplanEditingSession
             for (var i = 0; i < step.Inputs.Length; i++)
             {
                 if (step.Inputs[i] == connector)
+                {
                     step.Inputs[i] = null;
+                }
             }
             for (var i = 0; i < step.Outputs.Length; i++)
             {
                 if (step.Outputs[i] == connector)
+                {
                     step.Outputs[i] = null;
+                }
             }
         }
 
@@ -139,10 +163,14 @@ internal class WorkplanEditingSession : IWorkplanEditingSession
         if (sourceNode is IConnector start)
         {
             if (targetNode is IConnector)
+            {
                 throw new InvalidOperationException("Cannot connect start to End or Failed.");
+            }
 
             if (start == ((IWorkplanStep)targetNode).Inputs[targetIndex])
+            {
                 return;
+            }
 
             var targetStep = (IWorkplanStep)targetNode;
             var targetConnector = targetStep.Inputs[targetIndex];
@@ -154,7 +182,9 @@ internal class WorkplanEditingSession : IWorkplanEditingSession
             step.Outputs[sourceIndex] = end;
         }
         else
+        {
             ConnectTwoSteps(sourceNode, sourceIndex, targetNode, targetIndex);
+        }
     }
 
     private void ConnectStart(int targetIndex, IConnector start, IWorkplanStep targetStep, IConnector targetConnector)
@@ -178,7 +208,9 @@ internal class WorkplanEditingSession : IWorkplanEditingSession
             _workplan.Remove(targetConnector);
         }
         else
+        {
             targetStep.Inputs[targetIndex] = start;
+        }
     }
 
     private void ReplaceConnector(IConnector source, IConnector replacement)
@@ -188,12 +220,16 @@ internal class WorkplanEditingSession : IWorkplanEditingSession
             for (var i = 0; i < workplanStep.Outputs.Length; i++)
             {
                 if (workplanStep.Outputs[i] == source)
+                {
                     workplanStep.Outputs[i] = replacement;
+                }
             }
             for (var i = 0; i < workplanStep.Inputs.Length; i++)
             {
                 if (workplanStep.Inputs[i] == source)
+                {
                     workplanStep.Inputs[i] = replacement;
+                }
             }
         }
     }
@@ -254,7 +290,9 @@ internal class WorkplanEditingSession : IWorkplanEditingSession
             // Check if any other step uses this connector as output
             var others = _workplan.Steps.Where(s => s.Outputs.Contains(start)).ToList();
             if (!others.Any())
+            {
                 return;
+            }
 
             // That means it was a loop and we need to replace the connection
             var replacement = new Connector { Classification = NodeClassification.Intermediate };
@@ -264,7 +302,9 @@ internal class WorkplanEditingSession : IWorkplanEditingSession
                 for (var i = 0; i < other.Outputs.Length; i++)
                 {
                     if (other.Outputs[i] == start)
+                    {
                         other.Outputs[i] = replacement;
+                    }
                 }
             }
             step.Inputs[targetIndex] = replacement;

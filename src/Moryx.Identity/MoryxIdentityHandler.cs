@@ -48,25 +48,36 @@ public class MoryxIdentityHandler : AuthenticationHandler<MoryxIdentityOptions>
         var metadata = Context.GetEndpoint()?.Metadata;
         var authorizeAttributes = metadata?.OfType<AuthorizeAttribute>();
         if (authorizeAttributes?.Any() != true || metadata.GetMetadata<IAllowAnonymous>() != null)
+        {
             return AuthenticateResult.NoResult(); // endpoint has AllowAnonymous or no Authorize attribute
+        }
 
         if (Context.User == null)
+        {
             return AuthenticateResult.Fail("User not found.");
+        }
 
         var token = Context.Request.Cookies[MoryxIdentityDefaults.JWT_COOKIE_NAME];
         if (token == null)
+        {
             return AuthenticateResult.Fail("JwtToken not found");
+        }
 
         var refreshToken = Context.Request.Cookies[MoryxIdentityDefaults.REFRESH_TOKEN_COOKIE_NAME];
         if (refreshToken == null)
+        {
             return AuthenticateResult.Fail("RefreshToken not found");
+        }
 
         var decodedJwt = _jwtTokenHandler.ReadJwtToken(token);
         if (decodedJwt.ValidTo < DateTime.UtcNow)
         {
             var refreshResult = await _client.GetRefreshedTokensAsync(token, refreshToken);
             if (refreshResult is null || !refreshResult.Success)
+            {
                 return AuthenticateResult.Fail("Token is expired and could not be refreshed");
+            }
+
             token = refreshResult.Token;
             refreshToken = refreshResult.RefreshToken;
             Context.Response.Cookies.Append(MoryxIdentityDefaults.JWT_COOKIE_NAME, token, new CookieOptions
@@ -89,15 +100,22 @@ public class MoryxIdentityHandler : AuthenticationHandler<MoryxIdentityOptions>
         string requiredPolicy = "";
         var distinctPolicies = authorizeAttributes.Select(a => a.Policy).Where(s => !string.IsNullOrEmpty(s)).Distinct();
         if (distinctPolicies.Count() == 1)
+        {
             requiredPolicy = distinctPolicies.First();
+        }
 
         var permissions = await _client.GetPermissionsAsync(token, refreshToken, requiredPolicy);
         if (permissions == null)
+        {
             return AuthenticateResult.Fail("Retrieving Permissions failed");
+        }
 
         var appIdentity = new ClaimsIdentity(MoryxIdentityOptions.MoryxIdentity);
         foreach (var perm in permissions)
+        {
             appIdentity.AddClaim(new Claim("Permission", perm));
+        }
+
         var ticket = new AuthenticationTicket(
             new ClaimsPrincipal(appIdentity), this.Scheme.Name);
         return AuthenticateResult.Success(ticket);

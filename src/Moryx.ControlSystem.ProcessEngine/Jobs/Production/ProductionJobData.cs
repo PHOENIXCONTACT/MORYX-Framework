@@ -85,7 +85,10 @@ internal sealed class ProductionJobData : JobDataBase, IProductionJobData
     public override void FailurePredicted(ProcessData processData)
     {
         lock (_predictedFailures)
+        {
             _predictedFailures.Add(processData);
+        }
+
         Job.PredictedFailures.Add(processData.Process);
 
         RaiseProgressChanged();
@@ -107,22 +110,34 @@ internal sealed class ProductionJobData : JobDataBase, IProductionJobData
         Job.Running.Remove(processData.Process);
 
         lock (_predictedFailures)
+        {
             _predictedFailures.Remove(processData);
+        }
 
         Job.PredictedFailures.Remove(processData.Process);
 
         // Count the reworked process which could be also a success or failure process
         if (processData.Rework && (processData.State == ProcessState.Success || processData.State == ProcessState.Failure))
+        {
             Job.ReworkedCount = ++ReworkedCount;
+        }
 
         if (processData.State == ProcessState.Discarded)
+        {
             AllProcesses.Remove(processData); // Discarded processes are removed from all processes as well
+        }
         else if (processData.State == ProcessState.Success)
+        {
             Job.SuccessCount = ++SuccessCount;
+        }
         else if (processData.State == ProcessState.Failure)
+        {
             Job.FailureCount = ++FailureCount;
+        }
         else
+        {
             return;
+        }
 
         base.ProcessCompleted(processData);
     }

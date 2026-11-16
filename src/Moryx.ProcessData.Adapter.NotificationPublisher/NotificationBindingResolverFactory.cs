@@ -5,7 +5,7 @@ using Moryx.Bindings;
 
 namespace Moryx.ProcessData.Adapter.NotificationPublisher;
 
-internal class NotificationBindingResolverFactory : BindingResolverFactory
+internal sealed class NotificationBindingResolverFactory : BindingResolverFactory
 {
     protected override IBindingResolverChain CreateBaseResolver(string baseKey)
     {

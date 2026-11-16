@@ -1,10 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using Moq;
 using Moryx.Notifications;
 using Moryx.Orders.Management.Notifications;
@@ -112,7 +109,9 @@ public class OperationNotificationsTests
         List<IOperationData> operations = [otherOperationMock.Object];
 
         if (amountReachedInPool)
+        {
             operations.Add(amountReachedOperationMock.Object);
+        }
 
         _operationDataPoolMock.Setup(p => p.GetAll(It.IsAny<Func<IOperationData, bool>>()))
             .Returns((Func<IOperationData, bool> filter) => operations.Where(filter).ToArray());

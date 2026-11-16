@@ -85,11 +85,15 @@ public class PluginConfigsAttribute : PossibleValuesAttribute
 
             var baseConfig = targetApi.GetGenericArguments()[0];
             if (!baseConfig.IsAbstract)
+            {
                 possibleValues.Add(baseConfig);
+            }
         }
 
         if (pluginContainer == null)
+        {
             return possibleValues;
+        }
 
         // Find better way to remove ExpectedConfigAttribute -> Tries: 3
         var implementations = pluginContainer.GetRegisteredImplementations(StrategyService);

@@ -55,14 +55,14 @@ public abstract class TaskStep<TActivity, TProcParam, TParam> : WorkplanStepBase
     private static OutputDescription[] DescriptionsFromEnum(Type enumType)
     {
         return (from value in Enum.GetValues(enumType).OfType<object>()
-            let name = GetEnumName(value, enumType)
-            let numeric = (int)value
-            select new OutputDescription
-            {
-                Name = name,
-                OutputType = OutputTypeFromEnum(enumType, value, numeric),
-                MappingValue = numeric
-            }).ToArray();
+                let name = GetEnumName(value, enumType)
+                let numeric = (int)value
+                select new OutputDescription
+                {
+                    Name = name,
+                    OutputType = OutputTypeFromEnum(enumType, value, numeric),
+                    MappingValue = numeric
+                }).ToArray();
     }
 
     /// <summary>
@@ -110,7 +110,9 @@ public abstract class TaskStep<TActivity, TProcParam, TParam> : WorkplanStepBase
     protected override TransitionBase Instantiate(IWorkplanContext context)
     {
         if (context.IsDisabled(this))
+        {
             return new NullTransition();
+        }
 
         // Create transition
         var indexResolver = _indexResolver ?? (_indexResolver = TransitionBase.CreateIndexResolver(OutputDescriptions));

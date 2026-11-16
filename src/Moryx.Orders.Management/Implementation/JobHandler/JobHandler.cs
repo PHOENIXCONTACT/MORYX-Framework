@@ -63,7 +63,9 @@ internal class JobHandler : IJobHandler
             var operationData = OperationDataPool.Get(eventArgs.Operation);
 
             foreach (var addedJob in eventArgs.Jobs)
+            {
                 await operationData.AddJob(addedJob);
+            }
         }
         catch (Exception e)
         {
@@ -79,7 +81,9 @@ internal class JobHandler : IJobHandler
 
             // If operation was found and currently not dispatching, we can throw updates
             if (operationData == null)
+            {
                 return;
+            }
 
             await operationData.JobProgressChanged(job);
             await Dispatcher.JobProgressChangedAsync(operationData.Operation, job, CancellationToken.None);
@@ -103,7 +107,9 @@ internal class JobHandler : IJobHandler
 
             // If operation was found and currently not dispatching, we can throw updates
             if (operationData == null)
+            {
                 return;
+            }
 
             await operationData.JobStateChanged(eventArgs);
             await Dispatcher.JobStateChangedAsync(operationData.Operation, eventArgs, CancellationToken.None);
@@ -128,5 +134,5 @@ internal class JobHandler : IJobHandler
 
     /// <inheritdoc />
     public IEnumerable<Job> Restore(IEnumerable<long> jobIds)
-        => jobIds.Select(id => JobManagement.Get(id));
+        => jobIds.Select(JobManagement.Get);
 }

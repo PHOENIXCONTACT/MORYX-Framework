@@ -1,23 +1,23 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Buffers;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Runtime.Serialization;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Drivers;
 using Moryx.AbstractionLayer.Drivers.Message;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Bindings;
+using Moryx.Drivers.Mqtt.Messages;
+using Moryx.Drivers.Mqtt.Properties;
 using Moryx.Serialization;
 using Moryx.Threading;
 using Moryx.Tools;
-using Moryx.Drivers.Mqtt.Properties;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
-using Moryx.Drivers.Mqtt.Messages;
-using System.Buffers;
-using System.Text.Json;
 
 namespace Moryx.Drivers.Mqtt;
 

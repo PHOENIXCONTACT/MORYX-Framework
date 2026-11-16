@@ -102,9 +102,13 @@ internal class ModuleDependencyManager : IModuleDependencyManager
             {
                 var propType = importingProperty.Property.PropertyType;
                 if (typeof(Array).IsAssignableFrom(propType))
+                {
                     FillArray(propType, importingProperty, module, facadeProviders);
+                }
                 else
+                {
                     FillFacade(propType, importingProperty, module, facadeProviders);
+                }
             }
             satisfiedModules.Add(module);
         }
@@ -172,7 +176,9 @@ internal class ModuleDependencyManager : IModuleDependencyManager
                 // Go over all dependencies and convert if they were converted before
                 var dependencies = StartDependencies(module, facadeProviders);
                 if (dependencies.Any(dep => converted.All(con => con.RepresentedModule != dep) && dep.GetType() != typeof(MissingServerModule)))
+                {
                     continue; // Unconverted dependency
+                }
 
                 var branch = new ModuleDependencyBranch(module);
                 _cache[module] = branch;
@@ -192,7 +198,9 @@ internal class ModuleDependencyManager : IModuleDependencyManager
                 // of the current module
                 var nullDependencies = dependencies.Where(d => d.GetType() == typeof(MissingServerModule)).ToList();
                 if (nullDependencies != null && nullDependencies.Count > 0)
+                {
                     branch.Dependencies.AddRange(nullDependencies.Select(nd => new MissingModuleDependency((MissingServerModule)nd)));
+                }
 
                 remaining.Remove(module);
             }
@@ -208,19 +216,28 @@ internal class ModuleDependencyManager : IModuleDependencyManager
         foreach (var importingProperty in GetImportingProperties(module))
         {
             if (!importingProperty.Attribute.IsStartDependency)
+            {
                 continue;
+            }
 
             var propType = importingProperty.Property.PropertyType;
             if (propType.IsArray)
+            {
                 propType = propType.GetElementType();
+            }
+
             var dependencyProviders = facadeProviders.Where(facadePair => propType.IsInstanceOfType(facadePair.Key)).ToArray();
             foreach (var dependencyProvider in dependencyProviders)
+            {
                 dependencyServices.Add(dependencyProvider.Value);
+            }
 
             // when there is no facade provider for the dependency,
             // add a missing dependency for the property type
             if (dependencyProviders.Length == 0)
+            {
                 dependencyServices.Add(new MissingServerModule(propType, importingProperty.Attribute.IsOptional));
+            }
         }
 
         return dependencyServices;
@@ -229,9 +246,9 @@ internal class ModuleDependencyManager : IModuleDependencyManager
     private static IReadOnlyList<ImportingProperty> GetImportingProperties(IServerModule plugin)
     {
         var dependencyAttributes = from prop in plugin.GetType().GetProperties()
-            let att = prop.GetCustomAttribute<RequiredModuleApiAttribute>()
-            where att != null
-            select new ImportingProperty { Property = prop, Attribute = att };
+                                   let att = prop.GetCustomAttribute<RequiredModuleApiAttribute>()
+                                   where att != null
+                                   select new ImportingProperty { Property = prop, Attribute = att };
         return dependencyAttributes.ToList();
     }
     #endregion

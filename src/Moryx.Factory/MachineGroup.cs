@@ -5,8 +5,8 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Resources;
-using Moryx.Serialization;
 using Moryx.Factory.Properties;
+using Moryx.Serialization;
 
 namespace Moryx.Factory;
 

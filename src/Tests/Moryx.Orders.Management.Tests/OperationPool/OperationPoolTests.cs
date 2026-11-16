@@ -1,10 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moryx.ControlSystem.Jobs;
@@ -290,7 +286,9 @@ public class OperationPoolTests
             .Returns(mock.Object);
 
         if (startOperationPool)
+        {
             await operationDataPool.StartAsync();
+        }
 
         await operationDataPool.Add(context, new NullOperationSource());
         mock.SetupGet(op => op.State).Returns(new ReadyState(null, null));

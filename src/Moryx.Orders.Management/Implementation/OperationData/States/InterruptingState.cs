@@ -59,7 +59,9 @@ internal sealed class InterruptingState : OperationDataStateBase
     public override async Task JobsUpdated(JobStateChangedEventArgs args)
     {
         if (args.CurrentState < JobClassification.Completed)
+        {
             return;
+        }
 
         if (Context.Operation.Jobs.All(j => j.Classification == JobClassification.Completed))
         {

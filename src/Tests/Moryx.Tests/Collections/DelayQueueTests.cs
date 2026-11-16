@@ -1,10 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moryx.Collections;
 using Moryx.Threading;
@@ -15,7 +12,7 @@ namespace Moryx.Tests.Collections;
 [TestFixture, Explicit]
 public class DelayQueueTests
 {
-    private class DummyMessage
+    private sealed class DummyMessage
     {
     }
 
@@ -57,7 +54,9 @@ public class DelayQueueTests
         // Arrange
         var delay = (int)(Delay * delayFactor);
         if (delay > 0)
+        {
             Thread.Sleep(delay);
+        }
 
         // Act
         _queue.Enqueue(new DummyMessage());
@@ -83,7 +82,9 @@ public class DelayQueueTests
         // Arrange
         const int initalDelay = Delay + 100;
         if (queueReady)
+        {
             Thread.Sleep(initalDelay);
+        }
 
         // Act
         _queue.Enqueue(new DummyMessage());
@@ -113,7 +114,9 @@ public class DelayQueueTests
     {
         // Arrange
         if (initialDelay > 0)
+        {
             Thread.Sleep(initialDelay);
+        }
 
         // Act
         const int loops = 4;

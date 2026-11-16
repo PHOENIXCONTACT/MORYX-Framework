@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
+using Moryx.Container;
 using Moryx.Runtime.Modules;
 using Moryx.Serialization;
-using Moryx.Container;
 using IContainer = Moryx.Container.IContainer;
 
 namespace Moryx.TestModule;

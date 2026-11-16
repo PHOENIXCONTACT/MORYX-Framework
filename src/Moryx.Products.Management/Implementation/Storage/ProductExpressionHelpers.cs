@@ -13,15 +13,22 @@ internal static class ProductExpressionHelpers
     public static object ExtractExpressionValue(Expression expression)
     {
         if (expression is ConstantExpression constEx)
+        {
             return constEx.Value;
+        }
 
         if (expression is MemberExpression memEx)
         {
             var container = (memEx.Expression as ConstantExpression)?.Value;
             if (memEx.Member is FieldInfo field)
+            {
                 return field.GetValue(container);
+            }
+
             if (memEx.Member is PropertyInfo prop)
+            {
                 return prop.GetValue(container);
+            }
         }
 
         throw new NotSupportedException("Expression type not supported yet.");
@@ -74,7 +81,10 @@ internal static class ProductExpressionHelpers
         do
         {
             if (expression.Member is PropertyInfo propertyInfo && typeof(ProductType).IsAssignableFrom(propertyInfo.PropertyType))
+            {
                 return true;
+            }
+
             typeMember = expression.Member;
             expression = expression.Expression as MemberExpression;
         } while (expression is not null);

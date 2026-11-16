@@ -49,10 +49,9 @@
         </span>
         <section>
           <navigable-entry-editor
-            [entry]="skillType().acquiredCapabilities"
+            [entry]="skillType().acquiredCapabilities" (entryChange)="onCapabilitiesChange($event)"
             queryParam="acquiredCapabilities"
-            [disabled]="false">
-          </navigable-entry-editor>
+            [disabled]="false" />
         </section>
       </div>
     </div>

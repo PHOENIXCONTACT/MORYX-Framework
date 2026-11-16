@@ -1,7 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using Moryx.Configuration;
@@ -131,7 +130,9 @@ public class RuntimeConfigManagerTestConfig1 : ConfigBase, IUpdatableConfig
     public void RaiseConfigChanged(params string[] modifiedProperties)
     {
         if (ConfigChanged != null)
+        {
             ConfigChanged(this, new ConfigChangedEventArgs(modifiedProperties));
+        }
     }
 
     /// <summary>

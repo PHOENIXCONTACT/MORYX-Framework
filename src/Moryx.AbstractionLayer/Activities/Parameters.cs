@@ -29,10 +29,14 @@ public abstract class Parameters : IParameters
     {
         // We are already bound to this process
         if (_process == process)
+        {
             return this;
+        }
 
         if (_instanceDelegate == null)
+        {
             _instanceDelegate = ReflectionTool.ConstructorDelegate<Parameters>(GetType());
+        }
 
         // Create new instance of this type
         var instance = _instanceDelegate();

@@ -8,8 +8,8 @@ namespace Moryx.Configuration;
 [Serializable]
 internal class PropertyValidationException : Exception
 {
-    private PropertyInfo property;
-    private ValueProviderExecutorSettings settings;
+    private readonly PropertyInfo property;
+    private readonly ValueProviderExecutorSettings settings;
 
     public PropertyValidationException()
     {

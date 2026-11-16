@@ -1,9 +1,9 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Runtime.Serialization;
 using Moryx.Serialization;
 using Moryx.Tools;
-using System.Runtime.Serialization;
 
 namespace Moryx.Orders.Endpoints.Models;
 
@@ -77,7 +77,10 @@ public class OperationCreationContextModel
             {
                 var type = materialParameterTypes.FirstOrDefault(t => t.Name.Equals(materialEntry.Value.Default));
                 if (type == null)
+                {
                     continue;
+                }
+
                 var materialParameter = (IMaterialParameter)EntryConvert.CreateInstance(type, materialEntry);
                 context.MaterialParameters.Add(materialParameter);
             }

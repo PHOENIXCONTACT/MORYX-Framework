@@ -10,7 +10,7 @@ using NUnit.Framework;
 namespace Moryx.AbstractionLayer.Resources.Endpoints.Tests;
 
 [TestFixture]
-internal class ResourceManagementControllerTests
+internal sealed class ResourceManagementControllerTests
 {
     private Mock<IResourceManagement>? _resourceManagementMock;
     private Mock<IResourceTypeTree>? _resourceTypeTreeMock;

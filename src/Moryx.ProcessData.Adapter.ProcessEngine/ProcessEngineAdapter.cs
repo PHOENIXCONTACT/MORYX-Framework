@@ -14,7 +14,7 @@ using Moryx.ProcessData.Bindings;
 namespace Moryx.ProcessData.Adapter.ProcessEngine;
 
 [Plugin(LifeCycle.Singleton)]
-internal class ProcessEngineAdapter : IPlugin
+internal sealed class ProcessEngineAdapter : IPlugin
 {
     private const string MeasurementPrefix = "processEngine_";
 
@@ -81,7 +81,9 @@ internal class ProcessEngineAdapter : IPlugin
             {
                 var cycleTime = lastActivity.Tracing.Completed - firstActivity.Tracing.Started;
                 if (cycleTime.HasValue)
+                {
                     measurement.Add(new DataField("cycleTime", cycleTime.Value));
+                }
             }
 
             _processBindingProcessor.Apply(measurement, process);

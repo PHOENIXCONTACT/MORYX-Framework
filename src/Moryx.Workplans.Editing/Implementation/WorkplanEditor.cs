@@ -29,7 +29,9 @@ internal class WorkplanEditor : IWorkplanEditor, IPlugin
     {
         // Some step types are always allowed in editor because they will be used as template
         if (stepType == typeof(SubworkplanStep) || stepType == typeof(SplitWorkplanStep) || stepType == typeof(JoinWorkplanStep))
+        {
             return true;
+        }
 
         // Find match in settings
         var settings = Config.StepSettings.FirstOrDefault(ts => ts.StepType == stepType.FullName);
@@ -50,7 +52,9 @@ internal class WorkplanEditor : IWorkplanEditor, IPlugin
     {
         var session = this[token];
         if (session == null)
+        {
             return;
+        }
 
         _sessions.Remove(session);
     }

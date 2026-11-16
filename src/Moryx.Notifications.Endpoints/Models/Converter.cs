@@ -30,7 +30,10 @@ internal static class Converter
         };
 
         if (notification.Created != null)
+        {
             model.Created = (System.DateTime)notification.Created;
+        }
+
         return model;
     }
 }

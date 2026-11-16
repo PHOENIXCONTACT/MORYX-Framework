@@ -35,7 +35,7 @@ public class EngineTests
         Assert.That(workplanInstance.EndPlaces().First(), Is.EqualTo(transitions[2].Outputs[0]));
     }
 
-    private class FakeContext : IWorkplanContext
+    private sealed class FakeContext : IWorkplanContext
     {
         public bool IsDisabled(IWorkplanStep step)
         {
@@ -58,7 +58,10 @@ public class EngineTests
         {
             var dummy = (DummyTransition)transition;
             if (route == ExecutionPath.Alternative)
+            {
                 dummy.ResultOutput = dummy.Outputs.Length - 1;
+            }
+
             triggerCount++;
             path += "->" + dummy.Name;
         };

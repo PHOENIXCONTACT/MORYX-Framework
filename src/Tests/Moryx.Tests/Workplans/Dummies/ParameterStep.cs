@@ -8,7 +8,7 @@ using Moryx.Workplans.WorkplanSteps;
 
 namespace Moryx.Tests.Workplans;
 
-internal class ParameterStep : WorkplanStepBase, IParameterHolder
+internal sealed class ParameterStep : WorkplanStepBase, IParameterHolder
 {
     public ParameterStep()
     {
@@ -30,7 +30,7 @@ internal class ParameterStep : WorkplanStepBase, IParameterHolder
     }
 }
 
-internal class ParameterConstructorStep : WorkplanStepBase, IParameterHolder
+internal sealed class ParameterConstructorStep : WorkplanStepBase, IParameterHolder
 {
     private readonly DummyParameters _parameters;
 
@@ -57,7 +57,7 @@ internal interface IParameterHolder
     DummyParameters Export();
 }
 
-internal class DummyParameters
+internal sealed class DummyParameters
 {
     [EntrySerialize]
     public int Number { get; set; }

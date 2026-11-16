@@ -42,7 +42,7 @@ export class NodeProperties {
   private editorStateService = inject(EditorStateService);
 
   protected node = signal<WorkplanNodeModel | undefined>(undefined);
-  protected properties = signal<Entry | undefined>(undefined);
+  protected parameters = signal<Entry | undefined>(undefined);
 
   protected readonly workplanNodeClassification = WorkplanNodeClassification;
   protected readonly TranslationConstants = TranslationConstants;
@@ -59,7 +59,7 @@ export class NodeProperties {
         }
 
         this.node.set(step);
-        this.properties.set(step?.properties?.subEntries?.find(p => p.identifier === 'Parameters'));
+        this.parameters.set(step?.properties?.subEntries?.find(p => p.identifier === 'Parameters'));
       });
     });
   }
@@ -93,6 +93,18 @@ export class NodeProperties {
         await this.snackbarService.handleError(e);
         this.node.set(node);
       });
+  }
+
+  protected onParametersChange(updatedParameters: Entry) {
+    const node = this.node();
+    const subEntries = node?.properties?.subEntries;
+    if (!subEntries) {
+      return;
+    }
+    const index = subEntries.findIndex(p => p.identifier === 'Parameters');
+    if (index >= 0) {
+      subEntries[index] = updatedParameters;
+    }
   }
 
   protected onNavigateClick() {

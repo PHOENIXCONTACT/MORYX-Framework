@@ -28,7 +28,9 @@ public class StatusCheck : DeviceCommunicationBase, IStatusCheck
     public override void Start(Func<FunctionResult> execute)
     {
         if (_started)
+        {
             return;
+        }
 
         _execute = execute;
         _started = true;

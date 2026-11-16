@@ -48,8 +48,12 @@ internal sealed class ActivityTimeoutObserver : IActivityPoolListener, INotifica
     public void Stop()
     {
         lock (_runningTimers)
+        {
             foreach (var runningTimer in _runningTimers.Values)
+            {
                 ParallelOperations.StopExecution(runningTimer);
+            }
+        }
 
         _runningTimers.Clear();
     }
@@ -64,7 +68,9 @@ internal sealed class ActivityTimeoutObserver : IActivityPoolListener, INotifica
     {
         var timeoutParameters = args.ActivityData.Activity.Parameters as IActivityTimeoutParameters;
         if (timeoutParameters == null || timeoutParameters.Timeout <= 0)
+        {
             return;
+        }
 
         switch (args.Trigger)
         {
@@ -109,7 +115,9 @@ internal sealed class ActivityTimeoutObserver : IActivityPoolListener, INotifica
         NotificationAdapter.AcknowledgeAll(this, activityData);
 
         if (!_runningTimers.TryGetValue(activityData, out var timer))
+        {
             return;
+        }
 
         ParallelOperations.StopExecution(timer);
         _runningTimers.Remove(activityData);

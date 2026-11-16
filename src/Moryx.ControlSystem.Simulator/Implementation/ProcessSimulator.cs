@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Collections.Concurrent;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Processes;
@@ -14,7 +15,6 @@ using Moryx.Logging;
 using Moryx.Simulation.Simulator.Extensions;
 using Moryx.Threading;
 using Moryx.Tools;
-using System.Collections.Concurrent;
 
 namespace Moryx.ControlSystem.Simulator.Implementation;
 
@@ -46,7 +46,6 @@ internal sealed class ProcessSimulator : IProcessSimulator
 
     #endregion
 
-
     public void Start()
     {
         _running = true;
@@ -69,9 +68,13 @@ internal sealed class ProcessSimulator : IProcessSimulator
         foreach (var activity in activities)
         {
             if (activity.Tracing.Started == null)
+            {
                 ActivityReady(activity);
+            }
             else
+            {
                 ActivityRunning(activity);
+            }
         }
     }
 
@@ -82,7 +85,9 @@ internal sealed class ProcessSimulator : IProcessSimulator
         var runningProcesses = ProcessControl.GetRunningProcesses().ToList();
 
         if (newState == SimulationState.Offline || newState > SimulationState.Idle)
+        {
             return;
+        }
 
         Activity nextActivity;
         lock (_scheduledMovements)
@@ -104,7 +109,10 @@ internal sealed class ProcessSimulator : IProcessSimulator
                 .FirstOrDefault(pair => pair.Index >= 0 && pair.Activity != null)?.Activity;
         }
 
-        if (nextActivity is null) return;
+        if (nextActivity is null)
+        {
+            return;
+        }
 
         SimulateReady(driver, nextActivity);
     }
@@ -301,7 +309,9 @@ internal sealed class ProcessSimulator : IProcessSimulator
     private int CalculateExecutionTime(Activity activity)
     {
         if (activity.Parameters is ISimulationParameters simulationParameters)
+        {
             return (int)(simulationParameters.ExecutionTime.TotalMilliseconds / Config.Acceleration);
+        }
 
         var settings = Config.SpecificExecutionTimeSettings.Where(s => s.Activity.Equals(activity.GetType().FullName));
         if (!settings.Any())
@@ -312,11 +322,15 @@ internal sealed class ProcessSimulator : IProcessSimulator
         var resourceId = activity.Tracing.ResourceId;
         var specificSetting = settings.FirstOrDefault(s => s.CellId == resourceId);
         if (specificSetting != null)
+        {
             return (int)(specificSetting.ExecutionTime / Config.Acceleration);
+        }
 
         specificSetting = settings.FirstOrDefault(s => s.CellId == 0);
         if (specificSetting != null)
+        {
             return (int)(specificSetting.ExecutionTime / Config.Acceleration);
+        }
 
         return (int)(Config.DefaultExecutionTime / Config.Acceleration);
     }

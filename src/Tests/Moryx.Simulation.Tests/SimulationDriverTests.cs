@@ -10,7 +10,7 @@ using NUnit.Framework;
 
 namespace Moryx.Simulation.Tests;
 
-internal class SimulationDriverTests : BaseTest
+internal sealed class SimulationDriverTests : BaseTest
 {
     Mock<SimulatedDummyTestDriver> _simulationDriverTestMock;
 

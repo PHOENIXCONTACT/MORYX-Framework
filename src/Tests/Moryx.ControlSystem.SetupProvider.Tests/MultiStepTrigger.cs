@@ -4,7 +4,6 @@
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.ControlSystem.Setups;
 using Moryx.Workplans;
-using System.Collections.Generic;
 
 namespace Moryx.ControlSystem.SetupProvider.Tests;
 

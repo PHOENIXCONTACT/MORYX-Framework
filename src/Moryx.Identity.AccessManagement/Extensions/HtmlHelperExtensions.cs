@@ -17,12 +17,16 @@ static class HtmlHelperExtensions
             string contextAction = (string)html.ViewContext.RouteData.Values["action"];
 
             if (!string.Equals(contextController, controllerName, StringComparison.CurrentCultureIgnoreCase))
+            {
                 return string.Empty;
+            }
 
             foreach (string action in actionNames)
             {
                 if (string.Equals(contextAction, action, StringComparison.CurrentCultureIgnoreCase))
+                {
                     return _selectedClass;
+                }
             }
             return string.Empty;
         }
@@ -34,7 +38,9 @@ static class HtmlHelperExtensions
             foreach (string controller in controllerNames)
             {
                 if (string.Equals(contextController, controller, StringComparison.CurrentCultureIgnoreCase))
+                {
                     return _selectedClass;
+                }
             }
             return string.Empty;
         }

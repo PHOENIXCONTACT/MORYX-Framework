@@ -40,7 +40,9 @@ public sealed class SqliteModelConfigurator : ModelConfiguratorBase<SqliteDataba
 
         var dbFilePath = GetFilePath(config);
         if (File.Exists(dbFilePath))
+        {
             File.Delete(dbFilePath);
+        }
 
         return Task.CompletedTask;
     }

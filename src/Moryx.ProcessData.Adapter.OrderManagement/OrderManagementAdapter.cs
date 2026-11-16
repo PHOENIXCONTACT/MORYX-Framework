@@ -11,7 +11,7 @@ using Moryx.Threading;
 namespace Moryx.ProcessData.Adapter.OrderManagement;
 
 [Plugin(LifeCycle.Singleton)]
-internal class OrderManagementAdapter : IPlugin
+internal sealed class OrderManagementAdapter : IPlugin
 {
     private const string MeasurementPrefix = "orders_";
 
@@ -60,13 +60,17 @@ internal class OrderManagementAdapter : IPlugin
             // If operation is currently in queue, replace facade object
             var existing = _pendingProgressChanges.FirstOrDefault(o => o.Identifier == operation.Identifier);
             if (existing != null)
+            {
                 _pendingProgressChanges.Remove(existing);
+            }
 
             _pendingProgressChanges.Add(operation);
         }
 
         if (_timerId == 0)
+        {
             _timerId = ParallelOperations.ScheduleExecution(ReportProgressMeasurement, ModuleConfig.ReportInterval, -1);
+        }
     }
 
     private void ReportProgressMeasurement()

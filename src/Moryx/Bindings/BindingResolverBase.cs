@@ -21,7 +21,9 @@ public abstract class BindingResolverBase : IBindingResolverChain
         var result = Resolve(source);
 
         if (NextResolver == null || result == null)
+        {
             return result;
+        }
 
         return NextResolver.Resolve(result);
     }
@@ -37,11 +39,15 @@ public abstract class BindingResolverBase : IBindingResolverChain
     {
         // We can not proceed without a source object
         if (source == null)
+        {
             return false;
+        }
 
         // We have reached the end of the chain
         if (NextResolver == null)
+        {
             return Update(source, value);
+        }
 
         source = Resolve(source);
         return NextResolver.Update(source, value);

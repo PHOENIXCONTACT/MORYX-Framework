@@ -1,12 +1,12 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Logging;
 using Moryx.Container;
 using Moryx.Logging;
-using Moryx.Tools;
-using System.Runtime.CompilerServices;
 using Moryx.Shifts.Management.Model;
+using Moryx.Tools;
 
 [assembly: InternalsVisibleTo("Moryx.Shift.Management.IntegrationTests")]
 

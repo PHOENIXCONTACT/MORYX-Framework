@@ -8,9 +8,9 @@ using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.ControlSystem.Capabilities;
 using Moryx.ControlSystem.Setups;
-using Moryx.VisualInstructions;
 using Moryx.Modules;
 using Moryx.Tools;
+using Moryx.VisualInstructions;
 using Moryx.Workplans;
 
 namespace Moryx.ControlSystem.Assemble;
@@ -39,40 +39,52 @@ public class AssembleSetupTrigger : SetupTriggerBase<AssembleSetupTriggerConfig>
 
         // Validate type and create constructor delegate
         if (string.IsNullOrWhiteSpace(Config.RequiredCapabilityType))
+        {
             throw new NullReferenceException($"{nameof(AssembleSetupTriggerConfig.RequiredCapabilityType)} is null.");
+        }
 
         var requiredAssembleCapabilitiesType = ReflectionTool
             .GetPublicClasses<AssembleCapabilities>(type => type.Name == Config.RequiredCapabilityType)
             .FirstOrDefault();
 
         if (requiredAssembleCapabilitiesType == null)
+        {
             throw new InvalidConfigException(Config.RequiredCapabilityType, $"{nameof(AssembleSetupTriggerConfig.RequiredCapabilityType)} was not found.");
+        }
 
         _capabilitiesConstructor = ReflectionTool.ConstructorDelegate<ICapabilities>(requiredAssembleCapabilitiesType); ;
 
         // Validate property and create accessor
         if (string.IsNullOrWhiteSpace(Config.ValueSource))
+        {
             throw new NullReferenceException($"{nameof(AssembleSetupTriggerConfig.ValueSource)} is null.");
+        }
 
         _sourceResolver = RecipeResolverFactory.Create(Config.ValueSource);
 
         if (string.IsNullOrWhiteSpace(Config.TargetPropertyName))
+        {
             throw new NullReferenceException($"{nameof(AssembleSetupTriggerConfig.TargetPropertyName)} is null.");
+        }
 
         var targetProperty = requiredAssembleCapabilitiesType.GetProperty(Config.TargetPropertyName);
         if (targetProperty == null)
+        {
             throw new ArgumentException($"{nameof(AssembleSetupTriggerConfig.TargetPropertyName)} is not available in {Config.RequiredCapabilityType}.");
+        }
 
         // Make custom descriptor instance
         _descriptorAccessor = ReflectionTool.PropertyAccessor<ICapabilities>(targetProperty);
 
         // Only create resolve if config was valid
         if (!string.IsNullOrEmpty(Config.Instruction))
+        {
             _instructionBinder = new VisualInstructionBinder([new VisualInstruction
             {
                 Type = InstructionContentType.Text,
                 Content = Config.Instruction
             }], RecipeResolverFactory);
+        }
     }
 
     /// <inheritdoc />

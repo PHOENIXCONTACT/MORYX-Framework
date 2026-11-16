@@ -52,7 +52,9 @@ internal class RunningState : SetupJobStateBase
     public override void ProcessChanged(ProcessData processData, ProcessState trigger)
     {
         if (trigger != ProcessState.Success && trigger != ProcessState.Failure)
+        {
             return;
+        }
 
         Context.ProcessCompleted(processData);
         if (trigger == ProcessState.Success)
@@ -64,9 +66,13 @@ internal class RunningState : SetupJobStateBase
             Context.IncrementRetry();
             // Check if we reached the limit
             if (Context.IsRetryLimitReached())
+            {
                 NextState(StateRetrySetupBlocked); // Enter blocked state and await user confirmation
+            }
             else
+            {
                 NextState(StateRequestRecipe); // Request an updated setup from the setup manager
+            }
         }
     }
 }

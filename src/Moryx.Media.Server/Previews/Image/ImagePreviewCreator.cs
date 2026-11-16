@@ -36,9 +36,13 @@ internal class ImagePreviewCreator : PreviewCreatorBase<ImagePreviewCreatorConfi
 
             int width = 0, height = 0;
             if (image.Width > image.Height)
+            {
                 width = Config.LongestEdge;
+            }
             else if (image.Height > image.Width)
+            {
                 height = Config.LongestEdge;
+            }
             else
             {
                 width = Config.LongestEdge;

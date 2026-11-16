@@ -19,10 +19,14 @@ public class BinaryConnectionFactoryMock : IBinaryConnectionFactory
     {
         IBinaryConnection connection = null;
         if (config is TcpClientConfig)
+        {
             connection = new TcpClientConnection(validator) { Logger = _logger };
+        }
 
         if (config is TcpListenerConfig)
+        {
             connection = new TcpListenerConnection(validator) { Logger = _logger };
+        }
 
         connection?.Initialize(config);
 

@@ -130,7 +130,9 @@ internal class ResourceManager : IResourceManager
             // Create all objects
             var allResources = await ResourceEntityAccessor.FetchResourceTemplates(uow);
             if (allResources.Count > 0)
+            {
                 await LoadResources(allResources);
+            }
         }
 
         _startup = ResourceStartupPhase.Initializing;
@@ -155,7 +157,9 @@ internal class ResourceManager : IResourceManager
             Logger.Log(LogLevel.Warning, e, "Failed to initialize resource {0}-{1}", resource.Id, resource.Name);
             // Track resources as failed to exclude from future calls
             lock (_failedResources)
+            {
                 _failedResources.Add(resource);
+            }
         }
     }
 
@@ -187,7 +191,9 @@ internal class ResourceManager : IResourceManager
 
         // Register events after all links were set
         foreach (var resource in Graph.GetAll())
+        {
             RegisterEvents(resource);
+        }
     }
 
     /// <summary>
@@ -216,7 +222,9 @@ internal class ResourceManager : IResourceManager
 
         // Register to events
         if (registerEvents)
+        {
             RegisterEvents(instance);
+        }
 
         switch (_startup)
         {
@@ -263,7 +271,9 @@ internal class ResourceManager : IResourceManager
         instance.CapabilitiesChanged += RaiseCapabilitiesChanged;
 
         foreach (var autoSaveCollection in ResourceReferenceTools.GetAutoSaveCollections(instance))
+        {
             autoSaveCollection.CollectionChanged += OnAutoSaveCollectionChanged;
+        }
     }
 
     /// <summary>
@@ -275,7 +285,9 @@ internal class ResourceManager : IResourceManager
         instance.CapabilitiesChanged -= RaiseCapabilitiesChanged;
 
         foreach (var autoSaveCollection in ResourceReferenceTools.GetAutoSaveCollections(instance))
+        {
             autoSaveCollection.CollectionChanged -= OnAutoSaveCollectionChanged;
+        }
     }
 
     /// <summary>
@@ -343,7 +355,9 @@ internal class ResourceManager : IResourceManager
             var saveResult = await ResourceEntityAccessor.SaveToEntity(uow, resource);
             var entity = saveResult;
             if (uow.IsLinked(resource))
+            {
                 newResources.Add(resource);
+            }
 
             var references = new Dictionary<Resource, ResourceEntity>();
             var newInstances = await ResourceLinker.SaveReferencesAsync(uow, resource, entity, references);
@@ -356,7 +370,10 @@ internal class ResourceManager : IResourceManager
                 foreach (var instance in newResources)
                 {
                     if (!references.TryGetValue(instance, out var reference))
+                    {
                         continue;
+                    }
+
                     instance.Id = reference.Id;
                 }
 
@@ -368,7 +385,9 @@ internal class ResourceManager : IResourceManager
             }
 
             foreach (var instance in newResources)
+            {
                 await AddResource(instance, true);
+            }
 
             if (!isNew)
             {
@@ -471,7 +490,9 @@ internal class ResourceManager : IResourceManager
                 ResourceLinker.RemoveLinking(resource, reference);
 
                 if (permanent)
+                {
                     relationRepository.Remove(relation.Entity);
+                }
             }
 
             resourceRepository.Remove(entity, permanent);
@@ -487,7 +508,9 @@ internal class ResourceManager : IResourceManager
 
         // Notify listeners about the removal of the resource
         if (removed)
+        {
             RaiseResourceRemoved(instance);
+        }
 
         // Destroy the object
         TypeController.Destroy(instance);
@@ -523,7 +546,9 @@ internal class ResourceManager : IResourceManager
     private void RaiseCapabilitiesChanged(object originalSender, ICapabilities capabilities)
     {
         if (Graph.GetAll().Any(x => x.Id == ((IResource)originalSender).Id))
+        {
             CapabilitiesChanged?.Invoke(originalSender, capabilities);
+        }
     }
 
     #endregion

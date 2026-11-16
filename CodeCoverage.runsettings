@@ -8,7 +8,8 @@
           <Exclude>
             [*.Web]*,
             [*.Tests]*,
-            [*.IntegrationTests]*
+            [*.IntegrationTests]*,
+            [*.Samples]*
           </Exclude>
           <ExcludeByAttribute>
             GeneratedCodeAttribute,

@@ -1,21 +1,16 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Logging.Abstractions;
+using Moq;
+using Moryx.AbstractionLayer.Processes;
+using Moryx.AbstractionLayer.Recipes;
 using Moryx.ControlSystem.Jobs;
 using Moryx.ControlSystem.TestTools;
 using Moryx.Logging;
-using Moq;
-using Moryx.AbstractionLayer.Recipes;
-using Moryx.Notifications;
 using Moryx.Orders.Management.Assignment;
 using Moryx.Users;
 using NUnit.Framework;
-using Microsoft.Extensions.Logging.Abstractions;
-using Moryx.AbstractionLayer.Processes;
 
 namespace Moryx.Orders.Management.Tests;
 
@@ -62,7 +57,7 @@ public abstract class OperationDataTestBase
         JobHandlerMock.Setup(d => d.Dispatch(It.IsAny<IOperationData>(), It.IsAny<IReadOnlyList<DispatchContext>>())).Callback(dispatchDelegate);
     }
 
-    internal class TestJob : Job, IPredictiveJob
+    internal sealed class TestJob : Job, IPredictiveJob
     {
         public TestJob(IRecipe recipe, int amount) : base(recipe, amount)
         {

@@ -53,9 +53,13 @@ public class Notification
         set
         {
             if (field is null)
+            {
                 field = value;
+            }
             else
+            {
                 throw new InvalidOperationException($"Tried to update {nameof(Acknowledged)}.");
+            }
         }
     }
 
@@ -69,9 +73,13 @@ public class Notification
         set
         {
             if (field is null)
+            {
                 field = value;
+            }
             else
+            {
                 throw new InvalidOperationException($"Tried to update {nameof(Acknowledger)}.");
+            }
         }
     }
 
@@ -84,9 +92,13 @@ public class Notification
         set
         {
             if (field is null)
+            {
                 field = value;
+            }
             else
+            {
                 throw new InvalidOperationException($"Tried to update {nameof(Created)}.");
+            }
         }
     }
 

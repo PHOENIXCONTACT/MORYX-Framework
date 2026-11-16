@@ -20,12 +20,16 @@ public sealed class DefaultValueAttributeProvider : IValueProvider
         var defaultValue = propertyType.IsValueType ? Activator.CreateInstance(propertyType) : null;
         // We only operate on properties currently having their system default
         if (!Equals(value, defaultValue))
+        {
             return ValueProviderResult.Skipped;
+        }
 
         // No attribute, nothing we can do
         var attribute = property.GetCustomAttribute<DefaultValueAttribute>(false);
         if (attribute == null)
+        {
             return ValueProviderResult.Skipped;
+        }
 
         // Accept nulls for objects or nullable reference types
         if (attribute.Value == null && (propertyType.IsClass || Nullable.GetUnderlyingType(propertyType) != null))

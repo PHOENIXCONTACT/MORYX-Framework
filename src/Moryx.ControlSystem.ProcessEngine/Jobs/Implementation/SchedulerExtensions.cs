@@ -20,10 +20,14 @@ internal static class SchedulerExtensions
         public bool SameRecipeAs(Job other)
         {
             if (one == null || other == null)
+            {
                 return false;
+            }
 
             if (one.Recipe is SetupRecipe || other.Recipe is SetupRecipe)
+            {
                 return false; // Setups can not be identical
+            }
 
             return one.Recipe.Id == other.Recipe.Id;
         }

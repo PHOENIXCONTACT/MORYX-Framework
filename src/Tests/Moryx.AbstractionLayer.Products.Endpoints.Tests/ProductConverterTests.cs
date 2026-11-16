@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Reflection;
 using Moq;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Recipes;
@@ -8,12 +9,6 @@ using Moryx.AbstractionLayer.TestTools;
 using Moryx.Tools;
 using Moryx.Workplans;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Moryx.AbstractionLayer.Products.Endpoints.Tests;
 
@@ -59,11 +54,21 @@ public class ProductConverterTests
 
         // Create all possible combinations of input settings for the ConvertProduct method
         foreach (var identity in new IIdentity[] { null, new ProductIdentity("TestIdentifier", 1337) })
-        foreach (ProductState state in Enum.GetValues(typeof(ProductState)))
-        foreach (var flat in new bool[] { true, false })
-        foreach (var dummyType in dummyProductTypes)
-        foreach (var recipes in dummyRecipeLists)
-            yield return new TestCaseData(dummyType, state, identity, recipes, flat, testCaseCounter++);
+        {
+            foreach (ProductState state in Enum.GetValues(typeof(ProductState)))
+            {
+                foreach (var flat in new bool[] { true, false })
+                {
+                    foreach (var dummyType in dummyProductTypes)
+                    {
+                        foreach (var recipes in dummyRecipeLists)
+                        {
+                            yield return new TestCaseData(dummyType, state, identity, recipes, flat, testCaseCounter++);
+                        }
+                    }
+                }
+            }
+        }
     }
     /// <summary>
     /// Test if the conversion to and back from a ProductModel without modification of the model
@@ -81,7 +86,10 @@ public class ProductConverterTests
         originalProductType.Identity = identity;
         // - Expected behavior from the RecipeManagement
         if (recipes.Any())
+        {
             ReflectionTool.TestMode = true;
+        }
+
         _productManagerMock.Setup(rm => rm.LoadRecipesAsync(It.IsAny<ProductType>(), RecipeClassification.CloneFilter))
             .ReturnsAsync(recipes);
         _productManagerMock.Setup(rm => rm.LoadRecipeAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
@@ -108,7 +116,9 @@ public class ProductConverterTests
         // Assert
         // - Non ProductIdentities will always be transformed into empty ProductIdentities in the Process
         if (identity is null)
+        {
             originalProductType.Identity = new ProductIdentity("", 0);
+        }
         // - Products originally converted with the flat flag will only affect certain properties
         if (flat)
         {
@@ -128,18 +138,24 @@ public class ProductConverterTests
             _productManagerMock.Verify(rm => rm.LoadRecipesAsync(originalProductType, RecipeClassification.CloneFilter));
             _productManagerMock.Verify(rm => rm.SaveRecipeAsync(It.Is<IProductRecipe>(recipe => !HasChangedProperties<IProductRecipe>(recipe, recipes.LastOrDefault()))));
             if (recipes.First().Id != 0)
+            {
                 _productManagerMock.Verify(rm => rm.LoadRecipeAsync(recipes.First().Id));
+            }
         }
         // - If there are ProductPartLinks the ProductManagement should be called
         var targetDummyTypeWithParts = recoveredOriginal as DummyProductTypeWithParts;
         if (targetDummyTypeWithParts?.ProductPartLink?.Product is not null)
+        {
             _productManagerMock.Verify(pm => pm.LoadTypeAsync(targetDummyTypeWithParts.ProductPartLink.Product.Id));
+        }
     }
 
     private static bool HasChangedProperties<T>(object A, object B)
     {
         if (A is null || B is null)
+        {
             throw new ArgumentNullException("You need to provide 2 non-null objects.");
+        }
 
         var type = typeof(T);
         var allProperties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
@@ -156,8 +172,10 @@ public class ProductConverterTests
     private static bool IsSimpleType(Type type)
     {
         if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+        {
             // nullable type, check if the nested type is simple.
             return IsSimpleType(type.GetGenericArguments()[0]);
+        }
 
         return type.IsPrimitive
                || type.IsEnum
@@ -187,16 +205,25 @@ public class ProductConverterTests
 
         // Create all possible combinations of input settings for the ConvertRecipe method
         foreach (var backupProductType in new List<DummyProductType>() { null, new() })
-        foreach (RecipeState state in Enum.GetValues(typeof(RecipeState)))
-        foreach (var classification in classifications)
-        foreach (var dummyRecipe in dummyRecipes)
         {
-            //dummyRecipe.Classification = classification;
-            //dummyRecipe.State = state;
-            var workplanInTargetRecipe = (dummyRecipe as DummyProductWorkplanRecipe)?.Workplan;
-            if (workplanInTargetRecipe is not null)
-                yield return new TestCaseData(dummyRecipe, classification, state, backupProductType, new DummyWorkplan() { Id = 1 }, testCaseCounter++);
-            yield return new TestCaseData(dummyRecipe, classification, state, backupProductType, workplanInTargetRecipe, testCaseCounter++);
+            foreach (RecipeState state in Enum.GetValues(typeof(RecipeState)))
+            {
+                foreach (var classification in classifications)
+                {
+                    foreach (var dummyRecipe in dummyRecipes)
+                    {
+                        //dummyRecipe.Classification = classification;
+                        //dummyRecipe.State = state;
+                        var workplanInTargetRecipe = (dummyRecipe as DummyProductWorkplanRecipe)?.Workplan;
+                        if (workplanInTargetRecipe is not null)
+                        {
+                            yield return new TestCaseData(dummyRecipe, classification, state, backupProductType, new DummyWorkplan() { Id = 1 }, testCaseCounter++);
+                        }
+
+                        yield return new TestCaseData(dummyRecipe, classification, state, backupProductType, workplanInTargetRecipe, testCaseCounter++);
+                    }
+                }
+            }
         }
     }
 
@@ -223,10 +250,14 @@ public class ProductConverterTests
         var targetDummyRecipe = (DummyProductRecipe)Activator.CreateInstance(originalRecipe.GetType());
         targetDummyRecipe.Id = 42;
         if (originalWorkplanRecipe is not null)
+        {
             ((DummyProductWorkplanRecipe)targetDummyRecipe).Workplan = workplanInTargetRecipe;
+        }
         // - No change of classification on clones should be possible, thereby preset it
         if (originalRecipe.Classification.HasFlag(RecipeClassification.Clone))
+        {
             targetDummyRecipe.Classification = originalRecipe.Classification;
+        }
 
         // Act
         var convertedModel = _productConverter.ConvertRecipe(originalRecipe);
@@ -235,14 +266,20 @@ public class ProductConverterTests
         // Assert
         // - Backup products are used for recipes without products
         if (originalRecipe.Product is null)
+        {
             originalRecipe.Product = backupProductType;
+        }
 
         Assert.That(recoveredOriginal, Is.EqualTo(originalRecipe));
         // - If there is a workplan and it changed, reload it at backward conversion
         if (originalWorkplanRecipe?.Workplan is not null && originalWorkplanRecipe.Workplan.Id != workplanInTargetRecipe.Id)
+        {
             _productManagerMock.Verify(wm => wm.LoadWorkplanAsync(originalWorkplanRecipe.Workplan.Id), Times.Once);
+        }
         else
+        {
             _productManagerMock.VerifyNoOtherCalls();
+        }
     }
     #endregion
 
@@ -250,7 +287,9 @@ public class ProductConverterTests
     public static IEnumerable<TestCaseData> WorkplanForwardConversionTestCaseGenerator()
     {
         foreach (var wpState in Enum.GetValues(typeof(WorkplanState)))
+        {
             yield return new TestCaseData(wpState);
+        }
     }
 
     //Problem Entry Convert

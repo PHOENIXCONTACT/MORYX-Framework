@@ -80,7 +80,9 @@ public abstract class JobSchedulerBase<T> : IJobScheduler
             var removed = targetsDependencies.Remove(dependency);
 
             if (_dependencies[target].Count == 0)
+            {
                 _dependencies.Remove(target);
+            }
 
             return removed;
         }

@@ -101,9 +101,13 @@ internal class ProcessData : IEquatable<ProcessData>
 
             // Update Start and End when altering the process state
             if (field == ProcessState.Running)
+            {
                 Started = Activities.FirstOrDefault()?.Tracing.Started ?? DateTime.Now;
+            }
             else if (field >= ProcessState.Success)
+            {
                 Completed = Activities.LastOrDefault()?.Tracing.Completed ?? DateTime.Now;
+            }
         }
     }
 
@@ -129,7 +133,9 @@ internal class ProcessData : IEquatable<ProcessData>
     public void AddActivity(ActivityData activity)
     {
         lock (_activities)
+        {
             _activities.Add(activity);
+        }
     }
 
     /// <summary>
@@ -143,7 +149,9 @@ internal class ProcessData : IEquatable<ProcessData>
     public int ActivityCount(Func<ActivityData, bool> predicate)
     {
         lock (_activities)
+        {
             return _activities.Count(predicate);
+        }
     }
 
     /// <summary>
@@ -154,7 +162,9 @@ internal class ProcessData : IEquatable<ProcessData>
         get
         {
             lock (_activities)
+            {
                 return _activities.ToArray();
+            }
         }
     }
 
@@ -184,11 +194,20 @@ internal class ProcessData : IEquatable<ProcessData>
     public override bool Equals(object obj)
     {
         if (ReferenceEquals(null, obj))
+        {
             return false;
+        }
+
         if (ReferenceEquals(this, obj))
+        {
             return true;
+        }
+
         if (obj.GetType() != this.GetType())
+        {
             return false;
+        }
+
         return Equals((ProcessData)obj);
     }
 

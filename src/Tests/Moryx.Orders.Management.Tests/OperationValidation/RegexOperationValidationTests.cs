@@ -1,11 +1,8 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using Moryx.AbstractionLayer.Recipes;
 using Moq;
+using Moryx.AbstractionLayer.Recipes;
 using Moryx.Orders.Management.Assignment;
 using NUnit.Framework;
 

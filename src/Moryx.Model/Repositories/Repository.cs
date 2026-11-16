@@ -92,7 +92,9 @@ public abstract class Repository<T> : Repository, IRepository<T>
     {
         var newInstance = new T();
         if (addToContext)
+        {
             DbSet.Add(newInstance);
+        }
 
         return newInstance;
     }
@@ -102,7 +104,9 @@ public abstract class Repository<T> : Repository, IRepository<T>
     {
         var newInstance = new T();
         if (addToContext)
+        {
             await DbSet.AddAsync(newInstance, cancellationToken);
+        }
 
         return newInstance;
     }
@@ -190,12 +194,16 @@ public abstract class ModificationTrackedRepository<T> : Repository<T>
     protected override IEnumerable<T> ExecuteRemoveRange(IEnumerable<T> entities, bool permanent)
     {
         if (permanent)
+        {
             return base.ExecuteRemoveRange(entities, true);
+        }
 
         var list = entities.ToArray();
 
         foreach (var entity in list)
+        {
             DbSet.RemoveSoft(entity);
+        }
 
         return list;
     }

@@ -187,11 +187,11 @@ internal sealed class ActivityProvider : IActivityPoolListener, ILoggingComponen
         var snapshot = new WorkplanSnapshot
         {
             Holders = (from holder in holders
-                select new HolderSnapshot
-                {
-                    HolderId = holder.HolderId,
-                    Tokens = JsonConvert.DeserializeObject<IToken[]>(holder.Tokens, JsonSettings.Minimal)
-                }).ToArray()
+                       select new HolderSnapshot
+                       {
+                           HolderId = holder.HolderId,
+                           Tokens = JsonConvert.DeserializeObject<IToken[]>(holder.Tokens, JsonSettings.Minimal)
+                       }).ToArray()
         };
 
         // Remove holder entities after snapshot was created
@@ -212,7 +212,9 @@ internal sealed class ActivityProvider : IActivityPoolListener, ILoggingComponen
             using var uow = UnitOfWorkFactory.Create();
             // Workflow was not loaded and its snapshot is still valid
             if (processData.ActivityCount() == 0)
+            {
                 return;
+            }
 
             // Create snapshot and write to db
             var holderRepo = uow.GetRepository<ITokenHolderEntityRepository>();
@@ -240,12 +242,16 @@ internal sealed class ActivityProvider : IActivityPoolListener, ILoggingComponen
     private void OnActivityChanged(object sender, ActivityEventArgs args)
     {
         if (args.Trigger != ActivityState.ResultProcessed)
+        {
             return;
+        }
 
         // Very specific exclusion of activities that the ProcessRemoval created,
         // would be better to only include things the ActivityProvider provided
         if (args.ActivityData.Activity is ProcessFixupActivity)
+        {
             return;
+        }
 
         var activityData = args.ActivityData;
         activityData.Task.Completed(activityData.Result);
@@ -265,13 +271,19 @@ internal sealed class ActivityProvider : IActivityPoolListener, ILoggingComponen
             case NodeClassification.End:
                 // TODO: This is not a good place, but timing sucks
                 if (processData.Process is ProductionProcess prodProcess)
+                {
                     prodProcess.ProductInstance.State = ProductInstanceState.Success;
+                }
+
                 ActivityPool.UpdateProcess(processData, ProcessState.Success);
                 break;
             case NodeClassification.Failed:
                 // TODO: This is not a good place, but timing sucks
                 if (processData.Process is ProductionProcess failedProcess)
+                {
                     failedProcess.ProductInstance.State = ProductInstanceState.Failure;
+                }
+
                 ActivityPool.UpdateProcess(processData, ProcessState.Failure);
                 break;
         }
@@ -282,7 +294,9 @@ internal sealed class ActivityProvider : IActivityPoolListener, ILoggingComponen
         var processData = GetProcessByEngine((IWorkplanEngine)sender);
         // Stop creating activities for stopping processes
         if (processData.State > ProcessState.Running)
+        {
             return;
+        }
 
         var taskTransition = (ITaskTransition)transition;
         try
@@ -291,7 +305,9 @@ internal sealed class ActivityProvider : IActivityPoolListener, ILoggingComponen
             var activityData = new ActivityData(activity) { Task = taskTransition };
             // Try to reload the activity for restored processes, this will ONLY find a match for previously running activities
             if (processData.State == ProcessState.RestoredReady)
+            {
                 ProcessStorage.TryReloadRunningActivity(processData.Id, activityData);
+            }
 
             ActivityPool.AddActivity(processData, activityData);
         }
@@ -337,7 +353,9 @@ internal sealed class ActivityProvider : IActivityPoolListener, ILoggingComponen
         var workflow = processData.Engine;
 
         if (processData.State > ProcessState.Interrupted)
+        {
             DeleteHolders(processData); // Delete all remaining holders of the process
+        }
 
         workflow.TransitionTriggered -= OnTransitionTriggered;
         workflow.Completed -= OnWorkflowCompleted;

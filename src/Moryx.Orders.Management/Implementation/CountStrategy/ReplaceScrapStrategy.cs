@@ -47,12 +47,19 @@ internal class ReplaceScrapStrategy : ICountStrategy
     private static int Reachable(int sum, Job job)
     {
         if (job.Classification >= JobClassification.Completing)
+        {
             sum = sum + job.RunningProcesses.Count;
+        }
         else
+        {
             sum = sum + job.Amount - job.SuccessCount - job.FailureCount;
+        }
 
         if (job is IPredictiveJob predictive)
+        {
             sum -= predictive.PredictedFailures.Count;
+        }
+
         return sum;
     }
 

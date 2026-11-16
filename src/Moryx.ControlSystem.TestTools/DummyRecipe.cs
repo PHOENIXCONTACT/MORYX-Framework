@@ -89,9 +89,13 @@ public class DummyRecipe : ProductionRecipe
         for (var i = 0; i < task.Outputs.Length; i++)
         {
             if (outputs.Length > i)
+            {
                 task.Outputs[i] = outputs[i];
+            }
             else
+            {
                 task.Outputs[i] = outputs[outputs.Length - 1]; // Use last for all missing
+            }
         }
         return task;
     }

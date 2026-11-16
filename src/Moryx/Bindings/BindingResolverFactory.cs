@@ -32,7 +32,9 @@ public class BindingResolverFactory : IBindingResolverFactory
         // First we need a BaseKeyResolver to extract the base value
         var baseResolver = CreateBaseResolver(baseKey);
         if (baseResolver == null || properties.Count == 0)
+        {
             return baseResolver;
+        }
 
         var resolver = baseResolver;
         for (int index = 0; index < properties.Count; index++)

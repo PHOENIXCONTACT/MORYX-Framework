@@ -86,14 +86,18 @@ public class DelayQueue<T> : IDelayQueue<T>, IDelayQueueContext
     public void Stop()
     {
         lock (_stateLock)
+        {
             _state.Stop();
+        }
     }
 
     /// <inheritdoc />
     public void Enqueue(T obj)
     {
         lock (_stateLock)
+        {
             _state.Enqueue(obj);
+        }
     }
 
     /// <summary>

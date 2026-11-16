@@ -9,7 +9,7 @@ namespace Moryx.AbstractionLayer.Tests;
 [TestFixture]
 public class ExpressionConstraintTests
 {
-    private class DummyContext : IConstraintContext
+    private sealed class DummyContext : IConstraintContext
     {
         public int Foo { get; set; }
     }

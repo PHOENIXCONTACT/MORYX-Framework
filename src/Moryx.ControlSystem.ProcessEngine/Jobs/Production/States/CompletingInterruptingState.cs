@@ -30,11 +30,15 @@ internal sealed class CompletingInterruptingState : ProductionJobStateBase
     {
         // Only remove completed processes
         if (trigger >= ProcessState.Interrupted)
+        {
             Context.ProcessCompleted(processData);
+        }
 
         // Wait till all running processes have reported a stable state
         if (Context.RunningProcesses.Count > 0)
+        {
             return;
+        }
 
         // Iterate all processes from the back, looking for any non-completed process
         // If the job actually completed, this WILL iterate the entire list
@@ -42,7 +46,9 @@ internal sealed class CompletingInterruptingState : ProductionJobStateBase
         for (var i = Context.AllProcesses.Count - 1; i >= 0; i--)
         {
             if (Context.AllProcesses[i].State > ProcessState.Interrupted)
+            {
                 continue;
+            }
 
             anyInterrupted = true;
             break;
@@ -50,8 +56,12 @@ internal sealed class CompletingInterruptingState : ProductionJobStateBase
 
         // If we found any interrupted job, we are interrupted, otherwise completed
         if (anyInterrupted)
+        {
             NextState(StateCompletingInterrupted);
+        }
         else
+        {
             NextState(StateCompleted);
+        }
     }
 }

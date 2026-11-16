@@ -7,6 +7,6 @@ internal interface IFacadeC
 {
 }
 
-internal class FacadeC : IFacadeC
+internal sealed class FacadeC : IFacadeC
 {
 }

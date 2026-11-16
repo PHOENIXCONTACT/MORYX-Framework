@@ -1,9 +1,9 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Text.Json;
 using Microsoft.AspNetCore.Routing;
 using MQTTnet;
-using System.Text.Json;
 namespace Moryx.AspNetCore.Mqtt.Endpoints;
 
 /// <summary>

@@ -2,12 +2,12 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.ControlSystem.Cells;
-using Moryx.Serialization;
 using Moryx.Factory.Properties;
-using System.ComponentModel.DataAnnotations;
+using Moryx.Serialization;
 
 namespace Moryx.Factory;
 

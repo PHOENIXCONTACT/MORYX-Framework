@@ -3,8 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, computed, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
+import { Component, inject, linkedSignal, ChangeDetectionStrategy } from "@angular/core";
+import { Entry, NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
 import { EditProductsService } from "@app/services/edit-products.service";
 
 @Component({
@@ -18,5 +18,12 @@ export class ProductProperties {
   private editProductsService = inject(EditProductsService);
 
   protected isEditMode = this.editProductsService.editing;
-  protected properties = computed(() => this.editProductsService.currentProduct()?.properties);
+  protected properties = linkedSignal(() => this.editProductsService.currentProduct()?.properties);
+
+  protected onPropertiesChange(updatedProperties: Entry) {
+    const product = this.editProductsService.currentProduct();
+    if (product) {
+      product.properties = updatedProperties;
+    }
+  }
 }

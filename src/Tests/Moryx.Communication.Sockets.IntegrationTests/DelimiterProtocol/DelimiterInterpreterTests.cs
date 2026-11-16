@@ -1,9 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using NUnit.Framework;
 
@@ -47,7 +44,9 @@ public class DelimiterInterpreterTests
     public void ParsePartialDelimiterMessage(bool useStartDelimiter)
     {
         if (!useStartDelimiter)
+        {
             _interpreter = new EndDelimiterOnlyInterpreter();
+        }
 
         var text = Encoding.Unicode.GetBytes("Wie passend, du kämpfst");
 

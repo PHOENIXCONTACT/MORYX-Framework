@@ -1,7 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
 using Moryx.Tools;
 using NUnit.Framework;
 
@@ -29,10 +28,7 @@ public class EnumerableExtensionTests
         var enumerated = new List<int>();
 
         // ReSharper disable once ConvertClosureToMethodGroup
-        _enumerable.ForEach(delegate (int i)
-        {
-            enumerated.Add(i);
-        });
+        _enumerable.ForEach(enumerated.Add);
 
         foreach (var item in _enumerable)
         {

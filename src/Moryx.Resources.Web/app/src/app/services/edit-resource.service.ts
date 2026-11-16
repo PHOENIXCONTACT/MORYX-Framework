@@ -30,8 +30,10 @@ export class EditResourceService {
 
   private readonly _editing = signal<boolean>(false);
   readonly editing = this._editing.asReadonly();
+
   private readonly _activeResource = signal<ResourceModel | undefined>(undefined);
   readonly activeResource = this._activeResource.asReadonly();
+
   public editingUnsavedResource: boolean = false;
   TranslationConstants = TranslationConstants;
 

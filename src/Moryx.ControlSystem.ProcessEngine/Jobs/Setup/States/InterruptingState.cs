@@ -34,6 +34,8 @@ internal class InterruptingState : SetupJobStateBase
     public override void ProcessChanged(ProcessData processData, ProcessState trigger)
     {
         if (trigger >= ProcessState.Interrupted)
+        {
             NextState(StateCompleted);
+        }
     }
 }

@@ -110,10 +110,10 @@ internal class Navigation : INavigation
 
         // Transform to models
         var regions = (from pV in partialViews
-            let regionAttr = pV.GetCustomAttribute<ViewRegionAttribute>()
-            let config = _launcherConfig.Regions.FirstOrDefault(x => x.Name == regionAttr.Name)
-            where config != null
-            select new RegionItem { PartialView = regionAttr.Name, Region = config.Region }).ToArray();
+                       let regionAttr = pV.GetCustomAttribute<ViewRegionAttribute>()
+                       let config = _launcherConfig.Regions.FirstOrDefault(x => x.Name == regionAttr.Name)
+                       where config != null
+                       select new RegionItem { PartialView = regionAttr.Name, Region = config.Region }).ToArray();
 
         return regions;
     }
@@ -145,7 +145,7 @@ internal class Navigation : INavigation
         var index = _launcherConfig.ModuleSortIndices.Select(i => i.SortIndex).DefaultIfEmpty(0).Max();
         foreach (var descriptorAndModule in descriptorModuleTuples.OrderBy(t => t.ModuleItem.Title))
         {
-            var module  = descriptorAndModule.ModuleItem;
+            var module = descriptorAndModule.ModuleItem;
             var route = module is ExternalModuleItem ? module.Route.Replace("external/", "") : module.Route;
             var indexConfig = _launcherConfig.ModuleSortIndices.FirstOrDefault(m => m.Route == route);
             if (indexConfig != null)
@@ -177,7 +177,9 @@ internal class Navigation : INavigation
     {
         var webModuleAttribute = pageActionDescriptor.EndpointMetadata.OfType<WebModuleAttribute>().SingleOrDefault();
         if (webModuleAttribute is null)
+        {
             return null;
+        }
 
         var streamAttribute = pageActionDescriptor.EndpointMetadata.OfType<ModuleEventStreamAttribute>().SingleOrDefault();
         return new WebModuleItem

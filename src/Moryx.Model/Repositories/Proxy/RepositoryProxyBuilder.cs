@@ -48,7 +48,9 @@ public class RepositoryProxyBuilder
 
         var generatedType = ModuleBuilder.GetType(proxyName);
         if (generatedType != null)
+        {
             return generatedType;
+        }
 
         var entityType = repoApi.GetInterfaces().Single(i =>
             i.GetGenericArguments().Length == 1 &&
@@ -89,18 +91,24 @@ public class RepositoryProxyBuilder
 
         var generatedType = ModuleBuilder.GetType(proxyName);
         if (generatedType != null)
+        {
             return generatedType;
+        }
 
         // Select base type
         var baseType = repoImpl.BaseType;
         if (baseType == null || baseType.GetGenericArguments().Length != 1)
+        {
             throw new InvalidOperationException($"{repoImpl.Name} must have the base type {nameof(Repository)}<T>.");
+        }
 
         var entityType = baseType.GetGenericArguments()[0];
 
         if (IsModificationTracked(entityType) && baseType.GetGenericTypeDefinition() != typeof(ModificationTrackedRepository<>))
+        {
             throw new InvalidOperationException($"{entityType.Name} is modification tracked " +
                                                 "but the repository is not derived from ModificationTrackedRepository<T>.");
+        }
 
         // Get Methods and matching Strategies
         var methodStrategyMaps = repoImpl.IsAbstract
@@ -135,7 +143,9 @@ public class RepositoryProxyBuilder
         // Check for invalid strategies
         var invalidStrategy = methodStrategyMaps.FirstOrDefault(ms => ms.Strategy == null);
         if (invalidStrategy != null)
+        {
             throw new Exception($"Method '{invalidStrategy.MethodInfo.Name}' cannot be implemented because of invalid name.");
+        }
 
         return methodStrategyMaps;
     }
@@ -152,7 +162,9 @@ public class RepositoryProxyBuilder
 
         var invalidStrategy = methodStrategyMaps.FirstOrDefault(ms => ms.Strategy == null);
         if (invalidStrategy != null)
+        {
             throw new Exception($"Method '{invalidStrategy.MethodInfo.Name}' cannot be implemented because of invalid name.");
+        }
 
         return methodStrategyMaps;
     }
@@ -162,13 +174,13 @@ public class RepositoryProxyBuilder
         // Virtual methods will be implemented
         var methods = repoImpl.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly).Where(m => m.IsVirtual);
         var methodStrategyMaps = (from methodInfo in methods
-            let strategy = MethodStrategies.SingleOrDefault(s => s.CanImplement(methodInfo))
-            where strategy != null // Methods which cannot be implemented can be ignored
-            select new MethodStrategyMap
-            {
-                MethodInfo = methodInfo,
-                Strategy = strategy
-            }).ToArray();
+                                  let strategy = MethodStrategies.SingleOrDefault(s => s.CanImplement(methodInfo))
+                                  where strategy != null // Methods which cannot be implemented can be ignored
+                                  select new MethodStrategyMap
+                                  {
+                                      MethodInfo = methodInfo,
+                                      Strategy = strategy
+                                  }).ToArray();
 
         return methodStrategyMaps;
     }
@@ -183,7 +195,7 @@ public class RepositoryProxyBuilder
         }
     }
 
-    private class MethodStrategyMap
+    private sealed class MethodStrategyMap
     {
         public MethodInfo MethodInfo { get; set; }
 

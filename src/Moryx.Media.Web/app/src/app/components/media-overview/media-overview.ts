@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, effect, inject, OnDestroy, OnInit, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, DestroyRef, effect, inject, OnInit, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuTrigger, MatMenu, MatMenuContent, MatMenuItem } from '@angular/material/menu';
@@ -11,11 +11,10 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { TranslationConstants } from '@app/translation-constants';
-import { environment } from '../../../environments/environment';
 import { ContentDescriptorModel } from '@api/models';
 import { DialogDelete } from '@app/dialogs/dialog-delete/dialog-delete';
 import { MediaService } from '@app/services/media-service/media.service';
-import { SnackbarService, SearchBarService, SearchRequest, SearchSuggestion, } from '@moryx/ngx-web-framework/services';
+import { SearchBarService, SearchRequest, SearchSuggestion } from '@moryx/ngx-web-framework/services';
 import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
 import { FileDragAndDropDirective } from '@app/extensions/file-drag-and-drop.directive';
 import { MediaFile } from './media-file/media-file';
@@ -35,22 +34,21 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     MatFabButton, MatProgressSpinner, TranslatePipe,
     EmptyState]
 })
-export class MediaOverview implements OnInit, OnDestroy {
+export class MediaOverview implements OnInit {
   private dialog = inject(MatDialog);
   private mediaService = inject(MediaService);
   private router = inject(Router);
+  private location = inject(Location);
   private translateService = inject(TranslateService);
   private searchBarService = inject(SearchBarService);
-  private location = inject(Location);
-  private snackbarService = inject(SnackbarService);
+  private destroyRef = inject(DestroyRef);
 
-  protected filteredContents = signal<ContentDescriptorModel[]>([]);
-  protected backgroundImgPath = signal(environment.assets + 'assets/moryx_transparent_colored.png');
   protected isLoading = signal(true);
   protected contents = signal<ContentDescriptorModel[]>([]);
   protected selectedContent = signal<string | undefined>(undefined);
 
   readonly trigger = viewChild.required(MatMenuTrigger);
+
   protected TranslationConstants = TranslationConstants;
   protected menuTopLeftPosition = {x: '0', y: '0'};
 
@@ -58,55 +56,42 @@ export class MediaOverview implements OnInit, OnDestroy {
     effect(() => {
       const data = this.mediaService.contents();
       this.contents.set(data);
-      this.filteredContents.set(data);
       this.isLoading.set(false);
     });
-  }
-
-  ngOnDestroy(): void {
-    this.searchBarService.unsubscribe();
+    this.destroyRef.onDestroy(() => this.searchBarService.unsubscribe());
   }
 
   ngOnInit() {
     this.mediaService.loadContents();
 
     this.searchBarService.subscribe({
-      next: (request: SearchRequest) => {
-        this.onSearch(request);
-      },
+      next: (request: SearchRequest) => this.onSearch(request),
     });
   }
 
-  private onSearch(result: SearchRequest) {
-    const contents = this.contents().filter((c) =>
-      c.name?.toLowerCase()?.includes(result.term.toLowerCase())
+  private onSearch(request: SearchRequest) {
+    const matches = this.contents().filter(c =>
+      c.name?.toLowerCase()?.includes(request.term.toLowerCase())
     );
-    if (!contents) {
-      return;
-    }
 
-    if (result.submitted) {
+    if (request.submitted) {
       this.searchBarService.clearSuggestions();
-      this.filteredContents.set(contents);
+      if (matches.length === 1) {
+        this.router.navigate(['/details/', matches[0].id]);
+      }
       this.searchBarService.subscribe({
-        next: (newRequest: SearchRequest) => {
-          this.onSearch(newRequest);
-        },
+        next: (newRequest: SearchRequest) => this.onSearch(newRequest),
       });
     } else {
-      const searchSuggestions = [] as SearchSuggestion[];
-      for (const content of contents) {
-        if (!content.name) {
-          continue;
-        }
-
-        const url = this.location.prepareExternalUrl(this.router.serializeUrl(
-          this.router.createUrlTree(['details', content.id])
-        ));
-        searchSuggestions.push({text: content.name, url: url});
-      }
-      this.filteredContents.set(contents);
-      this.searchBarService.provideSuggestions(searchSuggestions);
+      const suggestions: SearchSuggestion[] = matches
+        .filter(c => c.name)
+        .map(c => ({
+          text: c.name!,
+          url: this.location.prepareExternalUrl(this.router.serializeUrl(
+            this.router.createUrlTree(['details', c.id])
+          )),
+        }));
+      this.searchBarService.provideSuggestions(suggestions);
     }
   }
 
@@ -162,7 +147,6 @@ export class MediaOverview implements OnInit, OnDestroy {
     if (typeof content.id === 'string') {
       await this.mediaService.removeContent(content.id);
       this.contents.update(items => items.filter(c => c.id !== content.id));
-      this.filteredContents.update(items => items.filter(c => c.id !== content.id));
       this.selectedContent.set(undefined);
     }
   }

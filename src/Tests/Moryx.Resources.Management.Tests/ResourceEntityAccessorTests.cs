@@ -1,17 +1,15 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.ComponentModel;
 using System.Runtime.Serialization;
-using Moryx.AbstractionLayer.Resources;
-using Moryx.Serialization;
 using Moq;
+using Moryx.AbstractionLayer.Resources;
 using Moryx.Model.Repositories;
+using Moryx.Resources.Management.Model;
+using Moryx.Serialization;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using System.ComponentModel;
-using System.Threading.Tasks;
-using Moryx.Resources.Management.Model;
-using System.Collections.Generic;
 
 namespace Moryx.Resources.Management.Tests;
 
@@ -53,8 +51,7 @@ public class ResourceEntityAccessorTests
         Assert.That(resource.Enabled);
         Assert.That(resource.Number, Is.EqualTo(42));
     }
-	
-	
+
     [Test(Description = "Calling Instantiate on a type that holds ignored properties does not override these properties")]
     public void InstantiateWithoutEntityDoesNotOverrideIgnoredJsonProperties()
     {
@@ -156,26 +153,26 @@ public class ResourceEntityAccessorTests
 #pragma warning restore CA1822 // Mark members as static
     }
 
-    private class ExtensionDataInherited : ExtensionDataTestBase
+    private sealed class ExtensionDataInherited : ExtensionDataTestBase
     {
 #pragma warning disable CA1822 // Mark members as static
         public long Value3 => 42;
 #pragma warning restore CA1822 // Mark members as static
     }
 
-    private class DefaultTestResource : Resource
+    private sealed class DefaultTestResource : Resource
     {
         [DataMember, DefaultValue(42)]
         public int Number { get; set; }
 
         [DataMember, DefaultValue(true)]
         public bool Enabled { get; set; }
-		
-		[DataMember, JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-		public List<string> InitializedProperty { get; set; } = [];
+
+        [DataMember, JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public List<string> InitializedProperty { get; set; } = [];
     }
 
-    private class TestResource : Resource
+    private sealed class TestResource : Resource
     {
         [DataMember]
         public ExtensionDataTestBase Data { get; set; }

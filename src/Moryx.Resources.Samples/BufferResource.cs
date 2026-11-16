@@ -32,7 +32,10 @@ public class BufferResource : Resource
     {
         var value = Values.FirstOrDefault(v => v.Name == name);
         if (value != null)
+        {
             await Graph.DestroyAsync(value, true);
+        }
+
         return Values.Count;
     }
 }

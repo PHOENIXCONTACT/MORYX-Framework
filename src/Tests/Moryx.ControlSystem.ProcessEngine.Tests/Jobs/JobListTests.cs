@@ -1,9 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moryx.AbstractionLayer.Recipes;
@@ -58,9 +55,13 @@ public class JobListTests
         _jobList.StateChanged += delegate (object sender, JobStateEventArgs args)
         {
             if (args.CurrentState.Classification < JobClassification.Completed)
+            {
                 _receivedStateChanged = args.JobData;
+            }
             else
+            {
                 _recievedJobCompleted = args.JobData;
+            }
         };
         _jobList.StateChanged += delegate (object sender, JobStateEventArgs eventArgs)
         {
@@ -358,7 +359,10 @@ public class JobListTests
         var jobMock = new Mock<IJobData>();
         jobMock.SetupGet(j => j.Id).Returns(id);
         if (recipeId == 0 && id > 0)
+        {
             recipeId = id;
+        }
+
         jobMock.SetupGet(j => j.Recipe).Returns(new ProductionRecipe { Id = recipeId });
         var jobStateMock = new Mock<IJobState>();
         jobStateMock.SetupGet(s => s.Classification).Returns(JobClassification.Idle);

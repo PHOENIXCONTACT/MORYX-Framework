@@ -195,13 +195,16 @@ public class FactoryMonitorController : ControllerBase
     public ActionResult<FactoryModel> GetNavigation(long factoryId)
     {
         var root = _resourceManager.GetRootFactory();
-        if (factoryId == root.Id) return new FactoryModel
+        if (factoryId == root.Id)
         {
-            Id = factoryId,
-            Title = root.Name,
-            BackgroundURL =
+            return new FactoryModel
+            {
+                Id = factoryId,
+                Title = root.Name,
+                BackgroundURL =
                 root.BackgroundUrl
-        };
+            };
+        }
 
         var factory = _resourceManager.ReadUnsafe(factoryId, e => (ManufacturingFactory)e);
         if (factory is not ManufacturingFactory manufacturingFactory)
@@ -347,11 +350,16 @@ public class FactoryMonitorController : ControllerBase
     public async Task<ActionResult> ChangeBackground(long resourceId, string url)
     {
         if (string.IsNullOrEmpty(url))
+        {
             return UnprocessableEntity($"The provided {nameof(url)} is invalid");
+        }
 
         var manufacturingConfig = _resourceManager.GetResources<IManufacturingFactory>().SingleOrDefault(f => f.Id == resourceId);
         if (manufacturingConfig is null)
+        {
             return NotFound("The resource to be modified could not be found");
+        }
+
         await _resourceManager.ModifyUnsafeAsync(manufacturingConfig.Id, r =>
         {
             ((IManufacturingFactory)r).BackgroundUrl = url;
@@ -374,7 +382,9 @@ public class FactoryMonitorController : ControllerBase
             .FirstOrDefault(x => x.Machine?.Id.ToString(CultureInfo.CurrentCulture) == identifier);
 
         if (cellLocation == null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = "Cell/Resource not found" });
+        }
 
         var converter = new Converter.Converter(_serialization, _logger);
         var cell = _resourceManager.ReadUnsafe(cellLocation.Machine.Id, r => r);
@@ -431,7 +441,9 @@ public class FactoryMonitorController : ControllerBase
         var cellLocation = _resourceManager.GetResource<IMachineLocation>(l => l.Machine?.Id == id);
 
         if (cellLocation is null)
+        {
             return NotFound();
+        }
 
         await _resourceManager.ModifyUnsafeAsync(cellLocation, r =>
         {

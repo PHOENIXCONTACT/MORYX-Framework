@@ -11,7 +11,7 @@ internal class GeneralConstructorResource : Resource
     public virtual void ConstructGeneralResource() => throw new NotImplementedException();
 }
 
-internal class SpecificConstructorResource : GeneralConstructorResource
+internal sealed class SpecificConstructorResource : GeneralConstructorResource
 {
     public override void ConstructGeneralResource() => throw new NotImplementedException();
 

@@ -51,7 +51,11 @@ internal class ResourceToModelConverter
     /// <returns></returns>
     public ResourceModel GetDetails(Resource current)
     {
-        if (current == null) return null;
+        if (current == null)
+        {
+            return null;
+        }
+
         return ToModel(current, false);
     }
 
@@ -63,7 +67,10 @@ internal class ResourceToModelConverter
     /// <returns></returns>
     protected ResourceModel ToModel(Resource current, bool partially)
     {
-        if (current == null) return null;
+        if (current == null)
+        {
+            return null;
+        }
         // Extract model
         var model = new ResourceModel
         {
@@ -131,7 +138,9 @@ internal class ResourceToModelConverter
         // We can not set current targets if we do not have any
         var value = property.GetValue(current);
         if (value == null)
+        {
             return referenceModel;
+        }
 
         // Convert referenced resource objects and possible instance types
         var referenceTargets = (value as IEnumerable<IResource>) ?? [(IResource)value];
@@ -161,7 +170,9 @@ internal class ResourceToModelConverter
     {
         // If there are no overrides the only limitation is the target type
         if (!referenceOverrides.TryGetValue(property.Name, out var myOverrides))
+        {
             return [targetType];
+        }
 
         // Otherwise find all types that limit the reference type without redundancies. This means eliminating all types
         // represented by another type
@@ -185,7 +196,9 @@ internal class ResourceToModelConverter
         var resType = node.ResourceType;
 
         if (TypeCache.TryGetValue(node.Name, out var cachedType))
+        {
             return cachedType;
+        }
 
         // Remove generic arguments from type name
         var typeModel = new ResourceTypeModel
@@ -231,7 +244,10 @@ internal class ResourceToModelConverter
         // Get type constraints
         Type targetType = property.PropertyType;
         if (referenceModel.IsCollection)
+        {
             targetType = EntryConvert.ElementType(targetType);
+        }
+
         var typeConstraints = MergeTypeConstraints(property, targetType, overrides);
         referenceModel.SupportedTypes = TypeController.SupportedTypes(typeConstraints).Select(t => t.Name).ToArray();
 

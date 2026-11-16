@@ -25,6 +25,7 @@ public class ReferenceCollectionMock<T> : List<T>, IReferenceCollection, IRefere
     {
         CollectionChanged?.Invoke(this, eventArgs);
     }
+    
     /// <summary>
     ///  
     /// </summary>

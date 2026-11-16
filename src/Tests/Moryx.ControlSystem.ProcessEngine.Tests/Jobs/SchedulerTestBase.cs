@@ -1,9 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Moq;
 using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Recipes;
@@ -322,9 +319,13 @@ public abstract class SchedulerTestBase
         JobScheduler.Scheduled += (sender, job) =>
         {
             if (job == runningInterrupted)
+            {
                 runningInterrupted.Classification = JobClassification.Running;
+            }
             else if (job == completingInterrupted)
+            {
                 completingInterrupted.Classification = JobClassification.Completing;
+            }
         };
 
         // Act

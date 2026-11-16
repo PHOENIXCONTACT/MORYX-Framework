@@ -1,18 +1,15 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.ControlSystem.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Jobs;
 using Moryx.Logging;
-using NUnit.Framework;
 using Moryx.TestTools.UnitTest;
+using NUnit.Framework;
 
 namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs;
 
@@ -32,7 +29,7 @@ public class JobManagerTests
         _jobListMock = new Mock<IJobDataList>();
         _jobStorageMock = new Mock<IJobStorage>();
 
-        _jobStorageMock.Setup(j => j.GetAll()).Returns(() => Array.Empty<IJobData>());
+        _jobStorageMock.Setup(j => j.GetAll()).Returns(Array.Empty<IJobData>);
         _jobListMock.Setup(j => j.GetEnumerator()).Returns(() => _jobList.GetEnumerator());
         _jobListMock.As<IEnumerable>().Setup(j => j.GetEnumerator()).Returns(() => _jobList.GetEnumerator());
 

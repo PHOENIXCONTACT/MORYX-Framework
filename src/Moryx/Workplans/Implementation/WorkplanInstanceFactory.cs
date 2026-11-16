@@ -39,7 +39,9 @@ internal static class WorkplanInstanceFactory
     {
         IPlace instance;
         if (cache.TryGetValue(connector.Id, out var connectorsPlace))
+        {
             instance = connectorsPlace;
+        }
         else
         {
             instance = connector.CreateInstance();

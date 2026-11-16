@@ -1,8 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Threading.Tasks;
 using Moryx.StateMachines;
 using Moryx.Tests.AsyncTestMachine;
 using NUnit.Framework;
@@ -73,7 +71,6 @@ public class AsyncStateMachineTests
         Assert.That(context.BtoCTriggered);
         Assert.That(context.CtoATriggered);
     }
-
 
     [Test(Description = "Create a StateMachine with a specific initial state key.")]
     public async Task CreateWithSpecificInitialState()

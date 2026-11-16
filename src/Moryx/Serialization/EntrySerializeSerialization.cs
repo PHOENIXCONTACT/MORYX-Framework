@@ -39,9 +39,9 @@ public class EntrySerializeSerialization : DefaultSerialization
     public override IEnumerable<ConstructorInfo> GetConstructors(Type sourceType)
     {
         var constructors = from ctor in base.GetConstructors(sourceType)
-            let mode = EvaluateSerializeMode(ctor)
-            where mode.HasValue && mode.Value == EntrySerializeMode.Always
-            select ctor;
+                           let mode = EvaluateSerializeMode(ctor)
+                           where mode.HasValue && mode.Value == EntrySerializeMode.Always
+                           select ctor;
 
         return constructors;
     }
@@ -51,9 +51,9 @@ public class EntrySerializeSerialization : DefaultSerialization
     {
         var methods = sourceType.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).Where(m => !m.IsSpecialName);
         methods = from method in methods
-            let mode = EvaluateSerializeMode(method)
-            where mode.HasValue && mode.Value == EntrySerializeMode.Always
-            select method;
+                  let mode = EvaluateSerializeMode(method)
+                  where mode.HasValue && mode.Value == EntrySerializeMode.Always
+                  select method;
 
         return methods;
     }
@@ -72,12 +72,12 @@ public class EntrySerializeSerialization : DefaultSerialization
         // Ignore properties which are not mapped
         var properties = GetProperties(sourceType);
         var result = from entry in encoded
-            let property = properties.FirstOrDefault(x => x.Name.Equals(entry.Identifier))
-            select new MappedProperty
-            {
-                Entry = entry,
-                Property = property
-            };
+                     let property = properties.FirstOrDefault(x => x.Name.Equals(entry.Identifier))
+                     select new MappedProperty
+                     {
+                         Entry = entry,
+                         Property = property
+                     };
         return result.Where(mapped => mapped.Entry != null);
     }
 
@@ -87,7 +87,9 @@ public class EntrySerializeSerialization : DefaultSerialization
     private bool BasePropertyFilter(PropertyInfo prop)
     {
         if (_basePropertyFilter.Length == 0)
+        {
             return true;
+        }
 
         return !_basePropertyFilter.Contains(prop.Name);
     }
@@ -98,7 +100,9 @@ public class EntrySerializeSerialization : DefaultSerialization
     private bool ExplicitPropertyFilter(PropertyInfo prop)
     {
         if (!FilterExplicitProperties)
+        {
             return true;
+        }
 
         return !ReflectionTool.IsExplicitInterfaceImplementation(prop);
     }
@@ -119,24 +123,32 @@ public class EntrySerializeSerialization : DefaultSerialization
         // Class: Always
         // -> All properties except "Never"
         if (sourceTypeMode.HasValue && sourceTypeMode.Value == EntrySerializeMode.Always)
+        {
             return properties.Except(neverProperties);
+        }
 
         // Class: Never
         // -> Only "Always" properties
         if (sourceTypeMode.HasValue && sourceTypeMode.Value == EntrySerializeMode.Never)
+        {
             return alwaysProperties;
+        }
 
         // Class: Not defined
 
         // "Always" and "Never" properties, "Always" properties but no "Never"
         // Only "Never" properties
         if (alwaysProperties.Length > 0)
+        {
             return alwaysProperties;
+        }
 
         // No "Always" properties, but "Never" properties
         // -> Properties except "Never"
         if (neverProperties.Length > 0)
+        {
             return properties.Except(neverProperties);
+        }
 
         // No property mode defined, No "Always", No "Never"
         // -> All property

@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moq;
+using Moryx.AbstractionLayer.Processes;
 using Moryx.ControlSystem.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Jobs.Setup;
@@ -10,8 +11,6 @@ using Moryx.ControlSystem.Recipes;
 using Moryx.Notifications;
 using Moryx.Workplans;
 using NUnit.Framework;
-using System.Linq;
-using Moryx.AbstractionLayer.Processes;
 
 namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs;
 

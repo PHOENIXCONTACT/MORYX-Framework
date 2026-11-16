@@ -7,7 +7,7 @@ namespace Moryx.FactoryMonitor.Web.Pages;
 
 public class FactoryMonitorModel : PageModel
 {
-  public void OnGet()
-  {
-  }
+    public void OnGet()
+    {
+    }
 }

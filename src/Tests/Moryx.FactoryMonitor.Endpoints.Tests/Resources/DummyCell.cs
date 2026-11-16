@@ -2,12 +2,8 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Capabilities;
-using Moryx.AbstractionLayer.Resources;
 using Moryx.ControlSystem.Cells;
 using Moryx.Factory;
-using System;
-using System.Collections.Generic;
-using Moryx.AbstractionLayer.Activities;
 
 namespace Moryx.FactoryMonitor.Endpoints.Tests.Resources;
 

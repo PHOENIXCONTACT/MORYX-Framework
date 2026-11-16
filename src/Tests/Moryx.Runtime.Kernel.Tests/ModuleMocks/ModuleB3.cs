@@ -5,7 +5,7 @@ using Moryx.Runtime.Modules;
 
 namespace Moryx.Runtime.Kernel.Tests.ModuleMocks;
 
-internal class ModuleB3 : ModuleBase, IFacadeContainer<IFacadeB>
+internal sealed class ModuleB3 : ModuleBase, IFacadeContainer<IFacadeB>
 {
     public ModuleB3()
     {

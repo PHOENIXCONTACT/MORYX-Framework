@@ -22,14 +22,20 @@ public class TransportCapabilities : CapabilitiesBase
     {
         var capabilities = provided as TransportCapabilities;
         if (capabilities == null)
+        {
             return false;
+        }
 
         if (ConnectedResources == null || ConnectedResources.Length == 0)
+        {
             return true;
+        }
 
         // If resources are specified we must check whether we are connected to all of them
         if (ConnectedResources.All(requiredRes => capabilities.ConnectedResources.Contains(requiredRes)))
+        {
             return true;
+        }
 
         return false;
     }

@@ -3,7 +3,6 @@
 
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using Moryx.Model.Configuration;
 
 namespace Moryx.Model.Sqlite;
 

@@ -9,7 +9,7 @@ using Moryx.ProcessData.Bindings;
 namespace Moryx.ProcessData.Adapter.NotificationPublisher;
 
 [Plugin(LifeCycle.Singleton)]
-internal class NotificationPublisherAdapter : IPlugin
+internal sealed class NotificationPublisherAdapter : IPlugin
 {
     private const string MeasurementPrefix = "notifications_";
     private MeasurementBindingProcessor _notificationBindingProcessor;
@@ -49,7 +49,9 @@ internal class NotificationPublisherAdapter : IPlugin
 
         var duration = notification.Acknowledged - notification.Created;
         if (duration.HasValue)
+        {
             measurement.Add(new DataField("duration", duration.Value));
+        }
 
         measurement.Add(new DataTag("severity", notification.Severity.ToString()));
         measurement.Add(new DataTag("type", notification.GetType().Name));
