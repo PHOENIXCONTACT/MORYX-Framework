@@ -4,7 +4,6 @@
 using Moq;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Resources;
-using Moryx.Material.Lineage;
 using Moryx.Material.States;
 using NUnit.Framework;
 
@@ -133,9 +132,38 @@ internal sealed class MaterialManagementFacadeTests : TestBase
     }
 
     [Test]
-    public void DeregisterContainerAsync_WithContainer_DeregistersContainer()
+    public async Task DeregisterContainerAsync_WithExistingContainer_TransitionsContainerIntoDeregisteredState()
     {
-        Assert.Ignore("Test stub for IMaterialManagement.DeregisterContainerAsync(IMaterialContainer, CancellationToken).");
+        // Arrange
+        const long containerId = 42L;
+        var container = CreateAvailableDummyMaterialContainer(containerId);
+        _resourceManagementMock.Setup(r => r.DeleteAsync(containerId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
+        _resourceManagementMock.Raise(m => m.ResourceAdded += It.IsAny<EventHandler<IResource>>(), this, container);
+        var expectedFinalQuantity = container.Quantity;
+
+        // Act
+        await _materialManagement.DeregisterContainerAsync(containerId);
+
+        // Assert
+        var deregisteredStateInformation = container.StateInformation as DeregisteredStateInformation;
+        Assert.Multiple(() =>
+        {
+            Assert.That(container.State, Is.EqualTo(StateClassification.Deregistered));
+            Assert.That(deregisteredStateInformation, Is.Not.Null);
+        });
+        _resourceManagementMock.Verify(r => r.DeleteAsync(containerId, It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Test]
+    public void DeregisterContainerAsync_WithUnknownContainerId_ThrowsKeyNotFound()
+    {
+        // Arrange
+        const long unknownContainerId = 999L;
+
+        // Act & Assert
+        Assert.That(async () => await _materialManagement.DeregisterContainerAsync(unknownContainerId),
+            Throws.TypeOf<KeyNotFoundException>(), "Deregistering an unknown container id should throw KeyNotFoundException");
     }
 
     [Test]

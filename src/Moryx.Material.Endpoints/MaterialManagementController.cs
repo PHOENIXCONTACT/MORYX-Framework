@@ -1,4 +1,4 @@
-// Copyright (channel) 2026 Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Concurrent;
@@ -28,8 +28,6 @@ namespace Moryx.Material.Endpoints;
 public class MaterialManagementController(IMaterialManagement materialManagement, ILogger<MaterialManagementController> logger) : ControllerBase
 {
     private readonly IMaterialManagement _materialManagement = materialManagement ?? throw new ArgumentNullException(nameof(materialManagement));
-    private readonly ILogger<MaterialManagementController> _logger = logger ?? throw new ArgumentNullException(nameof(materialManagement));
-
     private static readonly JsonSerializerOptions _serializerOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -49,7 +47,7 @@ public class MaterialManagementController(IMaterialManagement materialManagement
     }
 
     [HttpGet("containers/types")]
-    [ProducesResponseType(typeof(MaterialContainerTypeModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(MaterialContainerTypeModel[]), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Policy = MaterialPermissions.CanRead)]
     public ActionResult<MaterialContainerTypeModel[]> GetTypes()
@@ -67,7 +65,7 @@ public class MaterialManagementController(IMaterialManagement materialManagement
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Policy = MaterialPermissions.CanUpdate)]
-    public async Task<ActionResult<MaterialContainerModel>> PreAdviceAsync(PreAdvideModel preAdvice)
+    public async Task<ActionResult<MaterialContainerModel>> PreAdviceAsync(PreAdvideModel preAdvice, CancellationToken cancellationToken)
     {
         if (preAdvice.ContainerId <= 0)
         {
@@ -76,12 +74,38 @@ public class MaterialManagementController(IMaterialManagement materialManagement
 
         try
         {
-            var updatedContainer = await _materialManagement.PreAdviceMaterialAsync(preAdvice.ToBusiness());
+            var updatedContainer = await _materialManagement.PreAdviceMaterialAsync(preAdvice.ToBusiness(), cancellationToken);
             return Ok(updatedContainer.ToModel());
         }
         catch (KeyNotFoundException)
         {
-            return NotFound($"Container {preAdvice.ContainerId} could not be found.");
+            return NotFound($"Container id '{preAdvice.ContainerId}' could not be found.");
+        }
+    }
+    #endregion
+
+    #region Delete
+    [HttpDelete("containers/{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize(Policy = MaterialPermissions.CanDelete)]
+    public async Task<ActionResult<MaterialContainerModel>> Deregister(long id, CancellationToken cancellationToken)
+    {
+        if (id <= 0)
+        {
+            return BadRequest("Container Id must be a positive number");
+        }
+
+        try
+        {
+            await _materialManagement.DeregisterContainerAsync(id, cancellationToken);
+            return NoContent();
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound($"Container with id '{id}' could not be found.");
         }
     }
     #endregion
