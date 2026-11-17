@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Moryx.Configuration;
 using Moryx.Serialization;
 
 namespace Moryx.Tests.Serialization;
@@ -132,4 +133,21 @@ public class SelfReferencingBase
 
 public class SelfReferencingDerived : SelfReferencingBase
 {
+}
+
+public class MyModuleConfig : ConfigBase
+{
+    public object SomeSubConfig { get; set; }
+    public ConfigBase ConfigBase { get; set; }
+}
+
+public class ChildClass
+{
+    public string Name { get; set; }
+}
+
+public class ContainerWithTwoChildProps
+{
+    public ChildClass First { get; set; }
+    public ChildClass Second { get; set; }
 }
