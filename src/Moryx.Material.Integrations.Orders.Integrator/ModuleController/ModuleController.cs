@@ -7,6 +7,7 @@ using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Material.Facade;
 using Moryx.Material.Integrations.Orders.Integrator.Components;
+using Moryx.Material.Integrations.Orders.Integrator.Facade;
 using Moryx.Material.Linking;
 using Moryx.Orders;
 using Moryx.Runtime.Modules;
@@ -20,7 +21,7 @@ namespace Moryx.Material.Integrations.Orders.Integrator;
 /// </summary>
 [Display(Name = "Material Mánagement - Order Integration", Description = "Wires order linking semantics into the material management module.")]
 public class ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory)
-    : ServerModuleBase<ModuleConfig>(containerFactory, configManager, loggerFactory)
+    : ServerModuleBase<ModuleConfig>(containerFactory, configManager, loggerFactory), IFacadeContainer<IOrderIntegration>
 {
     /// <inheritdoc />
     public override string Name => "Material Mánagement - Order Integration";
@@ -46,8 +47,7 @@ public class ModuleController(IModuleContainerFactory containerFactory, IConfigM
     /// <inheritdoc />
     protected override Task OnInitializeAsync(CancellationToken cancellationToken)
     {
-        _ = Container
-            .SetInstance(OrderManagement)
+        Container.SetInstance(OrderManagement)
             .SetInstance(MaterialManagement);
 
         Container.LoadComponents<ILinkingHook>();
@@ -60,13 +60,19 @@ public class ModuleController(IModuleContainerFactory containerFactory, IConfigM
         await Container.Resolve<ILinkingHookManager>().StartAsync(cancellationToken);
         await Container.Resolve<IOrderReferencesPool>().StartAsync(cancellationToken);
         await Container.Resolve<IOrderContainerManager>().StartAsync(cancellationToken);
+        ActivateFacade(_facade);
     }
 
     /// <inheritdoc />
     protected override async Task OnStopAsync(CancellationToken cancellationToken)
     {
+        DeactivateFacade(_facade);
         await Container.Resolve<IOrderContainerManager>().StopAsync(cancellationToken);
         await Container.Resolve<IOrderReferencesPool>().StopAsync(cancellationToken);
         await Container.Resolve<ILinkingHookManager>().StopAsync(cancellationToken);
     }
+
+    private readonly OrderIntegrationFacade _facade = new();
+
+    IOrderIntegration IFacadeContainer<IOrderIntegration>.Facade => _facade;
 }

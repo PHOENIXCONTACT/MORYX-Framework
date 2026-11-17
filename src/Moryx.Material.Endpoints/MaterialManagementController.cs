@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moryx.Material.Endpoints.Model;
 using Moryx.Material.Facade;
+using Moryx.Material.Integrations.Orders;
 using Moryx.Tools;
 
 namespace Moryx.Material.Endpoints;
@@ -25,22 +26,25 @@ namespace Moryx.Material.Endpoints;
 [ApiController]
 [Route("api/moryx/materials/")]
 [Produces("application/json")]
-public class MaterialManagementController(IMaterialManagement materialManagement, ILogger<MaterialManagementController> logger) : ControllerBase
+public class MaterialManagementController(IMaterialManagement materialManagement, IOrderIntegration? orderIntegration, ILogger<MaterialManagementController> logger) : ControllerBase
 {
     private readonly IMaterialManagement _materialManagement = materialManagement ?? throw new ArgumentNullException(nameof(materialManagement));
+    private readonly IOrderIntegration _orderIntegration = orderIntegration;
+
     private static readonly JsonSerializerOptions _serializerOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         Converters = { new JsonStringEnumConverter() }
     };
 
+    #region Material Containers
     #region GET
 
     [HttpGet("containers")]
-    [ProducesResponseType(typeof(MaterialContainerModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(MaterialContainerModel[]), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Policy = MaterialPermissions.CanRead)]
-    public ActionResult<MaterialContainerModel[]> GetAll()
+    public ActionResult<MaterialContainerModel[]> GetContainers()
     {
         var containers = _materialManagement.GetContainers();
         return Ok(containers.ToModels());
@@ -91,7 +95,7 @@ public class MaterialManagementController(IMaterialManagement materialManagement
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Policy = MaterialPermissions.CanDelete)]
-    public async Task<ActionResult<MaterialContainerModel>> Deregister(long id, CancellationToken cancellationToken)
+    public async Task<ActionResult> Deregister(long id, CancellationToken cancellationToken)
     {
         if (id <= 0)
         {
@@ -168,5 +172,26 @@ public class MaterialManagementController(IMaterialManagement materialManagement
         void Broadcast(IMaterialContainer container) => _containerStreamSubscribers.Values.ForEach(channel =>
             channel.Writer.TryWrite(JsonSerializer.Serialize(container.ToModel(), _serializerOptions)));
     }
+    #endregion
+    #endregion
+
+    #region Order References
+    #region GET
+
+    [HttpGet("integrations/orders/available")]
+    [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+    [Authorize(Policy = MaterialPermissions.CanRead)]
+    public ActionResult<bool> HasOrderIntegration() => Ok(_orderIntegration is null);
+
+    [HttpGet("integrations/orders")]
+    [ProducesResponseType(typeof(OrderReferenceModel[]), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize(Policy = MaterialPermissions.CanRead)]
+    public ActionResult<OrderReference[]> GetOrderReferences()
+    {
+        var references = _orderIntegration.GetOrderReferences();
+        return Ok(references.ToModels());
+    }
+    #endregion
     #endregion
 }

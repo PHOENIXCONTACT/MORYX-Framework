@@ -2,28 +2,28 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using NUnit.Framework;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using Moryx.Tools;
-using System.ComponentModel.DataAnnotations;
+using NUnit.Framework;
 
 namespace Moryx.Tests.Extensions;
 
-internal class TestConstants
+file class TestConstants
 {
     public const string ClassDisplayName = "Some Display Name";
     public const string ClassDescription = "Some Description";
 }
 
 [Display(Name = TestConstants.ClassDisplayName, Description = TestConstants.ClassDescription)]
-internal class ClassDisplayAttributeDummy
+file class ClassDisplayAttributeDummy
 {
 }
 
 [DisplayName(TestConstants.ClassDisplayName)]
 [System.ComponentModel.Description(TestConstants.ClassDescription)]
-internal class DotnetAttributesDummy
+file class DotnetAttributesDummy
 {
 }
 

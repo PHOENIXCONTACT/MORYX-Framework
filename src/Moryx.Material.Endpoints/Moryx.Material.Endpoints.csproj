@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Moryx.AspNetCore\Moryx.AspNetCore.csproj" />
+    <ProjectReference Include="..\Moryx.Material.Integrations.Orders\Moryx.Material.Integrations.Orders.csproj" />
     <ProjectReference Include="..\Moryx.Material\Moryx.Material.csproj" />
     <ProjectReference Include="..\Moryx.Runtime\Moryx.Runtime.csproj" />
   </ItemGroup>
@@ -33,10 +34,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="C:\Repositories\00 Products\MORYX-Framework\.build\\moryx-logo.png" Link="Model\moryx-logo.png" />
   </ItemGroup>
 
 </Project>

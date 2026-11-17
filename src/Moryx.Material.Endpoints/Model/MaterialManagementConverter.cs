@@ -8,7 +8,7 @@ using Moryx.Tools;
 
 namespace Moryx.Material.Endpoints.Model;
 
-internal static class Converter
+internal static class MaterialManagementConverter
 {
     #region ToModel
     public static MaterialContainerTypeModel ToModel(this Type type) => new()
