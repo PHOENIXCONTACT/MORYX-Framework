@@ -27,9 +27,15 @@ public class OrderReference : Reference
 
     /// <summary>
     /// Cached operation status, mapped from the underlying business object when active.
-    /// This information is rest when the reference is not actively maintained.
+    /// This information is reset when the reference is not actively maintained.
     /// </summary>
     public OperationStateClassification? Status { get; protected set; }
+
+    /// <summary>
+    /// Cached operation source, mapped from the underlying business object when active.
+    /// This information is reset when the reference is not actively maintained.
+    /// </summary>
+    public IOperationSource? Source { get; protected set; }
 
     /// <summary>
     /// Creates a new <see cref="OrderReference"/> in <see cref="ReferenceState.Initialized"/>.

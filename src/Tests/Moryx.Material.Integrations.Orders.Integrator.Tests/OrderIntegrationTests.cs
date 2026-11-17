@@ -97,6 +97,7 @@ internal sealed class OrderIntegrationTests
             Assert.That(container.LinkedOrder.OperationNumber, Is.EqualTo(OperationNumber));
             Assert.That(container.LinkedOrder.State, Is.EqualTo(ReferenceState.Active));
             Assert.That(container.LinkedOrder.Status, Is.EqualTo(OperationStateClassification.Ready));
+            Assert.That(container.LinkedOrder.Source, Is.TypeOf<TestOperationSource>());
         });
     }
 
@@ -120,6 +121,7 @@ internal sealed class OrderIntegrationTests
             Assert.That(container.LinkedOrder.OperationNumber, Is.EqualTo("9999"));
             Assert.That(container.LinkedOrder.State, Is.EqualTo(ReferenceState.Unavailable));
             Assert.That(container.LinkedOrder.Status, Is.Null);
+            Assert.That(container.LinkedOrder.Source, Is.Null);
         });
     }
 
@@ -143,8 +145,9 @@ internal sealed class OrderIntegrationTests
             Assert.That(container.LinkedOrder, Is.Not.SameAs(originalReference));
             Assert.That(container.LinkedOrder!.OrderNumber, Is.EqualTo(OrderNumber));
             Assert.That(container.LinkedOrder.OperationNumber, Is.EqualTo(OperationNumber));
-            Assert.That(container.LinkedOrder.State, Is.EqualTo(ReferenceState.Active));
             Assert.That(container.LinkedOrder.Status, Is.EqualTo(OperationStateClassification.Running));
+            Assert.That(container.LinkedOrder.Source, Is.TypeOf<TestOperationSource>());
+            Assert.That(container.LinkedOrder.State, Is.EqualTo(ReferenceState.Active));
         });
     }
 
@@ -169,6 +172,7 @@ internal sealed class OrderIntegrationTests
             Assert.That(container.LinkedOrder.OperationNumber, Is.EqualTo(OperationNumber));
             Assert.That(container.LinkedOrder.State, Is.EqualTo(ReferenceState.Active));
             Assert.That(container.LinkedOrder.Status, Is.EqualTo(OperationStateClassification.Running));
+            Assert.That(container.LinkedOrder.Source, Is.TypeOf<TestOperationSource>());
             Assert.That(container.ValidationErrorHandlingCount, Is.Zero);
         });
     }
@@ -295,6 +299,7 @@ internal sealed class OrderIntegrationTests
             Order = order;
             Number = number;
             Name = number;
+            Source = new TestOperationSource();
             SetState(state);
         }
 
@@ -303,5 +308,10 @@ internal sealed class OrderIntegrationTests
             State = state;
             StateDisplayName = state.ToString();
         }
+    }
+
+    private sealed class TestOperationSource : IOperationSource
+    {
+        public string Type => nameof(TestOperationSource);
     }
 }

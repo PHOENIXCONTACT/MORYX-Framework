@@ -16,11 +16,11 @@ public class StateTransitionLineageEvent : LineageEventBase
     /// Classification of the previous state, or <c>null</c> if this is the initial state.
     /// </summary>
     [DataMember]
-    public MaterialContainerStateClassification? FromClassification { get; set; }
+    public StateClassification? FromClassification { get; set; }
 
     /// <summary>
     /// Classification of the new state.
     /// </summary>
     [DataMember]
-    public MaterialContainerStateClassification ToClassification { get; set; }
+    public StateClassification ToClassification { get; set; }
 }

@@ -3,7 +3,7 @@
 
 namespace Moryx.Material.Endpoints.Model;
 
-public class OrderReferenceModel
+public class OrderReferenceModel : ReferenceModel
 {
     public required int ReferenceStateKey { get; set; }
 
@@ -16,4 +16,6 @@ public class OrderReferenceModel
     public int StatusKey { get; set; }
 
     public string? StatusDisplayName { get; set; }
+
+    public string? OperationSourceType { get; set; }
 }
