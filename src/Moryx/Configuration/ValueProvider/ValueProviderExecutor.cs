@@ -3,6 +3,7 @@
 
 using System.Collections;
 using System.Reflection;
+using Newtonsoft.Json.Linq;
 
 namespace Moryx.Configuration;
 
@@ -53,12 +54,18 @@ public class ValueProviderExecutor : IEmptyPropertyProvider
             throw new ArgumentNullException(nameof(settings.Filters));
         }
 
-        Iterate(targetObject, settings);
+        Iterate(targetObject, settings, []);
     }
 
-    private static void Iterate(object target, ValueProviderExecutorSettings settings, Stack<ExecutorLevel> stack = null)
+    private static void Iterate(object target, ValueProviderExecutorSettings settings,HashSet<Type> visited ,Stack<ExecutorLevel> stack = null)
     {
         stack ??= new Stack<ExecutorLevel>();
+        if (visited.Contains(target.GetType()))
+        {
+            return;
+        }
+
+        visited.Add(target.GetType());
         foreach (var property in FilterProperties(target, settings))
         {
             var level = new ExecutorLevel(target, property, new());
@@ -90,7 +97,7 @@ public class ValueProviderExecutor : IEmptyPropertyProvider
             }
 
             var value = property.GetValue(target);
-
+            
             if (!property.PropertyType.IsPrimitive && property.PropertyType != typeof(string))
             {
                 // Iterate each item of an enumerable
@@ -102,14 +109,14 @@ public class ValueProviderExecutor : IEmptyPropertyProvider
                         stack.Push(new ExecutorLevel(enumerable, null, new() { [IndexKey] = i++ }));
                         if (item != null)
                         {
-                            Iterate(item, settings, stack);
+                            Iterate(item, settings, visited, stack);
                         }
                         stack.Pop();
                     }
                 }
                 else if (value != null && property.PropertyType.IsClass)
                 {
-                    Iterate(value, settings, stack);
+                    Iterate(value, settings, visited, stack);
                 }
             }
             stack.Pop();

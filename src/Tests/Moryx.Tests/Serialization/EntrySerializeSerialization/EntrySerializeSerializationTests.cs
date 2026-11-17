@@ -2,6 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Globalization;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Moryx.Configuration;
 using Moryx.Serialization;
 using NUnit.Framework;
 
@@ -226,11 +229,97 @@ public class EntrySerializeSerializationTests
     }
 
     [Test]
-    public void SerializeClassWithSelfReference()
+    public void SerializeClassWithSelfReferenceShouldNotThrowException()
     {
         var instance = new SelfReferencingDerived();
         instance.Self = instance;
         Assert.DoesNotThrow(() => EntryConvert.EncodeObject(instance));
+    }
+
+    [Test]
+    public void SerializeClassWithMutualReferenceShouldNotThrowException()
+    {
+        var a = new MutualReferenceA { Name = "A" };
+        var b = new MutualReferenceB { Name = "B" };
+        a.Other = b;
+        b.Other = a;
+        Exception exception = null;
+        try
+        {
+            var res = JsonSerializer.Serialize(a, new JsonSerializerOptions
+            {
+                ReferenceHandler = ReferenceHandler.IgnoreCycles,
+            });
+            EntryConvert.EncodeObject(a);
+        }
+        catch(Exception ex)
+        {
+             exception = ex;
+        }
+        Assert.That(exception, Is.Null, "Mutual reference caused a stack overflow");
+       // Assert.DoesNotThrow(() => EntryConvert.EncodeObject(a));
+    }
+
+    [Test]
+    public void SerializeClassWithTwoPropertiesOfSameTypeShouldSerializeBoth()
+    {
+        // Arrange
+        var instance = new ContainerWithTwoChildProps
+        {
+            First = new ChildClass { Name = "First" },
+            Second = new ChildClass { Name = "Second" }
+        };
+
+        // Act
+        var result = EntryConvert.EncodeObject(instance);
+
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.That(result.SubEntries.Any(x => x.Identifier == nameof(ContainerWithTwoChildProps.First)), Is.True);
+        Assert.That(result.SubEntries.Any(x => x.Identifier == nameof(ContainerWithTwoChildProps.Second)), Is.True);
+    }
+
+    [Test]
+    public void SerializeClassWithObjectProperty()
+    {
+        //Arrange
+        var instance = new MyModuleConfig();
+        instance.SomeSubConfig = new ConfigBase();
+        instance.ConfigBase = new ConfigBase();
+        Entry result = null;
+
+        //Act
+        result = EntryConvert.EncodeObject(instance);
+
+        //Assert
+        Assert.IsNotNull(result);
+        Assert.That(result.SubEntries.Any(x => x.Identifier == nameof(MyModuleConfig.SomeSubConfig)), Is.True);
+        Assert.That(result.SubEntries.Any(x => x.Identifier == nameof(MyModuleConfig.ConfigBase)), Is.True);
+    }
+
+    [Test]
+    public void SerializeClassWithTwoPropertiesOfSameType_ShouldEncodeEachInstanceIndependently()
+    {
+
+        // Two different ChildClass instances with different values
+        var instance = new ContainerWithTwoChildProps
+        {
+            First = new ChildClass { Name = "FirstValue" },
+            Second = new ChildClass { Name = "SecondValue" }
+        };
+        var result = EntryConvert.EncodeObject(instance);
+
+        var firstEntry = result.SubEntries.First(e => e.Identifier == nameof(ContainerWithTwoChildProps.First));
+        var secondEntry = result.SubEntries.First(e => e.Identifier == nameof(ContainerWithTwoChildProps.Second));
+
+        // First should carry its own instance value
+        Assert.That(firstEntry.SubEntries.First(e => e.Identifier == nameof(ChildClass.Name)).Value.Current,
+        Is.EqualTo("FirstValue"));
+
+        // Second should carry its OWN instance value - not a copy of First
+        Assert.That(secondEntry.SubEntries.First(e => e.Identifier == nameof(ChildClass.Name)).Value.Current,
+        Is.EqualTo("SecondValue")); // < FAILS: returns "FirstValue"
+
     }
 }
 

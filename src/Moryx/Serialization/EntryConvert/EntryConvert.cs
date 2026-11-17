@@ -149,7 +149,7 @@ public static partial class EntryConvert
         var defaultAttribute = property.GetCustomAttribute<DefaultValueAttribute>();
         if (defaultAttribute != null)
         {
-            entryValue.Default = defaultAttribute.Value.ToString();
+            entryValue.Default = defaultAttribute.Value?.ToString();
         }
         else if (entryValue.Possible != null && entryValue.Possible.Length >= 1)
         {
@@ -378,6 +378,11 @@ public static partial class EntryConvert
     /// </summary>
     public static Entry EncodeObject(object instance, ICustomSerialization customSerialization)
     {
+        return EncodeObject(instance, customSerialization, new HashSet<object>(ReferenceEqualityComparer.Instance));
+    }
+
+    private static Entry EncodeObject(object instance, ICustomSerialization customSerialization, HashSet<object> visitedTypes)
+    {
         var instanceType = instance.GetType();
 
         // Encoders encode the complete entry
@@ -410,13 +415,28 @@ public static partial class EntryConvert
         {
             //exclude property that can lead to self reference
             var propertyType = property.PropertyType;
-            if (propertyType == instanceType || propertyType.IsAssignableFrom(instanceType))
+            if (propertyType == instanceType)
             {
                 continue;
             }
+            //if(visitedTypes.TryGetValue(propertyType, out var entry))
+            //{
+            //    var subentry = (Entry)entry.Clone();
+            //    subentry.Description = property.GetDescription();
+            //    subentry.DisplayName = property.GetDisplayName();
+            //    subentry.Identifier = property.Name;
+            //    subentry.Value.IsReadOnly = property.CanRead && !property.CanWrite;  //Is this the right property to match
+            //    converted.SubEntries.Add(subentry);
+            //    continue;
+            //}
 
             var isFaulty = !TryGetValue(property, instance, out var value);
-
+            if (visitedTypes.Contains(value))
+            {
+                var encodedEntry = EncodeObject(value);
+                converted.SubEntries.Add(encodedEntry);
+                continue;
+            }
             // Encoders encode the complete entry
             var encoder = customSerialization.GetEncoder(propertyType, property);
             if (encoder is not null && !isFaulty)
@@ -446,9 +466,10 @@ public static partial class EntryConvert
                 case EntryValueType.Class:
                     var subEntry = value == null
                         ? EncodeClass(property.PropertyType, customSerialization)
-                        : EncodeObject(value, customSerialization);
+                        : EncodeObject(value, customSerialization, visitedTypes);
                     convertedProperty.Value.Current = ConvertToString(subEntry.Value.Current, customSerialization.FormatProvider);
                     convertedProperty.SubEntries = subEntry.SubEntries;
+                    visitedTypes.Add(value);
                     break;
                 case EntryValueType.Exception:
                     convertedProperty.Value.Current = (value as Exception)?.ToString() ?? string.Empty;
