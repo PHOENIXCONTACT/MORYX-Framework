@@ -23,6 +23,7 @@
 
     <!-- Asp.Net Core Framework dependency -->
     <FrameworkReference Update="Microsoft.AspNetCore.App" Version="$(dotnetVersion)" />
+    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.14" />
 
     <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="$(dotnetVersion)" />
     <PackageVersion Include="Microsoft.Extensions.Logging" Version="$(dotnetVersion)" />
