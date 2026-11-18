@@ -114,7 +114,17 @@ public class IdentifierShortCut : BindingResolverBase
     /// <inheritdoc />
     protected override object Resolve(object source)
     {
-        return (source as IIdentifiableObject)?.Identity?.Identifier;
+        if (source is IIdentifiableObject identifiableObject)
+        {
+            return identifiableObject.Identity?.Identifier;
+        }
+
+        if (source is IIdentity identity)
+        {
+            return identity.Identifier;
+        }
+
+        return null;
     }
 
     /// <inheritdoc />
