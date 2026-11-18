@@ -260,7 +260,7 @@ internal class JobManager : IJobManager, IDisposable
             _taskQueue.Enqueue(() => ProcessJobState(eventArgs));
             JobStorage.UpdateState(eventArgs.JobData, eventArgs.CurrentState);
         }
-        else if (_running)
+        else
         {
             _taskQueue.Enqueue(() => ProcessJobCompleted(eventArgs.JobData));
         }
@@ -279,13 +279,16 @@ internal class JobManager : IJobManager, IDisposable
 
     private void ProcessJobCompleted(IJobData completedJob)
     {
-        try
+        if (_running)
         {
-            _scheduler.JobUpdated(completedJob.Job, JobClassification.Completed);
-        }
-        catch (Exception ex)
-        {
-            Logger.Log(LogLevel.Error, ex, "Failed to forward completed job to scheduler");
+            try
+            {
+                _scheduler.JobUpdated(completedJob.Job, JobClassification.Completed);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(LogLevel.Error, ex, "Failed to forward completed job to scheduler");
+            }
         }
 
         JobList.Remove(completedJob, JobStorage.Save);
