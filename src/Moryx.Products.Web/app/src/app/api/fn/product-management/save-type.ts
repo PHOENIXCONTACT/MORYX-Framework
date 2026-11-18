@@ -15,10 +15,14 @@ import { RequestBuilder } from '../../request-builder';
 import { ProductModel } from '../../models/product-model';
 
 export interface SaveType$Params {
-      body?: ProductModel
+  
+    /**
+     * Model of the new product
+     */
+    body: ProductModel
 }
 
-export function saveType(http: HttpClient, rootUrl: string, params?: SaveType$Params, context?: HttpContext): Observable<StrictHttpResponse<number>> {
+export function saveType(http: HttpClient, rootUrl: string, params: SaveType$Params, context?: HttpContext): Observable<StrictHttpResponse<number>> {
   const rb = new RequestBuilder(rootUrl, saveType.PATH, 'post');
   if (params) {
     rb.body(params.body, 'application/*+json');

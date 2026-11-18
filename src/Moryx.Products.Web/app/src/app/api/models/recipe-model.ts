@@ -11,14 +11,38 @@ import { Entry } from '@moryx/ngx-web-framework/entry-editor';
 import { RecipeClassificationModel } from '../models/recipe-classification-model';
 import { RecipeState } from '../models/recipe-state';
 import { WorkplanModel } from '../models/workplan-model';
+
+/**
+ * DTO representation of a recipe
+ */
 export interface RecipeModel {
   classification?: RecipeClassificationModel;
+
+  /**
+   * Id of the recipe
+   */
   id?: number;
+
+  /**
+   * Whether this Recipe is a clone or not
+   */
   isClone?: boolean;
+
+  /**
+   * Name of the recipe
+   */
   name?: string | null;
   properties?: Entry;
+
+  /**
+   * Revision of the recipe
+   */
   revision?: number;
   state?: RecipeState;
+
+  /**
+   * Type of the recipe
+   */
   type?: string | null;
   workplanModel?: WorkplanModel;
 }

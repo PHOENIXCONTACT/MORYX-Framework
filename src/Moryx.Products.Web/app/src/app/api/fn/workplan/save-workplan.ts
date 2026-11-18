@@ -15,10 +15,10 @@ import { RequestBuilder } from '../../request-builder';
 import { WorkplanModel } from '../../models/workplan-model';
 
 export interface SaveWorkplan$Params {
-      body?: WorkplanModel
+      body: WorkplanModel
 }
 
-export function saveWorkplan(http: HttpClient, rootUrl: string, params?: SaveWorkplan$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+export function saveWorkplan(http: HttpClient, rootUrl: string, params: SaveWorkplan$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
   const rb = new RequestBuilder(rootUrl, saveWorkplan.PATH, 'post');
   if (params) {
     rb.body(params.body, 'application/*+json');

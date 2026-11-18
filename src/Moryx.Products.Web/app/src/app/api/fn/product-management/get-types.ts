@@ -16,10 +16,14 @@ import { ProductModel } from '../../models/product-model';
 import { ProductQuery } from '../../models/product-query';
 
 export interface GetTypes$Params {
-      body?: ProductQuery
+  
+    /**
+     * Query parameters
+     */
+    body: ProductQuery
 }
 
-export function getTypes(http: HttpClient, rootUrl: string, params?: GetTypes$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ProductModel>>> {
+export function getTypes(http: HttpClient, rootUrl: string, params: GetTypes$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ProductModel>>> {
   const rb = new RequestBuilder(rootUrl, getTypes.PATH, 'post');
   if (params) {
     rb.body(params.body, 'application/*+json');
