@@ -41,21 +41,36 @@ public class OrderManagementController : ControllerBase
     }
 
     #region HttpGet
+    /// <summary>
+    /// Retrieve all current operations that match the given filter parameters.
+    /// Already completed or aborted Operations won't be included.
+    /// </summary>
+    /// <param name="orderNumber">Optional. If specified only operations that belong to this order will be returned</param>
+    /// <param name="operationNumber">Optional. If specified only operations with this operation number will be returned</param>
     [HttpGet]
     [ProducesResponseType(typeof(OperationModel[]), StatusCodes.Status200OK)]
     [Authorize(Policy = OrderPermissions.CanView)]
     public ActionResult<OperationModel[]> GetOperations(string orderNumber = null, string operationNumber = null)
     {
-        var operations = _orderManagement.GetOperations(_ => true)
-            .Where(o => orderNumber is null || o.Order.Number == orderNumber)
-            .Where(o => operationNumber is null || o.Number == operationNumber)
+        var operations = _orderManagement.GetOperations(o =>
+           (orderNumber is null || o.Order.Number == orderNumber)
+           && (operationNumber is null || o.Number == operationNumber))
             .Select(Converter.ToModel).ToArray();
 
         return operations;
     }
 
+    /// <summary>
+    /// Stream that allow subscribing to operation changes.
+    /// </summary>
     [HttpGet("stream")]
-    [ProducesResponseType(typeof(OperationChangedModel), StatusCodes.Status200OK)]
+    [ProducesSseEvent<OperationTypes>(OperationTypes.Start, typeof(OperationStartedModel), Description = "Published when operation has been started")]
+    [ProducesSseEvent<OperationTypes>(OperationTypes.Progress, typeof(OperationModel))]
+    [ProducesSseEvent<OperationTypes>(OperationTypes.Completed, typeof(OperationReportedModel))]
+    [ProducesSseEvent<OperationTypes>(OperationTypes.Interrupted, typeof(OperationReportedModel))]
+    [ProducesSseEvent<OperationTypes>(OperationTypes.Report, typeof(OperationReportedModel))]
+    [ProducesSseEvent<OperationTypes>(OperationTypes.Advice, typeof(OperationAdvicedModel))]
+    [ProducesSseEvent<OperationTypes>(OperationTypes.Update, typeof(OperationModel))]
     public async Task OperationStream(CancellationToken cancellationToken)
     {
         var channel = Channel.CreateUnbounded<SseItem<string>>();
@@ -142,6 +157,12 @@ public class OrderManagementController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Retrieves an operationmodel using the unique id of the operation
+    /// (Can load completed operations from storage)
+    /// </summary>
+    /// <param name="guid"></param>
+    /// <returns></returns>
     [HttpGet]
     [ProducesResponseType(typeof(OperationModel), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -159,6 +180,11 @@ public class OrderManagementController : ControllerBase
         return Converter.ToModel(operation);
     }
 
+    /// <summary>
+    /// Retrieve the documents attached to operation with the given id
+    /// </summary>
+    /// <param name="guid">Id of the operation</param>
+    /// <returns>A list of document models describing the available documents</returns>
     [HttpGet]
     [ProducesResponseType(typeof(DocumentModel[]), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -176,6 +202,12 @@ public class OrderManagementController : ControllerBase
         return operation.Documents.Select(Converter.ToModel).ToArray();
     }
 
+    /// <summary>
+    /// Retrieves the content of the document specified using the operation id and the identifier of the document
+    /// </summary>
+    /// <param name="guid">Id of the operation</param>
+    /// <param name="identifier">Identifier of the document</param>
+    /// <returns></returns>
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
@@ -197,6 +229,7 @@ public class OrderManagementController : ControllerBase
             return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_GetDocuments_DocumentNotFound });
         }
 
+        // TODO: Change the return value here. This is not a bad request. It's not the callers fault that the ContentType is not set
         if (string.IsNullOrEmpty(document.ContentType))
         {
             return BadRequest();
@@ -205,6 +238,11 @@ public class OrderManagementController : ControllerBase
         return new FileStreamResult(document.GetStream(), document.ContentType);
     }
 
+    /// <summary>
+    /// Retrieve a list of product parts attached to the given operation
+    /// </summary>
+    /// <param name="guid">If of the operation</param>
+    /// <returns>The list of product parts</returns>
     [HttpGet]
     [ProducesResponseType(typeof(ProductPartModel[]), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -222,6 +260,11 @@ public class OrderManagementController : ControllerBase
         return operation.Parts.Select(Converter.ToModel).ToArray();
     }
 
+    /// <summary>
+    /// Retrieves the begin context for the given operation
+    /// </summary>
+    /// <param name="guid">Id of the operation</param>
+    /// <returns>An object that can be used to popualte a begin dialog to the user</returns>
     [HttpGet]
     [ProducesResponseType(typeof(BeginContext), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -245,6 +288,11 @@ public class OrderManagementController : ControllerBase
         return beginContext;
     }
 
+    /// <summary>
+    /// Retrieves a report context for the given operation 
+    /// </summary>
+    /// <param name="guid">Id of the operation</param>
+    /// <returns>An object that can be used to populate a report dialog for the user</returns>
     [HttpGet]
     [ProducesResponseType(typeof(ReportContext), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -268,6 +316,11 @@ public class OrderManagementController : ControllerBase
         return reportContext;
     }
 
+    /// <summary>
+    /// Retrieves a interrupt context for the given operation 
+    /// </summary>
+    /// <param name="guid">Id of the operation</param>
+    /// <returns>An object that can be used to populate a interrupt dialog for the user</returns>
     [HttpGet]
     [ProducesResponseType(typeof(ReportContext), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -291,6 +344,11 @@ public class OrderManagementController : ControllerBase
         return reportContext;
     }
 
+    /// <summary>
+    /// Retrieves a advice context for the given operation 
+    /// </summary>
+    /// <param name="guid">Id of the operation</param>
+    /// <returns>An object that can be used to populate a advice dialog for the user</returns>
     [HttpGet]
     [ProducesResponseType(typeof(AdviceContext), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -314,6 +372,11 @@ public class OrderManagementController : ControllerBase
         return adviceContext;
     }
 
+    /// <summary>
+    /// Retrieves logs written during the creation of the operation
+    /// </summary>
+    /// <param name="guid">Id of the operation</param>
+    /// <returns>A list of log messages</returns>
     [HttpGet]
     [Route("{guid}/logs")]
     [ProducesResponseType(typeof(OperationLogMessageModel[]), StatusCodes.Status200OK)]
@@ -330,6 +393,12 @@ public class OrderManagementController : ControllerBase
         return _orderManagement.GetLogs(operation).Select(Converter.ToModel).ToArray();
     }
 
+    /// <summary>
+    /// Get's the list of recipes available to produce the given product
+    /// </summary>
+    /// <param name="identifier">Product identifier</param>
+    /// <param name="revision">Product revision</param>
+    /// <returns></returns>
     [HttpGet]
     [Route("recipes")]
     [ProducesResponseType(typeof(OperationRecipeModel[]), StatusCodes.Status200OK)]
@@ -343,6 +412,12 @@ public class OrderManagementController : ControllerBase
     #endregion
 
     #region HttpPost
+    /// <summary>
+    /// Add an operation to the order stock
+    /// </summary>
+    /// <param name="contextModel">Description of the operation</param>
+    /// <param name="sourceId">Identifier of the application adding the operation</param>
+    /// <returns></returns>
     [HttpPost]
     [ProducesResponseType(typeof(OperationModel), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
@@ -368,6 +443,11 @@ public class OrderManagementController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Begin producing the operation using the given parameters
+    /// </summary>
+    /// <param name="guid">Id of the operation</param>
+    /// <param name="beginModel">Begin parameters</param>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -394,6 +474,10 @@ public class OrderManagementController : ControllerBase
         return Ok();
     }
 
+    /// <summary>
+    /// Abort the specified operation (Remove it before being started)
+    /// </summary>
+    /// <param name="guid">Id of the operation</param>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -412,6 +496,11 @@ public class OrderManagementController : ControllerBase
         return Ok();
     }
 
+    /// <summary>
+    /// Report produced amounts of a given operation
+    /// </summary>
+    /// <param name="guid">Id of the operation</param>
+    /// <param name="report">Parameter object</param>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -430,6 +519,11 @@ public class OrderManagementController : ControllerBase
         return Ok();
     }
 
+    /// <summary>
+    /// Interrupt the given operation
+    /// </summary>
+    /// <param name="guid">Id of the operation</param>
+    /// <param name="userIdentifier">Identifier of the user requesting the interrupt (Optional depending on configuration)</param>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -450,6 +544,11 @@ public class OrderManagementController : ControllerBase
         return Ok();
     }
 
+    /// <summary>
+    /// Advice operation
+    /// </summary>
+    /// <param name="guid">Id of the operation</param>
+    /// <param name="advice">Parameter object</param>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
@@ -478,6 +577,11 @@ public class OrderManagementController : ControllerBase
 
     #region HttpPut
 
+    /// <summary>
+    /// Update the operation
+    /// </summary>
+    /// <param name="guid">Id of the operation</param>
+    /// <param name="update">Paramter object</param>
     [HttpPut]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -496,6 +600,10 @@ public class OrderManagementController : ControllerBase
         return Ok();
     }
 
+    /// <summary>
+    /// Reload the operation, rerunning the order assignment steps
+    /// </summary>
+    /// <param name="guid">Id of the operation</param>
     [HttpPut]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
