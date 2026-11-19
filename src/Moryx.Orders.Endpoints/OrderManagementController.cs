@@ -161,8 +161,7 @@ public class OrderManagementController : ControllerBase
     /// Retrieves an operationmodel using the unique id of the operation
     /// (Can load completed operations from storage)
     /// </summary>
-    /// <param name="guid"></param>
-    /// <returns></returns>
+    /// <param name="guid">unique id of the operation</param>
     [HttpGet]
     [ProducesResponseType(typeof(OperationModel), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -207,7 +206,6 @@ public class OrderManagementController : ControllerBase
     /// </summary>
     /// <param name="guid">Id of the operation</param>
     /// <param name="identifier">Identifier of the document</param>
-    /// <returns></returns>
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
@@ -398,7 +396,6 @@ public class OrderManagementController : ControllerBase
     /// </summary>
     /// <param name="identifier">Product identifier</param>
     /// <param name="revision">Product revision</param>
-    /// <returns></returns>
     [HttpGet]
     [Route("recipes")]
     [ProducesResponseType(typeof(OperationRecipeModel[]), StatusCodes.Status200OK)]
@@ -417,7 +414,6 @@ public class OrderManagementController : ControllerBase
     /// </summary>
     /// <param name="contextModel">Description of the operation</param>
     /// <param name="sourceId">Identifier of the application adding the operation</param>
-    /// <returns></returns>
     [HttpPost]
     [ProducesResponseType(typeof(OperationModel), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
