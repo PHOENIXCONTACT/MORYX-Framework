@@ -7,8 +7,12 @@ using Microsoft.OpenApi;
 namespace Moryx.AspNetCore.OpenApi;
 
 /// <summary>
-/// Remove content types that don't have a defined response in the schema.
-/// Necessary to keep the void results in generated client code.
+/// If a controller is annotated with application/json and the Endpoint method returns
+/// an ActionResult and no specific response annotation is present the schema contains
+/// an entry for the success status code and application/json, without any schema definition.
+/// 
+/// Swagger used to prune those from our api spec and therefore the UIs expect these endpoints to return void.
+/// If we don't prune it too the UI has compiler errors, because "any" is now returned instead of void.
 /// </summary>
 internal sealed class RemoveEmptyResponseTypeOperationTransformer : IOpenApiOperationTransformer
 {
