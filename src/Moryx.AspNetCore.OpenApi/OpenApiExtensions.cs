@@ -28,6 +28,7 @@ public static class OpenApiExtensions
             options.AddOperationTransformer<SetOperationIdOperationTransformer>();
             options.AddOperationTransformer<SseOperationTransformer>();
             options.AddOperationTransformer<RemoveEmptyResponseTypeOperationTransformer>();
+            options.AddOperationTransformer<DeduplicateJsonContentTransformer>();
             options.AddSchemaTransformer<EnumSchemaTransformer>();
             options.AddSchemaTransformer<FileStreamSchemaTransformer>();
             return options;
