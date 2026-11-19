@@ -1,7 +1,8 @@
 openapi: 3.0.4
 info:
-  title: StartProject.Asp | v1
-  version: 1.0.0
+  title: MORYX Framework API
+  description: API reference for all *.Endpoints packages provided by the the MORYX Framework.
+  version: '10.0'
 paths:
   /common/time:
     get:

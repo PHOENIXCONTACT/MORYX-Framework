@@ -64,6 +64,12 @@ builder.Services.AddOpenApi(static options =>
 {
     options.OpenApiVersion = OpenApiSpecVersion.OpenApi3_0; // Typescript code generator is not compatible with OpenApi3_1
     options.ConfigureMoryxTransformers();
+    options.AddDocumentTransformer(transformer: async (document, context, token) =>
+    {
+        document.Info.Title = "MORYX Framework API";
+        document.Info.Version = "10.0";
+        document.Info.Description = "API reference for all *.Endpoints packages provided by the the MORYX Framework.";
+    });
 });
 
 builder.Services.AddSingleton<IAuthorizationPolicyProvider, ExamplePolicyProvider>();
