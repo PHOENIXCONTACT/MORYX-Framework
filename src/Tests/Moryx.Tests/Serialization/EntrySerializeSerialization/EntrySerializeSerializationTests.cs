@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Globalization;
+using Moryx.Configuration;
 using Moryx.Serialization;
 using NUnit.Framework;
 
@@ -224,4 +225,56 @@ public class EntrySerializeSerializationTests
         var alwaysProperties = 3;
         Assert.That(alwaysProperties, Is.EqualTo(encoded.SubEntries.Count));
     }
+
+    [Test]
+    public void SerializeClassWithSelfReference()
+    {
+        var instance = new SelfReferencingDerived();
+        instance.Self = instance;
+        Assert.DoesNotThrow(() => EntryConvert.EncodeObject(instance));
+    }
+
+    [Test]
+    public void SerializeClassWithObjectProperty()
+    {
+        //Arrange
+        var instance = new MyModuleConfig();
+        instance.SomeSubConfig = new ConfigBase();
+        instance.ConfigBase = new ConfigBase();
+        Entry result = null;
+
+        //Act
+        result = EntryConvert.EncodeObject(instance);
+
+        //Assert
+        Assert.IsNotNull(result);
+        Assert.That(result.SubEntries.Any(x => x.Identifier == nameof(MyModuleConfig.SomeSubConfig)), Is.True);
+        Assert.That(result.SubEntries.Any(x => x.Identifier == nameof(MyModuleConfig.ConfigBase)), Is.True);
+    }
+
+    [Test]
+    public void SerializeClassWithTwoPropertiesOfSameType_ShouldEncodeEachInstanceIndependently()
+    {
+
+        // Two different ChildClass instances with different values
+        var instance = new ContainerWithTwoChildProps
+        {
+            First = new ChildClass { Name = "FirstValue" },
+            Second = new ChildClass { Name = "SecondValue" }
+        };
+        var result = EntryConvert.EncodeObject(instance);
+
+        var firstEntry = result.SubEntries.First(e => e.Identifier == nameof(ContainerWithTwoChildProps.First));
+        var secondEntry = result.SubEntries.First(e => e.Identifier == nameof(ContainerWithTwoChildProps.Second));
+
+        // First should carry its own instance value
+        Assert.That(firstEntry.SubEntries.First(e => e.Identifier == nameof(ChildClass.Name)).Value.Current,
+        Is.EqualTo("FirstValue"));
+
+        // Second should carry its OWN instance value - not a copy of First
+        Assert.That(secondEntry.SubEntries.First(e => e.Identifier == nameof(ChildClass.Name)).Value.Current,
+        Is.EqualTo("SecondValue")); // < FAILS: returns "FirstValue"
+
+    }
 }
+

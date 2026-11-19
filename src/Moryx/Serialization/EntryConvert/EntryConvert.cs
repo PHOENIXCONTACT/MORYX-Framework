@@ -373,10 +373,15 @@ public static partial class EntryConvert
         return EncodeObject(instance, _serialization);
     }
 
+    public static Entry EncodeObject(object instance, ICustomSerialization customSerialization)
+    {
+        return EncodeObject(instance, customSerialization, new HashSet<object>(ReferenceEqualityComparer.Instance));
+    }
+
     /// <summary>
     /// Convert object instance using custom strategy
     /// </summary>
-    public static Entry EncodeObject(object instance, ICustomSerialization customSerialization)
+    public static Entry EncodeObject(object instance, ICustomSerialization customSerialization, HashSet<object> visited)
     {
         var instanceType = instance.GetType();
 
@@ -416,7 +421,12 @@ public static partial class EntryConvert
             }
 
             var isFaulty = !TryGetValue(property, instance, out var value);
-
+            if(visited.Contains(value))
+            {
+                var encodedEntry = EncodeObject(value);
+                converted.SubEntries.Add(encodedEntry);
+                continue;
+            }
             // Encoders encode the complete entry
             var encoder = customSerialization.GetEncoder(propertyType, property);
             if (encoder is not null && !isFaulty)
@@ -449,6 +459,7 @@ public static partial class EntryConvert
                         : EncodeObject(value, customSerialization);
                     convertedProperty.Value.Current = ConvertToString(subEntry.Value.Current, customSerialization.FormatProvider);
                     convertedProperty.SubEntries = subEntry.SubEntries;
+                    visited.Add(value);
                     break;
                 case EntryValueType.Exception:
                     convertedProperty.Value.Current = (value as Exception)?.ToString() ?? string.Empty;
