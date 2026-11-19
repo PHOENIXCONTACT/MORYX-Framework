@@ -22,6 +22,7 @@ public class JobManagerTests
     private readonly List<IProductionJobData> _jobList = new();
     private Mock<IJobScheduler> _jobSchedulerMock;
     private Mock<IJobHandler> _handlerMock;
+    private Mock<IJobDataFactory> _jobDataFactoryMock;
 
     [SetUp]
     public void SetUp()
@@ -36,11 +37,12 @@ public class JobManagerTests
         _jobSchedulerMock = new Mock<IJobScheduler>();
 
         _handlerMock = new Mock<IJobHandler>();
+        _jobDataFactoryMock = new Mock<IJobDataFactory>();
 
         _jobManager = new JobManager
         {
             JobStorage = _jobStorageMock.Object,
-            JobDataFactory = new Mock<IJobDataFactory>().Object,
+            JobDataFactory = _jobDataFactoryMock.Object,
             JobList = _jobListMock.Object,
             JobHandlers = [_handlerMock.Object],
             Logger = new ModuleLogger("Dummy", new NullLoggerFactory()),
@@ -123,6 +125,65 @@ public class JobManagerTests
 
         // Assert
         _jobListMock.Verify(jl => jl.Remove(completed, _jobStorageMock.Object.Save));
+    }
+
+    [Test(Description = "Jobs completing during shutdown must still be removed to keep the stored job links consistent")]
+    public void JobManagerRemovesCompletedJobAfterStop()
+    {
+        // Arrange
+        _jobList.AddRange([CreateJobMock(1), CreateJobMock(2), CreateJobMock(3)]);
+        _jobManager.Stop();
+
+        // Act
+        var completed = _jobList[1];
+        RaiseStateChanged(completed, JobClassification.Running, JobClassification.Completed);
+
+        // Assert
+        _jobListMock.Verify(jl => jl.Remove(completed, _jobStorageMock.Object.Save), Times.Once);
+        _jobDataFactoryMock.Verify(f => f.Destroy(completed), Times.Once);
+    }
+
+    [Test(Description = "Completed jobs are not forwarded to the already stopped scheduler during shutdown")]
+    public void JobManagerDoesNotForwardCompletionToSchedulerAfterStop()
+    {
+        // Arrange
+        _jobList.AddRange([CreateJobMock(1)]);
+        _jobManager.Stop();
+
+        // Act
+        var completed = _jobList[0];
+        RaiseStateChanged(completed, JobClassification.Running, JobClassification.Completed);
+
+        // Assert
+        _jobSchedulerMock.Verify(s => s.JobUpdated(It.IsAny<Job>(), It.IsAny<JobClassification>()), Times.Never);
+        _jobListMock.Verify(jl => jl.Remove(completed, _jobStorageMock.Object.Save), Times.Once);
+    }
+
+    [Test(Description = "Intermediate state changes must not remove the job from the job list")]
+    public void JobManagerDoesNotRemoveJobOnIntermediateStateChange()
+    {
+        // Arrange
+        _jobList.AddRange([CreateJobMock(1)]);
+
+        // Act
+        var running = _jobList[0];
+        RaiseStateChanged(running, JobClassification.Waiting, JobClassification.Running);
+
+        // Assert
+        _jobSchedulerMock.Verify(s => s.JobUpdated(running.Job, JobClassification.Running), Times.Once);
+        _jobListMock.Verify(jl => jl.Remove(It.IsAny<IJobData>(), It.IsAny<Action<ModifiedJobsFragment>>()), Times.Never);
+        _jobDataFactoryMock.Verify(f => f.Destroy(It.IsAny<IJobData>()), Times.Never);
+    }
+
+    private void RaiseStateChanged(IJobData jobData, JobClassification previous, JobClassification current)
+    {
+        var previousStateMock = new Mock<IJobState>();
+        previousStateMock.SetupGet(s => s.Classification).Returns(previous);
+        var currentStateMock = new Mock<IJobState>();
+        currentStateMock.SetupGet(s => s.Classification).Returns(current);
+
+        _jobListMock.Raise(jl => jl.StateChanged += null, _jobListMock.Object,
+            new JobStateEventArgs(jobData, previousStateMock.Object, currentStateMock.Object));
     }
 
     private static IProductionJobData CreateJobMock(int id = 0)
