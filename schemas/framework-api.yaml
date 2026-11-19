@@ -61,9 +61,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DatabasesResponse'
-            text/json:
-              schema:
-                $ref: '#/components/schemas/DatabasesResponse'
     delete:
       tags:
         - Database
@@ -76,9 +73,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/InvocationResponse'
             application/json:
-              schema:
-                $ref: '#/components/schemas/InvocationResponse'
-            text/json:
               schema:
                 $ref: '#/components/schemas/InvocationResponse'
   '/databases/{targetModel}':
@@ -102,9 +96,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DataModel'
-            text/json:
-              schema:
-                $ref: '#/components/schemas/DataModel'
     delete:
       tags:
         - Database
@@ -120,12 +111,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/DatabaseConfigModel'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/DatabaseConfigModel'
-          application/*+json:
-            schema:
-              $ref: '#/components/schemas/DatabaseConfigModel'
         required: true
       responses:
         '200':
@@ -135,9 +120,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/InvocationResponse'
             application/json:
-              schema:
-                $ref: '#/components/schemas/InvocationResponse'
-            text/json:
               schema:
                 $ref: '#/components/schemas/InvocationResponse'
   '/databases/{targetModel}/config':
@@ -156,12 +138,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/DatabaseConfigModel'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/DatabaseConfigModel'
-          application/*+json:
-            schema:
-              $ref: '#/components/schemas/DatabaseConfigModel'
         required: true
       responses:
         '200':
@@ -171,9 +147,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/DataModel'
             application/json:
-              schema:
-                $ref: '#/components/schemas/DataModel'
-            text/json:
               schema:
                 $ref: '#/components/schemas/DataModel'
   '/databases/{targetModel}/config/test':
@@ -192,12 +165,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/DatabaseConfigModel'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/DatabaseConfigModel'
-          application/*+json:
-            schema:
-              $ref: '#/components/schemas/DatabaseConfigModel'
         required: true
       responses:
         '200':
@@ -207,9 +174,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/TestConnectionResponse'
             application/json:
-              schema:
-                $ref: '#/components/schemas/TestConnectionResponse'
-            text/json:
               schema:
                 $ref: '#/components/schemas/TestConnectionResponse'
   /databases/createall:
@@ -225,9 +189,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/InvocationResponse'
             application/json:
-              schema:
-                $ref: '#/components/schemas/InvocationResponse'
-            text/json:
               schema:
                 $ref: '#/components/schemas/InvocationResponse'
   '/databases/{targetModel}/create':
@@ -246,12 +207,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/DatabaseConfigModel'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/DatabaseConfigModel'
-          application/*+json:
-            schema:
-              $ref: '#/components/schemas/DatabaseConfigModel'
         required: true
       responses:
         '200':
@@ -261,9 +216,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/InvocationResponse'
             application/json:
-              schema:
-                $ref: '#/components/schemas/InvocationResponse'
-            text/json:
               schema:
                 $ref: '#/components/schemas/InvocationResponse'
   '/databases/{targetModel}/migrate':
@@ -282,12 +234,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/DatabaseConfigModel'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/DatabaseConfigModel'
-          application/*+json:
-            schema:
-              $ref: '#/components/schemas/DatabaseConfigModel'
         required: true
       responses:
         '200':
@@ -297,9 +243,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/DatabaseMigrationSummary'
             application/json:
-              schema:
-                $ref: '#/components/schemas/DatabaseMigrationSummary'
-            text/json:
               schema:
                 $ref: '#/components/schemas/DatabaseMigrationSummary'
   '/databases/{targetModel}/setup':
@@ -318,12 +261,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ExecuteSetupRequest'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/ExecuteSetupRequest'
-          application/*+json:
-            schema:
-              $ref: '#/components/schemas/ExecuteSetupRequest'
         required: true
       responses:
         '200':
@@ -333,9 +270,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/InvocationResponse'
             application/json:
-              schema:
-                $ref: '#/components/schemas/InvocationResponse'
-            text/json:
               schema:
                 $ref: '#/components/schemas/InvocationResponse'
   /api/moryx/factory-monitor/state:
@@ -353,9 +287,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FactoryStateModel'
-            text/json:
-              schema:
-                $ref: '#/components/schemas/FactoryStateModel'
   /api/moryx/factory-monitor/cells:
     get:
       tags:
@@ -371,11 +302,6 @@ paths:
                 items:
                   $ref: '#/components/schemas/VisualizableItemModel'
             application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/VisualizableItemModel'
-            text/json:
               schema:
                 type: array
                 items:
@@ -406,11 +332,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/VisualizableItemModel'
-            text/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/VisualizableItemModel'
   '/api/moryx/factory-monitor/navigation/{factoryId}':
     get:
       tags:
@@ -433,9 +354,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FactoryModel'
-            text/json:
-              schema:
-                $ref: '#/components/schemas/FactoryModel'
   /api/moryx/factory-monitor/state-stream:
     get:
       tags:
@@ -451,9 +369,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/OrderChangedModel'
-            text/json:
-              schema:
-                $ref: '#/components/schemas/OrderChangedModel'
   /api/moryx/factory-monitor/move-cell:
     post:
       tags:
@@ -462,12 +377,6 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/CellLocationModel'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/CellLocationModel'
-          application/*+json:
             schema:
               $ref: '#/components/schemas/CellLocationModel'
         required: true
@@ -479,9 +388,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/CellLocationModel'
             application/json:
-              schema:
-                $ref: '#/components/schemas/CellLocationModel'
-            text/json:
               schema:
                 $ref: '#/components/schemas/CellLocationModel'
   /api/moryx/factory-monitor/background:
@@ -511,9 +417,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
-            text/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetails'
         '422':
           description: Unprocessable Entity
           content:
@@ -521,9 +424,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
             application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetails'
-            text/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
   '/api/moryx/factory-monitor/cell-properties/{identifier}':
@@ -565,9 +465,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
-            text/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetails'
   /api/moryx/factory-monitor/traceroute:
     post:
       tags:
@@ -576,12 +473,6 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/TransportRouteModel'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/TransportRouteModel'
-          application/*+json:
             schema:
               $ref: '#/components/schemas/TransportRouteModel'
         required: true
@@ -605,12 +496,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CellSettingsModel'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/CellSettingsModel'
-          application/*+json:
-            schema:
-              $ref: '#/components/schemas/CellSettingsModel'
         required: true
       responses:
         '200':
@@ -630,11 +515,6 @@ paths:
                 items:
                   $ref: '#/components/schemas/TransportRouteModel'
             application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/TransportRouteModel'
-            text/json:
               schema:
                 type: array
                 items:
@@ -788,9 +668,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
-            text/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetails'
         '404':
           description: Not Found
           content:
@@ -798,9 +675,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
             application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetails'
-            text/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
   '/api/moryx/media/{guid}/{variantName}':
@@ -865,9 +739,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
-            text/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetails'
         '404':
           description: Not Found
           content:
@@ -875,9 +746,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
             application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetails'
-            text/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
   '/api/moryx/media/{guid}/{variantName}/stream':
@@ -911,9 +779,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
-            text/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetails'
         '404':
           description: Not Found
           content:
@@ -923,9 +788,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
-            text/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetails'
         '200':
           description: OK
           content:
@@ -933,9 +795,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/FileStreamResult'
             application/json:
-              schema:
-                $ref: '#/components/schemas/FileStreamResult'
-            text/json:
               schema:
                 $ref: '#/components/schemas/FileStreamResult'
   /api/moryx/media/master:
@@ -1038,9 +897,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DependencyEvaluation'
-            text/json:
-              schema:
-                $ref: '#/components/schemas/DependencyEvaluation'
   /modules:
     get:
       tags:
@@ -1056,11 +912,6 @@ paths:
                 items:
                   $ref: '#/components/schemas/ServerModuleModel'
             application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ServerModuleModel'
-            text/json:
               schema:
                 type: array
                 items:
@@ -1086,9 +937,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServerModuleState'
-            text/json:
-              schema:
-                $ref: '#/components/schemas/ServerModuleState'
         '404':
           description: Not Found
           content:
@@ -1096,9 +944,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
             application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetails'
-            text/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
   '/modules/{moduleName}/notifications':
@@ -1126,11 +971,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ModuleNotificationModel'
-            text/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ModuleNotificationModel'
         '404':
           description: Not Found
           content:
@@ -1138,9 +978,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
             application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetails'
-            text/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
   '/modules/{moduleName}/start':
@@ -1166,9 +1003,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
-            text/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetails'
   '/modules/{moduleName}/stop':
     post:
       tags:
@@ -1190,9 +1024,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
             application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetails'
-            text/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
   '/modules/{moduleName}/reincarnate':
@@ -1218,9 +1049,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
-            text/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetails'
   '/modules/{moduleName}':
     post:
       tags:
@@ -1237,12 +1065,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ServerModuleModel'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/ServerModuleModel'
-          application/*+json:
-            schema:
-              $ref: '#/components/schemas/ServerModuleModel'
         required: true
       responses:
         '200':
@@ -1256,9 +1078,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
-            text/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetails'
         '404':
           description: Not Found
           content:
@@ -1266,9 +1085,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
             application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetails'
-            text/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
   '/modules/{moduleName}/confirm':
@@ -1294,9 +1110,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
-            text/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetails'
   '/modules/{moduleName}/config':
     get:
       tags:
@@ -1318,9 +1131,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Config'
-            text/json:
-              schema:
-                $ref: '#/components/schemas/Config'
         '404':
           description: Not Found
           content:
@@ -1328,9 +1138,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
             application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetails'
-            text/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
         '500':
@@ -1350,12 +1157,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/SaveConfigRequest'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/SaveConfigRequest'
-          application/*+json:
-            schema:
-              $ref: '#/components/schemas/SaveConfigRequest'
         required: true
       responses:
         '200':
@@ -1369,9 +1170,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
-            text/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetails'
         '404':
           description: Not Found
           content:
@@ -1379,9 +1177,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
             application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetails'
-            text/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
         '500':
@@ -1411,11 +1206,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/MethodEntry'
-            text/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/MethodEntry'
         '404':
           description: Not Found
           content:
@@ -1423,9 +1213,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
             application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetails'
-            text/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
     post:
@@ -1443,12 +1230,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/MethodEntry'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/MethodEntry'
-          application/*+json:
-            schema:
-              $ref: '#/components/schemas/MethodEntry'
         required: true
       responses:
         '200':
@@ -1460,9 +1241,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Entry'
-            text/json:
-              schema:
-                $ref: '#/components/schemas/Entry'
         '400':
           description: Bad Request
           content:
@@ -1472,9 +1250,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
-            text/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetails'
         '404':
           description: Not Found
           content:
@@ -1482,9 +1257,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
             application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetails'
-            text/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
         '500':
@@ -1573,12 +1345,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/OperatorModel'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/OperatorModel'
-          application/*+json:
-            schema:
-              $ref: '#/components/schemas/OperatorModel'
         required: true
       responses:
         '201':
@@ -1650,12 +1416,6 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/OperatorModel'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/OperatorModel'
-          application/*+json:
             schema:
               $ref: '#/components/schemas/OperatorModel'
         required: true
@@ -1933,12 +1693,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/OperationCreationContextModel'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/OperationCreationContextModel'
-          application/*+json:
-            schema:
-              $ref: '#/components/schemas/OperationCreationContextModel'
         required: true
       responses:
         '200':
@@ -1992,7 +1746,7 @@ paths:
       parameters:
         - name: guid
           in: path
-          description: ''
+          description: unique id of the operation
           required: true
           schema:
             type: string
@@ -2177,12 +1931,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/BeginModel'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/BeginModel'
-          application/*+json:
-            schema:
-              $ref: '#/components/schemas/BeginModel'
         required: true
       responses:
         '200':
@@ -2249,12 +1997,6 @@ paths:
         description: Parameter object
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/ReportModel'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/ReportModel'
-          application/*+json:
             schema:
               $ref: '#/components/schemas/ReportModel'
         required: true
@@ -2391,12 +2133,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/AdviceModel'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/AdviceModel'
-          application/*+json:
-            schema:
-              $ref: '#/components/schemas/AdviceModel'
         required: true
       responses:
         '200':
@@ -2462,7 +2198,7 @@ paths:
             format: int16
       responses:
         '200':
-          description: ''
+          description: OK
           content:
             application/json:
               schema:
@@ -2516,12 +2252,6 @@ paths:
         description: Paramter object
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/OperationUpdateModel'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/OperationUpdateModel'
-          application/*+json:
             schema:
               $ref: '#/components/schemas/OperationUpdateModel'
         required: true
@@ -2868,12 +2598,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Entry'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/Entry'
-          application/*+json:
-            schema:
-              $ref: '#/components/schemas/Entry'
         required: true
       responses:
         '200':
@@ -2900,12 +2624,6 @@ paths:
         description: Model of the new product
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/ProductModel'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/ProductModel'
-          application/*+json:
             schema:
               $ref: '#/components/schemas/ProductModel'
         required: true
@@ -2967,12 +2685,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ProductQuery'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/ProductQuery'
-          application/*+json:
-            schema:
-              $ref: '#/components/schemas/ProductQuery'
         required: true
       responses:
         '200':
@@ -3024,7 +2736,7 @@ paths:
       parameters:
         - name: id
           in: path
-          description: ''
+          description: Database id
           required: true
           schema:
             type: integer
@@ -3061,12 +2773,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ProductModel'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/ProductModel'
-          application/*+json:
-            schema:
-              $ref: '#/components/schemas/ProductModel'
         required: true
       responses:
         '200':
@@ -3099,12 +2805,6 @@ paths:
         description: Product identifier of the new product
         content:
           application/json:
-            schema:
-              type: string
-          text/json:
-            schema:
-              type: string
-          application/*+json:
             schema:
               type: string
         required: true
@@ -3272,12 +2972,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ProductInstanceModel'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/ProductInstanceModel'
-          application/*+json:
-            schema:
-              $ref: '#/components/schemas/ProductInstanceModel'
         required: true
       responses:
         '200':
@@ -3340,12 +3034,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/RecipeModel'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/RecipeModel'
-          application/*+json:
-            schema:
-              $ref: '#/components/schemas/RecipeModel'
         required: true
       responses:
         '200':
@@ -3377,12 +3065,6 @@ paths:
         description: Model of the recipe
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/RecipeModel'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/RecipeModel'
-          application/*+json:
             schema:
               $ref: '#/components/schemas/RecipeModel'
         required: true
@@ -3485,12 +3167,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ResourceModel'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/ResourceModel'
-          application/*+json:
-            schema:
-              $ref: '#/components/schemas/ResourceModel'
         required: true
       responses:
         '200':
@@ -3521,12 +3197,6 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/ResourceQuery'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/ResourceQuery'
-          application/*+json:
             schema:
               $ref: '#/components/schemas/ResourceQuery'
         required: true
@@ -3590,12 +3260,6 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/ResourceModel'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/ResourceModel'
-          application/*+json:
             schema:
               $ref: '#/components/schemas/ResourceModel'
         required: true
@@ -3674,12 +3338,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Entry'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/Entry'
-          application/*+json:
-            schema:
-              $ref: '#/components/schemas/Entry'
         required: true
       responses:
         '200':
@@ -3726,12 +3384,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Entry'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/Entry'
-          application/*+json:
-            schema:
-              $ref: '#/components/schemas/Entry'
       responses:
         '200':
           description: OK
@@ -3774,12 +3426,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ShiftCreationContextModel'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/ShiftCreationContextModel'
-          application/*+json:
-            schema:
-              $ref: '#/components/schemas/ShiftCreationContextModel'
         required: true
       responses:
         '200':
@@ -3795,12 +3441,6 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/ShiftModel'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/ShiftModel'
-          application/*+json:
             schema:
               $ref: '#/components/schemas/ShiftModel'
         required: true
@@ -3870,12 +3510,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ShiftTypeCreationContextModel'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/ShiftTypeCreationContextModel'
-          application/*+json:
-            schema:
-              $ref: '#/components/schemas/ShiftTypeCreationContextModel'
         required: true
       responses:
         '200':
@@ -3891,12 +3525,6 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/ShiftTypeModel'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/ShiftTypeModel'
-          application/*+json:
             schema:
               $ref: '#/components/schemas/ShiftTypeModel'
         required: true
@@ -3941,12 +3569,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ShiftAssignementCreationContextModel'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/ShiftAssignementCreationContextModel'
-          application/*+json:
-            schema:
-              $ref: '#/components/schemas/ShiftAssignementCreationContextModel'
         required: true
       responses:
         '200':
@@ -3962,12 +3584,6 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/ShiftAssignementModel'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/ShiftAssignementModel'
-          application/*+json:
             schema:
               $ref: '#/components/schemas/ShiftAssignementModel'
         required: true
@@ -4043,12 +3659,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/SkillTypeCreationContextModel'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/SkillTypeCreationContextModel'
-          application/*+json:
-            schema:
-              $ref: '#/components/schemas/SkillTypeCreationContextModel'
         required: true
       responses:
         '201':
@@ -4070,12 +3680,6 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/SkillTypeModel'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/SkillTypeModel'
-          application/*+json:
             schema:
               $ref: '#/components/schemas/SkillTypeModel'
         required: true
@@ -4196,12 +3800,6 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/SkillCreationContextModel'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/SkillCreationContextModel'
-          application/*+json:
             schema:
               $ref: '#/components/schemas/SkillCreationContextModel'
         required: true
@@ -4361,12 +3959,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/InstructionModel'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/InstructionModel'
-          application/*+json:
-            schema:
-              $ref: '#/components/schemas/InstructionModel'
         required: true
       responses:
         '200':
@@ -4384,12 +3976,6 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/InstructionModel'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/InstructionModel'
-          application/*+json:
             schema:
               $ref: '#/components/schemas/InstructionModel'
         required: true
@@ -4410,12 +3996,6 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/InstructionResponseModel'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/InstructionResponseModel'
-          application/*+json:
             schema:
               $ref: '#/components/schemas/InstructionResponseModel'
         required: true
@@ -4463,12 +4043,6 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/WorkplanModel'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/WorkplanModel'
-          application/*+json:
             schema:
               $ref: '#/components/schemas/WorkplanModel'
         required: true
@@ -4578,12 +4152,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/WorkplanModel'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/WorkplanModel'
-          application/*+json:
-            schema:
-              $ref: '#/components/schemas/WorkplanModel'
         required: true
       responses:
         '400':
@@ -4614,12 +4182,6 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/OpenSessionRequest'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/OpenSessionRequest'
-          application/*+json:
             schema:
               $ref: '#/components/schemas/OpenSessionRequest'
         required: true
@@ -4673,12 +4235,6 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/WorkplanSessionModel'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/WorkplanSessionModel'
-          application/*+json:
             schema:
               $ref: '#/components/schemas/WorkplanSessionModel'
         required: true
@@ -4748,12 +4304,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/WorkplanSessionModel'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/WorkplanSessionModel'
-          application/*+json:
-            schema:
-              $ref: '#/components/schemas/WorkplanSessionModel'
         required: true
       responses:
         '200':
@@ -4814,12 +4364,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/WorkplanStepRecipe'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/WorkplanStepRecipe'
-          application/*+json:
-            schema:
-              $ref: '#/components/schemas/WorkplanStepRecipe'
         required: true
       responses:
         '200':
@@ -4854,12 +4398,6 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/WorkplanNodeModel'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/WorkplanNodeModel'
-          application/*+json:
             schema:
               $ref: '#/components/schemas/WorkplanNodeModel'
         required: true
@@ -4933,12 +4471,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/NodeConnector'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/NodeConnector'
-          application/*+json:
-            schema:
-              $ref: '#/components/schemas/NodeConnector'
         required: true
       responses:
         '200':
@@ -4978,12 +4510,6 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/NodeConnector'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/NodeConnector'
-          application/*+json:
             schema:
               $ref: '#/components/schemas/NodeConnector'
         required: true
