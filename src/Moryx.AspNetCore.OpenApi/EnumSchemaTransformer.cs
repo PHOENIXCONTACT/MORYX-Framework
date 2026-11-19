@@ -22,7 +22,7 @@ internal sealed class EnumSchemaTransformer : IOpenApiSchemaTransformer
         }
         // Set enum values for flage nums, because otherwise the information about possible keys is completely lost in the spec
         // It's not really correct, because technically other values than the pure enum cases are accepted
-        await SetEnumValuesForFlagEnums(schema, context, cancellationToken);
+        await SetEnumValuesForFlagEnums(schema, context);
 
         // try to set schema.Type because ng-openapi-gen will create unions instead of enums if not set
         if (schema.Type == null)
@@ -37,7 +37,7 @@ internal sealed class EnumSchemaTransformer : IOpenApiSchemaTransformer
             }
         }
     }
-    public async Task SetEnumValuesForFlagEnums(OpenApiSchema schema, OpenApiSchemaTransformerContext context, CancellationToken cancellationToken)
+    private async Task SetEnumValuesForFlagEnums(OpenApiSchema schema, OpenApiSchemaTransformerContext context)
     {
         if (schema.Enum != null || context.JsonTypeInfo.Type.GetCustomAttributes<FlagsAttribute>() is null)
         {
