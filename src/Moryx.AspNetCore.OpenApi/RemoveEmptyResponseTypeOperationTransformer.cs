@@ -16,10 +16,11 @@ internal sealed class RemoveEmptyResponseTypeOperationTransformer : IOpenApiOper
     {
         foreach (var (code, value) in operation.Responses)
         {
-            var emptyTypes = value?.Content?
-                    .Where(pair =>
-                        pair.Value.Schema == null).ToArray()
+            var emptyTypes =
+                value?.Content?
+                    .Where(responseEntry => responseEntry.Value.Schema == null).ToArray()
                     ?? [];
+
             foreach (var empty in emptyTypes)
             {
                 value.Content.Remove(empty.Key);

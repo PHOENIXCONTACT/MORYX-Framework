@@ -4,7 +4,10 @@
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.OpenApi;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;
 
 namespace Moryx.AspNetCore.OpenApi;
@@ -21,10 +24,17 @@ internal sealed class EnumSchemaTransformer : IOpenApiSchemaTransformer
         // It's not really correct, because technically other values than the pure enum cases are accepted
         await SetEnumValuesForFlagEnums(schema, context, cancellationToken);
 
-        // set schema.Type because ng-openapi-gen will create unions instead of enums if not set
-        if (schema.Type == null && schema.Enum.All(e => e.GetValueKind() == JsonValueKind.String))
+        // try to set schema.Type because ng-openapi-gen will create unions instead of enums if not set
+        if (schema.Type == null)
         {
-            schema.Type = JsonSchemaType.String;
+            if (schema.Enum.All(e => e.GetValueKind() == JsonValueKind.String))
+            {
+                schema.Type = JsonSchemaType.String;
+            }
+            else if (schema.Enum.All(e => e.GetValueKind() == JsonValueKind.Number))
+            {
+                schema.Type = JsonSchemaType.Number;
+            }
         }
     }
     public async Task SetEnumValuesForFlagEnums(OpenApiSchema schema, OpenApiSchemaTransformerContext context, CancellationToken cancellationToken)
@@ -33,7 +43,21 @@ internal sealed class EnumSchemaTransformer : IOpenApiSchemaTransformer
         {
             return;
         }
-        schema.Enum = Enum.GetNames(context.JsonTypeInfo.Type)
-            .Select(t => JsonValue.Create(t)).ToArray();
+        var mvcJsonOptions = context.ApplicationServices.GetService<IOptions<Microsoft.AspNetCore.Mvc.JsonOptions>>();
+        var minimalApiJsonOptions = context.ApplicationServices.GetService<IOptions<Microsoft.AspNetCore.Http.Json.JsonOptions>>();
+
+        var mvcUsesStringNames = mvcJsonOptions?.Value?.JsonSerializerOptions.Converters.Any(c => c is JsonStringEnumConverter converter);
+        var minimalApiUsesStringNames = minimalApiJsonOptions?.Value?.SerializerOptions.Converters.Any(c => c is JsonStringEnumConverter converter);
+
+        List<JsonNode> cases = [];
+        if (mvcUsesStringNames == true || minimalApiUsesStringNames == true)
+        {
+            cases.AddRange(Enum.GetNames(context.JsonTypeInfo.Type).Select(t => JsonValue.Create(t)).ToArray());
+        }
+        if (mvcUsesStringNames == false || minimalApiUsesStringNames == false)
+        {
+            cases.AddRange(Enum.GetValuesAsUnderlyingType(context.JsonTypeInfo.Type).OfType<int>().Select(t => JsonValue.Create(t)));
+        }
+        schema.Enum = cases;
     }
 }
