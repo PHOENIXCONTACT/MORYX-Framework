@@ -12,7 +12,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints;
 /// <summary>
 /// Converts Resources to ResourceModel
 /// </summary>
-internal class ResourceToModelConverter
+internal class ResourceToModelConverter(IResourceTypeTree typeTree, ICustomSerialization serialization)
 {
     /// <summary>
     /// Type cache to avoid redundant conversions AND make use of WCFs "IsReference" feature
@@ -29,20 +29,9 @@ internal class ResourceToModelConverter
     /// </summary>
     private readonly Dictionary<Resource, ResourceModel> _resourceCache = new();
 
-    protected ICustomSerialization Serialization { get; }
+    protected ICustomSerialization Serialization { get; } = serialization;
 
-    protected IResourceTypeTree TypeController { get; }
-
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="typeController"></param>
-    /// <param name="serialization"></param>
-    public ResourceToModelConverter(IResourceTypeTree typeController, ICustomSerialization serialization)
-    {
-        TypeController = typeController;
-        Serialization = serialization;
-    }
+    protected IResourceTypeTree TypeTree { get; } = typeTree;
 
     /// <summary>
     /// Convert a resource instance
@@ -71,16 +60,15 @@ internal class ResourceToModelConverter
         {
             return null;
         }
+
         // Extract model
         var model = new ResourceModel
         {
             Id = current.Id,
-
             Name = current.Name,
             Description = current.Description,
-
-            // Use simplified type reference
-            Type = current.ResourceType(),
+            Type = (TypeTree is IResourceTypeTreeExtended extended) ? extended.GetNode(current).ResourceType.FullName :
+                current.GetType().FullName
         };
 
         // Set partial flag or load complex properties depending on details depth
@@ -113,7 +101,7 @@ internal class ResourceToModelConverter
     private ResourceReferenceModel[] ConvertReferences(Resource current)
     {
         var name = current.GetType().FullName;
-        var node = TypeController[name];
+        var node = TypeTree[name];
 
         // Find all reference properties on the object
         var referenceProperties = node.References;
@@ -249,7 +237,7 @@ internal class ResourceToModelConverter
         }
 
         var typeConstraints = MergeTypeConstraints(property, targetType, overrides);
-        referenceModel.SupportedTypes = TypeController.SupportedTypes(typeConstraints).Select(t => t.Name).ToArray();
+        referenceModel.SupportedTypes = TypeTree.SupportedTypes(typeConstraints).Select(t => t.Name).ToArray();
 
         return referenceModel;
     }

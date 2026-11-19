@@ -82,7 +82,7 @@ public class ResourceModificationController : ControllerBase
         var filter = new ResourceQueryFilter(query, _resourceTypeTree);
         var resourceProxies = _resourceManagement.GetResourcesUnsafe<IResource>(r => filter.Match(r as Resource)).ToArray();
 
-        var converter = new ResourceQueryConverter(_resourceTypeTree, _serialization, query);
+        var converter = new UnsafeResourceQueryConverter(_resourceTypeTree, _serialization, query);
         var values = resourceProxies.Select(p => _resourceManagement.ReadUnsafe(p.Id, r => converter.QueryConversion(r))).Where(details => details != null).ToArray();
         return values;
     }
