@@ -4,7 +4,7 @@
 */
 
 export class TranslationConstants {
-  public static readonly LANGUAGES = ['en', 'de', 'it', 'zh'];
+  public static readonly LANGUAGES = ['en', 'de', 'it', 'zh', 'es'];
 
   public static readonly MEDIA_OVERVIEW = {
     DELETE_MESSAGE: 'MEDIA_OVERVIEW.DELETE_MESSAGE',

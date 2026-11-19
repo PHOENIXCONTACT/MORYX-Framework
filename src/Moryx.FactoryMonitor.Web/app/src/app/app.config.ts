@@ -26,6 +26,7 @@ import { TranslationConstants } from './translation-constants';
 import '@angular/common/locales/global/de';
 import '@angular/common/locales/global/it';
 import '@angular/common/locales/global/zh';
+import '@angular/common/locales/global/es';
 
 export const appConfig: ApplicationConfig = {
   providers: [

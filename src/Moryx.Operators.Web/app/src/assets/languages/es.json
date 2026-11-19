@@ -1,0 +1,77 @@
+{
+    "WORKSTATION_OPERATORS":{
+        "EMPTY_TITLE": "Puestos de trabajo",
+        "EMPTY_MESSAGE" : "No hay ningún puesto disponible en este momento.",
+        "EXPAND" : "Expandir",
+        "GO_BACK" : "Volver"
+    },
+    "SKILL_TYPES" : {
+        "NAME": "Nombre",
+        "TRAINED_OPERATORS": "Operarios formados",
+        "VALIDITY_PERIOD": "Periodo de validez"
+    },
+    "OPERATORS_MANAGEMENT" : {
+        "MANAGE_OPERATORS" : "Gestionar operarios",
+        "SKILL_TYPES" : "Tipos de cualificación",
+        "NAME": "Nombre",
+        "NUMBER": "Número",
+        "EDIT" : "EDITAR",
+        "DELETE" : "ELIMINAR",
+        "DELETE_TITLE" : "Eliminar operario",
+        "DELETE_MESSAGE" : "¿Quieres eliminar este operario?"
+    },
+    "OPERATORS" : {
+        "EMPTY_TITLE" : "Operarios",
+        "EMPTY_MESSAGE": "No existe en la base de datos ningún operario con la cualificación necesaria. Añade un operario con esa cualificación."
+    },
+    "ADD_OPERATOR_DIALOG":{
+        "IDENTIFIER" : "Identificador",
+        "FIRSTNAME": "Nombre",
+        "LASTNAME" : "Apellidos",
+        "PSEUDONYM" : "Seudónimo",
+        "TITLE" : "Añadir operario",
+        "CANCEL" : "Cancelar",
+        "SAVE": "Guardar"
+    },
+    "SKILL_EDIT_DIALOG":{
+        "TITLE": "Editar cualificación",
+        "NAME": "Nombre",
+        "VALIDITY" : "Validez",
+        "SKILL_TYPE" : "Tipo de cualificación",
+        "CANCEL" : "Cancelar",
+        "SAVE": "Guardar"
+    },
+    "SKILL_NEW_DIALOG":{
+        "TITLE": "Editar cualificación",
+        "NAME": "Nombre",
+        "VALIDITY" : "Validez",
+        "SKILL_TYPE" : "Tipo de cualificación",
+        "CANCEL" : "Cancelar",
+        "SAVE": "Guardar"
+    },
+    "SKILL_TYPE_DETAILS":{
+        "SKILL_TYPE_DETAILS": "Detalles del tipo de cualificación",
+        "NEW_SKILL_TYPE": "Nuevo tipo de cualificación",
+        "NAME": "Nombre",
+        "NAME_DESCRIPTION": "Nombre de la cualificación",
+        "VALIDITY_PERIOD": "Periodo de validez (días)",
+        "SKILL_CAPABILITY": "Capacidad de la cualificación",
+        "SAVE": "Guardar"
+    },
+    "CONFIRMATION_DIALOG" : {
+        "DELETE_SKILL_TYPE_TITLE": "Eliminar tipo de cualificación",
+        "DELETE_SKILL_TYPE_MESSAGE": "¿Quieres eliminar este tipo de cualificación?",
+        "DELETE_SKILL_TITLE": "Eliminar cualificación",
+        "DELETE_SKILL_MESSAGE": "¿Quieres eliminar esta cualificación del operario actual?",
+        "YES": "SÍ",
+        "NO" : "NO"
+    },
+    "OPERATOR_DETAILS":{
+        "TITLE":"Detalles del operario",
+        "OBTAINED_ON": "Obtenida el",
+        "EXPIRES_ON": "Caduca el",
+        "SKILLS": "Cualificaciones",
+        "NAME": "Nombre",
+        "SEARCH_SKILL": "Buscar cualificación..."
+    }
+}

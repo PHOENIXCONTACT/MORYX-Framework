@@ -1,0 +1,50 @@
+{
+  "MEDIA_OVERVIEW": {
+    "DELETE_MESSAGE": "¿Seguro que quieres eliminar este elemento multimedia y todas sus variantes?",
+    "EMPTY_STATE_HEADER": "No hay contenido multimedia",
+    "EMPTY_STATE_TEXT": "Para añadir contenido, haz clic en el icono de subida y selecciona un archivo.",
+    "FAILED_LOADING": "No se ha podido establecer la conexión con el servidor. Comprueba tu conexión de red o vuelve a intentarlo más tarde."
+  },
+  "VARIANT_ACTION": {
+    "DELETE": "Eliminar",
+    "INFO": "Información",
+    "DOWNLOAD": "Descargar"
+  },
+
+  "MEDIA_FILE_VARIANTS": "Variantes",
+
+  "VARIANT_OVERVIEW": {
+    "ALREADY_EXISTS_MESSAGE": "Ya existe una variante con este nombre en este contenido",
+    "DELETE_MESSAGE": "¿Seguro que quieres eliminar esta variante?",
+    "CREATION_DATE": "Fecha de creación",
+    "SIZE": "Tamaño",
+    "EMPTY_STATE_HEADER": "Ninguna variante seleccionada",
+    "EMPTY_STATE_TEXT": "Selecciona una variante de la lista para ver sus detalles."
+  },
+
+  "ADD_VARIANT_DIALOG": {
+    "TITLE": "Añadir variante",
+    "NAME": "Nombre",
+    "NAME_PLACEHOLDER": "Introduce un nombre",
+    "FILE_PLACEHOLDER": "Todavía no se ha subido ningún archivo...",
+    "CANCEL": "CANCELAR",
+    "UPLOAD": "SUBIR"
+  },
+
+  "DELETE_DIALOG": {
+    "TITLE": "Eliminar contenido",
+    "CANCEL": "CANCELAR",
+    "DELETE": "ELIMINAR"
+  },
+
+  "VARIANT_INFO_DIALOG": {
+    "TITLE": "Variante",
+    "VARIANT_NAME": "Nombre de la variante:",
+    "CONTENT_NAME": "Nombre del contenido:",
+    "ID": "ID del contenido:",
+    "SIZE": "Tamaño de la variante:",
+    "LINK": "Enlace",
+    "CLOSE": "CERRAR",
+    "COPY_TO_CLIPBOARD": "Copiar al portapapeles"
+  }
+}

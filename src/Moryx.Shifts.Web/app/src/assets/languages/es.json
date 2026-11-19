@@ -1,0 +1,91 @@
+{
+    "ASSIGNMENT": {
+        "DETAILS": "Detalles",
+        "DELETE": "Eliminar",
+        "NOTES": "Notas"
+    },
+    "DIALOGS":{
+        "SHIFT_INSTANCE_DIALOG" : {
+            "SHIFT_INSTANCE": "Instancia de turno",
+            "START_DATE": "Fecha de inicio",
+            "END_DATE": "Fecha de fin",
+            "CANCEL": "Cancelar",
+            "SAVE": "Guardar"
+        },
+        "SHIFT_TYPE_DIALOG" : {
+            "SHIFT_TYPE": "Tipo de turno",
+            "NAME": "Nombre",
+            "NAME_ERROR": "Introduce un nombre para el turno.",
+            "DURATION": "Duración",
+            "DURATION_ERROR": "Introduce un valor mayor que 0.",
+            "START_TIME": "Hora de inicio",
+            "START_TIME_ERROR": "Introduce una hora válida (p. ej., 20:00).",
+            "END_TIME": "Hora de fin",
+            "END_TIME_ERROR": "Introduce una hora válida (p. ej., 21:00).",
+            "CANCEL": "Cancelar",
+            "SAVE": "Guardar",
+            "DAYS": "Días"
+        },
+        "WEEK_ASSIGNMENT_DIALOG": {
+            "TITLE": "Detalles de la asignación semanal",
+            "RESOURCE": "Recurso",
+            "RESOURCE_ERROR": "Selecciona un recurso o ubicación",
+            "OPERATOR": "Operario",
+            "OPERATOR_ERROR": "Selecciona un operario.",
+            "DAYS_OF_THE_SHIFT": "Días del turno",
+            "DAYS_OF_THE_SHIFT_ERROR": "Selecciona un día ",
+            "PRIORITY": "Prioridad",
+            "NOTES": "Notas",
+            "CANCEL": "Cancelar",
+            "ASSIGN": "Asignar",
+            "NOT_QUALIFIED": "No cualificado",
+            "ON_VACATION": "De vacaciones",
+            "NOT_ALLOWED": "No permitido",
+            "AVAILABLE": "Disponible"
+        }
+    },
+    "APP_COMPONENT":{
+        "THIS_WEEK": "Esta semana",
+        "ALL": "Todos",
+        "OPERATORS": "Operarios",
+        "FILTER_OPERATORS": "Filtrar operarios",
+        "CLOSE": "Cerrar",
+        "RESOURCES": "Recursos",
+        "FILTER_RESOURCES": "Filtrar recursos",
+        "SEARCH": "Buscar",
+        "WEEK_NUMBER": "S",
+        "ADD_SHIFT": "Añadir turno",
+        "NO_ASSIGNMENT": "No se ha encontrado ninguna asignación para este periodo.",
+        "NO_SHIFT": " ¡No se ha encontrado ningún turno! Haz clic en el botón 'Añadir turno' para añadir un turno nuevo.",
+        "ASSIGN_TO": "Asignar al ",
+        "ASSIGN_TO_SHIFT": "Asignar a todo el turno",
+        "SHIFT_ELEMENTS": "Elementos de turno",
+        "ASSIGNMENTS_SAVED": "¡Asignaciones guardadas correctamente!",
+        "SHIFT_CREATED": "¡Turno creado correctamente!",
+        "SHIFT_UPDATED": "¡Turno actualizado correctamente!",
+        "NO_SHIFT_TO_COPY": "¡No se han encontrado asignaciones ni turnos para copiar!",
+        "SHIFT_TO_COPIED": "¡Los turnos y sus asignaciones se han copiado correctamente en la semana elegida!"
+    },
+    "DAYS_OF_THE_WEEK":{
+        "Monday": "Lunes",
+        "Tuesday": "Martes",
+        "Wednesday": "Miércoles",
+        "Thursday": "Jueves",
+        "Friday": "Viernes",
+        "Saturday": "Sábado",
+        "Sunday": "Domingo"
+    },
+    "DATE_FORMAT": {
+        "SHORT_DATE": "DD/MM/YYYY",
+        "MONTH_AND_DAY": "DD/MM"
+    },
+    "COPY_SHIFT_AND_ASSIGNMENT":{
+        "TITLE": "Copiar turno y asignación",
+        "LAST_FOR": "Dura",
+        "DAYS": "días",
+        "START_DATE": "Fecha de inicio",
+        "DELETE": "Eliminar",
+        "CANCEL": "Cancelar",
+        "COPY": "Copiar"
+    }
+}

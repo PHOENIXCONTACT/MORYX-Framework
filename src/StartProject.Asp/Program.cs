@@ -33,6 +33,7 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
         new CultureInfo("it-IT"),
         new CultureInfo("zh-Hans"),
         new CultureInfo("pl-PL"),
+        new CultureInfo("es-ES"),
     };
 
     options.DefaultRequestCulture = new RequestCulture(culture: "de-DE", uiCulture: "de-DE");

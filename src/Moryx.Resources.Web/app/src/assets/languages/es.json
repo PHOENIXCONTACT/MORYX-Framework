@@ -1,0 +1,53 @@
+{
+  "APP": {
+    "RESOURCES": "Recursos",
+    "NO_NAME": "Recurso sin nombre"
+  },
+  "SHARED": {
+    "DELETE": "Eliminar",
+    "EDIT": "Editar",
+    "SAVE": "Guardar",
+    "ID": "Id",
+    "TYPE": "Tipo",
+    "NAME": "Nombre",
+    "DESCRIPTION": "Descripción",
+    "INTERNAL": "Interno",
+    "CANCEL": "Cancelar",
+    "CREATE": "CREAR",
+    "ADD": "Añadir recurso",
+    "ADD_CHILD": "Añadir recurso secundario",
+    "RELOAD": "Recargar",
+    "NEXT": "Siguiente"
+  },
+  "ADD_RESOURCE_DIALOG": {
+    "TITLE": "¿Qué tipo de recurso quieres crear?"
+  },
+  "DEFAULT_VIEW": {
+    "FAILED_LOADING": "No se ha podido cargar el recurso.",
+    "NOT_FOUND": "El recurso solicitado no existe.",
+    "EMPTY_STATE_HEADER": "Ningún recurso",
+    "EMPTY_STATE_TEXT": "Selecciona un recurso de la lista o añade uno nuevo haciendo clic en el signo más."
+  },
+  "DETAILS": {
+    "PROPERTIES_TAB_TITLE": "Propiedades",
+    "REFERENCES_TAB_TITLE": "Referencias",
+    "METHODS_TAB_TITLE": "Métodos",
+    "REFERENCES": {
+      "LINKED_RESOURCE": "Recurso vinculado",
+      "PLACEHOLDER": "Selecciona un recurso disponible para añadirlo como referencia",
+      "NO_TARGET": "Ningún destino seleccionado"
+    },
+    "METHODS": {
+      "WAS_INVOKED": "Se ha invocado el método",
+      "INVOKE": "INVOCAR",
+      "REPEAT": "REPETIR",
+      "CLEAR": "BORRAR"
+    }
+  },
+  "REMOVE_RESOURCE_DIALOG": {
+    "TITLE": "Eliminar recurso",
+    "SUB_TITLE": "El recurso se eliminará de forma permanente:",
+    "CANCEL": "CANCELAR",
+    "REMOVE": "ELIMINAR"
+  }
+}
