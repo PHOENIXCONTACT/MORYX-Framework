@@ -1,0 +1,110 @@
+{
+  "APP": {
+    "PRODUCTS": "Productos",
+    "SELECTOR": "Selector",
+    "RESET_FILTER": "Restablecer",
+    "APPLY_FILTER": "Aplicar",
+    "EMPTY_STATE_HEADER": "Ningún producto",
+    "EMPTY_STATE_TEXT": "Selecciona un producto de la lista o importa uno nuevo haciendo clic en el signo más.",
+    "EMPTY_STATE_RECIPES_HEADER": "No hay recetas",
+    "EMPTY_STATE_RECIPES_TEXT": "Selecciona una receta de la lista o entra en el modo de edición para crear una nueva.",
+    "EMPTY_STATE_PARTS_HEADER": "No hay piezas",
+    "EMPTY_STATE_PARTS_TEXT": "Selecciona una pieza de la lista o entra en el modo de edición para crear una nueva.",
+    "FAILED_LOADING": "No se ha podido establecer la conexión con el servidor. Comprueba tu conexión de red o vuelve a intentarlo más tarde.",
+    "SNACK_BAR": {
+      "NO_IMPORTER": "No se ha definido ningún importador"
+    }
+  },
+  "PRODUCT_NOT_FOUND": "No se ha encontrado el producto solicitado",
+  "SHARED": {
+    "DELETE": "Eliminar",
+    "EDIT": "Editar",
+    "SAVE": "Guardar",
+    "DUPLICATE": "Duplicar",
+    "REVISION": "Revisión",
+    "NAME": "Nombre",
+    "CANCEL": "Cancelar",
+    "IDENTIFIER": "Identificador",
+    "STATE": "Estado",
+    "PROPERTIES": "Propiedades",
+    "WORKPLAN": "Plan de trabajo",
+    "CLASSIFICATION": "Clasificación"
+  },
+  "IMPORTER": {
+    "TITLE": "Importador de productos",
+    "SUB_TITLE": "Importa productos mediante un importador",
+    "IMPORT": "Importar"
+  },
+  "DETAILS": {
+    "PARTS": "Piezas",
+    "REFERENCES": "Referencias",
+    "RECIPES": "Recetas",
+    "HEADER": {
+      "TITLE": "General"
+    },
+    "REFS": {
+      "TITLE": "Este producto se usa en los siguientes productos",
+      "NO_REF": "Este producto no se usa en otros productos",
+      "NO_REF_HEADER": "Sin referencias"
+    },
+    "RECIPS": {
+      "ADD_RECIPE": "Añadir receta",
+      "CHOOSE_OTHER": "Elige otra"
+    }
+  },
+  "PARTS": {
+    "REMOVE": "QUITAR",
+    "ADD": "AÑADIR",
+    "REPLACE": "SUSTITUIR",
+    "OPEN": "ABRIR PRODUCTO"
+  },
+  "ADD_DIALOG": {
+    "TITLE": "Seleccionar pieza",
+    "SUB_TITLE": "Selecciona un producto de la lista",
+    "SEARCH": "Buscar",
+    "CANCEL": "CANCELAR",
+    "SELECT": "SELECCIONAR"
+  },
+  "CREATE_RECIPE_DIALOG": {
+    "TITLE": "Añadir receta",
+    "RECIPE_TYPE": "Tipo de receta",
+    "RECIPE_NAME": "Nombre de la receta",
+    "WORKPLAN": "Plan de trabajo",
+    "CANCEL": "CANCELAR",
+    "CREATE": "CREAR"
+  },
+  "CREATE_REVISION_DIALOG": {
+    "TITLE": "Nueva revisión",
+    "SUB_TITLE": "Crear una revisión del producto",
+    "REVISION": "Revisión",
+    "CANCEL": "CANCELAR",
+    "CREATE": "CREAR"
+  },
+  "DUPLICATE_PRODUCT_DIALOG": {
+    "TITLE": "Duplicar producto",
+    "IDENTIFIER": "Identificador",
+    "REVISION": "Revisión",
+    "CANCEL": "CANCELAR",
+    "DUPLICATE": "DUPLICAR"
+  },
+  "REMOVE_PRODUCT_DIALOG": {
+    "TITLE": "Eliminar producto",
+    "SUB_TITLE": "La siguiente revisión del producto se eliminará de forma irreversible:",
+    "CANNOT_REMOVE": "La revisión del producto seleccionada no se puede eliminar porque todavía la usan estos productos",
+    "CANCEL": "CANCELAR",
+    "REMOVE": "ELIMINAR"
+  },
+  "SHOW_REVISION_DIALOG": {
+    "TITLE": "Seleccionar una revisión",
+    "CANCEL": "CANCELAR",
+    "ADD_REVISION": "NUEVA"
+  },
+  "SIDEBAR_BUTTONS": {
+    "HIERARCHY_VIEW": "Vista jerárquica",
+    "LIST_VIEW": "Vista de lista",
+    "REFRESH": "Actualizar",
+    "FILTER": "Filtrar",
+    "ADD": "Añadir"
+  },
+  "DISMISS": "Cerrar"
+}

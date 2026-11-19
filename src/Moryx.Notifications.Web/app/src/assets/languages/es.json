@@ -1,0 +1,11 @@
+{
+  "APP": {
+    "NOTIFICATIONS": "Notificaciones",
+    "FAILED_LOADING": "No se ha podido establecer la conexión con el servidor. Comprueba tu conexión de red o vuelve a intentarlo más tarde.",
+    "EMPTY_STATE_HEADER": "No hay notificaciones pendientes",
+    "EMPTY_STATE_TEXT": "Ahora mismo no hay nada aquí que requiera tu atención."
+  },
+  "DETAILS": {
+    "ACKNOWLEDGE": "CONFIRMAR"
+  }
+}

@@ -1,0 +1,139 @@
+{
+  "APP": {
+    "TITLE": "Órdenes"
+  },
+  "OPERATIONS": {
+    "LOG_TITLE": "Mensajes",
+    "PARTS_TITLE": "Lista de piezas",
+    "FILTER_TITLE": "Filtro",
+    "SOURCE_TITLE": "Origen de la operación",
+    "AMOUNT": "Cantidad",
+    "SUCCESS": "Correctas",
+    "RUNNING": "En curso",
+    "SCRAP": "Rechazadas",
+    "PARTIAL": "Cantidad parcial",
+    "PENDING": "Pendiente",
+    "RESIDUAL": "Desviación",
+    "PRODUCT": "Producto",
+    "REPORTED_SUCCESS": "Correctas notificadas",
+    "OVERDELIVERY": "Exceso de entrega",
+    "REPORTED_SCRAP": "Rechazadas notificadas",
+    "UNDERDELIVERY": "Entrega insuficiente",
+    "BEGIN": "INICIAR",
+    "CHANGE_AMOUNT": "CAMBIAR CANTIDAD",
+    "INTERRUPT": "INTERRUMPIR",
+    "REPORT": "NOTIFICAR",
+    "REFRESH_DATA": "ACTUALIZAR",
+    "REASSIGN_NOT_POSSIBLE": "No es posible actualizar la operación en su estado actual",
+    "REFRESH_RECOMMENDED": "Se recomienda actualizar",
+    "REFRESH_OPTIONAL": "Actualización opcional",
+    "TRY_AGAIN": "REINTENTAR",
+    "MESSAGES": "MENSAJES",
+    "DOCUMENTS": "DOCUMENTOS",
+    "PART_LIST": "PIEZAS",
+    "SOURCE": "ORIGEN",
+    "RECIPE": "Receta",
+    "RECIPES": "RECETAS",
+    "P_LIST": {
+      "LOADING": "Cargando...",
+      "DESCRIPTION": "Descripción",
+      "NUMBER": "Número",
+      "QUANTITY": "Cantidad",
+      "UNIT": "Unidad",
+      "STAGING_INDICATOR": "Indicador de aprovisionamiento"
+    },
+    "FILTERS": {
+      "HIDE_COMPLETED": "Ocultar completadas",
+      "FILTER_TERM": "Término de filtro",
+      "FILTER_TERM_DESCRIPTION": "Filtra por orden, operación, producto o estado",
+      "RESET": "Restablecer"
+    },
+    "EMPTY_LOG": "Este registro está vacío",
+    "FAILED_LOADING": "No se ha podido establecer la conexión con el servidor. Comprueba tu conexión de red o vuelve a intentarlo más tarde.",
+    "EMPTY_STATE_HEADER": "No hay órdenes",
+    "EMPTY_STATE_TEXT": "Para crear una orden, haz clic en el signo más e inicia la configuración.",
+    "CREATE": "Crear",
+    "FILTER": "Filtrar"
+  },
+  "RECIPES": {
+    "RECIPES_OF": "Recetas de",
+    "GENERAL": "General",
+    "NAME": "Nombre",
+    "WORKPLAN": "Plan de trabajo",
+    "CLASSIFICATION": "Clasificación",
+    "PROPERTIES": "Propiedades",
+    "VERSION": "Versión",
+    "GO_BACK": "Volver",
+    "EDIT": "Editar",
+    "SAVE": "Guardar",
+    "CANCEL": "Cancelar"
+  },
+  "DOCUMENTS": {
+    "DOCUMENTS_OF": "Documentos de",
+    "EMPTY_STATE_HEADER": "Ningún documento seleccionado",
+    "EMPTY_STATE_TEXT": "Haz clic en uno de los documentos de la lista de la izquierda para mostrar su contenido.",
+    "IMAGE_ALT": "Documento de la operación"
+  },
+  "REPORT_DIALOG": {
+    "REPORT_TITLE": "Notificar operación",
+    "REPORT": "NOTIFICAR",
+    "OPERATION": "Operación",
+    "AMOUNT": "Cantidad",
+    "OVERDELIVERY": "Exceso de entrega",
+    "UNDERDELIVERY": "Entrega insuficiente",
+    "REPORTED": "Notificadas",
+    "SUCCESS": "Correctas",
+    "SCRAP": "Rechazadas",
+    "COMMENT": "Comentario",
+    "CONFIRMATION": "Notificación",
+    "PARTIAL": "Parcial",
+    "FINAL": "Final"
+  },
+  "INTERRUPT_DIALOG": {
+    "TITLE": "Interrumpir operación",
+    "PROMPT": "No se iniciarán nuevos procesos para la operación. Los procesos ya iniciados se completarán con normalidad y, a continuación, el estado de la operación cambiará a 'Interrumpida'.",
+    "INTERRUPT": "INTERRUMPIR"
+  },
+  "CREATE_DIALOG": {
+    "TITLE": "Nueva orden",
+    "ORDER_DETAILS": "Detalles de la orden",
+    "ORDER_NUMBER": "Número de orden",
+    "OPERATION_DETAILS": "Detalles de la operación",
+    "OPERATION_NUMBER": "Número de operación",
+    "PRODUCT": "Producto",
+    "RECIPE": "Receta",
+    "AMOUNT": "Cantidad",
+    "ADDED_OPERATIONS": "Operaciones añadidas",
+    "CLEAR": "BORRAR",
+    "CREATE": "CREAR",
+    "ADD": "AÑADIR",
+    "OPERATION_NUMBER_INVALID": "El número de operación debe tener 4 dígitos",
+    "HINT": "Aquí solo se pueden seleccionar productos con receta."
+  },
+  "BEGIN_DIALOG": {
+    "TITLE": "Iniciar la producción",
+    "TOTAL_AMOUNT": "Cantidad total",
+    "SUCCESS": "Correctas",
+    "SCRAP": "Rechazadas",
+    "ESTIMATED": "Estimada",
+    "OVERDELIVERY": "Exceso de entrega",
+    "UNDERDELIVERY": "Entrega insuficiente",
+    "PARTIAL_AMOUNT": "Cantidad objetivo",
+    "BEGIN": "INICIAR"
+  },
+  "OPERATOR_SELECTOR": {
+    "OPERATOR_SELECTOR_LABEL": "Operario",
+    "OPERATOR_SELECTOR_PLACEHOLDER": "(Opcional) Selecciona un operario"
+  },
+  "CHANGE_AMOUNT_DIALOG": {
+    "TITLE": "Actualizar la cantidad objetivo actual",
+    "UPDATE_AMOUNT": "ACTUALIZAR CANTIDAD",
+    "CANNOT_REDUCE_TARGET_AMOUNT": "La cantidad objetivo no se puede reducir más"
+  },
+  "DIALOG_CONTEXT": {
+    "ORDER": "Orden",
+    "PRODUCT": "Producto"
+  },
+  "CANCEL": "CANCELAR",
+  "CONFIRM": "CONFIRMAR"
+}

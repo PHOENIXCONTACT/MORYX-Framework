@@ -1,0 +1,70 @@
+{
+  "CONFIRM_DIALOG": {
+    "CANCEL": "CANCELAR",
+    "CONFIRM": "CONFIRMAR"
+  },
+  "APP": {
+    "TITLE": "Planes de trabajo",
+    "OPEN_WORKPLAN_MANAGEMENT": "Abrir la gestión de planes de trabajo",
+    "OPEN_WORKPLAN_SESSIONS": "Abrir sesiones",
+    "NO_SESSION_IS_OPEN": "No hay ninguna sesión abierta"
+  },
+  "NOT_FOUND": "No se ha encontrado la sesión",
+  "SESSIONS": {
+    "CONFIRM_DIALOG": {
+      "TITLE": "¿Quieres cerrar esta sesión?",
+      "MESSAGE": "Si no has guardado, perderás los cambios. ¿Seguro que quieres cerrar la sesión?",
+      "INVALID_WORKPLAN": "Plan de trabajo no válido"
+    },
+    "CLOSE": "Cerrar"
+  },
+  "STEP_CREATOR": {
+    "CREATE": "Crear",
+    "CONFIGURE_UNKNOWN": "Configurar paso desconocido",
+    "COULD_NOT_FIND": "No hemos encontrado ningún paso del tipo indicado"
+  },
+  "TOOLBOX": {
+    "HEADER": "Flujo de control",
+    "STEPS": "Pasos",
+    "SUB_HEADER": "Subplanes de trabajo"
+  },
+  "PROPERTIES": {
+    "TITLE": "Propiedades",
+    "NAME": "Nombre",
+    "STATE": "Estado",
+    "VERSION": "Versión",
+    "DISPLAY_NAME": "Nombre visible",
+    "NAVIGATE": "Ir al plan de trabajo"
+  },
+  "EDITOR": {
+    "AUTO_LAYOUT": "Diseño automático",
+    "CREATING": "Creando...",
+    "DELETE": "Eliminar",
+    "SAVE": "Guardar plan de trabajo",
+    "SNACK_BAR": {
+      "SUCCESS": "Plan de trabajo guardado"
+    }
+  },
+  "MANAGEMENT": {
+    "NAME": "Nombre",
+    "STATE": "Estado",
+    "VERSION": "Versión",
+    "OPEN_SESSION": "Abrir sesión",
+    "DUPLICATE": "Duplicar",
+    "DELETE": "Eliminar",
+    "ADD": "Añadir",
+    "CONFIRM_DIALOG": {
+      "TITLE": "Eliminar plan de trabajo",
+      "MESSAGE_FIRST_PART": "La sesión del plan de trabajo",
+      "MESSAGE_SECOND_PART": "también se cerrará. ¿Seguro que quieres continuar",
+      "MESSAGE": "¿Seguro que quieres eliminarlo?"
+    },
+    "SNACK_BAR": {
+      "SUCCESS_FIRST_PART": "Plan de trabajo",
+      "SUCCESS_SECOND_PART": "eliminado"
+    }
+  },
+  "PLACEHOLDER": {
+    "DISPLAY_NAME": "Nombre no disponible"
+  }
+}

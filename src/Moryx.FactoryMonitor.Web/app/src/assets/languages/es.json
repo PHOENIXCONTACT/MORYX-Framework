@@ -1,0 +1,44 @@
+{
+  "SHARED": {
+    "SAVE": "GUARDAR",
+    "CANCEL": "CANCELAR"
+  },
+  "CELL_DETAILS": {
+    "RUNNING_STATE": "EN MARCHA",
+    "IDLE_STATE": "INACTIVA",
+    "NOT_READY_TO_WORK_STATE": "NO DISPONIBLE",
+    "NO_PROPERTIES": "No hay ninguna propiedad configurada"
+  },
+  "CELL_ICON_SELECTOR_DIALOG": {
+    "ICON_SELECTOR": "Icono de la celda",
+    "ICON_NAME": "Nombre del icono",
+    "ICON_NAME_REQUIRED": "El nombre del icono es obligatorio",
+    "PREVIEW": "Vista previa"
+  },
+  "CELL_IMAGE_DIALOG": {
+    "CELL_IMAGE": "Imagen de la celda",
+    "NO_IMAGE": "No hay ninguna imagen que mostrar",
+    "IMAGE_URL": "URL de la imagen",
+    "ENTER_IMAGE_URL": "Introduce la URL de una imagen"
+  },
+  "CHANGE_BACKGROUND_DIALOG": {
+    "BACKGROUND_IMAGE": "Imagen de fondo",
+    "BACKGROUND_URL": "URL del fondo",
+    "ENTER_URL": "Introduce una URL",
+    "NO_MANUFACTURING_RESOURCE": "No hemos encontrado ningún ManufactoringFactoryResource en el que guardar el fondo. Si quieres cambiar el fondo, habla con el administrador del sistema."
+  },
+  "DETAILS_CONFIGURATION_DIALOG": {
+    "PROPERTIES_CONFIGURATION": "Configuración de propiedades",
+    "PROPERTY": "Propiedad",
+    "DISPLAY": "Mostrar"
+  },
+  "APP": {
+    "DEFAULT_BACKGROUND_URL": "No hemos encontrado ninguna URL de fondo. Hasta que la indiques, usaremos la imagen predeterminada."
+  },
+  "EDIT_MENU": {
+    "EDIT": "Editar",
+    "CONFIRM": "Confirmar",
+    "MOVE": "Mover",
+    "BACKGROUND": "Fondo"
+  }
+}

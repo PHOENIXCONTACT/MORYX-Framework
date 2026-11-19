@@ -1,0 +1,51 @@
+{
+  "PROCESSES": {
+    "ACTIVITIES": "Actividades",
+    "ACTIVITY_DETAILS": "Detalles de la actividad",
+    "ACTIVITY_ID": "Id",
+    "STARTED": "Inicio",
+    "COMPLETED": "Fin",
+    "CAPABILITIES": "Capacidades",
+    "RESOURCE": "Recurso",
+    "POSSIBLE_RESOURCES": "Recursos posibles",
+    "ARTICLE_ID": "Id del artículo",
+    "ERROR_CODE": "Código de error",
+    "TEXT": "Texto",
+    "SHOW_ALL_PROCESSES": "Mostrar todos los procesos"
+  },
+  "JOBS": {
+    "ORDER": "Orden",
+    "OPERATION": "Operación",
+    "ID": "Id",
+    "STATE": "Estado",
+    "AMOUNT": "Cantidad",
+    "PRODUCT": "Producto",
+    "RUNNING": "En curso",
+    "WORKPLAN": "Plan de trabajo",
+    "SUCCESS": "Correctos",
+    "REWORKED": "Retrabajados",
+    "FAILED": "Fallidos",
+    "COMPLETE": "COMPLETAR",
+    "ABORT": "ABORTAR",
+    "FAILED_LOADING": "No se ha podido establecer la conexión con el servidor. Comprueba tu conexión de red o vuelve a intentarlo más tarde.",
+    "EMPTY_STATE_HEADER": "No hay procesos activos",
+    "EMPTY_STATE_TEXT": "Inicia una producción y sus procesos se mostrarán aquí."
+  },
+  "PROCESS_HOLDER_GROUPS":{
+      "OPERATION_SUCCEEDED": "Operación realizada correctamente",
+      "PROCESSES_TITLE": "Procesos",
+      "PROCESS_HOLDER_GROUP_TITLE": "Grupo de portadores de proceso",
+      "SEARCH": "Buscar",
+      "COLLAPSE_ALL": "Contraer todo",
+      "EXPAND_ALL" : "Expandir todo",
+      "NAME": "Nombre",
+      "POSITION": "Posición",
+      "POSITIONS": "Posiciones",
+      "ACTIVITY": "Actividad",
+      "ORDER": "Orden",
+      "PROCESS" : "Proceso",
+      "RESET_POSITION": "Restablecer la posición y volver al estado inicial. Se perderá toda la información de montaje.",
+      "RESET_GROUP": "Restablecer todo el grupo",
+      "EMPTY_STATE_TEXT": "No hay grupos ni posiciones de portadores de proceso. Ahora mismo no hay nada aquí que requiera tu atención."
+  }
+}

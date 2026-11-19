@@ -1,0 +1,23 @@
+{
+  "APP": {
+"NO_INSTRUCTOR_MESSAGE": "No has seleccionado ninguna pantalla para este navegador, así que no podemos mostrarte instrucciones en esta pantalla."
+  },
+  "SETTINGS_DIALOG": {
+    "TITLE": "Ajustes",
+    "SELECT_INSTRUCTOR": "Seleccionar pantalla",
+    "FOCUS_MODE": "Modo de enfoque",
+    "FOCUS_MODE_NEWEST": "Traer la más reciente al frente",
+    "FOCUS_MODE_NEWEST_DESCRIPTION": "Cambiar siempre a la instrucción más reciente cuando llegue.",
+    "FOCUS_MODE_STAY": "Mantener la actual al frente",
+    "FOCUS_MODE_STAY_DESCRIPTION": "Permanecer siempre en la instrucción actual; las nuevas aparecen en segundo plano.",
+    "FOCUS_MODE_INPUT": "Mantener la entrada al frente",
+    "FOCUS_MODE_INPUT_DESCRIPTION": "Permanecer en la instrucción actual solo mientras se editan entradas; si no, cambiar a la más reciente."
+  },
+  "VISUAL_INSTRUCTIONS": {
+"EMPTY_STATE_HEADER": "No hay instrucciones",
+    "EMPTY_STATE_TEXT": "¡Listo! Te avisaremos de nuevo cuando haya algo que hacer."
+  },
+  "DISMISS": "Cerrar",
+  "CANCEL": "CANCELAR",
+  "SAVE": "GUARDAR"
+}
