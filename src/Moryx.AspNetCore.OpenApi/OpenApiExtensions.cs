@@ -9,10 +9,19 @@ using Microsoft.OpenApi;
 
 namespace Moryx.AspNetCore.OpenApi;
 
+/// <summary>
+/// Collection of extensions related to the OpenApi integration
+/// </summary>
 public static class OpenApiExtensions
 {
     extension(OpenApiOptions options)
     {
+        /// <summary>
+        /// Adds transformers to change the resulting schema to closely match the
+        /// content of the previous schemas generated using swagger in order to avoid
+        /// changes to the UI code
+        /// </summary>
+        /// <returns>The the modified options to allow chaining</returns>
         public OpenApiOptions ConfigureMoryxTransformers()
         {
             options.AddDocumentTransformer<MoryxOpenApiDocumentTransformer>();

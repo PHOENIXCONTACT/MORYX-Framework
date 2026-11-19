@@ -9,12 +9,15 @@ namespace Moryx.AspNetCore;
 
 /// <summary>
 /// Augmentation to AspNetCore build in ProducesAttribute to document sse events.
-/// Need to map to the openapi spec explicitly
+/// Because currently only one payloadType can be attached to a response code in Microsoft.AspNetCore.OpenApi.
+/// It generates pseudo response codes >1000 to document them.
+/// To have them show up in a generated spec correctly use the SseOperationTransformer defined in Moryx.AspNetCore.OpenApi.
+/// It will merge them into the text/event-stream response for code 200.
 /// </summary>
 /// <param name="eventType"></param>
 /// <param name="payloadType"></param>
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-public class ProducesSseEventAttribute(string? eventType, Type payloadType) : ProducesResponseTypeAttribute(payloadType, GetPseudoUniqueKey(eventType), "text/event-stream"), IApiResponseMetadataProvider
+public class ProducesSseEventAttribute(string eventType, Type payloadType) : ProducesResponseTypeAttribute(payloadType, GetPseudoUniqueKey(eventType), "text/event-stream"), IApiResponseMetadataProvider
 {
     /// <summary>
     /// EventType used in the sse message
