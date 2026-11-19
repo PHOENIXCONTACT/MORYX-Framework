@@ -261,8 +261,7 @@ public class ProductManagementController : ControllerBase
     /// <summary>
     /// Deletes the product type with the given id
     /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
+    /// <param name="id">Database id</param>
     [HttpDelete]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -384,7 +383,6 @@ public class ProductManagementController : ControllerBase
     /// Get's the product instance with the given id
     /// </summary>
     /// <param name="id">Database id of the product instance</param>
-    /// <returns></returns>
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -485,7 +483,6 @@ public class ProductManagementController : ControllerBase
     /// Get's a recipe by it's db id
     /// </summary>
     /// <param name="id">Database id of the recipe</param>
-    /// <returns></returns>
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
