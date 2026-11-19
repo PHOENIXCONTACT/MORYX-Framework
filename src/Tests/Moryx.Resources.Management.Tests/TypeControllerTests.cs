@@ -245,6 +245,73 @@ public class TypeControllerTests
         Assert.Throws<ProxyDetachedException>(() => _ = proxy.Foo);
     }
 
+    [Test(Description = "The type node of a proxy refers to the type of the proxied resource")]
+    public void GetNode_OfProxy_ReturnsProxyTargetsType()
+    {
+        // Arrange
+        var instance = new SimpleResource { Id = 33 };
+        var proxy = _typeController.GetProxy(instance);
+
+        // Act
+        var node = ((IResourceTypeTreeExtended)_typeController).GetNode(proxy);
+
+        // Assert
+        Assert.That(node.ResourceType, Is.EqualTo(typeof(SimpleResource)));
+    }
+
+    [Test(Description = "The type node of a proxy refers to the derived type, even if the proxy type is shared with the base type")]
+    public void GetNode_OfProxyForDerivedType_ReturnsProxyTargetsType()
+    {
+        // Arrange
+        var baseProxy = _typeController.GetProxy(new SimpleResource { Id = 34 });
+        var proxy = _typeController.GetProxy(new DerivedResource { Id = 35 });
+
+        // Act
+        var node = ((IResourceTypeTreeExtended)_typeController).GetNode(proxy);
+
+        // Assert
+        Assert.That(proxy.GetType(), Is.EqualTo(baseProxy.GetType()));
+        Assert.That(node.ResourceType, Is.EqualTo(typeof(DerivedResource)));
+    }
+
+    [Test(Description = "The type node of a resource instance refers to its own type")]
+    public void GetNode_OfResource_RetrunsResourcesType()
+    {
+        // Arrange
+        var instance = new DerivedResource { Id = 36 };
+
+        // Act
+        var node = ((IResourceTypeTreeExtended)_typeController).GetNode(instance);
+
+        // Assert
+        Assert.That(node.ResourceType, Is.EqualTo(typeof(DerivedResource)));
+    }
+
+    [Test(Description = "Resources unknown to the type tree have no type node")]
+    public void GetNode_OfUnknownResource_ReturnsNull()
+    {
+        // Arrange
+        var foreignResource = new Mock<IResource>().Object;
+
+        // Act
+        var node = ((IResourceTypeTreeExtended)_typeController).GetNode(foreignResource);
+
+        // Assert
+        Assert.That(node, Is.Null);
+    }
+
+    [Test(Description = "Retrieving the type node of a detached proxy throws ProxyDetachedException")]
+    public void GetNode_OfDetachedProxy_Throws()
+    {
+        // Arrange
+        var instance = new SimpleResource { Id = 37 };
+        var proxy = _typeController.GetProxy(instance);
+        _typeController.Stop();
+
+        // Assert
+        Assert.Throws<ProxyDetachedException>(() => ((IResourceTypeTreeExtended)_typeController).GetNode(proxy));
+    }
+
     [Test]
     public void ProxySupportsGenericInterfaces()
     {

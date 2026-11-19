@@ -19,10 +19,7 @@ internal static class ResourceExtensions
         return source.Select(r => r.Proxify(typeController));
     }
 
-    /// <summary>
-    /// Returns the resource identifier based on <see cref="Type"/>
-    /// </summary>
-    /// <param name="resourceType">Type of the resource</param>
-    /// <returns>Identifier for the type</returns>
-    internal static string ResourceType(this Type resourceType) => resourceType.FullName;
+    public static string ResourceType(this Type resourceType) => resourceType.FullName;
+
+    public static string ResourceType(this IResource resource) => resource.GetType().FullName;
 }

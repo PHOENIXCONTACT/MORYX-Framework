@@ -7,14 +7,14 @@ using Moryx.Serialization;
 
 namespace Moryx.AbstractionLayer.Resources.Endpoints;
 
-internal sealed class ResourceQueryConverter : ResourceToModelConverter
+/// <summary>
+/// Converter for resource queries. NOTE: This converter assumes to have real resources so it ony works in unsafe
+/// methods on the facade
+/// </summary>
+internal sealed class UnsafeResourceQueryConverter(IResourceTypeTree typeController, ICustomSerialization serialization, ResourceQuery query) :
+    ResourceToModelConverter(typeController, serialization)
 {
-    protected ResourceQuery Query { get; }
-
-    public ResourceQueryConverter(IResourceTypeTree typeController, ICustomSerialization serialization, ResourceQuery query) : base(typeController, serialization)
-    {
-        Query = query;
-    }
+    protected ResourceQuery Query { get; } = query;
 
     /// <summary>
     /// Convert resource matches of a query according to the queries reference configuration
@@ -47,7 +47,7 @@ internal sealed class ResourceQueryConverter : ResourceToModelConverter
     private ResourceReferenceModel[] FilteredReferences(Resource current)
     {
         // Get references of the instance and filter them
-        var node = TypeController[current.GetType().FullName];
+        var node = TypeTree[current.GetType().FullName];
         var references = node.References;
 
         var includedReferences = new List<ResourceReferenceModel>();
