@@ -13,10 +13,18 @@ internal class FFmpegPreviewCreatorConfig : PreviewCreatorConfig
     public override string PluginName => nameof(FFmpegPreviewCreator);
 
     [DataMember]
-    [Description("Path where the FFmpeg.exe can be found.")]
+    [Description("Path where the FFmpeg executable can be found.")]
     public string FFmpegPath { get; set; }
 
     [DataMember, DefaultValue(5000)]
-    [Description("Timeout for FFmpeg to create a preview from video")]
+    [Description("Timeout for FFmpeg to create a preview in milliseconds")]
     public int Timeout { get; set; }
+
+    [DataMember, DefaultValue(250)]
+    [Description("Defines how long the longest edge of the resulting image preview should be")]
+    public int LongestEdge { get; set; }
+
+    [DataMember, DefaultValue(80)]
+    [Description("Image quality between 0 - 100")]
+    public int Quality { get; set; }
 }

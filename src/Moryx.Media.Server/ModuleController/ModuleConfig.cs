@@ -50,10 +50,10 @@ public class ModuleConfig : ConfigBase
     {
         StoragePath = Path.Combine("Backups", "MediaServer");
         MaxFileSizeInMb = 10;
-        SupportedFileTypes = [".png", ".jpeg", ".jpg", ".gif", ".pdf", ".txt", ".csv"];
+        SupportedFileTypes = [".png", ".jpeg", ".jpg", ".gif", ".pdf", ".txt", ".csv", ".mov"];
         PreviewCreators =
         [
-            new ImagePreviewCreatorConfig()
+            new FFmpegPreviewCreatorConfig()
         ];
     }
 }
