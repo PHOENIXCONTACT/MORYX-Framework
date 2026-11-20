@@ -17,6 +17,9 @@
     <a href="https://www.nuget.org/packages/Moryx/">
         <img alt="NuGet Release" src="https://img.shields.io/nuget/v/Moryx?color=0098A1&logo=nuget" alt="Nuget Version">
     </a>
+    <a href="https://www.nuget.org/packages/Moryx/">
+        <img alt="NuGet Downloads" src="https://img.shields.io/nuget/dt/Moryx?color=0098A1&logo=nuget">
+    </a>
     <a href="https://www.myget.org/feed/moryx-oss-ci/package/nuget/Moryx">
         <img alt="MyGet PreRelease" src="https://img.shields.io/myget/moryx-oss-ci/vpre/Moryx?logo=nuget&label=myget&color=0098A1&link=https%3A%2F%2Fwww.myget.org%2FF%2Fmoryx-oss-ci%2Fapi%2Fv3%2Findex.json" alt="Myget Pre-Release Version">
     </a>
@@ -53,7 +56,7 @@ To contribute to the development of MORYX, ensure you have the following prerequ
    - [Vscode with C# Dev Kit](https://learn.microsoft.com/de-de/visualstudio/subscriptions/vs-c-sharp-dev-kit/)
    - [Rider ≥ **v2025.3**](https://www.jetbrains.com/rider/)
 
-   Open the solution file: `MORYX.Framework.slnx`
+   Open the solution file: `MORYX-Framework.slnx`
 
 3. **Build the solution**
 
@@ -78,12 +81,12 @@ Here we list all available packages in the MORYX ecosystem separated into compon
 |Component|Packages|
 |:--------|:------|
 |[MORYX](./docs/articles/framework/index.md)|[Moryx](./src/Moryx)<br>[Moryx.AspNetCore](./src/Moryx.AspNetCore)<br>[Moryx.AspNetCore.Mqtt](./src/Moryx.AspNetCore.Mqtt)<br>[Moryx.TestTools.UnitTest](./src/Moryx.TestTools.UnitTest)<br>[Moryx.TestTools.IntegrationTest](./src/Moryx.TestTools.IntegrationTest)|
-|[MORYX AbstractionLayer](./docs/articles/abstractions/index.md)|[Moryx.AbstractionLayer](./src/Moryx.AbstractionLayer)<br>[Moryx.AbstractionLayer.TestTools](./src/Moryx.AbstractionLayer.TestTools)<br>[Moryx.AbstractionLayer.Resources.Mqtt.Endpoints](./src/Moryx.AbstractionLayer.Resources.Mqtt.Endpoints)<br>[Moryx.Factory](./src/Moryx.Factory)<br>[Moryx.Users](./src/Moryx.Users)|
+|[MORYX AbstractionLayer](./docs/articles/abstractions/index.md)|[Moryx.AbstractionLayer](./src/Moryx.AbstractionLayer)<br>[Moryx.AbstractionLayer.TestTools](./src/Moryx.AbstractionLayer.TestTools)<br>[Moryx.AbstractionLayer.Resources.Mqtt.Endpoints](./src/Moryx.AbstractionLayer.Resources.Mqtt.Endpoints)<br>[Moryx.AbstractionLayer.ResourceExtensions](./src/Moryx.AbstractionLayer.ResourceExtensions)<br>[Moryx.Factory](./src/Moryx.Factory)<br>[Moryx.Users](./src/Moryx.Users)|
 |[MORYX Container](./docs/articles/framework/dependency-injection.md)|[Moryx.Container](./src/Moryx.Container)|
 |[MORYX Runtime](./docs/articles/runtime/index.md)|[Moryx.Runtime](./src/Moryx.Runtime)<br>[Moryx.Runtime.Endpoints](./src/Moryx.Runtime.Endpoints)<br>[Moryx.Runtime.Kernel](./src/Moryx.Runtime.Kernel)<br>[Moryx.CommandCenter.Web](./src/Moryx.CommandCenter.Web)|
 |[MORYX Model](./docs/articles/framework/DataModel/index.md)|[Moryx.Model](./src/Moryx.Model)<br>[Moryx.Model.InMemory](./src/Moryx.Model.InMemory)<br>[Moryx.Model.PostgreSQL](./src/Moryx.Model.PostgreSQL)<br>[Moryx.Model.SqlServer](./src/Moryx.Model.SqlServer)<br>[Moryx.Model.Sqlite](./src/Moryx.Model.Sqlite)|
 |[MORYX Communication](./docs/articles/framework/binary-connection.md)|[Moryx.Communication.Serial](./src/Moryx.Communication.Serial)|
-|Samples|[Moryx.Benchmarking](./src/Moryx.Benchmarking)<br>[Moryx.Products.Samples](./src/Moryx.Products.Samples)<br>[Moryx.Resources.Samples](./src/Moryx.Resources.Samples)<br>[Moryx.Resources.Benchmarking](./src/Moryx.Resources.Benchmarking)<br>[Moryx.Resources.BenchmarkSetup](./src/Moryx.Resources.BenchmarkSetup)<br>[Moryx.Workplans.Samples](./src/Moryx.Workplans.Samples)|
+|Samples|[Moryx.Benchmarking](./src/Moryx.Benchmarking)<br>[Moryx.Products.Samples](./src/Moryx.Products.Samples)<br>[Moryx.Resources.Samples](./src/Moryx.Resources.Samples)<br>[Moryx.Benchmarking.Setups](./src/Moryx.Benchmarking.Setups)<br>[Moryx.Resources.Benchmarking](./src/Moryx.Resources.Benchmarking)<br>[Moryx.Workplans.Samples](./src/Moryx.Workplans.Samples)|
 </details>
 
 ---
@@ -100,7 +103,7 @@ Here we list all available packages in the MORYX ecosystem separated into compon
 |[Module - Notifications](./docs/articles/module-notifications/index.md)|[Moryx.Notifications](./src/Moryx.Notifications)<br>[Moryx.Notifications.Publisher](./src/Moryx.Notifications.Publisher)<br>[Moryx.Notifications.Endpoints](./src/Moryx.Notifications.Endpoints)<br>[Moryx.Notifications.Web](./src/Moryx.Notifications.Web)|
 |[Module - Orders](./docs/articles/module-orders/index.md)|[Moryx.Orders](./src/Moryx.Orders)<br>[Moryx.Orders.Management](./src/Moryx.Orders.Management)<br>[Moryx.Orders.Endpoints](./src/Moryx.Orders.Endpoints)<br>[Moryx.Orders.Web](./src/Moryx.Orders.Web)|
 |[Module - Process Data](./docs/articles/module-process-data/index.md)|[Moryx.ProcessData](./src/Moryx.ProcessData)<br>[Moryx.ProcessData.Adapter.NotificationPublisher](./src/Moryx.ProcessData.Adapter.NotificationPublisher)<br>[Moryx.ProcessData.Adapter.OrderManagement](./src/Moryx.ProcessData.Adapter.OrderManagement)<br>[Moryx.ProcessData.Adapter.ProcessEngine](./src/Moryx.ProcessData.Adapter.ProcessEngine)<br>[Moryx.ProcessData.Adapter.ResourceManagement](./src/Moryx.ProcessData.Adapter.ResourceManagement)<br>[Moryx.ProcessData.Endpoints](./src/Moryx.ProcessData.Endpoints)<br>[Moryx.ProcessData.Monitor](./src/Moryx.ProcessData.Monitor)<br>[Moryx.ProcessData.InfluxDbListener](./src/Moryx.ProcessData.InfluxDbListener)<br>[Moryx.ProcessData.SpreadsheetsListener](./src/Moryx.ProcessData.SpreadsheetsListener)|
-|[Module - Process Engine](./docs/articles/module-process-engine/index.md)|[Moryx.ControlSystem](./src/Moryx.ControlSystem)<br>[Moryx.ControlSystem.ProcessEngine](./src/Moryx.ControlSystem.ProcessEngine)<br>[Moryx.ControlSystem.ProcessEngine.Web](./src/Moryx.ControlSystem.ProcessEngine.Web)<br>[Moryx.ControlSystem.Processes.Endpoints](./src/Moryx.ControlSystem.Processes.Endpoints)<br>[Moryx.ControlSystem.Jobs.Endpoints](./src/Moryx.ControlSystem.Jobs.Endpoints)<br>[Moryx.ControlSystem.Assemble](./src/Moryx.ControlSystem.Assemble)<br>[Moryx.ControlSystem.TestTools](./src/Moryx.ControlSystem.TestTools)|
+|[Module - Process Engine](./docs/articles/module-process-engine/index.md)|[Moryx.ControlSystem](./src/Moryx.ControlSystem)<br>[Moryx.ControlSystem.ProcessEngine](./src/Moryx.ControlSystem.ProcessEngine)<br>[Moryx.ControlSystem.ProcessEngine.Web](./src/Moryx.ControlSystem.ProcessEngine.Web)<br>[Moryx.ControlSystem.Processes.Endpoints](./src/Moryx.ControlSystem.Processes.Endpoints)<br>[Moryx.ControlSystem.Jobs.Endpoints](./src/Moryx.ControlSystem.Jobs.Endpoints)<br>[Moryx.ControlSystem.TestTools](./src/Moryx.ControlSystem.TestTools)<br>[Moryx.ControlSystem.TestTools.Assemble](./src/Moryx.ControlSystem.TestTools.Assemble)|
 |[Module - Setups](./docs/articles/module-setups/index.md)|[Moryx.ControlSystem.SetupProvider](./src/Moryx.ControlSystem.SetupProvider)|
 |[Module - Simulation](./docs/articles/module-simulation/index.md)|[Moryx.ControlSystem.Simulator](./src/Moryx.ControlSystem.Simulator/)<br>[Moryx.Drivers.Simulation](./src/Moryx.Drivers.Simulation)|
 |[Module - Visual Instructions](./docs/articles/module-visual-instructions/index.md)|[Moryx.VisualInstructions](./src/Moryx.VisualInstructions)<br>[Moryx.VisualInstructions.Controller](./src/Moryx.VisualInstructions.Controller)<br>[Moryx.VisualInstructions.Endpoints](./src/Moryx.VisualInstructions.Endpoints)<br>[Moryx.VisualInstructions.Web](./src/Moryx.VisualInstructions.Web)<br>[Moryx.Resources.VisualInstructions](./src/Moryx.Resources.VisualInstructions)|
@@ -155,4 +158,4 @@ Additionally, all MORYX components are now released under the same major version
 
 With **version 10** the complete MORYX portfolio aside from Phoenix Contact specific components is released as open source.
 We decided to combine all components into this mono-repository to make it easier to keep everything in sync and to lower the barrier for contributions.
-The previously seperated repository MORYX-Factory as well as the internal repositories will be archived.
+The previously separated repository MORYX-Factory as well as the internal repositories will be archived.

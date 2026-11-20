@@ -1,0 +1,8 @@
+# Keeps local build outputs of a developer checkout out of the image (BuildKit reads <Dockerfile>.dockerignore)
+**/bin
+**/obj
+**/node_modules
+**/TestResults
+.vs
+.vscode
+artifacts
