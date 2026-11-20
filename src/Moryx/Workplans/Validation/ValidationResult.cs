@@ -9,14 +9,14 @@ namespace Moryx.Workplans.Validation;
 public class ValidationResult
 {
     /// <summary>
-    /// Indicator wether validation was a success
+    /// Indicator weather validation was a success
     /// </summary>
     public bool Success { get; set; }
 
     /// <summary>
     /// Errors found during validation
     /// </summary>
-    public ValidationError[] Errors { get; set; }
+    public IReadOnlyList<ValidationError> Errors { get; set; }
 }
 
 /// <summary>

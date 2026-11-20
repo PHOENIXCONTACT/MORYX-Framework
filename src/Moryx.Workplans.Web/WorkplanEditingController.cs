@@ -1,7 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -10,6 +9,7 @@ using Moryx.AbstractionLayer.Products.Endpoints;
 using Moryx.AbstractionLayer.Workplans;
 using Moryx.AspNetCore;
 using Moryx.Serialization;
+using Moryx.Workplans.Validation;
 using Moryx.Workplans.Web.Models;
 using Moryx.Workplans.Web.Properties;
 
@@ -199,16 +199,19 @@ public class WorkplanEditingController : ControllerBase
         {
             session.Workplan.Validate();
         }
-        catch (ValidationException e)
+        catch (WorkplanValidationException e)
         {
-            var response = new ValidationResultModel
+            return Ok(ModelConverter.ToValidationModel(new ValidationResult
             {
-                Errors = [new ValidationErrorModel { Error = e.ValidationResult.ErrorMessage }],
-                Success = false
-            };
-            return Ok(response);
+                Success = false,
+                Errors = e.Errors
+            }, session.Workplan));
         }
-        return Ok(ModelConverter.ToValidationModel(new Validation.ValidationResult { Success = true }, session.Workplan));
+
+        return Ok(ModelConverter.ToValidationModel(new ValidationResult
+        {
+            Success = true
+        }, session.Workplan));
     }
 
     [HttpDelete("sessions/{sessionId}")]

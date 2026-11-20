@@ -1,7 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.ComponentModel.DataAnnotations;
 using Moryx.AbstractionLayer.Activities;
 using Moryx.Workplans;
 using Moryx.Workplans.Validation;
@@ -162,14 +161,8 @@ public static class WorkplanExtensions
     /// Validates the specified workplan.
     /// </summary>
     /// <param name="workplan">The workplan.</param>
-    /// <exception cref="ValidationException">
-    /// Error during 'DeadEnd'-Validation
-    /// or
-    /// Error during 'InfiniteLoop'-Validation
-    /// or
-    /// Error during 'LoneWolf'-Validation
-    /// or
-    /// Error during 'LuckStreak'-Validation
+    /// <exception cref="WorkplanValidationException">
+    /// Error during 'DeadEnd'-, 'InfiniteLoop'-, 'LoneWolf'- or 'LuckyStreak'-Validation
     /// </exception>
     public static void Validate(this IWorkplan workplan)
     {
@@ -181,9 +174,6 @@ public static class WorkplanExtensions
             return;
         }
 
-        var message = string.Join(Environment.NewLine, result.Errors.Select(e => e.Print(workplan)));
-
-        // TODO: Replace ValidationException in next major with a dedicated WorkplanValidationException, ValidationException is intended for System.ComponentModel.DataAnnotations ValidationAttribute
-        throw new ValidationException(message);
+        throw new WorkplanValidationException(result.Errors);
     }
 }
