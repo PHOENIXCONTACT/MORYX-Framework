@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Moq;
 using NUnit.Framework;
 
 namespace Moryx.Container.Tests;
@@ -14,7 +15,7 @@ public class UseChildSingleParentTest
     [SetUp]
     public void Init()
     {
-        _container = new CastleContainer();
+        _container = new CastleContainer(Mock.Of<IServiceProvider>());
         // Register only the parent
         _parent = new Parent("Parent");
         _container.SetInstance(_parent);
@@ -78,7 +79,7 @@ public class UseChildMultiParentTests
     [SetUp]
     public void Init()
     {
-        _container = new CastleContainer();
+        _container = new CastleContainer(Mock.Of<IServiceProvider>());
 
         // Register the parents
         _parent1 = new Parent("Parent1");

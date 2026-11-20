@@ -18,31 +18,49 @@ public class CastleContainer : IContainer
     private readonly IDictionary<Type, string> _strategies;
 
     /// <summary>
-    /// Create instance without strategies
+    /// Create container without strategies and an <see cref="IServiceProvider"/>
+    /// to bridge all types of the ServiceProvider into the module container.
     /// </summary>
-    public CastleContainer()
-        : this(new Dictionary<Type, string>())
+    /// <param name="serviceProvider">ServiceProvider to bridge into the container</param>
+    public CastleContainer(IServiceProvider serviceProvider)
+        : this(new Dictionary<Type, string>(), serviceProvider)
     {
     }
 
     /// <summary>
-    /// Create container with strategies
+    /// Create container without strategies and an <see cref="IServiceProvider"/>
+    /// to bridge the filtered types of the ServiceProvider into the module container.
     /// </summary>
-    // TODO: Change in next major - remove this constructor and make serviceProvider non-optional
-    public CastleContainer(IDictionary<Type, string> strategies)
-        : this(strategies, null)
+    /// <param name="serviceProvider">ServiceProvider to bridge into the container</param>
+    /// <param name="serviceProviderTypeFilter">Filter to exclude types from bridging</param>
+    public CastleContainer(IServiceProvider serviceProvider, Predicate<Type> serviceProviderTypeFilter)
+        : this(new Dictionary<Type, string>(), serviceProvider, serviceProviderTypeFilter)
     {
     }
 
     /// <summary>
-    /// Create container with strategies and an optional <see cref="IServiceProvider"/>
-    /// to bridge the ServiceProvider into the module container.
+    /// Create container with strategies and an <see cref="IServiceProvider"/>
+    /// to bridge all types of the ServiceProvider into the module container.
     /// </summary>
     /// <param name="strategies">Strategy configuration for component resolution</param>
-    /// <param name="serviceProvider">Optional ServiceProvider to bridge into the container</param>
-    /// <param name="serviceProviderTypeFilter">Optional filter to exclude types from bridging</param>
-    public CastleContainer(IDictionary<Type, string> strategies, IServiceProvider serviceProvider, Predicate<Type> serviceProviderTypeFilter = null)
+    /// <param name="serviceProvider">ServiceProvider to bridge into the container</param>
+    public CastleContainer(IDictionary<Type, string> strategies, IServiceProvider serviceProvider)
+        : this(strategies, serviceProvider, static _ => true)
     {
+    }
+
+    /// <summary>
+    /// Create container with strategies and an <see cref="IServiceProvider"/>
+    /// to bridge the filtered types of the ServiceProvider into the module container.
+    /// </summary>
+    /// <param name="strategies">Strategy configuration for component resolution</param>
+    /// <param name="serviceProvider">ServiceProvider to bridge into the container</param>
+    /// <param name="serviceProviderTypeFilter">Filter to exclude types from bridging</param>
+    public CastleContainer(IDictionary<Type, string> strategies, IServiceProvider serviceProvider, Predicate<Type> serviceProviderTypeFilter)
+    {
+        ArgumentNullException.ThrowIfNull(serviceProvider);
+        ArgumentNullException.ThrowIfNull(serviceProviderTypeFilter);
+
         _strategies = strategies;
 
         // Boot up the container
@@ -52,10 +70,7 @@ public class CastleContainer : IContainer
         _container.AddFacility<MoryxFacility>(facility =>
         {
             facility.AddStrategies(strategies);
-            if (serviceProvider != null)
-            {
-                facility.SetServiceProvider(serviceProvider, serviceProviderTypeFilter);
-            }
+            facility.SetServiceProvider(serviceProvider, serviceProviderTypeFilter);
         });
 
         // Self registration for framework functionality
