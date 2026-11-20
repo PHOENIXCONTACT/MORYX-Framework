@@ -3,26 +3,28 @@
 
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using Moryx.Tools;
+using NUnit.Framework;
 using NUnit.Framework;
 
 namespace Moryx.Tests.Extensions;
 
-internal sealed class TestConstants
+file sealed class TestConstants
 {
     public const string ClassDisplayName = "Some Display Name";
     public const string ClassDescription = "Some Description";
 }
 
 [Display(Name = TestConstants.ClassDisplayName, Description = TestConstants.ClassDescription)]
-internal sealed class ClassDisplayAttributeDummy
+file sealed class ClassDisplayAttributeDummy
 {
 }
 
 [DisplayName(TestConstants.ClassDisplayName)]
 [System.ComponentModel.Description(TestConstants.ClassDescription)]
-internal sealed class DotnetAttributesDummy
+file sealed class DotnetAttributesDummy
 {
 }
 

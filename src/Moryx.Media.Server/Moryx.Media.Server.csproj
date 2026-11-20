@@ -12,6 +12,5 @@
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="MimeTypeMapOfficial" />
-    <PackageReference Include="SixLabors.ImageSharp" />
   </ItemGroup>
 </Project>

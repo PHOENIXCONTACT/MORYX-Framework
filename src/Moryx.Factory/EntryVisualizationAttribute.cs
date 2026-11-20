@@ -6,6 +6,7 @@ namespace Moryx.Factory;
 /// <summary>
 ///  Attribute for a visual representation of the current property inside the Factory monitor UI
 /// </summary>
+[AttributeUsage(AttributeTargets.All, Inherited = true)]
 public class EntryVisualizationAttribute : Attribute
 {
     public EntryVisualizationAttribute(string unit, string icon)

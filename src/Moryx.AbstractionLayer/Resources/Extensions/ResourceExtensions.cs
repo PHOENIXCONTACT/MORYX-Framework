@@ -13,6 +13,7 @@ public static class ResourceExtensions
     /// </summary>
     /// <param name="resource">Source resource</param>
     /// <returns>Type identifier as string</returns>
+    [Obsolete($"Use {nameof(IResourceTypeTreeExtended.GetNode)} to retrieve {nameof(IResourceTypeNode.ResourceType)} instead.")]
     public static string ResourceType(this IResource resource)
     {
         return resource.GetType().FullName;
@@ -32,8 +33,7 @@ public static class ResourceExtensions
         /// <returns>The first resource that occurs in the recursion to match the condition, null otherwise</returns>
         public Resource GetFirstRelatedResource(Predicate<Resource> conditionToMatch, Func<Resource, Resource> methodToNavigate)
         {
-            return resource is null || conditionToMatch(resource)
-                ? resource
+            return resource is null || conditionToMatch(resource) ? resource
                 : GetFirstRelatedResource(methodToNavigate(resource), conditionToMatch, methodToNavigate);
         }
 
@@ -53,19 +53,17 @@ public static class ResourceExtensions
             {
                 return resource;
             }
-            else
-            {
-                foreach (var subsequentResource in methodToNavigate(resource))
-                {
-                    var matchingResource = GetFirstRelatedResource(subsequentResource, conditionToMatch, methodToNavigate);
-                    if (matchingResource is not null)
-                    {
-                        return matchingResource;
-                    }
-                }
 
-                return null;
+            foreach (var subsequentResource in methodToNavigate(resource))
+            {
+                var matchingResource = GetFirstRelatedResource(subsequentResource, conditionToMatch, methodToNavigate);
+                if (matchingResource is not null)
+                {
+                    return matchingResource;
+                }
             }
+
+            return null;
         }
     }
 }

@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Reflection;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
+using Moryx.Tools;
 
 namespace Moryx.Resources.Management;
 
@@ -125,8 +126,7 @@ internal class ResourceGraph : IManagedResourceGraph
 
         // Initially set name to value of DisplayNameAttribute if available
         var typeObj = instance.GetType();
-        var displayNameAttr = typeObj.GetCustomAttribute<DisplayNameAttribute>();
-        instance.Name = displayNameAttr?.DisplayName ?? typeObj.Name;
+        instance.Name = typeObj.GetDisplayName() ?? typeObj.Name;
 
         return instance;
     }
