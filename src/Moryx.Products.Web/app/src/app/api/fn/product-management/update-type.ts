@@ -15,8 +15,16 @@ import { RequestBuilder } from '../../request-builder';
 import { ProductModel } from '../../models/product-model';
 
 export interface UpdateType$Params {
+
+/**
+ * Database id of the product type
+ */
   id: number;
-      body?: ProductModel
+  
+    /**
+     * New product model
+     */
+    body: ProductModel
 }
 
 export function updateType(http: HttpClient, rootUrl: string, params: UpdateType$Params, context?: HttpContext): Observable<StrictHttpResponse<number>> {

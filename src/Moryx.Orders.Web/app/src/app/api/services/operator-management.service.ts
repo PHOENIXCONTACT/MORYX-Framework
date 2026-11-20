@@ -82,7 +82,7 @@ export class OperatorManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  add$Response(params?: Add$Params, context?: HttpContext): Promise<StrictHttpResponse<string>> {
+  add$Response(params: Add$Params, context?: HttpContext): Promise<StrictHttpResponse<string>> {
     const obs = add(this.http, this.rootUrl, params, context);
     return firstValueFrom(obs);
   }
@@ -93,7 +93,7 @@ export class OperatorManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  add(params?: Add$Params, context?: HttpContext): Promise<string> {
+  add(params: Add$Params, context?: HttpContext): Promise<string> {
     const resp = this.add$Response(params, context);
     return resp.then((r: StrictHttpResponse<string>): string => r.body);
   }

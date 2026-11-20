@@ -15,8 +15,20 @@ import { RequestBuilder } from '../../request-builder';
 import { ProductInstanceModel } from '../../models/product-instance-model';
 
 export interface CreateInstance$Params {
+
+/**
+ * Product identifier
+ */
   identifier?: string;
+
+/**
+ * Revision of the product
+ */
   revision?: number;
+
+/**
+ * If save is false, the new instance won't be stored in the db
+ */
   save?: boolean;
 }
 

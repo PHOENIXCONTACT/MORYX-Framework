@@ -9,7 +9,15 @@
 import { ICapabilities } from '../models/i-capabilities';
 export interface IOperatorAssignable {
   capabilities?: ICapabilities;
+
+  /**
+   * Id of the resource
+   */
   id?: number;
+
+  /**
+   * Name of this resource instance
+   */
   name?: string | null;
   requiredSkills?: ICapabilities;
 }

@@ -15,6 +15,10 @@ import { RequestBuilder } from '../../request-builder';
 import { AdviceContext } from '../../models/advice-context';
 
 export interface GetAdviceContext$Params {
+
+/**
+ * Id of the operation
+ */
   guid: string;
 }
 

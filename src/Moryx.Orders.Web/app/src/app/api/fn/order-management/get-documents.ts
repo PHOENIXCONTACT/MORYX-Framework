@@ -15,6 +15,10 @@ import { RequestBuilder } from '../../request-builder';
 import { DocumentModel } from '../../models/document-model';
 
 export interface GetDocuments$Params {
+
+/**
+ * Id of the operation
+ */
   guid: string;
 }
 

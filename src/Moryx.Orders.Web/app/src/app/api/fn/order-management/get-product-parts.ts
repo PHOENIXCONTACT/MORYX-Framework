@@ -15,6 +15,10 @@ import { RequestBuilder } from '../../request-builder';
 import { ProductPartModel } from '../../models/product-part-model';
 
 export interface GetProductParts$Params {
+
+/**
+ * If of the operation
+ */
   guid: string;
 }
 

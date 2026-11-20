@@ -12,22 +12,25 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { OperationChangedModel } from '../../models/operation-changed-model';
+import { SseItemOfOperationAdvicedModel } from '../../models/sse-item-of-operation-adviced-model';
+import { SseItemOfOperationModel } from '../../models/sse-item-of-operation-model';
+import { SseItemOfOperationReportedModel } from '../../models/sse-item-of-operation-reported-model';
+import { SseItemOfOperationStartedModel } from '../../models/sse-item-of-operation-started-model';
 
 export interface OperationStream$Params {
 }
 
-export function operationStream(http: HttpClient, rootUrl: string, params?: OperationStream$Params, context?: HttpContext): Observable<StrictHttpResponse<OperationChangedModel>> {
+export function operationStream(http: HttpClient, rootUrl: string, params?: OperationStream$Params, context?: HttpContext): Observable<StrictHttpResponse<(SseItemOfOperationStartedModel | SseItemOfOperationModel | SseItemOfOperationReportedModel | SseItemOfOperationReportedModel | SseItemOfOperationReportedModel | SseItemOfOperationAdvicedModel | SseItemOfOperationModel)>> {
   const rb = new RequestBuilder(rootUrl, operationStream.PATH, 'get');
   if (params) {
   }
 
   return http.request(
-    rb.build({ responseType: 'json', accept: 'application/json', context })
+    rb.build({ responseType: 'text', accept: 'text/event-stream', context })
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<OperationChangedModel>;
+      return r as StrictHttpResponse<(SseItemOfOperationStartedModel | SseItemOfOperationModel | SseItemOfOperationReportedModel | SseItemOfOperationReportedModel | SseItemOfOperationReportedModel | SseItemOfOperationAdvicedModel | SseItemOfOperationModel)>;
     })
   );
 }
