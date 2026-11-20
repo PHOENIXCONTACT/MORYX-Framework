@@ -97,7 +97,7 @@ public class EntryTests
         }
 
         // Act
-        var equals = Entry.ValuesEqual(entry, entry2, orderSensitive: true);
+        var equals = Entry.ValuesEqual(entry, entry2);
 
         // Assert
         Assert.That(equals, Is.EqualTo(sameOrder));
