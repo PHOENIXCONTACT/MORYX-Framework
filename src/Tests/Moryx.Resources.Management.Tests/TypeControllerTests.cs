@@ -253,7 +253,7 @@ public class TypeControllerTests
         var proxy = _typeController.GetProxy(instance);
 
         // Act
-        var node = ((IResourceTypeTreeExtended)_typeController).GetNode(proxy);
+        var node = ((IResourceTypeTree)_typeController).GetNode(proxy);
 
         // Assert
         Assert.That(node.ResourceType, Is.EqualTo(typeof(SimpleResource)));
@@ -267,7 +267,7 @@ public class TypeControllerTests
         var proxy = _typeController.GetProxy(new DerivedResource { Id = 35 });
 
         // Act
-        var node = ((IResourceTypeTreeExtended)_typeController).GetNode(proxy);
+        var node = ((IResourceTypeTree)_typeController).GetNode(proxy);
 
         // Assert
         Assert.That(proxy.GetType(), Is.EqualTo(baseProxy.GetType()));
@@ -281,7 +281,7 @@ public class TypeControllerTests
         var instance = new DerivedResource { Id = 36 };
 
         // Act
-        var node = ((IResourceTypeTreeExtended)_typeController).GetNode(instance);
+        var node = ((IResourceTypeTree)_typeController).GetNode(instance);
 
         // Assert
         Assert.That(node.ResourceType, Is.EqualTo(typeof(DerivedResource)));
@@ -294,7 +294,7 @@ public class TypeControllerTests
         var foreignResource = new Mock<IResource>().Object;
 
         // Act
-        var node = ((IResourceTypeTreeExtended)_typeController).GetNode(foreignResource);
+        var node = ((IResourceTypeTree)_typeController).GetNode(foreignResource);
 
         // Assert
         Assert.That(node, Is.Null);
@@ -309,7 +309,7 @@ public class TypeControllerTests
         _typeController.Stop();
 
         // Assert
-        Assert.Throws<ProxyDetachedException>(() => ((IResourceTypeTreeExtended)_typeController).GetNode(proxy));
+        Assert.Throws<ProxyDetachedException>(() => ((IResourceTypeTree)_typeController).GetNode(proxy));
     }
 
     [Test]

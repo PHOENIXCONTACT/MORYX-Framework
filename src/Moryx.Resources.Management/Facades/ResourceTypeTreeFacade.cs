@@ -6,11 +6,11 @@ using Moryx.Runtime.Modules;
 
 namespace Moryx.Resources.Management;
 
-internal class ResourceTypeTreeFacade : FacadeBase, IResourceTypeTreeExtended
+internal class ResourceTypeTreeFacade : FacadeBase, IResourceTypeTree
 {
     #region Dependency Injection
 
-    public IResourceTypeTreeExtended TypeTree { get; set; }
+    public IResourceTypeTree TypeTree { get; set; }
 
     #endregion
 

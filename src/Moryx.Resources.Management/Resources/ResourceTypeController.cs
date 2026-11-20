@@ -12,8 +12,8 @@ namespace Moryx.Resources.Management;
 /// <summary>
 /// Class to build resource proxies at runtime. It also contains a cache for types and instances
 /// </summary>
-[Component(LifeCycle.Singleton, typeof(IResourceTypeController), typeof(IResourceTypeTree), typeof(IResourceTypeTreeExtended))]
-internal class ResourceTypeController : IResourceTypeController, IResourceTypeTreeExtended
+[Component(LifeCycle.Singleton, typeof(IResourceTypeController), typeof(IResourceTypeTree))]
+internal class ResourceTypeController : IResourceTypeController, IResourceTypeTree
 {
     /// <summary>
     /// Container to read the type structure
