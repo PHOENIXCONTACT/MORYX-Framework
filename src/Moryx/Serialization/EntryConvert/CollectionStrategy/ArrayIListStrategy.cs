@@ -7,11 +7,10 @@ using System.Reflection;
 
 namespace Moryx.Serialization;
 
-// TODO: Make internal in next major MORYX release
 /// <summary>
 /// <see cref="IList"/> implementation of <see cref="ICollectionStrategy"/>
 /// </summary>
-public class ArrayIListStrategy(IList list, ICustomSerialization customSerialization,
+internal class ArrayIListStrategy(IList list, ICustomSerialization customSerialization,
     ICustomAttributeProvider attributeProvider, object instance) : ICollectionStrategy
 {
     private readonly IList _toDelete = new List<object>();
