@@ -9,7 +9,7 @@ namespace Moryx.Workplans.Validation;
 public class ValidationResult
 {
     /// <summary>
-    /// Indicator weather validation was a success
+    /// Indicator whether validation was a success
     /// </summary>
     public bool Success { get; set; }
 
