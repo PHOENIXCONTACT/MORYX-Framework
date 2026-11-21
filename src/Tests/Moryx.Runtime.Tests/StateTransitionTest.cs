@@ -26,7 +26,7 @@ public class StateTransitionTest
             Strategy = new StrategyConfig()
         });
 
-        _moduleUnderTest = new TestModule(new ModuleContainerFactory(), _configManagerMock.Object, new TestLoggerMgmt());
+        _moduleUnderTest = new TestModule(new ModuleContainerFactory(Mock.Of<IServiceProvider>()), _configManagerMock.Object, new TestLoggerMgmt());
     }
 
     [Test]
@@ -122,7 +122,7 @@ public class StateTransitionTest
     [Test]
     public async Task FailureInStopped()
     {
-        var module = new DelayedExceptionModule(new ModuleContainerFactory(), _configManagerMock.Object, new TestLoggerMgmt());
+        var module = new DelayedExceptionModule(new ModuleContainerFactory(Mock.Of<IServiceProvider>()), _configManagerMock.Object, new TestLoggerMgmt());
         var casted = (IServerModule)module;
 
         await casted.InitializeAsync();

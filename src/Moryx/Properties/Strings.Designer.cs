@@ -110,5 +110,11 @@ namespace Moryx.Properties {
                 return ResourceManager.GetString("SuccessPathCycleValidationError_Message", resourceCulture);
             }
         }
+
+        public static string WorkplanValidationException_Message {
+            get {
+                return ResourceManager.GetString("WorkplanValidationException_Message", resourceCulture);
+            }
+        }
     }
 }

@@ -21,7 +21,7 @@ public class ValidationTests
 
         // Assert
         Assert.That(validation.Success, "Validation did not return success for a valid workplan!");
-        Assert.That(validation.Errors.Length, Is.EqualTo(0), "Valid workplan must not report errors!");
+        Assert.That(validation.Errors.Count, Is.EqualTo(0), "Valid workplan must not report errors!");
     }
 
     [Test]
@@ -35,7 +35,7 @@ public class ValidationTests
 
         // Assert
         Assert.That(validation.Success, Is.False, "Validation did not detect error!");
-        Assert.That(validation.Errors.Length, Is.EqualTo(1), "Validation should have found one error!");
+        Assert.That(validation.Errors.Count, Is.EqualTo(1), "Validation should have found one error!");
         Assert.That(validation.Errors[0], Is.InstanceOf<LoneWolfValidationError>(), $"Error should be of type {nameof(LoneWolfValidationError)}");
 
         var expected = workplan.Steps.First(s => s.Name == "LoneWolf");
@@ -56,7 +56,7 @@ public class ValidationTests
 
         // Assert
         Assert.That(validation.Success, Is.False, "Validation did not detect error!");
-        Assert.That(validation.Errors.Length, Is.EqualTo(1), "Validation should have found one error!");
+        Assert.That(validation.Errors.Count, Is.EqualTo(1), "Validation should have found one error!");
         Assert.That(validation.Errors[0], Is.InstanceOf<DeadEndValidationError>(), $"Error should be of type {nameof(DeadEndValidationError)}");
 
         var expected = workplan.Connectors.First(c => c.Name == "DeadEnd");
@@ -77,7 +77,7 @@ public class ValidationTests
 
         // Assert
         Assert.That(validation.Success, Is.False, "Validation did not detect error!");
-        Assert.That(validation.Errors.Length, Is.EqualTo(1), "Validation should have found one error!");
+        Assert.That(validation.Errors.Count, Is.EqualTo(1), "Validation should have found one error!");
         Assert.That(validation.Errors[0], Is.InstanceOf<LuckyStreakValidationError>(), $"Error should be of type {nameof(LuckyStreakValidationError)}");
 
         var expected = workplan.Steps.First(s => s.Name == "FailOnly");
@@ -99,7 +99,7 @@ public class ValidationTests
         // Assert
         Assert.That(validation.Success, Is.False, "Validation did not detect error!");
         Assert.That(validation.Errors, Is.All.InstanceOf<SuccessPathCycleValidationError>(), $"Errors should be of type {nameof(SuccessPathCycleValidationError)}");
-        Assert.That(validation.Errors.Length, Is.EqualTo(3), "All three cycle steps should be reported!");
+        Assert.That(validation.Errors.Count, Is.EqualTo(3), "All three cycle steps should be reported!");
 
         var error = validation.Errors[0].Print(workplan);
         Assert.That(error, Is.Not.Null);
@@ -116,7 +116,7 @@ public class ValidationTests
 
         // Assert
         Assert.That(validation.Success, Is.False, "Validation did not detect error!");
-        Assert.That(validation.Errors.Length, Is.EqualTo(3), "Validation should have found three errors!");
+        Assert.That(validation.Errors.Count, Is.EqualTo(3), "Validation should have found three errors!");
         Assert.That(validation.Errors, Is.All.InstanceOf<InfiniteLoopValidationError>(), $"Errors should be of type {nameof(InfiniteLoopValidationError)}");
 
         var expectedIds = workplan.Steps.Select(s => s.Id).ToArray();

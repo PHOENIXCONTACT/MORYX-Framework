@@ -27,4 +27,12 @@ public interface IResourceTypeTree
     /// Find all resource type trees that implement the given type constraints
     /// </summary>
     IEnumerable<IResourceTypeNode> SupportedTypes(ICollection<Type> constraints);
+
+    /// <summary>
+    /// Get the type node of the given resource or resource proxy
+    /// </summary>
+    /// <param name="resource">Resource or resource proxy retrieved from the resource management</param>
+    /// <returns>The type node of the resource, or null if the resource is unknown to the type tree</returns>
+    /// <exception cref="ProxyDetachedException">The proxy was detached from its resource</exception>
+    IResourceTypeNode GetNode(IResource resource);
 }

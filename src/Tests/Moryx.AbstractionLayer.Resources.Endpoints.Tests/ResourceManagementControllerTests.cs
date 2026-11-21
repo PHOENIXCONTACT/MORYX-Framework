@@ -37,6 +37,8 @@ internal sealed class ResourceManagementControllerTests
         _resourceTypeTreeMock = new Mock<IResourceTypeTree>();
         _resourceTypeTreeMock.Setup(tree => tree[typeof(ReferencingResource).FullName])
             .Returns(_nodeMock.Object);
+        _resourceTypeTreeMock.Setup(tree => tree.GetNode(It.IsAny<IResource>()))
+            .Returns(_nodeMock.Object);
 
         _resourceManagementMock = new Mock<IResourceManagement>();
         _resourceManagementMock.Setup(management => management.GetResourcesUnsafe(It.IsAny<Func<IResource, bool>>()))

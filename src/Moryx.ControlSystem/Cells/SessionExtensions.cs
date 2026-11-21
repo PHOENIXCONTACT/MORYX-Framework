@@ -31,48 +31,6 @@ public static class SessionExtensions
             session.Process.GetProductInstance<TProductInstance>();
 
         /// <summary>
-        /// Modifies the <see cref="ProductInstance"/> of type <typeparamref name="TInstance"/>
-        /// on the <see cref="Process"/> of the <paramref name="session"/> using the given
-        /// <paramref name="setter"/>.
-        /// </summary>
-        /// <typeparam name="TInstance">The expected type of the product instance</typeparam>
-        /// <param name="setter">The action to be executed on the product instance</param>
-        /// <example>
-        /// <code>
-        /// <![CDATA[
-        /// session.ModifyProductInstance<MyProductInstance>((var instance) => instance.MyProperty = 1)
-        /// ]]>
-        /// </code>
-        /// </example>
-        /// <exception cref="InvalidCastException">Thrown if the <see cref="Process"/> of the
-        /// <paramref name="session"/> does not hold a product instance of type <typeparamref name="TInstance"/>
-        /// </exception>
-        /// <exception cref="InvalidOperationException">Thrown if the <see cref="Process"/> of the
-        /// <paramref name="session"/> is no <see cref="ProductionProcess"/></exception>
-        [Obsolete($"Use '{nameof(SessionExtensions.GetProductInstance)}' and direct property assignements instead of the delegate for cleaner stack traced during debugging.")]
-        public TInstance ModifyProductInstance<TInstance>(Action<TInstance> setter)
-            where TInstance : ProductInstance => session.Process.ModifyProductInstance(setter);
-
-        /// <summary>
-        /// Tries to modifies the <see cref="ProductInstance"/> of type <typeparamref name="TInstance"/>
-        /// on the <see cref="Process"/> of the <paramref name="session"/> using the given
-        /// <paramref name="setter"/>. Returns false, if the
-        /// operation could not be executed.
-        /// </summary>
-        /// <typeparam name="TInstance">The expected type of the product instance</typeparam>
-        /// <param name="setter">The action to be executed on the product instance</param>
-        /// <example>
-        /// <code>
-        /// <![CDATA[
-        /// session.TryModifyingProductInstance<MyProductInstance>((var instance) => instance.MyProperty = 1)
-        /// ]]>
-        /// </code>
-        /// </example>
-        [Obsolete($"Use '{nameof(ProcessExtensions.GetProductInstance)}' and direct property assignements instead of the delegate for cleaner stack traced during debugging.")]
-        public bool TryModifyProductInstance<TInstance>(Action<TInstance> setter)
-            where TInstance : ProductInstance => session.Process.TryModifyProductInstance(setter);
-
-        /// <summary>
         /// Extension method to get the <see cref="Activity"/> from the <paramref name="session"/>
         /// </summary>
         /// <typeparam name="TActivityType">Type of the <see cref="Activity"/> that is expected.</typeparam>

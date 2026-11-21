@@ -16,7 +16,7 @@ public class ServiceProviderBridgeTests
         var serviceProvider = new ServiceProviderMock(type =>
             type == typeof(TimeProvider) ? timeProvider : null);
 
-        var container = new CastleContainer(new Dictionary<Type, string>(), serviceProvider);
+        var container = new CastleContainer(serviceProvider);
         container.Register<IComponentWithExternalDependency, ComponentWithExternalDependency>();
 
         // Act
@@ -37,7 +37,7 @@ public class ServiceProviderBridgeTests
         var serviceProvider = new ServiceProviderMock(type =>
             type == typeof(TimeProvider) ? aspNetInstance : null);
 
-        var container = new CastleContainer(new Dictionary<Type, string>(), serviceProvider);
+        var container = new CastleContainer(serviceProvider);
         container.SetInstance(castleInstance);
         container.Register<IComponentWithExternalDependency, ComponentWithExternalDependency>();
 
@@ -57,7 +57,7 @@ public class ServiceProviderBridgeTests
             type == typeof(TimeProvider) ? timeProvider : null);
 
         // Filter excludes TimeProvider
-        var container = new CastleContainer(new Dictionary<Type, string>(), serviceProvider,
+        var container = new CastleContainer(serviceProvider,
             type => type != typeof(TimeProvider));
         container.Register<IComponentWithExternalDependency, ComponentWithExternalDependency>();
 
@@ -65,21 +65,11 @@ public class ServiceProviderBridgeTests
         Assert.That(() => container.Resolve<IComponentWithExternalDependency>(), Throws.Exception);
     }
 
-    // TODO: Remove in next major when IServiceProvider is non-optional
-    [Test(Description = "Container without IServiceProvider still resolves Castle-registered components")]
-    public void ContainerWithoutServiceProviderStillWorks()
+    [Test(Description = "Container cannot be created without an IServiceProvider")]
+    public void ContainerRequiresServiceProvider()
     {
-        // Arrange
-        var container = new CastleContainer(new Dictionary<Type, string>());
-        container.LoadFromAssembly(GetType().Assembly);
-
-        // Act
-        var local = container.Resolve<ILocalComponent>();
-
-        // Assert
-        Assert.That(local, Is.Not.Null);
-
-        container.Destroy();
+        // Act & Assert
+        Assert.That(() => new CastleContainer(null), Throws.ArgumentNullException);
     }
 
     public interface IComponentWithExternalDependency

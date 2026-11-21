@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Moq;
 using NUnit.Framework;
 
 namespace Moryx.Container.Tests;
@@ -13,7 +14,8 @@ public class RegistratorTest
     [SetUp]
     public void Init()
     {
-        _container = new CastleContainer();
+
+        _container = new CastleContainer(Mock.Of<IServiceProvider>());
         _container.Register<NamedDummy, NamedDummy>();
         _container.Register<UnnamedDummy, UnnamedDummy>();
     }

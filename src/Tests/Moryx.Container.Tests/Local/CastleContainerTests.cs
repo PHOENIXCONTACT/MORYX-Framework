@@ -3,6 +3,7 @@
 
 using Moryx.Container.TestTools;
 using Moryx.Tools;
+using Moq;
 using NUnit.Framework;
 
 namespace Moryx.Container.Tests;
@@ -22,7 +23,7 @@ public class CastleContainerTests
     [SetUp]
     public void Init()
     {
-        _container = new CastleContainer(new Dictionary<Type, string>());
+        _container = new CastleContainer(Mock.Of<IServiceProvider>());
         _container.LoadFromAssembly(GetType().Assembly);
     }
 
