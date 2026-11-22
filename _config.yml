@@ -19,18 +19,22 @@
 # in the templates via {{ site.myvariable }}.
 
 title: MORYX Framework
+tagline: "Open-source .NET framework for manufacturing execution and shop-floor control"
 email: info@moryx-industry.net
-description: "MORYX Framework"
-baseurl: "/" # the subpath of your site, e.g. /blog
-domain: "moryx-industry.net"
-url: "https://moryx-industry.net" # the base hostname & protocol for your site, e.g. http://example.com
-repository: "https://github.com/PHOENIXCONTACT/MORYX-Framework"
-logo: "/assets/images/MORYX_logo"
+description: "MORYX is an open-source .NET framework for building manufacturing execution and shop-floor control applications: digital twins of resources and products, process control, worker guidance and machine integration via OPC UA and MQTT. Maintained by Phoenix Contact."
+baseurl: "" # the subpath of your site, e.g. /blog
+domain: "www.moryx-industry.net"
+url: "https://www.moryx-industry.net" # the base hostname & protocol for your site, e.g. http://example.com
+repository: "PHOENIXCONTACT/MORYX-Framework"
+repository_url: "https://github.com/PHOENIXCONTACT/MORYX-Framework"
+logo: "/assets/images/moryx_small.png"
+lang: en
 
 # Build settings
 theme: minima
 plugins:
-  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-redirect-from
 
 highlighter: rouge
 
@@ -53,3 +57,5 @@ highlighter: rouge
 #   - vendor/cache/
 #   - vendor/gems/
 #   - vendor/ruby/
+exclude:
+  - README.md

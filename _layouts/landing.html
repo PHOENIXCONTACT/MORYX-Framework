@@ -2,125 +2,275 @@
 layout: home
 ---
 
-<div class="intro-header mb-3">
-  <div class="container-xxl bd-gutter">
+<div class="intro-header">
+  <div class="container-xxl">
     <div class="col-md-8 mx-auto text-center">
-      <p align="center">
-        <img
-          src="assets/images/MORYX_logo.svg"
-          alt="MORYX Logo"
-          width="400px"
-        />
+      <img
+        class="mb-4 mw-100"
+        src="{{ '/assets/images/MORYX_logo.svg' | relative_url }}"
+        alt="MORYX – Powered by Phoenix Contact"
+        width="400"
+      />
+
+      <h1 class="display-2 headline mb-4">Level up your factory</h1>
+
+      <p class="lead mb-4">
+        MORYX is an open-source .NET framework for manufacturing execution and shop-floor control.
+        It provides digital twins of resources and products, process control, worker guidance
+        and machine integration via OPC UA and MQTT, so you can build the applications that run your production.
       </p>
-
-      <h1 class="display-2 headline" align="center">Level up your factory</h1>
-      <br />
-      <br />
-
-      <h1 class="lead mb-4">
-        The MORYX Framework is a .NET based framework to quickly build
-        three-tier applications.
-        <br />
-        It aims to reduce boilerplate code as much as possible and provides
-        modularity, flexibility and easy configuration with very little effort.
-      </h1>
-      <a href="https://github.com/PHOENIXCONTACT/MORYX-Framework/tree/future" class="btn btn-primary btn-lg btn-gh" role="button"><i class="bi bi-github"></i>&nbsp;Check out on GitHub</a>
+      <div class="d-flex flex-wrap justify-content-center gap-2">
+        <a href="#get-started" class="btn btn-primary btn-lg"><i class="bi bi-rocket-takeoff"></i>&nbsp;Get started</a>
+        <a href="{{ site.repository_url }}" class="btn btn-outline-primary btn-lg"><i class="bi bi-github"></i>&nbsp;View on GitHub <i class="bi bi-box-arrow-up-right small" aria-hidden="true"></i></a>
+      </div>
     </div>
   </div>
 </div>
-<div class="container-xxl bd-gutter">
-  <section class="row g-3 g-md-5 mb-5 pb-5 justify-content-center">
-    <div class="col-lg-6 py-lg-4 pe-lg-5">
-      <h3><i class="bi bi-rocket-takeoff"></i> Get started quickly</h3>
-      <p class="pe-lg-5">
-        Use <code>dotnet tools</code> to install the MORYX toolchain and
-        bootstrap your digital shopfloor in minutes.
-      </p>
-      <div class="code-block">
-        <div class="clipboard-button-container">
-          <button type="button" class="clipboard-button">
-            <i class="bi bi-clipboard"></i>
-          </button>
-        </div>
-        <div class="highlight">
-          <!-- Code blocks have to start at col 1 as their content would be indented otherwise 
-                and `</pre>` has to close after `</code>` to not include a linebreak at the end.
-          -->
-          <pre class="language-sh">
-<code class="language-sh">dotnet tools install Moryx.Cli</code></pre>
-        </div>
+
+<div class="container-xxl">
+  <section class="stats text-center" aria-label="MORYX in numbers">
+    <div class="row g-3 justify-content-center">
+      {% for stat in site.data.facts.stats %}
+      <div class="col-6 col-md-3">
+        <div class="stat-value">{{ stat.value }}</div>
+        <div class="stat-label">{{ stat.label }}</div>
       </div>
-      <p></p>
-      <div class="code-block">
-        <div class="clipboard-button-container">
-          <button type="button" class="clipboard-button">
-            <i class="bi bi-clipboard"></i>
-          </button>
-        </div>
-        <div class="highlight">
-          <!-- Code blocks have to start at col 1 as their content would be indented otherwise 
-                and `</pre>` has to close after `</code>` to not include a linebreak at the end.
-          -->
-          <pre class="language-sh">
-<code class="language-sh">moryx new Factory</code></pre>
-        </div>
-      </div>
-      <p></p>
-      <p>
-        <a href="https://phoenixcontact.github.io/Application-Developer-Training/">Take our tour</a> to get a hands on introduction on how to
-        setup a factory.
-      </p>
+      {% endfor %}
     </div>
-    <div class="col-lg-6 py-lg-4 pe-lg-5">
-      <h3><i class="bi bi-code-square"></i> Utilize .NET</h3>
-      <p class="pe-lg-5">
-        MORYX builds upon the
-        <a href="https://dotnet.microsoft.com/en-us/">.NET</a> stack.
-        Incorporate the latest .NET features to build modern applications to
-        operate your factory.
-      </p>
-      <div class="code-block">
-        <div class="clipboard-button-container">
-          <button type="button" class="clipboard-button">
-            <i class="bi bi-clipboard"></i>
-          </button>
-        </div>
-        <div class="highlight">
-          <!-- Code blocks have to start at col 1 as their content would be indented otherwise 
-                and `</pre>` has to close after `</code>` to not include a linebreak at the end.
-          -->
-          <pre class="language-csharp">
-<code class="language-csharp">var builder = WebApplication.CreateBuilder();
-var services = builder.Services;
-
-// Setup MORYX
-services.AddMoryxKernel();
-services.AddMoryxModels();
-services.AddMoryxModules();
-
-// Setup other services ...
-
-services.AddLocalization();
-services.AddRazorPages();
-services.AddControllers();
-
-// Setup app ...
-
-app.Services.UseMoryxConfigurations("Config");
-
-var moduleManager = app.Services.GetRequiredService&lt;IModuleManager&gt;();
-moduleManager.StartModules();
-
-app.Run();
-
-moduleManager.StopModules();</code></pre>
-        </div>
-      </div>
+    <p class="mt-4 mb-3 text-body-secondary">
+      MORYX runs assembly and production lines of industrial manufacturers.
+      Most of these applications are proprietary products of the companies that build them, so they are not publicly visible.
+    </p>
+    <div class="badges">
+      <a href="https://www.nuget.org/packages/Moryx/"><img alt="NuGet downloads" src="https://img.shields.io/nuget/dt/Moryx?color=0098A1&logo=nuget&label=NuGet%20downloads" /></a>
+      <a href="{{ site.repository_url }}/blob/dev/LICENSE"><img alt="License" src="https://img.shields.io/github/license/PHOENIXCONTACT/MORYX-Framework" /></a>
     </div>
-  </section>
-  <section class="row g-3 g-md-5 mb-5 pb-5 justify-content-center">
-
-  {{ content }}
-
   </section>
 </div>
+
+<section id="features" class="section section-alt">
+  <div class="container-xxl">
+    <h2 class="section-title"><i class="bi bi-grid-1x2"></i> What you can build</h2>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      <div class="col feature">
+        <h3><i class="bi bi-diagram-3"></i> Modular manufacturing systems</h3>
+        <p>Add or remove production cells and stations at any time. New capabilities are used immediately, without changing existing workplans.</p>
+      </div>
+      <div class="col feature">
+        <h3><i class="bi bi-boxes"></i> One-piece flow and mass production</h3>
+        <p>The process engine dispatches jobs and routes every article through the cells that can process its next step.</p>
+      </div>
+      <div class="col feature">
+        <h3><i class="bi bi-person-workspace"></i> Worker assistance</h3>
+        <p>Visual instructions guide workers through manual steps, let them confirm execution, report problems and record inputs.</p>
+      </div>
+      <div class="col feature">
+        <h3><i class="bi bi-cpu"></i> Machine integration</h3>
+        <p>Drivers for OPC UA, MQTT, TCP and serial connections encapsulate the devices behind typed digital twins of your resources.</p>
+      </div>
+      <div class="col feature">
+        <h3><i class="bi bi-building-gear"></i> Enterprise integration</h3>
+        <p>Connect PDM and ERP systems to enrich their data and feed orders and products into production without duplicating them.</p>
+      </div>
+      <div class="col feature">
+        <h3><i class="bi bi-window-stack"></i> Ready-made web UIs</h3>
+        <p>Modules for products, resources, orders, shifts, operators and more come with REST APIs and web interfaces.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="get-started" class="section">
+  <div class="container-xxl">
+    <h2 class="section-title"><i class="bi bi-rocket-takeoff"></i> Get started</h2>
+    <!-- Three columns only from xl on, below that the code snippets don't fit into a third of the width -->
+    <div class="row row-cols-1 row-cols-xl-3 g-4">
+      <div class="col">
+        <div class="card h-100">
+          <div class="card-body d-flex flex-column">
+            <h3 class="card-title"><i class="bi bi-terminal"></i> Create an application</h3>
+            <p>
+              Install the MORYX CLI, a <code>dotnet</code> tool, and generate your first application in minutes.
+              The CLI requires the .NET 8 runtime, applications target .NET 10.
+            </p>
+            <div class="code-block mb-2">
+              <div class="clipboard-button-container">
+                <button type="button" class="clipboard-button" aria-label="Copy to clipboard">
+                  <i class="bi bi-clipboard"></i>
+                </button>
+              </div>
+              <div class="highlight">
+                <!-- Code blocks have to start at col 1 as their content would be indented otherwise
+                      and `</pre>` has to close after `</code>` to not include a linebreak at the end.
+                -->
+                <pre class="language-sh">
+<code class="language-sh">dotnet tool install -g Moryx.Cli</code></pre>
+              </div>
+            </div>
+            <div class="code-block mb-3">
+              <div class="clipboard-button-container">
+                <button type="button" class="clipboard-button" aria-label="Copy to clipboard">
+                  <i class="bi bi-clipboard"></i>
+                </button>
+              </div>
+              <div class="highlight">
+                <pre class="language-sh">
+<code class="language-sh">moryx new Factory</code></pre>
+              </div>
+            </div>
+            <p>
+              Want to see a complete application first? The MORYX Demo simulates the production
+              of electronic goods in a four-step process.
+            </p>
+            <div class="mt-auto">
+              <a href="https://github.com/PHOENIXCONTACT/MORYX-Demo" class="btn btn-outline-primary">Explore the MORYX Demo <i class="bi bi-box-arrow-up-right small" aria-hidden="true"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card h-100">
+          <div class="card-body d-flex flex-column">
+            <h3 class="card-title"><i class="bi bi-mortarboard"></i> Learn MORYX</h3>
+            <p>
+              The <strong>Application Developer Program</strong> is a free, self-paced course.
+              In 12 chapters you build a complete MORYX application from scratch and accompany a pencil manufacturer
+              on its way to the digital factory. No prior MORYX experience is needed.
+            </p>
+            <ol class="stages">
+              <li>
+                <span class="stage-name">Fundamentals</span> <span class="stage-range">Chapters 1–4</span>
+                <span class="stage-topics">Basics · Drivers · Capabilities · Testing</span>
+              </li>
+              <li>
+                <span class="stage-name">Production features</span> <span class="stage-range">Chapters 5–9</span>
+                <span class="stage-topics">Setup · Cleanup · Part links · Packing · Initializer and importer</span>
+              </li>
+              <li>
+                <span class="stage-name">Architecture</span> <span class="stage-range">Chapters 10–12</span>
+                <span class="stage-topics">Module, facade, adapter · Cell selectors · Advanced topics</span>
+              </li>
+            </ol>
+            <div class="mt-auto">
+              <a href="https://phoenixcontact.github.io/Application-Developer-Training/" class="btn btn-primary">Start the training <i class="bi bi-box-arrow-up-right small" aria-hidden="true"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card h-100">
+          <div class="card-body d-flex flex-column">
+            <h3 class="card-title"><i class="bi bi-code-square"></i> Built on .NET</h3>
+            <p>
+              MORYX plugs into <a href="https://dotnet.microsoft.com/en-us/apps/aspnet">ASP.NET Core</a>.
+              Register the MORYX services, then run the modules alongside your web application.
+            </p>
+            <div class="code-block mb-3">
+              <div class="clipboard-button-container">
+                <button type="button" class="clipboard-button" aria-label="Copy to clipboard">
+                  <i class="bi bi-clipboard"></i>
+                </button>
+              </div>
+              <div class="highlight">
+                <pre class="language-csharp">
+<code class="language-csharp">builder.Services.AddMoryxKernel();
+builder.Services.AddMoryxModels();
+builder.Services.AddMoryxModules();
+
+var app = builder.Build();
+app.Services
+  .UseMoryxConfigurations("Config");
+
+var modules = app.Services
+  .GetRequiredService&lt;IModuleManager&gt;();
+await modules.StartModulesAsync();
+await app.RunAsync();
+await modules.StopModulesAsync();</code></pre>
+              </div>
+            </div>
+            <div class="mt-auto">
+              <a href="{{ site.repository_url }}/tree/dev/docs" class="btn btn-outline-primary">Read the documentation <i class="bi bi-box-arrow-up-right small" aria-hidden="true"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="research" class="section section-alt">
+  <div class="container-xxl">
+    <h2 class="section-title"><i class="bi bi-lightbulb"></i> Research</h2>
+    <div class="row row-cols-1 row-cols-lg-2 g-4">
+      {% for project in site.data.research.projects %}
+      <div class="col">
+        <article class="card h-100">
+          <div class="card-body d-flex flex-column">
+            <h3 class="card-title mb-1">{{ project.name }}</h3>
+            <p class="research-title">{{ project.title }}</p>
+            <ul class="research-meta">
+              <li><i class="bi bi-calendar3" aria-hidden="true"></i> {{ project.period }}</li>
+              <li><i class="bi bi-bank" aria-hidden="true"></i> Funded by {{ project.funding }}</li>
+              <li><i class="bi bi-people" aria-hidden="true"></i> {{ project.partners }}</li>
+            </ul>
+            <p>{{ project.description }}</p>
+            <div class="contribution">
+              <h4>MORYX's contribution</h4>
+              <p class="mb-0">{{ project.contribution }}</p>
+            </div>
+            <div class="mt-auto pt-3 d-flex flex-wrap gap-3">
+              <a href="{{ project.url }}">Project website <i class="bi bi-box-arrow-up-right small" aria-hidden="true"></i></a>
+              {% if project.repo != "" %}
+              <a href="{{ project.repo }}"><i class="bi bi-github"></i>&nbsp;Application source code <i class="bi bi-box-arrow-up-right small" aria-hidden="true"></i></a>
+              {% endif %}
+            </div>
+          </div>
+        </article>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section id="security" class="section">
+  <div class="container-xxl">
+    <h2 class="section-title"><i class="bi bi-shield-check"></i> Security and maintenance</h2>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      <div class="col feature">
+        <h3><i class="bi bi-building-check"></i> Maintained by Phoenix Contact</h3>
+        <p>MORYX is developed and maintained by Phoenix Contact. Long-term support releases follow the .NET release schedule.</p>
+      </div>
+      <div class="col feature">
+        <h3><i class="bi bi-bug"></i> Coordinated disclosure</h3>
+        <p>Report vulnerabilities privately through GitHub or the Phoenix Contact PSIRT. We fix them and publish security advisories in coordination with the reporter.</p>
+      </div>
+      <div class="col feature">
+        <h3><i class="bi bi-box-seam"></i> Transparent supply chain</h3>
+        <p>Every release ships a software bill of materials (SBOM). Our security policy lists the supported versions and our reporting duties under the EU Cyber Resilience Act.</p>
+      </div>
+    </div>
+    <p class="text-center mt-4 mb-0">
+      <a href="{{ site.repository_url }}/blob/dev/SECURITY.md" class="btn btn-outline-primary"><i class="bi bi-shield-lock"></i>&nbsp;Read our security policy <i class="bi bi-box-arrow-up-right small" aria-hidden="true"></i></a>
+    </p>
+  </div>
+</section>
+
+{% assign page_content = content | strip %}
+{% if page_content != "" %}
+<div class="container-xxl">
+  {{ page_content }}
+</div>
+{% endif %}
+
+<script>
+  document.querySelectorAll('.clipboard-button').forEach(function (button) {
+    button.addEventListener('click', function () {
+      var code = button.closest('.code-block').querySelector('code');
+      navigator.clipboard.writeText(code.innerText).then(function () {
+        var icon = button.querySelector('i');
+        icon.className = 'bi bi-clipboard-check';
+        setTimeout(function () { icon.className = 'bi bi-clipboard'; }, 1500);
+      });
+    });
+  });
+</script>

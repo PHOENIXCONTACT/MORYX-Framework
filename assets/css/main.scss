@@ -2,22 +2,17 @@
 ---
 
 @import "bootstrap/scss/functions";
+
+// MORYX brand green, used for accents such as stats, icons and borders
+$brand: #20A07F;
+// Darker shade of the brand green for text, links, buttons and the navbar.
+// Required for sufficient contrast
+$primary: #18785F;
+
 @import "bootstrap/scss/variables";
-
-
-$primary: #20A07F;
-
-$theme-colors: map-merge($theme-colors, (
-  "primary": $primary
-));
-
 @import "bootstrap/scss/bootstrap";
 
 $bootstrap-icons-font-path: "/assets/fonts/";
 @import "bootstrap-icons";
-
-.nav-link {
-  color: $white;
-}
 
 @import "landing";

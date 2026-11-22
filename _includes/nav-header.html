@@ -1,25 +1,25 @@
-<header class="header">  
-  <nav class="navbar sticky-top navbar-expand-lg bg-primary bd-navbar">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">
-        <img src="{{ site.baseurl }}/assets/images/moryx_small.png" alt="Bootstrap" width="48" height="48">
+<header class="header sticky-top">
+  <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark" aria-label="Main navigation">
+    <div class="container-xxl">
+      <a class="navbar-brand" href="{{ '/' | relative_url }}">
+        <img src="{{ '/assets/images/moryx_small.png' | relative_url }}" alt="MORYX" width="40" height="40">
       </a>
-      <div class="d-flex justify-content-end">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">     
-          {% for link in site.data.navigation.items %}
-          
-          {% if link.url contains '://' %}
-          {% assign url = link.url %}
-          {% else %}
-          {% assign url = link.url | relative_url %}
-          {% endif %}
-          
-          <li class="nav-link">
-            <a class="nav-link" href="{{ url }}">
-              {% if link.icon %}
-              <i class="bi {{ link.icon }}"></i>&nbsp;
-              {% endif %}
-              {{ link.title }}
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-nav"
+              aria-controls="main-nav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="main-nav">
+        <ul class="navbar-nav mx-lg-auto">
+          {% for link in site.data.navigation.sections %}
+          <li class="nav-item"><a class="nav-link" href="{{ link.url | relative_url }}">{{ link.title }}</a></li>
+          {% endfor %}
+        </ul>
+        <ul class="navbar-nav nav-external">
+          {% for link in site.data.navigation.external %}
+          <li class="nav-item">
+            <a class="nav-link" href="{{ link.url }}">
+              {% if link.icon %}<i class="bi {{ link.icon }}"></i>&nbsp;{% endif %}{{ link.title }}
+              <i class="bi bi-box-arrow-up-right small" aria-hidden="true"></i>
             </a>
           </li>
           {% endfor %}
@@ -28,3 +28,23 @@
     </div>
   </nav>
 </header>
+<script>
+  // Close opened mobile menu before jumping to a section to prevent over-jumping
+  document.querySelectorAll('#main-nav .nav-link').forEach(function (link) {
+    link.addEventListener('click', function (event) {
+      var menu = document.getElementById('main-nav');
+      var target = link.hash && link.pathname === location.pathname ? document.querySelector(link.hash) : null;
+      if (!menu.classList.contains('show')) {
+        return;
+      }
+      if (target) {
+        event.preventDefault();
+        menu.addEventListener('hidden.bs.collapse', function () {
+          history.pushState(null, '', link.hash);
+          target.scrollIntoView();
+        }, { once: true });
+      }
+      bootstrap.Collapse.getOrCreateInstance(menu).hide();
+    });
+  });
+</script>

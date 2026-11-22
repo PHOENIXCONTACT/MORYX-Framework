@@ -1,7 +1,12 @@
 ---
 permalink: /404.html
 layout: page
+sitemap: false
 ---
+
+<!-- The former moryx-industry.net website had many more pages. Send visitors of old links to the start page. -->
+<meta http-equiv="refresh" content="5; url={{ '/' | relative_url }}">
+<script>setTimeout(function () { location.replace('{{ '/' | relative_url }}'); }, 5000);</script>
 
 <style type="text/css" media="screen">
   .container {
@@ -21,5 +26,5 @@ layout: page
   <h1>404</h1>
 
   <p><strong>Page not found :(</strong></p>
-  <p>The requested page could not be found.</p>
+  <p>The MORYX website has moved to a single page. You will be redirected to the <a href="{{ '/' | relative_url }}">start page</a> in a few seconds.</p>
 </div>

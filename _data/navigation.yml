@@ -1,10 +1,26 @@
-items:
+# Sections of the landing page, shown in the middle of the navbar
+sections:
+- title: Features
+  url: "/#features"
+- title: Get started
+  url: "/#get-started"
+- title: Research
+  url: "/#research"
+- title: Security
+  url: "/#security"
+
+# External links, shown on the right of the navbar and marked as external
+external:
+- title: Docs
+  icon: bi-book
+  url: https://github.com/PHOENIXCONTACT/MORYX-Framework/tree/dev/docs
+- title: GitHub
+  icon: bi-github
+  url: https://github.com/PHOENIXCONTACT/MORYX-Framework
+
+# Legal information, shown in the footer
+legal:
 - title: Site notice
   url: https://www.phoenixcontact.com/en-pc/impressum
 - title: Data privacy
-  url: https://www.phoenixcontact.com/de-de/rechtliche-hinweise/datenschutz
-- title: Documentation
-  url: https://github.com/PHOENIXCONTACT/MORYX-Framework/tree/future/docs
-- title: Repository
-  icon: bi-github
-  url: https://github.com/PHOENIXCONTACT/MORYX-Framework
+  url: https://www.phoenixcontact.com/en-pc/legal-information/data-privacy
