@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Moq" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Moryx.Container\Moryx.Container.csproj" />
     <ProjectReference Include="..\..\Moryx\Moryx.csproj" />
     <ProjectReference Include="..\Moryx.Container.TestPlugin\Moryx.Container.TestPlugin.csproj" />

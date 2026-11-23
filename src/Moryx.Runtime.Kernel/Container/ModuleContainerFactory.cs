@@ -14,20 +14,14 @@ public class ModuleContainerFactory : IModuleContainerFactory
 {
     private readonly IServiceProvider _serviceProvider;
 
-    // TODO: Change in next major - remove parameterless constructor and make IServiceProvider non-optional
-    /// <summary>
-    /// Parameterless constructor for backward compatibility
-    /// </summary>
-    public ModuleContainerFactory()
-    {
-    }
-
     /// <summary>
     /// Creates a new instance with an <see cref="IServiceProvider"/> to bridge the ServiceProvider
     /// into module containers.
     /// </summary>
     public ModuleContainerFactory(IServiceProvider serviceProvider)
     {
+        ArgumentNullException.ThrowIfNull(serviceProvider);
+
         _serviceProvider = serviceProvider;
     }
 

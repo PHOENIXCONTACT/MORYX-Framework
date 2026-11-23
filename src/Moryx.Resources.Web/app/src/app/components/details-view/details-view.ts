@@ -11,7 +11,7 @@ import { ResourceModel } from '../../api/models';
 import { EditResourceService } from '@app/services/edit-resource.service';
 import { ResourceNavigationService } from '@app/services/resource-navigation.service';
 import { SessionService } from '@app/services/session.service';
-import { ResourceModificationService } from '@api/services';
+import { ResourceManagementService } from '@api/services';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -30,7 +30,7 @@ export class DetailsView {
   private activatedRoute = inject(ActivatedRoute);
   private editResourceService = inject(EditResourceService);
   private navigationService = inject(ResourceNavigationService);
-  private resourceModificationService = inject(ResourceModificationService);
+  private resourceManagementService = inject(ResourceManagementService);
   private sessionService = inject(SessionService);
   private snackbarService = inject(SnackbarService);
 
@@ -102,7 +102,7 @@ export class DetailsView {
     }
 
     try {
-      const resource = await this.resourceModificationService.getDetails({ id });
+      const resource = await this.resourceManagementService.getDetails({ id });
       this.editResourceService.setResource(resource);
     } catch (error) {
       await this.snackbarService.handleError(error as HttpErrorResponse);

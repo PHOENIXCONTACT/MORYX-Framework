@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Moq;
 using NUnit.Framework;
 
 namespace Moryx.Container.Tests;
@@ -13,7 +14,7 @@ public class NamedComponentTest
     [SetUp]
     public void Init()
     {
-        _container = new CastleContainer();
+        _container = new CastleContainer(Mock.Of<IServiceProvider>());
         // Registerall involved components
         _container.Register<Component, Component>();
         _container.Register<Impossible, Impossible>();

@@ -112,7 +112,7 @@ public class ProcessesIntegrationTests
 
         // Prepare container
         var logger = new ModuleLogger("Dummy", new NullLoggerFactory(), (l, s, e) => { });
-        _container = new CastleContainer();
+        _container = new CastleContainer(Mock.Of<IServiceProvider>());
         _container.Register<IParallelOperations, NotSoParallelOps>();
         _container.LoadFromAssembly(typeof(ProcessController).Assembly);
         _container.SetInstance(_unitOfWorkFactory);

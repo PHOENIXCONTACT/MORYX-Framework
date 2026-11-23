@@ -67,8 +67,7 @@ internal class ResourceToModelConverter(IResourceTypeTree typeTree, ICustomSeria
             Id = current.Id,
             Name = current.Name,
             Description = current.Description,
-            Type = (TypeTree is IResourceTypeTreeExtended extended) ? extended.GetNode(current).ResourceType.FullName :
-                current.GetType().FullName
+            Type = TypeTree.GetNode(current).ResourceType.FullName
         };
 
         // Set partial flag or load complex properties depending on details depth

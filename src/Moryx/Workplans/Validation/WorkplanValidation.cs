@@ -41,7 +41,7 @@ internal static class WorkplanValidation
         return new ValidationResult
         {
             Success = valid,
-            Errors = errors.ToArray()
+            Errors = errors
         };
     }
 }

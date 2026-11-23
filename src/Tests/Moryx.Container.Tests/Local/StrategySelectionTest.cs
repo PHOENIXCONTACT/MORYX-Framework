@@ -5,6 +5,7 @@ using Moryx.Container.TestPlugin;
 using Moryx.Container.TestRootPlugin;
 using Moryx.Container.TestTools;
 using Moryx.Tools;
+using Moq;
 using NUnit.Framework;
 
 namespace Moryx.Container.Tests;
@@ -120,7 +121,7 @@ public class StrategySelectionTest
 
     private static IContainer CreateContainer(IDictionary<Type, string> strategies)
     {
-        var container = new CastleContainer(strategies);
+        var container = new CastleContainer(strategies, Mock.Of<IServiceProvider>());
 
         container.LoadComponents<IRootClass>();
         container.LoadComponents<IConfiguredComponent>();

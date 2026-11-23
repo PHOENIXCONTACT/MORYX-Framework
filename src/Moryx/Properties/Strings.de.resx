@@ -150,4 +150,7 @@
   <data name="SuccessPathCycleValidationError_Message" xml:space="preserve">
     <value>Schritt {0} an Position {1} ist Teil eines Zyklus auf dem Erfolgspfad!</value>
   </data>
+  <data name="WorkplanValidationException_Message" xml:space="preserve">
+    <value>Die Validierung des Arbeitsplans ist fehlgeschlagen.</value>
+  </data>
 </root>

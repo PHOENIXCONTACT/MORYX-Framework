@@ -41,7 +41,7 @@ public class ModuleManagerTests
 
     private LifeCycleBoundFacadeTestModule CreateLifeCycleBoundFacadeTestModuleUnderTest()
     {
-        return new LifeCycleBoundFacadeTestModule(new ModuleContainerFactory(), _mockConfigManager.Object, new NullLoggerFactory());
+        return new LifeCycleBoundFacadeTestModule(new ModuleContainerFactory(Mock.Of<IServiceProvider>()), _mockConfigManager.Object, new NullLoggerFactory());
     }
 
     [Test]
@@ -331,8 +331,8 @@ public class ModuleManagerTests
     public async Task RestartingDependencyRootRestartsDependentModule()
     {
         // Arrange
-        var rootModule = new ServerModuleA(new ModuleContainerFactory(), _mockConfigManager.Object, new NullLoggerFactory());
-        var dependentModule = new ServerModuleADependent(new ModuleContainerFactory(), _mockConfigManager.Object, new NullLoggerFactory());
+        var rootModule = new ServerModuleA(new ModuleContainerFactory(Mock.Of<IServiceProvider>()), _mockConfigManager.Object, new NullLoggerFactory());
+        var dependentModule = new ServerModuleADependent(new ModuleContainerFactory(Mock.Of<IServiceProvider>()), _mockConfigManager.Object, new NullLoggerFactory());
 
         var moduleManager = CreateObjectUnderTest([rootModule, dependentModule]);
 
@@ -376,8 +376,8 @@ public class ModuleManagerTests
     public async Task ShouldReincarnateDependentModules()
     {
         // Arrange
-        var rootModule = new ServerModuleA(new ModuleContainerFactory(), _mockConfigManager.Object, new NullLoggerFactory());
-        var dependentModule = new ServerModuleADependent(new ModuleContainerFactory(), _mockConfigManager.Object, new NullLoggerFactory());
+        var rootModule = new ServerModuleA(new ModuleContainerFactory(Mock.Of<IServiceProvider>()), _mockConfigManager.Object, new NullLoggerFactory());
+        var dependentModule = new ServerModuleADependent(new ModuleContainerFactory(Mock.Of<IServiceProvider>()), _mockConfigManager.Object, new NullLoggerFactory());
 
         var moduleManager = CreateObjectUnderTest([rootModule, dependentModule]);
 

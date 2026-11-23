@@ -16,69 +16,6 @@ public static class IProcessExtensions
     extension(IProcess process)
     {
         /// <summary>
-        /// Modifies the <see cref="ProductInstance"/> of type <typeparamref name="TInstance"/>
-        /// on the <see cref="IProcess"/> using the given <paramref name="setter"/>.
-        /// </summary>
-        /// <typeparam name="TInstance">The expected type of the product instance</typeparam>
-        /// <param name="setter">The action to be executed on the product instance</param>
-        /// <example>
-        /// <code>
-        /// <![CDATA[
-        /// process.ModifyProductInstance<MyProductInstance>((var instance) => instance.MyProperty = 1)
-        /// ]]>
-        /// </code>
-        /// </example>
-        /// <exception cref="InvalidCastException">Thrown if the given <paramref name="process"/> does
-        /// not hold a product instance of type <typeparamref name="TInstance"/></exception>
-        /// <exception cref="InvalidOperationException">Thrown if the given <paramref name="process"/>
-        /// is no <see cref="ProductionProcess"/></exception>
-        [Obsolete($"Use '{nameof(ProcessExtensions.GetProductInstance)}' and direct property assignements instead of the delegate for cleaner stack traced during debugging.")]
-        public TInstance ModifyProductInstance<TInstance>(Action<TInstance> setter)
-            where TInstance : ProductInstance
-        {
-            if (process is not ProductionProcess productionProcess)
-            {
-                throw new InvalidOperationException($"Cannot modify an {nameof(ProductInstance)} on a process of type {process.GetType()}.");
-            }
-
-            var instance = (TInstance)productionProcess.ProductInstance;
-            setter.Invoke(instance);
-            return instance;
-        }
-
-        /// <summary>
-        /// Tries to modifies the <see cref="ProductInstance"/> of type <typeparamref name="TInstance"/>
-        /// on the <see cref="IProcess"/> using the given <paramref name="setter"/>. Returns false, if the
-        /// operation could not be executed.
-        /// </summary>
-        /// <typeparam name="TInstance">The expected type of the product instance</typeparam>
-        /// <param name="setter">The action to be executed on the product instance</param>
-        /// <example>
-        /// <code>
-        /// <![CDATA[
-        /// process.TryModifyingProductInstance<MyProductInstance>((var instance) => instance.MyProperty = 1)
-        /// ]]>
-        /// </code>
-        /// </example>
-        [Obsolete($"Use '{nameof(ProcessExtensions.GetProductInstance)}' and direct property assignements instead of the delegate for cleaner stack traced during debugging.")]
-        public bool TryModifyProductInstance<TInstance>(Action<TInstance> setter)
-            where TInstance : ProductInstance
-        {
-            if (process is not ProductionProcess productionProcess)
-            {
-                return false;
-            }
-
-            if (productionProcess.ProductInstance is not TInstance instance)
-            {
-                return false;
-            }
-
-            setter.Invoke(instance);
-            return true;
-        }
-
-        /// <summary>
         /// Returns <see cref="IOrderBasedRecipe.OrderNumber"/> on the <see cref="IProcess"/> using the given <paramref name="process"/>.
         /// </summary>
         /// <example>
