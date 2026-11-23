@@ -48,7 +48,7 @@ public class OperationDataReportTests : OperationDataTestBase
         {
             case ConfirmationType.Partial:
                 // Act - Assert
-                Assert.ThrowsAsync<InvalidOperationException>(() => operationData.Report(report), "A partial report is not possible for a Ready OperationData.");
+                await Assert.ThrowsAsync<InvalidOperationException>(() => operationData.Report(report), "A partial report is not possible for a Ready OperationData.");
                 Assert.That(completedRaised, Is.False);
                 break;
             case ConfirmationType.Final:
@@ -90,7 +90,7 @@ public class OperationDataReportTests : OperationDataTestBase
                 break;
             case ConfirmationType.Final:
                 // Act - Assert
-                Assert.ThrowsAsync<InvalidOperationException>(() => operationData.Report(report), "A final report is not possible for a running OperationData");
+                await Assert.ThrowsAsync<InvalidOperationException>(() => operationData.Report(report), "A final report is not possible for a running OperationData");
 
                 Assert.That(partialReportRaised, Is.False);
                 break;
@@ -121,7 +121,7 @@ public class OperationDataReportTests : OperationDataTestBase
                 break;
             case ConfirmationType.Final:
                 // Act - Assert
-                Assert.ThrowsAsync<InvalidOperationException>(() => operationData.Report(report), "A final report is not possible for a running OperationData");
+                await Assert.ThrowsAsync<InvalidOperationException>(() => operationData.Report(report), "A final report is not possible for a running OperationData");
 
                 Assert.That(partialReportRaised, Is.False);
                 break;
@@ -186,7 +186,7 @@ public class OperationDataReportTests : OperationDataTestBase
         {
             case ConfirmationType.Partial:
                 // Act - Assert
-                Assert.ThrowsAsync<InvalidOperationException>(() => operationData.Report(report), "No partial report possible for an interrupted OperationData");
+                await Assert.ThrowsAsync<InvalidOperationException>(() => operationData.Report(report), "No partial report possible for an interrupted OperationData");
                 Assert.That(partialReportRaised, Is.False);
                 Assert.That(completedRaised, Is.False);
                 break;
@@ -214,7 +214,7 @@ public class OperationDataReportTests : OperationDataTestBase
         Assert.Throws<InvalidOperationException>(() => operationData.GetReportContext());
 
         // Arrange
-        operationData.Assign();
+        await operationData.Assign();
 
         // Act - Assert
         Assert.That(operationData.State.CanPartialReport, Is.False);

@@ -421,7 +421,7 @@ public class ResourceLinkerTests
     [TestCase(true, false, Description = "Validation should fail if the reference is null")]
     [TestCase(false, true, Description = "Validation should fail if the references are empty")]
     [TestCase(true, true, Description = "Validation should fail if both required are empty")]
-    public void CheckRequiredReference(bool isNull, bool isEmpty)
+    public async Task CheckRequiredReference(bool isNull, bool isEmpty)
     {
         // Arrange
         var instance = new RequiredReferenceResource();
@@ -444,11 +444,11 @@ public class ResourceLinkerTests
         // Assert
         if (isNull || isEmpty)
         {
-            Assert.ThrowsAsync<ValidationException>(() => _linker.SaveReferencesAsync(dbMocks.Item1.Object, instance, new ResourceEntity()));
+            await Assert.ThrowsAsync<ValidationException>(() => _linker.SaveReferencesAsync(dbMocks.Item1.Object, instance, new ResourceEntity()));
         }
         else
         {
-            Assert.DoesNotThrowAsync(() => _linker.SaveReferencesAsync(dbMocks.Item1.Object, instance, new ResourceEntity()));
+            await Assert.DoesNotThrowAsync(() => _linker.SaveReferencesAsync(dbMocks.Item1.Object, instance, new ResourceEntity()));
         }
     }
 

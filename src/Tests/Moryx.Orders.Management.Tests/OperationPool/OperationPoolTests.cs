@@ -272,7 +272,7 @@ public class OperationPoolTests
         var operationDataMock2 = InitializeOperation(operationNumber, orderNumber, _operationDataPool, false);
 
         IOperationData notCompletedOperation = null;
-        Assert.DoesNotThrowAsync(async () => notCompletedOperation = await _operationDataPool.Get(orderNumber, operationNumber));
+        await Assert.DoesNotThrowAsync(async () => notCompletedOperation = await _operationDataPool.Get(orderNumber, operationNumber));
         //Assert
         Assert.That(notCompletedOperation, Is.Not.Null, "There should be an operation with the given order and operation number");
     }

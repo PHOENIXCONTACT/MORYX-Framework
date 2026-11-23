@@ -412,7 +412,7 @@ public class ModuleManagerTests
     }
 
     [Test]
-    public void ShouldIgnoreUnknownModuleOnStart()
+    public async Task ShouldIgnoreUnknownModuleOnStart()
     {
         // Arrange
         var knownModule = new Mock<IServerModule>();
@@ -420,7 +420,7 @@ public class ModuleManagerTests
         var moduleManager = CreateObjectUnderTest([knownModule.Object]);
 
         // Act
-        Assert.DoesNotThrowAsync(async () => await moduleManager.StartModuleAsync(unknownModule.Object));
+        await Assert.DoesNotThrowAsync(async () => await moduleManager.StartModuleAsync(unknownModule.Object));
 
         // Assert
         unknownModule.Verify(m => m.InitializeAsync(), Times.Never);
@@ -428,7 +428,7 @@ public class ModuleManagerTests
     }
 
     [Test]
-    public void ShouldIgnoreUnknownModuleOnStop()
+    public async Task ShouldIgnoreUnknownModuleOnStop()
     {
         // Arrange
         var knownModule = new Mock<IServerModule>();
@@ -436,14 +436,14 @@ public class ModuleManagerTests
         var moduleManager = CreateObjectUnderTest([knownModule.Object]);
 
         // Act
-        Assert.DoesNotThrowAsync(async () => await moduleManager.StopModuleAsync(unknownModule.Object));
+        await Assert.DoesNotThrowAsync(async () => await moduleManager.StopModuleAsync(unknownModule.Object));
 
         // Assert
         unknownModule.Verify(m => m.StopAsync(), Times.Never);
     }
 
     [Test]
-    public void ShouldIgnoreUnknownModuleOnReincarnate()
+    public async Task ShouldIgnoreUnknownModuleOnReincarnate()
     {
         // Arrange
         var knownModule = new Mock<IServerModule>();
@@ -451,7 +451,7 @@ public class ModuleManagerTests
         var moduleManager = CreateObjectUnderTest([knownModule.Object]);
 
         // Act
-        Assert.DoesNotThrowAsync(async () => await moduleManager.ReincarnateModuleAsync(unknownModule.Object));
+        await Assert.DoesNotThrowAsync(async () => await moduleManager.ReincarnateModuleAsync(unknownModule.Object));
 
         // Assert
         unknownModule.Verify(m => m.InitializeAsync(), Times.Never);
