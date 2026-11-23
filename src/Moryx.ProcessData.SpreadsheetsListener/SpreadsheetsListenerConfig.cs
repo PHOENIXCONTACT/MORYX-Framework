@@ -42,9 +42,9 @@ public class SpreadsheetsListenerConfig : ProcessDataListenerConfig
     public string Path { get; set; }
 
     /// <summary>
-    /// Delimiter used to separate values
+    /// Separator used to separate values
     /// </summary>
     [DataMember, DefaultValue(";")]
-    [Description("Delimiter used to separate values")]
-    public string Delimiter { get; set; }
+    [Description("Separator used to separate values")]
+    public string Separator { get; set; }
 }
