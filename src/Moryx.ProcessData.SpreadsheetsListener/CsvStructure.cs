@@ -4,7 +4,6 @@
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using CsvHelper;
-using CsvHelper.Configuration;
 using Microsoft.Extensions.Logging;
 using Moryx.Logging;
 using Moryx.Tools;
@@ -16,14 +15,14 @@ internal class CsvStructure
 {
     private readonly IList<string> _header = new List<string>();
     private readonly ICollection<CsvRow> _rows = new List<CsvRow>();
-    private readonly object _headerLock = new();
-    private readonly object _rowsLock = new();
+    private readonly Lock _headerLock = new();
+    private readonly Lock _rowsLock = new();
 
     private readonly string _path;
     private readonly string _measurand;
     private string _completeFilePath;
 
-    private readonly CsvConfiguration _csvConfig = new(CultureInfo.InvariantCulture);
+    private readonly CsvWriterOptions _csvOptions;
     private readonly IModuleLogger _logger;
 
     private int _writtenRows;
@@ -38,18 +37,35 @@ internal class CsvStructure
         _path = config.Path;
         _measurand = measurand;
         _maxNumOfRows = Math.Max(2, config.MaxNumOfRows);
-        if (config.Delimiter != null)
+        _logger = logger;
+
+        var separator = CsvWriterOptions.Default.Separator;
+        if (!string.IsNullOrEmpty(config.Separator))
         {
-            _csvConfig.Delimiter = config.Delimiter;
+            // TODO: CommandCenter does not support char for now: https://github.com/PHOENIXCONTACT/MORYX-Framework/issues/1648
+            if (config.Separator.Length > 1)
+            {
+                _logger.LogWarning("Only single character separators are supported. Using '{UsedSeparator}' instead of '{ConfiguredSeparator}'",
+                    config.Separator[0], config.Separator);
+            }
+
+            separator = config.Separator[0];
         }
 
-        _logger = logger;
+        _csvOptions = new CsvWriterOptions
+        {
+            Separator = separator,
+            // Rows may have fewer fields than the header when the header was extended later on
+            ValidateFieldCount = false,
+            Quoting = CsvQuoting.WhenNeededOrWhitespace
+        };
+
         CreateNewFile();
     }
 
     public async Task AddMeasurement(Measurement measurement)
     {
-        IDictionary<string, object> record = MeasurementToDictionary(measurement);
+        var record = MeasurementToDictionary(measurement);
         var header = record.Keys.ToList();
         var row = new CsvRow(record.Values.ToList());
         await AdjustHeaderAddRow(header, row);
@@ -84,7 +100,7 @@ internal class CsvStructure
         lock (_headerLock)
         {
             var rowArray = new object[_header.Count];
-            for (int i = 0; i < header.Count; i++)
+            for (var i = 0; i < header.Count; i++)
             {
                 var heading = header[i];
                 var index = _header.IndexOf(heading);
@@ -110,33 +126,39 @@ internal class CsvStructure
 
     private void CreateNewFile()
     {
-        var fullFileName = _measurand + "_" + DateTime.Now.ToString("yyyyMMdd_HHmmssfff");
-        _completeFilePath = Path.Combine(_path, fullFileName + ".csv");
-
-        //if (!Directory.Exists(_filePath))
         Directory.CreateDirectory(_path);
-        _fileStream = (File.Create(_completeFilePath));
+
+        // Files created within the same millisecond would get the same name and overwrite each other
+        var timeStamp = DateTime.UtcNow;
+        do
+        {
+            var fullFileName = _measurand + "_" + timeStamp.ToString("yyyyMMdd_HHmmssfff", CultureInfo.InvariantCulture);
+            _completeFilePath = Path.Combine(_path, fullFileName + ".csv");
+            timeStamp = timeStamp.AddMilliseconds(1);
+        } while (File.Exists(_completeFilePath));
+
+        _fileStream = File.Open(_completeFilePath, FileMode.CreateNew);
         _writtenRows = 0;
         _streamWriter = new StreamWriter(_fileStream);
-        _csvWriter = new CsvWriter(_streamWriter, _csvConfig);
+        _csvWriter = CsvWriter.Create(_streamWriter, _csvOptions);
     }
 
     private void OpenFile()
     {
         _fileStream = File.Open(_completeFilePath, FileMode.Append);
         _streamWriter = new StreamWriter(_fileStream);
-        _csvWriter = new CsvWriter(_streamWriter, _csvConfig);
+        _csvWriter = CsvWriter.Create(_streamWriter, _csvOptions);
     }
 
     private IDictionary<string, object> MeasurementToDictionary(Measurement measurement)
     {
         try
         {
-            Dictionary<string, object> measurementDictionary = new Dictionary<string, object>();
+            var measurementDictionary = new Dictionary<string, object>();
             var tStamp = measurement.TimeStamp.ToUniversalTime();
             measurementDictionary.Add("time", tStamp);
 
-            SortedDictionary<string, object> sortedDictionary = new SortedDictionary<string, object>();
+            var sortedDictionary = new SortedDictionary<string, object>();
             measurement.Fields.ForEach(f => sortedDictionary.Add(f.Name, f.Value));
             measurement.Tags.ForEach(f => sortedDictionary.Add(f.Name, f.Value));
             var currentPlatform = Platform.Current;
@@ -155,7 +177,7 @@ internal class CsvStructure
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error while transforming measurement: {0}.", measurement);
+            _logger.LogError(e, "Error while transforming measurement: {Measurement}.", measurement);
             throw;
         }
     }
@@ -169,21 +191,27 @@ internal class CsvStructure
         }
 
         Close();
-        string tempfile = Path.GetTempFileName();
-        using (var writer = new StreamWriter(tempfile))
+        var tempfile = Path.GetTempFileName();
+        await using (var writer = new StreamWriter(tempfile))
         using (var reader = new StreamReader(_completeFilePath))
-        using (var csv = new CsvWriter(writer, _csvConfig))
+        await using (var csv = CsvWriter.Create(writer, _csvOptions, leaveOpen: true))
         {
-            _logger.Log(LogLevel.Debug, "Overwriting header: Writing {0} headings to header of spreadsheet '{1}'", tempHeader.Count, Path.GetFileName(_completeFilePath));
+            _logger.Log(LogLevel.Debug, "Overwriting header: Writing {HeadingCount} headings to header of spreadsheet '{FileName}'", tempHeader.Count, Path.GetFileName(_completeFilePath));
             foreach (var heading in tempHeader)
             {
                 csv.WriteField(heading);
             }
-            await csv.NextRecordAsync();
+            await csv.EndRecordAsync();
+
+            // The csv writer buffers internally, so flush the header before appending the existing rows
+            await csv.FlushAsync();
+
+            // Skip the old header and copy the remaining rows
             await reader.ReadLineAsync();
-            while (!reader.EndOfStream)
+            string line;
+            while ((line = await reader.ReadLineAsync()) != null)
             {
-                await writer.WriteLineAsync(reader.ReadLine());
+                await writer.WriteLineAsync(line);
             }
         }
         File.Copy(tempfile, _completeFilePath, true);
@@ -198,12 +226,13 @@ internal class CsvStructure
             tempHeader = _header.ToList();
         }
 
-        _logger.Log(LogLevel.Debug, "Writing {0} headings to header of spreadsheet '{1}'", tempHeader.Count, Path.GetFileName(_completeFilePath));
+        _logger.Log(LogLevel.Debug, "Writing {HeadingCount} headings to header of spreadsheet '{FileName}'",
+            tempHeader.Count, Path.GetFileName(_completeFilePath));
         foreach (var heading in tempHeader)
         {
             _csvWriter.WriteField(heading);
         }
-        await _csvWriter.NextRecordAsync();
+        await _csvWriter.EndRecordAsync();
         await _csvWriter.FlushAsync();
         _writtenRows++;
     }
@@ -218,26 +247,27 @@ internal class CsvStructure
         }
         if (tempRows.Count == 0)
         {
-            _logger.Log(LogLevel.Debug, "No measurements for {0} to be written", _measurand);
+            _logger.Log(LogLevel.Debug, "No measurements for {Measurand} to be written", _measurand);
             return;
         }
         try
         {
-            int availableNumOfRows = _maxNumOfRows - _writtenRows;
+            var availableNumOfRows = _maxNumOfRows - _writtenRows;
             var rowsToCurrentFile = tempRows.GetRange(0, Math.Min(availableNumOfRows, tempRows.Count));
 
-            _logger.Log(LogLevel.Debug, "Writing {0} records to spreadsheet '{1}'", tempRows.Count, Path.GetFileName(_completeFilePath));
+            _logger.Log(LogLevel.Debug, "Writing {RecordCount} records to spreadsheet '{FileName}'",
+                tempRows.Count, Path.GetFileName(_completeFilePath));
             foreach (var row in rowsToCurrentFile)
             {
                 foreach (var field in row.Fields)
                 {
                     _csvWriter.WriteField(field);
                 }
-                await _csvWriter.NextRecordAsync();
+                await _csvWriter.EndRecordAsync();
                 _writtenRows++;
                 if (!tempRows.Remove(row))
                 {
-                    _logger.Log(LogLevel.Debug, "Failed to remove row from '{0}' queue. Row was not found in queue", _measurand);
+                    _logger.Log(LogLevel.Debug, "Failed to remove row from '{Measurand}' queue. Row was not found in queue", _measurand);
                 }
             }
 
@@ -260,7 +290,8 @@ internal class CsvStructure
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error while writing records to spreadsheet '{0}'. Moving records back to queue.", Path.GetFileName(_completeFilePath));
+            _logger.LogError(e, "Error while writing records to spreadsheet '{FileName}'. Moving records back to queue.",
+                Path.GetFileName(_completeFilePath));
         }
     }
 }

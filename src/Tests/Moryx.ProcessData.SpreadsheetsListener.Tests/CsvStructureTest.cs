@@ -3,7 +3,6 @@
 
 using System.Globalization;
 using CsvHelper;
-using CsvHelper.Configuration;
 using Moq;
 using Moryx.Logging;
 using Moryx.Tools;
@@ -17,7 +16,13 @@ public class CsvStructureTest
 {
     private CsvStructure _csvStructure;
 
-    private CsvConfiguration _csvConfig = new(CultureInfo.InvariantCulture);
+    private readonly CsvReaderOptions _csvOptions = new()
+    {
+        Separator = ';',
+        // The header is part of the read lines
+        HasHeader = false
+    };
+
     private SpreadsheetsListenerConfig _slConfig;
     private IModuleLogger _logger;
     private readonly Random _random = new();
@@ -31,18 +36,18 @@ public class CsvStructureTest
     [SetUp]
     public void SetUp()
     {
-        _csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture);
-        _csvConfig.Delimiter = ";";
         _logger = new Mock<IModuleLogger>().Object;
 
-        _slConfig = new SpreadsheetsListenerConfig();
-        _slConfig.Path = _path;
-        _slConfig.Delimiter = ";";
+        _slConfig = new SpreadsheetsListenerConfig
+        {
+            Path = _path,
+            Separator = ";"
+        };
 
         _randomFileName = NewGuidString();
         _fileInfo = null;
         _files = null;
-        _testTimeStamp = DateTime.Now;
+        _testTimeStamp = DateTime.UtcNow;
     }
 
     [TearDown]
@@ -145,7 +150,7 @@ public class CsvStructureTest
     public async Task WriteMeasurementsTwiceToCsvCompare(bool addOrRemoveRandom = false, int numOfMeasurements = 0, int numOfFiles = 1, int maxNumOfRowsPerFile = -1)
     {
         // Arrange
-        Measurement firstMeasurement = RandomMeasurement(_random.Next(0, 8), _random.Next(0, 8));
+        var firstMeasurement = RandomMeasurement(_random.Next(0, 8), _random.Next(0, 8));
         List<Measurement> randomMeasurements = [firstMeasurement];
         if (maxNumOfRowsPerFile < 0) // unless maxNumOfRowsPerFile was specified, every file (except possibly the last one) has the same number of rows
         {
@@ -157,9 +162,9 @@ public class CsvStructureTest
         // Act
         _csvStructure = new CsvStructure(_slConfig, _randomFileName, _logger);
         await _csvStructure.AddMeasurement(firstMeasurement);
-        for (int i = 1; i < numOfMeasurements; i++)
+        for (var i = 1; i < numOfMeasurements; i++)
         {
-            Measurement newRndMeasurement = RandomMeasurement(basedOn: firstMeasurement);
+            var newRndMeasurement = RandomMeasurement(basedOn: firstMeasurement);
             await _csvStructure.AddMeasurement(newRndMeasurement);
             if (_random.NextDouble() < 0.1) // write rows at random and not after every measurement
             {
@@ -182,7 +187,7 @@ public class CsvStructureTest
         _randomFileName = NewGuidString();
         _csvStructure = new CsvStructure(_slConfig, _randomFileName, _logger);
         await _csvStructure.AddMeasurement(firstMeasurement);
-        for (int i = 1; i < randomMeasurements.Count; i++)
+        for (var i = 1; i < randomMeasurements.Count; i++)
         {
             if (addOrRemoveRandom && _random.NextDouble() < 5.0 / numOfMeasurements)
             {
@@ -202,7 +207,7 @@ public class CsvStructureTest
         AssertCsvIsValidResult(firstFiles, _files, randomMeasurements);
 
         // add files first created to _file so they can be deleted in tear down
-        List<string> tempFiles = _files.ToList();
+        var tempFiles = _files.ToList();
         tempFiles.AddRange(firstFiles);
         _files = tempFiles.ToArray();
     }
@@ -210,7 +215,7 @@ public class CsvStructureTest
     private async Task WriteMeasurementsToCsvCheckContent(bool triggerOverwritingHeader = false, int numOfMeasurements = 0, int numOfFiles = 1, int maxNumOfRowsPerFile = -1)
     {
         // Arrange
-        Measurement firstMeasurement = RandomMeasurement(_random.Next(0, 8), _random.Next(0, 8));
+        var firstMeasurement = RandomMeasurement(_random.Next(0, 8), _random.Next(0, 8));
         List<Measurement> randomMeasurements = [firstMeasurement];
         var headingsOfFirstMeasurement = GetNames(firstMeasurement);
 
@@ -229,9 +234,9 @@ public class CsvStructureTest
         _csvStructure = new CsvStructure(_slConfig, _randomFileName, _logger);
         await _csvStructure.AddMeasurement(firstMeasurement);
         // add random measurements
-        for (int i = 1; i < numOfMeasurements; i++)
+        for (var i = 1; i < numOfMeasurements; i++)
         {
-            Measurement newRndMeasurement = RandomMeasurement(basedOn: firstMeasurement);
+            var newRndMeasurement = RandomMeasurement(basedOn: firstMeasurement);
             if (triggerOverwritingHeader && _random.NextDouble() < 1.0 / numOfMeasurements)
             {
                 // add a random field or tag which should trigger the overwriting of the header
@@ -274,8 +279,8 @@ public class CsvStructureTest
 
             Assert.That(hasEveryHeader && hasEveryNewHeader, "Header does not contain every field or tag");
 
-            bool everyFieldAndTag = true;
-            for (int i = 1; i < actualWrittenCsv.Count; i++)
+            var everyFieldAndTag = true;
+            for (var i = 1; i < actualWrittenCsv.Count; i++)
             {
                 // check if the measurement in current line contains the same fields and tags
                 var toBeTestedMeasurement = randomMeasurements[numOfValidatedMeasurements + i - 1];
@@ -297,7 +302,7 @@ public class CsvStructureTest
     {
         if (_random.NextDouble() < 0.5)
         {
-            Measurement editedMeasurement = new Measurement(_randomFileName, measurement.TimeStamp);
+            var editedMeasurement = new Measurement(_randomFileName, measurement.TimeStamp);
             var editedFields = measurement.Fields;
             var editedTags = measurement.Tags;
             if (_random.NextDouble() < 0.5 && editedFields.Count > 0)
@@ -347,24 +352,25 @@ public class CsvStructureTest
         }
     }
 
-    public void AssertCsvIsValidResult(string[] originalFiles, string[] resultFiles, IList<Measurement> measurements)
+    private void AssertCsvIsValidResult(string[] originalFiles, string[] resultFiles, IList<Measurement> measurements)
     {
-        int numOfValidatedMeasurements = 0;
-        for (int fileIndex = 0; fileIndex < resultFiles.Length; fileIndex++)
+        var numOfValidatedMeasurements = 0;
+        for (var fileIndex = 0; fileIndex < resultFiles.Length; fileIndex++)
         {
             var firstWrittenCsv = ReadInCsv(originalFiles[fileIndex]);
             var secondWrittenCsv = ReadInCsv(resultFiles[fileIndex]);
 
             var firstHeader = firstWrittenCsv[0];
             var secondHeader = secondWrittenCsv[0];
-            for (int i = 0; i < firstHeader.Count; i++)
-            { // header of first file should be a sub list of the second header with the same order 
+            for (var i = 0; i < firstHeader.Count; i++)
+            {
+                // header of first file should be a sub list of the second header with the same order
                 Assert.That(firstHeader[0], Is.EqualTo(secondHeader[0]), "Headings are not the same");
             }
 
-            for (int row = 1; row < secondWrittenCsv.Count; row++)
+            for (var row = 1; row < secondWrittenCsv.Count; row++)
             {
-                for (int col = 0; col < secondWrittenCsv[row].Count; col++)
+                for (var col = 0; col < secondWrittenCsv[row].Count; col++)
                 {
                     var valueInSecondCsv = secondWrittenCsv[row][col];
                     var valueInMeasurement = GetValueByName(measurements[numOfValidatedMeasurements], secondHeader[col]);
@@ -412,9 +418,9 @@ public class CsvStructureTest
         {
             _fileInfo = new FileInfo(file);
 
-            var fileTimeStampStr = new String(_fileInfo.Name
+            var fileTimeStampStr = new string(_fileInfo.Name
                 .Replace(_randomFileName, "")
-                .Where(Char.IsDigit)
+                .Where(char.IsDigit)
                 .ToArray());
             var fileTimeStamp = DateTime.ParseExact(fileTimeStampStr, "yyyyMMddHHmmssfff", CultureInfo.InvariantCulture);
 
@@ -422,7 +428,7 @@ public class CsvStructureTest
             Assert.That(timeDiff + 100, Is.Positive, "Time stamp in name of file is too far in the past");
             Assert.That(timeDiff, Is.LessThan(100000), "File was not created within a necessary time span");
 
-            if (file.Equals(_files[_files.Length - 1]))
+            if (file.Equals(_files[^1]))
             {
                 Assert.That(IsFileLocked(_fileInfo), "Stream should stay open but file was accessible");
                 _csvStructure.Close();
@@ -457,10 +463,8 @@ public class CsvStructureTest
     {
         try
         {
-            using (FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None))
-            {
-                stream.Close();
-            }
+            using var stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None);
+            stream.Close();
         }
         catch (IOException) { return true; }
         return false;
@@ -473,7 +477,7 @@ public class CsvStructureTest
 
     private Measurement RandomMeasurement(int numOfFields = 0, int numOfTags = 0, Measurement basedOn = null)
     {
-        Measurement measurement = new Measurement(_randomFileName);
+        var measurement = new Measurement(_randomFileName);
         if (basedOn != null)
         {
             basedOn.Fields.ForEach(f => measurement.Add(new DataField(f.Name, NewGuidString())));
@@ -481,12 +485,12 @@ public class CsvStructureTest
         }
         else
         {
-            for (int i = 0; i < numOfFields; i++)
+            for (var i = 0; i < numOfFields; i++)
             {
                 AddRandomFieldOrTag(measurement, 1.0);
             }
 
-            for (int i = 0; i < numOfTags; i++)
+            for (var i = 0; i < numOfTags; i++)
             {
                 AddRandomFieldOrTag(measurement, 0.0);
             }
@@ -497,20 +501,18 @@ public class CsvStructureTest
     private List<List<string>> ReadInCsv(string absolutePath)
     {
         List<List<string>> result = [];
-        string value;
-        using (TextReader fileReader = File.OpenText(absolutePath))
+        using TextReader fileReader = File.OpenText(absolutePath);
+        using var csv = CsvReader.Create(fileReader, _csvOptions);
+        while (csv.Read())
         {
-            var csv = new CsvReader(fileReader, _csvConfig);
-            while (csv.Read())
+            List<string> line = [];
+            for (var i = 0; i < csv.FieldCount; i++)
             {
-                List<string> line = [];
-                for (int i = 0; csv.TryGetField<string>(i, out value); i++)
-                {
-                    line.Add(value);
-                }
-                result.Add(line);
+                line.Add(csv.GetString(i));
             }
+            result.Add(line);
         }
+
         return result;
     }
 }
