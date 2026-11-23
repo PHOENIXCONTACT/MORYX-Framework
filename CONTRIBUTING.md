@@ -35,7 +35,7 @@ Some projects may require additional frontend build steps. Follow the instructio
 ## Making changes
 
 - Keep each pull request focused. Avoid unrelated refactoring, formatting, or dependency updates.
-- Follow the repository's `.editorconfig` and existing conventions.
+- Follow the repository's [.editorconfig](/.editorconfig) as well as existing [guidelines](https://github.com/PHOENIXCONTACT/MORYX-Home/tree/main/guidelines) and [conventions](https://github.com/PHOENIXCONTACT/MORYX-Home/tree/main#coding-conventions).
 - Add or update tests for behavior changes and bug fixes where practical.
 - Update documentation when public behavior, configuration, APIs, or user workflows change.
 - Preserve compatibility unless a breaking change has been discussed and accepted in advance.
@@ -70,16 +70,7 @@ The disclosure does not reduce the contributor's responsibility for correctness,
 
 ## Pull requests
 
-Before submitting a pull request:
-
-1. Rebase or merge the latest `dev` branch as appropriate.
-2. Build the solution and run the relevant tests.
-3. Review the diff for accidental, generated, unrelated, or sensitive content.
-4. Follow the provided template, especially by
-  a. providing a clear description of the problem and the chosen solution,
-  b. linking the relevant issue, for example with `Fixes #123`.
-  c. calling out breaking changes, migration steps, and known limitations.
-5. Disclose significant AI assistance as described above.
+Before submitting a pull request, make sure you comply with our [guideline on creating pull requests](https://github.com/PHOENIXCONTACT/MORYX-Home/blob/main/guidelines/pull-request-guidelines.md) and disclose significant AI assistance as described above.
 
 Draft pull requests are welcome for early feedback. A pull request is ready for review when its scope is clear, required checks pass, and the contributor has completed a self-review.
 
