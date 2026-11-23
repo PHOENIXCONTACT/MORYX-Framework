@@ -10,41 +10,35 @@ namespace Moryx.Material.Integrations.Orders;
 /// <summary>
 /// Reference wrapper for an <see cref="Order"/> business object owned by the order integration.
 /// </summary>
+/// <remarks>
+/// Creates a new <see cref="OrderReference"/> in <see cref="ReferenceState.Initialized"/>.
+/// </remarks>
 [DataContract]
-public class OrderReference : Reference
+public class OrderReference(string orderNumber, string? operationNumber = null) : Reference
 {
     /// <summary>
-    /// Order number; always available even when <see cref="State"/> is not <see cref="ReferenceState.Active"/>.
+    /// Identifying order number mapped from <see cref="Operation.Order"/>
     /// </summary>
     [DataMember]
-    public string OrderNumber { get; protected set; } = string.Empty;
+    public string OrderNumber { get; protected set; } = orderNumber ?? throw new ArgumentNullException(nameof(orderNumber));
 
     /// <summary>
-    /// Operation number, null if operation is not specified
+    /// Identifying operation number mapped from <see cref="Operation.Number"/>, null if operation is not specified
     /// </summary>
     [DataMember]
-    public string? OperationNumber { get; protected set; }
+    public string? OperationNumber { get; protected set; } = operationNumber;
 
     /// <summary>
-    /// Cached operation status, mapped from the underlying business object when active.
+    /// Cached operation status, mapped from the underlying business object <see cref="Operation.State"/> when active.
     /// This information is reset when the reference is not actively maintained.
     /// </summary>
     public OperationStateClassification? Status { get; protected set; }
 
     /// <summary>
-    /// Cached operation source, mapped from the underlying business object when active.
+    /// Cached operation source, mapped from the underlying business object <see cref="Operation.Source"/> when active.
     /// This information is reset when the reference is not actively maintained.
     /// </summary>
     public IOperationSource? Source { get; protected set; }
-
-    /// <summary>
-    /// Creates a new <see cref="OrderReference"/> in <see cref="ReferenceState.Initialized"/>.
-    /// </summary>
-    public OrderReference(string orderNumber, string? operationNumber = null)
-    {
-        OrderNumber = orderNumber ?? throw new ArgumentNullException(nameof(orderNumber));
-        OperationNumber = operationNumber;
-    }
 }
 
 public static class OrderReferenceExtensions

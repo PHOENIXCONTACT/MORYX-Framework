@@ -16,7 +16,8 @@ public interface IOrderLinkedMaterialContainer : IMaterialContainer
     OrderReference? LinkedOrder { get; set; }
 
     /// <summary>
-    /// Initiates a linking request, optionally auto-unlinking the previously linked order.
+    /// Initiates a linking request for <paramref name="orderNumber"/> and <paramref name="operationNumber"/>, 
+    /// optionally auto-unlinking the previously linked order.
     /// </summary>
     Task RequestOrderLinkAsync(string orderNumber, string? operationNumber = null, CancellationToken cancellationToken = default);
 
@@ -27,13 +28,14 @@ public interface IOrderLinkedMaterialContainer : IMaterialContainer
 
     /// <summary>
     /// Raised when a link or unlink request is made by the container.
-    /// Listeners (typically <c>LinkingHookManager</c>) execute hooks and return a response
-    /// via <see cref="LinkingRequestEventArgs.ResponseCallback"/>.
+    /// Listeners execute <see cref="OrderLinkingHook"/>s and return a response via 
+    /// <see cref="LinkingRequestEventArgs.ResponseCallback"/>.
     /// </summary>
     event EventHandler<OrderLinkRequestEventArgs>? OrderLinkRequested;
 
     /// <summary>
     /// Raised by the container after a link has been applied (or unlinking completed).
+    /// Again fed into <see cref="OrderLinkingHook"/>s for optional post-processing.
     /// </summary>
     event EventHandler<OrderLinkAppliedEventArgs>? OrderLinkApplied;
 }
