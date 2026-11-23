@@ -126,12 +126,18 @@ internal class CsvStructure
 
     private void CreateNewFile()
     {
-        var fullFileName = _measurand + "_" + DateTime.Now.ToString("yyyyMMdd_HHmmssfff", CultureInfo.InvariantCulture);
-        _completeFilePath = Path.Combine(_path, fullFileName + ".csv");
-
-        //if (!Directory.Exists(_filePath))
         Directory.CreateDirectory(_path);
-        _fileStream = (File.Create(_completeFilePath));
+
+        // Files created within the same millisecond would get the same name and overwrite each other
+        var timeStamp = DateTime.UtcNow;
+        do
+        {
+            var fullFileName = _measurand + "_" + timeStamp.ToString("yyyyMMdd_HHmmssfff", CultureInfo.InvariantCulture);
+            _completeFilePath = Path.Combine(_path, fullFileName + ".csv");
+            timeStamp = timeStamp.AddMilliseconds(1);
+        } while (File.Exists(_completeFilePath));
+
+        _fileStream = File.Open(_completeFilePath, FileMode.CreateNew);
         _writtenRows = 0;
         _streamWriter = new StreamWriter(_fileStream);
         _csvWriter = CsvWriter.Create(_streamWriter, _csvOptions);

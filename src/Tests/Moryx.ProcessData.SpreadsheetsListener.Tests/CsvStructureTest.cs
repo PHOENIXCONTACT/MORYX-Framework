@@ -47,7 +47,7 @@ public class CsvStructureTest
         _randomFileName = NewGuidString();
         _fileInfo = null;
         _files = null;
-        _testTimeStamp = DateTime.Now;
+        _testTimeStamp = DateTime.UtcNow;
     }
 
     [TearDown]

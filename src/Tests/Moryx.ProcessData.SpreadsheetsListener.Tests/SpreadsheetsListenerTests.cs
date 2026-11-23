@@ -35,7 +35,7 @@ sealed class SpreadsheetsListenerTests
         _spreadsheetsListener.Initialize(_config);
     }
 
-    [Test, Ignore("Fails on Ubuntu, needs investigation")]
+    [Test]
     public void ShouldWriteMeasurementsToTwoFiles()
     {
         // Arrange
