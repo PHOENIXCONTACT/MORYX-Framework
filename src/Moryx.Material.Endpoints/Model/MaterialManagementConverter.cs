@@ -68,10 +68,10 @@ internal static class MaterialManagementConverter
         _ => PreAdviceDepartureReasonModel.Other
     };
 
-    public static IReadOnlyList<MaterialContainerModel> ToModels(this IEnumerable<IMaterialContainer> containers)
-        => containers.Select(c => c.ToModel()).ToArray();
+    public static IReadOnlyList<MaterialContainerModel> ToModels(this IEnumerable<IMaterialContainer> containers,
+        IResourceTypeTreeExtended typeTree) => containers.Select(c => c.ToModel(typeTree)).ToArray();
 
-    public static MaterialContainerModel ToModel(this IMaterialContainer container)
+    public static MaterialContainerModel ToModel(this IMaterialContainer container, IResourceTypeTreeExtended typeTree)
     {
         var containerModel = new MaterialContainerModel
         {
@@ -83,7 +83,7 @@ internal static class MaterialManagementConverter
             Quantity = container.Quantity,
             Unit = container.Unit,
             State = container.State.ToModel(),
-            Type = container.GetType().ToModel(),
+            Type = typeTree.GetNode(container).ResourceType.ToModel(),
         };
 
         if (container is IOrderLinkedMaterialContainer { LinkedOrder: not null } orderLinkedContainer)

@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Moryx.AbstractionLayer.Resources;
 using Moryx.Material.Endpoints.Model;
 using Moryx.Material.Facade;
 using Moryx.Material.Integrations.Orders;
@@ -26,9 +27,12 @@ namespace Moryx.Material.Endpoints;
 [ApiController]
 [Route("api/moryx/materials/")]
 [Produces("application/json")]
-public class MaterialManagementController(IMaterialManagement materialManagement, IOrderIntegration? orderIntegration, ILogger<MaterialManagementController> logger) : ControllerBase
+public class MaterialManagementController(IMaterialManagement materialManagement, IOrderIntegration? orderIntegration,
+    // TODO: Can I get rid of this dependency?
+    IResourceTypeTreeExtended resourceTypeTree, ILogger<MaterialManagementController> logger) : ControllerBase
 {
-    private readonly IMaterialManagement _materialManagement = materialManagement ?? throw new ArgumentNullException(nameof(materialManagement));
+    private readonly IMaterialManagement _materialManagement = materialManagement
+        ?? throw new ArgumentNullException(nameof(materialManagement));
     private readonly IOrderIntegration? _orderIntegration = orderIntegration;
 
     private static readonly JsonSerializerOptions _serializerOptions = new()
@@ -47,7 +51,7 @@ public class MaterialManagementController(IMaterialManagement materialManagement
     public ActionResult<MaterialContainerModel[]> GetContainers()
     {
         var containers = _materialManagement.GetContainers();
-        return Ok(containers.ToModels());
+        return Ok(containers.ToModels(resourceTypeTree));
     }
 
     [HttpGet("containers/types")]
