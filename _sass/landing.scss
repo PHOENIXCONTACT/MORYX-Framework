@@ -1,8 +1,35 @@
 @import "bootstrap/scss/functions";
 @import "bootstrap/scss/variables";
 
+// Height of the sticky navbar, so that jump targets are not hidden behind it
+$navbar-offset: 4.25rem;
+
+// Bootstrap's dark navbar dims links to 55 % white, which is too little contrast on the green
+.navbar[data-bs-theme="dark"] {
+  --bs-navbar-color: #{$white};
+  --bs-navbar-hover-color: #{rgba($white, .8)};
+  --bs-navbar-active-color: #{$white};
+}
+
+// Separate the external links from the section links
+.nav-external {
+  border-top: 1px solid rgba($white, .4);
+  margin-top: .25rem;
+  padding-top: .25rem;
+}
+
+@include media-breakpoint-up(lg) {
+  .nav-external {
+    border-top: 0;
+    margin-top: 0;
+    padding-top: 0;
+    border-left: 1px solid rgba($white, .4);
+    padding-left: .75rem;
+  }
+}
+
 .intro-header {
-  padding: 48px 0px;
+  padding: 3rem 0;
 }
 
 .headline {
@@ -16,32 +43,94 @@
   font-weight: 100;
 }
 
-.clipboard-button {
-  display: block;
-  padding: .5em;
-  line-height: 1;
-  color: var(--bs-body-color);
-  background-color: var(--bd-pre-bg);
-  border: 0;
-  border-radius: .25rem;
-  position: relative;
-  z-index: 3;
-  margin-top: 1.25rem;
-  margin-right: .75rem;
+// Sections
+
+.section {
+  padding: 4rem 0;
+  scroll-margin-top: $navbar-offset;
 }
 
-.clipboard-button-container {
-  position: relative;
-  float: right;
+.section-alt {
+  background-color: var(--bs-tertiary-bg);
 }
 
-@media (min-width: 768px) {
-  .clipboard-button-container {
-    display: block;
+.section-title {
+  font-weight: 500;
+  text-align: center;
+  margin-bottom: 2.5rem;
+
+  .bi {
+    color: $brand;
   }
 }
 
+.feature h3,
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 500;
+
+  .bi {
+    color: $brand;
+    margin-right: .25rem;
+  }
+}
+
+.card {
+  border-color: var(--bs-border-color-translucent);
+  box-shadow: $box-shadow-sm;
+}
+
+// Numbers
+
+.stats {
+  padding: 2rem 0;
+  border-top: 1px solid var(--bs-border-color);
+  margin-bottom: 0;
+}
+
+.stat-value {
+  font-size: 2.5rem;
+  font-weight: 500;
+  color: $brand;
+}
+
+.stat-label {
+  color: $body-secondary-color;
+}
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .5rem;
+
+  a {
+    text-decoration: none;
+  }
+}
+
+// Code blocks
+
+.clipboard-button {
+  display: block;
+  padding: .4rem;
+  line-height: 1;
+  color: var(--bs-body-color);
+  background-color: #f5f2f0;
+  border: 0;
+  border-radius: .25rem;
+}
+
+// Pinned to the top right corner, so it doesn't take width from the code lines
+.clipboard-button-container {
+  position: absolute;
+  top: .35rem;
+  right: .35rem;
+  z-index: 3;
+}
+
 .code-block {
+  position: relative;
   margin-right: 0;
   margin-left: 0;
   border: 1px solid var(--bs-border-color);
@@ -51,12 +140,111 @@
 
 .highlight {
   background-color: #f5f2f0;
+  border-radius: var(--bs-border-radius);
 }
 
-pre[class*="language-"] {
+// Prefixed with .code-block to win against prism.css, which is loaded after this file
+.code-block pre[class*="language-"] {
   margin: 0;
+  // The copy button only overlaps the first line
+  padding: .75rem 1rem;
 }
 
-.btn-gh {
-  color: $white;
+.code-block pre[class*="language-"],
+.code-block code[class*="language-"] {
+  font-size: .75rem;
+}
+
+// Training stages
+
+.stages {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem;
+  counter-reset: stage;
+
+  li {
+    position: relative;
+    padding: 0 0 1rem 2.75rem;
+    counter-increment: stage;
+
+    &::before {
+      content: counter(stage);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      background-color: $primary;
+      color: $white;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    // Line that connects the stages
+    &:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      left: 1rem;
+      top: 2.25rem;
+      bottom: .25rem;
+      border-left: 2px solid rgba($brand, .4);
+    }
+  }
+}
+
+.stage-name {
+  font-weight: 500;
+}
+
+.stage-range {
+  color: $body-secondary-color;
+  font-size: .875rem;
+  margin-left: .25rem;
+}
+
+.stage-topics {
+  display: block;
+  font-size: .875rem;
+  color: $body-secondary-color;
+}
+
+// Research
+
+.research-title {
+  color: $body-secondary-color;
+  margin-bottom: .75rem;
+}
+
+.research-meta {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+  font-size: .875rem;
+  color: $body-secondary-color;
+
+  .bi {
+    color: $brand;
+    margin-right: .25rem;
+  }
+}
+
+.contribution {
+  border-left: 3px solid $brand;
+  background-color: rgba($brand, .08);
+  border-radius: 0 var(--bs-border-radius) var(--bs-border-radius) 0;
+  padding: .75rem 1rem;
+
+  h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: .25rem;
+  }
+}
+
+.footer {
+  color: $body-secondary-color;
 }

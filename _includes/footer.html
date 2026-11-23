@@ -1,0 +1,14 @@
+<footer class="footer border-top py-4">
+  <div class="container-xxl d-flex flex-wrap justify-content-between gap-3">
+    <span>
+      &copy; {{ 'now' | date: '%Y' }} Phoenix Contact GmbH &amp; Co. KG &middot;
+      MORYX is licensed under the
+      <a href="{{ site.repository_url }}/blob/dev/LICENSE">Apache License 2.0</a>
+    </span>
+    <span class="d-flex flex-wrap gap-3">
+      {% for link in site.data.navigation.legal %}
+      <a href="{{ link.url }}">{{ link.title }}</a>
+      {% endfor %}
+    </span>
+  </div>
+</footer>

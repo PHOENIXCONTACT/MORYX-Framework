@@ -1,0 +1,33 @@
+# Research projects shown on the landing page.
+projects:
+- name: "Re²Pli"
+  title: "Renewable energies for the efficient operation of a press hardening line"
+  url: https://www.uni-paderborn.de/en/research-projects/re2pli
+  period: "04/2022 – 06/2027"
+  funding: "MWIDE NRW"
+  partners: "Paderborn University, BuL Werkzeugbau, MOESCHTER Group, MORYX Industry by Phoenix Contact"
+  description: >-
+    Re²Pli set out to build and validate a sustainable, efficient production line for press-hardened components
+    based on inductive heating. The project analyzes the energy and economic aspects of operating such a line
+    with renewable energies.
+  contribution: >-
+    MORYX controls the line and orchestrates its one-piece-flow production process. It connects two pick-and-place
+    robots, the inductive heating system and the hydraulic press, scheduling production based on the results of an
+    external optimization, so that the process follows the availability of renewable energies.
+  # TODO: URL of the public application repository
+  repo: ""
+- name: "IIP-Ecosphere"
+  title: "Next Level Ecosphere for Intelligent Industrial Production"
+  url: https://www.iip-ecosphere.de/
+  period: "04/2020 – 09/2023"
+  funding: "BMWK, AI innovation competition"
+  partners: "18 partners led by Leibniz University Hannover (L3S), 57 associated partners"
+  description: >-
+    IIP-Ecosphere built an AI ecosystem that connects industry, service providers, associations and research.
+    Its goal was a breakthrough in self-optimizing production that makes factories more productive, flexible,
+    robust and efficient.
+  contribution: >-
+    MORYX was applied by an electronics manufacturer in the consortium to control an autonomous test system for PCBs. 
+    It integrated a visual AI algorithm into the process control of the system including the communication of required 
+    actions to the intra-machine transport system and the communication of tracing data to the proprietary ERP system.
+  repo: ""

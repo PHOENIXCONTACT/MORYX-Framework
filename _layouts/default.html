@@ -1,12 +1,16 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ site.lang | default: 'en' }}">
 
   <head>
-
-      <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/main.css">
-      <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/prism.css">
-      <script src="{{ site.baseurl }}/assets/js/prism.js"></script>
-      <script src="{{ site.baseurl }}/assets/prism-languages/prism-csharp.js"></script>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      {% seo %}
+      <link rel="icon" type="image/png" href="{{ '/assets/images/moryx_small.png' | relative_url }}">
+      <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+      <link rel="stylesheet" href="{{ '/assets/css/prism.css' | relative_url }}">
+      <script src="{{ '/assets/js/prism.js' | relative_url }}"></script>
+      <script src="{{ '/assets/prism-languages/prism-csharp.js' | relative_url }}"></script>
+      <script src="{{ '/assets/js/bootstrap.bundle.min.js' | relative_url }}" defer></script>
   </head>
 
   <body class="layout">

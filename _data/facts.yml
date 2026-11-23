@@ -1,0 +1,10 @@
+# Adoption figures shown on the landing page. Only publish numbers we can back up.
+stats:
+- value: "100+"
+  label: known applications
+- value: "9+"
+  label: company locations
+- value: "4"
+  label: countries
+- value: "2020"
+  label: open source since
