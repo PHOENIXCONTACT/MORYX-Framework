@@ -38,15 +38,15 @@ public class OperationDataRestoreTests : OperationDataTestBase
         var operationData = await ReloadFromDatabase(databaseId, false);
         await operationData.Restore();
 
-        Assert.ThrowsAsync<InvalidOperationException>(() => operationData.Resume(), "There should be no restoring of Initial OperationData");
+        await Assert.ThrowsAsync<InvalidOperationException>(() => operationData.Resume(), "There should be no restoring of Initial OperationData");
 
         // Act - Assert: Creating
         await operationData.Assign();
-        Assert.ThrowsAsync<InvalidOperationException>(() => operationData.Resume(), "There should be no restoring of Creating OperationData");
+        await Assert.ThrowsAsync<InvalidOperationException>(() => operationData.Resume(), "There should be no restoring of Creating OperationData");
 
         // Act - Assert: CreationFailed
         await operationData.AssignCompleted(false);
-        Assert.ThrowsAsync<InvalidOperationException>(() => operationData.Resume(), "There should be no restoring of CreationFailed OperationData");
+        await Assert.ThrowsAsync<InvalidOperationException>(() => operationData.Resume(), "There should be no restoring of CreationFailed OperationData");
     }
 
     [Test(Description = "Restores a ready operation.")]

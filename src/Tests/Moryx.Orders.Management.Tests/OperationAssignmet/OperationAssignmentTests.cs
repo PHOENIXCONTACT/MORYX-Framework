@@ -108,7 +108,7 @@ public class OperationAssignmentTests
     [TestCase(true, true, true, true, false, false)]
     [TestCase(true, true, true, true, true, true)]
     [Description("If some component in the restore chain fails, the restore throws an exception")]
-    public void RestoreFailureIfChainFails(bool productResult, bool partsResult, bool recipeResult, bool documentResult, bool userResult, bool expCreation)
+    public async Task RestoreFailureIfChainFails(bool productResult, bool partsResult, bool recipeResult, bool documentResult, bool userResult, bool expCreation)
     {
         // Arrange
         _productAssignStepMock.Setup(p => p.RestoreStep(_operationDataMock.Object, It.IsAny<IOperationLogger>())).Returns(Task.FromResult(productResult));
@@ -120,7 +120,7 @@ public class OperationAssignmentTests
         // Act & Assert
         if (expCreation)
         {
-            Assert.DoesNotThrowAsync(async delegate
+            await Assert.DoesNotThrowAsync(async delegate
             {
                 await _assignment.Restore(_operationDataMock.Object);
                 _productAssignStepMock.Verify(p => p.RestoreStep(_operationDataMock.Object, It.IsAny<IOperationLogger>()), Times.Once);
@@ -132,13 +132,13 @@ public class OperationAssignmentTests
         }
         else
         {
-            Assert.ThrowsAsync<InvalidOperationException>(async () =>
+            await Assert.ThrowsAsync<InvalidOperationException>(async () =>
                 await _assignment.Restore(_operationDataMock.Object));
         }
     }
 
     [Test(Description = "Restore should load assign the product again")]
-    public void RestoreShouldLoadProductAndRecipe()
+    public async Task RestoreShouldLoadProductAndRecipe()
     {
         // Arrange
         _productAssignStepMock.Setup(p => p.RestoreStep(_operationDataMock.Object, It.IsAny<IOperationLogger>())).Returns(Task.FromResult(true));
@@ -148,7 +148,7 @@ public class OperationAssignmentTests
         _userAssignStepMock.Setup(d => d.RestoreStep(_operationDataMock.Object, It.IsAny<IOperationLogger>())).Returns(Task.FromResult(true));
 
         // Act
-        Assert.DoesNotThrowAsync(async delegate
+        await Assert.DoesNotThrowAsync(async delegate
         {
             await _assignment.Restore(_operationDataMock.Object);
             _productAssignStepMock.Verify(p => p.RestoreStep(_operationDataMock.Object, It.IsAny<IOperationLogger>()), Times.Once);

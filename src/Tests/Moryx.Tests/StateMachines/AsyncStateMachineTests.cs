@@ -17,7 +17,7 @@ public class AsyncStateMachineTests
         var context = await CreateContext();
 
         // Assert
-        Assert.DoesNotThrowAsync(async delegate
+        await Assert.DoesNotThrowAsync(async delegate
         {
             // Act
             await context.State.InitialAsync();
@@ -85,7 +85,7 @@ public class AsyncStateMachineTests
         // Assert
         using var _ = Assert.EnterMultipleScope();
         Assert.That(context.State.Key == bkey);
-        Assert.ThrowsAsync<InvalidOperationException>(() => context.State.InitialAsync());
+        await Assert.ThrowsAsync<InvalidOperationException>(() => context.State.InitialAsync());
     }
 
     [Test(Description = "Brings the StateMachine to B and force to A without exit the current or enter the forced state.")]
@@ -99,7 +99,7 @@ public class AsyncStateMachineTests
         await StateMachine.ForceAsync(context.State, MyStateBase.StateA);
 
         // Assert
-        Assert.DoesNotThrowAsync(() => context.State.AtoBAsync());
+        await Assert.DoesNotThrowAsync(() => context.State.AtoBAsync());
     }
 
     [Test(Description = "Brings the StateMachine to B and force to A with exiting the current state.")]

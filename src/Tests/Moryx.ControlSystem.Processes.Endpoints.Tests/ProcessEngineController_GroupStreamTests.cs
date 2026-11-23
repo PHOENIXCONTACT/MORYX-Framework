@@ -19,7 +19,7 @@ namespace Moryx.ControlSystem.Processes.Endpoints.Tests;
 public class ProcessEngineControllerGroupStreamTests
 {
     [Test]
-    public void GroupStream_ShouldNotThrow_WhenGroupIsNotProcessHolderGroup()
+    public async Task GroupStream_ShouldNotThrow_WhenGroupIsNotProcessHolderGroup()
     {
         // Arrange: Return a group that is not a concrete ProcessHolderGroup
         var resourceManagement = new Mock<IResourceManagement>();
@@ -57,6 +57,6 @@ public class ProcessEngineControllerGroupStreamTests
         // Act & Assert: The stream must not throw an exception
         using var cts = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
 
-        Assert.DoesNotThrowAsync(() => controller.GroupStream(cts.Token));
+        await Assert.DoesNotThrowAsync(() => controller.GroupStream(cts.Token));
     }  
 }

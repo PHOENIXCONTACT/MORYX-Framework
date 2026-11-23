@@ -637,7 +637,7 @@ public class ProductStorageTests
         var loaded = (WatchFaceType)await _storage.LoadTypeAsync(savedId);
 
         // Act & Assert
-        Assert.DoesNotThrowAsync(() => _storage.SaveTypeAsync(loaded), "Save should not fail with null string property");
+        await Assert.DoesNotThrowAsync(() => _storage.SaveTypeAsync(loaded), "Save should not fail with null string property");
     }
 
     [Test(Description = "Loads recipes by the classification flags enum")]
@@ -915,7 +915,7 @@ public class ProductStorageTests
             var newIdentity = crossTypeIdentifier
                 ? new ProductIdentity("3214711", 7)
                 : new ProductIdentity("321" + WatchMaterial, 5);
-            var ex = Assert.ThrowsAsync<IdentityConflictException>(async () =>
+            var ex = await Assert.ThrowsAsync<IdentityConflictException>(async () =>
             {
                 duplicate = (WatchType)await productMgr.DuplicateType(watch, newIdentity);
             });
@@ -923,7 +923,7 @@ public class ProductStorageTests
             return;
         }
 
-        Assert.DoesNotThrowAsync(async () =>
+        await Assert.DoesNotThrowAsync(async () =>
         {
             duplicate = (WatchType)await productMgr.DuplicateType(watch,
                 new ProductIdentity("654" + WatchMaterial, 1));
@@ -1204,7 +1204,7 @@ public class ProductStorageTests
         CompositeProductType loaded = null;
 
         // Assert
-        Assert.DoesNotThrowAsync(async () =>
+        await Assert.DoesNotThrowAsync(async () =>
         {
             loaded = (CompositeProductType)await _storage.LoadTypeAsync(id);
         });

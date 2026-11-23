@@ -65,7 +65,7 @@ public class ManagedMqttClientTests
     [Test]
     public async Task StartAsync_NullOptions_ThrowsArgumentNullException()
     {
-        Assert.ThrowsAsync<ArgumentNullException>(async () =>
+        await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             await _managedClient.StartAsync(null, CancellationToken.None), "StartAsync should throw ArgumentNullException when options are null.");
     }
 
@@ -189,7 +189,7 @@ public class ManagedMqttClientTests
         var options = new MqttClientOptions();
         _mockMqttClient.Setup(c => c.Options).Returns(options);
 
-        Assert.ThrowsAsync<ArgumentNullException>(async () =>
+        await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             await _managedClient.EnqueueAsync(null, CancellationToken.None),
             "EnqueueAsync should throw ArgumentNullException when the message is null.");
     }
@@ -199,7 +199,7 @@ public class ManagedMqttClientTests
     {
         var message = new MqttApplicationMessage { Topic = "test/topic" };
 
-        Assert.ThrowsAsync<InvalidOperationException>(async () =>
+        await Assert.ThrowsAsync<InvalidOperationException>(async () =>
             await _managedClient.EnqueueAsync(message, CancellationToken.None),
             "EnqueueAsync should throw InvalidOperationException when called before StartAsync.");
     }
@@ -211,7 +211,7 @@ public class ManagedMqttClientTests
         _mockMqttClient.Setup(c => c.Options).Returns(options);
         var message = new MqttApplicationMessageBuilder().WithTopic("test/topic").WithPayload([1, 2, 3]).Build();
 
-        Assert.DoesNotThrowAsync(async () => await _managedClient.EnqueueAsync(message, CancellationToken.None),
+        await Assert.DoesNotThrowAsync(async () => await _managedClient.EnqueueAsync(message, CancellationToken.None),
             "EnqueueAsync should not throw when enqueuing a valid message after StartAsync.");
     }
 
@@ -251,7 +251,7 @@ public class ManagedMqttClientTests
     {
         _mockMqttClient.Setup(c => c.IsConnected).Returns(false);
 
-        Assert.ThrowsAsync<InvalidOperationException>(async () =>
+        await Assert.ThrowsAsync<InvalidOperationException>(async () =>
             await _managedClient.PingAsync(CancellationToken.None),
             "PingAsync should throw InvalidOperationException when the client is not connected.");
     }
@@ -278,7 +278,7 @@ public class ManagedMqttClientTests
         var options = new MqttClientOptions();
         _mockMqttClient.Setup(c => c.Options).Returns(options);
 
-        Assert.ThrowsAsync<ArgumentNullException>(async () =>
+        await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             await _managedClient.SubscribeAsync(null, CancellationToken.None),
             "SubscribeAsync should throw ArgumentNullException when topic filters are null.");
     }
@@ -291,7 +291,7 @@ public class ManagedMqttClientTests
             new() { Topic = "test/topic" }
         };
 
-        Assert.ThrowsAsync<InvalidOperationException>(async () =>
+        await Assert.ThrowsAsync<InvalidOperationException>(async () =>
             await _managedClient.SubscribeAsync(filters, CancellationToken.None),
             "SubscribeAsync should throw InvalidOperationException when called before StartAsync.");
     }
@@ -345,7 +345,7 @@ public class ManagedMqttClientTests
         var options = new MqttClientOptions();
         _mockMqttClient.Setup(c => c.Options).Returns(options);
 
-        Assert.ThrowsAsync<ArgumentNullException>(async () =>
+        await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             await _managedClient.UnsubscribeAsync(null, CancellationToken.None),
             "UnsubscribeAsync should throw ArgumentNullException when topics are null.");
     }
@@ -355,7 +355,7 @@ public class ManagedMqttClientTests
     {
         var topics = new List<string> { "test/topic" };
 
-        Assert.ThrowsAsync<InvalidOperationException>(async () =>
+        await Assert.ThrowsAsync<InvalidOperationException>(async () =>
             await _managedClient.UnsubscribeAsync(topics, CancellationToken.None),
             "UnsubscribeAsync should throw InvalidOperationException when called before StartAsync.");
     }

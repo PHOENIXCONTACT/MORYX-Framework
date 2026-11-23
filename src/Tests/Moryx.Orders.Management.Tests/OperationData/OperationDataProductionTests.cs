@@ -67,7 +67,7 @@ public class OperationDataProductionTests : OperationDataTestBase
         }
         else
         {
-            Assert.ThrowsAsync<InvalidOperationException>(() => operationData.Adjust(10, User));
+            await Assert.ThrowsAsync<InvalidOperationException>(() => operationData.Adjust(10, User));
         }
     }
 
@@ -78,7 +78,7 @@ public class OperationDataProductionTests : OperationDataTestBase
         var operation = await GetReadyOperation(10, false, 10, 10);
 
         // Act / Assert
-        Assert.ThrowsAsync<InvalidOperationException>(() => operation.Adjust(-1, User));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => operation.Adjust(-1, User));
     }
 
     [Test(Description = "Adjust an operation in state " + nameof(InterruptedState) + "with an amount less than 0 is not allowed.")]
@@ -88,7 +88,7 @@ public class OperationDataProductionTests : OperationDataTestBase
         var operation = await GetInterruptedOperation(10, false, 10, 10);
 
         // Act / Assert
-        Assert.ThrowsAsync<InvalidOperationException>(() => operation.Adjust(-1, User));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => operation.Adjust(-1, User));
     }
 
     [Test(Description = "Adjust an operation in state " + nameof(AmountReachedState) + "with an amount less than 0 is not allowed.")]
@@ -98,7 +98,7 @@ public class OperationDataProductionTests : OperationDataTestBase
         var operation = await GetAmountReachedOperation(10, false, 10, 10);
 
         // Act / Assert
-        Assert.ThrowsAsync<InvalidOperationException>(() => operation.Adjust(-1, User));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => operation.Adjust(-1, User));
     }
 
     [Test(Description = "Adjust an operation in state " + nameof(CompletedState) + "with an amount less than 0 is not allowed.")]
@@ -108,7 +108,7 @@ public class OperationDataProductionTests : OperationDataTestBase
         var operation = await GetAmountReachedOperation(10, false, 10, 10);
 
         // Act / Assert
-        Assert.ThrowsAsync<InvalidOperationException>(() => operation.Adjust(-1, User));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => operation.Adjust(-1, User));
     }
 
     [Test(Description = "If an operation is running or interrupting the target " +
@@ -317,7 +317,7 @@ public class OperationDataProductionTests : OperationDataTestBase
 
         // Act - Assert
         Assert.That(operationData.State.CanBegin, Is.False);
-        Assert.ThrowsAsync<InvalidOperationException>(() => operationData.Adjust(1, User));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => operationData.Adjust(1, User));
     }
 
     [Test(Description = "Will simulate reaching the operation amount with only success parts and do not replace scrap.")]
@@ -476,6 +476,6 @@ public class OperationDataProductionTests : OperationDataTestBase
 
         // Assert
         Assert.That(operationData.State.CanInterrupt, Is.False);
-        Assert.ThrowsAsync<InvalidOperationException>(() => operationData.Interrupt(User));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => operationData.Interrupt(User));
     }
 }

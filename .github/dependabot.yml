@@ -18,6 +18,17 @@ updates:
         update-types: # The patch value of the version is used as major for this package.
           - "version-update:semver-major" # OPC Major
           - "version-update:semver-minor" # OPC Minor
+      # .NET 11 is skipped, we will upgrade with .NET 12 (LTS)
+      - dependency-name: "Microsoft.AspNetCore.*"
+        versions: [">= 11, < 12"]
+      - dependency-name: "Microsoft.EntityFrameworkCore*"
+        versions: [">= 11, < 12"]
+      - dependency-name: "Microsoft.Extensions.*"
+        versions: [">= 11, < 12"]
+      - dependency-name: "Microsoft.SourceLink.*"
+        versions: [">= 11, < 12"]
+      - dependency-name: "System.IO.Ports"
+        versions: [">= 11, < 12"]
     groups:
       major-updates:
         update-types: ["major"]

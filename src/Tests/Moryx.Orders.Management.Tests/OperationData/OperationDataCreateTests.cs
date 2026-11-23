@@ -34,7 +34,7 @@ public class OperationDataCreateTests : OperationDataTestBase
 
         // Act - Assert
         Assert.That(operationData.State.IsFailed);
-        Assert.DoesNotThrowAsync(operationData.Assign);
+        await Assert.DoesNotThrowAsync(operationData.Assign);
         await operationData.AssignCompleted(true);
         Assert.DoesNotThrow(() => operationData.Adjust(10, new User()));
     }
