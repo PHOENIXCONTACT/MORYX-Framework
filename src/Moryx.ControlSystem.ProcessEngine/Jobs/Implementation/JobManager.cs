@@ -78,7 +78,7 @@ internal class JobManager : IJobManager, IDisposable
     {
         _running = false;
         // wait until all events are processed 
-        while (_taskQueue.PendingElements > 0)
+        while (_taskQueue?.PendingElements > 0)
         {
             Thread.Sleep(1);
         }
@@ -88,9 +88,9 @@ internal class JobManager : IJobManager, IDisposable
     public void Dispose()
     {
         JobList.StateChanged -= OnJobStateChanged;
-        _scheduler.SlotAvailable -= OnSlotsAvailable;
-        _scheduler.Scheduled -= OnJobScheduled;
-        _scheduler.Suspended -= OnJobSuspended;
+        _scheduler?.SlotAvailable -= OnSlotsAvailable;
+        _scheduler?.Scheduled -= OnJobScheduled;
+        _scheduler?.Suspended -= OnJobSuspended;
     }
 
     private void ReloadJobs()
