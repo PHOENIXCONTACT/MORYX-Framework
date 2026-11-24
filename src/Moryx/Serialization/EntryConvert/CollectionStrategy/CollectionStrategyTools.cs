@@ -20,13 +20,12 @@ internal static class CollectionStrategyTools
     public static Entry CreateSub(object item, int index, ICustomSerialization customSerialization, Func<object, Entry> encodeItem = null)
     {
         var subEntry = EncodeItem(item, customSerialization, encodeItem);
-        // Encoders may encode null items, which keep the name assigned by the encoder
         if (item != null)
         {
-            // Items without encoder are named by their display name or ToString instead of their type name
-            if (encodeItem is null || subEntry.DisplayName is null)
+            // Items with encoder are already named by the encoder or by EntryConvert with the same item name
+            if (encodeItem is null)
             {
-                subEntry.DisplayName = GetEntryName(item);
+                subEntry.DisplayName = EntryConvert.GetItemName(item);
             }
             subEntry.Description ??= GetEntryDescription(item);
         }
@@ -37,27 +36,6 @@ internal static class CollectionStrategyTools
 
     public static Entry EncodeItem(object item, ICustomSerialization customSerialization, Func<object, Entry> encodeItem) =>
         encodeItem != null ? encodeItem(item) : EntryConvert.EncodeObject(item, customSerialization);
-
-    private static string GetEntryName(object item)
-    {
-        var itemType = item.GetType();
-
-        // Value type do not have names
-        if (EntryConvert.ValueOrStringType(itemType))
-        {
-            return itemType.Name;
-        }
-
-        // Check for display name declaration
-        var displayName = itemType.GetDisplayName();
-        if (!string.IsNullOrWhiteSpace(displayName))
-        {
-            return displayName;
-        }
-
-        // Check if item declares its own version of ToString()
-        return itemType.GetMethod(nameof(ToString))!.DeclaringType == typeof(object) ? itemType.Name : item.ToString();
-    }
 
     private static string GetEntryDescription(object item) => item.GetType().GetDescription();
 

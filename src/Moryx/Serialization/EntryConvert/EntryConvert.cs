@@ -502,7 +502,17 @@ public static partial class EntryConvert
         ICustomAttributeProvider attributeProvider, ICustomSerialization customSerialization, object instance)
     {
         var context = CreateItemContext(memberType, attributeProvider, customSerialization, instance);
-        return item => EncodeWith(itemEncoder, context, item, CreateFromType(context.MemberType, customSerialization));
+        return item =>
+        {
+            var metadata = CreateFromType(context.MemberType, customSerialization);
+            // Items not named by the encoder are named by the item itself instead of the item type
+            if (item is not null)
+            {
+                metadata.DisplayName = GetItemName(item);
+            }
+
+            return EncodeWith(itemEncoder, context, item, metadata);
+        };
     }
 
     private static EntryEncoderContext CreateItemContext(Type memberType, ICustomAttributeProvider attributeProvider,
@@ -544,6 +554,30 @@ public static partial class EntryConvert
             Description = objectType.GetDescription()
         };
         return entry;
+    }
+
+    /// <summary>
+    /// Get the name of a collection item from its display name, its own ToString() or its type name
+    /// </summary>
+    internal static string GetItemName(object item)
+    {
+        var itemType = item.GetType();
+
+        // Value type do not have names
+        if (ValueOrStringType(itemType))
+        {
+            return itemType.Name;
+        }
+
+        // Check for display name declaration
+        var displayName = itemType.GetDisplayName();
+        if (!string.IsNullOrWhiteSpace(displayName))
+        {
+            return displayName;
+        }
+
+        // Check if item declares its own version of ToString()
+        return itemType.GetMethod(nameof(ToString))!.DeclaringType == typeof(object) ? itemType.Name : item.ToString();
     }
 
     /// <summary>
