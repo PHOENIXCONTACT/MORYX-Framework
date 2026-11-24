@@ -26,6 +26,7 @@ public abstract class PossibleValuesAttribute : Attribute
     /// </summary>
     public abstract bool UpdateFromPredecessor { get; }
 
+    // TODO: Remove both GetValues in next major MORYX release and make GetPossibleValues abstract
     /// <summary>
     /// Extract possible values from local or global DI registration
     /// </summary>
@@ -39,6 +40,21 @@ public abstract class PossibleValuesAttribute : Attribute
     {
         yield break;
     }
+
+    /// <summary>
+    /// Extract possible values with display name and description from local or global DI registration.
+    /// The keys must match <see cref="GetValues(IContainer, IServiceProvider)"/>.
+    /// </summary>
+    public virtual IEnumerable<EntryPossible> GetPossibleValues(IContainer localContainer, IServiceProvider serviceProvider) =>
+        EntryPossible.FromStrings(GetValues(localContainer, serviceProvider));
+
+    /// <summary>
+    /// Extract possible values with display name and description from the given <paramref name="context"/>.
+    /// The keys must match <see cref="GetValues(PossibleValuesContext)"/>.
+    /// </summary>
+    /// <param name="context">context of the possible value</param>
+    public virtual IEnumerable<EntryPossible> GetPossibleValues(PossibleValuesContext context = null) =>
+        EntryPossible.FromStrings(GetValues(context));
 
     /// <summary>
     /// Parse value from string using local or global DI container

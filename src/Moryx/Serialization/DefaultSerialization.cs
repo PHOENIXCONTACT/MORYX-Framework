@@ -98,7 +98,7 @@ public class DefaultSerialization : ICustomSerialization
 
         if (isCollection)
         {
-            return EntryPossible.FromStrings([memberType.Name]);
+            return [memberType.ToEntryPossible(memberType.Name)];
         }
 
         var allowedValuesAttribute = attributeProvider.GetCustomAttribute<AllowedValuesAttribute>();

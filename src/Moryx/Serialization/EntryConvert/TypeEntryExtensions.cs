@@ -13,9 +13,14 @@ public static class TypeEntryExtensions
     /// <summary>
     /// Creates an <see cref="EntryPossible"/> from the given <paramref name="type"/>
     /// </summary>
-    public static EntryPossible ToEntryPossible(this Type type) => new()
+    public static EntryPossible ToEntryPossible(this Type type) => type.ToEntryPossible(type.FullName);
+
+    /// <summary>
+    /// Creates an <see cref="EntryPossible"/> from the given <paramref name="type"/> with a custom <paramref name="key"/>
+    /// </summary>
+    public static EntryPossible ToEntryPossible(this Type type, string key) => new()
     {
-        Key = type.FullName,
+        Key = key,
         DisplayName = type.GetDisplayName() ?? type.Name,
         Description = type.GetDescription(),
     };

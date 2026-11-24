@@ -44,7 +44,13 @@ public class PossibleTypesAttribute : PossibleValuesAttribute
 
     /// <inheritdoc />
     public override IEnumerable<string> GetValues(IContainer localContainer, IServiceProvider serviceProvider)
-        => _types.Select(t => UseFullname ? t.FullName : t.Name);
+        => _types.Select(TypeKey);
+
+    /// <inheritdoc />
+    public override IEnumerable<EntryPossible> GetPossibleValues(IContainer localContainer, IServiceProvider serviceProvider)
+        => _types.Select(t => t.ToEntryPossible(TypeKey(t)));
+
+    private string TypeKey(Type type) => UseFullname ? type.FullName : type.Name;
 
     /// <inheritdoc />
     public override object Parse(IContainer container, IServiceProvider serviceProvider, string value)

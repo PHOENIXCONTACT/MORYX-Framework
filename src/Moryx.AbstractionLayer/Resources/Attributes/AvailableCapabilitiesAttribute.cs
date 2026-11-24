@@ -45,12 +45,16 @@ public class AvailableCapabilitiesAttribute : PossibleValuesAttribute
         _capabilitiesFilter = baseType.IsAssignableFrom;
     }
 
-    /// <summary>
-    /// Names of available capabilities
-    /// </summary>
+    /// <inheritdoc />
     public override IEnumerable<string> GetValues(IContainer pluginContainer, IServiceProvider serviceProvider)
     {
         return GetCapabilities().Keys;
+    }
+
+    /// <inheritdoc />
+    public override IEnumerable<EntryPossible> GetPossibleValues(IContainer localContainer, IServiceProvider serviceProvider)
+    {
+        return GetCapabilities().Select(pair => pair.Value.ToEntryPossible(pair.Key));
     }
 
     /// <summary>
