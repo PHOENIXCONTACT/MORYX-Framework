@@ -83,3 +83,30 @@ public class ConfiguredComponentB : IConfiguredComponent
     {
     }
 }
+
+public interface IBareComponent
+{
+    string GetName();
+}
+
+[Plugin(LifeCycle.Singleton, typeof(IBareComponent), Name = PluginName)]
+public class BareComponent : IBareComponent
+{
+    public ComponentConfig Config { get; set; }
+
+    public BareComponent(ComponentConfig config)
+    {
+        Config = config;
+    }
+
+    internal const string PluginName = "BareComponent";
+
+    public string GetName() => PluginName;
+}
+
+[PluginFactory(typeof(IConfigBasedComponentSelector))]
+public interface IBareComponentFactory
+{
+    Task<IBareComponent> Create(ComponentConfig config);
+    void Destroy(IBareComponent instance);
+}

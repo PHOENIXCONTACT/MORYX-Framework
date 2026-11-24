@@ -112,7 +112,7 @@ internal sealed class ConfigBasedComponentSelector : DefaultTypedFactoryComponen
                 " nor " + nameof(IAsyncConfiguredInitializable<>) + ". Ensure the component lifecycle is properly initialized.",
                 targetComponentType.FullName, configType.FullName);
 
-            return instance;
+            return isAsync ? ToTypedTask(targetComponentType, Task.FromResult(instance)) : instance;
         });
 
         return createFunc;
