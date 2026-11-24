@@ -81,6 +81,22 @@ public class CastleContainerTests
         Assert.That(() => factory.Create(config), Throws.InstanceOf<ArgumentException>());
     }
 
+    [Test]
+    public async Task Create_ForAsyncConfigBasedFactoryComponentWithoutInitializable_ReturnsInstance()
+    {
+        // Arrange
+        var factory = _container.Resolve<IBareComponentFactory>();
+        var config = new ComponentConfig { PluginName = BareComponent.PluginName };
+
+        // Act
+        var instance = await factory.Create(config);
+
+        // Assert
+        Assert.That(instance, Is.Not.Null);
+        Assert.That(((BareComponent)instance).Config, Is.Not.Null);
+        Assert.That(instance.GetName(), Is.EqualTo(BareComponent.PluginName));
+    }
+
     [TearDown]
     public void Destroy()
     {
