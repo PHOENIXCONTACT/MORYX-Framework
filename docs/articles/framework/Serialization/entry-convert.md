@@ -213,12 +213,12 @@ public class FooSerialization : DefaultSerialization
         return base.GetProperties(sourceType).Where(property => property.Name != nameof(Foo.Id));
     }
 
-    public override string[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider)
+    public override EntryPossible[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider)
     {
-        if (memberType.Name == nameof(DerivedFoo.SomeName))
-            return new [] { "Alice", "Bob" };
+        if (attributeProvider is PropertyInfo { Name: nameof(DerivedFoo.SomeName) })
+            return EntryPossible.FromStrings(["Alice", "Bob"]);
 
-        return base.PossibleValues(property);
+        return base.PossibleValues(memberType, attributeProvider);
     }
 }
 ```

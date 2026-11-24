@@ -34,48 +34,41 @@ It is not supported to use `AllowedValues` and `DeniedValues` in combination. `A
 
 ## PossibleValuesAttribute
 
-This attribute is abstract and can not be used directly but must be inherited to implement a certain behavior. This attribute is only used for user interaction purposes and is not validated by neither the configuration management nor any other component of the platform. Values modified code or the json will still be loaded as valid and passed on to the module! Its abstract members are described below.
+This attribute is abstract and can not be used directly but must be inherited to implement a certain behavior. This attribute is only used for user interaction purposes and is not validated by neither the configuration management nor any other component of the platform. Values modified code or the json will still be loaded as valid and passed on to the module! All members are documented in [PossibleValuesAttribute](/src/Moryx/Serialization/PossibleValues/PossibleValuesAttribute.cs).
+
+### Display names and descriptions
+
+The values of `GetValues` are only keys, e.g. type names. They are used to create prototypes and are passed to `Parse`, so they must stay stable. To show a more readable text in the UI, override `GetPossibleValues` and return an `EntryPossible` with a display name and description for each key. The default implementation uses the values of `GetValues` as key and display name, so overriding it is optional.
 
 ```cs
-/// <summary>
-/// Base attribute for all attributes that support multiple values
-/// </summary>
-[AttributeUsage(AttributeTargets.Property)]
-public abstract class PossibleValuesAttribute : Attribute
+public class PossibleColorsAttribute : PossibleValuesAttribute
 {
-    /// <summary>
-    /// A flag indicating that the attribute requires a non-null <see cref="PossibleValuesContext"/>
-    /// </summary>
-    public bool RequiresPossibleValuesContext { get; set; }
+    public override bool OverridesConversion => false;
 
-    /// <summary>
-    /// Flag if this member implements its own string to value conversion. If this is set to false the runtime
-    /// will try to convert the the value with a predefined set of conversions for native types. This must be overridden
-    /// whenever your string represents and object.
-    /// </summary>
-    public abstract bool OverridesConversion { get; }
+    public override bool UpdateFromPredecessor => false;
 
-    /// <summary>
-    /// Flag if new values shall be updated from the old value. This is used only for object values which support multiple
-    /// types. In this case the runtime will try to copy as many values from the old to the new object.
-    /// </summary>
-    public abstract bool UpdateFromPredecessor { get; }
+    public override IEnumerable<string> GetValues(IContainer localContainer, IServiceProvider serviceProvider)
+        => ["Red", "Green"];
 
-    /// <summary>
-    /// All possible values for this member represented as strings. The given containers might be null
-    /// and can be used to resolve possible values
-    /// </summary>
-    public virtual IEnumerable<string> GetValues(IContainer container, IServiceProvider serviceProvider);
-
-    /// <summary>
-    /// String to value conversion. Must be overriden if <see cref="OverridesConversion"/> is set to true"/>
-    /// </summary>
-    public virtual object Parse(IContainer container, IServiceProvider serviceProvider), string value)
+    public override IEnumerable<EntryPossible> GetPossibleValues(IContainer localContainer, IServiceProvider serviceProvider)
     {
-       return value;
+        yield return new EntryPossible { Key = "Red", DisplayName = "Stop", Description = "Machine must stop" };
+        yield return new EntryPossible { Key = "Green", DisplayName = "Go", Description = "Machine may run" };
     }
 }
 ```
+
+The keys of `GetPossibleValues` must match the values of `GetValues`. If the attribute uses `RequiresPossibleValuesContext`, override the overload with `PossibleValuesContext` instead.
+
+For attributes that list types, the extension `Type.ToEntryPossible(key)` creates the entry from the `DisplayAttribute`/`DisplayNameAttribute` and `DescriptionAttribute` of the type. The built-in `PossibleTypesAttribute`, `PluginConfigsAttribute`, `AvailableCapabilitiesAttribute` and `ResourceTypesAttribute` already do this.
+
+```cs
+public override IEnumerable<EntryPossible> GetPossibleValues(IContainer localContainer, IServiceProvider serviceProvider)
+    => GetTypes().Select(type => type.ToEntryPossible(type.Name));
+```
+
+> [!NOTE]
+> `GetValues` will be removed in the next major version and `GetPossibleValues` will become the only method to provide possible values.
 
 ## Implementations
 
@@ -109,7 +102,7 @@ public string ActiveStrategy { get; set; }
 
 ### PluginConfigsAttribute
 
-Similar to the `PluginNameSelectorAttribute` this attribute provides a list of component configurations. These configurations are expected by the implementations of a certain interface and allow each implementation to define its own configuration. This does require the implementation to be decorated with the attribute `[ExpectedConfig(typeof(MyConfig))]`. This attribute can be used on single properties or collections. Therefor you can either select the type of a new entry or change an existing entry's type. All configs will be presented as a list of their respective type names and converted into an object if a type name is selected. When decorating a config member with this attribute the configs base type can be excluded if it is abstract. Always make sure to specify the interface type and not the base config type!
+Similar to the `PluginNameSelectorAttribute` this attribute provides a list of component configurations. These configurations are expected by the implementations of a certain interface and allow each implementation to define its own configuration. This does require the implementation to be decorated with the attribute `[ExpectedConfig(typeof(MyConfig))]`. This attribute can be used on single properties or collections. Therefor you can either select the type of a new entry or change an existing entry's type. All configs will be presented as a list of their respective type names and converted into an object if a type name is selected. If the config type is decorated with a `DisplayAttribute`/`DisplayNameAttribute` or `DescriptionAttribute`, the UI shows these instead of the type name. When decorating a config member with this attribute the configs base type can be excluded if it is abstract. Always make sure to specify the interface type and not the base config type!
 
 ```cs
 [DataMember]
@@ -123,7 +116,7 @@ public List<PluginConfig> ActivePlugins { get; set; }
 
 ### PossibleTypesAttribute
 
-This attribute generates possible values from given or derived types found at runtime, either as simple type name or full name. This attribute is useful when creating modules or components, that can be extended with derived types later.
+This attribute generates possible values from given or derived types found at runtime, either as simple type name or full name. This attribute is useful when creating modules or components, that can be extended with derived types later. Like for `PluginConfigsAttribute`, the UI shows the display name and description of the type if available.
 
 Properties of type `System.Type` are serialized by the built-in `TypeEntryEncoder`. Without `PossibleTypesAttribute` the value is read-only; adding the attribute makes the property editable and restricts selection to the specified types:
 
