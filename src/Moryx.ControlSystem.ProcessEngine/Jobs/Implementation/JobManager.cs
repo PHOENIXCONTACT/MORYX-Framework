@@ -39,7 +39,7 @@ internal class JobManager : IJobManager, IDisposable
     /// <summary>
     /// Indicator if job processing is active
     /// </summary>
-    private bool _running;
+    private volatile bool _running;
 
     /// <summary>
     /// Thread that works on the task queue
@@ -287,7 +287,7 @@ internal class JobManager : IJobManager, IDisposable
             }
             catch (Exception ex)
             {
-                Logger.Log(LogLevel.Error, ex, "Failed to forward completed job to scheduler");
+                Logger.LogError(ex, "Failed to forward completed job {Id} to scheduler", completedJob.Id);
             }
         }
 

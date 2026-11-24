@@ -383,18 +383,22 @@ public class JobListTests
         _jobList.Config = new ModuleConfig { JobListStopTimeout = 5 };
         var completed = _jobList.Get(3);
         var completedMock = (Mock<IJobData>)((IMocked)completed).Mock;
-        completedMock.SetupGet(j => j.Classification).Returns(JobClassification.Completed);
+        var classificationAccessedTcs = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        completedMock.SetupGet(j => j.Classification).Returns(() =>
+        {
+            classificationAccessedTcs.TrySetResult();
+            return JobClassification.Completed;
+        });
 
         // Act
         var stopTask = Task.Run(_jobList.Stop);
-        await Task.Delay(200);
+        await classificationAccessedTcs.Task;
         var stoppedBeforeRemoval = stopTask.IsCompleted;
         _jobList.Remove(completed, StorageCallback);
-        var finished = await Task.WhenAny(stopTask, Task.Delay(2000));
+        await stopTask.WaitAsync(TimeSpan.FromSeconds(2));
 
         // Assert
         Assert.That(stoppedBeforeRemoval, Is.False, "Stop must wait for the removal of completed jobs");
-        Assert.That(finished, Is.EqualTo(stopTask), "Stop must return after the completed job was removed");
         Assert.That(_storedJobs.Select(j => j.Id), Is.EqualTo(new long[] { 3, 4 }));
     }
 
