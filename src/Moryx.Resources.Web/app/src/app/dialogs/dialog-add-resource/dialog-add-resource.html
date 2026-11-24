@@ -66,7 +66,8 @@
         @if (resourceType()?.constructors?.length &&
              selectedCtor()?.parameters &&
              selectedCtor()?.parameters?.subEntries?.length) {
-          <navigable-entry-editor [entry]="selectedCtor()?.parameters!" [disabled]="false"></navigable-entry-editor>
+          <navigable-entry-editor [entry]="selectedCtor()?.parameters!" (entryChange)="onParametersChange($event)"
+            [disabled]="false" />
         } @else {
           <div class="done-template">
             <mat-progress-spinner [mode]="'determinate'" [value]="100"></mat-progress-spinner>

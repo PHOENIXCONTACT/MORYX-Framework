@@ -14,7 +14,7 @@ import { ResourceConstructionParameters } from '@app/models/ResourceConstruction
 import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { CommonModule } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MethodEntry, NavigableEntryEditor } from '@moryx/ngx-web-framework/entry-editor';
+import { Entry, MethodEntry, NavigableEntryEditor } from '@moryx/ngx-web-framework/entry-editor';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -84,6 +84,15 @@ export class DialogAddResource implements OnInit {
 
   protected onCtorSelectionChanged(event: MatSelectionListChange) {
     this.selectedCtor.update(() => event.options[0].value);
+  }
+
+  protected onParametersChange(parameters: Entry) {
+    this.selectedCtor.update(ctor => {
+      if (!ctor) {
+        return ctor;
+      }
+      return { ...ctor, parameters: parameters };
+    });
   }
 
   protected createResult(): ResourceConstructionParameters {
