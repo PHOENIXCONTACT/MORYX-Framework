@@ -25,7 +25,7 @@ internal static class CollectionStrategyTools
             // Items with encoder are already named by the encoder or by EntryConvert with the same item name
             if (encodeItem is null)
             {
-                subEntry.DisplayName = EntryConvert.GetItemName(item);
+                subEntry.DisplayName = EntryConvertHelper.GetItemName(item);
             }
             subEntry.Description ??= GetEntryDescription(item);
         }

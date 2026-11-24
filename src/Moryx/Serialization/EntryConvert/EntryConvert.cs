@@ -93,7 +93,7 @@ public static partial class EntryConvert
             return DefaultPropertyEncoding(property, customSerialization, instance);
         }
 
-        if (!TryGetValue(property, instance, out var value))
+        if (!EntryConvertHelper.TryGetValue(property, instance, out var value))
         {
             var faulty = DefaultPropertyEncoding(property, customSerialization, instance);
             faulty.Value.Type = EntryValueType.Exception;
@@ -141,7 +141,7 @@ public static partial class EntryConvert
         {
             Type = TransformType(property.PropertyType),
             UnitType = customSerialization.GetUnitTypeByAttributes(property),
-            IsReadOnly = IsReadOnly(property),
+            IsReadOnly = EntryConvertHelper.IsReadOnly(property),
             Possible = customSerialization.PossibleValues(property.PropertyType, property, instance)
         };
 
@@ -168,17 +168,6 @@ public static partial class EntryConvert
         }
 
         return entryValue;
-    }
-
-    private static bool IsReadOnly(PropertyInfo property)
-    {
-        if (!property.CanWrite)
-        {
-            return true;
-        }
-
-        var readOnlyAtt = property.GetCustomAttribute<ReadOnlyAttribute>();
-        return readOnlyAtt?.IsReadOnly ?? false;
     }
 
     /// <summary>
@@ -246,20 +235,6 @@ public static partial class EntryConvert
         }
     }
 
-    private static bool TryGetValue(PropertyInfo property, object instance, out object value)
-    {
-        try
-        {
-            value = instance != null ? property.GetValue(instance) : null;
-            return true;
-        }
-        catch (Exception ex)
-        {
-            value = ex;
-            return false;
-        }
-    }
-
     /// <summary>
     /// Encode a property using an <see cref="EntryEncoderBase"/>
     /// </summary>
@@ -268,7 +243,7 @@ public static partial class EntryConvert
     {
         var context = new EntryEncoderContext(property.PropertyType, property, customSerialization, instance);
         var encoded = EncodeWith(encoder, context, value, CreateFromProperty(property, customSerialization));
-        encoded.Value.IsReadOnly |= IsReadOnly(property);
+        encoded.Value.IsReadOnly |= EntryConvertHelper.IsReadOnly(property);
 
         return encoded;
     }
@@ -415,7 +390,7 @@ public static partial class EntryConvert
                 continue;
             }
 
-            var isFaulty = !TryGetValue(property, instance, out var value);
+            var isFaulty = !EntryConvertHelper.TryGetValue(property, instance, out var value);
 
             // Encoders encode the complete entry
             var encoder = customSerialization.GetEncoder(propertyType, property);
@@ -461,7 +436,7 @@ public static partial class EntryConvert
                             stream.Seek(0, SeekOrigin.Begin);
                         }
 
-                        convertedProperty.Value.Current = ConvertToBase64(stream);
+                        convertedProperty.Value.Current = EntryConvertHelper.ConvertToBase64(stream);
                     }
                     break;
                 default:
@@ -508,7 +483,7 @@ public static partial class EntryConvert
             // Items not named by the encoder are named by the item itself instead of the item type
             if (item is not null)
             {
-                metadata.DisplayName = GetItemName(item);
+                metadata.DisplayName = EntryConvertHelper.GetItemName(item);
             }
 
             return EncodeWith(itemEncoder, context, item, metadata);
@@ -518,7 +493,7 @@ public static partial class EntryConvert
     private static EntryEncoderContext CreateItemContext(Type memberType, ICustomAttributeProvider attributeProvider,
         ICustomSerialization customSerialization, object instance)
     {
-        TryGetElementType(memberType, out var elementType);
+        EntryConvertHelper.TryGetElementType(memberType, out var elementType);
         return new EntryEncoderContext(elementType, attributeProvider, customSerialization, instance)
         {
             Target = EntryEncoderTarget.Items
@@ -554,40 +529,6 @@ public static partial class EntryConvert
             Description = objectType.GetDescription()
         };
         return entry;
-    }
-
-    /// <summary>
-    /// Get the name of a collection item from its display name, its own ToString() or its type name
-    /// </summary>
-    internal static string GetItemName(object item)
-    {
-        var itemType = item.GetType();
-
-        // Value type do not have names
-        if (ValueOrStringType(itemType))
-        {
-            return itemType.Name;
-        }
-
-        // Check for display name declaration
-        var displayName = itemType.GetDisplayName();
-        if (!string.IsNullOrWhiteSpace(displayName))
-        {
-            return displayName;
-        }
-
-        // Check if item declares its own version of ToString()
-        return itemType.GetMethod(nameof(ToString))!.DeclaringType == typeof(object) ? itemType.Name : item.ToString();
-    }
-
-    /// <summary>
-    /// Read a stream as Base64
-    /// </summary>
-    private static string ConvertToBase64(Stream stream)
-    {
-        var bytes = new byte[stream.Length];
-        stream.ReadExactly(bytes, 0, (int)stream.Length);
-        return Convert.ToBase64String(bytes);
     }
 
     /// <summary>
@@ -629,7 +570,7 @@ public static partial class EntryConvert
         // Constructors have no return type
         if (method is MethodInfo methodInfo)
         {
-            methodEntry.IsAsync = IsAsyncMethod(methodInfo);
+            methodEntry.IsAsync = EntryConvertHelper.IsAsyncMethod(methodInfo);
         }
 
         return methodEntry;
@@ -698,10 +639,10 @@ public static partial class EntryConvert
         if (encoder is not null)
         {
             var context = new EntryEncoderContext(parameterType, parameter, serialization, instance);
-            return EncodeWith(encoder, context, DefaultArgument(parameter), CreateFromParameter(parameter, serialization));
+            return EncodeWith(encoder, context, EntryConvertHelper.DefaultArgument(parameter), CreateFromParameter(parameter, serialization));
         }
 
-        var defaultValue = DefaultArgument(parameter)?.ToString();
+        var defaultValue = EntryConvertHelper.DefaultArgument(parameter)?.ToString();
         var parameterModel = CreateFromParameter(parameter, serialization);
         parameterModel.Value = new EntryValue
         {
@@ -728,9 +669,6 @@ public static partial class EntryConvert
 
         return parameterModel;
     }
-
-    private static object DefaultArgument(ParameterInfo parameter) =>
-        parameter.HasDefaultValue ? parameter.DefaultValue : null;
 
     private static Entry CreateFromParameter(ParameterInfo parameter, ICustomSerialization serialization)
     {
@@ -843,7 +781,7 @@ public static partial class EntryConvert
             }
 
             // Try to read the current value, skip properties with faulty getters
-            if (!TryGetValue(property, instance, out var currentValue))
+            if (!EntryConvertHelper.TryGetValue(property, instance, out var currentValue))
             {
                 continue;
             }
@@ -1073,7 +1011,7 @@ public static partial class EntryConvert
         object invokeResult = null;
 
         // Also part of MethodEntry but be safer than sorry
-        var isAsync = IsAsyncMethod(method);
+        var isAsync = EntryConvertHelper.IsAsyncMethod(method);
         if (isAsync)
         {
             // TODO check cancellationToken usage and pass it to invoked method if possible
@@ -1106,12 +1044,6 @@ public static partial class EntryConvert
     }
 
     /// <summary>
-    /// Checks if the return type of the method is a task
-    /// </summary>
-    private static bool IsAsyncMethod(MethodInfo method) =>
-        typeof(Task).IsAssignableFrom(method.ReturnType);
-
-    /// <summary>
     /// Check if all parameters are provided by the given <see cref="MethodEntry"/>
     /// </summary>
     private static bool ParametersProvided(ParameterInfo[] parameters, MethodEntry encodedMethod)
@@ -1141,7 +1073,7 @@ public static partial class EntryConvert
             if (encoder is not null)
             {
                 var context = new EntryEncoderContext(paramType, parameter, customSerialization, instance);
-                arguments[i] = encoder.Decode(entry, DefaultArgument(parameter), context);
+                arguments[i] = encoder.Decode(entry, EntryConvertHelper.DefaultArgument(parameter), context);
                 continue;
             }
 
