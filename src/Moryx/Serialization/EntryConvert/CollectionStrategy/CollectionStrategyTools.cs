@@ -23,9 +23,12 @@ internal static class CollectionStrategyTools
         // Encoders may encode null items, which keep the name assigned by the encoder
         if (item != null)
         {
-            subEntry.DisplayName ??= GetEntryName(item);
+            // Items without encoder are named by their display name or ToString instead of their type name
+            if (encodeItem is null || subEntry.DisplayName is null)
+            {
+                subEntry.DisplayName = GetEntryName(item);
+            }
             subEntry.Description ??= GetEntryDescription(item);
-
         }
         subEntry.Identifier = index.ToString("D", CultureInfo.InvariantCulture);
 

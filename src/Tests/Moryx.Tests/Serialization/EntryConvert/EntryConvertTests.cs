@@ -344,6 +344,22 @@ public class EntryConvertTests
         Assert.That(se[1].Value.Current, Is.EqualTo(values[1]));
     }
 
+    [Test(Description = "Collection items without encoder should be named by their overridden ToString or else by their type name")]
+    public void CollectionItemsAreNamedByToStringOrTypeName()
+    {
+        // Arrange
+        var values = new List<object> { new ToStringDummy { Name = "Foo" }, new SubClassDummy(), 42 };
+
+        // Act
+        var encoded = EntryConvert.EncodeObject(values);
+
+        // Assert
+        var se = encoded.SubEntries;
+        Assert.That(se[0].DisplayName, Is.EqualTo("Dummy Foo"));
+        Assert.That(se[1].DisplayName, Is.EqualTo(nameof(SubClassDummy)));
+        Assert.That(se[2].DisplayName, Is.EqualTo(nameof(Int32)));
+    }
+
     [Test]
     public void SurviveGetterException()
     {
