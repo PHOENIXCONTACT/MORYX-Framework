@@ -32,4 +32,11 @@ public sealed class EntryEncoderContext(Type memberType, ICustomAttributeProvide
     /// Instance declaring the member. Can be <c>null</c> if no instance is available.
     /// </summary>
     public object Instance { get; } = instance;
+
+    // TODO: Make required in next major MORYX release
+    /// <summary>
+    /// Defines whether the member itself or an item of the collection member is converted.
+    /// For <see cref="EntryEncoderTarget.Items"/> the <see cref="MemberType"/> is the item type.
+    /// </summary>
+    public EntryEncoderTarget Target { get; init; }
 }

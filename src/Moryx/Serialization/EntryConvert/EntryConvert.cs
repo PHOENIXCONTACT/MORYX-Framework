@@ -509,7 +509,10 @@ public static partial class EntryConvert
         ICustomSerialization customSerialization, object instance)
     {
         TryGetElementType(memberType, out var elementType);
-        return new EntryEncoderContext(elementType, attributeProvider, customSerialization, instance);
+        return new EntryEncoderContext(elementType, attributeProvider, customSerialization, instance)
+        {
+            Target = EntryEncoderTarget.Items
+        };
     }
 
     /// <summary>

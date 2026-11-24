@@ -93,6 +93,27 @@ public class NumericEntryEncoderTests
         });
     }
 
+    [Test(Description = "Struct members should be named by the member, while struct items of a collection are named by their values")]
+    public void StructMembersAreNamedByMemberAndItemsByValues()
+    {
+        // Arrange
+        var dummy = new NumericsDummy
+        {
+            Position3D = new Vector3(1f, 2f, 3f),
+            Positions = [new Vector3(4f, 5f, 6f)]
+        };
+
+        // Act
+        var entry = EntryConvert.EncodeObject(dummy);
+
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(entry.SubEntry(nameof(NumericsDummy.Position3D)).DisplayName, Is.EqualTo(nameof(NumericsDummy.Position3D)));
+            Assert.That(entry.SubEntry(nameof(NumericsDummy.Positions)).SubEntries[0].DisplayName, Is.EqualTo("X=4, Y=5, Z=6"));
+        });
+    }
+
     [Test]
     public void EncodeObject_WithEncodersDisabled_DoesNotThrow()
     {
