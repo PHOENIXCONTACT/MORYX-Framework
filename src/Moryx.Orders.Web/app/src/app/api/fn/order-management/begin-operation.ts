@@ -15,8 +15,16 @@ import { RequestBuilder } from '../../request-builder';
 import { BeginModel } from '../../models/begin-model';
 
 export interface BeginOperation$Params {
+
+/**
+ * Id of the operation
+ */
   guid: string;
-      body?: BeginModel
+  
+    /**
+     * Begin parameters
+     */
+    body: BeginModel
 }
 
 export function beginOperation(http: HttpClient, rootUrl: string, params: BeginOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {

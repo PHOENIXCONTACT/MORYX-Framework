@@ -16,11 +16,19 @@ import { OperationCreationContextModel } from '../../models/operation-creation-c
 import { OperationModel } from '../../models/operation-model';
 
 export interface AddOperation$Params {
+
+/**
+ * Identifier of the application adding the operation
+ */
   sourceId?: string;
-      body?: OperationCreationContextModel
+  
+    /**
+     * Description of the operation
+     */
+    body: OperationCreationContextModel
 }
 
-export function addOperation(http: HttpClient, rootUrl: string, params?: AddOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<OperationModel>> {
+export function addOperation(http: HttpClient, rootUrl: string, params: AddOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<OperationModel>> {
   const rb = new RequestBuilder(rootUrl, addOperation.PATH, 'post');
   if (params) {
     rb.query('sourceId', params.sourceId, {});

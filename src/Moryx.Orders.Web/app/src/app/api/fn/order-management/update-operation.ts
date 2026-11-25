@@ -15,8 +15,16 @@ import { RequestBuilder } from '../../request-builder';
 import { OperationUpdateModel } from '../../models/operation-update-model';
 
 export interface UpdateOperation$Params {
+
+/**
+ * Id of the operation
+ */
   guid: string;
-      body?: OperationUpdateModel
+  
+    /**
+     * Paramter object
+     */
+    body: OperationUpdateModel
 }
 
 export function updateOperation(http: HttpClient, rootUrl: string, params: UpdateOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {

@@ -16,7 +16,7 @@ import { WorkplanModel } from '../../models/workplan-model';
 
 export interface UpdateWorkplan$Params {
   id: string;
-      body?: WorkplanModel
+      body: WorkplanModel
 }
 
 export function updateWorkplan(http: HttpClient, rootUrl: string, params: UpdateWorkplan$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {

@@ -15,6 +15,10 @@ import { RequestBuilder } from '../../request-builder';
 import { OperationLogMessageModel } from '../../models/operation-log-message-model';
 
 export interface GetLogs$Params {
+
+/**
+ * Id of the operation
+ */
   guid: string;
 }
 

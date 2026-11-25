@@ -15,6 +15,10 @@ import { RequestBuilder } from '../../request-builder';
 import { ProductInstanceModel } from '../../models/product-instance-model';
 
 export interface GetInstances$Params {
+
+/**
+ * A list of product instance ids
+ */
   ids?: Array<number>;
 }
 

@@ -16,7 +16,7 @@ import { OperatorModel } from '../../models/operator-model';
 
 export interface Update$Params {
   identifier: string;
-      body?: OperatorModel
+      body: OperatorModel
 }
 
 export function update(http: HttpClient, rootUrl: string, params: Update$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {

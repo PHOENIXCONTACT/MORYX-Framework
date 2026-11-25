@@ -15,7 +15,15 @@ import { RequestBuilder } from '../../request-builder';
 import { RecipeModel } from '../../models/recipe-model';
 
 export interface GetRecipes$Params {
+
+/**
+ * Database id
+ */
   id: number;
+
+/**
+ * Recipe classification RecipeClassification
+ */
   classification: number;
 }
 

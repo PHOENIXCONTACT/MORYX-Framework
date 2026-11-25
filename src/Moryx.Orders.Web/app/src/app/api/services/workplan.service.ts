@@ -68,7 +68,7 @@ export class WorkplanService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  saveWorkplan$Response(params?: SaveWorkplan$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
+  saveWorkplan$Response(params: SaveWorkplan$Params, context?: HttpContext): Promise<StrictHttpResponse<void>> {
     const obs = saveWorkplan(this.http, this.rootUrl, params, context);
     return firstValueFrom(obs);
   }
@@ -79,7 +79,7 @@ export class WorkplanService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  saveWorkplan(params?: SaveWorkplan$Params, context?: HttpContext): Promise<void> {
+  saveWorkplan(params: SaveWorkplan$Params, context?: HttpContext): Promise<void> {
     const resp = this.saveWorkplan$Response(params, context);
     return resp.then((r: StrictHttpResponse<void>): void => r.body);
   }
