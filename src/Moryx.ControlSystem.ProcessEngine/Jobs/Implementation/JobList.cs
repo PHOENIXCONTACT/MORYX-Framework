@@ -66,16 +66,48 @@ internal class JobList : IJobDataList, IJobList
         var stopWatch = new Stopwatch();
         stopWatch.Start();
         var timeOut = Config.JobListStopTimeout * 1000;
-        while (stopWatch.ElapsedMilliseconds < timeOut && _jobs.Any(j => !j.IsStable))
+        while (stopWatch.ElapsedMilliseconds < timeOut && !IsJobListClean())
         {
             Thread.Sleep(1);
         }
 
-        if (_jobs.Any(j => !j.IsStable))
+        if (TryGetBlockingJobs(out var blocking))
         {
-            Logger.LogWarning("Reached shutdown-timout of the {name} after {seconds}s. Unfinished jobs: {jobs}",
-                nameof(JobList), Config.JobListStopTimeout, string.Join(", ", _jobs.Select(j => j.Id)));
+            Logger.LogWarning("Reached shutdown-timeout of the {name} after {seconds}s. Unfinished jobs: {jobs}",
+                nameof(JobList), Config.JobListStopTimeout, string.Join(", ", blocking.Select(j => j.Id)));
         }
+    }
+
+    /// <summary>
+    /// Checks for jobs that are still in a transition or completed but not yet removed.
+    /// Completed jobs must be removed before clearing the list, otherwise the links in the storage are not updated,
+    /// which leads to issues on reloading jobs, where completed jobs are filtered.
+    /// </summary>
+    private bool IsJobListClean()
+    {
+        _jobLock.EnterReadLock();
+        try
+        {
+            return _jobs.All(j => j.IsStable && j.Classification != JobClassification.Completed);
+        }
+        finally
+        {
+            _jobLock.ExitReadLock();
+        }
+    }
+
+    private bool TryGetBlockingJobs(out IJobData[] jobs)
+    {
+        _jobLock.EnterReadLock();
+        try
+        {
+            jobs = _jobs.Where(j => !j.IsStable || j.Classification == JobClassification.Completed).ToArray();
+        }
+        finally
+        {
+            _jobLock.ExitReadLock();
+        }
+        return jobs.Length > 0;
     }
 
     #endregion

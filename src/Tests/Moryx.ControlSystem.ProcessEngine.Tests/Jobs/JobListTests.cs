@@ -354,6 +354,54 @@ public class JobListTests
         Assert.That(fragment.AffectedJobs[1].Id, Is.EqualTo(jobData.Id + 1));
     }
 
+    [Test(Description = "Removing consecutive completed jobs relinks the successor to the last remaining job")]
+    public void RemovingConsecutiveCompletedJobsRelinksSuccessor()
+    {
+        // Arrange
+        var job3 = _jobList.Get(3);
+        var job4 = _jobList.Get(4);
+        RaiseStateChanged(job3, JobClassification.Completed);
+        RaiseStateChanged(job4, JobClassification.Completed);
+
+        // Act
+        ModifiedJobsFragment first = null, second = null;
+        _jobList.Remove(job3, f => first = f);
+        _jobList.Remove(job4, f => second = f);
+
+        // Assert
+        Assert.That(first.PreviousId, Is.EqualTo(2));
+        Assert.That(first.AffectedJobs.Select(j => j.Id), Is.EqualTo(new long[] { 3, 4 }));
+        Assert.That(second.PreviousId, Is.EqualTo(2), "Successor of the removed jobs must be linked to job 2");
+        Assert.That(second.AffectedJobs.Select(j => j.Id), Is.EqualTo(new long[] { 4, 5 }));
+        Assert.That(_jobList.Next(_jobList.Get(2)).Id, Is.EqualTo(5));
+    }
+
+    [Test(Description = "Stopping the job list waits until completed jobs were removed, otherwise their successors are not relinked in the storage")]
+    public async Task StopAwaitsRemovalOfCompletedJobs()
+    {
+        // Arrange
+        _jobList.Config = new ModuleConfig { JobListStopTimeout = 5 };
+        var completed = _jobList.Get(3);
+        var completedMock = (Mock<IJobData>)((IMocked)completed).Mock;
+        var classificationAccessedTcs = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        completedMock.SetupGet(j => j.Classification).Returns(() =>
+        {
+            classificationAccessedTcs.TrySetResult();
+            return JobClassification.Completed;
+        });
+
+        // Act
+        var stopTask = Task.Run(_jobList.Stop);
+        await classificationAccessedTcs.Task;
+        var stoppedBeforeRemoval = stopTask.IsCompleted;
+        _jobList.Remove(completed, StorageCallback);
+        await stopTask.WaitAsync(TimeSpan.FromSeconds(2));
+
+        // Assert
+        Assert.That(stoppedBeforeRemoval, Is.False, "Stop must wait for the removal of completed jobs");
+        Assert.That(_storedJobs.Select(j => j.Id), Is.EqualTo(new long[] { 3, 4 }));
+    }
+
     private static IJobData CreateJobMock(long id = 0, long recipeId = 0)
     {
         var jobMock = new Mock<IJobData>();
@@ -364,6 +412,8 @@ public class JobListTests
         }
 
         jobMock.SetupGet(j => j.Recipe).Returns(new ProductionRecipe { Id = recipeId });
+        jobMock.SetupGet(j => j.IsStable).Returns(true);
+        jobMock.SetupGet(j => j.Classification).Returns(JobClassification.Idle);
         var jobStateMock = new Mock<IJobState>();
         jobStateMock.SetupGet(s => s.Classification).Returns(JobClassification.Idle);
         jobMock.SetupGet(j => j.State).Returns(jobStateMock.Object);
