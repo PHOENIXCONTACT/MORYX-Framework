@@ -142,9 +142,9 @@ public abstract class CommunicationSocketsTestsBase<TMessage> where TMessage : B
 
         server.Connection.Start();
 
-        // Server should be listening
-        Assert.That(server.Connection.CurrentState, Is.EqualTo(BinaryConnectionState.AttemptingConnection),
-            $"server is not in the state '{BinaryConnectionState.AttemptingConnection:G}'. CurrentState: {server.Connection.CurrentState:G}");
+        // Server should have started (may already be Connected if a client was pending)
+        Assert.That(server.Connection.CurrentState, Is.Not.EqualTo(BinaryConnectionState.Disconnected),
+            $"server failed to start. CurrentState: {server.Connection.CurrentState:G}");
 
         ServerConnections.Add(server);
 
