@@ -64,7 +64,7 @@ internal static class EntryConvertHelper
     }
 
     /// <summary>
-    /// Get the name of a collection item from its display name, its own ToString() or its type name
+    /// Get the name of a collection item from its own ToString(), its display name or its type name
     /// </summary>
     public static string GetItemName(object item)
     {
@@ -76,6 +76,12 @@ internal static class EntryConvertHelper
             return itemType.Name;
         }
 
+        // Check if item declares its own version of ToString() to distinguish the items
+        if (itemType.GetMethod(nameof(ToString))!.DeclaringType != typeof(object))
+        {
+            return item.ToString();
+        }
+
         // Check for display name declaration
         var displayName = itemType.GetDisplayName();
         if (!string.IsNullOrWhiteSpace(displayName))
@@ -83,8 +89,8 @@ internal static class EntryConvertHelper
             return displayName;
         }
 
-        // Check if item declares its own version of ToString()
-        return itemType.GetMethod(nameof(ToString))!.DeclaringType == typeof(object) ? itemType.Name : item.ToString();
+        // Fall back to the type name
+        return itemType.Name;
     }
 
     /// <summary>
