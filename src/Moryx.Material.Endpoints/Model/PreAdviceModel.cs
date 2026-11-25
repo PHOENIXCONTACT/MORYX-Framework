@@ -27,6 +27,7 @@ public enum PreAdviceDepartureReasonModel
 [DataContract]
 public class PreAdviceModel
 {
+    // TODO: Remove all DataMember attributes on the endpoint models, we are using system.text.json where it has no meaning
     [DataMember]
     public long ContainerId { get; set; }
 
