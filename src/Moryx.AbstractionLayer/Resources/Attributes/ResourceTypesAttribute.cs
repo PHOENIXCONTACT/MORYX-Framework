@@ -36,29 +36,38 @@ public class ResourceTypesAttribute : PossibleValuesAttribute
         TypeConstraint = typeConstraint;
     }
 
-    /// <summary>
-    /// Resolve all resource type names for a resource type
-    /// </summary>
+    /// <inheritdoc />
     public override IEnumerable<string> GetValues(IContainer pluginContainer, IServiceProvider serviceProvider)
     {
-        var typeController = pluginContainer.Resolve<IResourceTypeTree>();
-        return SelectTypeNames(typeController.SupportedTypes(TypeConstraint), new List<string>());
+        return SelectCreatableTypes(pluginContainer).Select(linker => linker.Name);
+    }
+
+    /// <inheritdoc />
+    public override IEnumerable<EntryPossible> GetPossibleValues(IContainer localContainer, IServiceProvider serviceProvider)
+    {
+        return SelectCreatableTypes(localContainer).Select(linker => linker.ResourceType.ToEntryPossible(linker.Name));
+    }
+
+    private IEnumerable<IResourceTypeNode> SelectCreatableTypes(IContainer localContainer)
+    {
+        var typeController = localContainer.Resolve<IResourceTypeTree>();
+        return SelectCreatableTypes(typeController.SupportedTypes(TypeConstraint), new List<IResourceTypeNode>());
     }
 
     /// <summary>
-    /// Recursive function to select all resource types
+    /// Recursive function to select all creatable resource types
     /// </summary>
-    private static IEnumerable<string> SelectTypeNames(IEnumerable<IResourceTypeNode> linkers, ICollection<string> names)
+    private static IEnumerable<IResourceTypeNode> SelectCreatableTypes(IEnumerable<IResourceTypeNode> linkers, ICollection<IResourceTypeNode> nodes)
     {
         foreach (var linker in linkers)
         {
             if (linker.Creatable)
             {
-                names.Add(linker.Name);
+                nodes.Add(linker);
             }
 
-            SelectTypeNames(linker.DerivedTypes, names);
+            SelectCreatableTypes(linker.DerivedTypes, nodes);
         }
-        return names;
+        return nodes;
     }
 }

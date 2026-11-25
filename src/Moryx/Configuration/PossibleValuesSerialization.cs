@@ -78,17 +78,17 @@ public class PossibleValuesSerialization : DefaultSerialization
 
     private EntryPossible[] GetEntryPossibles(PossibleValuesAttribute possibleValuesAttribute, object instance = null)
     {
-        IEnumerable<string> values;
+        IEnumerable<EntryPossible> possibles;
         if (possibleValuesAttribute.RequiresPossibleValuesContext)
         {
             var context = new PossibleValuesContext(instance, ServiceProvider, Container);
-            values = possibleValuesAttribute.GetValues(context);
+            possibles = possibleValuesAttribute.GetPossibleValues(context);
         }
         else
         {
-            values = possibleValuesAttribute.GetValues(Container, ServiceProvider);
+            possibles = possibleValuesAttribute.GetPossibleValues(Container, ServiceProvider);
         }
-        return EntryPossible.FromStrings(values?.Distinct());
+        return possibles?.DistinctBy(p => p?.Key).ToArray();
     }
 
     /// <summary>

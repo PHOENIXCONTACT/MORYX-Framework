@@ -39,14 +39,18 @@ public class PluginConfigsAttribute : PossibleValuesAttribute
         StrategyService = strategyService;
     }
 
-    /// <summary>
-    /// All possible values for this member represented as strings. The given container might be null
-    /// and can be used to resolve possible values
-    /// </summary>
+    /// <inheritdoc />
     public override IEnumerable<string> GetValues(IContainer container, IServiceProvider serviceProvider)
     {
         var possibleValues = GetPossibleTypes(container);
         return possibleValues.Select(configType => configType.Name);
+    }
+
+    /// <inheritdoc />
+    public override IEnumerable<EntryPossible> GetPossibleValues(IContainer localContainer, IServiceProvider serviceProvider)
+    {
+        var possibleValues = GetPossibleTypes(localContainer);
+        return possibleValues.Select(configType => configType.ToEntryPossible(configType.Name));
     }
 
     /// <inheritdoc />

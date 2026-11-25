@@ -25,6 +25,7 @@ public interface ICustomSerialization
     /// </summary>
     EntryPrototype[] Prototypes(Type memberType, ICustomAttributeProvider attributeProvider);
 
+    // TODO: Return IReadOnlyList<EntryPossible> from PossibleValues and PossibleElementValues in next major MORYX release
     /// <summary>
     /// Possible values of a property
     /// </summary>

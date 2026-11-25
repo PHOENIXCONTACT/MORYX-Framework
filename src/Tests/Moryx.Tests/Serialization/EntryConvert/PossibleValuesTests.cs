@@ -43,6 +43,22 @@ public class PossibleValuesTests
         }
     }
 
+    [Test(Description = "Possible values of collections should use DisplayName and Description of the element type")]
+    public void CollectionPossibleValuesHaveDisplayNameAndDescription()
+    {
+        // Act
+        var encoded = EntryConvert.EncodeClass(typeof(DisplayNameListDummy));
+
+        // Assert
+        var possible = encoded.SubEntry(nameof(DisplayNameListDummy.Items)).Value.Possible.Single();
+        Assert.Multiple(() =>
+        {
+            Assert.That(possible.Key, Is.EqualTo(nameof(DisplayNameItemDummy)));
+            Assert.That(possible.DisplayName, Is.EqualTo(DisplayNameItemDummy.ItemDisplayName));
+            Assert.That(possible.Description, Is.EqualTo(DisplayNameItemDummy.ItemDescription));
+        });
+    }
+
     [Test]
     public void ShouldProvidePossibleValue_UsingContext()
     {
