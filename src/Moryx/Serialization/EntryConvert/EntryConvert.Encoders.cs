@@ -63,7 +63,7 @@ public static partial class EntryConvert
     /// <returns>Encoders of the items or <c>null</c>, if the items use the default conversion</returns>
     public static EntryEncoderBase ResolveItemEncoder(Type memberType, ICustomAttributeProvider attributeProvider)
     {
-        if (!TryGetElementType(memberType, out var elementType))
+        if (!EntryConvertHelper.TryGetElementType(memberType, out var elementType))
         {
             return null;
         }
@@ -91,7 +91,7 @@ public static partial class EntryConvert
                     $"{nameof(EntrySerializeAttribute.EncoderTarget)} {EntryEncoderTarget.Items} requires a {nameof(EntrySerializeAttribute.EncoderType)}.");
             }
 
-            if (!TryGetElementType(memberType, out _))
+            if (!EntryConvertHelper.TryGetElementType(memberType, out _))
             {
                 throw new InvalidOperationException(
                     $"{nameof(EntrySerializeAttribute.EncoderTarget)} {EntryEncoderTarget.Items} is not supported for the non-collection type {memberType.Name}.");
@@ -99,23 +99,6 @@ public static partial class EntryConvert
         }
 
         return attribute.EncoderType;
-    }
-
-    private static bool TryGetElementType(Type memberType, out Type elementType)
-    {
-        elementType = null;
-        if (!IsCollection(memberType))
-        {
-            return false;
-        }
-
-        if (!memberType.IsArray && !memberType.IsGenericType)
-        {
-            return false;
-        }
-
-        elementType = ElementType(memberType);
-        return elementType != null;
     }
 
     /// <summary>

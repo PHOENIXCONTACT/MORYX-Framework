@@ -46,7 +46,8 @@ public class BenchmarkReporter : Cell
     private long _instructionId;
     private ActivityStart _currentSession;
 
-    [DataMember, EntrySerialize] public int StepId { get; set; }
+    [DataMember, EntrySerialize]
+    public int StepId { get; set; }
 
     /// <inheritdoc />
     protected override async Task OnInitializeAsync(CancellationToken cancellationToken)

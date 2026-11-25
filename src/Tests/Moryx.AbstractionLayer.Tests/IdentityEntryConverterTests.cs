@@ -68,6 +68,20 @@ public class IdentityEntryConverterTests
         });
     }
 
+    [Test(Description = "Identities of a list with item encoder should be named by the identity instead of the item type")]
+    public void IdentityListItemsAreNamedByIdentity()
+    {
+        // Arrange
+        var identity = new ProductIdentity("4711", 5);
+        var dummy = new IdentityDummy { Identities = [identity] };
+
+        // Act
+        var entry = IdentitiesEntry(EntryConvert.EncodeObject(dummy));
+
+        // Assert
+        Assert.That(entry.SubEntries.Single().DisplayName, Is.EqualTo(identity.ToString()));
+    }
+
     [Test]
     public void Decode_ChangedArguments_CreatesNewIdentity()
     {

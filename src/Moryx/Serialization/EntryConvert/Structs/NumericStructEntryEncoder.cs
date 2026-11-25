@@ -64,8 +64,10 @@ internal abstract class NumericStructEntryEncoder<TStruct> : NumericStructEntryE
         var typedValue = hasValue ? (TStruct)value : default;
         var subEntries = EncodeComponents(typedValue, context.Serialization.FormatProvider);
 
-        // Only set display name for actual values; prototypes pass null and should fall back to the member metadata
-        var displayName = hasValue ? string.Join(", ", subEntries.Select(e => $"{e.Identifier}={e.Value.Current}")) : null;
+        // Only name collection items by their values; members and prototypes fall back to the member metadata
+        var displayName = hasValue && context.Target == EntryEncoderTarget.Items
+            ? string.Join(", ", subEntries.Select(e => $"{e.Identifier}={e.Value.Current}"))
+            : null;
 
         var typeName = typeof(TStruct).Name;
 
