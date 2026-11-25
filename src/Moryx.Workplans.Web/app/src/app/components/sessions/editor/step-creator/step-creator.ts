@@ -3,14 +3,14 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, computed, inject, input, output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, input, linkedSignal, output, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { WorkplanStepRecipe } from '@api/models';
 import { TranslationConstants } from '@app/translation-constants';
 
-import { NavigableEntryEditor } from '@moryx/ngx-web-framework/entry-editor';
+import { Entry, NavigableEntryEditor } from '@moryx/ngx-web-framework/entry-editor';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 
@@ -33,11 +33,29 @@ export class StepCreator {
 
   private activatedRoute = inject(ActivatedRoute);
   private queryParamMap = toSignal(this.activatedRoute.queryParamMap);
-  protected stepRecipe = computed(() => {
+  protected stepRecipe = linkedSignal(() => {
     const type = this.queryParamMap()?.get('type');
     return structuredClone(this.availableSteps().find(s => s.type == type));
   });
   protected readonly TranslationConstants = TranslationConstants;
+
+  protected onParametersChange(parameters: Entry): void {
+    this.stepRecipe.update(recipe => {
+      if (!recipe?.constructor) {
+        return recipe;
+      }
+
+      const constructor = {
+        ...recipe.constructor,
+        parameters: parameters
+      };
+
+      return {
+        ...recipe,
+        constructor: constructor
+      };
+    });
+  }
 
   protected onCreate(): void {
     this.created.emit(this.stepRecipe()!);

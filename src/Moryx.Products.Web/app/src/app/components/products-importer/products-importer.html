@@ -32,7 +32,7 @@
 @if (properties) {
   <div class="importer-properties">
     <navigable-entry-editor
-      [entry]="properties"
+      [(entry)]="importerProperties"
       queryParam="productImport"
       [disabled]="false"
     ></navigable-entry-editor>

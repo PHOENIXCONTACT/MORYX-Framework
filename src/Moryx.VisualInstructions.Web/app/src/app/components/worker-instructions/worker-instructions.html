@@ -33,7 +33,8 @@
           </div>
           @if (inputs()) {
             <div class="input-instructions">
-              <navigable-entry-editor queryParam="inputs" [disabled]="false" [entry]="inputs()!" />
+              <navigable-entry-editor queryParam="inputs" [disabled]="false"
+                [entry]="inputs()!" (entryChange)="inputs.set($event)" />
             </div>
           }
         </div>

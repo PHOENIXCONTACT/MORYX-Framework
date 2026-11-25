@@ -15,7 +15,8 @@
         @let result = methodResult();
         @if (method.name === selectedMethod()?.name) {
           @if (method.parameters && method.parameters.subEntries?.length && !resultView()) {
-            <navigable-entry-editor [entry]="method.parameters" queryParam="methodParameters" [disabled]="false"/>
+            <navigable-entry-editor [(entry)]="method.parameters"
+              queryParam="methodParameters" [disabled]="false" />
           }
 
           @if (result !== undefined && resultView()) {
@@ -23,9 +24,9 @@
             result.subEntries.length > 0 &&
             result.subEntries[0].subEntries &&
             result.subEntries[0].subEntries.length > 0) {
-              <navigable-entry-editor [entry]="result" [disabled]="true" queryParam="methodParametersResult"/>
+              <navigable-entry-editor [entry]="result" [disabled]="true" queryParam="methodParametersResult" />
             } @else {
-              <entry-editor [entry]="result" [disabled]="true"/>
+              <entry-editor [entry]="result" [disabled]="true" />
             }
           }
         }
