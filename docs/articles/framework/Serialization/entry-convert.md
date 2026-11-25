@@ -255,9 +255,10 @@ The `EntryEncoderContext` passed to both methods provides:
 * `AttributeProvider` – the `PropertyInfo` or `ParameterInfo` to read further attributes
 * `Serialization` – the active `ICustomSerialization`
 * `Instance` – the containing object (`null` when encoding a type without an instance)
+* `Target` – whether the encoder converts the member itself (`Member`) or an item of a collection (`Items`)
 
 > [!IMPORTANT]
-> `Identifier` and `Validation` of the returned entry are always overridden from the member. `DisplayName` and `Description` are used from the encoder if set, otherwise they fall back to the member metadata. The read-only flag is merged: the entry is read-only if either the encoder or the member definition marks it as such.
+> `Identifier` and `Validation` of the returned entry are always overridden from the member. `DisplayName` and `Description` are used from the encoder if set, otherwise they fall back to the member metadata (see [Display Names](#display-names)). The read-only flag is merged: the entry is read-only if either the encoder or the member definition marks it as such.
 
 > [!NOTE]
 > Encoder instances are cached and shared. Implementations must be **stateless and thread-safe** and require a **public parameterless constructor**.
@@ -352,6 +353,31 @@ public Entry InvokeMethod(MethodEntry method)
 ### Serialize Constructors
 
 In the previous sections, it was described that `EntryConvert` can also serialize constructors. The [EntrySerializeSerialization](/src/Moryx/Serialization/EntrySerializeSerialization.cs) only serializes constructors like methods with the [EntrySerializeAttribute](/src/Moryx/Serialization/EntryConvert/EntrySerializeAttribute.cs) defined.
+
+## Display Names
+
+`EntryConvert` sets the `DisplayName` of each entry from the encoded member, type or instance. Unlike the `Identifier` it is only shown to the user and does not need to be unique.
+
+### Members
+
+Properties, methods and parameters are named by their `DisplayAttribute` (localizable via `ResourceType`), their `DisplayNameAttribute` or else their member name.
+
+### Types
+
+Entries created from a type without an instance, like prototypes or the possible types of a selection, are named by the display name of the type or else its type name.
+
+### Collection Items
+
+Collection items are named by the item instance, so that items of the same type can be distinguished:
+
+1. Primitive values and strings are named by their type name
+2. An overridden `ToString()` of the item, e.g. `Order 4711`
+3. The display name of the item type
+4. The type name of the item
+
+### Encoders
+
+A `DisplayName` returned by an [entry encoder](#entry-encoders) takes precedence over the rules above. Use `EntryEncoderContext.Target` to tell members from collection items. The built-in encoders for `Vector2/3/4`, `Quaternion` and `Plane` use this to show the values (`X=1, Y=2, Z=3`) only for collection items, while members keep their member name.
 
 ## Collections
 
