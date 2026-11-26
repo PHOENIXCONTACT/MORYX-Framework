@@ -19,7 +19,7 @@ public class ResourceTypeNodeMock(string name, Type resourceType, bool creatable
 
     public IResourceTypeNode BaseType => throw new NotImplementedException();
 
-    public IEnumerable<IResourceTypeNode> DerivedTypes => throw new NotImplementedException();
+    public IEnumerable<IResourceTypeNode> DerivedTypes => [];
 
     public IEnumerable<PropertyInfo> References => throw new NotImplementedException();
 

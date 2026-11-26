@@ -3,7 +3,6 @@
 
 using Moq;
 using Moryx.Material.Facade;
-using Moryx.Material.Integrations.Products;
 using Moryx.Material.Linking;
 using Moryx.Material.States;
 using Moryx.Modules;

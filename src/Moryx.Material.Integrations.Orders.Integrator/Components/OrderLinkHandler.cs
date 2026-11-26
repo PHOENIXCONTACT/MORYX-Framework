@@ -30,8 +30,8 @@ internal class OrderLinkHandler : LinkHandlerBase<OrderReference, Order, OrderLi
     protected override IEnumerable<OrderLinkingHookConfig> HookConfigs => Config.Hooks;
 
     /// <inheritdoc/>
-    protected override Task<ILinkingHook> CreateHookAsync(OrderLinkingHookConfig config, CancellationToken cancellationToken)
-        => HookFactory.Create(config, cancellationToken);
+    protected override async Task<ILinkingHook> CreateHookAsync(OrderLinkingHookConfig config, CancellationToken cancellationToken)
+        => await HookFactory.Create(config, cancellationToken);
 
     /// <inheritdoc/>
     protected override void DestroyHook(ILinkingHook hook) => HookFactory.Destroy(hook);

@@ -1,7 +1,9 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Moryx.Material.Integrations.Orders.Integrator;
 using Moryx.Material.Linking;
+using Moryx.Modules;
 using Moryx.Orders;
 
 namespace Moryx.Material.Integrations.Orders;
@@ -12,6 +14,9 @@ namespace Moryx.Material.Integrations.Orders;
 /// through <see cref="LinkingHook{TReference, TBusinessObject}.Target"/> and
 /// <see cref="LinkingHook{TReference, TBusinessObject}.Previous"/>.
 /// </summary>
-public abstract class OrderLinkingHook : LinkingHook<OrderReference, Order>
+public abstract class OrderLinkingHook : LinkingHook<OrderReference, Order>, IAsyncConfiguredInitializable<OrderLinkingHookConfig>
 {
+    /// <inheritdoc />
+    public virtual Task InitializeAsync(OrderLinkingHookConfig config, CancellationToken cancellationToken = default)
+        => Task.CompletedTask;
 }

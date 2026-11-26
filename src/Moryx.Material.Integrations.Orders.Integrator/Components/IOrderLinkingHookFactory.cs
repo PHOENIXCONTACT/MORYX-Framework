@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Container;
-using Moryx.Material.Linking;
 
 namespace Moryx.Material.Integrations.Orders.Integrator.Components;
 
@@ -12,14 +11,13 @@ namespace Moryx.Material.Integrations.Orders.Integrator.Components;
 [PluginFactory(typeof(IConfigBasedComponentSelector))]
 internal interface IOrderLinkingHookFactory
 {
-    // ToDo Can I specify this to directly return OrderLinkingHooks?
     /// <summary>
-    /// Create new importer
+    /// Create a new <see cref="OrderLinkingHook"/> matching the provided <paramref name="config"/>.
     /// </summary>
-    Task<ILinkingHook> Create(OrderLinkingHookConfig config, CancellationToken cancellationToken);
+    Task<OrderLinkingHook> Create(OrderLinkingHookConfig config, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Destroy an importer
+    /// Destroy the <paramref name="instance"/>
     /// </summary>
-    void Destroy(ILinkingHook instance);
+    void Destroy(OrderLinkingHook instance);
 }

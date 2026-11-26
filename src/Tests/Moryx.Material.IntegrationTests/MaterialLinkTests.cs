@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Material.Linking;
+using Moryx.Modules;
 using NUnit.Framework;
 
 namespace Moryx.Material.IntegrationTests;
@@ -13,9 +14,10 @@ internal sealed class MaterialLinkTests
     private TestHandler _handler = null!;
 
     [SetUp]
-    public void SetUp()
+    public async Task SetUp()
     {
         _container = new LinkedTestContainer { Id = 1, Name = "Test Container" };
+        await ((IAsyncInitializablePlugin)_container).InitializeAsync();
         _handler = new TestHandler();
     }
 
