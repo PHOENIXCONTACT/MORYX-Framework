@@ -27,5 +27,5 @@ public enum UpdateKind
     /// <summary>
     /// The change denotes a relative rather than an absolute change
     /// </summary>
-    Relative =  1 << 8,
+    Relative = 1 << 8,
 }

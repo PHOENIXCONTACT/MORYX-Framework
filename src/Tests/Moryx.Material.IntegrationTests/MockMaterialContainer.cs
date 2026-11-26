@@ -5,7 +5,7 @@ using Moryx.AbstractionLayer.Identity;
 
 namespace Moryx.Material.IntegrationTests;
 
-internal class MockMaterialContainer : MaterialContainer
+internal sealed class MockMaterialContainer : MaterialContainer
 {
     public new string? Material
     {
@@ -20,7 +20,7 @@ internal class MockMaterialContainer : MaterialContainer
     }
 }
 
-internal class MockIdentifier : IIdentity
+internal sealed class MockIdentifier : IIdentity
 {
     public string Identifier { get; set; }
 

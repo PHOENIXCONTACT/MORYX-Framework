@@ -3,14 +3,13 @@
 
 using System.ComponentModel;
 using Moryx.Container;
-using Moryx.Material.Facade;
 using Moryx.Material.Lineage;
 
 namespace Moryx.Material.Management.Components;
 
 // TODO: Add database implementation
 [Component(LifeCycle.Singleton, typeof(ILineageEventStorage))]
-internal class InMemoryLineageEventStorage : ILineageEventStorage
+internal sealed class InMemoryLineageEventStorage : ILineageEventStorage
 {
     private readonly List<ILineageEvent> _events = [];
     private readonly Lock _lock = new();

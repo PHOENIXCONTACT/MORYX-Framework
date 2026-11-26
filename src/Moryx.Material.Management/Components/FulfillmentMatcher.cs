@@ -7,7 +7,7 @@ using Moryx.Material.States;
 namespace Moryx.Material.Management.Components;
 
 [Component(LifeCycle.Singleton, typeof(IFulfillmentMatcher))]
-internal class FulfillmentMatcher : IFulfillmentMatcher
+internal sealed class FulfillmentMatcher : IFulfillmentMatcher
 {
     public IContainerPool Pool { get; set; }
 
@@ -52,10 +52,7 @@ internal class FulfillmentMatcher : IFulfillmentMatcher
 
     public IMaterialContainer? TryMatchRegistration(IMaterialContainer container)
     {
-        if (container == null)
-        {
-            throw new ArgumentNullException(nameof(container));
-        }
+        ArgumentNullException.ThrowIfNull(container);
 
         var candidates = Pool.GetAll(c => c.State is StateClassification.Requested or StateClassification.Inbound && !ReferenceEquals(c, container));
 

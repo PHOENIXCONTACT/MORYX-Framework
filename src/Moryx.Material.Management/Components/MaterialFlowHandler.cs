@@ -10,7 +10,7 @@ using Moryx.Material.States;
 namespace Moryx.Material.Management.Components;
 
 [Component(LifeCycle.Singleton, typeof(IMaterialFlowHandler))]
-internal class MaterialFlowHandler : IMaterialFlowHandler, ILoggingComponent
+internal sealed class MaterialFlowHandler : IMaterialFlowHandler, ILoggingComponent
 {
     #region Dependencies
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.

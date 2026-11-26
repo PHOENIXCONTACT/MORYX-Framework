@@ -8,7 +8,7 @@ using Moryx.Modules;
 namespace Moryx.Material.Management;
 
 [Component(LifeCycle.Singleton)]
-internal class ComponentOrchestration : IAsyncPlugin
+internal sealed class ComponentOrchestration : IAsyncPlugin
 {
     #region Dependencies
 

@@ -14,7 +14,7 @@ namespace Moryx.Material.Management.Components;
 
 // ToDo: Add logging for tracked containers, i.e. log state changes 
 [Component(LifeCycle.Singleton, typeof(IContainerPool))]
-internal class ContainerPool : IContainerPool
+internal sealed class ContainerPool : IContainerPool
 {
     private readonly ConcurrentDictionary<long, IMaterialContainer> _containers = new();
 

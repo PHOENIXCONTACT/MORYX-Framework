@@ -2,9 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moq;
-using Moryx.AbstractionLayer.Capabilities;
 using Moryx.AbstractionLayer.Resources;
-using Moryx.Material;
 using Moryx.Material.Facade;
 using Moryx.Material.Management;
 using Moryx.Material.States;
@@ -12,7 +10,6 @@ using Moryx.Modules;
 using Moryx.TestTools.IntegrationTest;
 using Moryx.Tools;
 using NUnit.Framework;
-
 
 namespace Moryx.Material.IntegrationTests;
 
@@ -71,8 +68,8 @@ internal abstract class TestBase
             .Callback<Type, Func<Resource, Task>, CancellationToken>(async (type, initializer, ct) =>
             {
                 var container = new MockMaterialContainer() { Id = 42L };
-                ((IAsyncInitializablePlugin)container).InitializeAsync().GetAwaiter().GetResult();
-                ((IAsyncInitializablePlugin)container).StartAsync().GetAwaiter().GetResult();
+                ((IAsyncInitializablePlugin)container).InitializeAsync(ct).GetAwaiter().GetResult();
+                ((IAsyncInitializablePlugin)container).StartAsync(ct).GetAwaiter().GetResult();
                 // Run initializer to mimic RM behavior (may adjust name/material etc.)
                 initializer?.Invoke(container).GetAwaiter().GetResult();
                 // Announce container addition so ContainerPool can track it

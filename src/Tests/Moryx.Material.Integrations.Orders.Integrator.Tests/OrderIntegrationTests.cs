@@ -240,7 +240,7 @@ internal sealed class OrderIntegrationTests
         var operation = CreateAndAddOperation(OrderNumber, OperationNumber, OperationStateClassification.Ready);
         RaiseOperationUpdatedToRunning(operation);
         var container = await CreateAndAddContainer();
-        var applied =new TaskCompletionSource<LinkAppliedEventArgs<OrderReference>>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var applied = new TaskCompletionSource<LinkAppliedEventArgs<OrderReference>>(TaskCreationOptions.RunContinuationsAsynchronously);
         container.OrderLink.Applied += (_, e) => applied.TrySetResult(e);
 
         // Act
