@@ -6,7 +6,6 @@ using Moryx.Material.Linking;
 
 namespace Moryx.Material.Integrations.Orders;
 
-// TODO: Worth a subclass?
 /// <summary>
 /// Link of a material container to an order (operation).
 /// </summary>

@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Description>Samples build upo the material domain models, material management and integrations to other domains.</Description>
+    <PackageTags>MORYX;Manufacturing;Industrial</PackageTags>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Moryx.Material.Integrations.Orders\Moryx.Material.Integrations.Orders.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -5,22 +5,21 @@ using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Resources;
+using Moryx.Material.Integrations.Orders;
 using Moryx.Material.States;
 using Moryx.Serialization;
 
-namespace Moryx.Material.Integrations.Orders;
+namespace Moryx.Material.Samples;
 
-// TODO: Is this worth a base class or rather a sample?
 /// <summary>
-/// Default base class for <see cref="IOrderLinkedMaterialContainer"/> implementations.
+/// Sample implementation for an <see cref="IOrderLinkedMaterialContainer"/>.
 /// </summary>
 /// <remarks>
-/// Containers linked to further business objects do not need to derive from this class. They can implement
-/// <see cref="IOrderLinkedMaterialContainer"/> alongside other linked container interfaces by declaring an
-/// <see cref="Orders.OrderLink"/> property.
+/// Containers linked to further business objects can implement <see cref="IOrderLinkedMaterialContainer"/> alongside
+/// other linked container interfaces by declaring an <see cref="Integrations.Orders.OrderLink"/> property.
 /// </remarks>
 [DataContract]
-public abstract class OrderLinkedMaterialContainer : MaterialContainer, IOrderLinkedMaterialContainer
+public class OrderLinkedMaterialContainer : MaterialContainer, IOrderLinkedMaterialContainer
 {
     /// <inheritdoc />
     [DataMember]

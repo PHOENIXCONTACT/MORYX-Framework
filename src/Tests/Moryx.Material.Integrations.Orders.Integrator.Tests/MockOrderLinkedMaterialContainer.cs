@@ -6,8 +6,11 @@ using Moryx.Material.Integrations.Products;
 
 namespace Moryx.Material.Integrations.Orders.Integrator.Tests;
 
-internal sealed class MockOrderLinkedMaterialContainer : OrderLinkedMaterialContainer
+internal sealed class MockOrderLinkedMaterialContainer : MaterialContainer, IOrderLinkedMaterialContainer
 {
+    /// <inheritdoc />
+    [DataMember]
+    public OrderLink OrderLink { get; } = new();
 }
 
 /// <summary>

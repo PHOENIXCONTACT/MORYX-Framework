@@ -110,7 +110,7 @@ public abstract class LinkedContainerManagerBase<TReference> : IAsyncPlugin, ILo
         {
             return;
         }
-        // TODO: Either use a set or the id as a key for the dictionary?
+
         _running.TryAdd(task, 0);
         _ = task.ContinueWith(t => _running.TryRemove(t, out _), TaskScheduler.Default);
     }

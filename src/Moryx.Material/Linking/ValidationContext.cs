@@ -12,9 +12,9 @@ namespace Moryx.Material.Linking;
 /// </remarks>
 public class ValidationContext
 {
-    private readonly List<ValidationContextEntry> _entries = new();
-    private readonly List<ILinkingRequirement> _requirements = new();
-    private readonly object _lock = new();
+    private readonly List<ValidationContextEntry> _entries = [];
+    private readonly List<ILinkingRequirement> _requirements = [];
+    private readonly Lock _lock = new();
 
     /// <summary>
     /// All recorded entries (info / warning / error).

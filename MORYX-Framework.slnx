@@ -1,8 +1,8 @@
 <Solution>
   <Folder Name="/Benchmark/">
+    <Project Path="src/Moryx.Benchmarking.Setups/Moryx.Benchmarking.Setups.csproj" />
     <Project Path="src/Moryx.Benchmarking/Moryx.Benchmarking.csproj" />
     <Project Path="src/Moryx.Resources.Benchmarking/Moryx.Resources.Benchmarking.csproj" />
-    <Project Path="src/Moryx.Benchmarking.Setups/Moryx.Benchmarking.Setups.csproj" />
   </Folder>
   <Folder Name="/ControlSystem/">
     <Project Path="src/Moryx.ControlSystem.Jobs.Endpoints/Moryx.ControlSystem.Jobs.Endpoints.csproj" />
@@ -35,6 +35,7 @@
     <Project Path="src/Moryx.Material.Integrations.Products.Integrator/Moryx.Material.Integrations.Products.Integrator.csproj" />
     <Project Path="src/Moryx.Material.Integrations.Products/Moryx.Material.Integrations.Products.csproj" />
     <Project Path="src/Moryx.Material.Management/Moryx.Material.Management.csproj" Id="5934fd23-97b6-424f-916d-aea4741b36ef" />
+    <Project Path="src/Moryx.Material.Samples/Moryx.Material.Samples.csproj" Id="fe731f70-5aa0-4626-b1fa-e366412b7fbe" />
     <Project Path="src/Moryx.Material/Moryx.Material.csproj" Id="644a3746-01f6-4cf0-a5be-7380559edc16" />
   </Folder>
   <Folder Name="/Media/">
@@ -133,6 +134,7 @@
       <Project Path="src/Tests/Moryx.Shifts.Management.IntegrationTests/Moryx.Shifts.Management.IntegrationTests.csproj" />
     </Folder>
   <Folder Name="/Tests/UnitTests/">
+    <Project Path="src/Tests/Moryx.AbstractionLayer.Products.Endpoints.Tests/Moryx.AbstractionLayer.Products.Endpoints.Tests.csproj" />
     <Project Path="src/Tests/Moryx.AbstractionLayer.Resources.Endpoints.Tests/Moryx.AbstractionLayer.Resources.Endpoints.Tests.csproj" />
     <Project Path="src/Tests/Moryx.AbstractionLayer.Tests/Moryx.AbstractionLayer.Tests.csproj" />
     <Project Path="src/Tests/Moryx.AspNetCore.Mqtt.Tests/Moryx.AspNetCore.Mqtt.Tests.csproj" />
@@ -152,7 +154,6 @@
     <Project Path="src/Tests/Moryx.ProcessData.InfluxDbListener.Tests/Moryx.ProcessData.InfluxDbListener.Tests.csproj" />
     <Project Path="src/Tests/Moryx.ProcessData.SpreadsheetsListener.Tests/Moryx.ProcessData.SpreadsheetsListener.Tests.csproj" />
     <Project Path="src/Tests/Moryx.ProcessData.Tests/Moryx.ProcessData.Tests.csproj" />
-    <Project Path="src/Tests/Moryx.AbstractionLayer.Products.Endpoints.Tests/Moryx.AbstractionLayer.Products.Endpoints.Tests.csproj" />
     <Project Path="src/Tests/Moryx.Resources.Management.Tests/Moryx.Resources.Management.Tests.csproj" />
     <Project Path="src/Tests/Moryx.Resources.VisualInstructions.Tests/Moryx.Resources.VisualInstructions.Tests.csproj" />
     <Project Path="src/Tests/Moryx.Runtime.Endpoints.Tests/Moryx.Runtime.Endpoints.Tests.csproj" />
@@ -197,5 +198,5 @@
   <Project Path="src/Moryx.Container/Moryx.Container.csproj" />
   <Project Path="src/Moryx.Launcher/Moryx.Launcher.csproj" />
   <Project Path="src/Moryx/Moryx.csproj" />
-  <Project Path="src/StartProject.Asp/StartProject.Asp.csproj" DefaultStartup="true"/>
+  <Project Path="src/StartProject.Asp/StartProject.Asp.csproj" />
 </Solution>
