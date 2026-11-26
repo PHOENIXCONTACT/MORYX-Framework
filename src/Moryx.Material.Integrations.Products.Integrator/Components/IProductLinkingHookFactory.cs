@@ -12,11 +12,15 @@ namespace Moryx.Material.Integrations.Products.Integrator.Components;
 [PluginFactory(typeof(IConfigBasedComponentSelector))]
 internal interface IProductLinkingHookFactory
 {
-    // ToDo: Can I specify this to directly return ProductLinkingHooks?
     /// <summary>
     /// Create a new hook instance.
     /// </summary>
-    Task<ILinkingHook> Create(ProductLinkingHookConfig config, CancellationToken cancellationToken);
+    /// <remarks>
+    /// Returns <see cref="ProductLinkingHook"/> instead of <see cref="ILinkingHook"/>, because the
+    /// <see cref="IConfigBasedComponentSelector"/> only passes the config to the hook if the
+    /// returned type implements <see cref="Modules.IAsyncConfiguredInitializable{T}"/>.
+    /// </remarks>
+    Task<ProductLinkingHook> Create(ProductLinkingHookConfig config, CancellationToken cancellationToken);
 
     /// <summary>
     /// Destroy a hook instance.

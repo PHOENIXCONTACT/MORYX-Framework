@@ -35,8 +35,8 @@ internal class ProductLinkHandler : LinkHandlerBase<ProductTypeReference, Produc
 
     protected override IEnumerable<ProductLinkingHookConfig> HookConfigs => Config.Hooks;
 
-    protected override Task<ILinkingHook> CreateHookAsync(ProductLinkingHookConfig config, CancellationToken cancellationToken)
-        => HookFactory.Create(config, cancellationToken);
+    protected override async Task<ILinkingHook> CreateHookAsync(ProductLinkingHookConfig config, CancellationToken cancellationToken)
+        => await HookFactory.Create(config, cancellationToken);
 
     protected override void DestroyHook(ILinkingHook hook) => HookFactory.Destroy(hook);
 

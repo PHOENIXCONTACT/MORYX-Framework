@@ -2,7 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Products;
+using Moryx.Material.Integrations.Products.Integrator;
 using Moryx.Material.Linking;
+using Moryx.Modules;
 
 namespace Moryx.Material.Integrations.Products;
 
@@ -12,6 +14,12 @@ namespace Moryx.Material.Integrations.Products;
 /// through <see cref="LinkingHook{TReference, TBusinessObject}.Target"/> and
 /// <see cref="LinkingHook{TReference, TBusinessObject}.Previous"/>.
 /// </summary>
-public abstract class ProductLinkingHook : LinkingHook<ProductTypeReference, ProductType>
+public abstract class ProductLinkingHook : LinkingHook<ProductTypeReference, ProductType>, IAsyncConfiguredInitializable<ProductLinkingHookConfig>
 {
+    /// <inheritdoc />
+    /// <remarks>
+    /// Override to read a derived <see cref="ProductLinkingHookConfig"/> of the hook.
+    /// </remarks>
+    public virtual Task InitializeAsync(ProductLinkingHookConfig config, CancellationToken cancellationToken = default)
+        => Task.CompletedTask;
 }
