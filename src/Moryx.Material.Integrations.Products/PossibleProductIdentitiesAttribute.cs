@@ -21,22 +21,24 @@ public class PossibleProductIdentitiesAttribute : PossibleValuesAttribute
     public override bool UpdateFromPredecessor => false;
 
     /// <inheritdoc />
-    public override IEnumerable<string> GetValues(Container.IContainer container, IServiceProvider serviceProvider)
+    public override IEnumerable<string>? GetValues(Container.IContainer container, IServiceProvider serviceProvider)
     {
         if (serviceProvider.GetService(typeof(IProductManagement)) is not IProductManagement facade)
         {
-            return [];
+            throw new InvalidOperationException($"Tried to utilize {nameof(PossibleProductIdentitiesAttribute)} without" +
+                $" an {nameof(IProductManagement)} facade being available. " +
+                $"Make sure a corresponding module is present in your application.");
         }
 
-        var empty = Array.Empty<string>();
         try
         {
             var types = facade.LoadTypesAsync(new ProductQuery()).GetAwaiter().GetResult();
             return types.Select(t => t.Identity?.ToString()).Where(s => !string.IsNullOrEmpty(s)).Cast<string>().Distinct().ToArray();
         }
-        catch (HealthStateException)
+        catch (HealthStateException e)
         {
-            return empty;
+            throw new InvalidOperationException($"Tried to utilize {nameof(PossibleProductIdentitiesAttribute)} while" +
+                $" the {nameof(IProductManagement)} module was not running. Check the modules state and retry.", e);
         }
     }
 }

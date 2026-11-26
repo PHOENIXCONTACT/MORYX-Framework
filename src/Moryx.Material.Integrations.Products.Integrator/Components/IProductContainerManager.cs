@@ -8,7 +8,7 @@ namespace Moryx.Material.Integrations.Products.Integrator.Components;
 /// <summary>
 /// Lifecycle manager for <see cref="IProductLinkedMaterialContainer"/> resources.
 /// Handles container registration and container lifecycle events.
-/// It also forwards product-linking events to be handled by the <see cref="ILinkingHookManager"/>.
+/// It also attaches the <see cref="IProductLinkHandler"/> to the <see cref="ProductLink"/> of each container.
 /// </summary>
 internal interface IProductContainerManager : IAsyncPlugin
 {

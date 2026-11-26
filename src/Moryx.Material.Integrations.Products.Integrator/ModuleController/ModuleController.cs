@@ -58,7 +58,6 @@ public class ModuleController(IModuleContainerFactory containerFactory, IConfigM
     /// <inheritdoc />
     protected override async Task OnStartAsync(CancellationToken cancellationToken)
     {
-        await Container.Resolve<ILinkingHookManager>().StartAsync(cancellationToken);
         await Container.Resolve<IProductTypeReferencesPool>().StartAsync(cancellationToken);
         await Container.Resolve<IProductContainerManager>().StartAsync(cancellationToken);
         ActivateFacade(_facade);
@@ -70,7 +69,6 @@ public class ModuleController(IModuleContainerFactory containerFactory, IConfigM
         DeactivateFacade(_facade);
         await Container.Resolve<IProductContainerManager>().StopAsync(cancellationToken);
         await Container.Resolve<IProductTypeReferencesPool>().StopAsync(cancellationToken);
-        await Container.Resolve<ILinkingHookManager>().StopAsync(cancellationToken);
     }
 
     private readonly ProductIntegrationFacade _facade = new();

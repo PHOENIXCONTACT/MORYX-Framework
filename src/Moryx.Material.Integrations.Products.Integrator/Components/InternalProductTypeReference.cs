@@ -3,18 +3,11 @@
 
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Products;
 using Moryx.Material.Linking;
 
 namespace Moryx.Material.Integrations.Products.Integrator.Components;
 
-/// <summary>
-/// Internal, managed variant of <see cref="ProductTypeReference"/> that carries a strong
-/// reference to the underlying <see cref="ProductType"/> business object as long as it is
-/// available. When active it forwards <see cref="ProductTypeReference.CreateInstance"/>
-/// to the underlying <see cref="ProductType"/>.
-/// </summary>
 internal class InternalProductTypeReference : ProductTypeReference
 {
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -32,33 +25,21 @@ internal class InternalProductTypeReference : ProductTypeReference
     }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    public new ProductState? Status
-    {
-        get;
-        set => base.Status = field = value;
-    }
-
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     public new ReferenceState State
     {
         get;
         set => base.State = field = value;
     }
 
-    /// <summary>
-    /// The resolved <see cref="ProductType"/> business object. Only set while the reference
-    /// is <see cref="ReferenceState.Active"/>.
-    /// </summary>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     public ProductType? ProductType { get; set; }
 
-    /// <inheritdoc />
     public override ProductInstance? CreateInstance()
     {
         // Only create an instance while we actively hold a strong reference to the ProductType.
-        if (this.IsActive() && ProductType is not null)
+        if (this.IsActive())
         {
-            return ProductType.CreateInstance();
+            return ProductType?.CreateInstance();
         }
 
         return null;
@@ -78,12 +59,12 @@ internal static class ReferenceExtensions
         public InternalProductTypeReference ToReference() => new(productType.Identity?.ToString() ?? string.Empty)
         {
             Name = productType.Name,
-            Status = productType.State,
             ProductType = productType,
             State = ReferenceState.Active
         };
     }
 
+    // ToDo: Verify if extensions make sense
     extension(IProductManagement productManagement)
     {
         public async Task<ProductType?> LoadProductFor(ProductTypeReference? reference)

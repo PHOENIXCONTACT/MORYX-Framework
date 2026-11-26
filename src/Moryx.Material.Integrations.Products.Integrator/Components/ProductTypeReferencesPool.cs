@@ -8,12 +8,7 @@ using Moryx.Material.Linking;
 
 namespace Moryx.Material.Integrations.Products.Integrator.Components;
 
-/// <summary>
-/// Lifecycle pool of <see cref="InternalProductTypeReference"/> instances that are
-/// currently referenced by at least one product-linked container. References are added on
-/// demand (through <see cref="AcquireAsync"/> / <see cref="ResolveAsync"/>) and removed via
-/// <see cref="Release"/> once no container uses them anymore.
-/// </summary>
+/// <inheritdoc/>
 [Component(LifeCycle.Singleton, typeof(IProductTypeReferencesPool))]
 internal class ProductTypeReferencesPool : IProductTypeReferencesPool
 {
@@ -29,8 +24,6 @@ internal class ProductTypeReferencesPool : IProductTypeReferencesPool
     #region Lifecycle
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        // We do not preload product types. The pool grows on demand when containers
-        // declare their linked product references.
         ProductManagement.TypeChanged += OnTypeChanged;
         return Task.CompletedTask;
     }
@@ -56,12 +49,9 @@ internal class ProductTypeReferencesPool : IProductTypeReferencesPool
             return;
         }
 
-        // Only synchronize references that are already tracked by the pool. We do not
-        // introduce new entries for product types no container is linked to.
         if (_references.TryGetValue(key, out var entry))
         {
             entry.Reference.Name = productType.Name;
-            entry.Reference.Status = productType.State;
             entry.Reference.ProductType = productType;
             entry.Reference.State = ReferenceState.Active;
         }
@@ -70,7 +60,6 @@ internal class ProductTypeReferencesPool : IProductTypeReferencesPool
     private static void Deactivate(InternalProductTypeReference reference)
     {
         reference.State = ReferenceState.Inactive;
-        reference.Status = null;
         reference.ProductType = null;
     }
     #endregion
@@ -109,7 +98,7 @@ internal class ProductTypeReferencesPool : IProductTypeReferencesPool
             : new InternalProductTypeReference(productIdentity) { State = ReferenceState.Unavailable };
     }
 
-    public async Task<InternalProductTypeReference> AcquireAsync(ProductTypeReference reference, CancellationToken cancellationToken = default)
+    public async Task<ProductTypeReference> AcquireAsync(ProductTypeReference reference, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(reference);
         if (string.IsNullOrEmpty(reference.ProductIdentity))
@@ -182,7 +171,6 @@ internal class ProductTypeReferencesPool : IProductTypeReferencesPool
             if (product is not null)
             {
                 entry.Reference.Name = product.Name;
-                entry.Reference.Status = product.State;
                 entry.Reference.ProductType = product;
                 entry.Reference.State = ReferenceState.Active;
             }

@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Products;
+using Moryx.Material.Linking.Integration;
 using Moryx.Modules;
 
 namespace Moryx.Material.Integrations.Products.Integrator.Components;
@@ -14,8 +15,11 @@ namespace Moryx.Material.Integrations.Products.Integrator.Components;
 /// The pool is populated on demand: entries are added when a container declares a link and
 /// removed once the last container referencing them is deregistered. References are kept in
 /// sync with the <see cref="IProductManagement"/> facade for as long as they live.
+/// <see cref="IReferencePool{TReference}.AcquireAsync"/> increments the usage count of a reference,
+/// <see cref="IReferencePool{TReference}.Release"/> decrements it and removes the reference once
+/// no container uses it anymore.
 /// </remarks>
-internal interface IProductTypeReferencesPool : IAsyncPlugin
+internal interface IProductTypeReferencesPool : IAsyncPlugin, IReferencePool<ProductTypeReference>
 {
     /// <summary>
     /// Gets the managed reference matching <paramref name="reference"/>, if one is currently
@@ -37,17 +41,4 @@ internal interface IProductTypeReferencesPool : IAsyncPlugin
     /// Returns all currently managed references.
     /// </summary>
     IReadOnlyList<ProductTypeReference> GetAll();
-
-    /// <summary>
-    /// Registers <paramref name="reference"/> as being used by another container.
-    /// Increments the internal usage count and adds the reference to the pool if it is not
-    /// already tracked.
-    /// </summary>
-    Task<InternalProductTypeReference> AcquireAsync(ProductTypeReference reference, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Releases a previously acquired reference. When no other container is using the
-    /// reference anymore, it is removed from the pool.
-    /// </summary>
-    void Release(ProductTypeReference? reference);
 }
