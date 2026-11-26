@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
+using Moryx.Material.Linking.Integration;
 using Newtonsoft.Json;
 
 namespace Moryx.Material.Linking;
@@ -149,10 +150,15 @@ public abstract class MaterialContainerLink<TReference> : MaterialContainerLink
     /// <summary>
     /// Attaches <paramref name="handler"/> to this link and processes a pending request, if any.
     /// </summary>
-    /// <param name="container">Container instance passed to the handler, typically the proxy the integration received.</param>
+    /// <param name="container">Container instance passed to the handler</param>
     /// <param name="handler">Handler executing the linking protocol.</param>
     /// <param name="cancellationToken">Token used to cancel processing of a pending request.</param>
     /// <returns>The result of the pending request, or <c>null</c> if there was none.</returns>
+    /// <remarks>
+    /// This is the only place an attachement is formed and it is only triggered from
+    /// <see cref="Integration.LinkedContainerManagerBase"/>, which as a component of integrator modules does only
+    /// work on resource proxies. Thereby, handing the container back during the linking process is not an issue.
+    /// </remarks>
     internal async Task<LinkingResult?> AttachAsync(IMaterialContainer container, ILinkHandler<TReference> handler,
         CancellationToken cancellationToken = default)
     {
@@ -219,7 +225,6 @@ public abstract class MaterialContainerLink<TReference> : MaterialContainerLink
     private async Task<LinkingResult> ExecuteAsync(Attachment attachment, TReference? target, CancellationToken cancellationToken)
     {
         var request = new LinkingRequest<TReference>(target, Reference);
-        // TODO: Is this a proxy, always?
         var response = await attachment.Handler.ValidateAsync(attachment.Container, request, cancellationToken);
 
         // The request is decided, a stored request is superseded either way
