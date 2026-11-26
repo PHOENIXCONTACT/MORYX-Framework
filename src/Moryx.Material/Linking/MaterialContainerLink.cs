@@ -47,7 +47,6 @@ public abstract class MaterialContainerLink
     protected void RaiseChanged() => Owner?.RaiseLinkChanged();
 }
 
-// TODO: Make sealed instead of abstract?
 /// <summary>
 /// Link slot of a <see cref="MaterialContainer"/> to a business object represented by <typeparamref name="TReference"/>.
 /// Drives the two-phase linking protocol against the <see cref="ILinkHandler{TReference}"/> attached by an integration.
