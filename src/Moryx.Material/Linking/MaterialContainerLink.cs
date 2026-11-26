@@ -123,11 +123,11 @@ public abstract class MaterialContainerLink<TReference> : MaterialContainerLink
             {
                 if (!ClearPending())
                 {
-                    return new LinkingResult(LinkingStatus.Unchanged, new ValidationContext());
+                    return LinkingResult.Unchanged();
                 }
 
                 RaiseChanged();
-                return new LinkingResult(LinkingStatus.Applied, new ValidationContext());
+                return LinkingResult.Applied(new());
             }
 
             var attachment = _attachment;
@@ -136,7 +136,7 @@ public abstract class MaterialContainerLink<TReference> : MaterialContainerLink
                 PendingTarget = target;
                 IsUnlinkPending = target is null;
                 RaiseChanged();
-                return new LinkingResult(LinkingStatus.Pending, new ValidationContext());
+                return LinkingResult.Pending();
             }
 
             return await ExecuteAsync(attachment, target, cancellationToken);
@@ -232,7 +232,7 @@ public abstract class MaterialContainerLink<TReference> : MaterialContainerLink
         if (!response.IsAllowed)
         {
             RaiseChanged();
-            return new LinkingResult(LinkingStatus.Rejected, response.Context);
+            return LinkingResult.Rejected(response.Context);
         }
 
         Reference = target is null ? null : response.Reference;
@@ -250,7 +250,7 @@ public abstract class MaterialContainerLink<TReference> : MaterialContainerLink
         // TODO: Check whether we need to fire this event here or whether it can be done behind the handler in the background.
         // The resource already emits the changed event for that matter
         Applied?.Invoke(this, new LinkAppliedEventArgs<TReference>(attachment.Container, request, response.Context, Reference));
-        return new LinkingResult(LinkingStatus.Applied, response.Context);
+        return LinkingResult.Applied(response.Context);
     }
 
     private bool ClearPending()

@@ -4,40 +4,38 @@
 namespace Moryx.Material.Linking;
 
 /// <summary>
-/// Outcome of a link or unlink request on a <see cref="MaterialContainerLink"/>.
-/// </summary>
-public enum LinkingStatus
-{
-    /// <summary>The request was validated and applied.</summary>
-    Applied,
-
-    /// <summary>The request was rejected during validation; the link is unchanged.</summary>
-    Rejected,
-
-    /// <summary>No integration is attached yet; the request is stored and processed once one attaches.</summary>
-    Pending,
-
-    /// <summary>The request did not change anything, e.g. unlinking a link that is not linked.</summary>
-    Unchanged
-}
-
-/// <summary>
 /// Result of a link or unlink request on a <see cref="MaterialContainerLink"/>.
 /// </summary>
-/// <param name="status">Outcome of the request.</param>
-/// <param name="context">Validation context populated during the request.</param>
-public class LinkingResult(LinkingStatus status, ValidationContext context)
+public class LinkingResult
 {
     /// <summary>
     /// Outcome of the request.
     /// </summary>
-    public LinkingStatus Status { get; } = status;
+    public LinkingStatus Status { get; }
 
     /// <summary>
     /// Validation context populated during the request. Empty for <see cref="LinkingStatus.Pending"/>
     /// and <see cref="LinkingStatus.Unchanged"/>.
     /// </summary>
-    public ValidationContext Context { get; } = context;
+    public ValidationContext Context { get; }
 
-    // TODO: Add shortcut static methods to create results for each enum case above
+    private LinkingResult(LinkingStatus status, ValidationContext context)
+    {
+        Status = status;
+        Context = context;
+    }
+
+    /// <inheritdoc cref="LinkingStatus.Applied"/>
+    public static LinkingResult Applied(ValidationContext validationContext)
+        => new(LinkingStatus.Applied, validationContext);
+
+    /// <inheritdoc cref="LinkingStatus.Rejected"/>
+    public static LinkingResult Rejected(ValidationContext validationContext)
+        => new(LinkingStatus.Rejected, validationContext);
+
+    /// <inheritdoc cref="LinkingStatus.Pending"/>
+    public static LinkingResult Pending() => new(LinkingStatus.Pending, new());
+
+    /// <inheritdoc cref="LinkingStatus.Unchanged"/>
+    public static LinkingResult Unchanged() => new(LinkingStatus.Applied, new());
 }
