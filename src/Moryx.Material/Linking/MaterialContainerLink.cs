@@ -146,7 +146,6 @@ public abstract class MaterialContainerLink<TReference> : MaterialContainerLink
         }
     }
 
-    // TODO: Might be internal?
     /// <summary>
     /// Attaches <paramref name="handler"/> to this link and processes a pending request, if any.
     /// </summary>
@@ -154,7 +153,7 @@ public abstract class MaterialContainerLink<TReference> : MaterialContainerLink
     /// <param name="handler">Handler executing the linking protocol.</param>
     /// <param name="cancellationToken">Token used to cancel processing of a pending request.</param>
     /// <returns>The result of the pending request, or <c>null</c> if there was none.</returns>
-    public async Task<LinkingResult?> AttachAsync(IMaterialContainer container, ILinkHandler<TReference> handler,
+    internal async Task<LinkingResult?> AttachAsync(IMaterialContainer container, ILinkHandler<TReference> handler,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(container);
@@ -187,7 +186,7 @@ public abstract class MaterialContainerLink<TReference> : MaterialContainerLink
     /// <summary>
     /// Detaches <paramref name="handler"/> from this link if it is the currently attached one.
     /// </summary>
-    public void Detach(ILinkHandler<TReference> handler)
+    internal void Detach(ILinkHandler<TReference> handler)
     {
         var current = _attachment;
         if (current is not null && ReferenceEquals(current.Handler, handler))
@@ -196,13 +195,12 @@ public abstract class MaterialContainerLink<TReference> : MaterialContainerLink
         }
     }
 
-    // TODO: Might be internal?
     /// <summary>
     /// Replaces the linked reference with an instance managed by an integration.
     /// </summary>
     /// <param name="reference">Reference that must <see cref="Linking.Reference.Matches"/> the linked one.</param>
     /// <exception cref="InvalidOperationException">If <paramref name="reference"/> identifies a different business object.</exception>
-    public void Substitute(TReference reference)
+    internal void Substitute(TReference reference)
     {
         ArgumentNullException.ThrowIfNull(reference);
         if (Reference is null || !Reference.Matches(reference))
