@@ -1,12 +1,15 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Factory;
+using Moryx.Material.Linking;
 using Moryx.Material.States;
 using Moryx.Serialization;
 using Moryx.StateMachines;
@@ -31,6 +34,7 @@ public abstract class MaterialContainer : Resource, IMaterialContainer, IStateCo
     [Display(Name = "Host", Description = "Resource that hosts or holds this container (e.g., carrier, machine, shelf slot).")]
     public IResource? ContainerHost { get; set; }
 
+    // TODO: IdentityEncoder
     /// <summary>
     /// Optional scannable identity of the physical container (e.g., barcode or QR code).
     /// May be <c>null</c> for virtual containers in <see cref="RequestedStateInformation"/> or unlabelled container types.
@@ -72,6 +76,13 @@ public abstract class MaterialContainer : Resource, IMaterialContainer, IStateCo
     [EntrySerialize, ReadOnly(true)]
     [Display(Name = "State Information", Description = "Information about the current state of the container.")]
     public StateInformation? StateInformation { get; set; }
+
+    /// <inheritdoc />
+    /// <remarks>
+    /// Links are discovered from properties of type <see cref="MaterialContainerLink"/>. Declare them as get-only
+    /// properties initialized inline or in the constructor, e.g. <c>public OrderLink OrderLink { get; } = new();</c>
+    /// </remarks>
+    public IReadOnlyList<MaterialContainerLink> Links { get; private set; } = [];
 
     /// <inheritdoc />
     public void UpdateMaterial(MaterialUpdate update)
@@ -137,9 +148,38 @@ public abstract class MaterialContainer : Resource, IMaterialContainer, IStateCo
 
     #endregion
 
+    #region Links
+
+    // TODO: Replace reflection with explicit link registration (and add code generator for such properties
+    private static readonly ConcurrentDictionary<Type, PropertyInfo[]> LinkProperties = new();
+
+    private MaterialContainerLink[] DiscoverLinks()
+    {
+        var properties = LinkProperties.GetOrAdd(GetType(), type => type
+            .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+            .Where(p => p.CanRead && p.GetIndexParameters().Length == 0 && typeof(MaterialContainerLink).IsAssignableFrom(p.PropertyType))
+            .ToArray());
+
+        var links = properties.Select(p => p.GetValue(this)).OfType<MaterialContainerLink>().ToArray();
+        foreach (var link in links)
+        {
+            link.Owner = this;
+        }
+
+        return links;
+    }
+
+    /// <summary>
+    /// Called by a <see cref="MaterialContainerLink"/> of this container when it changed.
+    /// </summary>
+    internal void RaiseLinkChanged() => RaiseResourceChanged();
+
+    #endregion
+
     #region IStateContext
 
     private MaterialContainerState? _state;
+    // TODO: Unused, needed here?
     private readonly Lock _stateLock = new();
 
     /// <inheritdoc/>
@@ -170,6 +210,9 @@ public abstract class MaterialContainer : Resource, IMaterialContainer, IStateCo
     {
         await base.OnInitializeAsync(cancellationToken);
         StateMachine.ForContext(this).With<MaterialContainerState>();
+
+        // Pick up links assigned after construction
+        Links = DiscoverLinks();
     }
     #endregion
 

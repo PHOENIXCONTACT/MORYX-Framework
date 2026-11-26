@@ -91,6 +91,11 @@ internal class OrderReferencesPool : IOrderReferencesPool
             .Value;
     }
 
+    // ToDo: References created here are marked Unavailable whenever the pool has not received an update event for the
+    // operation yet, even if the IOrderManagement can load it (e.g. operations not yet running). Resolve the operation
+    // through the facade instead and synchronize the reference with it. Additionally, the entry keyed by a random Guid
+    // is not replaced once the operation is reported (SynchronizeReferenceOf adds a second entry under the operation's
+    // identifier), so linked containers keep the stale reference and SingleOrDefault in Get/GetOrCreate throws.
     public InternalOrderReference GetOrCreate(string orderNumber, string? operationNumber = null)
     {
         var existing = _operationReferences.SingleOrDefault(pair =>
@@ -104,6 +109,15 @@ internal class OrderReferencesPool : IOrderReferencesPool
     }
 
     public IReadOnlyList<OrderReference> GetAll() => [.. _operationReferences.Values];
+
+    // References are synchronized with the operations of the order management rather than their usage by links
+    public Task<OrderReference> AcquireAsync(OrderReference reference, CancellationToken cancellationToken = default)
+        => Task.FromResult<OrderReference>(GetOrCreate(reference.OrderNumber, reference.OperationNumber));
+
+    // TODO: Check actual need for release
+    public void Release(OrderReference? reference)
+    {
+    }
 
     #endregion
 }

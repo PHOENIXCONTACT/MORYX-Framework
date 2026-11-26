@@ -12,6 +12,7 @@ namespace Moryx.Material.IntegrationTests;
 [TestFixture]
 internal sealed class MaterialManagementFacadeTests : TestBase
 {
+    // ToDo: Clean up setup of tests
     [SetUp]
     public override async Task SetUp()
     {
@@ -19,7 +20,7 @@ internal sealed class MaterialManagementFacadeTests : TestBase
     }
 
     [Test]
-    public void GetContainerTypes_InTestEnvironment_ReturnsBaseClass()
+    public void GetContainerTypes_InTestEnvironment_ReturnsOnlyTheBaseClass()
     {
         // Act
         var containerTypes = _materialManagement.GetContainerTypes();
@@ -166,6 +167,7 @@ internal sealed class MaterialManagementFacadeTests : TestBase
             Throws.TypeOf<KeyNotFoundException>(), "Deregistering an unknown container id should throw KeyNotFoundException");
     }
 
+    // TODO: Split Lineage Tests in seperate test class
     [Test]
     public void RecordLineageAsync_WithLineageEvent_RecordsLineageEvent()
     {

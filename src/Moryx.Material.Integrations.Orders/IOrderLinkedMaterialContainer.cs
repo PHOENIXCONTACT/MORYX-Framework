@@ -1,41 +1,20 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.Material.Linking;
+using Moryx.Orders;
 
 namespace Moryx.Material.Integrations.Orders;
 
 /// <summary>
-/// Material container with the ability to be linked to an order.
+/// A <see cref="IMaterialContainer"/> with the ability to be linked to an <see cref="Order"/>.
 /// </summary>
+/// <remarks>
+/// <see cref="IMaterialContainer"/>s are intended to be linked to at most one <see cref="Order"/> at a time.
+/// </remarks>
 public interface IOrderLinkedMaterialContainer : IMaterialContainer
 {
     /// <summary>
-    /// Currently linked order, if any.
+    /// Link to the order of this container.
     /// </summary>
-    OrderReference? LinkedOrder { get; set; }
-
-    /// <summary>
-    /// Initiates a linking request for <paramref name="orderNumber"/> and <paramref name="operationNumber"/>, 
-    /// optionally auto-unlinking the previously linked order.
-    /// </summary>
-    Task RequestOrderLinkAsync(string orderNumber, string? operationNumber = null, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Initiates an unlinking request to detach the currently linked order.
-    /// </summary>
-    Task RequestOrderUnlinkAsync(CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Raised when a link or unlink request is made by the container.
-    /// Listeners execute <see cref="OrderLinkingHook"/>s and return a response via 
-    /// <see cref="LinkingRequestEventArgs.ResponseCallback"/>.
-    /// </summary>
-    event EventHandler<OrderLinkRequestEventArgs>? OrderLinkRequested;
-
-    /// <summary>
-    /// Raised by the container after a link has been applied (or unlinking completed).
-    /// Again fed into <see cref="OrderLinkingHook"/>s for optional post-processing.
-    /// </summary>
-    event EventHandler<OrderLinkAppliedEventArgs>? OrderLinkApplied;
+    OrderLink OrderLink { get; }
 }

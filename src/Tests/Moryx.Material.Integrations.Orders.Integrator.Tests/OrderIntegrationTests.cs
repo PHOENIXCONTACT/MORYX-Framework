@@ -3,12 +3,15 @@
 
 using Moq;
 using Moryx.Material.Facade;
+using Moryx.Material.Integrations.Products;
 using Moryx.Material.Linking;
 using Moryx.Material.States;
 using Moryx.Modules;
 using Moryx.Orders;
+using Moryx.Serialization;
 using Moryx.TestTools.IntegrationTest;
 using Moryx.Tools;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using IntegratorModuleConfig = Moryx.Material.Integrations.Orders.Integrator.ModuleConfig;
 using IntegratorModuleController = Moryx.Material.Integrations.Orders.Integrator.ModuleController;
@@ -31,6 +34,7 @@ internal sealed class OrderIntegrationTests
     private Mock<IMaterialManagement> _materialManagement = null!;
     private Mock<IOrderManagement> _orderManagement = null!;
     private MoryxTestEnvironment _env = null!;
+    private IntegratorModuleConfig _config = null!;
     private IOrderIntegration _orderIntegration = null!; // ToDo: Remove null!
 
     [SetUp]
@@ -39,6 +43,8 @@ internal sealed class OrderIntegrationTests
         ReflectionTool.TestMode = true;
         _containers.Clear();
         _operations.Clear();
+        BlockingOrderLinkingHook.RequestCount = 0;
+        BlockingOrderLinkingHook.AppliedCount = 0;
 
         SetupMaterialManagementMock();
         SetupOrderManagementMock();
@@ -61,15 +67,21 @@ internal sealed class OrderIntegrationTests
         _orderManagement.Setup(m => m.GetOperations(It.IsAny<Func<Operation, bool>>()))
             .Returns((Func<Operation, bool> filter) => [.. _operations.Where(filter)]);
         _orderManagement.Setup(m => m.LoadOperationAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync((string orderNumber, string operationNumber, CancellationToken _) =>
-                _operations.SingleOrDefault(o => o.Order.Number == orderNumber && o.Number == operationNumber));
+            .Returns((string orderNumber, string operationNumber, CancellationToken _) => LoadOperationAsync(orderNumber, operationNumber));
+    }
+
+    // Completes asynchronously like a real facade to cover responses arriving after the request was raised
+    private async Task<Operation?> LoadOperationAsync(string orderNumber, string? operationNumber)
+    {
+        await Task.Delay(5);
+        return _operations.SingleOrDefault(o => o.Order.Number == orderNumber && o.Number == operationNumber);
     }
 
     private async Task SetupEnvironment()
     {
-        var config = new IntegratorModuleConfig();
-        config.Initialize();
-        _env = new MoryxTestEnvironment(typeof(IntegratorModuleController), [_materialManagement, _orderManagement], config);
+        _config = new IntegratorModuleConfig();
+        _config.Initialize();
+        _env = new MoryxTestEnvironment(typeof(IntegratorModuleController), [_materialManagement, _orderManagement], _config);
 
         await _env.StartTestModuleAsync();
     }
@@ -91,13 +103,13 @@ internal sealed class OrderIntegrationTests
         // Assert
         Assert.Multiple(() =>
         {
-            Assert.That(container.LinkedOrder, Is.Not.Null);
-            Assert.That(container.LinkedOrder, Is.Not.SameAs(originalReference));
-            Assert.That(container.LinkedOrder!.OrderNumber, Is.EqualTo(OrderNumber));
-            Assert.That(container.LinkedOrder.OperationNumber, Is.EqualTo(OperationNumber));
-            Assert.That(container.LinkedOrder.State, Is.EqualTo(ReferenceState.Active));
-            Assert.That(container.LinkedOrder.Status, Is.EqualTo(OperationStateClassification.Ready));
-            Assert.That(container.LinkedOrder.Source, Is.TypeOf<TestOperationSource>());
+            Assert.That(container.OrderLink.Reference, Is.Not.Null);
+            Assert.That(container.OrderLink.Reference, Is.Not.SameAs(originalReference));
+            Assert.That(container.OrderLink.Reference!.OrderNumber, Is.EqualTo(OrderNumber));
+            Assert.That(container.OrderLink.Reference.OperationNumber, Is.EqualTo(OperationNumber));
+            Assert.That(container.OrderLink.Reference.State, Is.EqualTo(ReferenceState.Active));
+            Assert.That(container.OrderLink.Reference.Status, Is.EqualTo(OperationStateClassification.Ready));
+            Assert.That(container.OrderLink.Reference.Source, Is.TypeOf<TestOperationSource>());
         });
     }
 
@@ -115,13 +127,13 @@ internal sealed class OrderIntegrationTests
         // Assert
         Assert.Multiple(() =>
         {
-            Assert.That(container.LinkedOrder, Is.Not.Null);
-            Assert.That(container.LinkedOrder, Is.Not.SameAs(originalReference));
-            Assert.That(container.LinkedOrder!.OrderNumber, Is.EqualTo("UNKNOWN-ORDER"));
-            Assert.That(container.LinkedOrder.OperationNumber, Is.EqualTo("9999"));
-            Assert.That(container.LinkedOrder.State, Is.EqualTo(ReferenceState.Unavailable));
-            Assert.That(container.LinkedOrder.Status, Is.Null);
-            Assert.That(container.LinkedOrder.Source, Is.Null);
+            Assert.That(container.OrderLink.Reference, Is.Not.Null);
+            Assert.That(container.OrderLink.Reference, Is.Not.SameAs(originalReference));
+            Assert.That(container.OrderLink.Reference!.OrderNumber, Is.EqualTo("UNKNOWN-ORDER"));
+            Assert.That(container.OrderLink.Reference.OperationNumber, Is.EqualTo("9999"));
+            Assert.That(container.OrderLink.Reference.State, Is.EqualTo(ReferenceState.Unavailable));
+            Assert.That(container.OrderLink.Reference.Status, Is.Null);
+            Assert.That(container.OrderLink.Reference.Source, Is.Null);
         });
     }
 
@@ -141,18 +153,18 @@ internal sealed class OrderIntegrationTests
         // Assert
         Assert.Multiple(() =>
         {
-            Assert.That(container.LinkedOrder, Is.Not.Null);
-            Assert.That(container.LinkedOrder, Is.Not.SameAs(originalReference));
-            Assert.That(container.LinkedOrder!.OrderNumber, Is.EqualTo(OrderNumber));
-            Assert.That(container.LinkedOrder.OperationNumber, Is.EqualTo(OperationNumber));
-            Assert.That(container.LinkedOrder.Status, Is.EqualTo(OperationStateClassification.Running));
-            Assert.That(container.LinkedOrder.Source, Is.TypeOf<TestOperationSource>());
-            Assert.That(container.LinkedOrder.State, Is.EqualTo(ReferenceState.Active));
+            Assert.That(container.OrderLink.Reference, Is.Not.Null);
+            Assert.That(container.OrderLink.Reference, Is.Not.SameAs(originalReference));
+            Assert.That(container.OrderLink.Reference!.OrderNumber, Is.EqualTo(OrderNumber));
+            Assert.That(container.OrderLink.Reference.OperationNumber, Is.EqualTo(OperationNumber));
+            Assert.That(container.OrderLink.Reference.Status, Is.EqualTo(OperationStateClassification.Running));
+            Assert.That(container.OrderLink.Reference.Source, Is.TypeOf<TestOperationSource>());
+            Assert.That(container.OrderLink.Reference.State, Is.EqualTo(ReferenceState.Active));
         });
     }
 
     [Test]
-    public async Task RequestOrderLinkAsync_ForRegisteredContainer_AppliesActiveSynchronizedReferenceWithoutHandlingValidationErrors()
+    public async Task LinkAsync_ForRegisteredContainer_AppliesActiveSynchronizedReference()
     {
         // Arrange
         var operation = CreateAndAddOperation(OrderNumber, OperationNumber, OperationStateClassification.Ready);
@@ -162,18 +174,122 @@ internal sealed class OrderIntegrationTests
         RaiseContainerStateChanged(container, new AvailableStateInformation());
 
         // Act
-        await container.RequestOrderLinkAsync(OrderNumber, OperationNumber);
+        var result = await container.OrderLink.LinkAsync(OrderNumber, OperationNumber);
 
         // Assert
         Assert.Multiple(() =>
         {
-            Assert.That(container.LinkedOrder, Is.Not.Null);
-            Assert.That(container.LinkedOrder!.OrderNumber, Is.EqualTo(OrderNumber));
-            Assert.That(container.LinkedOrder.OperationNumber, Is.EqualTo(OperationNumber));
-            Assert.That(container.LinkedOrder.State, Is.EqualTo(ReferenceState.Active));
-            Assert.That(container.LinkedOrder.Status, Is.EqualTo(OperationStateClassification.Running));
-            Assert.That(container.LinkedOrder.Source, Is.TypeOf<TestOperationSource>());
-            Assert.That(container.ValidationErrorHandlingCount, Is.Zero);
+            Assert.That(result.Status, Is.EqualTo(LinkingStatus.Applied));
+            Assert.That(container.OrderLink.Reference, Is.Not.Null);
+            Assert.That(container.OrderLink.Reference!.OrderNumber, Is.EqualTo(OrderNumber));
+            Assert.That(container.OrderLink.Reference.OperationNumber, Is.EqualTo(OperationNumber));
+            Assert.That(container.OrderLink.Reference.State, Is.EqualTo(ReferenceState.Active));
+            Assert.That(container.OrderLink.Reference.Status, Is.EqualTo(OperationStateClassification.Running));
+            Assert.That(container.OrderLink.Reference.Source, Is.TypeOf<TestOperationSource>());
+        });
+    }
+
+    // TODO: This behaviour should be coming from a hook, optionally we would definitely want unknown orders to be linkable
+    // to not limit use cases which register material before the order is known.
+    [Test]
+    public async Task LinkAsync_ForUnknownOrder_IsRejectedAndKeepsContainerUnlinked()
+    {
+        // Arrange
+        var container = await CreateAndAddContainer();
+        RaiseContainerStateChanged(container, new AvailableStateInformation());
+
+        // Act
+        var result = await container.OrderLink.LinkAsync("UNKNOWN-ORDER", "9999");
+
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.Status, Is.EqualTo(LinkingStatus.Rejected));
+            Assert.That(result.Context.HasErrors, Is.True);
+            Assert.That(container.OrderLink.Reference, Is.Null);
+        });
+    }
+
+    [Test]
+    public async Task LinkAsync_WithBlockingHook_IsRejectedWithoutRunningAppliedPhase()
+    {
+        // Arrange
+        CreateAndAddOperation(OrderNumber, OperationNumber, OperationStateClassification.Running);
+        _config.Hooks.Add(new OrderLinkingHookConfig { PluginName = BlockingOrderLinkingHook.PluginName });
+
+        var container = await CreateAndAddContainer();
+        RaiseContainerStateChanged(container, new AvailableStateInformation());
+
+        // Act
+        var result = await container.OrderLink.LinkAsync(OrderNumber, OperationNumber);
+
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.Status, Is.EqualTo(LinkingStatus.Rejected));
+            Assert.That(result.Context.Entries.Single().HookType, Is.EqualTo(typeof(BlockingOrderLinkingHook)));
+            Assert.That(BlockingOrderLinkingHook.RequestCount, Is.EqualTo(1));
+            Assert.That(BlockingOrderLinkingHook.AppliedCount, Is.Zero);
+            Assert.That(container.OrderLink.Reference, Is.Null);
+        });
+    }
+
+    [Test]
+    public async Task LinkAsync_BeforeContainerIsRegistered_IsProcessedOnceContainerIsRegistered()
+    {
+        // Arrange
+        var operation = CreateAndAddOperation(OrderNumber, OperationNumber, OperationStateClassification.Ready);
+        RaiseOperationUpdatedToRunning(operation);
+        var container = await CreateAndAddContainer();
+        var applied =new TaskCompletionSource<LinkAppliedEventArgs<OrderReference>>(TaskCreationOptions.RunContinuationsAsynchronously);
+        container.OrderLink.Applied += (_, e) => applied.TrySetResult(e);
+
+        // Act
+        // Like a resource constructor, the link is requested before the integration knows the container
+        var pending = await container.OrderLink.LinkAsync(OrderNumber, OperationNumber);
+        RaiseContainerStateChanged(container, new AvailableStateInformation());
+
+        // Assert
+        var appliedArgs = await applied.Task.WaitAsync(TimeSpan.FromSeconds(5));
+        Assert.Multiple(() =>
+        {
+            Assert.That(pending.Status, Is.EqualTo(LinkingStatus.Pending));
+            Assert.That(appliedArgs.Container, Is.SameAs(container));
+            Assert.That(container.OrderLink.HasPendingRequest, Is.False);
+            Assert.That(container.OrderLink.Reference!.OrderNumber, Is.EqualTo(OrderNumber));
+            Assert.That(container.OrderLink.Reference.State, Is.EqualTo(ReferenceState.Active));
+        });
+    }
+
+    // TODO: Remove dependency to products here, add a dummy link instead
+    [Test]
+    public async Task LinkAsync_OfContainerLinkedToOrderAndProduct_OnlyAppliesOrderLink()
+    {
+        // Arrange
+        CreateAndAddOperation(OrderNumber, OperationNumber, OperationStateClassification.Running);
+        var container = new MockOrderAndProductLinkedMaterialContainer
+        {
+            Id = Random.Shared.Next(1, int.MaxValue),
+            Name = "Combined Container",
+            StateInformation = new AvailableStateInformation(),
+        };
+        await ((IAsyncInitializablePlugin)container).InitializeAsync();
+        _containers.Add(container);
+        RaiseContainerStateChanged(container, new AvailableStateInformation());
+
+        // Act
+        var orderResult = await container.OrderLink.LinkAsync(OrderNumber, OperationNumber);
+        var productResult = await container.ProductLink.LinkAsync("PRD01-01");
+
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(container.Links, Has.Count.EqualTo(2));
+            Assert.That(orderResult.Status, Is.EqualTo(LinkingStatus.Applied));
+            Assert.That(container.OrderLink.Reference!.OrderNumber, Is.EqualTo(OrderNumber));
+            // No product integration is running in this environment
+            Assert.That(productResult.Status, Is.EqualTo(LinkingStatus.Pending));
+            Assert.That(container.ProductLink.PendingTarget!.ProductIdentity, Is.EqualTo("PRD01-01"));
         });
     }
 
@@ -191,8 +307,8 @@ internal sealed class OrderIntegrationTests
         // Assert
         Assert.Multiple(() =>
         {
-            Assert.That(container.LinkedOrder!.State, Is.EqualTo(ReferenceState.Active));
-            Assert.That(container.LinkedOrder.Status, Is.EqualTo(OperationStateClassification.Running));
+            Assert.That(container.OrderLink.Reference!.State, Is.EqualTo(ReferenceState.Active));
+            Assert.That(container.OrderLink.Reference.Status, Is.EqualTo(OperationStateClassification.Running));
         });
     }
 
@@ -210,8 +326,8 @@ internal sealed class OrderIntegrationTests
         // Assert
         Assert.Multiple(() =>
         {
-            Assert.That(container.LinkedOrder!.State, Is.EqualTo(ReferenceState.Inactive));
-            Assert.That(container.LinkedOrder.Status, Is.EqualTo(OperationStateClassification.Completed));
+            Assert.That(container.OrderLink.Reference!.State, Is.EqualTo(ReferenceState.Inactive));
+            Assert.That(container.OrderLink.Reference.Status, Is.EqualTo(OperationStateClassification.Completed));
         });
     }
 
@@ -247,8 +363,16 @@ internal sealed class OrderIntegrationTests
             Id = Random.Shared.Next(1, int.MaxValue),
             Name = "Test Container",
             StateInformation = new AvailableStateInformation(),
-            LinkedOrder = linkedOrder
         };
+        // TODO: Split this in a seperate test on the container:
+        // - The MockContainer should just initialize the link on start
+        // - An integration test case for the container should generally validate whether links and subclasses of links are correctly serialized
+        if (linkedOrder is not null)
+        {
+            // Restore the link like the resource management does when loading a persisted container
+            var extensionData = JsonConvert.SerializeObject(new { OrderLink = new { Reference = linkedOrder } }, JsonSettings.Minimal);
+            JsonConvert.PopulateObject(extensionData, container, JsonSettings.Minimal);
+        }
         await ((IAsyncInitializablePlugin)container).InitializeAsync();
         await ((IAsyncInitializablePlugin)container).StartAsync();
         _containers.Add(container);

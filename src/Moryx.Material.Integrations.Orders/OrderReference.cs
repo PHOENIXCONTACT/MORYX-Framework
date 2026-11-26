@@ -39,13 +39,12 @@ public class OrderReference(string orderNumber, string? operationNumber = null) 
     /// This information is reset when the reference is not actively maintained.
     /// </summary>
     public IOperationSource? Source { get; protected set; }
-}
 
-public static class OrderReferenceExtensions
-{
-    extension(OrderReference? reference)
-    {
-        public bool ValueEquals(OrderReference? other) => (reference is null && other is null)
-            || other is not null && reference is not null && reference.OrderNumber == other.OrderNumber && reference.OperationNumber == other.OperationNumber;
-    }
+    /// <inheritdoc />
+    public override bool Matches(Reference? other) => other is OrderReference order
+        && OrderNumber == order.OrderNumber && OperationNumber == order.OperationNumber;
+
+    /// <inheritdoc />
+    public override string ToString() => OperationNumber is null ? $"Order '{OrderNumber}'"
+        : $"Order '{OrderNumber}-{OperationNumber}')";
 }

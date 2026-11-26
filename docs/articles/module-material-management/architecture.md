@@ -70,6 +70,13 @@ graph TB
     style External fill:#f5f5f5
 ```
 
+> [!WARNING]
+> **Outdated:** The order-linking events (`OrderLinkRequested`, `OrderLinkApplied`) and the `LinkingHookManager` no longer exist.
+> Containers declare link slots (`MaterialLink<TReference>`, e.g. `OrderLink`) in `Moryx.Material.Linking`; integrators attach an
+> `ILinkHandler<TReference>` (`OrderLinkHandler`) to each link. Shared integrator base classes (`LinkHandlerBase`,
+> `LinkedContainerManagerBase`, `IReferencePool`) live in `Moryx.Material.Linking.Integration`. The product integration
+> (`Moryx.Material.Integrations.Products[.Integrator]`) follows the same structure and is not shown.
+
 ---
 
 ## Layer 1: Material Management
@@ -93,6 +100,11 @@ graph TB
 - `event EventHandler<MaterialChangedEventArgs> MaterialChanged`
 - `event EventHandler<FillingLevelChangedEventArgs> FillingLevelChanged`
 - `event EventHandler<StateChangedEventArgs> StateChanged`
+
+> [!WARNING]
+> **Outdated:** `Quantity` is a `double`, `State` is a `StateClassification` (details in `StateInformation`), and
+> `MaterialChanged`/`FillingLevelChanged` are combined in `MaterialUpdated`. The new property
+> `IReadOnlyList<MaterialLink> Links` is missing; it lists the links of a container to business objects of other domains.
 
 **Purpose:**
 Provides a unified abstraction for any container holding material. Can be extended by domain-specific integrations without modifying the core.
@@ -148,6 +160,12 @@ public abstract class LinkingHook
 - `LinkingRequest Request { get; internal set; }` — Current linking request (order#, op#)
 - `ValidationContext ValidationContext { get; internal set; }` — Shared error/warning/info accumulator (append-only)
 - `IMaterialContainer Container { get; internal set; }` — Container resource raising event
+
+> [!WARNING]
+> **Outdated:** The base class is generic: `LinkingHook<TReference, TBusinessObject>` (plugin interface `ILinkingHook`).
+> The phase methods are `public virtual`. `Request` is a typed `LinkingRequest<TReference>` (`Target`, `Previous`, `IsUnlink`),
+> and the resolved business objects are available as `Target` and `Previous`. Properties have public setters and protected getters.
+> Information about other links of the container is available through `Container.Links` (cached references only).
 
 **Hook Lifecycle (Config-Based Plugin Factory):**
 
@@ -261,6 +279,12 @@ public class OperatorAcknowledgementRequirement : ILinkingRequirement
 ```
 
 **Lifecycle in Two-Phase Linking:**
+
+> [!WARNING]
+> **Outdated:** There are no callbacks or second events anymore. The link awaits `ILinkHandler.ValidateAsync` (phase 1),
+> applies the returned reference itself and then awaits `ILinkHandler.OnAppliedAsync` (phase 2). Requests on one link are
+> processed sequentially. Requests made while no handler is attached are stored as pending (persisted) and processed once an
+> integrator attaches. The container-side fulfillment of requirements (steps 2-5) is not implemented yet.
 
 ```text
 Phase 1: Validation Request
@@ -631,6 +655,12 @@ Integrations work based on custom *container interfaces*, *links*, *hook base ty
   - EventArgs contains applied OrderReference
   - Fired after linking is validated and accepted
 
+> [!WARNING]
+> **Outdated:** The interface only declares `OrderLink OrderLink { get; }`. The link exposes `Reference`, `PendingTarget`,
+> `LinkAsync(orderNumber, operationNumber)`, `UnlinkAsync()` and an `Applied` event. `OrderLinkingRequest` and the event args
+> types were replaced by the generic `LinkingRequest<OrderReference>` and `LinkAppliedEventArgs<OrderReference>`. A container
+> can implement further linked container interfaces (e.g. `IProductLinkedMaterialContainer`) by declaring additional link properties.
+
 **Purpose:**
 Extends IMaterialContainer with order-specific linking semantics. Containers can now declare that they are order-capable without requiring the order object directly.
 
@@ -657,6 +687,11 @@ Specific reference implementation based on [Reference base class](#reference-wra
 - `string? Status { get; }` — Mirrored from Order (mapped from current business object state)
 - Other mapped properties as needed (TBD: remaining quantity, dates, etc.)
 
+> [!WARNING]
+> **Outdated:** The reference is accessible via `IOrderLinkedMaterialContainer.OrderLink.Reference`. The managed
+> `InternalOrderReference` does not hold the `Order`; it maps `Status` (`OperationStateClassification?`) and `Source`.
+> Only the declared `OrderReference` type is persisted; the managed subtype is substituted on integrator start.
+
 #### `OrderContainerManager` (Module Component)
 
 **Responsibilities:**
@@ -676,6 +711,11 @@ Specific reference implementation based on [Reference base class](#reference-wra
 
 **Purpose:**
 Ensures consistency and clean lifecycle management across system restarts and container deletion.
+
+> [!WARNING]
+> **Outdated:** `OrderContainerManager` derives from `LinkedContainerManagerBase<OrderReference>`. It attaches the
+> `OrderLinkHandler` to the `OrderLink` of each container, which also processes pending link requests. Reference states are
+> maintained by the `OrderReferencesPool`. Auto-unlink and lineage on container deletion are not implemented yet (ToDo).
 
 #### `LinkingHookManager` (Module Component)
 
@@ -697,6 +737,11 @@ Ensures consistency and clean lifecycle management across system restarts and co
 **Purpose:**
 Acts as event orchestrator — decouples container events from hook logic.
 
+> [!WARNING]
+> **Outdated:** Replaced by `OrderLinkHandler`, an `ILinkHandler<OrderReference>` derived from `LinkHandlerBase`. It is
+> called directly by the link (no events), resolves the order, executes the configured hooks in both phases and updates
+> the reference pool. Lineage recording in the applied phase is not implemented yet (ToDo).
+
 ---
 
 #### `OrderLinkingHook` (Plugin Base Class)
@@ -717,9 +762,18 @@ public abstract class OrderLinkingHook : LinkingHook
 
 `Request` is populated with `OrderLinkingRequest` and `Container` holds an `IOrderLinkedMaterialContainer`.
 
+> [!WARNING]
+> **Outdated:** `OrderLinkingHook : LinkingHook<OrderReference, Order>`; `Order`/`PreviousOrder` are named `Target`/`Previous`,
+> and `Request` is a `LinkingRequest<OrderReference>`.
+
 #### Data Flow: Complete Re-Link Sequence with Hooks & Lineage
 
 **Scenario:** Container already linked to Order-A; operator requests link to Order-B
+
+> [!WARNING]
+> **Outdated:** The sequence is no longer event-driven. The operator calls `OrderLink.LinkAsync`/`UnlinkAsync`; the link awaits
+> `OrderLinkHandler.ValidateAsync` and receives the `LinkingResponse` as return value, applies the reference and awaits
+> `OrderLinkHandler.OnAppliedAsync`. The operator receives a `LinkingResult` (Applied, Rejected, Pending, Unchanged).
 
 ```mermaid
 sequenceDiagram
@@ -818,6 +872,10 @@ sequenceDiagram
 | **Extensibility** | New hook types added without modifying container or manager |
 | **Two-Phase Linking** | Validation phase (hooks) → Container callback with OrderReference → Applied phase (side effects) |
 
+> [!WARNING]
+> **Outdated:** *Event-Driven* and the container callback of *Two-Phase Linking* were replaced by direct, awaited calls to the
+> `ILinkHandler` attached to a link. Linking is composed per link slot instead of per container base class.
+
 ---
 
 #### Order Integration Design Decisions
@@ -846,6 +904,11 @@ sequenceDiagram
 | **Hook Exception Handling** | Hooks can throw; manager catches and adds to ValidationContext; execution continues with other hooks |
 | **ValidationContext** | Errors + Warnings + Info (append-only); can carry Hook requirements; in-memory during orchestration, optionally persisted to audit trail |
 
+> [!WARNING]
+> **Outdated:** *Link Persistence* is denormalized on `MaterialLink` properties (e.g. `OrderLink.Reference`) instead of an
+> `OrderReference` property. *Two-Phase Linking* has no container callback (see above). Links to different business objects
+> (e.g. order and product) are independent; requesting both is not atomic.
+
 ## Remaining Design Details for Deep Dive
 
 ### 1. OrderReference Serialization Guarantee
@@ -856,6 +919,10 @@ sequenceDiagram
   - Use private setters + factory methods to enforce protocol?
   - Validate state machine transitions on deserialization?
 - **Question**: Can/Should we guarantee event-driven protocol compliance while allowing persistence within resource?
+
+> [!WARNING]
+> **Outdated:** Partially resolved. `MaterialLink.Reference` has a private setter and is only changed through the linking
+> protocol; integrations can only `Substitute` a reference identifying the same business object.
 
 ### 2. Lineage Event Serialization & ResourceStub
 
@@ -876,12 +943,20 @@ How can a container reliably know whether the integration (LinkingHookManager, O
 
 - Integration registers a capability/feature with container on init; container checks before raising events
 
+> [!WARNING]
+> **Outdated:** Resolved. Integrators attach an `ILinkHandler` to each link; requests without an attached handler are stored
+> as pending (persisted) and processed on attach.
+
 ### 4. Should we provide a MaterialContainer base class?
 
 ### 5. Should container request/announcement/register via facade include linking within a single method call?
 
 - Linking is usually a two step process, involving the container. How should this happen if the container is just created?
 - How can a fluent UX be achieved if in the background information is handled in a two step process
+
+> [!WARNING]
+> **Outdated:** Partially resolved. A link requested in a resource constructor (before the container is registered) stays
+> pending and is validated once the integrator attaches. Feedback on a rejected pending request currently only reaches the log.
 
 #### 6. How can requirements for linking be handled from within in the Material Management UI?
 

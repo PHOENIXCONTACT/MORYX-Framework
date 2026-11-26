@@ -86,9 +86,12 @@ internal static class MaterialManagementConverter
             Type = typeTree.GetNode(container).ResourceType.ToModel(),
         };
 
-        if (container is IOrderLinkedMaterialContainer { LinkedOrder: not null } orderLinkedContainer)
+        foreach (var reference in container.Links.Select(l => l.CurrentReference))
         {
-            containerModel.References.Add(orderLinkedContainer.LinkedOrder.ToModel());
+            if (reference is OrderReference orderReference)
+            {
+                containerModel.References.Add(orderReference.ToModel());
+            }
         }
 
         return containerModel;

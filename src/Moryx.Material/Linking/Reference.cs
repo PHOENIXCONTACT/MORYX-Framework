@@ -20,6 +20,12 @@ public abstract class Reference
     /// </summary>
     [DataMember]
     public ReferenceState State { get; protected set; } = ReferenceState.Initialized;
+
+    /// <summary>
+    /// Checks whether <paramref name="other"/> identifies the same business object as this reference,
+    /// independent of the reference instance and its <see cref="State"/>.
+    /// </summary>
+    public abstract bool Matches(Reference? other);
 }
 
 public static class ReferenceExtensions
@@ -28,5 +34,13 @@ public static class ReferenceExtensions
     {
         public bool IsActive() => reference.State == ReferenceState.Active;
         public bool IsValid() => reference.State != ReferenceState.Unavailable;
+    }
+
+    extension(Reference? reference)
+    {
+        /// <summary>
+        /// Value-based equality check, also handling <c>null</c> on both sides.
+        /// </summary>
+        public bool ValueEquals(Reference? other) => reference is null ? other is null : reference.Matches(other);
     }
 }

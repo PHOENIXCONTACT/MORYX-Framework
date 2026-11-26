@@ -5,154 +5,31 @@ using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Resources;
-using Moryx.Material.Linking;
 using Moryx.Material.States;
 using Moryx.Serialization;
-using ValidationContext = Moryx.Material.Linking.ValidationContext;
 
 namespace Moryx.Material.Integrations.Orders;
 
+// TODO: Is this worth a base class or rather a sample?
 /// <summary>
 /// Default base class for <see cref="IOrderLinkedMaterialContainer"/> implementations.
 /// </summary>
+/// <remarks>
+/// Containers linked to further business objects do not need to derive from this class. They can implement
+/// <see cref="IOrderLinkedMaterialContainer"/> alongside other linked container interfaces by declaring an
+/// <see cref="Orders.OrderLink"/> property.
+/// </remarks>
 [DataContract]
 public abstract class OrderLinkedMaterialContainer : MaterialContainer, IOrderLinkedMaterialContainer
 {
-    #region IOrderLinkedMaterialContainer
-    private OrderReference? _linkedOrder;
     /// <inheritdoc />
     [DataMember]
-    public OrderReference? LinkedOrder
-    {
-        get => _linkedOrder;
-        set
-        {
-            var previous = _linkedOrder;
-            _linkedOrder = value;
-            if (!previous.ValueEquals(value))
-            {
-                RaiseResourceChanged();
-            }
-        }
-    }
-
-    /// <inheritdoc />
-    public virtual async Task RequestOrderLinkAsync(string orderNumber, string? operationNumber = null, CancellationToken cancellationToken = default)
-    {
-        if (string.IsNullOrEmpty(orderNumber))
-        {
-            throw new ArgumentException("Order number is required.", nameof(orderNumber));
-        }
-
-        var request = new OrderLinkingRequest(orderNumber, operationNumber, _linkedOrder);
-        await ExecuteLinkingProtocolAsync(request, cancellationToken);
-    }
-
-    /// <inheritdoc />
-    public virtual async Task RequestOrderUnlinkAsync(CancellationToken cancellationToken = default)
-    {
-        if (_linkedOrder == null)
-        {
-            return;
-        }
-
-        var request = new OrderLinkingRequest(_linkedOrder);
-        await ExecuteLinkingProtocolAsync(request, cancellationToken);
-    }
-
-    /// <summary>
-    /// Drives the two-phase linking protocol against any registered listeners
-    /// (typically the <c>LinkingHookManager</c>).
-    /// </summary>
-    protected virtual async Task ExecuteLinkingProtocolAsync(OrderLinkingRequest request, CancellationToken cancellationToken)
-    {
-        var listeners = OrderLinkRequested;
-        if (listeners is null)
-        {
-            // No integration is currently active.
-            // We "fail" gracefully in this case and apply the reference directly without validation. While this
-            // could circumvent validation hooks in certain cases, it prevents process interruptions and even allows
-            // for using order-linked material containers without the sophisticated integration infrastructure.
-            ApplyLink(request, new ValidationContext(), createReferenceLocally: true);
-            return;
-        }
-
-        ValidationContext? finalContext = null;
-        OrderReference? finalReference = null;
-
-        Task ResponseHandler(LinkingResponse response)
-        {
-            finalContext = response.Context;
-            finalReference = response.Reference as OrderReference;
-            return Task.CompletedTask;
-        }
-
-        var args = new OrderLinkRequestEventArgs(request, ResponseHandler);
-        listeners.Invoke(this, args);
-
-        // Await the response if it was scheduled asynchronously.
-        if (args.ResponseCallback != null && finalContext == null)
-        {
-            await Task.Yield();
-        }
-
-        // No validation context delivered OR context indicates an error: treat as failure.
-        if (finalContext == null || finalContext.HasErrors)
-        {
-
-            await HandleValidationErrors(finalContext);
-            return;
-        }
-
-        // ToDo: Add processing of validation limitations
-
-        ApplyLink(request, finalContext, createReferenceLocally: false, providedReference: finalReference);
-    }
-
-    /// <summary>
-    /// Applies the linking decision to this container and raises <see cref="OrderLinkApplied"/>.
-    /// </summary>
-    protected void ApplyLink(OrderLinkingRequest request, ValidationContext context, bool createReferenceLocally, OrderReference? providedReference = null)
-    {
-        OrderReference? applied = null;
-
-        if (request.IsUnlink)
-        {
-            applied = _linkedOrder = null;
-        }
-        else if (providedReference is not null)
-        {
-            applied = _linkedOrder = providedReference;
-        }
-        else if (createReferenceLocally && !string.IsNullOrEmpty(request.OrderNumber))
-        {
-            applied = _linkedOrder = new OrderReference(request.OrderNumber, request.OperationNumber);
-        }
-        else
-        {
-            throw new InvalidOperationException($"Cannot apply {nameof(OrderReference)} " +
-                $"{(providedReference is null ? "" : $"{providedReference.OrderNumber}-{providedReference.OperationNumber}")} " +
-                $"for {nameof(OrderLinkingRequest)} {request.OrderNumber}-{request.OperationNumber}");
-        }
-
-        RaiseResourceChanged();
-
-        OrderLinkApplied?.Invoke(this, new OrderLinkAppliedEventArgs(request, context, applied));
-    }
-
-    protected virtual Task HandleValidationErrors(ValidationContext? context) => Task.CompletedTask;
-
-    /// <inheritdoc />
-    public event EventHandler<OrderLinkRequestEventArgs>? OrderLinkRequested;
-
-    /// <inheritdoc />
-    public event EventHandler<OrderLinkAppliedEventArgs>? OrderLinkApplied;
-    #endregion
+    public OrderLink OrderLink { get; } = new();
 
     /// <summary>
     /// Resource constructor method bringing a <see cref="MaterialContainer"/> from the <see cref="StateClassification.Uninitialized"/>
-    /// state into the <see cref="StateClassification.Available"/> state using provided information and requesting to linking it to
-    /// an order right away.
+    /// state into the <see cref="StateClassification.Available"/> state using provided information and requesting to link it to
+    /// an order right away. The link request stays pending until the order integration attaches to the container.
     /// </summary>
     /// <param name="identityType">Optional identity instance used to represent the container identity.</param>
     /// <param name="identity">Optional identifier value assigned to <paramref name="identityType"/>.</param>
@@ -176,6 +53,6 @@ public abstract class OrderLinkedMaterialContainer : MaterialContainer, IOrderLi
         Material = material;
         Quantity = quantity;
         Unit = unit;
-        return RequestOrderLinkAsync(orderNumber, operationNumber);
+        return OrderLink.LinkAsync(orderNumber, operationNumber);
     }
 }

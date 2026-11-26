@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Resources;
+using Moryx.Material.Linking;
 using Moryx.Material.States;
 using Moryx.Resources.Management;
 using Moryx.TestTools.IntegrationTest;
@@ -174,5 +175,71 @@ internal sealed class MaterialContainerTests
             "Container could not be retrieved after restarting the resource management.");
         Assert.That(container.State, Is.EqualTo(expectedClassification),
             "Container did not restore the expected state classification after restart.");
+    }
+
+    [Test]
+    public async Task MaterialLink_RequestedInResourceConstructorWithoutIntegration_IsPendingAfterRestart()
+    {
+        // Arrange
+        var containerId = await _resourceManagement.CreateUnsafeAsync(typeof(LinkedTestContainer), resource =>
+        {
+            // Resource constructors are invoked before the container is registered and do not await the request
+            _ = ((LinkedTestContainer)resource).First.LinkAsync("A");
+            return Task.CompletedTask;
+        });
+
+        // Act
+        await RestartResourceManagementAsync();
+
+        // Assert
+        var link = _resourceManagement.ReadUnsafe(containerId, resource => ((LinkedTestContainer)resource).First);
+        Assert.Multiple(() =>
+        {
+            Assert.That(link.HasPendingRequest, Is.True);
+            Assert.That(link.PendingTarget!.Key, Is.EqualTo("A"));
+            Assert.That(link.Reference, Is.Null);
+        });
+    }
+
+    [Test]
+    public async Task MaterialLink_WithAppliedManagedReference_RestoresDeclaredReferenceTypeAfterRestart()
+    {
+        // Arrange
+        var containerId = await _resourceManagement.CreateUnsafeAsync(typeof(LinkedTestContainer), async resource =>
+        {
+            var container = (LinkedTestContainer)resource;
+            await container.First.AttachAsync(container, new ManagingHandler());
+            await container.First.LinkAsync("A");
+        });
+
+        // Act
+        await RestartResourceManagementAsync();
+
+        // Assert
+        var (first, second, links) = _resourceManagement.ReadUnsafe(containerId, resource =>
+        {
+            var container = (LinkedTestContainer)resource;
+            return (container.First, container.Second, container.Links);
+        });
+        Assert.Multiple(() =>
+        {
+            Assert.That(first.Reference, Is.TypeOf<TestReference>(),
+                "The managed subtype of an integration must not leak into the persisted data");
+            Assert.That(first.Reference!.Key, Is.EqualTo("A"));
+            Assert.That(first.HasPendingRequest, Is.False);
+            Assert.That(second.Reference, Is.Null);
+            Assert.That(links, Is.EquivalentTo(new MaterialContainerLink[] { first, second }),
+                "Restored links must be the instances discovered by the container.");
+        });
+    }
+
+    private sealed class ManagingHandler : ILinkHandler<TestReference>
+    {
+        public Task<LinkingResponse<TestReference>> ValidateAsync(IMaterialContainer container, LinkingRequest<TestReference> request,
+            CancellationToken cancellationToken)
+            => Task.FromResult(new LinkingResponse<TestReference>(new ValidationContext(), new ManagedTestReference(request.Target!.Key)));
+
+        public Task OnAppliedAsync(IMaterialContainer container, LinkingRequest<TestReference> request, LinkingResponse<TestReference> response,
+            CancellationToken cancellationToken) => Task.CompletedTask;
     }
 }

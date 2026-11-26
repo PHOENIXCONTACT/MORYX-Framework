@@ -4,14 +4,18 @@
 namespace Moryx.Material.Linking;
 
 /// <summary>
-/// Response returned to the container after the request-phase hooks have executed.
+/// Response returned by an <see cref="ILinkHandler{TReference}"/> after the request-phase hooks have executed.
 /// </summary>
-public class LinkingResponse
+/// <typeparam name="TReference">Type of reference the link points to.</typeparam>
+/// <param name="context">Validation context populated by all hooks.</param>
+/// <param name="reference">Managed reference resolved for <see cref="LinkingRequest{TReference}.Target"/>, if any.</param>
+public class LinkingResponse<TReference>(ValidationContext context, TReference? reference = null)
+    where TReference : Reference
 {
     /// <summary>
     /// Validation context populated by all hooks.
     /// </summary>
-    public ValidationContext Context { get; }
+    public ValidationContext Context { get; } = context;
 
     /// <summary>
     /// True if no hook raised an error and the link can proceed (subject to requirement fulfillment).
@@ -19,18 +23,7 @@ public class LinkingResponse
     public bool IsAllowed => !Context.HasErrors;
 
     /// <summary>
-    /// Optional reference object resolved during request handling (subclasses may carry typed payloads).
+    /// Managed reference resolved for the requested target. Applied to the link instead of the unresolved target.
     /// </summary>
-    public Reference? Reference { get; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="LinkingResponse"/> class.
-    /// </summary>
-    /// <param name="context">Validation context populated by all hooks.</param>
-    /// <param name="reference">Optional reference object resolved during request handling.</param>
-    public LinkingResponse(ValidationContext context, Reference? reference = null)
-    {
-        Context = context;
-        Reference = reference;
-    }
+    public TReference? Reference { get; } = reference;
 }

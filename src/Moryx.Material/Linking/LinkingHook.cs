@@ -7,24 +7,47 @@ namespace Moryx.Material.Linking;
 /// Plugin base class for hooks that participate in the two-phase linking protocol.
 /// </summary>
 /// <remarks>
-/// Hooks are instantiated transiently per linking request by the orchestrating manager.
+/// Hooks are instantiated transiently per linking request by the orchestrating handler.
 /// They observe and may influence the validation phase via the <see cref="ValidationContext"/>,
-/// and produce side effects in the applied phase.
+/// and produce side effects in the applied phase. Information about other links of the
+/// <see cref="Container"/> is available through <see cref="IMaterialContainer.Links"/>.
 /// </remarks>
-public abstract class LinkingHook : ILinkingHook
+/// <typeparam name="TReference">Type of reference the handled link points to.</typeparam>
+/// <typeparam name="TBusinessObject">Type of business object resolved for the reference.</typeparam>
+public abstract class LinkingHook<TReference, TBusinessObject> : ILinkingHook
+    where TReference : Reference
+    where TBusinessObject : class
 {
-    /// <inheritdoc/>
-    public required IMaterialContainer Container { protected get; set; }
+    // TODO: Maybe make required, init properties?
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+    /// <summary>
+    /// Container the link belongs to. Set by the orchestrator before invocation.
+    /// </summary>
+    public IMaterialContainer Container { protected get; set; }
+
+    /// <summary>
+    /// Linking request being handled. Set by the orchestrator before invocation.
+    /// </summary>
+    public LinkingRequest<TReference> Request { protected get; set; }
 
     /// <inheritdoc/>
-    public required LinkingRequest Request { protected get; set; }
+    public ValidationContext ValidationContext { protected get; set; }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+
+    /// <summary>
+    /// The resolved business object being linked. <c>null</c> when handling a pure unlink request
+    /// or if the business object could not be resolved.
+    /// </summary>
+    public TBusinessObject? Target { protected get; set; }
+
+    /// <summary>
+    /// The previously linked business object, if any.
+    /// </summary>
+    public TBusinessObject? Previous { protected get; set; }
 
     /// <inheritdoc/>
-    public required ValidationContext ValidationContext { protected get; set; }
+    public virtual Task HandleLinkRequestAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 
     /// <inheritdoc/>
-    public Task HandleLinkRequestAsync(CancellationToken cancellationToken) => Task.CompletedTask;
-
-    /// <inheritdoc/>
-    public Task HandleLinkAppliedAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+    public virtual Task HandleLinkAppliedAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 }

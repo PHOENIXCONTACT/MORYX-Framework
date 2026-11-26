@@ -3,6 +3,7 @@
 
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Resources;
+using Moryx.Material.Linking;
 using Moryx.Material.States;
 
 namespace Moryx.Material;
@@ -50,6 +51,11 @@ public interface IMaterialContainer : IResource, IIdentifiableObject
     /// Information object for the current lifecycle state of the container.
     /// </summary>
     StateInformation? StateInformation { get; }
+
+    /// <summary>
+    /// Links of this container to business objects of other domains (e.g. orders, product types).
+    /// </summary>
+    IReadOnlyList<MaterialContainerLink> Links { get; }
 
     /// <summary>
     /// Applies a material update to this container and raises <see cref="MaterialUpdated"/> when a value changes.

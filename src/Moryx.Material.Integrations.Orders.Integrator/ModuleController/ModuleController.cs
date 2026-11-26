@@ -24,7 +24,7 @@ public class ModuleController(IModuleContainerFactory containerFactory, IConfigM
     : ServerModuleBase<ModuleConfig>(containerFactory, configManager, loggerFactory), IFacadeContainer<IOrderIntegration>
 {
     /// <inheritdoc />
-    public override string Name => "Material Mánagement - Order Integration";
+    public override string Name => "Material Management - Order Integration";
 
     #region Dependencies
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
@@ -57,7 +57,7 @@ public class ModuleController(IModuleContainerFactory containerFactory, IConfigM
     /// <inheritdoc />
     protected override async Task OnStartAsync(CancellationToken cancellationToken)
     {
-        await Container.Resolve<ILinkingHookManager>().StartAsync(cancellationToken);
+        // IOrderLinkHandler component needs no Start
         await Container.Resolve<IOrderReferencesPool>().StartAsync(cancellationToken);
         await Container.Resolve<IOrderContainerManager>().StartAsync(cancellationToken);
         ActivateFacade(_facade);
@@ -69,7 +69,7 @@ public class ModuleController(IModuleContainerFactory containerFactory, IConfigM
         DeactivateFacade(_facade);
         await Container.Resolve<IOrderContainerManager>().StopAsync(cancellationToken);
         await Container.Resolve<IOrderReferencesPool>().StopAsync(cancellationToken);
-        await Container.Resolve<ILinkingHookManager>().StopAsync(cancellationToken);
+        // IOrderLinkHandler component needs no Stop
     }
 
     private readonly OrderIntegrationFacade _facade = new();
