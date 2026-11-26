@@ -1,0 +1,28 @@
+﻿@page "{*_}"
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Authorization
+@using Moryx.Material.Endpoints
+@using Moryx.Material.Web.Properties
+@using Moryx.Modules
+
+@{
+    ViewData["Title"] = Strings.Module_Title;
+    ViewData["BaseRef"] = "Material";
+
+    Layout = "_Layout";
+}
+
+@attribute [WebModule("Material", "box"),
+            Display(ResourceType = typeof(Strings), Name = nameof(Strings.Module_Title), Description = nameof(Strings.Module_Description)),
+            Authorize(Policy = MaterialPermissions.CanRead),
+            AllowAnonymous]
+@section Styles {
+    <link rel="stylesheet" href="~/_content/Moryx.Material.Web/styles.css">
+}
+
+@section Scripts
+{
+    <script src="~/_content/Moryx.Material.Web/main.js" type="module"></script>
+}
+
+<app-root></app-root>

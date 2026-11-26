@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Concurrent;
+using System.Net;
 using System.Net.ServerSentEvents;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
@@ -10,11 +11,16 @@ using System.Threading.Channels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Resources;
+using Moryx.Configuration;
 using Moryx.Material.Endpoints.Model;
 using Moryx.Material.Facade;
 using Moryx.Material.Integrations.Orders;
+using Moryx.Material.Management;
+using Moryx.Runtime.Modules;
+using Moryx.Serialization;
 using Moryx.Tools;
 
 namespace Moryx.Material.Endpoints;
@@ -28,8 +34,7 @@ namespace Moryx.Material.Endpoints;
 [Route("api/moryx/materials/")]
 [Produces("application/json")]
 public class MaterialManagementController(IMaterialManagement materialManagement, IOrderIntegration? orderIntegration,
-    // TODO: Can I get rid of this dependency?
-    IResourceTypeTreeExtended resourceTypeTree, ILogger<MaterialManagementController> logger) : ControllerBase
+    IResourceTypeTreeExtended resourceTypeTree, IConfigManager configManager, ILogger<MaterialManagementController> logger) : ControllerBase
 {
     private readonly IMaterialManagement _materialManagement = materialManagement
         ?? throw new ArgumentNullException(nameof(materialManagement));
@@ -60,7 +65,7 @@ public class MaterialManagementController(IMaterialManagement materialManagement
     [Authorize(Policy = MaterialPermissions.CanRead)]
     public ActionResult<MaterialContainerTypeModel[]> GetTypes()
     {
-        var types = _materialManagement.GetContainerTypes();
+        var types = ApplyConfiguredFilter(_materialManagement.GetContainerTypes(), configManager.GetConfiguration<ModuleConfig>());
         return Ok(types.Select(t => t.ToModel()).ToArray());
     }
 
@@ -75,7 +80,6 @@ public class MaterialManagementController(IMaterialManagement materialManagement
 
     #endregion
 
-    #region POST
     [HttpPost("containers/pre-advice")]
     [ProducesResponseType(typeof(MaterialContainerModel), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
@@ -186,7 +190,6 @@ public class MaterialManagementController(IMaterialManagement materialManagement
             channel.Writer.TryWrite(JsonSerializer.Serialize(container.ToModel(), _serializerOptions)));
     }
     #endregion
-    #endregion
 
     #region Order References
     #region GET
@@ -214,4 +217,13 @@ public class MaterialManagementController(IMaterialManagement materialManagement
     }
     #endregion
     #endregion
+
+    private static IReadOnlyList<Type> ApplyConfiguredFilter(IReadOnlyList<Type> types, ModuleConfig moduleConfig)
+    {
+        if (!moduleConfig.HideUnknown)
+        {
+            return types;
+        }
+        return types.Where(t => moduleConfig.ContainerTypeSettings.Any(set => set.Enabled && set.Type == t.FullName)).ToArray();
+    }
 }

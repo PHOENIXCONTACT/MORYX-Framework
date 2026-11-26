@@ -45,7 +45,7 @@ public abstract class MaterialContainer : Resource, IMaterialContainer, IStateCo
     [DataMember]
     [EntrySerialize, ReadOnly(true)]
     [Display(Name = "Material", Description = "Material reference contained in this container (e.g., product number).")]
-    public virtual string? Material {  get; protected set; }
+    public virtual string? Material { get; protected set; }
 
     /// <inheritdoc />
     [DataMember]
@@ -90,7 +90,8 @@ public abstract class MaterialContainer : Resource, IMaterialContainer, IStateCo
             Unit = update.Unit;
         }
 
-        if (update.Kind.HasFlag(UpdateKind.FillingLevel)) {
+        if (update.Kind.HasFlag(UpdateKind.FillingLevel))
+        {
             if (update.Kind.HasFlag(UpdateKind.Relative))
             {
                 eventArgs.OldQuantity = Quantity;

@@ -1,0 +1,16 @@
+@use '@angular/material' as mat;
+@use "@moryx/ngx-web-framework/styles/variables" as *;
+
+:host {
+    @include mat.card-overrides((
+        elevated-container-color: var(--mat-sys-surface-container-lowest)
+        ));
+}
+
+.container-icon {
+    margin-top: 10px !important;
+}
+
+.card-chips {
+    margin-top: 3px;
+}

@@ -3,6 +3,8 @@
 
 using System.Text.Json.Serialization;
 
+using System.Text.Json.Serialization;
+
 namespace Moryx.Material.Endpoints.Model;
 
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]

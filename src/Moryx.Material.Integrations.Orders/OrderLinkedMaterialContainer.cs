@@ -22,6 +22,7 @@ public abstract class OrderLinkedMaterialContainer : MaterialContainer, IOrderLi
     private OrderReference? _linkedOrder;
     /// <inheritdoc />
     [DataMember]
+    [EntrySerialize]
     public OrderReference? LinkedOrder
     {
         get => _linkedOrder;
