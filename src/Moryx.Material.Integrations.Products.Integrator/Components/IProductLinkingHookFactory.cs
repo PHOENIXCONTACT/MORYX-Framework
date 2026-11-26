@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Moryx.AbstractionLayer.Products;
 using Moryx.Container;
 using Moryx.Material.Linking;
 
@@ -20,7 +21,9 @@ internal interface IProductLinkingHookFactory
     /// <see cref="IConfigBasedComponentSelector"/> only passes the config to the hook if the
     /// returned type implements <see cref="Modules.IAsyncConfiguredInitializable{T}"/>.
     /// </remarks>
-    Task<ProductLinkingHook> Create(ProductLinkingHookConfig config, CancellationToken cancellationToken);
+    Task<ProductLinkingHook> Create(ProductLinkingHookConfig config, IMaterialContainer container,
+        LinkingRequest<ProductTypeReference> request, ValidationContext validationContext, ProductType? target,
+        ProductType? previous, CancellationToken cancellationToken);
 
     /// <summary>
     /// Destroy a hook instance.

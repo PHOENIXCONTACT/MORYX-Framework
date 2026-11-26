@@ -2,19 +2,12 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Products;
+using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
 using Moryx.Material.Linking;
 using Moryx.Material.Linking.Integration;
 
 namespace Moryx.Material.Integrations.Products.Integrator.Components;
-
-/// <summary>
-/// Executes the linking protocol for all <see cref="ProductLink"/>s, orchestrating the configured
-/// <see cref="ProductLinkingHook"/> plugins.
-/// </summary>
-internal interface IProductLinkHandler : ILinkHandler<ProductTypeReference>
-{
-}
 
 [Component(LifeCycle.Singleton, typeof(IProductLinkHandler))]
 internal class ProductLinkHandler : LinkHandlerBase<ProductTypeReference, ProductType, ProductLinkingHookConfig>, IProductLinkHandler
@@ -35,8 +28,10 @@ internal class ProductLinkHandler : LinkHandlerBase<ProductTypeReference, Produc
 
     protected override IEnumerable<ProductLinkingHookConfig> HookConfigs => Config.Hooks;
 
-    protected override async Task<ILinkingHook> CreateHookAsync(ProductLinkingHookConfig config, CancellationToken cancellationToken)
-        => await HookFactory.Create(config, cancellationToken);
+    protected override async Task<ILinkingHook> CreateHookAsync(ProductLinkingHookConfig config, IMaterialContainer container,
+        LinkingRequest<ProductTypeReference> request, ValidationContext validationContext, ProductType? target,
+        ProductType? previous, CancellationToken cancellationToken)
+        => await HookFactory.Create(config, container, request, validationContext, target, previous, cancellationToken);
 
     protected override void DestroyHook(ILinkingHook hook) => HookFactory.Destroy(hook);
 
