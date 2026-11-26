@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
 using Moryx.Material.Linking;
 using Moryx.Material.Linking.Integration;
@@ -30,8 +31,10 @@ internal class OrderLinkHandler : LinkHandlerBase<OrderReference, Order, OrderLi
     protected override IEnumerable<OrderLinkingHookConfig> HookConfigs => Config.Hooks;
 
     /// <inheritdoc/>
-    protected override async Task<ILinkingHook> CreateHookAsync(OrderLinkingHookConfig config, CancellationToken cancellationToken)
-        => await HookFactory.Create(config, cancellationToken);
+    protected override async Task<ILinkingHook> CreateHookAsync(OrderLinkingHookConfig config, IMaterialContainer container,
+        LinkingRequest<OrderReference> request, ValidationContext validationContext, Order? target, Order? previous,
+        CancellationToken cancellationToken)
+        => await HookFactory.Create(config, container, request, validationContext, target, previous, cancellationToken);
 
     /// <inheritdoc/>
     protected override void DestroyHook(ILinkingHook hook) => HookFactory.Destroy(hook);

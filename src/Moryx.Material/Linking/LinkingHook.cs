@@ -18,21 +18,18 @@ public abstract class LinkingHook<TReference, TBusinessObject> : ILinkingHook
     where TReference : Reference
     where TBusinessObject : class
 {
-    // TODO: Maybe make required, init properties?
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
     /// <summary>
     /// Container the link belongs to. Set by the orchestrator before invocation.
     /// </summary>
-    public IMaterialContainer Container { protected get; set; }
+    public required IMaterialContainer Container { protected get; set; }
 
     /// <summary>
     /// Linking request being handled. Set by the orchestrator before invocation.
     /// </summary>
-    public LinkingRequest<TReference> Request { protected get; set; }
+    public required LinkingRequest<TReference> Request { protected get; set; }
 
     /// <inheritdoc/>
-    public ValidationContext ValidationContext { protected get; set; }
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+    public required ValidationContext ValidationContext { protected get; set; }
 
     /// <summary>
     /// The resolved business object being linked. <c>null</c> when handling a pure unlink request

@@ -39,7 +39,9 @@ public abstract class LinkHandlerBase<TReference, TBusinessObject, THookConfig> 
     /// <summary>
     /// Creates the hook for <paramref name="config"/>.
     /// </summary>
-    protected abstract Task<ILinkingHook> CreateHookAsync(THookConfig config, CancellationToken cancellationToken);
+    protected abstract Task<ILinkingHook> CreateHookAsync(THookConfig config, IMaterialContainer container,
+        LinkingRequest<TReference> request, ValidationContext validationContext, TBusinessObject? target,
+        TBusinessObject? previous, CancellationToken cancellationToken);
 
     /// <summary>
     /// Destroys a hook created by <see cref="CreateHookAsync"/>.
@@ -129,19 +131,13 @@ public abstract class LinkHandlerBase<TReference, TBusinessObject, THookConfig> 
             ILinkingHook? hook = null;
             try
             {
-                hook = await CreateHookAsync(config, cancellationToken);
+                hook = await CreateHookAsync(config, container, request, validation, target, previous, cancellationToken);
                 if (hook is not LinkingHook<TReference, TBusinessObject> typedHook)
                 {
                     validation.AddError($"Configured hook '{config.PluginName}' could not be created as " +
                         $"{nameof(LinkingHook<,>)} for {typeof(TReference).Name}.");
                     continue;
                 }
-
-                typedHook.Container = container;
-                typedHook.Request = request;
-                typedHook.ValidationContext = validation;
-                typedHook.Target = target;
-                typedHook.Previous = previous;
 
                 if (applyPhase)
                 {
