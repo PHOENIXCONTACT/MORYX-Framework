@@ -21,5 +21,5 @@ public class RegisterLineageEvent : LineageEventBase
     /// Quantity at registration time.
     /// </summary>
     [DataMember]
-    public decimal Quantity { get; set; }
+    public double Quantity { get; set; }
 }

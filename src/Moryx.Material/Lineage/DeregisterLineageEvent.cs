@@ -15,5 +15,5 @@ public class DeregisterLineageEvent : LineageEventBase
     /// Final quantity at deregistration.
     /// </summary>
     [DataMember]
-    public decimal FinalQuantity { get; set; }
+    public double FinalQuantity { get; set; }
 }

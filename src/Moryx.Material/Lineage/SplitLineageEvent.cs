@@ -21,5 +21,5 @@ public class SplitLineageEvent : LineageEventBase
     /// Quantity transferred from the source.
     /// </summary>
     [DataMember]
-    public decimal TransferredQuantity { get; set; }
+    public double TransferredQuantity { get; set; }
 }

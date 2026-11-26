@@ -20,7 +20,7 @@ public interface ILineageEvent
     /// <summary>
     /// Timestamp at which the event occurred.
     /// </summary>
-    DateTime Timestamp { get; }
+    DateTimeOffset Timestamp { get; }
 
     /// <summary>
     /// Resource id of the primary container affected by the event.

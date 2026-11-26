@@ -17,7 +17,7 @@ public abstract class LineageEventBase : ILineageEvent
 
     /// <inheritdoc />
     [DataMember]
-    public DateTime Timestamp { get; set; } = DateTime.UtcNow;
+    public DateTimeOffset Timestamp { get; set; } = DateTimeOffset.UtcNow;
 
     /// <inheritdoc />
     [DataMember]

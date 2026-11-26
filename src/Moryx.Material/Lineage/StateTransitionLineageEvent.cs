@@ -16,11 +16,11 @@ public class StateTransitionLineageEvent : LineageEventBase
     /// Classification of the previous state, or <c>null</c> if this is the initial state.
     /// </summary>
     [DataMember]
-    public StateClassification? FromClassification { get; set; }
+    public StateInformation? FromClassification { get; set; }
 
     /// <summary>
     /// Classification of the new state.
     /// </summary>
     [DataMember]
-    public StateClassification ToClassification { get; set; }
+    public StateInformation ToClassification { get; set; }
 }

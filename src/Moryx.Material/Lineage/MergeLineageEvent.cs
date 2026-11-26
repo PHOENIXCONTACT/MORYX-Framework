@@ -21,5 +21,5 @@ public class MergeLineageEvent : LineageEventBase
     /// Quantity received by the destination (i.e. <see cref="ILineageEvent.ContainerId"/>).
     /// </summary>
     [DataMember]
-    public decimal ReceivedQuantity { get; set; }
+    public double ReceivedQuantity { get; set; }
 }
