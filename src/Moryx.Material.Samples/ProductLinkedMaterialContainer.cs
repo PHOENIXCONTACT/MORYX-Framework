@@ -5,10 +5,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Resources;
+using Moryx.Material.Integrations.Products;
 using Moryx.Material.States;
 using Moryx.Serialization;
 
-namespace Moryx.Material.Integrations.Products;
+namespace Moryx.Material.Samples;
 
 /// <summary>
 /// Default base class for <see cref="IProductLinkedMaterialContainer"/> implementations.
@@ -16,10 +17,10 @@ namespace Moryx.Material.Integrations.Products;
 /// <remarks>
 /// Containers linked to further business objects do not need to derive from this class. They can implement
 /// <see cref="IProductLinkedMaterialContainer"/> alongside other linked container interfaces by declaring a
-/// <see cref="Products.ProductLink"/> property.
+/// <see cref="Integrations.Products.ProductLink"/> property.
 /// </remarks>
 [DataContract]
-public abstract class ProductLinkedMaterialContainer : MaterialContainer, IProductLinkedMaterialContainer
+public class ProductLinkedMaterialContainer : MaterialContainer, IProductLinkedMaterialContainer
 {
     /// <inheritdoc />
     [DataMember]

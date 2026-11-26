@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Moryx.Material.Integrations.Orders\Moryx.Material.Integrations.Orders.csproj" />
+    <ProjectReference Include="..\Moryx.Material.Integrations.Products\Moryx.Material.Integrations.Products.csproj" />
   </ItemGroup>
 
 </Project>
