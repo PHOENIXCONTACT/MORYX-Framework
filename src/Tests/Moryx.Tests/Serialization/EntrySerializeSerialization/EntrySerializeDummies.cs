@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Runtime.Serialization;
 using Moryx.Configuration;
 using Moryx.Serialization;
 
@@ -150,4 +151,29 @@ public class ContainerWithTwoChildProps
 {
     public ChildClass First { get; set; }
     public ChildClass Second { get; set; }
+}
+
+public class Resource { }
+
+public class FooResource : Resource
+{
+    [EntrySerialize, DataMember]
+    public required BarType BarProperty { get; set; }
+}
+
+public class BarType
+{
+    public BarType NestedBarProperty { get; set; } // <- This will not be a circular reference on the object level, or at least that would be out of scope for now
+}
+
+public class MutualReferenceA
+{
+    public string Name { get; set; }
+    public MutualReferenceB Other { get; set; }
+}
+
+public class MutualReferenceB
+{
+    public string Name { get; set; }
+    public MutualReferenceA Other { get; set; }
 }

@@ -3,6 +3,7 @@
 
 using System.Collections;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace Moryx.Configuration;
 
@@ -53,14 +54,15 @@ public class ValueProviderExecutor : IEmptyPropertyProvider
             throw new ArgumentNullException(nameof(settings.Filters));
         }
 
-        Iterate(targetObject, settings);
+        Iterate(targetObject, settings, []);
     }
 
-    private static void Iterate(object target, ValueProviderExecutorSettings settings, Stack<ExecutorLevel> stack = null)
+    private static void Iterate(object target, ValueProviderExecutorSettings settings, HashSet<int> visited, Stack<ExecutorLevel> stack = null)
     {
         stack ??= new Stack<ExecutorLevel>();
         foreach (var property in FilterProperties(target, settings))
         {
+            var hash = RuntimeHelpers.GetHashCode(property);
             var level = new ExecutorLevel(target, property, new());
             stack.Push(level);
             foreach (var settingsProvider in settings.Providers)
@@ -78,6 +80,16 @@ public class ValueProviderExecutor : IEmptyPropertyProvider
                     {
                         if (settingsProvider.Handle(target, property) == ValueProviderResult.Handled)
                         {
+                            if (property.PropertyType.IsClass && visited.Contains(hash))
+                            {
+                                stack.Pop();
+                                return;
+                            }
+
+                            if (property.PropertyType.IsClass)
+                            {
+                                visited.Add(hash);
+                            }
                             break;
                         }
                     }
@@ -90,7 +102,6 @@ public class ValueProviderExecutor : IEmptyPropertyProvider
             }
 
             var value = property.GetValue(target);
-
             if (!property.PropertyType.IsPrimitive && property.PropertyType != typeof(string))
             {
                 // Iterate each item of an enumerable
@@ -102,17 +113,18 @@ public class ValueProviderExecutor : IEmptyPropertyProvider
                         stack.Push(new ExecutorLevel(enumerable, null, new() { [IndexKey] = i++ }));
                         if (item != null)
                         {
-                            Iterate(item, settings, stack);
+                            Iterate(item, settings, visited, stack);
                         }
                         stack.Pop();
                     }
                 }
                 else if (value != null && property.PropertyType.IsClass)
                 {
-                    Iterate(value, settings, stack);
+                    Iterate(value, settings, visited, stack);
                 }
             }
             stack.Pop();
+
         }
     }
 

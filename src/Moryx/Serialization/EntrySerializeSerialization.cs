@@ -120,18 +120,22 @@ public class EntrySerializeSerialization : DefaultSerialization
             .Where(pm => pm.Mode.HasValue && pm.Mode == EntrySerializeMode.Never)
             .Select(pm => pm.Property).ToArray();
 
+        var nullModeProperties = propertyModes
+            .Where(pm => pm.Mode is null)
+            .Select(pm => pm.Property).ToArray();
+
         // Class: Always
         // -> All properties except "Never"
         if (sourceTypeMode.HasValue && sourceTypeMode.Value == EntrySerializeMode.Always)
         {
-            return properties.Except(neverProperties);
+            return properties.Except([.. neverProperties, .. nullModeProperties]);
         }
 
         // Class: Never
         // -> Only "Always" properties
         if (sourceTypeMode.HasValue && sourceTypeMode.Value == EntrySerializeMode.Never)
         {
-            return alwaysProperties;
+            return alwaysProperties.Except(nullModeProperties);
         }
 
         // Class: Not defined
@@ -140,14 +144,14 @@ public class EntrySerializeSerialization : DefaultSerialization
         // Only "Never" properties
         if (alwaysProperties.Length > 0)
         {
-            return alwaysProperties;
+            return alwaysProperties.Except(nullModeProperties);
         }
 
         // No "Always" properties, but "Never" properties
         // -> Properties except "Never"
         if (neverProperties.Length > 0)
         {
-            return properties.Except(neverProperties);
+            return properties.Except([.. neverProperties, .. nullModeProperties]);
         }
 
         // No property mode defined, No "Always", No "Never"

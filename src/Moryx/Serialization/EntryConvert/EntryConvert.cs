@@ -4,6 +4,7 @@
 using System.Collections;
 using System.ComponentModel;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using Moryx.Tools;
 
@@ -87,15 +88,20 @@ public static partial class EntryConvert
     /// <returns>Converted property</returns>
     public static Entry EncodeProperty(PropertyInfo property, ICustomSerialization customSerialization, object instance)
     {
+        return EncodeProperty(property, customSerialization, instance, []);
+    }
+
+    private static Entry EncodeProperty(PropertyInfo property, ICustomSerialization customSerialization, object instance, Dictionary<int, Entry> visited)
+    {
         var encoder = customSerialization.GetEncoder(property.PropertyType, property);
         if (encoder == null)
         {
-            return DefaultPropertyEncoding(property, customSerialization, instance);
+            return DefaultPropertyEncoding(property, customSerialization, visited, instance);
         }
 
         if (!TryGetValue(property, instance, out var value))
         {
-            var faulty = DefaultPropertyEncoding(property, customSerialization, instance);
+            var faulty = DefaultPropertyEncoding(property, customSerialization, visited, instance);
             faulty.Value.Type = EntryValueType.Exception;
             faulty.Value.Current = value.ToString();
             return faulty;
@@ -107,7 +113,7 @@ public static partial class EntryConvert
     /// <summary>
     /// Convert a single property without <see cref="EntryEncoderBase"/>
     /// </summary>
-    private static Entry DefaultPropertyEncoding(PropertyInfo property, ICustomSerialization customSerialization, object instance = default)
+    private static Entry DefaultPropertyEncoding(PropertyInfo property, ICustomSerialization customSerialization, Dictionary<int, Entry> visited, object instance = default)
     {
         // Fill with default if entry is null
         var entry = CreateFromProperty(property, customSerialization);
@@ -120,7 +126,7 @@ public static partial class EntryConvert
         }
 
         // Determine and convert prototypes
-        AddPrototypes(entry, property.PropertyType, property, customSerialization, instance);
+        AddPrototypes(entry, property.PropertyType, property, customSerialization, instance, visited);
 
         return entry;
     }
@@ -186,12 +192,12 @@ public static partial class EntryConvert
     /// of the encoder and offer them as possible values for new items.
     /// </summary>
     private static void AddPrototypes(Entry entry, Type memberType, ICustomAttributeProvider attributeProvider,
-        ICustomSerialization customSerialization, object instance)
+        ICustomSerialization customSerialization, object instance, Dictionary<int, Entry> visited)
     {
         var itemEncoder = IsCollection(memberType) ? customSerialization.GetItemEncoder(memberType, attributeProvider) : null;
         if (itemEncoder is null)
         {
-            entry.Prototypes.AddRange(Prototypes(memberType, attributeProvider, customSerialization, instance));
+            entry.Prototypes.AddRange(Prototypes(memberType, attributeProvider, customSerialization, visited, instance));
             return;
         }
 
@@ -223,26 +229,50 @@ public static partial class EntryConvert
     /// <summary>
     /// Create prototypes for possible values of an entry
     /// </summary>
-    private static IEnumerable<Entry> Prototypes(Type memberType, ICustomAttributeProvider customAttributeProvider, ICustomSerialization customSerialization, object instance = null)
+    private static IEnumerable<Entry> Prototypes(Type memberType, ICustomAttributeProvider customAttributeProvider, ICustomSerialization customSerialization, Dictionary<int, Entry> visited, object instance = null)
     {
-        EntryPossible[] possibleElementValues;
-        if (IsCollection(memberType))
-        {
-            possibleElementValues = customSerialization.PossibleElementValues(memberType, customAttributeProvider);
-        }
-        else
-        {
-            possibleElementValues = customSerialization.PossibleValues(memberType, customAttributeProvider, instance);
-        }
+        var possibleElementValues = IsCollection(memberType)
+            ? customSerialization.PossibleElementValues(memberType, customAttributeProvider)
+            : customSerialization.PossibleValues(memberType, customAttributeProvider, instance);
 
         var validation = customSerialization.CreateValidation(memberType, customAttributeProvider);
         foreach (var prototype in customSerialization.Prototypes(memberType, customAttributeProvider))
         {
-            var prototypeEntry = Prototype(prototype, customSerialization);
-            prototypeEntry.Identifier = prototype.Key;
-            prototypeEntry.Validation = validation;
-            prototypeEntry.Value.Possible = possibleElementValues;
-            yield return prototypeEntry;
+            var prototypeEntry = new Entry
+            {
+                Identifier = prototype.Key,
+                Validation = validation
+            };
+
+            var prototypeType = prototype.Prototype.GetType();
+            if (ValueOrStringType(prototypeType) || IsDictionary(prototypeType) || prototypeType.IsArray)
+            {
+                var result = Prototype(prototype, customSerialization, visited);
+                prototypeEntry.Prototypes = result.Prototypes;
+                prototypeEntry.SubEntries = result.SubEntries;
+                prototypeEntry.Value = result.Value;
+                prototypeEntry.Value.Possible = possibleElementValues;
+                yield return prototypeEntry;
+            }
+            else
+            {
+                var hashString = RuntimeHelpers.GetHashCode(prototype.Prototype);
+                if (visited.TryGetValue(hashString, out var match))
+                {
+                    yield return match;
+                }
+                else
+                {
+                    visited.Add(hashString, prototypeEntry);
+                    var result = Prototype(prototype, customSerialization, visited);
+                    prototypeEntry.Prototypes = result.Prototypes;
+                    prototypeEntry.SubEntries = result.SubEntries;
+                    prototypeEntry.Value = result.Value;
+                    prototypeEntry.Value.Possible = possibleElementValues;
+                    yield return prototypeEntry;
+                }
+            }
+
         }
     }
 
@@ -295,6 +325,11 @@ public static partial class EntryConvert
     /// </summary>
     public static Entry Prototype(EntryPrototype type, ICustomSerialization customSerialization)
     {
+        return Prototype(type, customSerialization, []);
+    }
+
+    private static Entry Prototype(EntryPrototype type, ICustomSerialization customSerialization, Dictionary<int, Entry> visited)
+    {
         Entry encoded;
         var transformedType = TransformType(type.Prototype.GetType());
         if (transformedType != EntryValueType.Class)
@@ -315,7 +350,7 @@ public static partial class EntryConvert
         }
         else
         {
-            encoded = EncodeObject(type.Prototype, customSerialization);
+            encoded = EncodeObject(type.Prototype, customSerialization, visited);
         }
 
         return encoded;
@@ -334,8 +369,19 @@ public static partial class EntryConvert
     /// </summary>
     public static Entry EncodeClass(Type objType, ICustomSerialization customSerialization)
     {
-        var encodedClass = CreateFromType(objType, customSerialization);
+        return EncodeClass(objType, customSerialization, []);
+    }
 
+    private static Entry EncodeClass(Type objType, ICustomSerialization customSerialization, Dictionary<int, Entry> visited)
+    {
+        var hash = RuntimeHelpers.GetHashCode(objType);
+        if (visited.TryGetValue(hash, out var encoded))
+        {
+            return encoded;
+        }
+
+        var encodedClass = CreateFromType(objType, customSerialization);
+        visited.Add(hash, encodedClass);
         var filtered = customSerialization.GetProperties(objType);
         foreach (var property in filtered)
         {
@@ -347,7 +393,7 @@ public static partial class EntryConvert
                 continue;
             }
 
-            var converted = DefaultPropertyEncoding(property, customSerialization);
+            var converted = DefaultPropertyEncoding(property, customSerialization, visited);
             // Assign default to current
             var value = converted.Value;
             value.Current = ConvertToString(value.Default, customSerialization.FormatProvider);
@@ -355,7 +401,7 @@ public static partial class EntryConvert
             if (converted.Value.Type == EntryValueType.Class)
             {
                 // Convert sub entries for classes
-                var subentry = EncodeClass(property.PropertyType, customSerialization);
+                var subentry = EncodeClass(property.PropertyType, customSerialization, visited);
                 converted.SubEntries.AddRange(subentry.SubEntries);
             }
 
@@ -373,17 +419,22 @@ public static partial class EntryConvert
         return EncodeObject(instance, _serialization);
     }
 
-    public static Entry EncodeObject(object instance, ICustomSerialization customSerialization)
-    {
-        return EncodeObject(instance, customSerialization, new HashSet<object>(ReferenceEqualityComparer.Instance));
-    }
-
     /// <summary>
     /// Convert object instance using custom strategy
     /// </summary>
-    public static Entry EncodeObject(object instance, ICustomSerialization customSerialization, HashSet<object> visited)
+    public static Entry EncodeObject(object instance, ICustomSerialization customSerialization)
+    {
+        return EncodeObject(instance, customSerialization, []);
+    }
+
+    private static Entry EncodeObject(object instance, ICustomSerialization customSerialization, Dictionary<int, Entry> visited)
     {
         var instanceType = instance.GetType();
+        var hashString = RuntimeHelpers.GetHashCode(instance);
+        if (visited.TryGetValue(hashString, out var valueEntry))
+        {
+            return valueEntry;
+        }
 
         // Encoders encode the complete entry
         var instanceEncoder = customSerialization.GetEncoder(instanceType, instanceType);
@@ -394,6 +445,7 @@ public static partial class EntryConvert
 
         var isValueType = ValueOrStringType(instanceType);
         var converted = CreateFromType(instanceType, customSerialization);
+        visited.Add(hashString, converted);
 
         // Value or string are easily value encoded
         if (isValueType)
@@ -413,20 +465,14 @@ public static partial class EntryConvert
         var filtered = customSerialization.GetProperties(instance.GetType());
         foreach (var property in filtered)
         {
-            //exclude property that can lead to self reference
             var propertyType = property.PropertyType;
-            if (propertyType == instanceType)
+            var isFaulty = !TryGetValue(property, instance, out var value);
+            if (value is not null && visited.TryGetValue(RuntimeHelpers.GetHashCode(value), out var match))
             {
+                converted.SubEntries.Add(match);
                 continue;
             }
 
-            var isFaulty = !TryGetValue(property, instance, out var value);
-            if(visited.Contains(value))
-            {
-                var encodedEntry = EncodeObject(value);
-                converted.SubEntries.Add(encodedEntry);
-                continue;
-            }
             // Encoders encode the complete entry
             var encoder = customSerialization.GetEncoder(propertyType, property);
             if (encoder is not null && !isFaulty)
@@ -435,7 +481,7 @@ public static partial class EntryConvert
                 continue;
             }
 
-            var convertedProperty = DefaultPropertyEncoding(property, customSerialization, instance);
+            var convertedProperty = DefaultPropertyEncoding(property, customSerialization, visited, instance);
             // Change type in case of exception
             if (isFaulty)
             {
@@ -454,12 +500,14 @@ public static partial class EntryConvert
                     convertedProperty.SubEntries.AddRange(EncodeItems(value, propertyType, property, customSerialization, instance));
                     break;
                 case EntryValueType.Class:
-                    var subEntry = value == null
-                        ? EncodeClass(property.PropertyType, customSerialization)
-                        : EncodeObject(value, customSerialization);
+
+                    if (value is null)
+                    {
+                        break;
+                    }
+                    var subEntry = EncodeObject(value, customSerialization, visited);
                     convertedProperty.Value.Current = ConvertToString(subEntry.Value.Current, customSerialization.FormatProvider);
                     convertedProperty.SubEntries = subEntry.SubEntries;
-                    visited.Add(value);
                     break;
                 case EntryValueType.Exception:
                     convertedProperty.Value.Current = (value as Exception)?.ToString() ?? string.Empty;
@@ -479,7 +527,6 @@ public static partial class EntryConvert
                     convertedProperty.Value.Current = ConvertToString(value ?? convertedProperty.Value.Default, customSerialization.FormatProvider);
                     break;
             }
-
             converted.SubEntries.Add(convertedProperty);
         }
 
@@ -690,13 +737,13 @@ public static partial class EntryConvert
         {
             case EntryValueType.Class:
                 parameterModel.Value.Current = parameterType.Name;
-                parameterModel.Prototypes.AddRange(Prototypes(parameterType, parameter, serialization, instance));
+                parameterModel.Prototypes.AddRange(Prototypes(parameterType, parameter, serialization, [], instance));
                 parameterModel.SubEntries = EncodeClass(parameterType, serialization).SubEntries;
                 break;
             case EntryValueType.Collection:
                 var elemType = ElementType(parameterType);
                 parameterModel.Value.Current = elemType.Name;
-                AddPrototypes(parameterModel, parameterType, parameter, serialization, instance);
+                AddPrototypes(parameterModel, parameterType, parameter, serialization, instance, []);
                 break;
         }
 

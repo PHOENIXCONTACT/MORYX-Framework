@@ -276,5 +276,52 @@ public class EntrySerializeSerializationTests
         Is.EqualTo("SecondValue")); // < FAILS: returns "FirstValue"
 
     }
-}
 
+    [Test]
+    public void ShouldEncodeObjectBased_OnlyOnValue()
+    {
+        //Arrange
+        var instance = new FooResource
+        {
+            BarProperty = new BarType
+            {
+                NestedBarProperty = new BarType()
+            }
+        };
+
+        //Act
+        var result = EntryConvert.EncodeObject(instance);
+
+        //Assert
+        var nestedBarProperty = result.SubEntries[0].SubEntries[0];
+        Assert.That(nestedBarProperty.Identifier, Is.EqualTo(nameof(FooResource.BarProperty.NestedBarProperty)));
+        Assert.That(nestedBarProperty.SubEntries[0].Value.Current, Is.Null);
+    }
+
+    [Test]
+    public void ShouldSetPropertyToNullWhenCircularReferenceIsEncountered_WhileEncodingClass()
+    {
+        //Arrange
+        Entry result = null;
+
+        //Act
+        result = EntryConvert.EncodeClass(typeof(FooResource));
+
+        //Assert
+        var barProperty = result.SubEntries[0];
+        var nestedBarProperty = barProperty.SubEntries[0];
+        Assert.That(barProperty.Identifier, Is.EqualTo(nameof(FooResource.BarProperty)));
+        Assert.That(nestedBarProperty.Identifier, Is.EqualTo(nameof(FooResource.BarProperty.NestedBarProperty)));
+        Assert.That(nestedBarProperty.Value.Current, Is.Null); // circular reference handled with null
+    }
+
+    [Test]
+    public void SerializeClassWithMutualReferenceShouldNotThrowException()
+    {
+        var a = new MutualReferenceA { Name = "A" };
+        var b = new MutualReferenceB { Name = "B" };
+        a.Other = b;
+        b.Other = a;
+        Assert.DoesNotThrow(() => EntryConvert.EncodeObject(a));
+    }
+}
