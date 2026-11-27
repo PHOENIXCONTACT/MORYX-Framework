@@ -126,7 +126,7 @@
     <Project Path="src/Tests/Moryx.AbstractionLayer.Resources.Endpoints.Tests/Moryx.AbstractionLayer.Resources.Endpoints.Tests.csproj" />
     <Project Path="src/Tests/Moryx.AbstractionLayer.Tests/Moryx.AbstractionLayer.Tests.csproj" />
     <Project Path="src/Tests/Moryx.AspNetCore.Mqtt.Tests/Moryx.AspNetCore.Mqtt.Tests.csproj" />
-    <Project Path="src/Tests/Moryx.AspNetCore.Tests/Moryx.AspNetCore.Tests.csproj" Id="ccc197d0-8acb-41f7-9abe-8298b9661f51" />
+    <Project Path="src/Tests/Moryx.AspNetCore.Tests/Moryx.AspNetCore.Tests.csproj" />
     <Project Path="src/Tests/Moryx.Container.Tests/Moryx.Container.Tests.csproj" />
     <Project Path="src/Tests/Moryx.ControlSystem.ProcessEngine.Tests/Moryx.ControlSystem.ProcessEngine.Tests.csproj" />
     <Project Path="src/Tests/Moryx.ControlSystem.SetupProvider.Tests/Moryx.ControlSystem.SetupProvider.Tests.csproj" />

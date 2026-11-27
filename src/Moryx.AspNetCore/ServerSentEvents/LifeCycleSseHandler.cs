@@ -36,7 +36,6 @@ public sealed class LifeCycleSseHandler : IDisposable
     /// Compatibility mode for implementations of a facade that may not implement
     /// ILifeCycleBoundFacade and may thus be null
     /// </param>
-
     public LifeCycleSseHandler(ILifeCycleBoundFacade facade, ChannelWriter<SseItem<string>> channelWriter,
         Action onReady, JsonSerializerOptions serializerOptions, bool treatNotLifeCycleBoundFacadeAsReady = true)
     {

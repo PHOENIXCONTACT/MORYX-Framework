@@ -16,7 +16,8 @@ namespace Moryx.AspNetCore.ServerSentEvents;
 /// Options used to serialize the readiness state.
 /// </param>
 /// <return>
-/// An SSE item conatining 
+/// An SSE item conatining the serialized readiness state and marked
+/// with the readiness event type.
 /// </return>
 public static class SseReadinessMessage
 {

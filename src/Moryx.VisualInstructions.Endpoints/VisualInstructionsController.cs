@@ -94,12 +94,9 @@ public class VisualInstructionsController : ControllerBase
 
         return;
 
-        async IAsyncEnumerable<SseItem<string>> Subscribe([EnumeratorCancellation] CancellationToken cancelToken)
+        IAsyncEnumerable<SseItem<string>> Subscribe(CancellationToken cancelToken)
         {
-            await foreach (var item in channel.Reader.ReadAllAsync(cancelToken))
-            {
-                yield return item;
-            }
+            return channel.Reader.ReadAllAsync(cancelToken);
         }
 
         // Local helper to broadcast instruction changes to all matching subscribers
@@ -111,11 +108,11 @@ public class VisualInstructionsController : ControllerBase
             {
                 instructions = _visualInstructions.GetInstructions(identifier).Select(_converter.ToModel).ToArray();
             }
-            catch(HealthStateException)
+            catch (HealthStateException)
             {
                 //Ignore if the module is not ready yet.
             }
-            
+
             var data = JsonSerializer.Serialize(instructions, _serializerOptions);
 
             channel.Writer.TryWrite(new SseItem<string>(data));
