@@ -18,7 +18,7 @@ public interface IResourceTypeNode
     /// <summary>
     /// Type definition wrapped by this object
     /// </summary>
-    Type ResourceType { get; set; }
+    Type ResourceType { get; }
 
     /// <summary>
     /// Flag if this node can be instantiated
